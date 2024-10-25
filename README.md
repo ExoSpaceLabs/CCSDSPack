@@ -5,6 +5,20 @@ C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, an
 Describe a typical packet and its components graphs and such.
 ```Include links for references```
 
+## Features
+1) User-friendly installation and usage within your code.
+2) Optimised for fast execution.
+3) CRC16, Checksum tests for easy retransmission on faulty packet.
+4) Reed-Solomon Error correction on data (optional).
+5) Integrated serial connection and transmission with ACK and NACK packets.
+```
+                |                   |     
+                | ----- CCSDS ----> |     
+          TX    |                   |    RX    
+                | <----- ACK ------ |     
+                |                   |     
+```
+
 ## Install
 1) Source - use the cmake and make commands to compile the whole project and install it.
 2) RPM    - Use the precompiled rpm installers and linux commands to extract and install.
@@ -14,7 +28,7 @@ Describe a typical packet and its components graphs and such.
 1) This example shows how this library can be used to generate a ccsds packet or stream of packets using CCSDSPack
 
 TBD
-```
+```c++
 #include "CCSDSPack.h"
 
 int main(){
@@ -34,7 +48,7 @@ Where "explanation" of what does it do.
 2) Assuming you already have a CCSDS packet stream and want to extract the data from it
 
 TBD
-```
+```c++
 #include "CCSDSPack.h"
 
 int main(){
