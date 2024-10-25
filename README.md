@@ -21,7 +21,8 @@ int main(){
   return 0;
 }
 ```
-Where <explanation> of what does it do.
+Where "explanation" of what does it do.
+
 2) Assuming you already have a CCSDS packet stream and want to extract the data from it
 
 TBD
@@ -37,4 +38,4 @@ int main(){
   return 0;
 }
 ```
-Where <explanation> of what does it do.
+Where "explanation" of what does it do.
