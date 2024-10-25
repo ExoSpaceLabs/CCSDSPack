@@ -18,6 +18,7 @@ Describe a typical packet and its components graphs and such.
                 | <----- ACK ------ |     
                 |                   |     
 ```
+6) Included binaries to transmit files trough a serial connection using CCSDS packages.
 
 ## Install
 1) Source - use the cmake and make commands to compile the whole project and install it.
