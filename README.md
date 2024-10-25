@@ -22,8 +22,8 @@ int main(){
   ccsdsManager.ID = {0xFF ... };
 
   ccsdsManager.data({0x00,0xff ....});
-  // auto data ccsdsManager.packets();             // all ccsds packets appendedd.
-  auto data ccsdsManager.packet(int packetNumber); // single ccsds packet specified
+  // auto data = ccsdsManager.packets();             // all ccsds packets appendedd.
+  auto data = ccsdsManager.packet(int packetNumber); // single ccsds packet specified
   return 0;
 }
 ```
