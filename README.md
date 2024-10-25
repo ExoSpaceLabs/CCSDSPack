@@ -6,9 +6,9 @@ Describe a typical packet and its components graphs and such.
 ```Include links for references```
 
 ## Install
-1) Compile from source - use the cmake and make commands to compile the whole project and install it.
-2) Use the precompiled rpm installers and linux commands to extract and install.
-3) Installation within a Docker container, use the provided bash script under the "docker" directory.
+1) Source - use the cmake and make commands to compile the whole project and install it.
+2) RPM    - Use the precompiled rpm installers and linux commands to extract and install.
+3) Docker - Installation within a Docker container, use the provided bash script under the "docker" directory.
 
 ## Examples
 1) This example shows how this library can be used to generate a ccsds packet or stream of packets using CCSDSPack
@@ -22,7 +22,8 @@ int main(){
   ccsdsManager.ID = {0xFF ... };
 
   ccsdsManager.data({0x00,0xff ....});
-
+  // auto data ccsdsManager.packets();             // all ccsds packets appendedd.
+  auto data ccsdsManager.packet(int packetNumber); // single ccsds packet specified
   return 0;
 }
 ```
