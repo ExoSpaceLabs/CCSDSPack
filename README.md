@@ -20,10 +20,12 @@ TBD
 int main(){
   CCSDSManager ccsdsManager;
   ccsdsManager.ID = {0xFF ... };
-
   ccsdsManager.data({0x00,0xff ....});
+
+  ccssdsManager.pack();                              // CCSDS wrapper
   // auto data = ccsdsManager.packets();             // all ccsds packets appendedd.
-  auto data = ccsdsManager.packet(int packetNumber); // single ccsds packet specified
+  auto data = ccsdsManager.packet(int packetNumber); // single ccsds packet specified.
+
   return 0;
 }
 ```
@@ -39,7 +41,10 @@ int main(){
   CCSDSManager ccsdsManager;
   ccsdsManager.ID = {0xFF ... };
 
-  auto data = ccsdsManager.data();
+  ccsdsManager.packets(packets);                     // CCSDS packets
+  ccsdsManager.unPack():                             // CCSDS un-wrapper
+
+  auto data = ccsdsManager.data();                   // just the data
 
   return 0;
 }
