@@ -7,5 +7,5 @@ cmake ..
 make
 
 cd ../bin
-./Electronics101
+./CCSDSPack_tester
 
