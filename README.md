@@ -9,6 +9,7 @@ C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, an
  - [Examples](#Examples)
 
 ## Description
+Detailed Documentation: [CCSDSPack Documentation](docs/README.md) - CCSDSPack Documentation
 This section is used to describe how the CCSDS packet is composed and how it can be used.
 
 NOTE: These Images are to be replaced as the source is not attendible and not clear.
