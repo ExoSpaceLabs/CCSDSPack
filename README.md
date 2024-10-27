@@ -1,6 +1,13 @@
 # CCSDSPack
 C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, analisys and more
 
+
+### Table of Contents
+ - [CCSDS Packet Description](## What is a CCSDS Packet Description)
+ - [Features](## Features)
+ - [Install](## Install)
+ - [Examples](## Examples)
+
 ## What is a CCSDS Packet Description
 Describe a typical packet and its components graphs and such.
 
@@ -23,13 +30,14 @@ This section shows how a PUS-B Packet can be inluded in the CCSDS packet
 
 
 ### Other Documents
-Please check out the documentation on ![ccsds documentation]()
+Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Reccomended documents are within the Blue books.
+
+Also take a look of the following documents:
 
 * [CCSDS 133.0-B-2](https://public.ccsds.org/Pubs/133x0b2e2.pdf) - Space Packet Protocol
 * [CCSDS 133.1-B-3](https://public.ccsds.org/Pubs/133x1b3e1.pdf) - Encapsulation Packet Protocol
 * [CCSDS 524.1-B-1](https://public.ccsds.org/Pubs/524x1b1.pdf) - Mission Operations--MAL Space Packet Transport Binding and Binary Encoding
 
-```Include links for references```
 
 ## Features
 1) User-friendly installation and usage within your code.
