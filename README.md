@@ -7,16 +7,19 @@ Describe a typical packet and its components graphs and such.
 
 ### The CCSDS Packet protocol
 The CCSDS packet is described by:
-![ccsds packet image](docs/CCSDS.png)
+
+[ccsds packet image](docs/CCSDS.png)
 
 ### PUS TC (PUS-A) inclusion
 This section shows how a PUS-A Packet can be inluded in the CCSDS packet
-![PUS TC packet image](docs/PUS_TC.png)
+
+[PUS TC packet image](docs/PUS_TC.png)
 
 
 ### PUS TM (PUS-B) inclusion
 This section shows how a PUS-B Packet can be inluded in the CCSDS packet
-![PUS TM packet image](docs/PUS_TM.png)
+
+[PUS TM packet image](docs/PUS_TM.png)
 
 
 ### Other Documents
