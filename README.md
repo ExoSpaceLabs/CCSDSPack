@@ -11,22 +11,22 @@ C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, an
 ## Description
 This section is used to describe how the CCSDS packet is composed and how it can be used.
 
-
+NOTE: These Images are to be replaced as the source is not attendible and not clear.
 ### The CCSDS Packet protocol
 The CCSDS packet is described by:
 
-![ccsds packet image](docs/CCSDS.png)
+![ccsds packet image](docs/imgs/CCSDS.png)
 
 ### PUS TC (PUS-A) inclusion
 This section shows how a PUS-A Packet can be inluded in the CCSDS packet
 
-![PUS TC packet image](docs/PUS_TC.png)
+![PUS TC packet image](docs/imgs/PUS_TC.png)
 
 
 ### PUS TM (PUS-B) inclusion
 This section shows how a PUS-B Packet can be inluded in the CCSDS packet
 
-![PUS TM packet image](docs/PUS_TM.png)
+![PUS TM packet image](docs/imgs/PUS_TM.png)
 
 
 ### Other Documents
