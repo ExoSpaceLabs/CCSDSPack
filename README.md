@@ -3,13 +3,13 @@ C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, an
 
 
 ### Table of Contents
- - [CCSDS Packet Description](#What is a CCSDS Packet Description)
+ - [Description](#Description)
  - [Features](#Features)
  - [Install](#Install)
  - [Examples](#Examples)
 
-## What is a CCSDS Packet Description
-Describe a typical packet and its components graphs and such.
+## Description
+This section is used to describe how the CCSDS packet is composed and how it can be used.
 
 
 ### The CCSDS Packet protocol
