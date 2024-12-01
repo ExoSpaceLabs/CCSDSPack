@@ -30,6 +30,8 @@ set(BINARY_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin")
 
 # Add include directories
 include_directories(${INCLUDE_DIR})
+# Collect all source files in the src folder for the library
+file(GLOB LIBRARY_INCLUDES "${INCLUDE_DIR}/*.h")
 
 # Collect all source files in the src folder for the library
 file(GLOB LIBRARY_SOURCES "${SOURCE_DIR}/*.cpp")
@@ -47,6 +49,9 @@ set(TEST_SOURCES "${TEST_DIR}/CCSDSPack_test.cpp")
 
 # Create the test executable target
 add_executable(${TESTER_EXEC} ${TEST_SOURCES})
+
+# Add include directories to the test target
+target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR})
 
 # Link the test executable with the library
 target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_VERSIONED})

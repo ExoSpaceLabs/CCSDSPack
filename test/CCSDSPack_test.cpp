@@ -12,7 +12,7 @@ int main() {
     
     uint64_t headerData = 0xFFFFFFFFFFFF;
 
-    CCSDSPacket ccsds;
+    CCSDS::Packet ccsds;
     
     ccsds.setPrimaryHeader(headerData);    
     ccsds.printPrimaryHeader();
@@ -38,9 +38,15 @@ int main() {
     // Start of the test
 
     //uint64_t headerData = 0xFFFFFFFFFFFF;
-    PrimaryHeader headerData(1,1,1,1,1,1,1);
+    CCSDS::PrimaryHeader headerData(1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1);
 
-    CCSDSPacket ccsds;
+    CCSDS::Packet ccsds;
 
     ccsds.setPrimaryHeader(headerData);
     ccsds.printPrimaryHeader();
@@ -64,7 +70,7 @@ int main() {
         auto start = std::chrono::high_resolution_clock::now();
         //==============================================================================
         // Start of the test
-        CCSDSPacket ccsds;
+        CCSDS::Packet ccsds;
 
         ccsds.setDataField({1, 2, 3, 4, 5});
         ccsds.printDataField();
@@ -89,7 +95,7 @@ int main() {
         auto start = std::chrono::high_resolution_clock::now();
         //==============================================================================
         // Start of the test
-        CCSDSPacket ccsds;
+        CCSDS::Packet ccsds;
 
         ccsds.setSecondaryHeader({0x1,0x2,0x3});
         ccsds.setDataField({4, 5});
