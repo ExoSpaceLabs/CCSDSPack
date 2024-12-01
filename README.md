@@ -61,6 +61,7 @@ Also take a look of the following documents:
 
 ## Examples
 1) This example shows how this library can be used to generate a ccsds packet or stream of packets using CCSDSPack
+* Assume a Big endian logic for data processing.
 
 TBD
 ```c++
