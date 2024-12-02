@@ -11,8 +11,8 @@ void CCSDS::Packet::printDataField() {
 
 
 void CCSDS::Packet::calculateCRC16() {
-    constexpr uint16_t POLYNOMIAL = 0x1021;      // CCSDS CRC-16 polynomial (x^16 + x^12 + x^5 + 1)
-    constexpr uint16_t INITIAL_VALUE = 0xFFFF;   // Initial value
+    constexpr uint16_t POLYNOMIAL      = 0x1021; // CCSDS CRC-16 polynomial (x^16 + x^12 + x^5 + 1)
+    constexpr uint16_t INITIAL_VALUE   = 0xFFFF; // Initial value
     constexpr uint16_t FINAL_XOR_VALUE = 0x0000; // No final XOR in CCSDS
 
     uint16_t crc = INITIAL_VALUE;
@@ -27,6 +27,5 @@ void CCSDS::Packet::calculateCRC16() {
             }
         }
     }
-
     m_CRC16 =  crc ^ FINAL_XOR_VALUE;             // Apply final XOR (if needed)
 }

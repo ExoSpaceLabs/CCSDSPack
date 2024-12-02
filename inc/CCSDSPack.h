@@ -31,7 +31,7 @@ namespace CCSDS {
 
         Header m_primaryHeader{};  // 6 bytes / 48 bits / 12 hex
         DataField m_dataField{};   // variable
-        uint64_t m_CRC16{};               // Cyclic Redundancy check 16 bits
+        uint16_t m_CRC16{};               // Cyclic Redundancy check 16 bits
     };
 }
 #endif // CCSDSPACK_H

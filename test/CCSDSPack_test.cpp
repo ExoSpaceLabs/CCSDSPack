@@ -156,7 +156,7 @@ int main() {
         uint8_t data[] = {0x3,0x4,0x5};
 
         ccsds.setDataField( data,3);
-        ccsds.setSecondaryHeader(secondaryHeader, 2);
+        ccsds.setSecondaryHeader( secondaryHeader, 2);
 
 
 
