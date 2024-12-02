@@ -3,6 +3,19 @@
 
 #include <cstdint>
 
+/**
+* PrimaryHeader Structure
+*
+* parameters:
+* uint8_t versionNumber_value,       // 3 bit
+* uint8_t type_value,                // 1 bit
+* uint8_t dataFieldHeaderFlag_value, // 1 bit
+* uint16_t APID_value,               // 11 bit
+* #uint8_t sequenceFlag_value,       // 2 bit
+* uint16_t sequenceCount_value,      // 14 bit
+* uint16_t dataLength_value          // 16 bit
+*
+*/
 namespace CCSDS {
     struct PrimaryHeader {
         // version and packet identification 16 bit 4 hex
