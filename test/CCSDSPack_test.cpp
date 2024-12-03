@@ -1,177 +1,142 @@
 #include <iostream>
-#include <chrono>
 #include "CCSDSPack.h"
+#include "CCSDSUtils.h"
 
 #include <cstring>
 
 int main() {
+    Tester tester{};
 
-    {
-    std::cout << "[ CCSDSPack ] Test using buffer as input." << std::endl;
-    auto start = std::chrono::high_resolution_clock::now();
-    //==============================================================================
-    // Start of the test
-    
-    uint64_t headerData = 0xFFFFFFFFFFFF;
-    CCSDS::Packet ccsds;
-    ccsds.setPrimaryHeader(headerData);
-    
-    // End of the Test
-    //==============================================================================
-    auto end = std::chrono::high_resolution_clock::now();
-
-    ccsds.printPrimaryHeader();
-    
-    std::chrono::duration<double> elapsed = end - start;
-    auto us = elapsed.count() * 1000000;
-    
-    std::cout << std::endl;
-    //std::cout << "[ CCSDSPack ] Elapsed : " << elapsed << " [double]." << std::endl;
-    std::cout << "[ CCSDSPack ] Elapsed time: " << us << " [us]." << std::endl;
-    }
-    
-    //==============================================================================
-
-    {
-    std::cout << "[ CCSDSPack ] Test using the Struct as input." << std::endl;
-    auto start = std::chrono::high_resolution_clock::now();
-    //==============================================================================
-    // Start of the test
-
-    //uint64_t headerData = 0xFFFFFFFFFFFF;
-    CCSDS::PrimaryHeader headerData(1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1);
-    CCSDS::Packet ccsds;
-    ccsds.setPrimaryHeader(headerData);
-
-
-    // End of the Test
-    //==============================================================================
-    auto end = std::chrono::high_resolution_clock::now();
-
-    ccsds.printPrimaryHeader();
-
-    std::chrono::duration<double> elapsed = end - start;
-    auto us = elapsed.count() * 1000000;
-
-    std::cout << std::endl;
-    std::cout << "[ CCSDSPack ] Elapsed time: " << us << " [us]." << std::endl;
-    }
-
-    //==============================================================================
-
-    {
-        std::cout << "[ CCSDSPack ] Test Data field with crc" << std::endl;
-        auto start = std::chrono::high_resolution_clock::now();
-        //==============================================================================
-        // Start of the test
+    tester.unitTest("Assign Primary header using an uint64_t as input.", []() {
+        constexpr uint64_t headerData( 0xFFFFFFFFFFFF );
         CCSDS::Packet ccsds;
-        ccsds.setDataField({1, 2, 3, 4, 5});
+        ccsds.setPrimaryHeader(headerData);
+        const auto ret = ccsds.getPrimaryHeader();
+        return ret == 0xFFFFFFFFFFFF;
+    });
 
+    //==============================================================================
 
-
-        // End of the Test
-        //==============================================================================
-        auto end = std::chrono::high_resolution_clock::now();
-
-        ccsds.printDataField();
-
-        std::chrono::duration<double> elapsed = end - start;
-        auto us = elapsed.count() * 1000000;
-
-        std::cout << std::endl;
-        std::cout << "[ CCSDSPack ] Elapsed time: " << us << " [us]." << std::endl;
-    }
+    tester.unitTest("Assign Primary header using PrimaryHeader struct as input.", []()
+    {
+        constexpr uint64_t expectedHeaderData( 0x380140010001 );
+        const CCSDS::PrimaryHeader headerData(1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1);
+        CCSDS::Packet ccsds;
+        ccsds.setPrimaryHeader(headerData);
+        const auto ret = ccsds.getPrimaryHeader();
+        return  ret == expectedHeaderData;
+    });
 
     //==============================================================================
 
     {
-        std::cout << "[ CCSDSPack ] Test Secondary Header and Data field with crc" << std::endl;
-        auto start = std::chrono::high_resolution_clock::now();
-        //==============================================================================
-        // Start of the test
         CCSDS::Packet ccsds;
 
-        ccsds.setSecondaryHeader({0x1,0x2,0x3});
-        ccsds.setDataField({4, 5});
+        tester.unitTest("Assign Data field using vector, wDataFieldHeader should be empty.",[&ccsds]() {
+            ccsds.setApplicationData({1, 2, 3, 4, 5});
+            const auto dfh = ccsds.getDataFieldHeader();
+            return dfh.empty();
+        } );
 
+        tester.unitTest("Assign Data field using vector, ApplicationData should be of correct size.",[&ccsds] {
+            const auto apd = ccsds.getApplicationData();
+            return apd.size() == 5;
+        });
 
-
-        // End of the Test
-        //==============================================================================
-        auto end = std::chrono::high_resolution_clock::now();
-
-        ccsds.printDataField();
-
-        std::chrono::duration<double> elapsed = end - start;
-        auto us = elapsed.count() * 1000000;
-
-        std::cout << std::endl;
-        std::cout << "[ CCSDSPack ] Elapsed time: " << us << " [us]." << std::endl;
+        tester.unitTest("Assign Data field using vector, CRC16 should be correct.", [&ccsds]() {
+            ccsds.calculateCRC16();
+            constexpr uint16_t expectedCRC16( 0x9304 );
+            const auto crc( ccsds.getCRC() );
+            return crc == expectedCRC16;
+        });
     }
 
     //==============================================================================
 
     {
-        std::cout << "[ CCSDSPack ] Test Data field * with crc" << std::endl;
-        auto start = std::chrono::high_resolution_clock::now();
-        //==============================================================================
-        // Start of the test
         CCSDS::Packet ccsds;
 
-        uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+        tester.unitTest("Assign Secondary Header and Data using vector, wDataFieldHeader should be of correct size.",[&ccsds] {
+            ccsds.setDataFieldHeader({0x1,0x2,0x3});
+            ccsds.setApplicationData({4, 5});
+            const auto dfh = ccsds.getDataFieldHeader();
+            return dfh.size() == 3;
+        });
 
-        ccsds.setDataField( data,5);
+        tester.unitTest("Assign Secondary Header and Data using vector, ApplicationData, should be of correct size.", [&ccsds] {
+            const auto apd = ccsds.getApplicationData();
+            return apd.size() == 2;
+        });
 
 
-
-        // End of the Test
-        //==============================================================================
-        auto end = std::chrono::high_resolution_clock::now();
-
-        ccsds.printDataField();
-
-        std::chrono::duration<double> elapsed = end - start;
-        auto us = elapsed.count() * 1000000;
-
-        std::cout << std::endl;
-        std::cout << "[ CCSDSPack ] Elapsed time: " << us << " [us]." << std::endl;
+        tester.unitTest("Assign Secondary Header and Data using vector, CRC16 should be correct.",[&ccsds] {
+            ccsds.calculateCRC16();
+            constexpr uint16_t expectedCRC16(0x9304);
+            const auto crc(ccsds.getCRC());
+            return crc == expectedCRC16;
+        });
     }
 
     //==============================================================================
 
     {
-        std::cout << "[ CCSDSPack ] Test Secondary header field * with crc" << std::endl;
-        auto start = std::chrono::high_resolution_clock::now();
-        //==============================================================================
-        // Start of the test
         CCSDS::Packet ccsds;
 
-        uint8_t secondaryHeader[] = {0x1,0x2};
-        uint8_t data[] = {0x3,0x4,0x5};
+        tester.unitTest("Assign Data field using array*, wDataFieldHeader should be empty.",[&ccsds] {
+            const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+            ccsds.setApplicationData( data,5);
+            const auto dfh = ccsds.getDataFieldHeader();
+            return dfh.empty();
+        });
 
-        ccsds.setDataField( data,3);
-        ccsds.setSecondaryHeader( secondaryHeader, 2);
+        tester.unitTest("Assign Data field using array*, ApplicationData should be of correct size.",[&ccsds] {
+            const auto apd = ccsds.getApplicationData();
+            return apd.size() == 5;
+        });
 
-
-
-        // End of the Test
-        //==============================================================================
-        auto end = std::chrono::high_resolution_clock::now();
-
-        ccsds.printDataField();
-
-        std::chrono::duration<double> elapsed = end - start;
-        auto us = elapsed.count() * 1000000;
-
-        std::cout << std::endl;
-        std::cout << "[ CCSDSPack ] Elapsed time: " << us << " [us]." << std::endl;
+        tester.unitTest("Assign Data field using array*, CRC16 should be correct.",[&ccsds] {
+            ccsds.calculateCRC16();
+            constexpr uint16_t expectedCRC16(0x9304);
+            const auto crc(ccsds.getCRC());
+            return crc == expectedCRC16;
+        });
     }
-    return 0;
+
+    //==============================================================================
+
+    {
+        CCSDS::Packet ccsds;
+
+        tester.unitTest("Assign Secondary header and data field using array*, wDataFieldHeader should be of correct size.", [&ccsds] {
+            constexpr uint8_t secondaryHeader[] = {0x1,0x2};
+            constexpr uint8_t data[] = {0x3,0x4,0x5};
+            ccsds.setApplicationData( data,3);
+            ccsds.setDataFieldHeader( secondaryHeader, 2);
+            const auto dfh = ccsds.getDataFieldHeader();
+            return dfh.size() == 2;
+        });
+
+        tester.unitTest("Assign Secondary header and data field using array*, ApplicationData should be of correct size.",[&ccsds] {
+            const auto apd = ccsds.getApplicationData();
+            return apd.size() == 3;
+        });
+
+        tester.unitTest("Assign Secondary header and data field using array*, CRC16 should be correct.",[&ccsds] {
+            ccsds.calculateCRC16();
+            constexpr uint16_t expectedCRC16(0x9304);
+            const auto crc(ccsds.getCRC());
+            return crc == expectedCRC16;
+        });
+    }
+
+    //==============================================================================
+
+    return tester.Result();
 }
 

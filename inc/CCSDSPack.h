@@ -14,20 +14,27 @@ namespace CCSDS {
         // setters
         void setPrimaryHeader(                           const uint64_t data ) {                  m_primaryHeader.setData( data ); }
         void setPrimaryHeader(                      const PrimaryHeader data ) {                  m_primaryHeader.setData( data ); }
-        void setDataField(                  const std::vector<uint8_t>& data ) {                      m_dataField.setData( data ); }
-        void setDataField(       const uint8_t* pData, const size_t sizeData ) {            m_dataField.setData( pData,sizeData ); }
-        void setSecondaryHeader(            const std::vector<uint8_t>& data ) {           m_dataField.setSecondaryHeader( data ); }
-        void setSecondaryHeader( const uint8_t* pData, const size_t sizeData ) { m_dataField.setSecondaryHeader( pData,sizeData ); }
+        void setDataFieldHeader(                           const PusA header ) {         m_dataField.setDataFieldHeader( header ); }
+        void setDataFieldHeader(                           const PusB header ) {         m_dataField.setDataFieldHeader( header ); }
+        void setDataFieldHeader(                          const PusC &header ) {      m_dataField.setDataFieldHeader( header ); }
+        void setDataFieldHeader(            const std::vector<uint8_t>& data ) {           m_dataField.setDataFieldHeader( data ); }
+        void setDataFieldHeader( const uint8_t* pData, const size_t sizeData ) { m_dataField.setDataFieldHeader( pData,sizeData ); }
+        void setApplicationData(            const std::vector<uint8_t>& data ) {           m_dataField.setApplicationData( data ); }
+        void setApplicationData( const uint8_t* pData, const size_t sizeData ) { m_dataField.setApplicationData( pData,sizeData ); }
+
+        uint64_t getPrimaryHeader() { return m_primaryHeader.getFullHeader(); };
+        std::vector<uint8_t> getDataFieldHeader() { return m_dataField.getDataFieldHeader();};
+        std::vector<uint8_t> getApplicationData() { return m_dataField.getApplicationData();};
 
         // getters
         uint16_t getCRC() const { return m_CRC16; }
 
         // other
+        void calculateCRC16();
         void printPrimaryHeader() { m_primaryHeader.printHeader(); }
         void printDataField();
 
     private:
-        void calculateCRC16();
 
         Header m_primaryHeader{};  // 6 bytes / 48 bits / 12 hex
         DataField m_dataField{};   // variable

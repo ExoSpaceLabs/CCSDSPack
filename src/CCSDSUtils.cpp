@@ -2,6 +2,7 @@
 
 #include "CCSDSUtils.h"
 #include <iostream>
+#include <iomanip>
 
 std::string getBinaryString(uint32_t value, int bits) {
     std::string binaryString;
@@ -28,3 +29,53 @@ std::string getBitsSpaces(int num){
 
     return spaces;
 }
+
+void Tester::unitTestStart() {
+    if (!m_testStarted) {
+        std::cout << std::endl;
+        std::cout <<"Starting Tests:" << std::endl;
+        m_startTime = std::chrono::high_resolution_clock::now();
+        m_unitStartTime = m_startTime;
+        m_testStarted = true;
+    }else {
+        m_unitStartTime = std::chrono::high_resolution_clock::now();
+    }
+}
+
+
+void Tester::unitTestEnd(const bool condition, const std::string& message) {
+    m_unitEndTime = std::chrono::high_resolution_clock::now();
+    const std::chrono::duration<double> elapsed = m_unitEndTime - m_unitStartTime;
+    const auto us = elapsed.count() * 1000000;
+    m_testCounter++;
+    if (condition) {
+        m_testsPassed++;
+        std::cout << " "<< std::setw(3) << std::setfill(' ') << m_testCounter
+        << " > [ "<< std::setw(6) << std::setfill(' ') << us << " us ]"
+        << "[ PASS ] Test: "<<  message << std::endl;
+    }else {
+        m_testsFailed++;
+        std::cout << " "<< std::setw(3) << std::setfill(' ') << m_testCounter
+        << " > [ "<< std::setw(6) << std::setfill(' ') << us << " us ]"
+        << "[ FAIL ] Test: "<<  message << std::endl;
+    }
+}
+
+
+
+int Tester::Result() {
+    constexpr int spaceSize = 7;
+    m_testStarted = false;
+    const std::chrono::duration<double> elapsed = m_unitEndTime - m_startTime;
+    const auto us = elapsed.count() * 1000000;
+
+    std::cout << std::endl;
+    std::cout <<"Test Results:" << std::endl;
+    std::cout << "  PASSED: [" << std::setw(spaceSize) << std::setfill(' ') << m_testsPassed << " ]"
+              << "  FAILED: [" << std::setw(spaceSize) << std::setfill(' ') << m_testsFailed << " ]"
+              << "   TOTAL: [" << std::setw(spaceSize) << std::setfill(' ') << m_testCounter << " ]"
+              << "    TIME: [" << std::setw(spaceSize) << std::setfill(' ') << us << " us ]";
+    std::cout << std::endl;
+    return static_cast<int>(m_testsFailed);
+}
+
