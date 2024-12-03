@@ -30,7 +30,7 @@ std::string getBitsSpaces(int num){
     return spaces;
 }
 
-void Tester::unitTestStart() {
+void TestManager::unitTestStart() {
     if (!m_testStarted) {
         std::cout << std::endl;
         std::cout <<"Starting Tests:" << std::endl;
@@ -43,7 +43,7 @@ void Tester::unitTestStart() {
 }
 
 
-void Tester::unitTestEnd(const bool condition, const std::string& message) {
+void TestManager::unitTestEnd(const bool condition, const std::string& message) {
     m_unitEndTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsed = m_unitEndTime - m_unitStartTime;
     const auto us = elapsed.count() * 1000000;
@@ -63,7 +63,7 @@ void Tester::unitTestEnd(const bool condition, const std::string& message) {
 
 
 
-int Tester::Result() {
+int TestManager::Result() {
     constexpr int spaceSize = 7;
     m_testStarted = false;
     const std::chrono::duration<double> elapsed = m_unitEndTime - m_startTime;
