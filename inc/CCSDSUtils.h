@@ -4,13 +4,17 @@
 #include <string>
 #include <cstdint>
 #include <chrono>
-#include <functional>
+#include <vector>
 
 const std::string GREEN = "\033[32m";
 const std::string  RED = "\033[31m";
 const std::string  RESET = "\033[0m";
 
 // functions
+/**
+*
+*/
+uint16_t crc16(const std::vector<uint8_t>& data);
 std::string getBinaryString(uint32_t value, int bits);
 std::string getBitsSpaces(int num);
 
@@ -76,6 +80,7 @@ private:
     std::chrono::time_point<std::chrono::system_clock> m_startTime;
     std::chrono::time_point<std::chrono::system_clock> m_unitStartTime;
     std::chrono::time_point<std::chrono::system_clock> m_unitEndTime;
+    double m_totalTime{};
 };
 #endif // CCSDSUTILS_H
 

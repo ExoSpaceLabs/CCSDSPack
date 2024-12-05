@@ -33,13 +33,32 @@ std::string getBitsSpaces(int num){
     return spaces;
 }
 
+uint16_t crc16(const std::vector<uint8_t>& data) {
+    constexpr uint16_t POLYNOMIAL      = 0x1021; // CCSDS CRC-16 polynomial (x^16 + x^12 + x^5 + 1)
+    constexpr uint16_t INITIAL_VALUE   = 0xFFFF; // Initial value
+    constexpr uint16_t FINAL_XOR_VALUE = 0x0000; // No final XOR in CCSDS
+
+    uint16_t crc = INITIAL_VALUE;
+
+    for (const auto& byte : data) {
+        crc ^= static_cast<uint16_t>(byte) << 8;  // Align byte with MSB of 16-bit CRC
+        for (int i = 0; i < 8; ++i) {             // Process each bit
+            if (crc & 0x8000) {                   // Check if MSB is set
+                crc = (crc << 1) ^ POLYNOMIAL;    // Shift and XOR with polynomial
+            } else {
+                crc = crc << 1;                   // Shift only
+            }
+        }
+    }
+    const uint16_t crcRet =  crc ^ FINAL_XOR_VALUE;             // Apply final XOR (if needed)
+    return crcRet;
+}
+
 void TestManager::unitTestStart() {
     if (!m_testStarted) {
-        std::cout << std::endl;
-        std::cout <<"Running Tests..." << std::endl;
+        m_testStarted = true;
         m_startTime = std::chrono::high_resolution_clock::now();
         m_unitStartTime = m_startTime;
-        m_testStarted = true;
     }else {
         m_unitStartTime = std::chrono::high_resolution_clock::now();
     }
@@ -50,19 +69,20 @@ void TestManager::unitTestEnd(const bool condition, const std::string& message) 
     m_unitEndTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsed = m_unitEndTime - m_unitStartTime;
     const auto us = elapsed.count() * 1000000;
+    m_totalTime += us;
     m_testCounter++;
     if (condition) {
         m_testsPassed++;
 #if VERBOSE == 1
         std::cout << "# "<< std::setw(3) << std::setfill(' ') << m_testCounter
-        << " [ "<< GREEN << "PASS" << RESET << " | "<< std::setw(6) << std::setfill(' ') << us
+        << " [ "<< GREEN << "PASS" << RESET << " | "<< std::setw(7) << std::setfill(' ') << us
         << " us ] Test: "<<  message << std::endl;
 #endif
     }else {
         m_testsFailed++;
 #if VERBOSE == 1
         std::cout << "# "<< std::setw(3) << std::setfill(' ') << m_testCounter
-        << " [ " << RED << "FAIL" << RESET<< " | " <<  std::setw(6) << std::setfill(' ') << us
+        << " [ " << RED << "FAIL" << RESET<< " | " <<  std::setw(7) << std::setfill(' ') << us
         << " us ] Test: "<<  message << std::endl;
 #endif
     }
@@ -77,10 +97,11 @@ int TestManager::Result() {
     const auto us = elapsed.count() * 1000000;
 
     std::cout <<"Test Results:" << std::endl;
-    std::cout << "  PASSED: [" << std::setw(spaceSize) << std::setfill(' ') << m_testsPassed << " ]"
-              << "  FAILED: [" << std::setw(spaceSize) << std::setfill(' ') << m_testsFailed << " ]"
-              << "   TOTAL: [" << std::setw(spaceSize) << std::setfill(' ') << m_testCounter << " ]"
-              << "    TIME: [" << std::setw(spaceSize) << std::setfill(' ') << us << " us ]";
+    std::cout << "   PASSED:    [" << std::setw(spaceSize + 4) << std::setfill(' ') << m_testsPassed << " |"
+              << std::setw(spaceSize + 4) << std::setfill(' ') << m_testsFailed
+              << " ] :FAILED,     TOTAL: [" << std::setw(spaceSize) << std::setfill(' ') << m_testCounter << " ]\n"
+              << "   TEST TIME: [ " << std::setw(spaceSize) << std::setfill(' ') << us << " us | "
+              << std::setw(spaceSize) << std::setfill(' ') << m_totalTime << " us ] :ACTUAL TIME";
     std::cout << std::endl;
     return static_cast<int>(m_testsFailed);
 }

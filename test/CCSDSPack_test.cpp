@@ -2,7 +2,8 @@
 #include "CCSDSPack.h"
 #include "CCSDSUtils.h"
 
-void testGroupBasic(TestManager *tester) {
+void testGroupBasic(TestManager *tester, const std::string& description) {
+    std::cout << "  testGroupBasic: " << description <<  std::endl;
 
     tester->unitTest("Assign Primary header using an uint64_t as input.", []() {
         constexpr uint64_t headerData( 0xFFFFFFFFFFFF );
@@ -31,7 +32,7 @@ void testGroupBasic(TestManager *tester) {
     {
         CCSDS::Packet ccsds;
 
-        tester->unitTest("Assign Data field using vector, wDataFieldHeader should be empty.",[&ccsds]() {
+        tester->unitTest("Assign Data field using vector, DataFieldHeader should be empty.",[&ccsds]() {
             ccsds.setApplicationData({1, 2, 3, 4, 5});
             const auto dfh = ccsds.getDataFieldHeader();
             return dfh.empty();
@@ -52,7 +53,7 @@ void testGroupBasic(TestManager *tester) {
     {
         CCSDS::Packet ccsds;
 
-        tester->unitTest("Assign Secondary Header and Data using vector, wDataFieldHeader should be of correct size.",[&ccsds] {
+        tester->unitTest("Assign Secondary Header and Data using vector, DataFieldHeader should be of correct size.",[&ccsds] {
             ccsds.setDataFieldHeader({0x1,0x2,0x3});
             ccsds.setApplicationData({4, 5});
             const auto dfh = ccsds.getDataFieldHeader();
@@ -75,7 +76,7 @@ void testGroupBasic(TestManager *tester) {
     {
         CCSDS::Packet ccsds;
 
-        tester->unitTest("Assign Data field using array*, wDataFieldHeader should be empty.",[&ccsds] {
+        tester->unitTest("Assign Data field using array*, DataFieldHeader should be empty.",[&ccsds] {
             const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
             ccsds.setApplicationData( data,5);
             const auto dfh = ccsds.getDataFieldHeader();
@@ -97,7 +98,7 @@ void testGroupBasic(TestManager *tester) {
     {
         CCSDS::Packet ccsds;
 
-        tester->unitTest("Assign Secondary header and data field using array*, wDataFieldHeader should be of correct size.", [&ccsds] {
+        tester->unitTest("Assign Secondary header and data field using array*, DataFieldHeader should be of correct size.", [&ccsds] {
             constexpr uint8_t secondaryHeader[] = {0x1,0x2};
             constexpr uint8_t data[] = {0x3,0x4,0x5};
             ccsds.setApplicationData( data,3);
@@ -155,10 +156,17 @@ void testGroupBasic(TestManager *tester) {
 
 int main() {
 
+    // use this to test some functionality
+
+
+
+    // Perform unit tests.
+    std::cout << std::endl;
+    std::cout <<"Running Tests..." << std::endl;
     TestManager tester{};
 
     // groups of tests to perform.
-    testGroupBasic(&tester);
+    testGroupBasic(&tester, "Basic CCSDS Packet feature tests.");
 
     return tester.Result();
 }

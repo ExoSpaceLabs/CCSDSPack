@@ -1,6 +1,8 @@
 
 
 #include "CCSDSPack.h"
+
+#include <CCSDSUtils.h>
 #include <iostream>
 
 void CCSDS::Packet::printDataField() {
@@ -8,30 +10,10 @@ void CCSDS::Packet::printDataField() {
     std::cout << "[ CCSDSPack ] CRC-16                   [Hex] : [ "<< "0x" << std::hex << getCRC() << " ]" << std::endl;
 }
 
-void CCSDS::Packet::calculateCRC16() {
-    constexpr uint16_t POLYNOMIAL      = 0x1021; // CCSDS CRC-16 polynomial (x^16 + x^12 + x^5 + 1)
-    constexpr uint16_t INITIAL_VALUE   = 0xFFFF; // Initial value
-    constexpr uint16_t FINAL_XOR_VALUE = 0x0000; // No final XOR in CCSDS
-
-    uint16_t crc = INITIAL_VALUE;
-
-    for (const auto& byte : m_dataField.getFullDataField()) {
-        crc ^= static_cast<uint16_t>(byte) << 8;  // Align byte with MSB of 16-bit CRC
-        for (int i = 0; i < 8; ++i) {             // Process each bit
-            if (crc & 0x8000) {                   // Check if MSB is set
-                crc = (crc << 1) ^ POLYNOMIAL;    // Shift and XOR with polynomial
-            } else {
-                crc = crc << 1;                   // Shift only
-            }
-        }
-    }
-    m_crcCalculated = true;
-    m_CRC16 =  crc ^ FINAL_XOR_VALUE;             // Apply final XOR (if needed)
-}
-
 uint16_t CCSDS::Packet::getCRC() {
     if (!m_crcCalculated) {
-        calculateCRC16();
+        m_CRC16 = crc16(m_dataField.getFullDataField());
+        m_crcCalculated = true;
     }
     return m_CRC16;
 }
@@ -57,13 +39,15 @@ std::vector<uint8_t> CCSDS::Packet::getPrimaryHeaderVector() {
 std::vector<uint8_t> CCSDS::Packet::getFullPacket() {
 
     std::vector<uint8_t> packet{};
+    auto header         =       getPrimaryHeaderVector();
     auto dataField = m_dataField.getFullDataField();
-    const auto crc = getCRCVector();
-    auto header = getPrimaryHeaderVector();
+    //ToDo Check if header and data are assigned, throw error if not.  header.size = 6, data.size > 1
+    const auto crc      =                 getCRCVector();
 
-    packet.insert(packet.end(), header.begin(), header.end());
+
+    packet.insert(packet.end(),    header.begin(),    header.end());
     packet.insert(packet.end(), dataField.begin(), dataField.end());
-    packet.insert(packet.end(), crc.begin(), crc.end());
+    packet.insert(packet.end(),       crc.begin(),       crc.end());
 
     return packet;
 }

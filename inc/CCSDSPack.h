@@ -23,10 +23,10 @@ namespace CCSDS {
         void setApplicationData( const uint8_t* pData, const size_t sizeData ) { m_dataField.setApplicationData( pData,sizeData ); m_crcCalculated = false; }
 
         // getters
-        uint64_t getPrimaryHeader() { return m_primaryHeader.getFullHeader(); };
-        std::vector<uint8_t> getDataFieldHeader() { return m_dataField.getDataFieldHeader();};
-        std::vector<uint8_t> getApplicationData() { return m_dataField.getApplicationData();};
-        std::vector<uint8_t> getFullDataField() { return m_dataField.getFullDataField();};
+        uint64_t getPrimaryHeader()               { return  m_primaryHeader.getFullHeader(); };
+        std::vector<uint8_t> getDataFieldHeader() { return m_dataField.getDataFieldHeader(); };
+        std::vector<uint8_t> getApplicationData() { return m_dataField.getApplicationData(); };
+        std::vector<uint8_t> getFullDataField()   { return   m_dataField.getFullDataField(); };
         std::vector<uint8_t> getPrimaryHeaderVector();
         std::vector<uint8_t> getFullPacket();
         std::vector<uint8_t> getCRCVector();
@@ -37,7 +37,6 @@ namespace CCSDS {
         void printDataField();
 
     private:
-        void calculateCRC16();
 
         Header m_primaryHeader{};         // 6 bytes / 48 bits / 12 hex
         DataField m_dataField{};          // variable
