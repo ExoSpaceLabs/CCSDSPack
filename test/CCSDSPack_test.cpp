@@ -43,7 +43,6 @@ void testGroupBasic(TestManager *tester) {
         });
 
         tester->unitTest("Assign Data field using vector, CRC16 should be correct.", [&ccsds]() {
-            ccsds.calculateCRC16();
             constexpr uint16_t expectedCRC16( 0x9304 );
             const auto crc( ccsds.getCRC() );
             return crc == expectedCRC16;
@@ -67,7 +66,6 @@ void testGroupBasic(TestManager *tester) {
 
 
         tester->unitTest("Assign Secondary Header and Data using vector, CRC16 should be correct.",[&ccsds] {
-            ccsds.calculateCRC16();
             constexpr uint16_t expectedCRC16(0x9304);
             const auto crc(ccsds.getCRC());
             return crc == expectedCRC16;
@@ -90,7 +88,6 @@ void testGroupBasic(TestManager *tester) {
         });
 
         tester->unitTest("Assign Data field using array*, CRC16 should be correct.",[&ccsds] {
-            ccsds.calculateCRC16();
             constexpr uint16_t expectedCRC16(0x9304);
             const auto crc(ccsds.getCRC());
             return crc == expectedCRC16;
@@ -115,10 +112,42 @@ void testGroupBasic(TestManager *tester) {
         });
 
         tester->unitTest("Assign Secondary header and data field using array*, CRC16 should be correct.",[&ccsds] {
-            ccsds.calculateCRC16();
             constexpr uint16_t expectedCRC16(0x9304);
             const auto crc(ccsds.getCRC());
             return crc == expectedCRC16;
+        });
+
+        tester->unitTest("Primary header vector getter values should be correctly returned.",[&ccsds] {
+            ccsds.setPrimaryHeader(0xFFFFFFFFFFFF);
+            const auto header = ccsds.getPrimaryHeaderVector();
+            bool res(true);
+            for (const auto &v : header) {
+                res &= v == 0xFF;
+            }
+            return res;
+        });
+
+        tester->unitTest("CRC16 vector getter values should be correctly returned.",[&ccsds] {
+            const auto crc = ccsds.getCRCVector();
+            auto res(true);
+            res &= crc[0] == 0x93;
+            res &= crc[1] == 0x04;;
+            return res;
+        });
+
+        tester->unitTest("Get full packet size. Header, Data field and CRC should be correctly positioned.",[&ccsds] {
+            const auto header = ccsds.getPrimaryHeaderVector();
+            const auto data = ccsds.getFullDataField();
+            const size_t packetSize = 6 + 2 + data.size();
+            const auto packet = ccsds.getFullPacket();
+            bool res(packet.size() == packetSize);
+            res &= header[3] == packet[3];
+            res &= packet[6] == data[0];
+            res &= packet[10] == data[4];
+            const auto crc = ccsds.getCRCVector();
+            res &= crc[0] == packet[packetSize-2];
+            res &= crc[1] == packet[packetSize-1];;
+            return res;
         });
     }
 }

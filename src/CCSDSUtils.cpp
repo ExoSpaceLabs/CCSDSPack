@@ -4,10 +4,13 @@
 #include <iostream>
 #include <iomanip>
 
+//###########################################################################
+#define VERBOSE 1
+
 std::string getBinaryString(uint32_t value, int bits) {
     std::string binaryString;
         // Calculate the minimum number of bits required to represent in groups of 4
-    int paddedBits = ((bits + 3) / 4) * 4;  // Round up to the nearest multiple of 4
+    const int paddedBits = ((bits + 3) / 4) * 4;  // Round up to the nearest multiple of 4
 
     for (int i = paddedBits - 1; i >= 0; --i) {
         binaryString += ((value >> i) & 1) ? '1' : '0';
@@ -33,7 +36,7 @@ std::string getBitsSpaces(int num){
 void TestManager::unitTestStart() {
     if (!m_testStarted) {
         std::cout << std::endl;
-        std::cout <<"Starting Tests:" << std::endl;
+        std::cout <<"Running Tests..." << std::endl;
         m_startTime = std::chrono::high_resolution_clock::now();
         m_unitStartTime = m_startTime;
         m_testStarted = true;
@@ -50,14 +53,18 @@ void TestManager::unitTestEnd(const bool condition, const std::string& message) 
     m_testCounter++;
     if (condition) {
         m_testsPassed++;
-        std::cout << " "<< std::setw(3) << std::setfill(' ') << m_testCounter
-        << " > [ "<< std::setw(6) << std::setfill(' ') << us << " us ]"
-        << "[ PASS ] Test: "<<  message << std::endl;
+#if VERBOSE == 1
+        std::cout << "# "<< std::setw(3) << std::setfill(' ') << m_testCounter
+        << " [ "<< GREEN << "PASS" << RESET << " | "<< std::setw(6) << std::setfill(' ') << us
+        << " us ] Test: "<<  message << std::endl;
+#endif
     }else {
         m_testsFailed++;
-        std::cout << " "<< std::setw(3) << std::setfill(' ') << m_testCounter
-        << " > [ "<< std::setw(6) << std::setfill(' ') << us << " us ]"
-        << "[ FAIL ] Test: "<<  message << std::endl;
+#if VERBOSE == 1
+        std::cout << "# "<< std::setw(3) << std::setfill(' ') << m_testCounter
+        << " [ " << RED << "FAIL" << RESET<< " | " <<  std::setw(6) << std::setfill(' ') << us
+        << " us ] Test: "<<  message << std::endl;
+#endif
     }
 }
 
@@ -69,7 +76,6 @@ int TestManager::Result() {
     const std::chrono::duration<double> elapsed = m_unitEndTime - m_startTime;
     const auto us = elapsed.count() * 1000000;
 
-    std::cout << std::endl;
     std::cout <<"Test Results:" << std::endl;
     std::cout << "  PASSED: [" << std::setw(spaceSize) << std::setfill(' ') << m_testsPassed << " ]"
               << "  FAILED: [" << std::setw(spaceSize) << std::setfill(' ') << m_testsFailed << " ]"

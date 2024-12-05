@@ -6,6 +6,9 @@
 #include <chrono>
 #include <functional>
 
+const std::string GREEN = "\033[32m";
+const std::string  RED = "\033[31m";
+const std::string  RESET = "\033[0m";
 
 // functions
 std::string getBinaryString(uint32_t value, int bits);
