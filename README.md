@@ -12,13 +12,23 @@ C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, an
 Detailed Documentation: [CCSDSPack Documentation](docs/README.md) 
 
 This section is used to describe how the CCSDS packet is composed and how it can be used.
+A simple description of the provided feature:
 
-NOTE: These Images are to be replaced as the source is not attendible and not clear.
+![ccsds packet image](docs/imgs/Packet_management.png)
+
+Where Assuming the Packet identifier data is known, the Package manager is able to: 
+* Read / Write a binary file and extract CCSDS Packets.
+* Read / Write CCSDS Packets to serial tty, socat...
+* Wrap / Extract Data in CCSDS packets.
+* Wrap / Extract Real time CCSDS packets.
+
 ### The CCSDS Packet protocol
 The CCSDS packet is described by:
 
-![ccsds packet image](docs/imgs/CCSDS.png)
+![ccsds packet image](docs/imgs/ccsdsPacket.png)
 
+
+NOTE: These Images are to be replaced as the source is not attendible and not clear.
 ### PUS TC (PUS-A) inclusion
 This section shows how a PUS-A Packet can be inluded in the CCSDS packet
 
@@ -30,6 +40,9 @@ This section shows how a PUS-B Packet can be inluded in the CCSDS packet
 
 ![PUS TM packet image](docs/imgs/PUS_TM.png)
 
+
+###  PUS-C inclusion
+A more flexible and variable sized standard.
 
 ### Other Documents
 Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Reccomended documents are within the Blue books.
