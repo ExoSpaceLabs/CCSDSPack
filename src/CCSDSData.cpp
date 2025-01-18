@@ -116,3 +116,16 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData,  const size_t s
     }
     m_dataFieldHeader.assign(pData, pData + sizeData);
 }
+
+void CCSDS::DataField::setDataFieldHeader( const CCSDS::PusA header ) {
+    //Todo
+    //m_dataFieldHeader = header.getData();
+}
+void CCSDS::DataField::setDataFieldHeader( const CCSDS::PusB header ) {
+    //Todo
+    //m_dataFieldHeader = header.getData();
+}
+void CCSDS::DataField::setDataFieldHeader( const CCSDS::PusC& header ) {
+    //Todo
+    //m_dataFieldHeader = header.getData();
+}

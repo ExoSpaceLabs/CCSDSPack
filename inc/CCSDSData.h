@@ -89,7 +89,7 @@ namespace CCSDS {
         void setDataFieldHeader(       const uint8_t* pData, size_t sizeData );
         void setDataFieldHeader(                                 PusA header );
         void setDataFieldHeader(                                 PusB header );
-        void setDataFieldHeader(                                 PusC header );
+        void setDataFieldHeader(                          const PusC& header );
         void setDataFieldHeader( const std::vector<uint8_t>& dataFieldHeader ) { m_dataFieldHeader = dataFieldHeader; } // type has to be set to other
 
         void setDataPacketSize(                         const uint16_t value ) {  m_dataPacketSize =           value; }
@@ -98,6 +98,7 @@ namespace CCSDS {
         std::vector<uint8_t> getDataFieldHeader() {return m_dataFieldHeader; }
         std::vector<uint8_t> getApplicationData() {return m_applicationData; }
         std::vector<uint8_t> getFullDataField();
+        bool getDataFieldHeaderFlag() const       { return !m_dataFieldHeader.empty(); }
 
         void printData();
 

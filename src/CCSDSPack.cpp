@@ -1,6 +1,7 @@
 
 
 #include "CCSDSPack.h"
+#include "CCSDSData.h"
 
 #include <CCSDSUtils.h>
 #include <iostream>
@@ -16,6 +17,24 @@
 void CCSDS::Packet::printDataField() {
     m_dataField.printData();
     std::cout << "[ CCSDSPack ] CRC-16                   [Hex] : [ "<< "0x" << std::hex << getCRC() << " ]" << std::endl;
+}
+
+/**
+ * @brief Updates Primary headers data field size.
+ *
+ * Uses the currently set data field size to set the header.
+ *
+ * @return none.
+ */
+void CCSDS::Packet::updatePrimaryHeader() {
+    if (!m_updatedHeader) {
+        const auto dataFiledSize = static_cast<uint16_t>( m_dataField.getFullDataField().size());
+        const auto dataFieldHeaderFlag = m_dataField.getDataFieldHeaderFlag();
+        m_primaryHeader.setDataLength(dataFiledSize);
+        m_primaryHeader.setDataFieldheaderFlag(dataFieldHeaderFlag);
+        m_primaryHeader.setSequenceCount(m_sequenceCounter);
+        m_updatedHeader = true;
+    }
 }
 
 /**
@@ -51,6 +70,11 @@ std::vector<uint8_t> CCSDS::Packet::getCRCVector() {
     return crc;
 }
 
+uint64_t CCSDS::Packet::getPrimaryHeader() {
+    updatePrimaryHeader();
+    return  m_primaryHeader.getFullHeader();
+};
+
 /**
  * @brief Retrieves the primary header of the packet as a vector of bytes.
  *
@@ -60,14 +84,13 @@ std::vector<uint8_t> CCSDS::Packet::getCRCVector() {
  *
  * @return A vector containing the six bytes of the primary header.
  */
-
 std::vector<uint8_t> CCSDS::Packet::getPrimaryHeaderVector() {
+    updatePrimaryHeader();
     std::vector<uint8_t> header(6);
     const auto headerVar = getPrimaryHeader();
     for (int i = 0; i < 6; ++i) {
         header[i] = (headerVar >> (40 - i * 8)) & 0xFF; // Extract MSB to LSB
     }
-
     return header;
 }
 
@@ -97,3 +120,48 @@ std::vector<uint8_t> CCSDS::Packet::getFullPacket() {
     return packet;
 }
 
+void CCSDS::Packet::setPrimaryHeader( const uint64_t data ) {
+    m_primaryHeader.setData( data );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setPrimaryHeader( const PrimaryHeader data ) {
+    m_primaryHeader.setData( data );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setDataFieldHeader( const PusA header ) {
+    m_dataField.setDataFieldHeader( header );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setDataFieldHeader( const PusB header ) {
+    m_dataField.setDataFieldHeader( header );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setDataFieldHeader(const PusC &header ) {
+    m_dataField.setDataFieldHeader( header );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setDataFieldHeader( const std::vector<uint8_t>& data ) {
+    m_dataField.setDataFieldHeader( data );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setDataFieldHeader( const uint8_t* pData, const size_t sizeData ) {
+    m_dataField.setDataFieldHeader( pData,sizeData );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setApplicationData( const std::vector<uint8_t>& data ) {
+    m_dataField.setApplicationData( data );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
+void CCSDS::Packet::setApplicationData( const uint8_t* pData, const size_t sizeData ) {
+    m_dataField.setApplicationData( pData,sizeData );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}

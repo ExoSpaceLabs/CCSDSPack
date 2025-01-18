@@ -9,13 +9,14 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         constexpr uint64_t headerData( 0xFFFFFFFFFFFF );
         CCSDS::Packet ccsds;
         ccsds.setPrimaryHeader(headerData);
+        // getPrimaryHeader updated dependent fields to correct values.
         const auto ret = ccsds.getPrimaryHeader();
-        return ret == 0xFFFFFFFFFFFF;
+        return ret == 0xf7ffc0000000;
     });
 
     tester->unitTest("Assign Primary header using PrimaryHeader struct as input.", []()
     {
-        constexpr uint64_t expectedHeaderData( 0x380140010001 );
+        constexpr uint64_t expectedHeaderData( 0x300140000000 );
         const CCSDS::PrimaryHeader headerData(1,
             1,
             1,
@@ -25,6 +26,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
             1);
         CCSDS::Packet ccsds;
         ccsds.setPrimaryHeader(headerData);
+        // getPrimaryHeader updated dependent fields to correct values.
         const auto ret = ccsds.getPrimaryHeader();
         return  ret == expectedHeaderData;
     });
@@ -98,6 +100,16 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
     {
         CCSDS::Packet ccsds;
 
+        tester->unitTest("Primary header vector should be 0 valued.",[&ccsds] {
+            // although the header is set to FFFF for data field size, its content is updated by data field size.
+
+            const auto header = ccsds.getPrimaryHeaderVector();
+            bool res(true);
+            for (const auto v : header) {
+                res &= v == 0;
+            }
+            return res;
+        });
         tester->unitTest("Assign Secondary header and data field using array*, DataFieldHeader should be of correct size.", [&ccsds] {
             constexpr uint8_t secondaryHeader[] = {0x1,0x2};
             constexpr uint8_t data[] = {0x3,0x4,0x5};
@@ -119,12 +131,19 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         });
 
         tester->unitTest("Primary header vector getter values should be correctly returned.",[&ccsds] {
-            ccsds.setPrimaryHeader(0xFFFFFFFFFFFF);
+            ccsds.setPrimaryHeader(0xffffffffffff);
+            // although the header is set to FFFF for data field size, its content is Header getters.
+            const std::vector<uint8_t> expectedHeader = {
+                0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05
+            };
             const auto header = ccsds.getPrimaryHeaderVector();
             bool res(true);
-            for (const auto &v : header) {
-                res &= v == 0xFF;
+            for (int i = 0; i < (int)header.size(); ++i) {
+                //std::cout << std::hex << static_cast<int>( header[i]) << " " ;
+                res &= header[i] == expectedHeader[i];
             }
+            //ccsds.printPrimaryHeader();
+            //std::cout << std::endl;
             return res;
         });
 
@@ -157,7 +176,6 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
 int main() {
 
     // use this to test some functionality
-
 
 
     // Perform unit tests.
