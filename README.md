@@ -1,3 +1,8 @@
+
+<div style="text-align: center;">
+    <img alt="ccsds_pack_logo" src="docs/imgs/Logo.png" width="400" />
+</div>
+
 # CCSDSPack
 C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, analisys and more
 
