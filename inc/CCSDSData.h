@@ -33,7 +33,7 @@ namespace CCSDS {
         void printData();
 
     private:
-        PUSServiceType        m_dataFieldHeaderType{};
+        PUSType               m_dataFieldHeaderType{};
         std::vector<uint8_t>      m_dataFieldHeader{};
         std::vector<uint8_t>      m_applicationData{};
         uint16_t              m_dataPacketSize = 2024;
