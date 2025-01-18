@@ -130,12 +130,12 @@ void CCSDS::Packet::setPrimaryHeader( const PrimaryHeader data ) {
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
-void CCSDS::Packet::setDataFieldHeader( const PusA header ) {
+void CCSDS::Packet::setDataFieldHeader(const PusA header ) {
     m_dataField.setDataFieldHeader( header );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
-void CCSDS::Packet::setDataFieldHeader( const PusB header ) {
+void CCSDS::Packet::setDataFieldHeader(const PusB header ) {
     m_dataField.setDataFieldHeader( header );
     m_crcCalculated = false;
     m_updatedHeader = false;
