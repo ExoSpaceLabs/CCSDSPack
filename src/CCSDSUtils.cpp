@@ -7,6 +7,13 @@
 //###########################################################################
 #define VERBOSE 1
 
+/**
+ * @brief Converts a given value to its binary representation as a string, with spaces every 4 bits.
+ *
+ * @param value The 32-bit integer value to convert.
+ * @param bits The number of significant bits to include in the binary string.
+ * @return A string representing the binary value with spaces every 4 bits.
+ */
 std::string getBinaryString(uint32_t value, int bits) {
     std::string binaryString;
         // Calculate the minimum number of bits required to represent in groups of 4
@@ -23,6 +30,12 @@ std::string getBinaryString(uint32_t value, int bits) {
     return binaryString;
 }
 
+/**
+ * @brief Generates a string of spaces for formatting binary outputs.
+ *
+ * @param num The number of spaces required.
+ * @return A string of spaces of length `num`.
+ */
 std::string getBitsSpaces(int num){
     std::string spaces;
     
@@ -33,6 +46,14 @@ std::string getBitsSpaces(int num){
     return spaces;
 }
 
+/**
+ * @brief Computes the CCSDS CRC-16 checksum for a given data vector.
+ *
+ * @param data A vector of bytes to compute the checksum for.
+ * @return The computed 16-bit CRC value.
+ *
+ * The CRC-16 uses the polynomial x^16 + x^12 + x^5 + 1, with an initial value of 0xFFFF.
+ */
 uint16_t crc16(const std::vector<uint8_t>& data) {
     constexpr uint16_t POLYNOMIAL      = 0x1021; // CCSDS CRC-16 polynomial (x^16 + x^12 + x^5 + 1)
     constexpr uint16_t INITIAL_VALUE   = 0xFFFF; // Initial value
@@ -54,6 +75,11 @@ uint16_t crc16(const std::vector<uint8_t>& data) {
     return crcRet;
 }
 
+/**
+ * @brief Marks the start of a unit test.
+ *
+ * Initializes the timer and tracks whether this is the first test in a series.
+ */
 void TestManager::unitTestStart() {
     if (!m_testStarted) {
         m_testStarted = true;
@@ -64,7 +90,12 @@ void TestManager::unitTestStart() {
     }
 }
 
-
+/**
+ * @brief Marks the end of a unit test and logs its result.
+ *
+ * @param condition The result of the test (true for pass, false for fail).
+ * @param message A message describing the test.
+ */
 void TestManager::unitTestEnd(const bool condition, const std::string& message) {
     m_unitEndTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsed = m_unitEndTime - m_unitStartTime;
@@ -87,8 +118,6 @@ void TestManager::unitTestEnd(const bool condition, const std::string& message) 
 #endif
     }
 }
-
-
 
 int TestManager::Result() {
     constexpr int spaceSize = 7;

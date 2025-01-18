@@ -1,10 +1,19 @@
 
-
 #include "CCSDSHeader.h"
 #include "CCSDSUtils.h"
 #include <iostream>
 #include <stdexcept>
 
+/**
+ * @brief Sets the header data from a 64-bit integer representation.
+ *
+ * Decomposes the 64-bit input data into various header fields, including the version number,
+ * type, data field header flag, APID, sequence flags, sequence count, and data length.
+ *
+ * @param data The 64-bit integer representing the header data.
+ * @throws std::invalid_argument If the input data exceeds the valid bit range for the header.
+ * @return none.
+ */
 void CCSDS::Header::setData(const uint64_t data){
     if (data > 0xFFFFFFFFFFFF) { // check if given header exeeds header size.
         throw std::invalid_argument("[ CCSDS Header ] Error: Input data exceeds expected bit size for version or size.");
@@ -26,6 +35,15 @@ void CCSDS::Header::setData(const uint64_t data){
     m_sequenceCount = (m_packetSequenceControl & 0x3FFF);             // Last 14 bits.
 }
 
+/**
+ * @brief Sets the header data from a `PrimaryHeader` structure.
+ *
+ * Assigns values from a `PrimaryHeader` structure to the internal header fields.
+ * Combines certain fields into their packed representations for efficient storage.
+ *
+ * @param data A `PrimaryHeader` structure containing the header data.
+ * @return none.
+ */
 void CCSDS::Header::setData(const PrimaryHeader data){
 
     m_versionNumber       =       data.versionNumber & 0x0007;
@@ -40,8 +58,15 @@ void CCSDS::Header::setData(const PrimaryHeader data){
     m_packetIdentificationAndVersion = (static_cast<uint16_t>(m_versionNumber) << 13) | (m_type << 12) | static_cast<uint16_t>((m_dataFieldHeaderFlag) << 11) | m_APID;
 }
 
-
-
+/**
+ * @brief Prints the header fields and their binary or hexadecimal representations.
+ *
+ * Outputs all relevant header fields, including the full primary header, version number,
+ * type, data field header flag, APID, sequence flags, sequence count, and data length.
+ * Each field is displayed with appropriate formatting and spacing.
+ *
+ * @return none.
+ */
 void CCSDS::Header::printHeader(){
 
     std::cout << std::endl;
@@ -50,7 +75,7 @@ void CCSDS::Header::printHeader(){
     std::cout << std::endl;
     std::cout << " [CCSDS HEADER] Info: Version Number         : [ " << getBitsSpaces(19- 4) << getBinaryString(       getVersionNumber(),  3 ) << " ]" << std::endl;
     std::cout << " [CCSDS HEADER] Info: Type                   : [ " << getBitsSpaces(19- 4) << getBinaryString(                getType(),  1 ) << " ]" << std::endl;
-    std::cout << " [CCSDS HEADER] Info: Data Field Header Flag : [ " << getBitsSpaces(19- 4) << getBinaryString( getDataFieldheaderFlag(),  1 ) << " ]" << std::endl;
+    std::cout << " [CCSDS HEADER] Info: Data Field Header Flag : [ " << getBitsSpaces(19- 4) << getBinaryString( getDataFieldHeaderFlag(),  1 ) << " ]" << std::endl;
     std::cout << " [CCSDS HEADER] Info: APID                   : [ " << getBitsSpaces(17-12) << getBinaryString(                getAPID(), 11 ) << " ]" << std::endl;
     std::cout << " [CCSDS HEADER] Info: Sequence Flags         : [ " << getBitsSpaces(19- 4) << getBinaryString(       getSequenceFlags(),  2 ) << " ]" << std::endl;
     std::cout << " [CCSDS HEADER] Info: Sequence Count         : [ " << getBitsSpaces(    0) << getBinaryString(       getSequenceCount(), 14 ) << " ]" << std::endl;

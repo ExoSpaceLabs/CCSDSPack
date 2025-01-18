@@ -1,7 +1,6 @@
 #ifndef CCSDSDATA_H
 #define CCSDSDATA_H
 
-#include <string>
 #include <cstdint>
 #include <vector>
 
@@ -52,7 +51,7 @@ namespace CCSDS {
         uint8_t                    getDestinationID()   const { return   m_destinationID; };
         uint16_t                   getSequenceControl() const { return m_sequenceControl; };
         static DataFieldHeaderType getType()                  { return            PUS_B; };
-        std::vector<uint8_t> getData()                  const;
+        std::vector<uint8_t>       getData()            const;
 
     private:
         uint8_t          m_version{};
@@ -67,7 +66,6 @@ namespace CCSDS {
     public:
         PusC();
 
-
         static DataFieldHeaderType getType()                  { return            PUS_C; };
         std::vector<uint8_t> getData() const;
     private:
@@ -80,10 +78,11 @@ namespace CCSDS {
         uint16_t m_size = 6; // set to minimum, typically between 6 - 12 bytes
     };
 
-    class DataField {
+    class DataField final {
     public:
         DataField() = default;
-        virtual ~DataField() = default;
+
+        ~DataField() = default;
 
         void setApplicationData( const std::vector<uint8_t>& applicationData ) { m_applicationData = applicationData; }
         void setApplicationData(       const uint8_t* pData, size_t sizeData );
