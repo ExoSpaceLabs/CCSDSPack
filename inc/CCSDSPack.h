@@ -14,9 +14,9 @@ namespace CCSDS {
         // setters
         void setPrimaryHeader(                           uint64_t data );
         void setPrimaryHeader(                      PrimaryHeader data );
-        void setDataFieldHeader(                           PusA header );
-        void setDataFieldHeader(                           PusB header );
-        void setDataFieldHeader(                    const PusC &header );
+        void setDataFieldHeader(                    const PusA& header );
+        void setDataFieldHeader(                    const PusB& header );
+        void setDataFieldHeader(                    const PusC& header );
         void setDataFieldHeader(      const std::vector<uint8_t>& data );
         void setDataFieldHeader( const uint8_t* pData, size_t sizeData );
         void setApplicationData(      const std::vector<uint8_t>& data );

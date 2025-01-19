@@ -117,15 +117,21 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData,  const size_t s
     m_dataFieldHeader.assign(pData, pData + sizeData);
 }
 
-void CCSDS::DataField::setDataFieldHeader( PusA header ) {
+void CCSDS::DataField::setDataFieldHeader(const PusA& header ) {
     //Todo
-    m_dataFieldHeader = header.getData();
+    m_dataFieldHeaderType = PUS_A;
+    m_pusHeaderData = std::make_shared<PusA>(header);
+    m_dataFieldHeader = m_pusHeaderData->getData();
 }
-void CCSDS::DataField::setDataFieldHeader( PusB header ) {
+void CCSDS::DataField::setDataFieldHeader(const PusB& header ) {
     //Todo
-    m_dataFieldHeader = header.getData();
+    m_dataFieldHeaderType = PUS_B;
+    m_pusHeaderData = std::make_shared<PusB>(header);
+    m_dataFieldHeader = m_pusHeaderData->getData();
 }
-void CCSDS::DataField::setDataFieldHeader( PusC header ) {
+void CCSDS::DataField::setDataFieldHeader(const PusC& header ) {
     //Todo
-    m_dataFieldHeader = header.getData();
+    m_dataFieldHeaderType = PUS_C;
+    m_pusHeaderData = std::make_shared<PusC>(header);
+    m_dataFieldHeader = m_pusHeaderData->getData();
 }

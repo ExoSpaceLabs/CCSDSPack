@@ -170,6 +170,33 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
             return res;
         });
     }
+    {
+
+        tester->unitTest("PUS-A secondary header assignment. returned data field header size is of correct size of 6 bytes.",[] {
+            CCSDS::Packet ccsds;
+            //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+            const CCSDS::PusA pusAHeader(1,2,3,4,5);
+            ccsds.setDataFieldHeader(pusAHeader);
+            const auto dfh = ccsds.getDataFieldHeader();
+            return dfh.size() == pusAHeader.getSize();
+        });
+
+        tester->unitTest("PUS-B secondary header assignment. returned data field header size is of correct size of 7 bytes.",[] {
+             CCSDS::Packet ccsds;
+             const CCSDS::PusB pusBHeader(1,2,3,4,5,6);
+             ccsds.setDataFieldHeader(pusBHeader);
+             const auto dfh = ccsds.getDataFieldHeader();
+             return dfh.size() == pusBHeader.getSize();
+        });
+
+        tester->unitTest("PUS-C secondary header assignment. returned data field header size is of correct size of 8 bytes.",[] {
+             CCSDS::Packet ccsds;
+             const CCSDS::PusC pusCHeader(1,2,3,4,5,6);
+             ccsds.setDataFieldHeader(pusCHeader);
+             const auto dfh = ccsds.getDataFieldHeader();
+             return dfh.size() == pusCHeader.getSize();
+        });
+    }
 }
 
 

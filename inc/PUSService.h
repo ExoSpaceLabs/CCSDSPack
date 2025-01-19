@@ -1,16 +1,13 @@
-#pragma once
-#include <utility>
-#include <vector>
-#include <cstdint>
-
-//
-// Created by dev on 1/18/25.
-//
 
 #ifndef PUSSERVICE_H
 #define PUSSERVICE_H
 
+#include <vector>
+#include <cstdint>
+
 namespace CCSDS {
+
+
     enum PUSType {
         NA,
         PUS_A,
@@ -19,88 +16,112 @@ namespace CCSDS {
         OTHER
     };
 
-    class PusA {
+    class PusHeader {
     public:
-        PusA();
-        PusA(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, uint32_t timeStamp) :
-        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_timeStamp(timeStamp) {};
+
+        virtual ~PusHeader() = default;
+
+        // virtual overloaded functions require default definition within cpp.
+
+        // public virtual setters
+        virtual void setDataLength(uint16_t dataLength);
+
+        // public virtual getters
+        virtual uint16_t             getDataLength() const;
+        virtual uint8_t              getSize() const;
+        virtual std::vector<uint8_t> getData() const; // Pure virtual method for polymorphism
+    };
+
+    class PusA final : public PusHeader {
+    public:
+        explicit PusA(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const uint32_t dataLength) :
+        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_dataLength(dataLength) {};
         explicit PusA(std::vector<uint8_t> data);
 
-        uint8_t                    getVersion()         const { return        m_version; }
-        uint8_t                    getServiceType()     const { return    m_serviceType; }
-        uint8_t                    getServiceSubtype()  const { return m_serviceSubType; }
-        uint8_t                    getSourceID()        const { return       m_sourceID; }
-        uint32_t                   getTimeStamp()       const { return      m_timeStamp; }
-        uint8_t                    getSize()            const { return           m_size; }
-        static PUSType             getType()                  { return            PUS_A; }
-        std::vector<uint8_t>       getData() const;
+        void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
 
-    private:
-        uint8_t         m_version{};
-        uint8_t     m_serviceType{};
-        uint8_t  m_serviceSubType{};
-        uint8_t        m_sourceID{};
-        uint32_t      m_timeStamp{}; // (mission epoch, often in CCSDS CUC format or mission-defined).
+        uint8_t                    getVersion()         const  { return        m_version; }
+        uint8_t                    getServiceType()     const  { return    m_serviceType; }
+        uint8_t                    getServiceSubtype()  const  { return m_serviceSubType; }
+        uint8_t                    getSourceID()        const  { return       m_sourceID; }
+        uint16_t                   getDataLength()      const override { return     m_dataLength; }
+        uint8_t                    getSize()            const override { return           m_size; }
+        std::vector<uint8_t>       getData()            const override;
+
+    private:                                // Field	            Size (bits)	Description
+        uint8_t         m_version{};        // Version	            3	        Version of the PUS standard
+        uint8_t     m_serviceType{};        // Service Type	        8	        Type of service (e.g., 0x01 for telemetry)
+        uint8_t  m_serviceSubType{};        // Service Subtype	    8	        Subtype of the service (e.g., specific telemetry type)
+        uint8_t        m_sourceID{};        // Source ID	        8	        ID of the source (e.g., satellite or sensor)
+        uint16_t     m_dataLength{};        // Data Length	        16	        Length of the telemetry data in bytes
+                                            // Telemetry Data	    Variable    (based on Data Length)	The actual telemetry data (variable length)
+
+        const uint16_t m_size = 6; // bytes
+    };
+
+    class PusB final : public PusHeader {
+    public:
+        explicit PusB(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const uint8_t eventID, const uint16_t dataLength) :
+        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_eventID(eventID), m_dataLength(dataLength) {}
+        explicit PusB(std::vector<uint8_t> data);
+
+        void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
+
+        uint8_t                    getVersion()         const  { return         m_version; }
+        uint8_t                    getServiceType()     const  { return     m_serviceType; }
+        uint8_t                    getServiceSubtype()  const  { return  m_serviceSubType; }
+        uint8_t                    getSourceID()        const  { return        m_sourceID; }
+        uint8_t                    getEventID()         const          { return         m_eventID; }
+        uint16_t                   getDataLength()      const override { return      m_dataLength; }
+        uint8_t                    getSize()            const override { return            m_size; }
+        std::vector<uint8_t>       getData()            const override;
+
+    private:                                 // Field	            Size (bits)	Description
+        uint8_t          m_version{};        // Version	            3	        Version of the PUS standard
+        uint8_t      m_serviceType{};        // Service Type	    8	        Type of service (e.g., 0x02 for event reporting)
+        uint8_t   m_serviceSubType{};        // Service Subtype	    8	        Subtype of the service (e.g., specific event type)
+        uint8_t         m_sourceID{};        // Source ID	        8	        ID of the source (e.g., satellite or sensor)
+        uint8_t          m_eventID{};        // Event ID	        16	        ID of the event being reported
+        uint16_t      m_dataLength{};        // Data Length	        16	        Length of the event data in bytes
+                                             // Event Data	        Variable    (based on Data Length)	The actual event data (variable length)
 
         const uint16_t m_size = 7; // bytes
     };
 
-    class PusB {
+    class PusC final : public PusHeader {
     public:
-        PusB();
-        PusB(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t destinationID, uint16_t sequenceControl) :
-        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_destinationID(destinationID), m_sequenceControl(sequenceControl) {}
-        explicit PusB(std::vector<uint8_t> data);
-
-        uint8_t                    getVersion()         const { return         m_version; }
-        uint8_t                    getServiceType()     const { return     m_serviceType; }
-        uint8_t                    getServiceSubtype()  const { return  m_serviceSubType; }
-        uint8_t                    getDestinationID()   const { return   m_destinationID; }
-        uint16_t                   getSequenceControl() const { return m_sequenceControl; }
-        uint8_t                    getSize()            const { return            m_size; }
-        static PUSType             getType()                  { return             PUS_B; };
-        std::vector<uint8_t>       getData() const;
-
-    private:
-        uint8_t          m_version{};
-        uint8_t      m_serviceType{};
-        uint8_t   m_serviceSubType{};
-        uint8_t    m_destinationID{};
-        uint16_t m_sequenceControl{}; // timestamp or alternatively it can be used for sequence control
-
-        const uint16_t m_size = 6; // bytes
-    };
-    class PusC {
-    public:
-        PusC();
-        PusC(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, uint16_t, std::vector<uint8_t> missionData) :
-        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_missionData(std::move(missionData)) {}
+        explicit PusC(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const uint16_t timeCode, const uint16_t dataLength) :
+        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_timeCode(timeCode), m_dataLength(dataLength) {}
         explicit PusC(std::vector<uint8_t> data);
 
-        uint8_t                    getVersion()         const { return                     m_version; }
-        uint8_t                    getServiceType()     const { return                 m_serviceType; }
-        uint8_t                    getServiceSubtype()  const { return              m_serviceSubType; }
-        uint8_t                    getSourceID()        const { return                    m_sourceID; }
-        std::vector<uint8_t>       getMissionData()     const { return              m_missionData; }
-        uint8_t                    getSize()            const { return m_size + m_missionData.size(); }
-        static PUSType getType()                              { return                         PUS_C; }
+        void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
 
-        std::vector<uint8_t> getData();
-    private:
-        uint8_t                    m_version{};
-        uint8_t                m_serviceType{};
-        uint8_t             m_serviceSubType{};
-        uint8_t                   m_sourceID{};
-        std::vector<uint8_t>   m_missionData{};
+        uint8_t                    getVersion()         const  { return                     m_version; }
+        uint8_t                    getServiceType()     const  { return                 m_serviceType; }
+        uint8_t                    getServiceSubtype()  const  { return              m_serviceSubType; }
+        uint8_t                    getSourceID()        const  { return                    m_sourceID; }
+        uint16_t                   getTimeCode()        const          { return                    m_timeCode; }
+        uint16_t                   getDataLength()      const override { return                  m_dataLength; }
+        uint8_t                    getSize()            const override { return                        m_size; }
+        std::vector<uint8_t>       getData()            const override;
 
-        uint16_t m_size = 4; // set to minimum, typically between 6 - 12 bytes
+    private:                            // Field	            Size (bits)	Description
+        uint8_t        m_version{};     // Version	            3	        Version of the PUS standard
+        uint8_t    m_serviceType{};     // Service Type	        8	        Type of service (e.g., 0x03 for time code)
+        uint8_t m_serviceSubType{};     // Service Subtype	    8	        Subtype of the service (e.g., specific time type
+        uint8_t       m_sourceID{};     // Source ID	        8	        ID of the source (e.g., satellite or sensor)
+        uint16_t      m_timeCode{};     // Time Code	        16	        Time code value, depending on the system
+        uint16_t    m_dataLength{};     // Data Length	        16	        Length of the time data in bytes
+                                        // Time Data	        Variable    (based on Data Length)	The actual time-related data (variable length)
+
+        uint16_t m_size = 8; // bytes
     };
 }
 
 #endif //PUSSERVICE_H
 
 
-/*Todo
+/*
 Here are the PUS A, B, and C secondary header examples, as used within the CCSDS Packet format. Each of these headers contains fields with specific bit sizes and data that will vary based on the type of PUS used (A, B, or C). We'll show the structure and some typical values for each.
 
 PUS-A (Telemetry) – Secondary Header
