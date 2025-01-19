@@ -1,5 +1,5 @@
 #include <iostream>
-#include "CCSDSPack.h"
+#include "CCSDSPacket.h"
 #include "CCSDSUtils.h"
 
 void testGroupBasic(TestManager *tester, const std::string& description) {
@@ -10,7 +10,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet ccsds;
         ccsds.setPrimaryHeader(headerData);
         // getPrimaryHeader updated dependent fields to correct values.
-        const auto ret = ccsds.getPrimaryHeader();
+        const auto ret = ccsds.getPrimaryHeader64bit();
         return ret == 0xf7ffc0000000;
     });
 
@@ -27,8 +27,28 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet ccsds;
         ccsds.setPrimaryHeader(headerData);
         // getPrimaryHeader updated dependent fields to correct values.
-        const auto ret = ccsds.getPrimaryHeader();
+        const auto ret = ccsds.getPrimaryHeader64bit();
         return  ret == expectedHeaderData;
+    });
+
+    tester->unitTest("Assign Primary header performing vector deserialization.", []()
+    {
+        constexpr uint64_t expectedHeaderData( 0xf7ffc0000000 );
+        const std::vector<uint8_t> data( {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} );
+        CCSDS::Packet ccsds;
+        ccsds.setPrimaryHeader(data);
+        const auto ret = ccsds.getPrimaryHeader64bit();
+        return  ret == expectedHeaderData;
+    });
+
+    tester->unitTest("Get Header using vector serialization.", []()
+    {
+        constexpr uint64_t data( 0xf7ffc0000000 );
+        const std::vector<uint8_t> expectedHeaderData( {0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00} );
+        CCSDS::Packet ccsds;
+        ccsds.setPrimaryHeader(data);
+        const auto ret = ccsds.getPrimaryHeader();
+        return std::equal(expectedHeaderData.begin(), expectedHeaderData.end(), ret.begin());
     });
 
     {
@@ -103,7 +123,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         tester->unitTest("Primary header vector should be 0 valued.",[&ccsds] {
             // although the header is set to FFFF for data field size, its content is updated by data field size.
 
-            const auto header = ccsds.getPrimaryHeaderVector();
+            const auto header = ccsds.getPrimaryHeader();
             bool res(true);
             for (const auto v : header) {
                 res &= v == 0;
@@ -136,15 +156,9 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
             const std::vector<uint8_t> expectedHeader = {
                 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05
             };
-            const auto header = ccsds.getPrimaryHeaderVector();
-            bool res(true);
-            for (int i = 0; i < (int)header.size(); ++i) {
-                //std::cout << std::hex << static_cast<int>( header[i]) << " " ;
-                res &= header[i] == expectedHeader[i];
-            }
-            //ccsds.printPrimaryHeader();
-            //std::cout << std::endl;
-            return res;
+            const auto header = ccsds.getPrimaryHeader();
+
+            return std::equal(expectedHeader.begin(), expectedHeader.end(), header.begin());
         });
 
         tester->unitTest("CRC16 vector getter values should be correctly returned.",[&ccsds] {
@@ -156,10 +170,10 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         });
 
         tester->unitTest("Get full packet size. Header, Data field and CRC should be correctly positioned.",[&ccsds] {
-            const auto header = ccsds.getPrimaryHeaderVector();
+            const auto header = ccsds.getPrimaryHeader();
             const auto data = ccsds.getFullDataField();
             const size_t packetSize = 6 + 2 + data.size();
-            const auto packet = ccsds.getFullPacket();
+            const auto packet = ccsds.serialize();
             bool res(packet.size() == packetSize);
             res &= header[3] == packet[3];
             res &= packet[6] == data[0];
@@ -203,14 +217,14 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
 
             //ccsds.setPrimaryHeader(0xffffffff);
             //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
-            const auto primaryHeader = ccsds.getPrimaryHeader();
+            const auto primaryHeader = ccsds.getPrimaryHeader64bit();
             return (primaryHeader & 0xFFFF) == 0x8;
         });
 
         tester->unitTest("Automatic data Length update in Primary header and Secondary header after data inclusion.",[&ccsds] {
             constexpr uint8_t data[] = {0x3,0x4,0x5};
             ccsds.setApplicationData( data,3);
-            const auto primaryHeaderSize = ccsds.getPrimaryHeader() & 0xFFFF;
+            const auto primaryHeaderSize = ccsds.getPrimaryHeader64bit() & 0xFFFF;
             const auto dataFieldHeaderSize = ccsds.getDataFieldHeader()[7];
 
             return primaryHeaderSize == 0xB && dataFieldHeaderSize == 0x3;
@@ -218,7 +232,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
 
         tester->unitTest("Automatic data Length check with get full ccsds packet",[&ccsds] {
 
-            const auto ccsdsPacket = ccsds.getFullPacket();
+            const auto ccsdsPacket = ccsds.serialize();
             // data sizes:
             // Primary header 6 bytes (last byte for data field size includes data Field Header):
             //   Data Field Header 8 bytes (last byte for data field size):

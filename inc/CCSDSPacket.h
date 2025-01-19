@@ -32,9 +32,11 @@ namespace CCSDS {
     class Packet {
     public:
         Packet() = default;
+        explicit Packet(std::vector<uint8_t> data);
 
         // setters
         void setPrimaryHeader(                           uint64_t data );
+        void setPrimaryHeader(        const std::vector<uint8_t>& data );
         void setPrimaryHeader(                      PrimaryHeader data );
         void setDataFieldHeader(                    const PusA& header );
         void setDataFieldHeader(                    const PusB& header );
@@ -45,15 +47,19 @@ namespace CCSDS {
         void setApplicationData( const uint8_t* pData, size_t sizeData );
 
         // getters
-        uint64_t getPrimaryHeader();
-        std::vector<uint8_t> getPrimaryHeaderVector();
+        uint64_t getPrimaryHeader64bit();
+        std::vector<uint8_t> getPrimaryHeader();
         std::vector<uint8_t> getDataFieldHeader()      { return m_dataField.getDataFieldHeader(); }
         std::vector<uint8_t> getApplicationData()      { return m_dataField.getApplicationData(); }
         std::vector<uint8_t> getFullDataField()        { return   m_dataField.getFullDataField(); }
-        std::vector<uint8_t> getFullPacket();
         std::vector<uint8_t> getCRCVector();
         bool getDataFieldHeaderFlag()    const { return m_primaryHeader.getDataFieldHeaderFlag(); }
         uint16_t getCRC();
+
+
+        std::vector<uint8_t> serialize();
+        void deserialize(std::vector<uint8_t> data);
+        void deserialize(std::vector<uint8_t> data, PUSType PusType);
 
         // other
         void printPrimaryHeader() { m_primaryHeader.printHeader(); }

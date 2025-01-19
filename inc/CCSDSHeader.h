@@ -2,6 +2,7 @@
 #define CCSDSHEADER_H
 
 #include <cstdint>
+#include <vector>
 
 namespace CCSDS {
     /**
@@ -68,6 +69,12 @@ namespace CCSDS {
         */
         explicit Header(const uint64_t data)     { setData(data);                }
 
+        /**
+        * @brief Constructs a Header from a vector of uint8_t data representation.
+        * @param data The 8-bit integer vector representing the header fields.
+        */
+        explicit Header(const std::vector<uint8_t>& data);
+
         // getters
         uint8_t  getVersionNumber() const        { return m_versionNumber;       }
         uint8_t  getType() const                 { return m_type;                }
@@ -106,6 +113,8 @@ namespace CCSDS {
 
         // Full data setter
         void setData(PrimaryHeader data);
+        void deserialize(const std::vector<uint8_t>& data );
+        std::vector<uint8_t> serialize();
 
         // print out the header
         void printHeader();

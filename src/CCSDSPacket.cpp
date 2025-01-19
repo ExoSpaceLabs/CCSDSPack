@@ -1,6 +1,6 @@
 
 
-#include "CCSDSPack.h"
+#include "CCSDSPacket.h"
 #include "CCSDSData.h"
 
 #include <CCSDSUtils.h>
@@ -79,10 +79,13 @@ std::vector<uint8_t> CCSDS::Packet::getCRCVector() {
  *
  * @return The 64-bit primary header of the packet.
  */
-uint64_t CCSDS::Packet::getPrimaryHeader() {
+uint64_t CCSDS::Packet::getPrimaryHeader64bit() {
     updatePrimaryHeader();
     return  m_primaryHeader.getFullHeader();
 };
+
+
+
 
 /**
  * @brief Retrieves the primary header of the packet as a vector of bytes.
@@ -93,13 +96,9 @@ uint64_t CCSDS::Packet::getPrimaryHeader() {
  *
  * @return A vector containing the six bytes of the primary header.
  */
-std::vector<uint8_t> CCSDS::Packet::getPrimaryHeaderVector() {
-    std::vector<uint8_t> header(6);
-    const auto headerVar = getPrimaryHeader();
-    for (int i = 0; i < 6; ++i) {
-        header[i] = (headerVar >> (40 - i * 8)) & 0xFF; // Extract MSB to LSB
-    }
-    return header;
+std::vector<uint8_t> CCSDS::Packet::getPrimaryHeader() {
+    updatePrimaryHeader();
+    return m_primaryHeader.serialize();
 }
 
 /**
@@ -113,9 +112,9 @@ std::vector<uint8_t> CCSDS::Packet::getPrimaryHeaderVector() {
  *
  * @return A vector containing the full packet in byte form.
  */
-std::vector<uint8_t> CCSDS::Packet::getFullPacket() {
+std::vector<uint8_t> CCSDS::Packet::serialize() {
 
-    auto header         =       getPrimaryHeaderVector();
+    auto header         =       getPrimaryHeader();
     auto dataField = m_dataField.getFullDataField();
     //ToDo Check if header and data are assigned, throw error if not.  header.size = 6, data.size > 1
     const auto crc      =                 getCRCVector();
@@ -143,6 +142,21 @@ void CCSDS::Packet::setPrimaryHeader( const uint64_t data ) {
     m_updatedHeader = false;
 }
 
+
+/**
+ * @brief Sets the primary header using the provided vector of uint8_tdata.
+ *
+ * This function sets the primary header of the packet using vector of 8-bit integers
+ * as the header data.
+ *
+ * @param data The vector of 8-bit integers primary header data.
+ * @return none.
+ */
+void CCSDS::Packet::setPrimaryHeader( const std::vector<uint8_t>& data ) {
+    m_primaryHeader.deserialize( data );
+    m_crcCalculated = false;
+    m_updatedHeader = false;
+}
 /**
  * @brief Sets the primary header using the provided PrimaryHeader object.
  *

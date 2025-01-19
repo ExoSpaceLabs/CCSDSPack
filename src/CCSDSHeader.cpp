@@ -1,8 +1,27 @@
 
 #include "CCSDSHeader.h"
+
+#include <cstring>
+
 #include "CCSDSUtils.h"
 #include <iostream>
 #include <stdexcept>
+#include <algorithm>
+
+
+
+void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
+    // use set data to handle the hard work
+    if (data.size() != 6) {
+        throw std::invalid_argument("Invalid Header Data");
+    }
+    uint64_t headerData = 0;
+    for (int i = 0; i < 6; ++i) {
+        headerData |= static_cast<uint64_t>(data[i]) << (40 - i * 8); // Combine MSB to LSB
+    }
+    setData(headerData);
+}
+
 
 /**
  * @brief Sets the header data from a 64-bit integer representation.
@@ -35,6 +54,10 @@ void CCSDS::Header::setData(const uint64_t data){
     m_sequenceCount = (m_packetSequenceControl & 0x3FFF);             // Last 14 bits.
 }
 
+CCSDS::Header::Header(const std::vector<uint8_t>& data) {
+    deserialize(data);
+}
+
 /**
  * @brief Sets the header data from a `PrimaryHeader` structure.
  *
@@ -56,6 +79,15 @@ void CCSDS::Header::setData(const PrimaryHeader data){
 
     m_packetSequenceControl = (static_cast<uint16_t>(m_sequenceFlags) << 14) | m_sequenceCount;
     m_packetIdentificationAndVersion = (static_cast<uint16_t>(m_versionNumber) << 13) | (m_type << 12) | static_cast<uint16_t>((m_dataFieldHeaderFlag) << 11) | m_APID;
+}
+
+std::vector<uint8_t> CCSDS::Header::serialize() {
+    std::vector<uint8_t> header(6);
+    const auto headerVar = getFullHeader();
+    for (int i = 0; i < 6; ++i) {
+        header[i] = (headerVar >> (40 - i * 8)) & 0xFF; // Extract MSB to LSB
+    }
+    return header;
 }
 
 /**
