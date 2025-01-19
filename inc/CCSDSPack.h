@@ -30,6 +30,7 @@ namespace CCSDS {
         std::vector<uint8_t> getFullDataField()        { return   m_dataField.getFullDataField(); }
         std::vector<uint8_t> getFullPacket();
         std::vector<uint8_t> getCRCVector();
+        bool getDataFieldHeaderFlag()    const { return m_primaryHeader.getDataFieldHeaderFlag(); }
         uint16_t getCRC();
 
         // other

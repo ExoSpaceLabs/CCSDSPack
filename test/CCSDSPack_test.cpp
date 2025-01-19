@@ -171,7 +171,6 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         });
     }
     {
-
         tester->unitTest("PUS-A secondary header assignment. returned data field header size is of correct size of 6 bytes.",[] {
             CCSDS::Packet ccsds;
             //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
@@ -188,13 +187,45 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
              const auto dfh = ccsds.getDataFieldHeader();
              return dfh.size() == pusBHeader.getSize();
         });
+    }
+    {
+        CCSDS::Packet ccsds;
 
-        tester->unitTest("PUS-C secondary header assignment. returned data field header size is of correct size of 8 bytes.",[] {
-             CCSDS::Packet ccsds;
+        tester->unitTest("PUS-C secondary header assignment. returned data field header size is of correct size of 8 bytes.",[&ccsds] {
+
              const CCSDS::PusC pusCHeader(1,2,3,4,5,6);
              ccsds.setDataFieldHeader(pusCHeader);
              const auto dfh = ccsds.getDataFieldHeader();
              return dfh.size() == pusCHeader.getSize();
+        });
+
+        tester->unitTest("Automatic data Length update in Primary header (PUS-C size).",[&ccsds] {
+
+            //ccsds.setPrimaryHeader(0xffffffff);
+            //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+            const auto primaryHeader = ccsds.getPrimaryHeader();
+            return (primaryHeader & 0xFFFF) == 0x8;
+        });
+
+        tester->unitTest("Automatic data Length update in Primary header and Secondary header after data inclusion.",[&ccsds] {
+            constexpr uint8_t data[] = {0x3,0x4,0x5};
+            ccsds.setApplicationData( data,3);
+            const auto primaryHeaderSize = ccsds.getPrimaryHeader() & 0xFFFF;
+            const auto dataFieldHeaderSize = ccsds.getDataFieldHeader()[7];
+
+            return primaryHeaderSize == 0xB && dataFieldHeaderSize == 0x3;
+        });
+
+        tester->unitTest("Automatic data Length check with get full ccsds packet",[&ccsds] {
+            constexpr uint8_t data[] = {0x3,0x4,0x5};
+            ccsds.setApplicationData( data,3);
+            const auto ccsdsPacket = ccsds.getFullPacket();
+            // data sizes:
+            // Primary header 6 bytes (last byte for data field size includes data Field Header):
+            //   Data Field Header 8 bytes (last byte for data field size):
+            //      Application Data 3 byte
+            // CRC 2 Bytes
+            return ccsdsPacket[5] == 0xB && ccsdsPacket[5+8] == 0x3 && ccsdsPacket.size() == 6 + 8 + 3 + 2;
         });
     }
 }

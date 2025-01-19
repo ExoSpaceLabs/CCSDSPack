@@ -29,7 +29,7 @@ void CCSDS::Packet::printDataField() {
 void CCSDS::Packet::updatePrimaryHeader() {
     if (!m_updatedHeader) {
         const auto dataFiledSize = static_cast<uint16_t>( m_dataField.getFullDataField().size());
-        const auto dataFieldHeaderFlag = m_dataField.getDataFieldHeaderFlag();
+        const auto dataFieldHeaderFlag(m_dataField.getDataFieldHeaderFlag());
         m_primaryHeader.setDataLength(dataFiledSize);
         m_primaryHeader.setDataFieldheaderFlag(dataFieldHeaderFlag);
         m_primaryHeader.setSequenceCount(m_sequenceCounter);
@@ -85,7 +85,6 @@ uint64_t CCSDS::Packet::getPrimaryHeader() {
  * @return A vector containing the six bytes of the primary header.
  */
 std::vector<uint8_t> CCSDS::Packet::getPrimaryHeaderVector() {
-    updatePrimaryHeader();
     std::vector<uint8_t> header(6);
     const auto headerVar = getPrimaryHeader();
     for (int i = 0; i < 6; ++i) {

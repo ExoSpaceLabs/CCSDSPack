@@ -48,7 +48,7 @@ set_target_properties(${LIB_VERSIONED} PROPERTIES
 set(TEST_SOURCES "${TEST_DIR}/CCSDSPack_test.cpp")
 
 # Create the test executable target
-add_executable(${TESTER_EXEC} ${TEST_SOURCES} )
+add_executable(${TESTER_EXEC} ${TEST_SOURCES})
 
 # Add include directories to the test target
 target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR})

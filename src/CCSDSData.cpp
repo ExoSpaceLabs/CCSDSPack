@@ -16,13 +16,15 @@
  * @return A vector containing the full data field (header + application data).
  */
 std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
-    if (m_dataFieldHeader.size() + m_applicationData.size() > m_dataPacketSize) { // check if given header exeeds header size.
-        std::cout << "[ CCSDS Data ] Provided data: " << m_dataFieldHeader.size() + m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
+
+    const auto& dataFieldHeader = getDataFieldHeader();
+    if (dataFieldHeader.size() + m_applicationData.size() > m_dataPacketSize) { // check if given header exeeds header size.
+        std::cout << "[ CCSDS Data ] Provided data: " << dataFieldHeader.size() + m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
         throw std::invalid_argument("[ CCSDS Data ] Error: Data field exceeds expected size.");
     }
     std::vector<uint8_t> fullData{};
-    if(!m_dataFieldHeader.empty()) {
-        fullData.insert(fullData.end(),m_dataFieldHeader.begin(),m_dataFieldHeader.end());
+    if(!dataFieldHeader.empty()) {
+        fullData.insert(fullData.end(),dataFieldHeader.begin(),dataFieldHeader.end());
     }
     fullData.insert(fullData.end(),m_applicationData.begin(),m_applicationData.end());
     return fullData;
@@ -38,13 +40,14 @@ std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
  */
 void CCSDS::DataField::printData() {
 
-    const uint16_t maxSize = (m_applicationData.size() > m_dataFieldHeader.size()) ? m_applicationData.size() : m_dataFieldHeader.size();
+    const auto dataFieldHeader = getDataFieldHeader();
+    const uint16_t maxSize = (m_applicationData.size() > dataFieldHeader.size()) ? m_applicationData.size() : dataFieldHeader.size();
 
     std::cout << std::endl;
     std::cout << " [CCSDS DATA] Test result:" << std::endl;
-    std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << ((!m_dataFieldHeader.empty() ) ? "True" : "False") << " ]" << std::endl;
-    std::cout << " [CCSDS DATA] Secondary Header         [Hex] : [ " << getBitsSpaces((maxSize - static_cast<uint16_t>(m_dataFieldHeader.size()))*4) ;
-    for(const auto& data : m_dataFieldHeader) {
+    std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << (getDataFieldHeaderFlag()  ? "True" : "False") << " ]" << std::endl;
+    std::cout << " [CCSDS DATA] Secondary Header         [Hex] : [ " << getBitsSpaces((maxSize - static_cast<uint16_t>(dataFieldHeader.size()))*4) ;
+    for(const auto& data : dataFieldHeader) {
         std::cout << "0x" << std::hex << static_cast<unsigned int>(data) << " ";
     }
 
@@ -55,6 +58,15 @@ void CCSDS::DataField::printData() {
     }
     std::cout <<"]" <<  std::endl;
     std::cout << std::endl;
+}
+
+void CCSDS::DataField::updateDataFieldHeader() {
+    if (!m_dataFieldHeaderUpdated) {
+        if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
+            m_pusHeaderData->setDataLength(m_applicationData.size());;
+        }
+        m_dataFieldHeaderUpdated = true;
+    }
 }
 
 /**
@@ -71,21 +83,30 @@ void CCSDS::DataField::printData() {
  * @return none.
  */
 void CCSDS::DataField::setApplicationData(const uint8_t * pData, const size_t sizeData) {
+    const auto& dataFieldHeader = getDataFieldHeader();
     if (!pData) {
         throw std::invalid_argument("[ CCSDS Data ] Error: Data is nullptr");
     }
     if (sizeData < 1) {
         throw std::invalid_argument("[ CCSDS Data ] Error: Data size cannot be < 1");
     }
-    if (sizeData > m_dataPacketSize - m_dataFieldHeader.size()) {
-        std::cout << "[ CCSDS Data ] Header size: " << m_dataFieldHeader.size() <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
+    if (sizeData > m_dataPacketSize - dataFieldHeader.size()) {
+        std::cout << "[ CCSDS Data ] Header size: " << dataFieldHeader.size() <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
         throw std::invalid_argument("[ CCSDS Data ] Error: Data field exceeds expected size.");
     }
     if (!m_applicationData.empty()) {
         std::cerr << "[ CCSDS Data ] Warning: Data field is not empty, it has been overwritten." << std::endl;
     }
     m_applicationData.assign(pData, pData + sizeData);
+    updateDataFieldHeader();
 }
+
+
+void CCSDS::DataField::setApplicationData(const std::vector<uint8_t>& applicationData ) {
+    m_applicationData = applicationData;
+    updateDataFieldHeader();
+}
+
 
 /**
  * @brief Sets the secondary header for the data field.
@@ -114,6 +135,7 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData,  const size_t s
     if (!m_dataFieldHeader.empty()) {
         std::cerr <<  "[ CCSDS Data ] Warning: Secondary Header field is not empty, it has been overwritten." << std::endl;
     }
+    m_dataFieldHeaderType = OTHER;
     m_dataFieldHeader.assign(pData, pData + sizeData);
 }
 
@@ -121,17 +143,21 @@ void CCSDS::DataField::setDataFieldHeader(const PusA& header ) {
     //Todo
     m_dataFieldHeaderType = PUS_A;
     m_pusHeaderData = std::make_shared<PusA>(header);
-    m_dataFieldHeader = m_pusHeaderData->getData();
 }
 void CCSDS::DataField::setDataFieldHeader(const PusB& header ) {
     //Todo
     m_dataFieldHeaderType = PUS_B;
     m_pusHeaderData = std::make_shared<PusB>(header);
-    m_dataFieldHeader = m_pusHeaderData->getData();
 }
 void CCSDS::DataField::setDataFieldHeader(const PusC& header ) {
     //Todo
     m_dataFieldHeaderType = PUS_C;
     m_pusHeaderData = std::make_shared<PusC>(header);
-    m_dataFieldHeader = m_pusHeaderData->getData();
+}
+
+std::vector<uint8_t> CCSDS::DataField::getDataFieldHeader() {
+    if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
+        return m_pusHeaderData->getData();;
+    }
+    return m_dataFieldHeader;
 }

@@ -46,7 +46,8 @@ namespace CCSDS {
         uint8_t                    getSourceID()        const  { return       m_sourceID; }
         uint16_t                   getDataLength()      const override { return     m_dataLength; }
         uint8_t                    getSize()            const override { return           m_size; }
-        std::vector<uint8_t>       getData()            const override;
+
+        std::vector<uint8_t> getData() const override;
 
     private:                                // Field	            Size (bits)	Description
         uint8_t         m_version{};        // Version	            3	        Version of the PUS standard
@@ -74,7 +75,8 @@ namespace CCSDS {
         uint8_t                    getEventID()         const          { return         m_eventID; }
         uint16_t                   getDataLength()      const override { return      m_dataLength; }
         uint8_t                    getSize()            const override { return            m_size; }
-        std::vector<uint8_t>       getData()            const override;
+
+        std::vector<uint8_t> getData() const override;
 
     private:                                 // Field	            Size (bits)	Description
         uint8_t          m_version{};        // Version	            3	        Version of the PUS standard
@@ -103,7 +105,8 @@ namespace CCSDS {
         uint16_t                   getTimeCode()        const          { return                    m_timeCode; }
         uint16_t                   getDataLength()      const override { return                  m_dataLength; }
         uint8_t                    getSize()            const override { return                        m_size; }
-        std::vector<uint8_t>       getData()            const override;
+
+        std::vector<uint8_t> getData() const override;
 
     private:                            // Field	            Size (bits)	Description
         uint8_t        m_version{};     // Version	            3	        Version of the PUS standard
