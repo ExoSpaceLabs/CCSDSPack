@@ -60,6 +60,14 @@ void CCSDS::DataField::printData() {
     std::cout << std::endl;
 }
 
+/**
+ * @brief Updates the data field header based on the current application data size.
+ *
+ * Updates the length field in the secondary header to match the size of the
+ * application data. Ensures the header reflects the most recent data state.
+ *
+ * @return None.
+ */
 void CCSDS::DataField::updateDataFieldHeader() {
     if (!m_dataFieldHeaderUpdated) {
         if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
@@ -101,7 +109,15 @@ void CCSDS::DataField::setApplicationData(const uint8_t * pData, const size_t si
     updateDataFieldHeader();
 }
 
-
+/**
+ * @brief Sets the application data using a vector of bytes.
+ *
+ * Replaces the current application data with the given vector and updates the header.
+ *
+ * @param applicationData A vector containing the application data bytes.
+ *
+ * @return None.
+ */
 void CCSDS::DataField::setApplicationData(const std::vector<uint8_t>& applicationData ) {
     m_applicationData = applicationData;
     updateDataFieldHeader();
@@ -139,22 +155,47 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData,  const size_t s
     m_dataFieldHeader.assign(pData, pData + sizeData);
 }
 
+/**
+ * @brief Sets the secondary header for the data field using a PUS-A header.
+ *
+ * @param header A PusA object containing the header data.
+ * @return None.
+ */
 void CCSDS::DataField::setDataFieldHeader(const PusA& header ) {
-    //Todo
     m_dataFieldHeaderType = PUS_A;
     m_pusHeaderData = std::make_shared<PusA>(header);
 }
+
+/**
+ * @brief Sets the secondary header for the data field using a PUS-B header.
+ *
+ * @param header A PusB object containing the header data.
+ * @return None.
+ */
 void CCSDS::DataField::setDataFieldHeader(const PusB& header ) {
-    //Todo
     m_dataFieldHeaderType = PUS_B;
     m_pusHeaderData = std::make_shared<PusB>(header);
 }
+
+/**
+ * @brief Sets the secondary header for the data field using a PUS-C header.
+ *
+ * @param header A PusC object containing the header data.
+ * @return None.
+ */
 void CCSDS::DataField::setDataFieldHeader(const PusC& header ) {
-    //Todo
     m_dataFieldHeaderType = PUS_C;
     m_pusHeaderData = std::make_shared<PusC>(header);
 }
 
+/**
+ * @brief Retrieves the secondary header data as a vector of bytes.
+ *
+ * If the header type is not OTHER or NA, retrieves the data from the
+ * corresponding PUS header object.
+ *
+ * @return A vector containing the header data bytes.
+ */
 std::vector<uint8_t> CCSDS::DataField::getDataFieldHeader() {
     if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
         return m_pusHeaderData->getData();;

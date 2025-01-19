@@ -217,8 +217,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         });
 
         tester->unitTest("Automatic data Length check with get full ccsds packet",[&ccsds] {
-            constexpr uint8_t data[] = {0x3,0x4,0x5};
-            ccsds.setApplicationData( data,3);
+
             const auto ccsdsPacket = ccsds.getFullPacket();
             // data sizes:
             // Primary header 6 bytes (last byte for data field size includes data Field Header):

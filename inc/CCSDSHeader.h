@@ -3,24 +3,6 @@
 
 #include <cstdint>
 
-/**
-* PrimaryHeader Structure
-*
-* parameters:
-* uint8_t versionNumber_value,       // 3 bit
-* uint8_t type_value,                // 1 bit
-* uint8_t dataFieldHeaderFlag_value, // 1 bit
-* uint16_t APID_value,               // 11 bit
-* #uint8_t sequenceFlag_value,       // 2 bit
-* uint16_t sequenceCount_value,      // 14 bit
-* uint16_t dataLength_value          // 16 bit
-*
-*/
-
-/**
- * @namespace CCSDS
- * @brief Contains definitions and classes for handling CCSDS headers.
- */
 namespace CCSDS {
     /**
      * @struct PrimaryHeader
@@ -64,12 +46,13 @@ namespace CCSDS {
          * @param sequenceCount_value 14-bit sequence count.
          * @param dataLength_value 16-bit data length.
          */
-        PrimaryHeader(uint8_t versionNumber_value, uint8_t type_value, uint8_t dataFieldHeaderFlag_value, uint16_t APID_value,
-                     uint8_t sequenceFlag_value, uint16_t sequenceCount_value,  uint16_t dataLength_value) :
+        PrimaryHeader(const uint8_t versionNumber_value, const uint8_t type_value, const uint8_t dataFieldHeaderFlag_value,
+            const uint16_t APID_value, const uint8_t sequenceFlag_value, const uint16_t sequenceCount_value,
+            const uint16_t dataLength_value) :
 
-                      versionNumber(versionNumber_value), type(type_value),  dataFieldHeaderFlag(dataFieldHeaderFlag_value),
-                      APID(APID_value), sequenceFlags(sequenceFlag_value), sequenceCount(sequenceCount_value),
-                      dataLength(dataLength_value) {}
+            versionNumber(versionNumber_value), type(type_value),  dataFieldHeaderFlag(dataFieldHeaderFlag_value),
+            APID(APID_value), sequenceFlags(sequenceFlag_value), sequenceCount(sequenceCount_value),
+            dataLength(dataLength_value) {}
     };
     /**
      * @class Header
@@ -111,7 +94,7 @@ namespace CCSDS {
         // setters
         void setVersionNumber(const uint8_t value)        { m_versionNumber       = value & 0x0007; }
         void setType(const uint8_t value)                 { m_type                = value & 0x0001; }
-        void setDataFieldheaderFlag(const uint8_t value)  { m_dataFieldHeaderFlag = value & 0x0001; }
+        void setDataFieldHeaderFlag(const uint8_t value)  { m_dataFieldHeaderFlag = value & 0x0001; }
         void setAPID(const uint16_t value)                { m_APID                = value & 0x07FF; }
         void setSequenceFlags(const uint8_t value)        { m_sequenceFlags       = value & 0x0003; }
         void setSequenceCount(const uint16_t value)       { m_sequenceCount       = value & 0x3FFF; }

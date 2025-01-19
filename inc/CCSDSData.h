@@ -7,7 +7,22 @@
 #include "PUSService.h"
 
 
+
 namespace CCSDS{
+
+    /**
+     * @brief Represents the data field of a CCSDS packet.
+     *
+     * This class encapsulates the structure and operations for handling the data field
+     * of a CCSDS (Consultative Committee for Space Data Systems) packet. It allows for
+     * setting and retrieving application data, data field headers, and calculating
+     * the full data field. Additionally, it provides methods for managing the data field's
+     * size and printing its content.
+     *
+     * The data field consists of headers and application data, and the class supports
+     * different header types (PusA, PusB, PusC). It also allows setting and getting
+     * the data packet size, as well as managing the data field header flag.
+     */
     class DataField {
     public:
         DataField() = default;
@@ -24,11 +39,6 @@ namespace CCSDS{
         void setDataFieldHeader(          const std::vector<uint8_t>& dataFieldHeader ) { m_dataFieldHeader = dataFieldHeader; } // type has to be set to other
 
         void setDataPacketSize(                         const uint16_t value ) {  m_dataPacketSize =           value; }
-
-        // template<typename PusType, typename... Args>
-        // void setDataFieldHeader(Args&&... args) {
-        //     m_pusHeaderData = std::make_shared<PusType>(std::forward<Args>(args)...);
-        // }
 
         std::vector<uint8_t> getDataFieldHeader();
         std::vector<uint8_t> getApplicationData() {return m_applicationData; }

@@ -6,7 +6,29 @@
 #include "CCSDSHeader.h"
 #include "CCSDSData.h"
 
+/**
+ * @namespace CCSDS
+ * @brief Contains definitions and classes for handling CCSDS headers.
+ */
 namespace CCSDS {
+
+    /**
+     * @brief Represents a CCSDS (Consultative Committee for Space Data Systems) packet.
+     *
+     * This class provides functionality to construct and manage a CCSDS packet, which
+     * includes both the primary header and the data field. It allows setting and getting
+     * the primary header, data field headers (PusA, PusB, PusC), and application data.
+     * The packet also includes a CRC-16 checksum for error detection.
+     *
+     * The class provides methods for managing the packet's data structure, including
+     * printing the headers and data field, calculating the CRC-16, and combining the
+     * primary header, data field, and CRC into a complete packet. The header is updated
+     * automatically when necessary, and it provides both raw and vector representations
+     * of the data for further use or transmission.
+     *
+     * The `Packet` class also handles the internal state for CRC calculation and header
+     * updates to ensure data consistency.
+     */
     class Packet {
     public:
         Packet() = default;

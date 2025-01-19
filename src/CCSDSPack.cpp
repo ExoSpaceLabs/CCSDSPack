@@ -31,7 +31,7 @@ void CCSDS::Packet::updatePrimaryHeader() {
         const auto dataFiledSize = static_cast<uint16_t>( m_dataField.getFullDataField().size());
         const auto dataFieldHeaderFlag(m_dataField.getDataFieldHeaderFlag());
         m_primaryHeader.setDataLength(dataFiledSize);
-        m_primaryHeader.setDataFieldheaderFlag(dataFieldHeaderFlag);
+        m_primaryHeader.setDataFieldHeaderFlag(dataFieldHeaderFlag);
         m_primaryHeader.setSequenceCount(m_sequenceCounter);
         m_updatedHeader = true;
     }
@@ -70,6 +70,15 @@ std::vector<uint8_t> CCSDS::Packet::getCRCVector() {
     return crc;
 }
 
+/**
+ * @brief Retrieves the primary header of the packet.
+ *
+ * This function ensures that the primary header is updated by calling the
+ * `updatePrimaryHeader()` function, and then returns the full 48-bit primary
+ * header as a 64-bit integer.
+ *
+ * @return The 64-bit primary header of the packet.
+ */
 uint64_t CCSDS::Packet::getPrimaryHeader() {
     updatePrimaryHeader();
     return  m_primaryHeader.getFullHeader();
@@ -119,46 +128,137 @@ std::vector<uint8_t> CCSDS::Packet::getFullPacket() {
     return packet;
 }
 
+/**
+ * @brief Sets the primary header using the provided 64-bit data.
+ *
+ * This function sets the primary header of the packet using a 64-bit integer
+ * as the header data.
+ *
+ * @param data The 64-bit primary header data.
+ * @return none.
+ */
 void CCSDS::Packet::setPrimaryHeader( const uint64_t data ) {
     m_primaryHeader.setData( data );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the primary header using the provided PrimaryHeader object.
+ *
+ * This function sets the primary header of the packet using a `PrimaryHeader`
+ * object as the header data.
+ *
+ * @param data The `PrimaryHeader` object containing the header data.
+ * @return none.
+ */
 void CCSDS::Packet::setPrimaryHeader( const PrimaryHeader data ) {
     m_primaryHeader.setData( data );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the data field header using the provided PusA header.
+ *
+ * This function sets the data field header of the packet using a `PusA`
+ * header object.
+ *
+ * @param header The `PusA` header object.
+ * @return none.
+ */
 void CCSDS::Packet::setDataFieldHeader(const PusA& header ) {
     m_dataField.setDataFieldHeader( header );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the data field header using the provided PusB header.
+ *
+ * This function sets the data field header of the packet using a `PusB`
+ * header object.
+ *
+ * @param header The `PusB` header object.
+ * @return none.
+ */
 void CCSDS::Packet::setDataFieldHeader(const PusB& header ) {
     m_dataField.setDataFieldHeader( header );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the data field header using the provided PusC header.
+ *
+ * This function sets the data field header of the packet using a `PusC`
+ * header object.
+ *
+ * @param header The `PusC` header object.
+ * @return none.
+ */
 void CCSDS::Packet::setDataFieldHeader(const PusC& header ) {
     m_dataField.setDataFieldHeader( header );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the data field header using the provided vector of bytes.
+ *
+ * This function sets the data field header of the packet using a vector
+ * of bytes.
+ *
+ * @param data The vector containing the header bytes.
+ * @return none.
+ */
 void CCSDS::Packet::setDataFieldHeader( const std::vector<uint8_t>& data ) {
     m_dataField.setDataFieldHeader( data );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the data field header using the provided pointer and size.
+ *
+ * This function sets the data field header of the packet using a pointer
+ * to the header data and its size.
+ *
+ * @param pData A pointer to the header data.
+ * @param sizeData The size of the header data.
+ * @return none.
+ */
 void CCSDS::Packet::setDataFieldHeader( const uint8_t* pData, const size_t sizeData ) {
     m_dataField.setDataFieldHeader( pData,sizeData );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the application data for the packet.
+ *
+ * This function sets the application data in the data field of the packet
+ * using a vector of bytes.
+ *
+ * @param data The vector containing the application data.
+ * @return none.
+ */
 void CCSDS::Packet::setApplicationData( const std::vector<uint8_t>& data ) {
     m_dataField.setApplicationData( data );
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+/**
+ * @brief Sets the application data for the packet.
+ *
+ * This function sets the application data in the data field of the packet
+ * using a pointer to the data and its size.
+ *
+ * @param pData A pointer to the application data.
+ * @param sizeData The size of the application data.
+ * @return none.
+ */
 void CCSDS::Packet::setApplicationData( const uint8_t* pData, const size_t sizeData ) {
     m_dataField.setApplicationData( pData,sizeData );
     m_crcCalculated = false;
