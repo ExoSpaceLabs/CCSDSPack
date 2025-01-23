@@ -67,6 +67,7 @@ namespace CCSDS {
      */
     class PusA final : public PusHeader {
     public:
+        PusA() = default;
         /**
          * @brief Constructs a PusA object with all fields explicitly set.
          * @param version PUS version (3 bits).
@@ -83,7 +84,7 @@ namespace CCSDS {
          * @param data Vector containing the serialized PUS-A header 6 elements.
          * @throws std::invalid_argument if the data size is invalid or parsing fails.
          */
-        explicit PusA(std::vector<uint8_t> data);
+        explicit PusA(std::vector<uint8_t> data); //Todo Implementation
 
         void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
 
@@ -122,6 +123,7 @@ namespace CCSDS {
      */
     class PusB final : public PusHeader {
     public:
+        PusB() = default;
 
         /**
          * @brief Constructs a PusB object with all fields explicitly set.
@@ -140,7 +142,7 @@ namespace CCSDS {
          * @param data Vector containing the serialized PUS-B header 7 elements.
          * @throws std::invalid_argument if the data size is invalid or parsing fails.
          */
-        explicit PusB(std::vector<uint8_t> data);
+        explicit PusB(std::vector<uint8_t> data); //Todo Implementation
 
         void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
 
@@ -181,6 +183,7 @@ namespace CCSDS {
      */
     class PusC final : public PusHeader {
     public:
+        PusC() = default;
         /**
          * @brief Constructs a PusC object with all fields explicitly set.
          * @param version PUS version (3 bits).
@@ -198,7 +201,7 @@ namespace CCSDS {
          * @param data Vector containing the serialized PUS-C header 8 elements.
          * @throws std::invalid_argument if the data size is invalid or parsing fails.
          */
-        explicit PusC(std::vector<uint8_t> data);
+        explicit PusC(std::vector<uint8_t> data); //Todo Implementation
 
         void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
 

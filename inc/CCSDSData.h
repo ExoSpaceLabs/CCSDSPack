@@ -29,16 +29,16 @@ namespace CCSDS{
 
         ~DataField() = default;
 
-        void setApplicationData(          const std::vector<uint8_t>& applicationData );
-        void setApplicationData(                const uint8_t* pData, size_t sizeData );
-        void setDataFieldHeader(                const uint8_t* pData, size_t sizeData );
-        void setDataFieldHeader( const uint8_t* pData, size_t sizeData, PUSType pType );
-        void setDataFieldHeader(                                   const PusA& header );
-        void setDataFieldHeader(                                   const PusB& header );
-        void setDataFieldHeader(                                   const PusC& header );
-        void setDataFieldHeader(          const std::vector<uint8_t>& dataFieldHeader ) { m_dataFieldHeader = dataFieldHeader; } // type has to be set to other
+        void setApplicationData(                const std::vector<uint8_t>& applicationData );
+        void setApplicationData(               const uint8_t* pData, const size_t &sizeData );
+        void setDataFieldHeader(               const uint8_t* pData, const size_t &sizeData );
+        void setDataFieldHeader(const uint8_t* pData, const size_t &sizeData, const PUSType &pType);
+        void setDataFieldHeader(                                         const PusA& header );
+        void setDataFieldHeader(                                         const PusB& header );
+        void setDataFieldHeader(                                         const PusC& header );
+        void setDataFieldHeader(                const std::vector<uint8_t>& dataFieldHeader ) { m_dataFieldHeader = dataFieldHeader; } // type has to be set to other
 
-        void setDataPacketSize(                         const uint16_t value ) {  m_dataPacketSize =           value; }
+        void setDataPacketSize(                                  const uint16_t &value) {  m_dataPacketSize =           value; }
 
         std::vector<uint8_t> getDataFieldHeader();
         std::vector<uint8_t> getApplicationData() {return m_applicationData; }

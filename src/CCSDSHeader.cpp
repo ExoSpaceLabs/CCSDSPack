@@ -7,7 +7,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <algorithm>
-
+#include <iomanip>
 
 
 void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
@@ -33,11 +33,10 @@ void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
  * @throws std::invalid_argument If the input data exceeds the valid bit range for the header.
  * @return none.
  */
-void CCSDS::Header::setData(const uint64_t data){
+void CCSDS::Header::setData(const uint64_t &data){
     if (data > 0xFFFFFFFFFFFF) { // check if given header exeeds header size.
         throw std::invalid_argument("[ CCSDS Header ] Error: Input data exceeds expected bit size for version or size.");
     }
-
     // Decompose data using mask and
     m_dataLength                     = (data & 0xFFFF);               // last 16 bits
     m_packetSequenceControl          = (data >> 16) & 0xFFFF;         // middle 16 bits
@@ -52,10 +51,28 @@ void CCSDS::Header::setData(const uint64_t data){
     // decompose sequence control
     m_sequenceFlags = (m_packetSequenceControl >> 14);                // first 2 bits
     m_sequenceCount = (m_packetSequenceControl & 0x3FFF);             // Last 14 bits.
+
 }
 
 CCSDS::Header::Header(const std::vector<uint8_t>& data) {
     deserialize(data);
+}
+
+
+std::vector<uint8_t> CCSDS::Header::serialize()  {
+
+    m_packetSequenceControl = (static_cast<uint16_t>(m_sequenceFlags) << 14) | m_sequenceCount;
+    m_packetIdentificationAndVersion = (static_cast<uint16_t>(m_versionNumber) << 13) | (m_type << 12) | static_cast<uint16_t>((m_dataFieldHeaderFlag) << 11) | m_APID;
+
+    std::vector<uint8_t> data{
+        static_cast<unsigned char>(m_packetIdentificationAndVersion >> 8),
+        static_cast<unsigned char>(m_packetIdentificationAndVersion & 0xFF),
+        static_cast<unsigned char>(m_packetSequenceControl >> 8),
+        static_cast<unsigned char>(m_packetSequenceControl & 0xFF),
+        static_cast<unsigned char>(m_dataLength >> 8),
+        static_cast<unsigned char>(m_dataLength & 0xFF),
+    };
+    return data;
 }
 
 /**
@@ -67,7 +84,7 @@ CCSDS::Header::Header(const std::vector<uint8_t>& data) {
  * @param data A `PrimaryHeader` structure containing the header data.
  * @return none.
  */
-void CCSDS::Header::setData(const PrimaryHeader data){
+void CCSDS::Header::setData(const PrimaryHeader &data){
 
     m_versionNumber       =       data.versionNumber & 0x0007;
     m_type                =                data.type & 0x0001;
@@ -81,14 +98,6 @@ void CCSDS::Header::setData(const PrimaryHeader data){
     m_packetIdentificationAndVersion = (static_cast<uint16_t>(m_versionNumber) << 13) | (m_type << 12) | static_cast<uint16_t>((m_dataFieldHeaderFlag) << 11) | m_APID;
 }
 
-std::vector<uint8_t> CCSDS::Header::serialize() {
-    std::vector<uint8_t> header(6);
-    const auto headerVar = getFullHeader();
-    for (int i = 0; i < 6; ++i) {
-        header[i] = (headerVar >> (40 - i * 8)) & 0xFF; // Extract MSB to LSB
-    }
-    return header;
-}
 
 /**
  * @brief Prints the header fields and their binary or hexadecimal representations.

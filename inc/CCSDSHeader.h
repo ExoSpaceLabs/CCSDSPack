@@ -67,7 +67,7 @@ namespace CCSDS {
         * @brief Constructs a Header from a 64-bit data representation.
         * @param data The 64-bit integer representing the header fields.
         */
-        explicit Header(const uint64_t data)     { setData(data);                }
+        explicit Header(const uint64_t& data)     { setData(data);                }
 
         /**
         * @brief Constructs a Header from a vector of uint8_t data representation.
@@ -84,6 +84,8 @@ namespace CCSDS {
         uint16_t getSequenceCount() const        { return m_sequenceCount;       }
         uint16_t getDataLength() const           { return m_dataLength;          }
 
+        std::vector<uint8_t>serialize();
+
         /**
          * @brief Computes and retrieves the full header as a 64-bit value.
          *
@@ -99,23 +101,21 @@ namespace CCSDS {
 
 
         // setters
-        void setVersionNumber(const uint8_t value)        { m_versionNumber       = value & 0x0007; }
-        void setType(const uint8_t value)                 { m_type                = value & 0x0001; }
-        void setDataFieldHeaderFlag(const uint8_t value)  { m_dataFieldHeaderFlag = value & 0x0001; }
-        void setAPID(const uint16_t value)                { m_APID                = value & 0x07FF; }
-        void setSequenceFlags(const uint8_t value)        { m_sequenceFlags       = value & 0x0003; }
-        void setSequenceCount(const uint16_t value)       { m_sequenceCount       = value & 0x3FFF; }
-        void setDataLength(const uint16_t value)          { m_dataLength          = value;          }
+        void setVersionNumber(const uint8_t &value)        { m_versionNumber       = value & 0x0007; }
+        void setType(const uint8_t &value)                 { m_type                = value & 0x0001; }
+        void setDataFieldHeaderFlag(const uint8_t &value)  { m_dataFieldHeaderFlag = value & 0x0001; }
+        void setAPID(const uint16_t &value)                { m_APID                = value & 0x07FF; }
+        void setSequenceFlags(const uint8_t &value)        { m_sequenceFlags       = value & 0x0003; }
+        void setSequenceCount(const uint16_t &value)       { m_sequenceCount       = value & 0x3FFF; }
+        void setDataLength(const uint16_t &value)          { m_dataLength          = value;          }
 
 
         // Full data setter
-        void setData(uint64_t data);
+        void setData(const uint64_t &data);
 
         // Full data setter
-        void setData(PrimaryHeader data);
+        void setData(const PrimaryHeader &data);
         void deserialize(const std::vector<uint8_t>& data );
-        std::vector<uint8_t> serialize();
-
         // print out the header
         void printHeader();
 
