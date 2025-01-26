@@ -327,3 +327,17 @@ void CCSDS::Packet::setApplicationData( const uint8_t* pData, const size_t sizeD
  * @param flags The sequence flag to be set, represented by the ESequenceFlag enum : uint8_t.
  */
 void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags)  { m_primaryHeader.setSequenceFlags(flags);}
+
+
+/**
+ * @brief Sets the maximum data packet size for the CCSDS DataField.
+ *
+ * This method updates the maximum allowed size for the data packet.
+ * The data packet size is used to validate that the combined size of
+ * the header and application data does not exceed this limit.
+ *
+ * @param size The maximum size of the data packet, in bytes.
+ */
+void CCSDS::Packet::setDataFieldSize(const uint16_t size) {
+    m_dataField.setDataPacketSize(size);
+}

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "CCSDSPacket.h"
+#include "CCSDSManager.h"
 #include "CCSDSUtils.h"
 
 void testGroupBasic(TestManager *tester, const std::string& description) {
@@ -302,7 +302,18 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
     }
 }
 
+void testGroupManagement(TestManager *tester, const std::string& description) {
+    std::cout << "\n  testGroupManagement: " << description <<  std::endl;
 
+
+    tester->unitTest("Create an instance of management and set packet template.",[] {
+        const CCSDS::Packet packet{};
+        CCSDS::Manager manager(packet);
+        manager.setDatFieldSize(4096);
+
+        return true;
+    });
+}
 int main() {
 
     // use this to test some functionality
@@ -317,6 +328,7 @@ int main() {
 
     // groups of tests to perform.
     testGroupBasic(&tester, "Basic CCSDS Packet feature tests.");
+    testGroupManagement(&tester, "management of CCSDS packet tests.");
 
     return tester.Result();
 }

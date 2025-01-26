@@ -38,6 +38,7 @@ namespace CCSDS{
         void setDataFieldHeader(                                                 const PusA& header );
         void setDataFieldHeader(                                                 const PusB& header );
         void setDataFieldHeader(                                                 const PusC& header );
+
         void setDataPacketSize(                                               const uint16_t &value );
 
         std::vector<uint8_t> getDataFieldHeader();

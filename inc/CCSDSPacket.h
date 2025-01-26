@@ -47,7 +47,9 @@ namespace CCSDS {
         void setDataFieldHeader(               const uint8_t* pData, size_t sizeData );
         void setApplicationData(                    const std::vector<uint8_t>& data );
         void setApplicationData(               const uint8_t* pData, size_t sizeData );
+
         void setSequenceFlags(                                   ESequenceFlag flags );
+        void setDataFieldSize(                                         uint16_t size );
 
         // getters
         uint64_t getPrimaryHeader64bit();
