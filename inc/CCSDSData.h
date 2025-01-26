@@ -33,10 +33,11 @@ namespace CCSDS{
         void setApplicationData(               const uint8_t* pData, const size_t &sizeData );
         void setDataFieldHeader(               const uint8_t* pData, const size_t &sizeData );
         void setDataFieldHeader(const uint8_t* pData, const size_t &sizeData, const PUSType &pType);
+        void setDataFieldHeader(           const std::vector<uint8_t>&, const PUSType &pType);
+        void setDataFieldHeader(                const std::vector<uint8_t>& dataFieldHeader );
         void setDataFieldHeader(                                         const PusA& header );
         void setDataFieldHeader(                                         const PusB& header );
         void setDataFieldHeader(                                         const PusC& header );
-        void setDataFieldHeader(                const std::vector<uint8_t>& dataFieldHeader ) { m_dataFieldHeader = dataFieldHeader; } // type has to be set to other
 
         void setDataPacketSize(                                  const uint16_t &value) {  m_dataPacketSize =           value; }
 

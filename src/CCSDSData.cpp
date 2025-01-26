@@ -151,8 +151,8 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
     if (!m_dataFieldHeader.empty()) {
         std::cerr <<  "[ CCSDS Data ] Warning: Secondary Header field is not empty, it has been overwritten." << std::endl;
     }
-    m_dataFieldHeaderType = OTHER;
     m_dataFieldHeader.assign(pData, pData + sizeData);
+    m_dataFieldHeaderType = OTHER;
 }
 
 /**
@@ -170,61 +170,68 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
  * @return none.
  */
 void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &sizeData, const PUSType &pType) {
-    //Todo needs to be moved to a sub function e.g. setDataFieldHeader(std::vedtor<uint_8>, PUSType), and call that here.
     if (!pData) {
         throw std::invalid_argument("[ CCSDS Data ] Error: Header is nullptr");
     }
     if (!m_dataFieldHeader.empty()) {
         std::cerr <<  "[ CCSDS Data ] Warning: Secondary Header field is not empty, it has been overwritten." << std::endl;
+        m_dataFieldHeader.clear();
+    }
+    if (pType != OTHER && pType != NA) {
+        std::vector<uint8_t> data;
+        data.assign(pData, pData + sizeData);
+        setDataFieldHeader(data,pType);
+    }else if (pType == OTHER) {
+        setDataFieldHeader(pData, sizeData);
+        m_dataFieldHeaderType = pType;
+    }else {
+        throw std::invalid_argument("[ CCSDS Data ] Error: Header type is NA (NOT APPLICABLE)");
+    }
+}
+
+void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , const PUSType &pType) {
+    m_dataFieldHeaderType = pType;
+    if (m_dataPacketSize < data.size() + m_applicationData.size()) {
+        std::cerr << "[ PUS ] Header size: " << data.size() <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
+        throw std::invalid_argument("[ PUS ] Error: Header inclusion exceeds max allowed size.");
     }
     switch (pType) {
         case PUS_A:
-            if (sizeData == 6) {
-                if (sizeData > 6 - m_applicationData.size()) {
-                    std::cout << "[ CCSDS Data ] Header size: " << 6 <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
-                    throw std::invalid_argument("[ CCSDS Data ] Error: Header field exceeds expected size.");
-                }
-                std::vector<uint8_t> data;
-                data.assign(pData, pData + sizeData);
-                //Todo Implementation
-                //m_pusHeaderData = std::make_unique<PusA>(data);
+            if (data.size() == 6) {
+                m_pusHeaderData = std::make_unique<PusA>(data);
             }else {
-                //Todo Deal With Error
+                throw std::invalid_argument("[ PUS ] Error: PUS-A Header field exceeds expected size.");
             }
+        break;
         case PUS_B:
-            if (sizeData == 7) {
-                if (sizeData > 7 - m_applicationData.size()) {
-                    std::cout << "[ CCSDS Data ] Header size: " << 7 <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
-                    throw std::invalid_argument("[ CCSDS Data ] Error: Header field exceeds expected size.");
-                }
-                std::vector<uint8_t> data;
-                data.assign(pData, pData + sizeData);
-                //Todo Implementation
-                //m_pusHeaderData = std::make_unique<PusB>();
+            if (data.size()  == 8) {
+                m_pusHeaderData = std::make_unique<PusB>(data);
             }else {
-                //Todo Deal With Error
+                throw std::invalid_argument("[ PUS ] Error: PUS-B Header field exceeds expected size.");
             }
+        break;
         case PUS_C:
-            if (sizeData == 8) {
-                if (sizeData > 8 - m_applicationData.size()) {
-                    std::cout << "[ CCSDS Data ] Header size: " << 8 <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
-                    throw std::invalid_argument("[ CCSDS Data ] Error: Header field exceeds expected size.");
-                }
-                std::vector<uint8_t> data;
-                data.assign(pData, pData + sizeData);
-                //Todo Implementation
-                //m_pusHeaderData = std::make_unique<PusC>();
+            if (data.size()  == 8) {
+                m_pusHeaderData = std::make_unique<PusC>(data);
             }else {
-                //Todo Deal With Error
+                throw std::invalid_argument("[ PUS ] Error: PUS-C Header field exceeds expected size.");
             }
+        break;
         case OTHER:
-            setDataFieldHeader(pData, sizeData);
-            return;
-        case NA:
-            return;
+            setDataFieldHeader(data);
+            break;
         default: ;
     }
-    m_dataFieldHeader.clear();
+}
+
+
+void CCSDS::DataField::setDataFieldHeader( const std::vector<uint8_t>& dataFieldHeader ) {
+    if (!m_dataFieldHeader.empty()) {
+        std::cerr <<  "[ CCSDS Data ] Warning: Secondary Header field is not empty, it has been overwritten." << std::endl;
+        m_dataFieldHeader.clear();
+    }
+    m_dataFieldHeader = dataFieldHeader;
+    m_dataFieldHeaderType = OTHER;
 }
 
 /**
@@ -270,7 +277,7 @@ void CCSDS::DataField::setDataFieldHeader(const PusC& header ) {
  */
 std::vector<uint8_t> CCSDS::DataField::getDataFieldHeader() {
     if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
-        return m_pusHeaderData->getData();;
+        return m_pusHeaderData->serialize();;
     }
     return m_dataFieldHeader;
 }

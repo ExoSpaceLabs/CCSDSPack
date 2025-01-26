@@ -114,9 +114,11 @@ std::vector<uint8_t> CCSDS::Packet::getPrimaryHeader() {
  */
 std::vector<uint8_t> CCSDS::Packet::serialize() {
 
+    if (getFullDataField().empty()) {
+        throw std::invalid_argument("[ CCSDS Packet ] Error: Data field is not set.");
+    }
     auto header         =       getPrimaryHeader();
     auto dataField = m_dataField.getFullDataField();
-    //ToDo Check if header and data are assigned, throw error if not.  header.size = 6, data.size > 1
     const auto crc      =                 getCRCVector();
 
     std::vector<uint8_t> packet{};
@@ -215,6 +217,14 @@ void CCSDS::Packet::setDataFieldHeader(const PusC& header ) {
     m_dataField.setDataFieldHeader( header );
     m_crcCalculated = false;
     m_updatedHeader = false;
+}
+
+void CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const PUSType type) {
+    m_dataField.setDataFieldHeader( data, type );
+}
+
+void CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData, const PUSType type) {
+    m_dataField.setDataFieldHeader( pData, sizeData, type );
 }
 
 /**

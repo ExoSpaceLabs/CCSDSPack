@@ -34,6 +34,8 @@ namespace CCSDS {
        */
         virtual void setDataLength(uint16_t dataLength);
 
+
+        virtual void deserialize(const std::vector<uint8_t>& data);
         /**
          * @brief Gets the length of the data associated with the PUS packet.
          * @return The length of the data in bytes set in the header.
@@ -50,7 +52,7 @@ namespace CCSDS {
          * @brief Retrieves the serialized representation of the PUS header.
          * @return A vector containing the header bytes. (does not include data field)
          */
-        virtual std::vector<uint8_t> getData() const; // Pure virtual method for polymorphism
+        virtual std::vector<uint8_t> serialize() const; // Pure virtual method for polymorphism
     };
 
     /**
@@ -77,16 +79,17 @@ namespace CCSDS {
          * @param dataLength Length of the telemetry data (16 bits).
          */
         explicit PusA(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const uint32_t dataLength) :
-        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_dataLength(dataLength) {};
+        m_version(version &0x7), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_dataLength(dataLength) {};
 
         /**
          * @brief Constructs a PusA object by parsing a serialized data vector.
          * @param data Vector containing the serialized PUS-A header 6 elements.
          * @throws std::invalid_argument if the data size is invalid or parsing fails.
          */
-        explicit PusA(std::vector<uint8_t> data); //Todo Implementation
+        explicit PusA(const std::vector<uint8_t> &data);
 
-        void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
+        void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; }
+        void deserialize(const std::vector<uint8_t>& data)    override;
 
         uint8_t                    getVersion()         const  { return        m_version; }
         uint8_t                    getServiceType()     const  { return    m_serviceType; }
@@ -95,7 +98,7 @@ namespace CCSDS {
         uint16_t                   getDataLength()      const override { return     m_dataLength; }
         uint8_t                    getSize()            const override { return           m_size; }
 
-        std::vector<uint8_t> getData() const override;
+        std::vector<uint8_t> serialize() const override;
 
     private:                                // Field	            Size (bits)	Description
         uint8_t         m_version{};        // Version	            3	        Version of the PUS standard
@@ -135,16 +138,17 @@ namespace CCSDS {
          * @param dataLength Length of the event data (16 bits).
          */
         explicit PusB(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const uint8_t eventID, const uint16_t dataLength) :
-        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_eventID(eventID), m_dataLength(dataLength) {}
+        m_version(version &0x7), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_eventID(eventID), m_dataLength(dataLength) {}
 
         /**
          * @brief Constructs a PusB object by parsing a serialized data vector.
          * @param data Vector containing the serialized PUS-B header 7 elements.
          * @throws std::invalid_argument if the data size is invalid or parsing fails.
          */
-        explicit PusB(std::vector<uint8_t> data); //Todo Implementation
+        explicit PusB(const std::vector<uint8_t>& data);
 
         void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
+        void deserialize(const std::vector<uint8_t>& data)    override;
 
         uint8_t                    getVersion()         const  { return         m_version; }
         uint8_t                    getServiceType()     const  { return     m_serviceType; }
@@ -154,18 +158,18 @@ namespace CCSDS {
         uint16_t                   getDataLength()      const override { return      m_dataLength; }
         uint8_t                    getSize()            const override { return            m_size; }
 
-        std::vector<uint8_t> getData() const override;
+        std::vector<uint8_t> serialize() const override;
 
     private:                                 // Field	            Size (bits)	Description
         uint8_t          m_version{};        // Version	            3	        Version of the PUS standard
         uint8_t      m_serviceType{};        // Service Type	    8	        Type of service (e.g., 0x02 for event reporting)
         uint8_t   m_serviceSubType{};        // Service Subtype	    8	        Subtype of the service (e.g., specific event type)
         uint8_t         m_sourceID{};        // Source ID	        8	        ID of the source (e.g., satellite or sensor)
-        uint8_t          m_eventID{};        // Event ID	        16	        ID of the event being reported
+        uint16_t         m_eventID{};        // Event ID	        16	        ID of the event being reported
         uint16_t      m_dataLength{};        // Data Length	        16	        Length of the event data in bytes
                                              // Event Data	        Variable    (based on Data Length)	The actual event data (variable length)
 
-        const uint16_t m_size = 7; // bytes
+        const uint16_t m_size = 8; // bytes
     };
 
     /**
@@ -194,16 +198,17 @@ namespace CCSDS {
          * @param dataLength Length of the time data (16 bits).
          */
         explicit PusC(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const uint16_t timeCode, const uint16_t dataLength) :
-        m_version(version), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_timeCode(timeCode), m_dataLength(dataLength) {}
+        m_version(version &0x7), m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_timeCode(timeCode), m_dataLength(dataLength) {}
 
         /**
          * @brief Constructs a PusC object by parsing a serialized data vector.
          * @param data Vector containing the serialized PUS-C header 8 elements.
          * @throws std::invalid_argument if the data size is invalid or parsing fails.
          */
-        explicit PusC(std::vector<uint8_t> data); //Todo Implementation
+        explicit PusC(const std::vector<uint8_t>& data);
 
         void setDataLength(const uint16_t dataLength)    override  { m_dataLength = dataLength; };
+        void deserialize(const std::vector<uint8_t>& data)    override;
 
         uint8_t                    getVersion()         const  { return                     m_version; }
         uint8_t                    getServiceType()     const  { return                 m_serviceType; }
@@ -213,7 +218,7 @@ namespace CCSDS {
         uint16_t                   getDataLength()      const override { return                  m_dataLength; }
         uint8_t                    getSize()            const override { return                        m_size; }
 
-        std::vector<uint8_t> getData() const override;
+        std::vector<uint8_t> serialize() const override;
 
     private:                            // Field	            Size (bits)	Description
         uint8_t        m_version{};     // Version	            3	        Version of the PUS standard
