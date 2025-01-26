@@ -7,10 +7,10 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
 
     tester->unitTest("Assign Primary header using an uint64_t as input.", []() {
         constexpr uint64_t headerData( 0xFFFFFFFFFFFF );
-        CCSDS::Packet ccsds;
-        ccsds.setPrimaryHeader(headerData);
+        CCSDS::Packet packet;
+        packet.setPrimaryHeader(headerData);
         // getPrimaryHeader updated dependent fields to correct values.
-        const auto ret = ccsds.getPrimaryHeader64bit();
+        const auto ret = packet.getPrimaryHeader64bit();
         return ret == 0xf7ffc0000000;
     });
 
@@ -24,10 +24,10 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
             1,
             1,
             1);
-        CCSDS::Packet ccsds;
-        ccsds.setPrimaryHeader(headerData);
+        CCSDS::Packet packet;
+        packet.setPrimaryHeader(headerData);
         // getPrimaryHeader updated dependent fields to correct values.
-        const auto ret = ccsds.getPrimaryHeader64bit();
+        const auto ret = packet.getPrimaryHeader64bit();
         return  ret == expectedHeaderData;
     });
 
@@ -35,9 +35,9 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
     {
         constexpr uint64_t expectedHeaderData( 0xf7ffc0000000 );
         const std::vector<uint8_t> data( {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF} );
-        CCSDS::Packet ccsds;
-        ccsds.setPrimaryHeader(data);
-        const auto ret = ccsds.getPrimaryHeader64bit();
+        CCSDS::Packet packet;
+        packet.setPrimaryHeader(data);
+        const auto ret = packet.getPrimaryHeader64bit();
         return  ret == expectedHeaderData;
     });
 
@@ -45,200 +45,139 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
     {
         constexpr uint64_t data( 0xf7ffc0000000 );
         const std::vector<uint8_t> expectedHeaderData( {0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00} );
-        CCSDS::Packet ccsds;
-        ccsds.setPrimaryHeader(data);
-        const auto ret = ccsds.getPrimaryHeader();
+        CCSDS::Packet packet;
+        packet.setPrimaryHeader(data);
+        const auto ret = packet.getPrimaryHeader();
         return std::equal(expectedHeaderData.begin(), expectedHeaderData.end(), ret.begin());
     });
 
     {
-        CCSDS::Packet ccsds;
+        CCSDS::Packet packet;
 
-        tester->unitTest("Assign Data field using vector, DataFieldHeader shall be empty.",[&ccsds]() {
-            ccsds.setApplicationData({1, 2, 3, 4, 5});
-            const auto dfh = ccsds.getDataFieldHeader();
+        tester->unitTest("Assign Data field using vector, DataFieldHeader shall be empty.",[&packet]() {
+            packet.setApplicationData({1, 2, 3, 4, 5});
+            const auto dfh = packet.getDataFieldHeader();
             return dfh.empty();
         } );
 
-        tester->unitTest("Assign Data field using vector, ApplicationData shall be of correct size.",[&ccsds] {
-            const auto apd = ccsds.getApplicationData();
+        tester->unitTest("Assign Data field using vector, ApplicationData shall be of correct size.",[&packet] {
+            const auto apd = packet.getApplicationData();
             return apd.size() == 5;
         });
 
-        tester->unitTest("Assign Data field using vector, CRC16 shall be correct.", [&ccsds]() {
+        tester->unitTest("Assign Data field using vector, CRC16 shall be correct.", [&packet]() {
             constexpr uint16_t expectedCRC16( 0x9304 );
-            const auto crc( ccsds.getCRC() );
+            const auto crc( packet.getCRC() );
             return crc == expectedCRC16;
         });
     }
 
     {
-        CCSDS::Packet ccsds;
+        CCSDS::Packet packet;
 
-        tester->unitTest("Assign Secondary Header and Data using vector, DataFieldHeader shall be of correct size.",[&ccsds] {
-            ccsds.setDataFieldHeader({0x1,0x2,0x3});
-            ccsds.setApplicationData({4, 5});
-            const auto dfh = ccsds.getDataFieldHeader();
+        tester->unitTest("Assign Secondary Header and Data using vector, DataFieldHeader shall be of correct size.",[&packet] {
+            packet.setDataFieldHeader({0x1,0x2,0x3});
+            packet.setApplicationData({4, 5});
+            const auto dfh = packet.getDataFieldHeader();
             return dfh.size() == 3;
         });
 
-        tester->unitTest("Assign Secondary Header and Data using vector, ApplicationData, shall be of correct size.", [&ccsds] {
-            const auto apd = ccsds.getApplicationData();
+        tester->unitTest("Assign Secondary Header and Data using vector, ApplicationData, shall be of correct size.", [&packet] {
+            const auto apd = packet.getApplicationData();
             return apd.size() == 2;
         });
 
 
-        tester->unitTest("Assign Secondary Header and Data using vector, CRC16 shall be correct.",[&ccsds] {
+        tester->unitTest("Assign Secondary Header and Data using vector, CRC16 shall be correct.",[&packet] {
             constexpr uint16_t expectedCRC16(0x9304);
-            const auto crc(ccsds.getCRC());
+            const auto crc(packet.getCRC());
             return crc == expectedCRC16;
         });
     }
 
     {
-        CCSDS::Packet ccsds;
+        CCSDS::Packet packet;
 
-        tester->unitTest("Assign Data field using array*, DataFieldHeader shall be empty.",[&ccsds] {
+        tester->unitTest("Assign Data field using array*, DataFieldHeader shall be empty.",[&packet] {
             const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
-            ccsds.setApplicationData( data,5);
-            const auto dfh = ccsds.getDataFieldHeader();
+            packet.setApplicationData( data,5);
+            const auto dfh = packet.getDataFieldHeader();
             return dfh.empty();
         });
 
-        tester->unitTest("Assign Data field using array*, ApplicationData shall be of correct size.",[&ccsds] {
-            const auto apd = ccsds.getApplicationData();
+        tester->unitTest("Assign Data field using array*, ApplicationData shall be of correct size.",[&packet] {
+            const auto apd = packet.getApplicationData();
             return apd.size() == 5;
         });
 
-        tester->unitTest("Assign Data field using array*, CRC16 shall be correct.",[&ccsds] {
+        tester->unitTest("Assign Data field using array*, CRC16 shall be correct.",[&packet] {
             constexpr uint16_t expectedCRC16(0x9304);
-            const auto crc(ccsds.getCRC());
+            const auto crc(packet.getCRC());
             return crc == expectedCRC16;
         });
     }
 
     {
-        CCSDS::Packet ccsds;
+        CCSDS::Packet packet;
 
-        tester->unitTest("Primary header vector shall be 0 valued.",[&ccsds] {
+        tester->unitTest("Primary header vector shall be default valued.",[&packet] {
             // although the header is set to FFFF for data field size, its content is updated by data field size.
-
-            const auto header = ccsds.getPrimaryHeader();
-            bool res(true);
-            for (const auto v : header) {
-                res &= v == 0;
-            }
-            return res;
+            std::vector<uint8_t> expectedHeader{0x0,0x0,0xc0,0x0,0x0,0x0};
+            const auto header = packet.getPrimaryHeader();
+            return std::equal(expectedHeader.begin(), expectedHeader.end(), header.begin());
         });
-        tester->unitTest("Assign Secondary header and data field using array*, DataFieldHeader shall be of correct size.", [&ccsds] {
+        tester->unitTest("Assign Secondary header and data field using array*, DataFieldHeader shall be of correct size.", [&packet] {
             constexpr uint8_t secondaryHeader[] = {0x1,0x2};
             constexpr uint8_t data[] = {0x3,0x4,0x5};
-            ccsds.setApplicationData( data,3);
-            ccsds.setDataFieldHeader( secondaryHeader, 2);
-            const auto dfh = ccsds.getDataFieldHeader();
+            packet.setApplicationData( data,3);
+            packet.setDataFieldHeader( secondaryHeader, 2);
+            const auto dfh = packet.getDataFieldHeader();
             return dfh.size() == 2;
         });
 
-        tester->unitTest("Assign Secondary header and data field using array*, ApplicationData shall be of correct size.",[&ccsds] {
-            const auto apd = ccsds.getApplicationData();
+        tester->unitTest("Assign Secondary header and data field using array*, ApplicationData shall be of correct size.",[&packet] {
+            const auto apd = packet.getApplicationData();
             return apd.size() == 3;
         });
 
-        tester->unitTest("Assign Secondary header and data field using array*, CRC16 shall be correct.",[&ccsds] {
+        tester->unitTest("Assign Secondary header and data field using array*, CRC16 shall be correct.",[&packet] {
             constexpr uint16_t expectedCRC16(0x9304);
-            const auto crc(ccsds.getCRC());
+            const auto crc(packet.getCRC());
             return crc == expectedCRC16;
         });
 
-        tester->unitTest("Primary header vector getter values shall be correctly returned.",[&ccsds] {
-            ccsds.setPrimaryHeader(0xffffffffffff);
+        tester->unitTest("Primary header vector getter values shall be correctly returned.",[&packet] {
+            packet.setPrimaryHeader(0xffffffffffff);
             // although the header is set to FFFF for data field size, its content is Header getters.
             const std::vector<uint8_t> expectedHeader = {
                 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05
             };
-            const auto header = ccsds.getPrimaryHeader();
+            const auto header = packet.getPrimaryHeader();
 
             return std::equal(expectedHeader.begin(), expectedHeader.end(), header.begin());
         });
 
-        tester->unitTest("CRC16 vector getter values shall be correctly returned.",[&ccsds] {
-            const auto crc = ccsds.getCRCVector();
+        tester->unitTest("CRC16 vector getter values shall be correctly returned.",[&packet] {
+            const auto crc = packet.getCRCVector();
             auto res(true);
             res &= crc[0] == 0x93;
             res &= crc[1] == 0x04;;
             return res;
         });
 
-        tester->unitTest("Get full packet size. Header, Data field and CRC shall be correctly positioned.",[&ccsds] {
-            const auto header = ccsds.getPrimaryHeader();
-            const auto data = ccsds.getFullDataField();
+        tester->unitTest("Get full packet size. Header, Data field and CRC shall be correctly positioned.",[&packet] {
+            const auto header = packet.getPrimaryHeader();
+            const auto data = packet.getFullDataField();
             const size_t packetSize = 6 + 2 + data.size();
-            const auto packet = ccsds.serialize();
-            bool res(packet.size() == packetSize);
-            res &= header[3] == packet[3];
-            res &= packet[6] == data[0];
-            res &= packet[10] == data[4];
-            const auto crc = ccsds.getCRCVector();
-            res &= crc[0] == packet[packetSize-2];
-            res &= crc[1] == packet[packetSize-1];;
+            const auto pack = packet.serialize();
+            bool res(pack.size() == packetSize);
+            res &= header[3] == pack[3];
+            res &= pack[6] == data[0];
+            res &= pack[10] == data[4];
+            const auto crc = packet.getCRCVector();
+            res &= crc[0] == pack[packetSize-2];
+            res &= crc[1] == pack[packetSize-1];;
             return res;
-        });
-    }
-    {
-        tester->unitTest("PUS-A secondary header assignment. returned data field header size is of correct size of 6 bytes.",[] {
-            CCSDS::Packet ccsds;
-            //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
-            const CCSDS::PusA pusAHeader(1,2,3,4,5);
-            ccsds.setDataFieldHeader(pusAHeader);
-            const auto dfh = ccsds.getDataFieldHeader();
-            return dfh.size() == pusAHeader.getSize();
-        });
-
-        tester->unitTest("PUS-B secondary header assignment. returned data field header size is of correct size of 8 bytes.",[] {
-             CCSDS::Packet ccsds;
-             const CCSDS::PusB pusBHeader(1,2,3,4,5,6);
-             ccsds.setDataFieldHeader(pusBHeader);
-             const auto dfh = ccsds.getDataFieldHeader();
-             return dfh.size() == pusBHeader.getSize();
-        });
-    }
-    {
-        CCSDS::Packet ccsds;
-
-        tester->unitTest("PUS-C secondary header assignment. returned data field header size is of correct size of 8 bytes.",[&ccsds] {
-
-             const CCSDS::PusC pusCHeader(1,2,3,4,5,6);
-             ccsds.setDataFieldHeader(pusCHeader);
-             const auto dfh = ccsds.getDataFieldHeader();
-             return dfh.size() == pusCHeader.getSize();
-        });
-
-        tester->unitTest("Automatic data Length update in Primary header (PUS-C size).",[&ccsds] {
-
-            //ccsds.setPrimaryHeader(0xffffffff);
-            //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
-            const auto primaryHeader = ccsds.getPrimaryHeader64bit();
-            return (primaryHeader & 0xFFFF) == 0x8;
-        });
-
-        tester->unitTest("Automatic data Length update in Primary header and Secondary header after data inclusion.",[&ccsds] {
-            constexpr uint8_t data[] = {0x3,0x4,0x5};
-            ccsds.setApplicationData( data,3);
-            const auto primaryHeaderSize = ccsds.getPrimaryHeader64bit() & 0xFFFF;
-            const auto dataFieldHeaderSize = ccsds.getDataFieldHeader()[7];
-
-            return primaryHeaderSize == 0xB && dataFieldHeaderSize == 0x3;
-        });
-
-        tester->unitTest("Automatic data Length check with get full ccsds packet",[&ccsds] {
-
-            const auto ccsdsPacket = ccsds.serialize();
-            // data sizes:
-            // Primary header 6 bytes (last byte for data field size includes data Field Header):
-            //   Data Field Header 8 bytes (last byte for data field size):
-            //      Application Data 3 byte
-            // CRC 2 Bytes
-            return ccsdsPacket[5] == 0xB && ccsdsPacket[5+8] == 0x3 && ccsdsPacket.size() == 6 + 8 + 3 + 2;
         });
     }
 
@@ -269,7 +208,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         packet.setDataFieldHeader(data,CCSDS::PUS_C);
         auto dfh = packet.getDataFieldHeader();
 
-        return  std::equal(data.begin(), data.end(), dfh.begin());
+        return std::equal(data.begin(), data.end(), dfh.begin());
     });
 
     tester->unitTest("PUS-A data field header assignment using uint8 buffer*, size and Type.",[] {
@@ -280,7 +219,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         std::vector<uint8_t> tmp;
         tmp.assign(data,data+6);
 
-        return  std::equal(tmp.begin(), tmp.end(), dfh.begin());
+        return std::equal(tmp.begin(), tmp.end(), dfh.begin());
     });
 
     tester->unitTest("PUS-B data field header assignment using uint8 buffer*, size and Type.",[] {
@@ -291,7 +230,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         std::vector<uint8_t> tmp;
         tmp.assign(data,data+8);
 
-        return  std::equal(tmp.begin(), tmp.end(), dfh.begin());
+        return std::equal(tmp.begin(), tmp.end(), dfh.begin());
     });
 
     tester->unitTest("PUS-C data field header assignment using uint8 buffer*, size and Type.",[] {
@@ -302,9 +241,65 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         std::vector<uint8_t> tmp;
         tmp.assign(data,data+8);
 
-        return  std::equal(tmp.begin(), tmp.end(), dfh.begin());
+        return std::equal(tmp.begin(), tmp.end(), dfh.begin());
     });
 
+    tester->unitTest("PUS-A secondary header assignment. returned data field header size is of correct size of 6 bytes.",[] {
+        CCSDS::Packet packet;
+        //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+        const CCSDS::PusA pusAHeader(1,2,3,4,5);
+        packet.setDataFieldHeader(pusAHeader);
+        const auto dfh = packet.getDataFieldHeader();
+        return dfh.size() == pusAHeader.getSize();
+    });
+
+    tester->unitTest("PUS-B secondary header assignment. returned data field header size is of correct size of 8 bytes.",[] {
+         CCSDS::Packet packet;
+         const CCSDS::PusB pusBHeader(1,2,3,4,5,6);
+         packet.setDataFieldHeader(pusBHeader);
+         const auto dfh = packet.getDataFieldHeader();
+         return dfh.size() == pusBHeader.getSize();
+    });
+
+    {
+        CCSDS::Packet packet;
+
+        tester->unitTest("PUS-C secondary header assignment. returned data field header size is of correct size of 8 bytes.",[&packet] {
+
+             const CCSDS::PusC pusCHeader(1,2,3,4,5,6);
+             packet.setDataFieldHeader(pusCHeader);
+             const auto dfh = packet.getDataFieldHeader();
+             return dfh.size() == pusCHeader.getSize();
+        });
+
+        tester->unitTest("Automatic data Length update in Primary header (PUS-C size).",[&packet] {
+
+            //ccsds.setPrimaryHeader(0xffffffff);
+            //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+            const auto primaryHeader = packet.getPrimaryHeader64bit();
+            return (primaryHeader & 0xFFFF) == 0x8;
+        });
+
+        tester->unitTest("Automatic data Length update in Primary header and Secondary header after data inclusion.",[&packet] {
+            constexpr uint8_t data[] = {0x3,0x4,0x5};
+            packet.setApplicationData( data,3);
+            const auto primaryHeaderSize = packet.getPrimaryHeader64bit() & 0xFFFF;
+            const auto dataFieldHeaderSize = packet.getDataFieldHeader()[7];
+
+            return primaryHeaderSize == 0xB && dataFieldHeaderSize == 0x3;
+        });
+
+        tester->unitTest("Automatic data Length check with get full ccsds packet.",[&packet] {
+
+            const auto ccsdsPacket = packet.serialize();
+            // data sizes:
+            // Primary header 6 bytes (last byte for data field size includes data Field Header):
+            //   Data Field Header 8 bytes (last byte for data field size):
+            //      Application Data 3 byte
+            // CRC 2 Bytes
+            return ccsdsPacket[5] == 0xB && ccsdsPacket[5+8] == 0x3 && ccsdsPacket.size() == 6 + 8 + 3 + 2;
+        });
+    }
 }
 
 

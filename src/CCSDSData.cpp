@@ -123,7 +123,6 @@ void CCSDS::DataField::setApplicationData(const std::vector<uint8_t>& applicatio
     updateDataFieldHeader();
 }
 
-
 /**
  * @brief Sets the secondary header for the data field.
  *
@@ -189,6 +188,24 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
     }
 }
 
+/**
+ * @brief Sets the data field header for the CCSDS DataField with a specific PUS type.
+ *
+ * This method configures the data field header based on the provided data and
+ * the specified Packet Utilization Standard (PUS) type. It validates the header
+ * size to ensure it does not exceed the maximum allowed packet size and creates
+ * the appropriate header object based on the PUS type.
+ *
+ * @param data A vector containing the data for the data field header.
+ * @param pType The PUS type (PUS_A, PUS_B, PUS_C, or OTHER) indicating the header format.
+ *
+ * @throws std::invalid_argument If the data size exceeds the allowed limits or
+ *         if the header size does not match the expected size for the given PUS type.
+ *
+ * @note If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method.
+ * @warning The method will log an error to standard error and throw an exception if the total
+ *          size of the header and application data exceeds the allowed packet size.
+ */
 void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , const PUSType &pType) {
     m_dataFieldHeaderType = pType;
     if (m_dataPacketSize < data.size() + m_applicationData.size()) {
@@ -224,7 +241,19 @@ void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , con
     }
 }
 
-
+/**
+ * @brief Sets the data field header for the CCSDS DataField.
+ *
+ * This method updates the data field header with the provided vector of bytes.
+ * If the existing data field header is not empty, it clears the current contents
+ * and logs a warning to indicate that the header has been overwritten.
+ *
+ * @param dataFieldHeader A vector containing the new data field header.
+ *
+ * @note The m_dataFieldHeaderType is set to OTHER after the header is updated.
+ * @warning If the current data field header is not empty, it will be cleared,
+ * and a warning message will be printed to the standard error stream.
+ */
 void CCSDS::DataField::setDataFieldHeader( const std::vector<uint8_t>& dataFieldHeader ) {
     if (!m_dataFieldHeader.empty()) {
         std::cerr <<  "[ CCSDS Data ] Warning: Secondary Header field is not empty, it has been overwritten." << std::endl;
@@ -266,6 +295,17 @@ void CCSDS::DataField::setDataFieldHeader(const PusC& header ) {
     m_dataFieldHeaderType = PUS_C;
     m_pusHeaderData = std::make_shared<PusC>(header);
 }
+
+/**
+ * @brief Sets the maximum data packet size for the CCSDS DataField.
+ *
+ * This method updates the maximum allowed size for the data packet.
+ * The data packet size is used to validate that the combined size of
+ * the header and application data does not exceed this limit.
+ *
+ * @param value The maximum size of the data packet, in bytes.
+ */
+void CCSDS::DataField::setDataPacketSize(const uint16_t &value)  {  m_dataPacketSize = value; }
 
 /**
  * @brief Retrieves the secondary header data as a vector of bytes.

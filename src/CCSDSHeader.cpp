@@ -22,7 +22,6 @@ void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
     setData(headerData);
 }
 
-
 /**
  * @brief Sets the header data from a 64-bit integer representation.
  *
@@ -37,7 +36,7 @@ void CCSDS::Header::setData(const uint64_t &data){
     if (data > 0xFFFFFFFFFFFF) { // check if given header exeeds header size.
         throw std::invalid_argument("[ CCSDS Header ] Error: Input data exceeds expected bit size for version or size.");
     }
-    // Decompose data using mask and
+    // Decompose data using mask and shifts
     m_dataLength                     = (data & 0xFFFF);               // last 16 bits
     m_packetSequenceControl          = (data >> 16) & 0xFFFF;         // middle 16 bits
     m_packetIdentificationAndVersion = (data >> 32);                  // first 16 bits
@@ -57,7 +56,6 @@ void CCSDS::Header::setData(const uint64_t &data){
 CCSDS::Header::Header(const std::vector<uint8_t>& data) {
     deserialize(data);
 }
-
 
 std::vector<uint8_t> CCSDS::Header::serialize()  {
 

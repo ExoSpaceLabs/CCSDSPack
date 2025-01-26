@@ -58,7 +58,6 @@ std::vector<uint8_t> CCSDS::PusA::serialize() const {
   return data;
 }
 
-
 CCSDS::PusB::PusB(const std::vector<uint8_t>& data) {
   deserialize(data);
 }
@@ -120,4 +119,3 @@ std::vector<uint8_t> CCSDS::PusC::serialize() const {
 
   return data;
 }
-

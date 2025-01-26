@@ -1,9 +1,8 @@
 
-
 #include "CCSDSPacket.h"
 #include "CCSDSData.h"
+#include "CCSDSUtils.h"
 
-#include <CCSDSUtils.h>
 #include <iostream>
 
 /**
@@ -83,9 +82,6 @@ uint64_t CCSDS::Packet::getPrimaryHeader64bit() {
     updatePrimaryHeader();
     return  m_primaryHeader.getFullHeader();
 };
-
-
-
 
 /**
  * @brief Retrieves the primary header of the packet as a vector of bytes.
@@ -219,10 +215,33 @@ void CCSDS::Packet::setDataFieldHeader(const PusC& header ) {
     m_updatedHeader = false;
 }
 
+/**
+ * @brief Sets the data field header for the packet using a vector of bytes.
+ *
+ * This method updates the data field header of the packet by providing the
+ * data as a vector of bytes and specifying the PUS (Packet Utilization Standard) type if applicable.
+ *
+ * @param data A vector containing the data for the data field header.
+ * @param type The PUS type that specifies the purpose of the data.
+ */
 void CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const PUSType type) {
     m_dataField.setDataFieldHeader( data, type );
 }
 
+/**
+ * @brief Sets the data field header for the packet using a raw data pointer.
+ *
+ * This method updates the data field header of the packet by providing a
+ * pointer to the raw data and its size, along with the PUS (Packet Utilization Standard) type if applicable.
+ *
+ * @note This method is potentially unsafe as it relies on a raw pointer and size.
+ * Ensure that the pointer is valid and the size accurately reflects the data length
+ * to avoid undefined behavior such as buffer overflows or invalid memory access.
+ *
+ * @param pData Pointer to the raw data for the data field header.
+ * @param sizeData The size of the data pointed to by pData, in bytes.
+ * @param type The PUS type that specifies the purpose of the data.
+ */
 void CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData, const PUSType type) {
     m_dataField.setDataFieldHeader( pData, sizeData, type );
 }
@@ -247,6 +266,10 @@ void CCSDS::Packet::setDataFieldHeader( const std::vector<uint8_t>& data ) {
  *
  * This function sets the data field header of the packet using a pointer
  * to the header data and its size.
+ *
+ * @note This method is potentially unsafe as it relies on a raw pointer and size.
+ * Ensure that the pointer is valid and the size accurately reflects the data length
+ * to avoid undefined behavior such as buffer overflows or invalid memory access.
  *
  * @param pData A pointer to the header data.
  * @param sizeData The size of the header data.
@@ -279,6 +302,10 @@ void CCSDS::Packet::setApplicationData( const std::vector<uint8_t>& data ) {
  * This function sets the application data in the data field of the packet
  * using a pointer to the data and its size.
  *
+ * @note This method is potentially unsafe as it relies on a raw pointer and size.
+ * Ensure that the pointer is valid and the size accurately reflects the data length
+ * to avoid undefined behavior such as buffer overflows or invalid memory access.
+ *
  * @param pData A pointer to the application data.
  * @param sizeData The size of the application data.
  * @return none.
@@ -288,3 +315,15 @@ void CCSDS::Packet::setApplicationData( const uint8_t* pData, const size_t sizeD
     m_crcCalculated = false;
     m_updatedHeader = false;
 }
+
+
+/**
+ * @brief Sets the sequence flags for the packet's primary header.
+ *
+ * This method updates the sequence flags in the primary header of the packet.
+ * The sequence flags indicate the position or type of the data segment within
+ * the CCSDS telemetry transfer frame (e.g., first segment, last segment, etc.).
+ *
+ * @param flags The sequence flag to be set, represented by the ESequenceFlag enum : uint8_t.
+ */
+void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags)  { m_primaryHeader.setSequenceFlags(flags);}

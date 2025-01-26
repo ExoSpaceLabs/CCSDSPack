@@ -1,5 +1,5 @@
-#ifndef CCSDSPACK_H
-#define CCSDSPACK_H
+#ifndef CCSDSPACKET_H
+#define CCSDSPACKET_H
 
 #include <cstdint>
 #include <vector>
@@ -47,6 +47,7 @@ namespace CCSDS {
         void setDataFieldHeader(               const uint8_t* pData, size_t sizeData );
         void setApplicationData(                    const std::vector<uint8_t>& data );
         void setApplicationData(               const uint8_t* pData, size_t sizeData );
+        void setSequenceFlags(                                   ESequenceFlag flags );
 
         // getters
         uint64_t getPrimaryHeader64bit();
@@ -79,5 +80,5 @@ namespace CCSDS {
         uint16_t m_sequenceCounter{0};
     };
 }
-#endif // CCSDSPACK_H
+#endif // CCSDSPACKET_H
 

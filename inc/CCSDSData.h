@@ -29,20 +29,19 @@ namespace CCSDS{
 
         ~DataField() = default;
 
-        void setApplicationData(                const std::vector<uint8_t>& applicationData );
-        void setApplicationData(               const uint8_t* pData, const size_t &sizeData );
-        void setDataFieldHeader(               const uint8_t* pData, const size_t &sizeData );
-        void setDataFieldHeader(const uint8_t* pData, const size_t &sizeData, const PUSType &pType);
-        void setDataFieldHeader(           const std::vector<uint8_t>&, const PUSType &pType);
-        void setDataFieldHeader(                const std::vector<uint8_t>& dataFieldHeader );
-        void setDataFieldHeader(                                         const PusA& header );
-        void setDataFieldHeader(                                         const PusB& header );
-        void setDataFieldHeader(                                         const PusC& header );
-
-        void setDataPacketSize(                                  const uint16_t &value) {  m_dataPacketSize =           value; }
+        void setApplicationData(                        const std::vector<uint8_t>& applicationData );
+        void setApplicationData(                       const uint8_t* pData, const size_t &sizeData );
+        void setDataFieldHeader(                       const uint8_t* pData, const size_t &sizeData );
+        void setDataFieldHeader( const uint8_t* pData, const size_t &sizeData, const PUSType &pType );
+        void setDataFieldHeader(                  const std::vector<uint8_t>&, const PUSType &pType );
+        void setDataFieldHeader(                        const std::vector<uint8_t>& dataFieldHeader );
+        void setDataFieldHeader(                                                 const PusA& header );
+        void setDataFieldHeader(                                                 const PusB& header );
+        void setDataFieldHeader(                                                 const PusC& header );
+        void setDataPacketSize(                                               const uint16_t &value );
 
         std::vector<uint8_t> getDataFieldHeader();
-        std::vector<uint8_t> getApplicationData() {return m_applicationData; }
+        std::vector<uint8_t> getApplicationData()  {return m_applicationData; }
         std::vector<uint8_t> getFullDataField();
         bool getDataFieldHeaderFlag() const       { return !m_dataFieldHeader.empty() || m_pusHeaderData != nullptr; }
 
@@ -51,13 +50,12 @@ namespace CCSDS{
     private:
         void updateDataFieldHeader();
 
-        PUSType               m_dataFieldHeaderType{};
-        std::shared_ptr<PusHeader>  m_pusHeaderData{};
-        std::vector<uint8_t>      m_dataFieldHeader{};
-        std::vector<uint8_t>      m_applicationData{};
-        uint16_t              m_dataPacketSize = 2024;
-
-        bool m_dataFieldHeaderUpdated{false};
+        std::shared_ptr<PusHeader>                 m_pusHeaderData{};
+        std::vector<uint8_t>                     m_dataFieldHeader{};
+        std::vector<uint8_t>                     m_applicationData{};
+        PUSType                          m_dataFieldHeaderType{ NA };
+        uint16_t                           m_dataPacketSize{  2024 };
+        bool                       m_dataFieldHeaderUpdated{ false };
     };
 }
 #endif // CCSDSDATA_H

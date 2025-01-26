@@ -7,14 +7,8 @@
 //###########################################################################
 #define VERBOSE 1
 
-/**
- * @brief Converts a given value to its binary representation as a string, with spaces every 4 bits.
- *
- * @param value The 32-bit integer value to convert.
- * @param bits The number of significant bits to include in the binary string.
- * @return A string representing the binary value with spaces every 4 bits.
- */
-std::string getBinaryString(uint32_t value, int bits) {
+
+std::string getBinaryString(const uint32_t value, const int bits) {
     std::string binaryString;
         // Calculate the minimum number of bits required to represent in groups of 4
     const int paddedBits = ((bits + 3) / 4) * 4;  // Round up to the nearest multiple of 4
@@ -30,13 +24,7 @@ std::string getBinaryString(uint32_t value, int bits) {
     return binaryString;
 }
 
-/**
- * @brief Generates a string of spaces for formatting binary outputs.
- *
- * @param num The number of spaces required.
- * @return A string of spaces of length `num`.
- */
-std::string getBitsSpaces(int num){
+std::string getBitsSpaces(const int num){
     std::string spaces;
     
     for (int i = num - 1; i >= 0; --i) {
@@ -46,34 +34,24 @@ std::string getBitsSpaces(int num){
     return spaces;
 }
 
-/**
- * @brief Computes the CCSDS CRC-16 checksum for a given data vector.
- *
- * @param data A vector of bytes to compute the checksum for.
- * @return The computed 16-bit CRC value.
- *
- * The CRC-16 uses the polynomial x^16 + x^12 + x^5 + 1, with an initial value of 0xFFFF.
- */
-uint16_t crc16(const std::vector<uint8_t>& data) {
-    constexpr uint16_t POLYNOMIAL      = 0x1021; // CCSDS CRC-16 polynomial (x^16 + x^12 + x^5 + 1)
-    constexpr uint16_t INITIAL_VALUE   = 0xFFFF; // Initial value
-    constexpr uint16_t FINAL_XOR_VALUE = 0x0000; // No final XOR in CCSDS
-
-    uint16_t crc = INITIAL_VALUE;
+uint16_t crc16(
+    const std::vector<uint8_t>& data, const uint16_t polynomial, const uint16_t initialValue, const uint16_t finalXorValue) {
+    uint16_t crc = initialValue;
 
     for (const auto& byte : data) {
         crc ^= static_cast<uint16_t>(byte) << 8;  // Align byte with MSB of 16-bit CRC
         for (int i = 0; i < 8; ++i) {             // Process each bit
             if (crc & 0x8000) {                   // Check if MSB is set
-                crc = (crc << 1) ^ POLYNOMIAL;    // Shift and XOR with polynomial
+                crc = (crc << 1) ^ polynomial;    // Shift and XOR with polynomial
             } else {
                 crc = crc << 1;                   // Shift only
             }
         }
     }
-    const uint16_t crcRet =  crc ^ FINAL_XOR_VALUE;             // Apply final XOR (if needed)
-    return crcRet;
+
+    return crc ^ finalXorValue; // Apply final XOR
 }
+
 
 /**
  * @brief Marks the start of a unit test.

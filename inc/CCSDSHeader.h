@@ -5,6 +5,24 @@
 #include <vector>
 
 namespace CCSDS {
+
+    /**
+     * @brief Represents the sequence flags used in CCSDS telemetry transfer frames.
+     *
+     * This enum defines the possible sequence flag values that indicate the type
+     * and position of a data segment in a telemetry frame:
+     * - CONTINUING_SEGMENT: An intermediate segment of a packet.
+     * - FIRST_SEGMENT: The first segment of a new packet.
+     * - LAST_SEGMENT: The last segment of a packet that spans multiple frames.
+     * - UNSEGMENTED: A complete unsegmented packet contained in a single frame.
+     */
+    enum ESequenceFlag : uint8_t {
+        CONTINUING_SEGMENT, ///< 00 Intermediate segment of a packet.
+        FIRST_SEGMENT,      ///< 01 First segment of a new packet.
+        LAST_SEGMENT,       ///< 10 Last segment of a multi-frame packet.
+        UNSEGMENTED         ///< 11 Complete packet in a single frame.
+    };
+
     /**
      * @struct PrimaryHeader
      * @brief Represents the primary header of a CCSDS packet.
@@ -22,19 +40,17 @@ namespace CCSDS {
      */
     struct PrimaryHeader {
         // version and packet identification 16 bit 4 hex
-        uint8_t versionNumber;         // 3 bit
-
-        // packet identification 4 hex
-        uint8_t type;                  // 1 bit
-        uint8_t dataFieldHeaderFlag;   // 1 bit
-        uint16_t APID;                 // 11 bit
+        uint8_t       versionNumber; ///< 3 bit first of packet identification
+        uint8_t                type; ///< 1 bit second of packet identification
+        uint8_t dataFieldHeaderFlag; ///< 1 bit third of packet identification
+        uint16_t               APID; ///< 11 bit last of packet identification
 
         //packet sequence control 16 bit 4 hex
-        uint8_t sequenceFlags;         // 2 bit
-        uint16_t sequenceCount;        // 14 bit
+        uint8_t       sequenceFlags; ///< 2 bit first of sequence control
+        uint16_t      sequenceCount; ///< 14 bit last of sequence control
 
         // data packet length
-        uint16_t dataLength;           // 16 bits
+        uint16_t         dataLength; ///< 16 bits
 
         /**
          * @brief Constructs a PrimaryHeader with specified field values.
@@ -76,13 +92,13 @@ namespace CCSDS {
         explicit Header(const std::vector<uint8_t>& data);
 
         // getters
-        uint8_t  getVersionNumber() const        { return m_versionNumber;       }
-        uint8_t  getType() const                 { return m_type;                }
-        uint8_t  getDataFieldHeaderFlag() const  { return m_dataFieldHeaderFlag; }
-        uint16_t getAPID() const                 { return m_APID;                }
-        uint8_t  getSequenceFlags() const        { return m_sequenceFlags;       }
-        uint16_t getSequenceCount() const        { return m_sequenceCount;       }
-        uint16_t getDataLength() const           { return m_dataLength;          }
+        uint8_t  getVersionNumber()       const { return m_versionNumber;       }
+        uint8_t  getType()                const { return m_type;                }
+        uint8_t  getDataFieldHeaderFlag() const { return m_dataFieldHeaderFlag; }
+        uint16_t getAPID()                const { return m_APID;                }
+        uint8_t  getSequenceFlags()       const { return m_sequenceFlags;       }
+        uint16_t getSequenceCount()       const { return m_sequenceCount;       }
+        uint16_t getDataLength()          const { return m_dataLength;          }
 
         std::vector<uint8_t>serialize();
 
@@ -99,7 +115,6 @@ namespace CCSDS {
             return (static_cast<uint64_t>(m_packetIdentificationAndVersion) << 32) | (static_cast<uint32_t>(m_packetSequenceControl) << 16) | m_dataLength;
         }
 
-
         // setters
         void setVersionNumber(const uint8_t &value)        { m_versionNumber       = value & 0x0007; }
         void setType(const uint8_t &value)                 { m_type                = value & 0x0001; }
@@ -108,7 +123,6 @@ namespace CCSDS {
         void setSequenceFlags(const uint8_t &value)        { m_sequenceFlags       = value & 0x0003; }
         void setSequenceCount(const uint16_t &value)       { m_sequenceCount       = value & 0x3FFF; }
         void setDataLength(const uint16_t &value)          { m_dataLength          = value;          }
-
 
         // Full data setter
         void setData(const uint64_t &data);
@@ -119,27 +133,26 @@ namespace CCSDS {
         // print out the header
         void printHeader();
 
-
-
     private:
-        // full packet size 48 bit fixed 6 byes
-        uint16_t m_packetIdentificationAndVersion{};
 
         // version and packet identification 16 bit 4 hex
-        uint8_t m_versionNumber{};            // 3 bit
+        uint8_t                   m_versionNumber{}; // 3 bit
 
         // packet identification 4 hex
-        uint8_t m_type{};                     // 1 bit
-        uint8_t m_dataFieldHeaderFlag{};      // 1 bit
-        uint16_t m_APID{};                    // 11 bit
+        uint8_t                            m_type{}; // 1 bit
+        uint8_t             m_dataFieldHeaderFlag{}; // 1 bit
+        uint16_t                           m_APID{}; // 11 bit
 
-        //packet sequence control 16 bit 4 hex
-        uint16_t m_packetSequenceControl{};
-        uint8_t m_sequenceFlags{};            // 2 bit
-        uint16_t m_sequenceCount{};           // 14 bit
+        // packet sequence control 16 bit 4 hex
+        uint8_t      m_sequenceFlags{ UNSEGMENTED }; // 2 bit
+        uint16_t                  m_sequenceCount{}; // 14 bit
 
-        // data packet length
-        uint16_t m_dataLength{};              // 16 bits
+
+        // full packet size 48 bit fixed 6 byes
+        uint16_t m_packetIdentificationAndVersion{}; // packet id and version 16 bit 4 hex
+        uint16_t          m_packetSequenceControl{}; // packet sequence control 16 bit 4 hex
+        uint16_t                     m_dataLength{}; // data packet length 16 bits 4 hex
+
     };
 }
 #endif // CCSDSHEADER_H
