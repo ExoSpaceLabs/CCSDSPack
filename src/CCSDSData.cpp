@@ -30,6 +30,19 @@ std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
     return fullData;
 }
 
+uint16_t CCSDS::DataField::getDataFieldAvailableSizeByes() const {
+    if (getDataFieldHeaderFlag()) {
+        return m_dataPacketSize;
+    }
+    if (!m_dataFieldHeader.empty()) {
+        return m_dataPacketSize - m_dataFieldHeader.size();
+    }
+    if (!m_pusHeaderData) {
+        return m_dataPacketSize - m_pusHeaderData->getSize();
+    }
+    return 0;
+}
+
 /**
  * @brief Prints the data field details, including the secondary header and application data.
  *

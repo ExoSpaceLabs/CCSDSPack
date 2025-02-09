@@ -330,6 +330,7 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
         });
 
         tester->unitTest("Manager set data with large Data and check returned multi packets.",[&manager] {
+            // Note: Max data field size is set to 5 bytes, and header is already set.
             manager.setData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07});
             std::vector<std::vector<uint8_t>> packets;
             packets.reserve(manager.getTotalPackets());

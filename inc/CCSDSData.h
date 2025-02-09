@@ -45,7 +45,7 @@ namespace CCSDS{
         std::vector<uint8_t> getApplicationData()  {return m_applicationData; }
         std::vector<uint8_t> getFullDataField();
         bool getDataFieldHeaderFlag() const       { return !m_dataFieldHeader.empty() || m_pusHeaderData != nullptr; }
-        uint16_t getDataFieldMaximumSize() const  { return m_dataPacketSize; }
+        uint16_t getDataFieldAvailableSizeByes() const;
 
         void printData();
 

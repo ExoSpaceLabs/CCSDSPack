@@ -60,7 +60,7 @@ namespace CCSDS {
         std::vector<uint8_t> getFullDataField()        { return   m_dataField.getFullDataField(); }
         std::vector<uint8_t> getCRCVector();
         bool getDataFieldHeaderFlag()     const {    return m_primaryHeader.getDataFieldHeaderFlag(); }
-        uint16_t getDataFieldMaximumSize()    const { return m_dataField.getDataFieldMaximumSize(); }
+        uint16_t getDataFieldMaximumSize()    const { return m_dataField.getDataFieldAvailableSizeByes(); }
         uint16_t getCRC();
 
 
