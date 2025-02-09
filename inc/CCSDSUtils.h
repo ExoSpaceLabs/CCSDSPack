@@ -43,6 +43,7 @@ std::string getBinaryString(uint32_t value, int bits);
  */
 std::string getBitsSpaces(int num);
 
+void printBufferData(const std::vector<uint8_t>& buffer);
 /**
  * @brief A utility class for testing and validation.
  *

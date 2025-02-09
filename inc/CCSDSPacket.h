@@ -49,6 +49,7 @@ namespace CCSDS {
         void setApplicationData(               const uint8_t* pData, size_t sizeData );
 
         void setSequenceFlags(                                   ESequenceFlag flags );
+        void setSequenceCount(                                        uint16_t count );
         void setDataFieldSize(                                         uint16_t size );
 
         // getters
@@ -58,7 +59,8 @@ namespace CCSDS {
         std::vector<uint8_t> getApplicationData()      { return m_dataField.getApplicationData(); }
         std::vector<uint8_t> getFullDataField()        { return   m_dataField.getFullDataField(); }
         std::vector<uint8_t> getCRCVector();
-        bool getDataFieldHeaderFlag()    const { return m_primaryHeader.getDataFieldHeaderFlag(); }
+        bool getDataFieldHeaderFlag()     const {    return m_primaryHeader.getDataFieldHeaderFlag(); }
+        uint16_t getDataFieldMaximumSize()    const { return m_dataField.getDataFieldMaximumSize(); }
         uint16_t getCRC();
 
 

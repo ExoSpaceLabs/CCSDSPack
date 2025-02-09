@@ -110,16 +110,16 @@ std::vector<uint8_t> CCSDS::Packet::getPrimaryHeader() {
  */
 std::vector<uint8_t> CCSDS::Packet::serialize() {
 
-    if (getFullDataField().empty()) {
-        throw std::invalid_argument("[ CCSDS Packet ] Error: Data field is not set.");
-    }
     auto header         =       getPrimaryHeader();
     auto dataField = m_dataField.getFullDataField();
     const auto crc      =                 getCRCVector();
 
-    std::vector<uint8_t> packet{};
+    std::vector<uint8_t> packet;
+    packet.reserve(header.size() + dataField.size() + crc.size());
     packet.insert(packet.end(),    header.begin(),    header.end());
-    packet.insert(packet.end(), dataField.begin(), dataField.end());
+    if (!getFullDataField().empty()) {
+        packet.insert(packet.end(), dataField.begin(), dataField.end());
+    }
     packet.insert(packet.end(),       crc.begin(),       crc.end());
 
     return packet;
@@ -327,6 +327,10 @@ void CCSDS::Packet::setApplicationData( const uint8_t* pData, const size_t sizeD
  * @param flags The sequence flag to be set, represented by the ESequenceFlag enum : uint8_t.
  */
 void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags)  { m_primaryHeader.setSequenceFlags(flags);}
+
+void CCSDS::Packet::setSequenceCount( uint16_t count) {
+    m_sequenceCounter = count;
+}
 
 
 /**

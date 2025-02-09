@@ -34,6 +34,14 @@ std::string getBitsSpaces(const int num){
     return spaces;
 }
 
+void printBufferData(const std::vector<uint8_t>& buffer) {
+    std::cout << "[ ";
+    for (const unsigned char i : buffer) {
+        std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(i) << " ";
+    }
+    std::cout << "]" << std::endl;
+}
+
 uint16_t crc16(
     const std::vector<uint8_t>& data, const uint16_t polynomial, const uint16_t initialValue, const uint16_t finalXorValue) {
     uint16_t crc = initialValue;

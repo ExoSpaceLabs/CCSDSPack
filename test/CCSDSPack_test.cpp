@@ -307,12 +307,43 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
 
 
     tester->unitTest("Create an instance of management and set packet template.",[] {
-        const CCSDS::Packet packet{};
+        CCSDS::Packet packet{};
+        std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
+        packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00});
         CCSDS::Manager manager(packet);
-        manager.setDatFieldSize(4096);
-
-        return true;
+        auto templatePacket = manager.getPacketTemplate();
+        //manager.printTemplatePacket();
+        return std::equal(expected.begin(), expected.end(), templatePacket.begin());
     });
+    {
+        CCSDS::Packet packet{};
+        packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00});
+        CCSDS::Manager manager(packet);
+
+        tester->unitTest("Manager set data and check returned packet.",[&manager] {
+            manager.setDatFieldSize(5);
+            manager.setData({0x01, 0x02, 0x03, 0x04, 0x05});
+            auto ccsdsPacket = manager.getPacketAtIndex(0);
+            //manager.printPackets();
+            std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
+            return std::equal(expected.begin(), expected.end(), ccsdsPacket.begin()) && manager.getTotalPackets() == 1;
+        });
+
+        tester->unitTest("Manager set data with large Data and check returned multi packets.",[&manager] {
+            manager.setData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07});
+            std::vector<std::vector<uint8_t>> packets;
+            packets.reserve(manager.getTotalPackets());
+            for (int i = 0; i < manager.getTotalPackets(); i++) {
+                packets.push_back(manager.getPacketAtIndex(i));
+            }
+            //manager.printPackets();
+            std::vector<std::vector<uint8_t>> expected{
+                {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
+                {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
+                {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}};
+            return std::equal(expected.begin(), expected.end(), packets.begin()) && manager.getTotalPackets() == 3;
+        });
+    }
 }
 int main() {
 
