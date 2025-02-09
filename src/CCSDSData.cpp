@@ -31,13 +31,13 @@ std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
 }
 
 uint16_t CCSDS::DataField::getDataFieldAvailableSizeByes() const {
-    if (getDataFieldHeaderFlag()) {
+    if (!getDataFieldHeaderFlag()) {
         return m_dataPacketSize;
     }
     if (!m_dataFieldHeader.empty()) {
         return m_dataPacketSize - m_dataFieldHeader.size();
     }
-    if (!m_pusHeaderData) {
+    if (m_pusHeaderData != nullptr) {
         return m_dataPacketSize - m_pusHeaderData->getSize();
     }
     return 0;
