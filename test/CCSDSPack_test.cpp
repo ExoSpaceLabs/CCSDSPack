@@ -322,16 +322,16 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
 
         tester->unitTest("Manager set data and check returned packet.",[&manager] {
             manager.setDatFieldSize(5);
-            manager.setData({0x01, 0x02, 0x03, 0x04, 0x05});
+            manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05});
             auto ccsdsPacket = manager.getPacketAtIndex(0);
             //manager.printPackets();
             std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
             return std::equal(expected.begin(), expected.end(), ccsdsPacket.begin()) && manager.getTotalPackets() == 1;
         });
 
-        tester->unitTest("Manager set data with large Data and check returned multi packets.",[&manager] {
+        tester->unitTest("Manager set large data and check returned multi packets with sequence control.",[&manager] {
             // Note: Max data field size is set to 5 bytes, and header is already set.
-            manager.setData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07});
+            manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07});
             std::vector<std::vector<uint8_t>> packets;
             packets.reserve(manager.getTotalPackets());
             for (int i = 0; i < manager.getTotalPackets(); i++) {

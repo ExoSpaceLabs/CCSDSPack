@@ -125,6 +125,7 @@ std::vector<uint8_t> CCSDS::Packet::serialize() {
     return packet;
 }
 
+
 /**
  * @brief Sets the primary header using the provided 64-bit data.
  *
@@ -224,7 +225,7 @@ void CCSDS::Packet::setDataFieldHeader(const PusC& header ) {
  * @param data A vector containing the data for the data field header.
  * @param type The PUS type that specifies the purpose of the data.
  */
-void CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const PUSType type) {
+void CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const ESecondaryHeaderType type) {
     m_dataField.setDataFieldHeader( data, type );
 }
 
@@ -242,7 +243,7 @@ void CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const P
  * @param sizeData The size of the data pointed to by pData, in bytes.
  * @param type The PUS type that specifies the purpose of the data.
  */
-void CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData, const PUSType type) {
+void CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData, const ESecondaryHeaderType type) {
     m_dataField.setDataFieldHeader( pData, sizeData, type );
 }
 
@@ -328,7 +329,7 @@ void CCSDS::Packet::setApplicationData( const uint8_t* pData, const size_t sizeD
  */
 void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags)  { m_primaryHeader.setSequenceFlags(flags);}
 
-void CCSDS::Packet::setSequenceCount( uint16_t count) {
+void CCSDS::Packet::setSequenceCount(const uint16_t count) {
     m_sequenceCounter = count;
 }
 

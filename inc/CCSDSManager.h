@@ -16,12 +16,16 @@ namespace CCSDS {
 
     void setPacketTemplate(Packet packet);
     void setDatFieldSize(const uint16_t size) { m_packetTemplate.setDataFieldSize(size); }
-
-    void setData(const std::vector<uint8_t>& data);
+    void setApplicationData(const std::vector<uint8_t>& data);
 
     std::vector<uint8_t> getPacketTemplate() { return m_packetTemplate.serialize(); }
-    uint16_t getTotalPackets() const { return m_packets.size();}
     std::vector<uint8_t> getPacketAtIndex(uint16_t index);
+    //todo implement
+    std::vector<uint8_t> getApplicationData();
+    //todo implement
+    std::vector<uint8_t> getApplicationData(uint16_t index);
+
+    uint16_t getTotalPackets() const { return m_packets.size();}
 
     void printTemplatePacket();
     void printPackets();
@@ -32,7 +36,6 @@ namespace CCSDS {
     // Todo Make getPackets(); returns all packets
     private:
     Packet m_packetTemplate{};
-    std::vector<uint8_t> m_data{};
     std::vector<Packet> m_packets;
   };
 

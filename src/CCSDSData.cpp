@@ -181,7 +181,7 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
  * @throws std::invalid_argument If the header is null, size is zero, or exceeds the allowed size.
  * @return none.
  */
-void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &sizeData, const PUSType &pType) {
+void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &sizeData, const ESecondaryHeaderType &pType) {
     if (!pData) {
         throw std::invalid_argument("[ CCSDS Data ] Error: Header is nullptr");
     }
@@ -219,7 +219,7 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
  * @warning The method will log an error to standard error and throw an exception if the total
  *          size of the header and application data exceeds the allowed packet size.
  */
-void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , const PUSType &pType) {
+void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , const ESecondaryHeaderType &pType) {
     m_dataFieldHeaderType = pType;
     if (m_dataPacketSize < data.size() + m_applicationData.size()) {
         std::cerr << "[ PUS ] Header size: " << data.size() <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;

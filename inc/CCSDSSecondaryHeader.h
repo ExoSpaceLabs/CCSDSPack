@@ -10,7 +10,7 @@ namespace CCSDS {
     /**
      * @brief Enumeration representing the different types of PUS headers.
      */
-    enum PUSType {
+    enum ESecondaryHeaderType {
         NA,     ///< Not applicable or undefined.
         PUS_A,  ///< PUS Type A: Telemetry header.
         PUS_B,  ///< PUS Type B: Event Reporting header.
@@ -23,10 +23,10 @@ namespace CCSDS {
      *
      * Defines the common interface for all PUS header types.
      */
-    class PusHeader {
+    class SecondaryHeaderAbstract {
     public:
 
-        virtual ~PusHeader() = default;
+        virtual ~SecondaryHeaderAbstract() = default;
 
         /**
        * @brief Sets the length of the data associated with the PUS packet.
@@ -67,7 +67,7 @@ namespace CCSDS {
      * - Source ID: 8 bits, source identifier (e.g., satellite ID).
      * - Data Length: 16 bits, length of the telemetry data in bytes.
      */
-    class PusA final : public PusHeader {
+    class PusA final : public SecondaryHeaderAbstract {
     public:
         PusA() = default;
         /**
@@ -124,7 +124,7 @@ namespace CCSDS {
      * - Event ID: 16 bits, identifier of the event.
      * - Data Length: 16 bits, length of the event data in bytes.
      */
-    class PusB final : public PusHeader {
+    class PusB final : public SecondaryHeaderAbstract {
     public:
         PusB() = default;
 
@@ -185,7 +185,7 @@ namespace CCSDS {
      * - Time Code: 16 bits, value representing the time.
      * - Data Length: 16 bits, length of the time data in bytes.
      */
-    class PusC final : public PusHeader {
+    class PusC final : public SecondaryHeaderAbstract {
     public:
         PusC() = default;
         /**

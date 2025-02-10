@@ -32,6 +32,7 @@ namespace CCSDS {
     class Packet {
     public:
         Packet() = default;
+        //Todo implement
         explicit Packet(std::vector<uint8_t> data);
 
         // setters
@@ -41,8 +42,8 @@ namespace CCSDS {
         void setDataFieldHeader(                                  const PusA& header );
         void setDataFieldHeader(                                  const PusB& header );
         void setDataFieldHeader(                                  const PusC& header );
-        void setDataFieldHeader(      const std::vector<uint8_t>& data, PUSType type );
-        void setDataFieldHeader( const uint8_t* pData, size_t sizeData, PUSType type );
+        void setDataFieldHeader(      const std::vector<uint8_t>& data, ESecondaryHeaderType type );
+        void setDataFieldHeader( const uint8_t* pData, size_t sizeData, ESecondaryHeaderType type );
         void setDataFieldHeader(                    const std::vector<uint8_t>& data );
         void setDataFieldHeader(               const uint8_t* pData, size_t sizeData );
         void setApplicationData(                    const std::vector<uint8_t>& data );
@@ -65,8 +66,16 @@ namespace CCSDS {
 
 
         std::vector<uint8_t> serialize();
+        // todo implement
         void deserialize(std::vector<uint8_t> data);
-        void deserialize(std::vector<uint8_t> data, PUSType PusType);
+        // todo implement
+        void deserialize(std::vector<uint8_t> data, ESecondaryHeaderType PusType);
+        // todo implement
+        void deserialize(std::vector<uint8_t> data, uint16_t headerDataSizeBytes);
+        // todo implement
+        void deserialize(std::vector<uint8_t> headerData, std::vector<uint8_t> data);
+        // todo implement
+        uint16_t getFullPacketLength() const;
 
         // other
         void printPrimaryHeader() { m_primaryHeader.printHeader(); }

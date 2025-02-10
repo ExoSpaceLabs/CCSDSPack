@@ -2,30 +2,30 @@
 // Created by dev on 1/18/25.
 //
 
-#include "PUSService.h"
+#include "CCSDSSecondaryHeader.h"
 #include <vector>
 #include <stdexcept>
 #include <cstdint>
 
-void CCSDS::PusHeader::setDataLength(const uint16_t dataLength) {
+void CCSDS::SecondaryHeaderAbstract::setDataLength(const uint16_t dataLength) {
   // Default implementation (optional or could throw an exception)
   (void)dataLength; // To avoid unused parameter warning
 }
 
-void CCSDS::PusHeader::deserialize(const std::vector<uint8_t> &data) {
+void CCSDS::SecondaryHeaderAbstract::deserialize(const std::vector<uint8_t> &data) {
   (void)data;
 }
 
-uint16_t CCSDS::PusHeader::getDataLength() const {
+uint16_t CCSDS::SecondaryHeaderAbstract::getDataLength() const {
   return 0;
 }
 
-uint8_t CCSDS::PusHeader::getSize() const {
+uint8_t CCSDS::SecondaryHeaderAbstract::getSize() const {
   // Default implementation
   return 0; // or an appropriate default value
 }
 
-std::vector<uint8_t> CCSDS::PusHeader::serialize() const {
+std::vector<uint8_t> CCSDS::SecondaryHeaderAbstract::serialize() const {
   // Default implementation
   return {}; // Return an empty vector
 }

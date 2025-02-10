@@ -9,7 +9,7 @@ void CCSDS::Manager::setPacketTemplate(CCSDS::Packet packet){
   m_packetTemplate = std::move(packet);
 }
 
-void CCSDS::Manager::setData(const std::vector<uint8_t>& data) {
+void CCSDS::Manager::setApplicationData(const std::vector<uint8_t>& data) {
   if (!m_packets.empty()) {
     m_packets.clear();
   }

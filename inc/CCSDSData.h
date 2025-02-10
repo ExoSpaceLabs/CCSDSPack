@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
-#include "PUSService.h"
+#include "CCSDSSecondaryHeader.h"
 
 
 
@@ -32,8 +32,8 @@ namespace CCSDS{
         void setApplicationData(                        const std::vector<uint8_t>& applicationData );
         void setApplicationData(                       const uint8_t* pData, const size_t &sizeData );
         void setDataFieldHeader(                       const uint8_t* pData, const size_t &sizeData );
-        void setDataFieldHeader( const uint8_t* pData, const size_t &sizeData, const PUSType &pType );
-        void setDataFieldHeader(                  const std::vector<uint8_t>&, const PUSType &pType );
+        void setDataFieldHeader( const uint8_t* pData, const size_t &sizeData, const ESecondaryHeaderType &pType );
+        void setDataFieldHeader(                  const std::vector<uint8_t>&, const ESecondaryHeaderType &pType );
         void setDataFieldHeader(                        const std::vector<uint8_t>& dataFieldHeader );
         void setDataFieldHeader(                                                 const PusA& header );
         void setDataFieldHeader(                                                 const PusB& header );
@@ -52,10 +52,10 @@ namespace CCSDS{
     private:
         void updateDataFieldHeader();
 
-        std::shared_ptr<PusHeader>                 m_pusHeaderData{};
+        std::shared_ptr<SecondaryHeaderAbstract>                 m_pusHeaderData{};
         std::vector<uint8_t>                     m_dataFieldHeader{};
         std::vector<uint8_t>                     m_applicationData{};
-        PUSType                          m_dataFieldHeaderType{ NA };
+        ESecondaryHeaderType                          m_dataFieldHeaderType{ NA };
         uint16_t                           m_dataPacketSize{  2024 };
         bool                       m_dataFieldHeaderUpdated{ false };
     };
