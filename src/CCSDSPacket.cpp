@@ -125,6 +125,66 @@ std::vector<uint8_t> CCSDS::Packet::serialize() {
     return packet;
 }
 
+void CCSDS::Packet::deserialize(std::vector<uint8_t> data) {
+    if (data.size() > 5) {
+        std::vector<uint8_t> dataFieldVector;
+        if (data.size() > 6) {
+            std::copy(data.begin()+6, data.end(), std::back_inserter(dataFieldVector));
+        }
+        deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector);
+    }
+}
+
+void CCSDS::Packet::deserialize(std::vector<uint8_t> data, const ESecondaryHeaderType PusType) {
+    if (data.size() > 5) {
+        uint8_t headerDataSizeBytes;
+        std::shared_ptr<PusA> secondaryHeader;
+
+        if (PusType == PUS_A) {
+            headerDataSizeBytes = 6;
+            m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11]}, PUS_A);
+        }else {
+            headerDataSizeBytes = 8;
+            //todo Deal with cases when it is not Pus
+            m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13]}, PusType);
+        }
+
+        if (data.size() > (6 + headerDataSizeBytes)) {
+            std::vector<uint8_t> dataFieldVector;
+
+            if (data.size() > (7 + headerDataSizeBytes)) {
+                std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
+            }
+            deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector);
+        }
+    }
+}
+
+void CCSDS::Packet::deserialize(std::vector<uint8_t> data, const uint16_t headerDataSizeBytes) {
+    if (data.size() > 5) {
+        if (data.size() > (6 + headerDataSizeBytes)) {
+            std::vector<uint8_t> secondaryHeader;
+            std::vector<uint8_t> dataFieldVector;
+            std::copy(data.begin() + 6, data.begin() + 6 + headerDataSizeBytes, std::back_inserter(secondaryHeader));
+            m_dataField.setDataFieldHeader(secondaryHeader);
+            if (data.size() > (7 + headerDataSizeBytes)) {
+                std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
+            }
+            deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector);
+        }
+    }
+}
+
+void CCSDS::Packet::deserialize(const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data) {
+    if (headerData.size() == 6) {
+        m_primaryHeader.deserialize(headerData);
+        if (!data.empty()) {
+            m_dataField.setApplicationData(data);
+        }
+        updatePrimaryHeader();
+    }
+}
+
 
 /**
  * @brief Sets the primary header using the provided 64-bit data.

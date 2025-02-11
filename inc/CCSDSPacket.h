@@ -36,44 +36,40 @@ namespace CCSDS {
         explicit Packet(std::vector<uint8_t> data);
 
         // setters
-        void setPrimaryHeader(                                         uint64_t data );
-        void setPrimaryHeader(                      const std::vector<uint8_t>& data );
-        void setPrimaryHeader(                                    PrimaryHeader data );
-        void setDataFieldHeader(                                  const PusA& header );
-        void setDataFieldHeader(                                  const PusB& header );
-        void setDataFieldHeader(                                  const PusC& header );
+        void setPrimaryHeader(                                                      uint64_t data );
+        void setPrimaryHeader(                                   const std::vector<uint8_t>& data );
+        void setPrimaryHeader(                                                 PrimaryHeader data );
+        void setDataFieldHeader(                                               const PusA& header );
+        void setDataFieldHeader(                                               const PusB& header );
+        void setDataFieldHeader(                                               const PusC& header );
         void setDataFieldHeader(      const std::vector<uint8_t>& data, ESecondaryHeaderType type );
         void setDataFieldHeader( const uint8_t* pData, size_t sizeData, ESecondaryHeaderType type );
-        void setDataFieldHeader(                    const std::vector<uint8_t>& data );
-        void setDataFieldHeader(               const uint8_t* pData, size_t sizeData );
-        void setApplicationData(                    const std::vector<uint8_t>& data );
-        void setApplicationData(               const uint8_t* pData, size_t sizeData );
+        void setDataFieldHeader(                                 const std::vector<uint8_t>& data );
+        void setDataFieldHeader(                            const uint8_t* pData, size_t sizeData );
+        void setApplicationData(                                 const std::vector<uint8_t>& data );
+        void setApplicationData(                            const uint8_t* pData, size_t sizeData );
 
-        void setSequenceFlags(                                   ESequenceFlag flags );
-        void setSequenceCount(                                        uint16_t count );
-        void setDataFieldSize(                                         uint16_t size );
+        void setSequenceFlags(                                                ESequenceFlag flags );
+        void setSequenceCount(                                                     uint16_t count );
+        void setDataFieldSize(                                                      uint16_t size );
 
         // getters
         uint64_t getPrimaryHeader64bit();
         std::vector<uint8_t> getPrimaryHeader();
-        std::vector<uint8_t> getDataFieldHeader()      { return m_dataField.getDataFieldHeader(); }
-        std::vector<uint8_t> getApplicationData()      { return m_dataField.getApplicationData(); }
-        std::vector<uint8_t> getFullDataField()        { return   m_dataField.getFullDataField(); }
+        std::vector<uint8_t> getDataFieldHeader()              { return m_dataField.getDataFieldHeader(); }
+        std::vector<uint8_t> getApplicationData()              { return m_dataField.getApplicationData(); }
+        std::vector<uint8_t> getFullDataField()                { return   m_dataField.getFullDataField(); }
         std::vector<uint8_t> getCRCVector();
-        bool getDataFieldHeaderFlag()     const {    return m_primaryHeader.getDataFieldHeaderFlag(); }
-        uint16_t getDataFieldMaximumSize()    const { return m_dataField.getDataFieldAvailableSizeByes(); }
         uint16_t getCRC();
+        uint16_t getDataFieldMaximumSize()    const { return m_dataField.getDataFieldAvailableSizeByes(); }
+        bool getDataFieldHeaderFlag()         const {    return m_primaryHeader.getDataFieldHeaderFlag(); }
 
 
         std::vector<uint8_t> serialize();
-        // todo implement
-        void deserialize(std::vector<uint8_t> data);
-        // todo implement
-        void deserialize(std::vector<uint8_t> data, ESecondaryHeaderType PusType);
-        // todo implement
-        void deserialize(std::vector<uint8_t> data, uint16_t headerDataSizeBytes);
-        // todo implement
-        void deserialize(std::vector<uint8_t> headerData, std::vector<uint8_t> data);
+        void deserialize(                                                std::vector<uint8_t> data );
+        void deserialize(                  std::vector<uint8_t> data, ESecondaryHeaderType PusType );
+        void deserialize(                  std::vector<uint8_t> data, uint16_t headerDataSizeBytes );
+        void deserialize( const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
         // todo implement
         uint16_t getFullPacketLength() const;
 
