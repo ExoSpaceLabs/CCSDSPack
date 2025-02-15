@@ -48,9 +48,32 @@ void CCSDS::Manager::setApplicationData(const std::vector<uint8_t>& data) {
   }
 }
 
+void CCSDS::Manager::setAutoUpdateEnable(const bool enable) {
+  m_updateEnable = enable;
+  for (auto& packet : m_packets) {
+    packet.setUpdatePacketEnable(enable);
+  }
+}
+
 std::vector<uint8_t> CCSDS::Manager::getPacketAtIndex(const uint16_t index) {
   if (index <= m_packets.size()) {
     return m_packets[index].serialize();
+  }
+  return {};
+}
+
+std::vector<uint8_t> CCSDS::Manager::getApplicationData() const {
+  std::vector<uint8_t> data;
+  for (auto packet : m_packets) {
+    auto applicationData = packet.getApplicationData();
+    data.insert(data.end(),    applicationData.begin(),    applicationData.end());
+  }
+  return data;
+}
+
+std::vector<uint8_t> CCSDS::Manager::getApplicationDataAtIndex(const uint16_t index) {
+  if (index <= m_packets.size()) {
+    return m_packets[index].getApplicationData();
   }
   return {};
 }

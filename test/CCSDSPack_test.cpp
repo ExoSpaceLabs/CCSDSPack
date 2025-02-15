@@ -454,6 +454,26 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
                 {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}};
             return std::equal(expected.begin(), expected.end(), packets.begin()) && manager.getTotalPackets() == 3;
         });
+
+        tester->unitTest("Manager get application data, shall be the same as set data",[&manager] {
+            std::vector<uint8_t> expected {0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
+            auto ret = manager.getApplicationData();
+            return std::equal(expected.begin(), expected.end(), ret.begin());
+        });
+
+        tester->unitTest("Manager get application data at index, shall be the same as set data.",[&manager] {
+            bool ret{true};
+            std::vector<std::vector<uint8_t>> expected{
+                { 0x01, 0x02, 0x03, 0x04, 0x05 },
+                { 0x01, 0x02, 0x03, 0x04, 0x05 },
+                { 0x06, 0x07 }};
+
+            for (int i = 0; i < manager.getTotalPackets(); i++) {
+                auto data = manager.getApplicationDataAtIndex(i);
+                 ret &= std::equal(expected[i].begin(), expected[i].end(), data.begin());
+            }
+            return ret;
+        });
     }
 }
 int main() {

@@ -150,7 +150,7 @@ std::vector<uint8_t> CCSDS::Packet::serialize() {
 void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data) {
     if (data.size() > 5) {
         std::vector<uint8_t> dataFieldVector;
-        if (data.size() > 6) {
+        if (data.size() > 7) {
             std::copy(data.begin()+6, data.end(), std::back_inserter(dataFieldVector));
         }
         deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector);
