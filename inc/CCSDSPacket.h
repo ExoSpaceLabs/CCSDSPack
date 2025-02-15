@@ -32,8 +32,11 @@ namespace CCSDS {
     class Packet {
     public:
         Packet() = default;
-        //Todo implement
-        explicit Packet(std::vector<uint8_t> data);
+
+        explicit Packet(                                         const std::vector<uint8_t>& data );
+        explicit Packet(           const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
+        explicit Packet(           const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
+        explicit Packet( const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
 
         // setters
         void setPrimaryHeader(                                                      uint64_t data );
@@ -66,11 +69,11 @@ namespace CCSDS {
 
 
         std::vector<uint8_t> serialize();
-        void deserialize(                                                std::vector<uint8_t> data );
-        void deserialize(                  std::vector<uint8_t> data, ESecondaryHeaderType PusType );
-        void deserialize(                  std::vector<uint8_t> data, uint16_t headerDataSizeBytes );
+        void deserialize(                                         const std::vector<uint8_t>& data );
+        void deserialize(           const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
+        void deserialize(           const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
         void deserialize( const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
-        // todo implement
+
         uint16_t getFullPacketLength() const;
 
         // other

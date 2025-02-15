@@ -125,7 +125,7 @@ std::vector<uint8_t> CCSDS::Packet::serialize() {
     return packet;
 }
 
-void CCSDS::Packet::deserialize(std::vector<uint8_t> data) {
+void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data) {
     if (data.size() > 5) {
         std::vector<uint8_t> dataFieldVector;
         if (data.size() > 6) {
@@ -135,7 +135,7 @@ void CCSDS::Packet::deserialize(std::vector<uint8_t> data) {
     }
 }
 
-void CCSDS::Packet::deserialize(std::vector<uint8_t> data, const ESecondaryHeaderType PusType) {
+void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data, const ESecondaryHeaderType PusType) {
     if (data.size() > 5) {
         uint8_t headerDataSizeBytes;
         std::shared_ptr<PusA> secondaryHeader;
@@ -160,7 +160,7 @@ void CCSDS::Packet::deserialize(std::vector<uint8_t> data, const ESecondaryHeade
     }
 }
 
-void CCSDS::Packet::deserialize(std::vector<uint8_t> data, const uint16_t headerDataSizeBytes) {
+void CCSDS::Packet::deserialize( const std::vector<uint8_t>&  data, const uint16_t headerDataSizeBytes) {
     if (data.size() > 5) {
         if (data.size() > (6 + headerDataSizeBytes)) {
             std::vector<uint8_t> secondaryHeader;
@@ -185,6 +185,26 @@ void CCSDS::Packet::deserialize(const std::vector<uint8_t>& headerData, const st
     }
 }
 
+uint16_t CCSDS::Packet::getFullPacketLength() const {
+    // where 8 is derived from 6 bytes for Primary header and 2 bytes for CRC16.
+    return 8 + m_dataField.getDataFieldUsedSizeByes();
+}
+
+CCSDS::Packet::Packet(const std::vector<uint8_t>& data) {
+    deserialize(data);
+}
+
+CCSDS::Packet::Packet(const std::vector<uint8_t>& data, const ESecondaryHeaderType PusType) {
+    deserialize(data, PusType);
+}
+
+CCSDS::Packet::Packet(const std::vector<uint8_t>& data, const uint16_t headerDataSizeBytes) {
+    deserialize(data, headerDataSizeBytes);
+}
+
+CCSDS::Packet::Packet(const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data) {
+    deserialize(headerData, data);
+}
 
 /**
  * @brief Sets the primary header using the provided 64-bit data.

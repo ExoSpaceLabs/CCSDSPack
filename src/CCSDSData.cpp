@@ -31,14 +31,18 @@ std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
 }
 
 uint16_t CCSDS::DataField::getDataFieldAvailableSizeByes() const {
+    return m_dataPacketSize - getDataFieldUsedSizeByes();
+}
+
+uint16_t CCSDS::DataField::getDataFieldUsedSizeByes() const {
     if (!getDataFieldHeaderFlag()) {
-        return m_dataPacketSize;
+        return m_applicationData.size();
     }
     if (!m_dataFieldHeader.empty()) {
-        return m_dataPacketSize - m_dataFieldHeader.size();
+        return m_applicationData.size() + m_dataFieldHeader.size();
     }
     if (m_pusHeaderData != nullptr) {
-        return m_dataPacketSize - m_pusHeaderData->getSize();
+        return m_applicationData.size() + m_pusHeaderData->getSize();
     }
     return 0;
 }
