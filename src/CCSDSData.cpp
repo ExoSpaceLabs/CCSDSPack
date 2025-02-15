@@ -16,7 +16,7 @@
  * @return A vector containing the full data field (header + application data).
  */
 std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
-
+    update();
     const auto& dataFieldHeader = getDataFieldHeader();
     if (dataFieldHeader.size() + m_applicationData.size() > m_dataPacketSize) { // check if given header exeeds header size.
         std::cout << "[ CCSDS Data ] Provided data: " << dataFieldHeader.size() + m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
@@ -30,11 +30,23 @@ std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
     return fullData;
 }
 
-uint16_t CCSDS::DataField::getDataFieldAvailableSizeByes() const {
+std::vector<uint8_t> CCSDS::DataField::getApplicationData() {
+    update();
+    return m_applicationData;
+}
+
+uint16_t CCSDS::DataField::getDataFieldAvailableSizeByes() {
+    update();
     return m_dataPacketSize - getDataFieldUsedSizeByes();
 }
 
-uint16_t CCSDS::DataField::getDataFieldUsedSizeByes() const {
+uint16_t CCSDS::DataField::getDataFieldAbsoluteSizeByes() {
+    update();
+    return m_dataPacketSize;
+}
+
+uint16_t CCSDS::DataField::getDataFieldUsedSizeByes() {
+    update();
     if (!getDataFieldHeaderFlag()) {
         return m_applicationData.size();
     }
@@ -56,7 +68,7 @@ uint16_t CCSDS::DataField::getDataFieldUsedSizeByes() const {
  * @return none.
  */
 void CCSDS::DataField::printData() {
-
+    update();
     const auto dataFieldHeader = getDataFieldHeader();
     const uint16_t maxSize = (m_applicationData.size() > dataFieldHeader.size()) ? m_applicationData.size() : dataFieldHeader.size();
 
@@ -85,8 +97,8 @@ void CCSDS::DataField::printData() {
  *
  * @return None.
  */
-void CCSDS::DataField::updateDataFieldHeader() {
-    if (!m_dataFieldHeaderUpdated) {
+void CCSDS::DataField::update() {
+    if (!m_dataFieldHeaderUpdated && m_enableDataFieldUpdate) {
         if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
             m_pusHeaderData->setDataLength(m_applicationData.size());;
         }
@@ -123,7 +135,7 @@ void CCSDS::DataField::setApplicationData(const uint8_t * pData, const size_t &s
         std::cerr << "[ CCSDS Data ] Warning: Data field is not empty, it has been overwritten." << std::endl;
     }
     m_applicationData.assign(pData, pData + sizeData);
-    updateDataFieldHeader();
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -137,7 +149,7 @@ void CCSDS::DataField::setApplicationData(const uint8_t * pData, const size_t &s
  */
 void CCSDS::DataField::setApplicationData(const std::vector<uint8_t>& applicationData ) {
     m_applicationData = applicationData;
-    updateDataFieldHeader();
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -169,6 +181,7 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
     }
     m_dataFieldHeader.assign(pData, pData + sizeData);
     m_dataFieldHeaderType = OTHER;
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -203,6 +216,7 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
     }else {
         throw std::invalid_argument("[ CCSDS Data ] Error: Header type is NA (NOT APPLICABLE)");
     }
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -256,6 +270,7 @@ void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , con
             break;
         default: ;
     }
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -278,6 +293,7 @@ void CCSDS::DataField::setDataFieldHeader( const std::vector<uint8_t>& dataField
     }
     m_dataFieldHeader = dataFieldHeader;
     m_dataFieldHeaderType = OTHER;
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -289,6 +305,7 @@ void CCSDS::DataField::setDataFieldHeader( const std::vector<uint8_t>& dataField
 void CCSDS::DataField::setDataFieldHeader(const PusA& header ) {
     m_dataFieldHeaderType = PUS_A;
     m_pusHeaderData = std::make_shared<PusA>(header);
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -300,6 +317,7 @@ void CCSDS::DataField::setDataFieldHeader(const PusA& header ) {
 void CCSDS::DataField::setDataFieldHeader(const PusB& header ) {
     m_dataFieldHeaderType = PUS_B;
     m_pusHeaderData = std::make_shared<PusB>(header);
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -311,6 +329,7 @@ void CCSDS::DataField::setDataFieldHeader(const PusB& header ) {
 void CCSDS::DataField::setDataFieldHeader(const PusC& header ) {
     m_dataFieldHeaderType = PUS_C;
     m_pusHeaderData = std::make_shared<PusC>(header);
+    m_dataFieldHeaderUpdated = false;
 }
 
 /**
@@ -333,6 +352,7 @@ void CCSDS::DataField::setDataPacketSize(const uint16_t &value)  {  m_dataPacket
  * @return A vector containing the header data bytes.
  */
 std::vector<uint8_t> CCSDS::DataField::getDataFieldHeader() {
+    update();
     if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
         return m_pusHeaderData->serialize();;
     }

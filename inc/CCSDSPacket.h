@@ -33,63 +33,61 @@ namespace CCSDS {
     public:
         Packet() = default;
 
-        explicit Packet(                                         const std::vector<uint8_t>& data );
-        explicit Packet(           const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
-        explicit Packet(           const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
-        explicit Packet( const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
+        explicit Packet(                                                 const std::vector<uint8_t>& data );
+        explicit Packet(                   const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
+        explicit Packet(                   const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
+        explicit Packet(         const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
 
         // setters
-        void setPrimaryHeader(                                                      uint64_t data );
-        void setPrimaryHeader(                                   const std::vector<uint8_t>& data );
-        void setPrimaryHeader(                                                 PrimaryHeader data );
-        void setDataFieldHeader(                                               const PusA& header );
-        void setDataFieldHeader(                                               const PusB& header );
-        void setDataFieldHeader(                                               const PusC& header );
-        void setDataFieldHeader(      const std::vector<uint8_t>& data, ESecondaryHeaderType type );
-        void setDataFieldHeader( const uint8_t* pData, size_t sizeData, ESecondaryHeaderType type );
-        void setDataFieldHeader(                                 const std::vector<uint8_t>& data );
-        void setDataFieldHeader(                            const uint8_t* pData, size_t sizeData );
-        void setApplicationData(                                 const std::vector<uint8_t>& data );
-        void setApplicationData(                            const uint8_t* pData, size_t sizeData );
+        void setPrimaryHeader(                                                              uint64_t data );
+        void setPrimaryHeader(                                           const std::vector<uint8_t>& data );
+        void setPrimaryHeader(                                                         PrimaryHeader data );
+        void setDataFieldHeader(                                                       const PusA& header );
+        void setDataFieldHeader(                                                       const PusB& header );
+        void setDataFieldHeader(                                                       const PusC& header );
+        void setDataFieldHeader(              const std::vector<uint8_t>& data, ESecondaryHeaderType type );
+        void setDataFieldHeader(         const uint8_t* pData, size_t sizeData, ESecondaryHeaderType type );
+        void setDataFieldHeader(                                         const std::vector<uint8_t>& data );
+        void setDataFieldHeader(                                    const uint8_t* pData, size_t sizeData );
+        void setApplicationData(                                         const std::vector<uint8_t>& data );
+        void setApplicationData(                                    const uint8_t* pData, size_t sizeData );
 
-        void setSequenceFlags(                                                ESequenceFlag flags );
-        void setSequenceCount(                                                     uint16_t count );
-        void setDataFieldSize(                                                      uint16_t size );
+        void setSequenceFlags(                                                        ESequenceFlag flags );
+        void setSequenceCount(                                                             uint16_t count );
+        void setDataFieldSize(                                                              uint16_t size );
+        void setUpdatePacketEnable(                                                           bool enable );
+        void deserialize(                                                const std::vector<uint8_t>& data );
+        void deserialize(                  const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
+        void deserialize(                  const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
+        void deserialize(        const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
 
         // getters
         uint64_t getPrimaryHeader64bit();
+        uint16_t getFullPacketLength();
+        std::vector<uint8_t> serialize();
         std::vector<uint8_t> getPrimaryHeader();
-        std::vector<uint8_t> getDataFieldHeader()              { return m_dataField.getDataFieldHeader(); }
-        std::vector<uint8_t> getApplicationData()              { return m_dataField.getApplicationData(); }
-        std::vector<uint8_t> getFullDataField()                { return   m_dataField.getFullDataField(); }
+        std::vector<uint8_t> getDataFieldHeader();
+        std::vector<uint8_t> getApplicationData();
+        std::vector<uint8_t> getFullDataField();
         std::vector<uint8_t> getCRCVector();
         uint16_t getCRC();
-        uint16_t getDataFieldMaximumSize()    const { return m_dataField.getDataFieldAvailableSizeByes(); }
-        bool getDataFieldHeaderFlag()         const {    return m_primaryHeader.getDataFieldHeaderFlag(); }
-
-
-        std::vector<uint8_t> serialize();
-        void deserialize(                                         const std::vector<uint8_t>& data );
-        void deserialize(           const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
-        void deserialize(           const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
-        void deserialize( const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
-
-        uint16_t getFullPacketLength() const;
+        uint16_t getDataFieldMaximumSize();
+        bool getDataFieldHeaderFlag();
 
         // other
-        void printPrimaryHeader() { m_primaryHeader.printHeader(); }
+        void printPrimaryHeader()                                        { m_primaryHeader.printHeader(); }
         void printDataField();
 
+        void update();
     private:
-        void updatePrimaryHeader();
 
-        Header m_primaryHeader{};         // 6 bytes / 48 bits / 12 hex
-        DataField m_dataField{};          // variable
-        uint16_t m_CRC16{};               // Cyclic Redundancy check 16 bits
+        Header            m_primaryHeader{};      // 6 bytes / 48 bits / 12 hex
+        DataField             m_dataField{};      // variable
+        uint16_t                  m_CRC16{};      // Cyclic Redundancy check 16 bits
 
-        bool m_crcCalculated{false};      // When setting data thus value should be set to false.
-        bool m_updatedHeader{false};      // When setting data thus value should be set to false.
-        uint16_t m_sequenceCounter{0};
+        bool        m_updateStatus{ false };      // When setting data thus value should be set to false.
+        bool   m_enableUpdatePacket{ true };      // Enables primary header and secondary header update.
+        uint16_t     m_sequenceCounter{ 0 };
     };
 }
 #endif // CCSDSPACKET_H

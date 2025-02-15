@@ -40,17 +40,17 @@ namespace CCSDS {
      */
     struct PrimaryHeader {
         // version and packet identification 16 bit 4 hex
-        uint8_t       versionNumber; ///< 3 bit first of packet identification
-        uint8_t                type; ///< 1 bit second of packet identification
-        uint8_t dataFieldHeaderFlag; ///< 1 bit third of packet identification
-        uint16_t               APID; ///< 11 bit last of packet identification
+        uint8_t       versionNumber{}; ///< 3 bit first of packet identification
+        uint8_t                type{}; ///< 1 bit second of packet identification
+        uint8_t dataFieldHeaderFlag{}; ///< 1 bit third of packet identification
+        uint16_t               APID{}; ///< 11 bit last of packet identification
 
         //packet sequence control 16 bit 4 hex
-        uint8_t       sequenceFlags; ///< 2 bit first of sequence control
-        uint16_t      sequenceCount; ///< 14 bit last of sequence control
+        uint8_t       sequenceFlags{}; ///< 2 bit first of sequence control
+        uint16_t      sequenceCount{}; ///< 14 bit last of sequence control
 
         // data packet length
-        uint16_t         dataLength; ///< 16 bits
+        uint16_t         dataLength{}; ///< 16 bits
 
         /**
          * @brief Constructs a PrimaryHeader with specified field values.
