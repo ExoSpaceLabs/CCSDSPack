@@ -5,19 +5,7 @@
 
 #include <iostream>
 
-/**
- * @brief Prints the data field and the CRC-16 checksum of the packet.
- *
- * Outputs the content of the data field and the CRC-16 checksum
- * in hexadecimal format to the standard output.
- *
- * @return none.
- */
-void CCSDS::Packet::printDataField() {
-    update();
-    m_dataField.printData();
-    std::cout << "[ CCSDSPack ] CRC-16                   [Hex] : [ "<< "0x" << std::hex << getCRC() << " ]" << std::endl;
-}
+
 
 /**
  * @brief Updates Primary headers data field size.
@@ -60,6 +48,11 @@ uint16_t CCSDS::Packet::getDataFieldMaximumSize() {
 bool CCSDS::Packet::getDataFieldHeaderFlag() {
     update();
     return m_primaryHeader.getDataFieldHeaderFlag();
+}
+
+CCSDS::Result<CCSDS::DataField> CCSDS::Packet::getDataField() {
+    update();
+    return m_dataField;
 }
 
 /**

@@ -96,7 +96,7 @@ std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; \
 
 
 //used in unit testing to return false if an error occured.
-#define TEST_ASSIGN_OR_RETURN_VALID(var, result) \
+#define TEST_RET(var, result)                  \
     do {                                       \
         auto&& _res = (result);                \
         if (!_res) {                           \

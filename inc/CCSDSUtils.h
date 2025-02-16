@@ -1,6 +1,7 @@
 #ifndef CCSDSUTILS_H
 #define CCSDSUTILS_H
 
+#include <CCSDSPacket.h>
 #include <string>
 #include <cstdint>
 #include <chrono>
@@ -26,6 +27,9 @@ uint16_t crc16(const std::vector<uint8_t>& data,
     uint16_t finalXorValue = 0x0000
 );
 
+
+void printPackets(std::vector<CCSDS::Packet>& packets);
+
 /**
  * @brief Converts a given value to its binary representation as a string, with spaces every 4 bits.
  *
@@ -44,6 +48,10 @@ std::string getBinaryString(uint32_t value, int bits);
 std::string getBitsSpaces(int num);
 
 void printBufferData(const std::vector<uint8_t>& buffer);
+void printData(CCSDS::DataField dataField);
+void printHeader(CCSDS::Header& header);
+void printPrimaryHeader(CCSDS::Packet& packet);
+void printDataField(CCSDS::Packet& packet);
 /**
  * @brief A utility class for testing and validation.
  *

@@ -1,6 +1,7 @@
 #ifndef CCSDSPACKET_H
 #define CCSDSPACKET_H
 
+#include <CCSDSResult.h>
 #include <cstdint>
 #include <vector>
 #include "CCSDSHeader.h"
@@ -73,10 +74,10 @@ namespace CCSDS {
         uint16_t getCRC();
         uint16_t getDataFieldMaximumSize();
         bool getDataFieldHeaderFlag();
+        Result<CCSDS::DataField> getDataField();
 
         // other
-        void printPrimaryHeader()                                        { m_primaryHeader.printHeader(); }
-        void printDataField();
+
 
         void update();
     private:

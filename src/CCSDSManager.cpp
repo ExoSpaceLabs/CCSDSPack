@@ -3,8 +3,6 @@
 
 #include <utility>
 #include "CCSDSUtils.h"
-#include <iostream>
-
 void CCSDS::Manager::setPacketTemplate(CCSDS::Packet packet){
   m_packetTemplate = std::move(packet);
 }
@@ -88,21 +86,9 @@ CCSDS::Result<unsigned short> CCSDS::Manager::getTotalPackets() const {
   return m_packets.size();
 }
 
-void CCSDS::Manager::printTemplatePacket() {
-  m_packetTemplate.printPrimaryHeader();
-  m_packetTemplate.printDataField();
+CCSDS::Result<std::vector<CCSDS::Packet>> CCSDS::Manager::getPackets() {
+  RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
+  return m_packets;
 }
 
-void CCSDS::Manager::printPackets() {
-  int idx = 0;
-  for (auto& packet : m_packets) {
-    std::cout << "[ CCSDS Manager ] Printing Packet [ "<< idx << " ]:" << std::endl;
-    std::cout << "[ CCSDS Manager ] Data ";
-    printBufferData(packet.serialize());
 
-    packet.printPrimaryHeader();
-    packet.printDataField();
-
-    idx++;
-  }
-}

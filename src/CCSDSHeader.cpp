@@ -96,28 +96,3 @@ void CCSDS::Header::setData(const PrimaryHeader &data){
     m_packetIdentificationAndVersion = (static_cast<uint16_t>(m_versionNumber) << 13) | (m_type << 12) | static_cast<uint16_t>((m_dataFieldHeaderFlag) << 11) | m_APID;
 }
 
-
-/**
- * @brief Prints the header fields and their binary or hexadecimal representations.
- *
- * Outputs all relevant header fields, including the full primary header, version number,
- * type, data field header flag, APID, sequence flags, sequence count, and data length.
- * Each field is displayed with appropriate formatting and spacing.
- *
- * @return none.
- */
-void CCSDS::Header::printHeader(){
-
-    std::cout << std::endl;
-    std::cout << " [CCSDS HEADER] Test result:" << std::endl;
-    std::cout << " [CCSDS HEADER] Full Primary Header    [Hex] : [ " << getBitsSpaces(17-12) << "0x" << std::hex << getFullHeader() << " ]" << std::endl;
-    std::cout << std::endl;
-    std::cout << " [CCSDS HEADER] Info: Version Number         : [ " << getBitsSpaces(19- 4) << getBinaryString(       getVersionNumber(),  3 ) << " ]" << std::endl;
-    std::cout << " [CCSDS HEADER] Info: Type                   : [ " << getBitsSpaces(19- 4) << getBinaryString(                getType(),  1 ) << " ]" << std::endl;
-    std::cout << " [CCSDS HEADER] Info: Data Field Header Flag : [ " << getBitsSpaces(19- 4) << getBinaryString( getDataFieldHeaderFlag(),  1 ) << " ]" << std::endl;
-    std::cout << " [CCSDS HEADER] Info: APID                   : [ " << getBitsSpaces(17-12) << getBinaryString(                getAPID(), 11 ) << " ]" << std::endl;
-    std::cout << " [CCSDS HEADER] Info: Sequence Flags         : [ " << getBitsSpaces(19- 4) << getBinaryString(       getSequenceFlags(),  2 ) << " ]" << std::endl;
-    std::cout << " [CCSDS HEADER] Info: Sequence Count         : [ " << getBitsSpaces(    0) << getBinaryString(       getSequenceCount(), 14 ) << " ]" << std::endl;
-    std::cout << " [CCSDS HEADER] Info: DataLength             : [ "                              << getBinaryString(          getDataLength(), 16 ) << " ]" << std::endl;
-    std::cout << std::endl;
-}

@@ -131,7 +131,7 @@ namespace CCSDS {
         void setData(const PrimaryHeader &data);
         void deserialize(const std::vector<uint8_t>& data );
         // print out the header
-        void printHeader();
+
 
     private:
 

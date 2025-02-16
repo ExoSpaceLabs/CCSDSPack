@@ -60,36 +60,6 @@ uint16_t CCSDS::DataField::getDataFieldUsedSizeByes() {
 }
 
 /**
- * @brief Prints the data field details, including the secondary header and application data.
- *
- * Outputs information about the presence of a secondary header and the content
- * of both the secondary header and the application data in hexadecimal format.
- *
- * @return none.
- */
-void CCSDS::DataField::printData() {
-    update();
-    const auto dataFieldHeader = getDataFieldHeader();
-    const uint16_t maxSize = (m_applicationData.size() > dataFieldHeader.size()) ? m_applicationData.size() : dataFieldHeader.size();
-
-    std::cout << std::endl;
-    std::cout << " [CCSDS DATA] Test result:" << std::endl;
-    std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << (getDataFieldHeaderFlag()  ? "True" : "False") << " ]" << std::endl;
-    std::cout << " [CCSDS DATA] Secondary Header         [Hex] : [ " << getBitsSpaces((maxSize - static_cast<uint16_t>(dataFieldHeader.size()))*4) ;
-    for(const auto& data : dataFieldHeader) {
-        std::cout << "0x" << std::hex << static_cast<unsigned int>(data) << " ";
-    }
-
-    std::cout <<"]" <<  std::endl;
-    std::cout << " [CCSDS DATA] Data Field               [Hex] : [ " << getBitsSpaces((maxSize - static_cast<uint16_t>(m_applicationData.size()))*4) ;
-    for(const auto& data : m_applicationData) {
-        std::cout << "0x" << std::hex << static_cast<unsigned int>(data)<< " ";
-    }
-    std::cout <<"]" <<  std::endl;
-    std::cout << std::endl;
-}
-
-/**
  * @brief Updates the data field header based on the current application data size.
  *
  * Updates the length field in the secondary header to match the size of the

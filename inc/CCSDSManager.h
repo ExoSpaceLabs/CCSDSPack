@@ -28,14 +28,11 @@ namespace CCSDS {
 
     [[nodiscard]] Result< uint16_t> getTotalPackets() const;
     [[nodiscard]] bool getAutoUpdateEnable() const { return m_updateEnable;}
+    Packet getTemplate() { return m_packetTemplate; };
+    Result<std::vector<Packet>> getPackets();
 
     void printTemplatePacket();
-    void printPackets();
 
-
-    // todo Make getters and setters for this class...
-    // Todo Make getPacketAt(index)
-    // Todo Make getPackets(); returns all packets
     private:
     Packet m_packetTemplate{};
     bool m_updateEnable{true};  // by default every packet is set to true.

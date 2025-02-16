@@ -52,7 +52,7 @@ namespace CCSDS{
         uint16_t getDataFieldUsedSizeByes();
         uint16_t getDataFieldAvailableSizeByes();
 
-        void printData();
+
 
         void update();
     private:
