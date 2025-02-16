@@ -2,7 +2,6 @@
 
 #include "CCSDSData.h"
 #include "CCSDSUtils.h"
-#include <cstring>
 #include <iostream>
 #include <stdexcept>
 

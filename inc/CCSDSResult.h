@@ -5,9 +5,9 @@
 #ifndef CCSDSRESULT_H
 #define CCSDSRESULT_H
 
-#include <iostream>
 #include <unordered_map>
 #include <variant>
+#include <vector>
 
 namespace CCSDS {
 
@@ -36,6 +36,7 @@ namespace CCSDS {
         const auto it = errorMessageMap.find(code);
         return (it != errorMessageMap.end()) ? it->second : "Unhandled error";
     }
+
 
 
     // The `Result<T>` class encapsulating both a value and an error code
@@ -72,6 +73,11 @@ namespace CCSDS {
         // Implicit conversion to `bool`, allowing usage like `if (result)`
         explicit operator bool() const { return has_value(); }
     };
+
+    // Define alias for convenience
+    using ResultBool = Result<bool>;
+    using ResultBuffer = Result<std::vector<uint8_t>>;
+
 }
 
 #define RETURN_IF_ERROR(condition, errorCode)  \
@@ -92,7 +98,7 @@ std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; \
         } else {                               \
             var = std::move(_res.value());     \
         }                                      \
-} while (0)
+    } while (0)
 
 
 //used in unit testing to return false if an error occured.
@@ -104,6 +110,29 @@ std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; retur
         } else {                               \
             var = std::move(_res.value());     \
         }                                      \
-} while (0)
+    } while (0)
+
+//used in unit testing to return false if an error occured.
+#define TEST_VOID( result )                    \
+    do {                                       \
+        auto&& _res = (result);                \
+        if (!_res) {                           \
+            std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; return false;\
+        }                                      \
+    } while (0)
+
+// If `result` contains an error, return immediately (for void functions)
+#define ASSERT_SUCCESS(result)                 \
+    do {                                       \
+        auto&& _res = (result);                \
+        if (!_res.has_value()) return;         \
+    } while (0)
+
+// Forward the result as-is (for functions returning Result<T>)
+#define FORWARD_RESULT(result)                 \
+    do {                                       \
+        auto&& _res = (result);                \
+        if (!_res.has_value()) return _res;    \
+    } while (0)
 
 #endif //CCSDSRESULT_H

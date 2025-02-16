@@ -432,8 +432,8 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
         CCSDS::Manager manager(packet);
 
         tester->unitTest("Manager set data and check returned packet.",[&manager] {
-            manager.setDatFieldSize(5);
-            manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05});
+            TEST_VOID(manager.setDatFieldSize(5));
+            TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05}));
             std::vector<uint8_t> ret{};
             TEST_RET(ret, manager.getPacketAtIndex(0));
             std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
@@ -445,7 +445,7 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
 
         tester->unitTest("Manager set large data and check returned multi packets with sequence control.",[&manager] {
             // Note: Max data field size is set to 5 bytes, and header is already set.
-            manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07});
+            TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07}));
             std::vector<std::vector<uint8_t>> ret{};
             uint16_t totalNumberOfPackets{0};
             TEST_RET(totalNumberOfPackets, manager.getTotalPackets());
@@ -493,8 +493,6 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
             std::vector<std::vector<uint8_t>> ret{};
             std::vector<CCSDS::Packet> localPackets;
             TEST_RET(localPackets, manager.getPackets());
-
-            printPackets(localPackets);
             ret.reserve(localPackets.size());
             for (auto localPacket : localPackets) {
                 std::vector<uint8_t> pack{};

@@ -1,13 +1,20 @@
 
 #include "CCSDSManager.h"
-
 #include <utility>
 #include "CCSDSUtils.h"
+
 void CCSDS::Manager::setPacketTemplate(CCSDS::Packet packet){
   m_packetTemplate = std::move(packet);
+  //RETURN_IF_ERROR(, ErrorCode::NO_DATA );
 }
 
-void CCSDS::Manager::setApplicationData(const std::vector<uint8_t>& data) {
+CCSDS::ResultBool CCSDS::Manager::setDatFieldSize(const uint16_t size) {
+  m_packetTemplate.setDataFieldSize(size);
+  return true;
+}
+
+CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t>& data) {
+   RETURN_IF_ERROR(data.empty(), ErrorCode::NO_DATA);
   if (!m_packets.empty()) {
     m_packets.clear();
   }
@@ -44,6 +51,7 @@ void CCSDS::Manager::setApplicationData(const std::vector<uint8_t>& data) {
     m_packets.push_back(std::move(newPacket));
     sequenceCount++;
   }
+   return true;
 }
 
 void CCSDS::Manager::setAutoUpdateEnable(const bool enable) {
@@ -53,19 +61,19 @@ void CCSDS::Manager::setAutoUpdateEnable(const bool enable) {
   }
 }
 
-CCSDS::Result<std::vector<unsigned char>> CCSDS::Manager::getPacketTemplate() {
+CCSDS::ResultBuffer CCSDS::Manager::getPacketTemplate() {
   auto data = m_packetTemplate.serialize();
   RETURN_IF_ERROR(data.empty(), ErrorCode::NO_DATA);
   return data;
 }
 
-CCSDS::Result<std::vector<uint8_t>> CCSDS::Manager::getPacketAtIndex(const uint16_t index) {
+CCSDS::ResultBuffer CCSDS::Manager::getPacketAtIndex(const uint16_t index) {
   RETURN_IF_ERROR(index < 0, ErrorCode::INVALID_DATA);
   RETURN_IF_ERROR(index >= m_packets.size(), ErrorCode::INVALID_DATA);
   return m_packets[index].serialize();
 }
 
-CCSDS::Result<std::vector<uint8_t>> CCSDS::Manager::getApplicationData() const {
+CCSDS::ResultBuffer CCSDS::Manager::getApplicationData() const {
   RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
   std::vector<uint8_t> data;
   for (auto packet : m_packets) {
@@ -75,13 +83,13 @@ CCSDS::Result<std::vector<uint8_t>> CCSDS::Manager::getApplicationData() const {
   return data;
 }
 
-CCSDS::Result<std::vector<uint8_t>> CCSDS::Manager::getApplicationDataAtIndex(const uint16_t index) {
+CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataAtIndex(const uint16_t index) {
   RETURN_IF_ERROR(index < 0, ErrorCode::INVALID_DATA);
   RETURN_IF_ERROR(index >= m_packets.size(), ErrorCode::INVALID_DATA);
   return m_packets[index].getApplicationData();
 }
 
-CCSDS::Result<unsigned short> CCSDS::Manager::getTotalPackets() const {
+CCSDS::Result< uint16_t >  CCSDS::Manager::getTotalPackets() const {
   RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
   return m_packets.size();
 }

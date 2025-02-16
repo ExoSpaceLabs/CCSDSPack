@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <chrono>
 #include <vector>
-#include "CCSDSResult.h"
+
 const std::string GREEN = "\033[32m"; ///< print Green color after this
 const std::string   RED = "\033[31m"; ///< print Red color after this
 const std::string RESET =  "\033[0m"; ///< print Reset color after this

@@ -3,10 +3,6 @@
 #include "CCSDSData.h"
 #include "CCSDSUtils.h"
 
-#include <iostream>
-
-
-
 /**
  * @brief Updates Primary headers data field size.
  *
