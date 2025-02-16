@@ -55,14 +55,20 @@ void CCSDS::Manager::setAutoUpdateEnable(const bool enable) {
   }
 }
 
-std::vector<uint8_t> CCSDS::Manager::getPacketAtIndex(const uint16_t index) {
-  if (index <= m_packets.size()) {
-    return m_packets[index].serialize();
-  }
-  return {};
+CCSDS::Result<std::vector<unsigned char>> CCSDS::Manager::getPacketTemplate() {
+  auto data = m_packetTemplate.serialize();
+  RETURN_IF_ERROR(data.empty(), ErrorCode::NO_DATA);
+  return data;
 }
 
-std::vector<uint8_t> CCSDS::Manager::getApplicationData() const {
+CCSDS::Result<std::vector<uint8_t>> CCSDS::Manager::getPacketAtIndex(const uint16_t index) {
+  RETURN_IF_ERROR(index < 0, ErrorCode::INVALID_DATA);
+  RETURN_IF_ERROR(index >= m_packets.size(), ErrorCode::INVALID_DATA);
+  return m_packets[index].serialize();
+}
+
+CCSDS::Result<std::vector<uint8_t>> CCSDS::Manager::getApplicationData() const {
+  RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
   std::vector<uint8_t> data;
   for (auto packet : m_packets) {
     auto applicationData = packet.getApplicationData();
@@ -71,11 +77,15 @@ std::vector<uint8_t> CCSDS::Manager::getApplicationData() const {
   return data;
 }
 
-std::vector<uint8_t> CCSDS::Manager::getApplicationDataAtIndex(const uint16_t index) {
-  if (index <= m_packets.size()) {
-    return m_packets[index].getApplicationData();
-  }
-  return {};
+CCSDS::Result<std::vector<uint8_t>> CCSDS::Manager::getApplicationDataAtIndex(const uint16_t index) {
+  RETURN_IF_ERROR(index < 0, ErrorCode::INVALID_DATA);
+  RETURN_IF_ERROR(index >= m_packets.size(), ErrorCode::INVALID_DATA);
+  return m_packets[index].getApplicationData();
+}
+
+CCSDS::Result<unsigned short> CCSDS::Manager::getTotalPackets() const {
+  RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
+  return m_packets.size();
 }
 
 void CCSDS::Manager::printTemplatePacket() {

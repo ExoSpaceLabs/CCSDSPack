@@ -1,6 +1,7 @@
 #include <iostream>
 #include "CCSDSManager.h"
 #include "CCSDSUtils.h"
+#include "CCSDSResult.h"
 
 void testGroupBasic(TestManager *tester, const std::string& description) {
     std::cout << "  testGroupBasic: " << description <<  std::endl;
@@ -421,8 +422,8 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
         std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
         packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00});
         CCSDS::Manager manager(packet);
-        auto templatePacket = manager.getPacketTemplate();
-        //manager.printTemplatePacket();
+        std::vector<uint8_t> templatePacket;
+        TEST_ASSIGN_OR_RETURN_VALID(templatePacket, manager.getPacketTemplate());
         return std::equal(expected.begin(), expected.end(), templatePacket.begin());
     });
     {
@@ -433,46 +434,58 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
         tester->unitTest("Manager set data and check returned packet.",[&manager] {
             manager.setDatFieldSize(5);
             manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05});
-            auto ccsdsPacket = manager.getPacketAtIndex(0);
-            //manager.printPackets();
+            std::vector<uint8_t> ret{};
+            TEST_ASSIGN_OR_RETURN_VALID(ret, manager.getPacketAtIndex(0));
             std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
-            return std::equal(expected.begin(), expected.end(), ccsdsPacket.begin()) && manager.getTotalPackets() == 1;
+            uint16_t totalNumberOfPackets{0};
+            TEST_ASSIGN_OR_RETURN_VALID(totalNumberOfPackets, manager.getTotalPackets());
+
+            return std::equal(expected.begin(), expected.end(), ret.begin()) && totalNumberOfPackets == 1;
         });
 
         tester->unitTest("Manager set large data and check returned multi packets with sequence control.",[&manager] {
             // Note: Max data field size is set to 5 bytes, and header is already set.
             manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07});
-            std::vector<std::vector<uint8_t>> packets;
-            packets.reserve(manager.getTotalPackets());
-            for (int i = 0; i < manager.getTotalPackets(); i++) {
-                packets.push_back(manager.getPacketAtIndex(i));
+            std::vector<std::vector<uint8_t>> ret{};
+            uint16_t totalNumberOfPackets{0};
+            TEST_ASSIGN_OR_RETURN_VALID(totalNumberOfPackets, manager.getTotalPackets());
+            ret.reserve(totalNumberOfPackets);
+            for (int i = 0; i < totalNumberOfPackets; i++) {
+                std::vector<uint8_t> pack{};
+                TEST_ASSIGN_OR_RETURN_VALID(pack, manager.getPacketAtIndex(i));
+                ret.push_back(pack);
             }
             //manager.printPackets();
             std::vector<std::vector<uint8_t>> expected{
                 {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
                 {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
                 {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}};
-            return std::equal(expected.begin(), expected.end(), packets.begin()) && manager.getTotalPackets() == 3;
+
+            return std::equal(expected.begin(), expected.end(), ret.begin()) && totalNumberOfPackets == 3;
         });
 
         tester->unitTest("Manager get application data, shall be the same as set data",[&manager] {
             std::vector<uint8_t> expected {0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
-            auto ret = manager.getApplicationData();
+            std::vector<uint8_t> ret{};
+            TEST_ASSIGN_OR_RETURN_VALID(ret, manager.getApplicationData());
             return std::equal(expected.begin(), expected.end(), ret.begin());
         });
 
         tester->unitTest("Manager get application data at index, shall be the same as set data.",[&manager] {
-            bool ret{true};
+            std::vector<std::vector<uint8_t>> ret{};
             std::vector<std::vector<uint8_t>> expected{
                 { 0x01, 0x02, 0x03, 0x04, 0x05 },
                 { 0x01, 0x02, 0x03, 0x04, 0x05 },
                 { 0x06, 0x07 }};
 
-            for (int i = 0; i < manager.getTotalPackets(); i++) {
-                auto data = manager.getApplicationDataAtIndex(i);
-                 ret &= std::equal(expected[i].begin(), expected[i].end(), data.begin());
+            uint16_t totalNumberOfPackets{0};
+            TEST_ASSIGN_OR_RETURN_VALID(totalNumberOfPackets, manager.getTotalPackets());
+            for (int i = 0; i < totalNumberOfPackets; i++) {
+                std::vector<uint8_t> data{};
+                TEST_ASSIGN_OR_RETURN_VALID(data, manager.getApplicationDataAtIndex(i));
+                ret.push_back(data);
             }
-            return ret;
+            return std::equal(expected.begin(), expected.end(), ret.begin());
         });
     }
 }

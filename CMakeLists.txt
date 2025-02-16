@@ -1,6 +1,9 @@
 # Minimum CMake version
 cmake_minimum_required(VERSION 3.10)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Project name
 set(LIB_NAME "CCSDSPack")
 
@@ -12,7 +15,7 @@ set(LIB_NAME "CCSDSPack")
 #PATCH: Increases for backward-compatible bug fixes or small improvements. A patch update fixes issues, improves stability, or makes minor improvements without adding new features.
 
 set(MAJOR "0")
-set(MINOR "2")
+set(MINOR "3")
 set(PATCH "0")
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")

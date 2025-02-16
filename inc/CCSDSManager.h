@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "CCSDSPacket.h"
+#include "CCSDSResult.h"
 
 namespace CCSDS {
 
@@ -20,13 +21,13 @@ namespace CCSDS {
     void setAutoUpdateEnable(bool enable);
 
 
-    std::vector<uint8_t> getPacketTemplate() { return m_packetTemplate.serialize(); }
-    std::vector<uint8_t> getPacketAtIndex(uint16_t index);
-    std::vector<uint8_t> getApplicationData() const;
-    std::vector<uint8_t> getApplicationDataAtIndex(uint16_t index);
+    Result<std::vector<uint8_t>> getPacketTemplate();
+    Result<std::vector<uint8_t>> getPacketAtIndex(uint16_t index);
+    [[nodiscard]] Result<std::vector<uint8_t>> getApplicationData() const;
+    Result<std::vector<uint8_t>> getApplicationDataAtIndex(uint16_t index);
 
-    uint16_t getTotalPackets() const { return m_packets.size();}
-    bool getAutoUpdateEnable() const { return m_updateEnable;}
+    [[nodiscard]] Result< uint16_t> getTotalPackets() const;
+    [[nodiscard]] bool getAutoUpdateEnable() const { return m_updateEnable;}
 
     void printTemplatePacket();
     void printPackets();
