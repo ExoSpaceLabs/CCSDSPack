@@ -7,13 +7,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Project name
 set(LIB_NAME "CCSDSPack")
 
-
 #MAJOR: Increases when there are breaking changes that are incompatible with previous versions. A major version change indicates significant updates or overhauls, and often requires developers to modify their code to stay compatible.
 
 #MINOR: Increases when new features or functionality are added in a backward-compatible way. These updates enhance the software but do not break existing functionality.
 
 #PATCH: Increases for backward-compatible bug fixes or small improvements. A patch update fixes issues, improves stability, or makes minor improvements without adding new features.
 
+# Versioning
 set(MAJOR "0")
 set(MINOR "3")
 set(PATCH "0")
@@ -28,26 +28,38 @@ project(${LIB_VERSIONED})
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/inc")
-set(LIBRARY_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/lib")
-set(BINARY_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin")
+
+# Set output directories for different OSes
+if (WIN32)
+    set(LIBRARY_OUTPUT_DIR "${CMAKE_BINARY_DIR}/lib")
+    set(BINARY_OUTPUT_DIR "${CMAKE_BINARY_DIR}/bin")
+else()
+    set(LIBRARY_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/lib")
+    set(BINARY_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin")
+endif()
 
 # Add include directories
 include_directories(${INCLUDE_DIR})
-# Collect all source files in the src folder for the library
-file(GLOB LIBRARY_INCLUDES "${INCLUDE_DIR}/*.h")
 
 # Collect all source files in the src folder for the library
 file(GLOB LIBRARY_SOURCES "${SOURCE_DIR}/*.cpp")
 
-# Create the library target
+# Create the shared library target
 add_library(${LIB_VERSIONED} SHARED ${LIBRARY_SOURCES})
 
-# Set the output directory for the library
+# Ensure Windows exports all symbols when building a shared library
+if (WIN32)
+    set_target_properties(${LIB_VERSIONED} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
+
+# Set the output directories for different platforms
 set_target_properties(${LIB_VERSIONED} PROPERTIES
+    ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
     LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
+    RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
 
-# Collect source files for the test executable (assuming it's in src/test.cpp)
+# Collect source files for the test executable
 set(TEST_SOURCES "${TEST_DIR}/CCSDSPack_test.cpp")
 
 # Create the test executable target
@@ -63,4 +75,3 @@ target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_VERSIONED})
 set_target_properties(${TESTER_EXEC} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
-
