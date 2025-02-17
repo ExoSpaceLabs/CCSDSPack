@@ -21,11 +21,9 @@ jobs:
           sudo apt update
           sudo apt install -y cmake make g++ 
 
-      - name: Run build script
+      - name: Run build
         run: |
-          cd build
-          cmake ..
-          make
+          cd build && cmake .. && make j($nproc)
 
       - name: Verify build artifacts
         run: |
