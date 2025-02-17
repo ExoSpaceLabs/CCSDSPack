@@ -62,10 +62,14 @@ jobs:
       - name: Verify build artifacts
         if: runner.os == 'Windows'
         run: |
-          ls -l lib/
-          ls -l bin/         
+          echo "Listing contents of build/lib/"
+          Get-ChildItem -Path build/lib/
+          echo "Listing contents of build/bin/"
+          Get-ChildItem -Path build/bin/        
 
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
-        run: ./bin/CCSDSPack_tester.exe 
-        
+        run: |
+          echo "Running CCSDSPack_tester.exe from build/bin/"
+          ./build/bin/CCSDSPack_tester.exe
+        shell: bash
