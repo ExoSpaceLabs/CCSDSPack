@@ -58,7 +58,6 @@ jobs:
         run: |
           cd build
           cmake --build . -- 
-          shell: bash
 
       - name: Verify build artifacts
         if: runner.os == 'Windows'
