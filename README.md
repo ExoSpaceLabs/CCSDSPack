@@ -4,7 +4,7 @@
 </div>
 
 # CCSDSPack
-![Build Status](https://img.shields.io/github/workflow/status/Inczert/CCSDSPack/ci.yml?label=Build&logo=github&branch=main)
+![Build Status](https://img.shields.io/github/workflow/status/Inczert/CCSDSPack/ci.yml?branch=main)
 
 
 C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, analisys and more
