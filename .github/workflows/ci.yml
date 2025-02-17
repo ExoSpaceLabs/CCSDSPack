@@ -12,7 +12,7 @@ jobs:
   build-and-test:
     strategy:
       matrix:
-        os: [ubuntu-22.04, linux-latest, windows-latest]
+        os: [linux-latest, ubuntu-22.04, windows-latest, windows-2019]
 
     runs-on: ${{ matrix.os }}
     
@@ -26,27 +26,17 @@ jobs:
           sudo apt update
           sudo apt install -y cmake make g++ 
 
-      - name: Run build
-        if: runner.os == 'Linux'
-        run: |
-          mkdir build && cd build && cmake .. && make
-
-      - name: Verify build artifacts
-        if: runner.os == 'Linux'
-        run: |
-          ls -l lib/
-          ls -l bin/
-
-      - name: Run tests Linux
-        if: runner.os == 'Linux'
-        run: ./bin/CCSDSPack_tester
-
       - name: Install dependencies (Windows)
         if: runner.os == 'Windows'
         run: |
           choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
           choco install ninja -y
           choco install mingw -y
+          
+      - name: Run build
+        if: runner.os == 'Linux'
+        run: |
+          mkdir build && cd build && cmake .. && make
 
       - name: Configure CMake (Windows)
         if: runner.os == 'Windows'
@@ -60,12 +50,22 @@ jobs:
           cmake --build . -- 
 
       - name: Verify build artifacts
+        if: runner.os == 'Linux'
+        run: |
+          ls -l lib/
+          ls -l bin/
+
+      - name: Verify build artifacts
         if: runner.os == 'Windows'
         run: |
           echo "Listing contents of build/lib/"
           Get-ChildItem -Path build/lib/
           echo "Listing contents of build/bin/"
-          Get-ChildItem -Path build/bin/        
+          Get-ChildItem -Path build/bin/   
+
+      - name: Run tests Linux
+        if: runner.os == 'Linux'
+        run: ./bin/CCSDSPack_tester     
 
       - name: Run tests (Windows)
         if: runner.os == 'Windows'
