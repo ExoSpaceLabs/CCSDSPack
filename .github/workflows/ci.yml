@@ -23,7 +23,7 @@ jobs:
 
       - name: Run build
         run: |
-          cd build && cmake .. && make j($nproc)
+          cd build && cmake .. && make
 
       - name: Verify build artifacts
         run: |
