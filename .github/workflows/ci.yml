@@ -10,26 +10,63 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, linux-latest, windows-latest]
 
+    runs-on: ${{ matrix.os }}
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install dependencies
+        if: runner.os == 'Linux'
         run: |
           sudo apt update
           sudo apt install -y cmake make g++ 
 
       - name: Run build
+        if: runner.os == 'Linux'
         run: |
           mkdir build && cd build && cmake .. && make
 
       - name: Verify build artifacts
+        if: runner.os == 'Linux'
         run: |
           ls -l lib/
           ls -l bin/
 
-      - name: Run tests
+      - name: Run tests Linux
+        if: runner.os == 'Linux'
         run: ./bin/CCSDSPack_tester
 
+      - name: Install dependencies (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install cmake --installargs 'ADD_CMAKE_TO_PATH=System' -y
+          choco install ninja -y
+          choco install mingw -y
+
+      - name: Configure CMake (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          mkdir build && cd build && cmake -G "MinGW Makefiles" ..
+          
+      - name: Build project (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd build
+          cmake --build . -- 
+          shell: bash
+
+      - name: Verify build artifacts
+        if: runner.os == 'Windows'
+        run: |
+          ls -l lib/
+          ls -l bin/         
+
+      - name: Run tests (Windows)
+        if: runner.os == 'Windows'
+        run: ./bin/CCSDSPack_tester.exe 
+        
