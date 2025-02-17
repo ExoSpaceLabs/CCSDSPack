@@ -4,7 +4,11 @@
 </div>
 
 # CCSDSPack
-![Build Status](https://github.com/Inczert/CCSDSPack/actions/workflows/ci.yml/badge.svg)
+![Build Status](https://github.com/Inczert/CCSDSPack/actions/workflows/ci.yml/badge.svg?job=linux)
+![Ubuntu 22.04](https://github.com/Inczert/CCSDSPack/actions/workflows/ci.yml/badge.svg?job=ubuntu-22-04)
+![Ubuntu Latest](https://github.com/Inczert/CCSDSPack/actions/workflows/ci.yml/badge.svg?job=ubuntu-latest)
+![Windows 10](https://github.com/Inczert/CCSDSPack/actions/workflows/ci.yml/badge.svg?job=windows-2019)
+![Windows Latest](https://github.com/Inczert/CCSDSPack/actions/workflows/ci.yml/badge.svg?job=windows-latest)
 
 ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/ci.yml?branch=main)
 
