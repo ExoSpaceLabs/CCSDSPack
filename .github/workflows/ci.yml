@@ -23,10 +23,9 @@ jobs:
 
       - name: Run build script
         run: |
-          cmake
           cd build
+          cmake ..
           make
-          cd ..
 
       - name: Verify build artifacts
         run: |
