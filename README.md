@@ -4,6 +4,8 @@
 </div>
 
 # CCSDSPack
+![Build Status](https://github.com/Inczert/CCSDSPack/actions/workflows/ci.yml/badge.svg)
+
 ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/ci.yml?branch=main)
 
 
