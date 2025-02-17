@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <variant>
 #include <vector>
+#include <cstdint>
 
 namespace CCSDS {
 
