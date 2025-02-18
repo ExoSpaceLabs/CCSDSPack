@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-22.04]
+
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cmake make g++ 
+
+      - name: Run build
+        run: |
+          mkdir build && cd build && cmake .. && make
+
+      - name: Verify build artifacts
+        run: |
+          ls -l lib/
+          ls -l bin/
+
+      - name: Run tests Linux
+        run: ./bin/CCSDSPack_tester     
+        
