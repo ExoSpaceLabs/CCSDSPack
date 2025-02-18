@@ -16,3 +16,6 @@ After the CCSDSPack has been defined:
 * Populate member variable vector if constraints are met.
   * if multiple packets are loaded check for sequence flag continue and end.
   * check for count in incrememntal order.
+
+
+Note git-hub Workflow does not support ubuntu-18.04 build and testing.
