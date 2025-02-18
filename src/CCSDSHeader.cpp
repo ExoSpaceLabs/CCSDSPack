@@ -6,6 +6,7 @@
 
 
 void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
+    //todo return ResultBool
     // use set data to handle the hard work
     if (data.size() != 6) {
         throw std::invalid_argument("Invalid Header Data");
@@ -28,6 +29,7 @@ void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
  * @return none.
  */
 void CCSDS::Header::setData(const uint64_t &data){
+  //todo return ResultBool
     if (data > 0xFFFFFFFFFFFF) { // check if given header exeeds header size.
         throw std::invalid_argument("[ CCSDS Header ] Error: Input data exceeds expected bit size for version or size.");
     }
@@ -49,6 +51,7 @@ void CCSDS::Header::setData(const uint64_t &data){
 }
 
 CCSDS::Header::Header(const std::vector<uint8_t>& data) {
+  //todo return ResultBool impossible therefore just print.
     deserialize(data);
 }
 
@@ -57,7 +60,7 @@ std::vector<uint8_t> CCSDS::Header::serialize()  {
     m_packetSequenceControl = (static_cast<uint16_t>(m_sequenceFlags) << 14) | m_sequenceCount;
     m_packetIdentificationAndVersion = (static_cast<uint16_t>(m_versionNumber) << 13) | (m_type << 12) | static_cast<uint16_t>((m_dataFieldHeaderFlag) << 11) | m_APID;
 
-    std::vector<uint8_t> data{
+    std::vector data{
         static_cast<unsigned char>(m_packetIdentificationAndVersion >> 8),
         static_cast<unsigned char>(m_packetIdentificationAndVersion & 0xFF),
         static_cast<unsigned char>(m_packetSequenceControl >> 8),

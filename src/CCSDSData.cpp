@@ -89,6 +89,7 @@ void CCSDS::DataField::update() {
  * @return none.
  */
 void CCSDS::DataField::setApplicationData(const uint8_t * pData, const size_t &sizeData) {
+    //todo return ResultBool
     const auto& dataFieldHeader = getDataFieldHeader();
     if (!pData) {
         throw std::invalid_argument("[ CCSDS Data ] Error: Data is nullptr");
@@ -117,6 +118,7 @@ void CCSDS::DataField::setApplicationData(const uint8_t * pData, const size_t &s
  * @return None.
  */
 void CCSDS::DataField::setApplicationData(const std::vector<uint8_t>& applicationData ) {
+    //todo return ResultBool with expection if trying to set more data than available
     m_applicationData = applicationData;
     m_dataFieldHeaderUpdated = false;
 }
@@ -135,6 +137,7 @@ void CCSDS::DataField::setApplicationData(const std::vector<uint8_t>& applicatio
  * @return none.
  */
 void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &sizeData) {
+    //todo return ResultBool
     if (!pData) {
         throw std::invalid_argument("[ CCSDS Data ] Error: Header is nullptr");
     }
@@ -168,6 +171,7 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
  * @return none.
  */
 void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &sizeData, const ESecondaryHeaderType &pType) {
+    //todo return ResultBool
     if (!pData) {
         throw std::invalid_argument("[ CCSDS Data ] Error: Header is nullptr");
     }
@@ -207,6 +211,8 @@ void CCSDS::DataField::setDataFieldHeader(const uint8_t * pData, const size_t &s
  *          size of the header and application data exceeds the allowed packet size.
  */
 void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , const ESecondaryHeaderType &pType) {
+
+    //todo return ResultBool
     m_dataFieldHeaderType = pType;
     if (m_dataPacketSize < data.size() + m_applicationData.size()) {
         std::cerr << "[ PUS ] Header size: " << data.size() <<", data size: " << m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
@@ -256,6 +262,7 @@ void CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data , con
  * and a warning message will be printed to the standard error stream.
  */
 void CCSDS::DataField::setDataFieldHeader( const std::vector<uint8_t>& dataFieldHeader ) {
+    //todo return ResultBool
     if (!m_dataFieldHeader.empty()) {
         std::cerr <<  "[ CCSDS Data ] Warning: Secondary Header field is not empty, it has been overwritten." << std::endl;
         m_dataFieldHeader.clear();

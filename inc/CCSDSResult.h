@@ -13,26 +13,28 @@
 namespace CCSDS {
 
     // Define an enum for error codes
-    enum class ErrorCode {
-        NONE,
-        NO_DATA,
-        INVALID_DATA,
-        INVALID_CHECKSUM,
-        DATA_TOO_SHORT,
-        UNKNOWN_ERROR
+    enum ErrorCode : int32_t{
+        NONE = 0,
+        NO_DATA = -128,
+        INVALID_DATA = -129,
+        INVALID_CHECKSUM = -130,
+        SOMETHING_WENT_WRONG = -131,
+        UNKNOWN_ERROR = -132
     };
 
     // Define a static unordered map for error messages
+    //todo remove the map, no need for this map, I can just log the error with cerr and return code.
     const std::unordered_map<ErrorCode, const char*> errorMessageMap = {
-        {ErrorCode::NONE, "No error"},
-        {ErrorCode::NO_DATA, "No Data"},
-        {ErrorCode::INVALID_DATA, "Invalid data provided"},
-        {ErrorCode::INVALID_CHECKSUM, "Invalid checksum detected"},
-        {ErrorCode::DATA_TOO_SHORT, "Data packet is too short"},
-        {ErrorCode::UNKNOWN_ERROR, "An unknown error occurred"}
+        {NONE, "No error"},
+        {NO_DATA, "No Data"},
+        {INVALID_DATA, "Invalid data provided"},
+        {INVALID_CHECKSUM, "Invalid checksum detected"},
+        {SOMETHING_WENT_WRONG, "Data packet is too short"},
+        {UNKNOWN_ERROR, "An unknown error occurred"}
     };
 
     // Function to get error message from the map
+    //todo therefore this might be redundant as well.
     inline const char* getErrorMessage(const ErrorCode code) {
         const auto it = errorMessageMap.find(code);
         return (it != errorMessageMap.end()) ? it->second : "Unhandled error";
@@ -81,8 +83,18 @@ namespace CCSDS {
 
 }
 
+// MACROS FOR Result error management class.
+
 #define RETURN_IF_ERROR(condition, errorCode)  \
 do { if (condition) return errorCode; } while (0)
+
+#define RET_IF_ERR_MSG(condition, errorCode, message)   \
+do {                                                    \
+    if (condition){                                     \
+        std::cerr << "[ Error ]: Code ["<< errorCode << "]: " << message << '\n'; \
+        return errorCode;                               \
+    }                                                   \
+} while (0)
 
 #define ASSIGN_OR_RETURN(var, result)          \
     do {                                       \
@@ -95,7 +107,7 @@ do { if (condition) return errorCode; } while (0)
     do {                                       \
         auto&& _res = (result);                \
         if (!_res) {                           \
-std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; \
+std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; \
         } else {                               \
             var = std::move(_res.value());     \
         }                                      \
@@ -107,7 +119,7 @@ std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; \
     do {                                       \
         auto&& _res = (result);                \
         if (!_res) {                           \
-std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; return false;\
+std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; return false; \
         } else {                               \
             var = std::move(_res.value());     \
         }                                      \
@@ -118,7 +130,7 @@ std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; retur
     do {                                       \
         auto&& _res = (result);                \
         if (!_res) {                           \
-            std::cerr << "Error: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; return false;\
+            std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; return false; \
         }                                      \
     } while (0)
 

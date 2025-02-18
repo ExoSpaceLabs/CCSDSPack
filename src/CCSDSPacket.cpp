@@ -137,6 +137,7 @@ std::vector<uint8_t> CCSDS::Packet::serialize() {
 }
 
 void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data) {
+    //todo return ResultBool
     if (data.size() > 5) {
         std::vector<uint8_t> dataFieldVector;
         if (data.size() > 7) {
@@ -147,6 +148,7 @@ void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data) {
 }
 
 void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data, const ESecondaryHeaderType PusType) {
+    //todo return ResultBool
     if (data.size() > 5) {
         uint8_t headerDataSizeBytes;
         std::shared_ptr<PusA> secondaryHeader;
@@ -172,6 +174,7 @@ void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data, const ESecond
 }
 
 void CCSDS::Packet::deserialize( const std::vector<uint8_t>&  data, const uint16_t headerDataSizeBytes) {
+    //todo return ResultBool
     if (data.size() > 5) {
         if (data.size() > (6 + headerDataSizeBytes)) {
             std::vector<uint8_t> secondaryHeader;
@@ -187,6 +190,7 @@ void CCSDS::Packet::deserialize( const std::vector<uint8_t>&  data, const uint16
 }
 
 void CCSDS::Packet::deserialize(const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data) {
+    //todo return ResultBool
     m_updateStatus = false;
     if (headerData.size() == 6) {
         m_primaryHeader.deserialize(headerData);
@@ -208,21 +212,29 @@ uint16_t CCSDS::Packet::getFullPacketLength() {
 }
 
 CCSDS::Packet::Packet(const std::vector<uint8_t>& data) {
+    //todo return ResultBool not possible, deal with it possibly move iot out
+    // from constructor and leave a single one as default.
     deserialize(data);
     m_updateStatus = false;
 }
 
 CCSDS::Packet::Packet(const std::vector<uint8_t>& data, const ESecondaryHeaderType PusType) {
+    //todo return ResultBool not possible, deal with it possibly move iot out
+    // from constructor and leave a single one as default.
     deserialize(data, PusType);
     m_updateStatus = false;
 }
 
 CCSDS::Packet::Packet(const std::vector<uint8_t>& data, const uint16_t headerDataSizeBytes) {
+    //todo return ResultBool not possible, deal with it possibly move iot out
+    // from constructor and leave a single one as default.
     deserialize(data, headerDataSizeBytes);
     m_updateStatus = false;
 }
 
 CCSDS::Packet::Packet(const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data) {
+    //todo return ResultBool not possible, deal with it possibly move iot out
+    // from constructor and leave a single one as default.
     deserialize(headerData, data);
     m_updateStatus = false;
 }
