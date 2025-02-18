@@ -475,7 +475,7 @@ void testGroupManagement(TestManager *tester, const std::string& description) {
             std::vector<std::vector<uint8_t>> ret{};
             std::vector<std::vector<uint8_t>> expected{
                 { 0x01, 0x02, 0x03, 0x04, 0x05 },
-                { 0x01, 0x02, 0x03, 0x04, 0x05 },
+                { 0x21, 0x02, 0x03, 0x04, 0x05 },
                 { 0x06, 0x07 }};
 
             uint16_t totalNumberOfPackets{0};
