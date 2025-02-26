@@ -19,30 +19,11 @@ namespace CCSDS {
         NO_DATA = 128,
         INVALID_DATA,
         INVALID_HEADER_DATA,
+        INVALID_APPLICATION_DATA,
         INVALID_CHECKSUM,
         SOMETHING_WENT_WRONG,
         UNKNOWN_ERROR
     };
-
-    // Define a static unordered map for error messages
-    //todo remove the map, no need for this map, I can just log the error with cerr and return code.
-    const std::unordered_map<ErrorCode, const char*> errorMessageMap = {
-        {NONE, "No error"},
-        {NO_DATA, "No Data"},
-        {INVALID_DATA, "Invalid data provided"},
-        {INVALID_CHECKSUM, "Invalid checksum detected"},
-        {SOMETHING_WENT_WRONG, "Data packet is too short"},
-        {UNKNOWN_ERROR, "An unknown error occurred"}
-    };
-
-    // Function to get error message from the map
-    //todo therefore this might be redundant as well.
-    inline const char* getErrorMessage(const ErrorCode code) {
-        const auto it = errorMessageMap.find(code);
-        return (it != errorMessageMap.end()) ? it->second : "Unhandled error";
-    }
-
-
 
     // The `Result<T>` class encapsulating both a value and an error code
     template <typename T>
@@ -68,11 +49,6 @@ namespace CCSDS {
         // Retrieve the error code
         [[nodiscard]] ErrorCode error() const{
             return std::get<ErrorCode>(data);
-        }
-
-        // Get human-readable error message
-        [[nodiscard]] const char* error_message() const{
-            return getErrorMessage(error());
         }
 
         // Implicit conversion to `bool`, allowing usage like `if (result)`
@@ -108,7 +84,7 @@ do {                                                    \
     do {                                       \
         auto&& _res = (result);                \
         if (!_res) {                           \
-std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; \
+std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << '\n'; \
         } else {                               \
             var = std::move(_res.value());     \
         }                                      \
@@ -120,7 +96,7 @@ std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageM
     do {                                       \
         auto&& _res = (result);                \
         if (!_res) {                           \
-std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; return false; \
+std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << '\n'; return false; \
         } else {                               \
             var = std::move(_res.value());     \
         }                                      \

@@ -16,7 +16,7 @@ set(LIB_NAME "CCSDSPack")
 # Versioning
 set(MAJOR "0")
 set(MINOR "3")
-set(PATCH "0")
+set(PATCH "2")
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
 set(LIB_VERSIONED "${LIB_NAME}${VER}")
