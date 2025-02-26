@@ -99,9 +99,11 @@ void printHeader(CCSDS::Header &header) {
 }
 
 
-void printPrimaryHeader(CCSDS::Packet& packet) {
-    CCSDS::Header header{packet.getPrimaryHeader()};
+CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet) {
+    CCSDS::Header header;
+    FORWARD_RESULT( header.deserialize({packet.getPrimaryHeader()}));
     printHeader(header);
+    return true;
 }
 
 /**

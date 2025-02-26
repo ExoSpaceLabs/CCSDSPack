@@ -34,15 +34,11 @@ namespace CCSDS {
     public:
         Packet() = default;
 
-        explicit Packet(                                                 const std::vector<uint8_t>& data );
-        explicit Packet(                   const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
-        explicit Packet(                   const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
-        explicit Packet(         const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
-
         // setters
-        void setPrimaryHeader(                                                              uint64_t data );
-        void setPrimaryHeader(                                           const std::vector<uint8_t>& data );
-        void setPrimaryHeader(                                                         PrimaryHeader data );
+        void setPrimaryHeader(                                   PrimaryHeader data );
+        [[nodiscard]] ResultBool setPrimaryHeader(                   uint64_t  data );
+        [[nodiscard]] ResultBool setPrimaryHeader( const std::vector<uint8_t> &data );
+
         void setDataFieldHeader(                                                       const PusA& header );
         void setDataFieldHeader(                                                       const PusB& header );
         void setDataFieldHeader(                                                       const PusC& header );
@@ -57,10 +53,11 @@ namespace CCSDS {
         void setSequenceCount(                                                             uint16_t count );
         void setDataFieldSize(                                                              uint16_t size );
         void setUpdatePacketEnable(                                                           bool enable );
-        void deserialize(                                                const std::vector<uint8_t>& data );
-        void deserialize(                  const std::vector<uint8_t>& data, ESecondaryHeaderType PusType );
-        void deserialize(                  const std::vector<uint8_t>& data, uint16_t headerDataSizeBytes );
-        void deserialize(        const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data );
+
+        [[nodiscard]] ResultBool deserialize(                                         const std::vector<uint8_t> &data );
+        [[nodiscard]] ResultBool deserialize(           const std::vector<uint8_t> &data, ESecondaryHeaderType PusType );
+        [[nodiscard]] ResultBool deserialize(           const std::vector<uint8_t> &data, uint16_t headerDataSizeBytes );
+        [[nodiscard]] ResultBool deserialize( const std::vector<uint8_t> &headerData, const std::vector<uint8_t> &data );
 
         // getters
         uint64_t getPrimaryHeader64bit();

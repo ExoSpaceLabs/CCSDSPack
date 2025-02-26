@@ -9,17 +9,19 @@
 #include <variant>
 #include <vector>
 #include <cstdint>
+#include <iostream>
 
 namespace CCSDS {
 
     // Define an enum for error codes
-    enum ErrorCode : int32_t{
+    enum ErrorCode : uint8_t{
         NONE = 0,
-        NO_DATA = -128,
-        INVALID_DATA = -129,
-        INVALID_CHECKSUM = -130,
-        SOMETHING_WENT_WRONG = -131,
-        UNKNOWN_ERROR = -132
+        NO_DATA = 128,
+        INVALID_DATA,
+        INVALID_HEADER_DATA,
+        INVALID_CHECKSUM,
+        SOMETHING_WENT_WRONG,
+        UNKNOWN_ERROR
     };
 
     // Define a static unordered map for error messages
@@ -91,8 +93,7 @@ do { if (condition) return errorCode; } while (0)
 #define RET_IF_ERR_MSG(condition, errorCode, message)   \
 do {                                                    \
     if (condition){                                     \
-        std::cerr << "[ Error ]: Code ["<< errorCode << "]: " << message << '\n'; \
-        return errorCode;                               \
+        std::cerr << "[ Error ]: Code ["<< errorCode << "]: " << message << '\n'; return errorCode;    \
     }                                                   \
 } while (0)
 
@@ -130,7 +131,7 @@ std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageM
     do {                                       \
         auto&& _res = (result);                \
         if (!_res) {                           \
-            std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << CCSDS::errorMessageMap.at(_res.error()) << '\n'; return false; \
+            std::cerr << "[ Error ]: Code ["<< _res.error() << "]: " << "Test Void Failure Detected" << '\n'; return false; \
         }                                      \
     } while (0)
 

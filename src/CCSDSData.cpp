@@ -17,10 +17,6 @@
 std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
     update();
     const auto& dataFieldHeader = getDataFieldHeader();
-    if (dataFieldHeader.size() + m_applicationData.size() > m_dataPacketSize) { // check if given header exeeds header size.
-        std::cout << "[ CCSDS Data ] Provided data: " << dataFieldHeader.size() + m_applicationData.size() << ", max size: "<< m_dataPacketSize << std::endl;
-        throw std::invalid_argument("[ CCSDS Data ] Error: Data field exceeds expected size.");
-    }
     std::vector<uint8_t> fullData{};
     if(!dataFieldHeader.empty()) {
         fullData.insert(fullData.end(),dataFieldHeader.begin(),dataFieldHeader.end());

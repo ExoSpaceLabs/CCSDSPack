@@ -136,107 +136,85 @@ std::vector<uint8_t> CCSDS::Packet::serialize() {
     return packet;
 }
 
-void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data) {
-    //todo return ResultBool
-    if (data.size() > 5) {
-        std::vector<uint8_t> dataFieldVector;
-        if (data.size() > 7) {
-            std::copy(data.begin()+6, data.end(), std::back_inserter(dataFieldVector));
-        }
-        deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector);
-    }
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data) {
+    RET_IF_ERR_MSG( data.size() <= 7, ErrorCode::INVALID_HEADER_DATA,
+        "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
+
+    std::vector<uint8_t> dataFieldVector;
+    std::copy(data.begin()+6, data.end(), std::back_inserter(dataFieldVector));
+
+    FORWARD_RESULT( deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector));
+
+    return true;
 }
 
-void CCSDS::Packet::deserialize( const std::vector<uint8_t>& data, const ESecondaryHeaderType PusType) {
-    //todo return ResultBool
-    if (data.size() > 5) {
-        uint8_t headerDataSizeBytes;
-        std::shared_ptr<PusA> secondaryHeader;
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const ESecondaryHeaderType PusType) {
+    RET_IF_ERR_MSG( data.size() <= 8, ErrorCode::INVALID_DATA,
+        "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
 
+    uint8_t headerDataSizeBytes{0};
+
+    if (PusType != NA) {
         if (PusType == PUS_A) {
             headerDataSizeBytes = 6;
+            RET_IF_ERR_MSG( data.size() < 8 + headerDataSizeBytes, ErrorCode::INVALID_DATA,
+                "Cannot Deserialize Packet, Invalid Data provided PUS_A requires 6 bytes");
             m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11]}, PUS_A);
         }else {
             headerDataSizeBytes = 8;
+            RET_IF_ERR_MSG( data.size() < 8 + headerDataSizeBytes, ErrorCode::INVALID_DATA,
+                "Cannot Deserialize Packet, Invalid Data provided Secondary header requires 8 bytes");
             //todo Deal with cases when it is not Pus
             m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13]}, PusType);
         }
-
-        if (data.size() > (6 + headerDataSizeBytes)) {
-            std::vector<uint8_t> dataFieldVector;
-
-            if (data.size() > (7 + headerDataSizeBytes)) {
-                std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
-            }
-            deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector);
-        }
     }
+
+    if (data.size() > (8 + headerDataSizeBytes)) {
+        std::vector<uint8_t> dataFieldVector;
+
+        if (data.size() > (9 + headerDataSizeBytes)) {
+            std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
+        }
+        FORWARD_RESULT( deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector));
+    }
+
+    return true;
 }
 
-void CCSDS::Packet::deserialize( const std::vector<uint8_t>&  data, const uint16_t headerDataSizeBytes) {
-    //todo return ResultBool
-    if (data.size() > 5) {
-        if (data.size() > (6 + headerDataSizeBytes)) {
-            std::vector<uint8_t> secondaryHeader;
-            std::vector<uint8_t> dataFieldVector;
-            std::copy(data.begin() + 6, data.begin() + 6 + headerDataSizeBytes, std::back_inserter(secondaryHeader));
-            m_dataField.setDataFieldHeader(secondaryHeader);
-            if (data.size() > (7 + headerDataSizeBytes)) {
-                std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
-            }
-            deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector);
-        }
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const uint16_t headerDataSizeBytes) {
+    RET_IF_ERR_MSG(data.size() <= (8 + headerDataSizeBytes), ErrorCode::INVALID_DATA, "Cannot Serialize Packet, Invalid Data provided");
+
+    std::vector<uint8_t> secondaryHeader;
+    std::vector<uint8_t> dataFieldVector;
+    std::copy(data.begin() + 6, data.begin() + 6 + headerDataSizeBytes, std::back_inserter(secondaryHeader));
+    m_dataField.setDataFieldHeader(secondaryHeader);
+    if (data.size() > (7 + headerDataSizeBytes)) {
+        std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
     }
+    FORWARD_RESULT(deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector));
+    return true;
 }
 
-void CCSDS::Packet::deserialize(const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data) {
-    //todo return ResultBool
-    m_updateStatus = false;
-    if (headerData.size() == 6) {
-        m_primaryHeader.deserialize(headerData);
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &headerData, const std::vector<uint8_t> &data) {
+    RET_IF_ERR_MSG( headerData.size() != 6, ErrorCode::INVALID_HEADER_DATA, "Cannot Deserialize Packet, Invalid Header Data provided.");
+    FORWARD_RESULT( m_primaryHeader.deserialize( headerData ));
 
-        if (data.size() >= 2) {
-            std::vector<uint8_t> dataCopy;
-            m_CRC16 = (data[data.size()-2] << 8) + data.back();
-            if (data.size() > 2) {
-                std::copy(data.begin(), data.end()-2, std::back_inserter(dataCopy));
-            }
-            m_dataField.setApplicationData(dataCopy);
-        }
-    }
+    RET_IF_ERR_MSG( data.size() < 2, ErrorCode::INVALID_DATA, "Cannot Deserialize Packet, Invalid Data provided, at least CRC is required.");
+
+    std::vector<uint8_t> dataCopy;
+    m_CRC16 = (data[data.size()-2] << 8) + data.back();
+
+    if (data.size() == 2) return true; // returns since no application data is to be written.
+
+    std::copy(data.begin(), data.end()-2, std::back_inserter(dataCopy));
+    m_dataField.setApplicationData(dataCopy);
+
+    return true;;
 }
 
 uint16_t CCSDS::Packet::getFullPacketLength() {
     // where 8 is derived from 6 bytes for Primary header and 2 bytes for CRC16.
     return 8 + m_dataField.getDataFieldUsedSizeByes();
-}
-
-CCSDS::Packet::Packet(const std::vector<uint8_t>& data) {
-    //todo return ResultBool not possible, deal with it possibly move iot out
-    // from constructor and leave a single one as default.
-    deserialize(data);
-    m_updateStatus = false;
-}
-
-CCSDS::Packet::Packet(const std::vector<uint8_t>& data, const ESecondaryHeaderType PusType) {
-    //todo return ResultBool not possible, deal with it possibly move iot out
-    // from constructor and leave a single one as default.
-    deserialize(data, PusType);
-    m_updateStatus = false;
-}
-
-CCSDS::Packet::Packet(const std::vector<uint8_t>& data, const uint16_t headerDataSizeBytes) {
-    //todo return ResultBool not possible, deal with it possibly move iot out
-    // from constructor and leave a single one as default.
-    deserialize(data, headerDataSizeBytes);
-    m_updateStatus = false;
-}
-
-CCSDS::Packet::Packet(const std::vector<uint8_t>& headerData, const std::vector<uint8_t> &data) {
-    //todo return ResultBool not possible, deal with it possibly move iot out
-    // from constructor and leave a single one as default.
-    deserialize(headerData, data);
-    m_updateStatus = false;
 }
 
 /**
@@ -246,11 +224,12 @@ CCSDS::Packet::Packet(const std::vector<uint8_t>& headerData, const std::vector<
  * as the header data.
  *
  * @param data The 64-bit primary header data.
- * @return none.
+ * @return ResultBool.
  */
-void CCSDS::Packet::setPrimaryHeader( const uint64_t data ) {
-    m_primaryHeader.setData( data );
+CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const uint64_t data) {
+    FORWARD_RESULT( m_primaryHeader.setData( data ));
     m_updateStatus = false;
+    return true;
 }
 
 
@@ -261,11 +240,12 @@ void CCSDS::Packet::setPrimaryHeader( const uint64_t data ) {
  * as the header data.
  *
  * @param data The vector of 8-bit integers primary header data.
- * @return none.
+ * @return ResultBool.
  */
-void CCSDS::Packet::setPrimaryHeader( const std::vector<uint8_t>& data ) {
-    m_primaryHeader.deserialize( data );
+CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader( const std::vector<uint8_t>& data ) {
+    FORWARD_RESULT( m_primaryHeader.deserialize( data ));
     m_updateStatus = false;
+    return true;
 }
 /**
  * @brief Sets the primary header using the provided PrimaryHeader object.
@@ -276,7 +256,7 @@ void CCSDS::Packet::setPrimaryHeader( const std::vector<uint8_t>& data ) {
  * @param data The `PrimaryHeader` object containing the header data.
  * @return none.
  */
-void CCSDS::Packet::setPrimaryHeader( const PrimaryHeader data ) {
+void CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
     m_primaryHeader.setData( data );
     m_updateStatus = false;
 }

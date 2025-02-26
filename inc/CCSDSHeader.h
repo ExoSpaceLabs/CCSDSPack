@@ -1,6 +1,7 @@
 #ifndef CCSDSHEADER_H
 #define CCSDSHEADER_H
 
+#include <CCSDSResult.h>
 #include <cstdint>
 #include <vector>
 
@@ -79,26 +80,14 @@ namespace CCSDS {
     public:
         Header() = default;
 
-        /**
-        * @brief Constructs a Header from a 64-bit data representation.
-        * @param data The 64-bit integer representing the header fields.
-        */
-        explicit Header(const uint64_t& data)     { setData(data);                }
-
-        /**
-        * @brief Constructs a Header from a vector of uint8_t data representation.
-        * @param data The 8-bit integer vector representing the header fields.
-        */
-        explicit Header(const std::vector<uint8_t>& data);
-
         // getters
-        uint8_t  getVersionNumber()       const { return m_versionNumber;       }
-        uint8_t  getType()                const { return m_type;                }
-        uint8_t  getDataFieldHeaderFlag() const { return m_dataFieldHeaderFlag; }
-        uint16_t getAPID()                const { return m_APID;                }
-        uint8_t  getSequenceFlags()       const { return m_sequenceFlags;       }
-        uint16_t getSequenceCount()       const { return m_sequenceCount;       }
-        uint16_t getDataLength()          const { return m_dataLength;          }
+        [[nodiscard]] uint8_t  getVersionNumber()       const { return m_versionNumber;       }
+        [[nodiscard]] uint8_t  getType()                const { return m_type;                }
+        [[nodiscard]] uint8_t  getDataFieldHeaderFlag() const { return m_dataFieldHeaderFlag; }
+        [[nodiscard]] uint16_t getAPID()                const { return m_APID;                }
+        [[nodiscard]] uint8_t  getSequenceFlags()       const { return m_sequenceFlags;       }
+        [[nodiscard]] uint16_t getSequenceCount()       const { return m_sequenceCount;       }
+        [[nodiscard]] uint16_t getDataLength()          const { return m_dataLength;          }
 
         std::vector<uint8_t>serialize();
 
@@ -125,11 +114,12 @@ namespace CCSDS {
         void setDataLength(const uint16_t &value)          { m_dataLength          = value;          }
 
         // Full data setter
-        void setData(const uint64_t &data);
+        [[nodiscard]] ResultBool setData(const uint64_t &data);
 
         // Full data setter
         void setData(const PrimaryHeader &data);
-        void deserialize(const std::vector<uint8_t>& data );
+
+        [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data);
         // print out the header
 
 

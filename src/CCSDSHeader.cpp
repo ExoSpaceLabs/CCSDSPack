@@ -1,21 +1,17 @@
 
 #include "CCSDSHeader.h"
-
 #include "CCSDSUtils.h"
-#include <stdexcept>
 
 
-void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
-    //todo return ResultBool
-    // use set data to handle the hard work
-    if (data.size() != 6) {
-        throw std::invalid_argument("Invalid Header Data");
-    }
+CCSDS::ResultBool CCSDS::Header::deserialize(const std::vector<uint8_t> &data) {
+    RET_IF_ERR_MSG( data.size() != 6, ErrorCode::INVALID_HEADER_DATA, "Invalid Header Data provided: size != 6" );
+
     uint64_t headerData = 0;
     for (int i = 0; i < 6; ++i) {
         headerData |= static_cast<uint64_t>(data[i]) << (40 - i * 8); // Combine MSB to LSB
     }
-    setData(headerData);
+    FORWARD_RESULT( setData(headerData) );
+    return true;
 }
 
 /**
@@ -28,11 +24,9 @@ void CCSDS::Header::deserialize(const std::vector<uint8_t>& data) {
  * @throws std::invalid_argument If the input data exceeds the valid bit range for the header.
  * @return none.
  */
-void CCSDS::Header::setData(const uint64_t &data){
-  //todo return ResultBool
-    if (data > 0xFFFFFFFFFFFF) { // check if given header exeeds header size.
-        throw std::invalid_argument("[ CCSDS Header ] Error: Input data exceeds expected bit size for version or size.");
-    }
+CCSDS::ResultBool CCSDS::Header::setData(const uint64_t &data){
+
+    RET_IF_ERR_MSG(data > 0xFFFFFFFFFFFF, ErrorCode::INVALID_HEADER_DATA ,"Input data exceeds expected bit size for version or size.");
     // Decompose data using mask and shifts
     m_dataLength                     = (data & 0xFFFF);               // last 16 bits
     m_packetSequenceControl          = (data >> 16) & 0xFFFF;         // middle 16 bits
@@ -47,12 +41,7 @@ void CCSDS::Header::setData(const uint64_t &data){
     // decompose sequence control
     m_sequenceFlags = (m_packetSequenceControl >> 14);                // first 2 bits
     m_sequenceCount = (m_packetSequenceControl & 0x3FFF);             // Last 14 bits.
-
-}
-
-CCSDS::Header::Header(const std::vector<uint8_t>& data) {
-  //todo return ResultBool impossible therefore just print.
-    deserialize(data);
+    return true;
 }
 
 std::vector<uint8_t> CCSDS::Header::serialize()  {

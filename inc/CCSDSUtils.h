@@ -50,7 +50,8 @@ std::string getBitsSpaces(int num);
 void printBufferData(const std::vector<uint8_t>& buffer);
 void printData(CCSDS::DataField dataField);
 void printHeader(CCSDS::Header& header);
-void printPrimaryHeader(CCSDS::Packet& packet);
+
+CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet);
 void printDataField(CCSDS::Packet& packet);
 /**
  * @brief A utility class for testing and validation.
