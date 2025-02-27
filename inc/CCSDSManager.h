@@ -16,7 +16,8 @@ namespace CCSDS {
     explicit Manager(Packet packet) : m_packetTemplate(std::move(packet)) {};
 
     void setPacketTemplate(Packet packet);
-    ResultBool setDatFieldSize( uint16_t size);
+
+    void setDatFieldSize(uint16_t size);
     ResultBool setApplicationData(const std::vector<uint8_t>& data);
     void setAutoUpdateEnable(bool enable);
 
@@ -26,10 +27,11 @@ namespace CCSDS {
     [[nodiscard]] ResultBuffer getApplicationData() const;
     ResultBuffer getApplicationDataAtIndex(uint16_t index);
 
-    [[nodiscard]] Result< uint16_t > getTotalPackets() const;
+    [[nodiscard]] uint16_t getTotalPackets() const;
     [[nodiscard]] bool getAutoUpdateEnable() const { return m_updateEnable;}
     Packet getTemplate() { return m_packetTemplate; };
-    Result<std::vector<Packet>> getPackets();
+
+    std::vector<CCSDS::Packet> getPackets();
 
     private:
     Packet m_packetTemplate{};

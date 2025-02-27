@@ -5,12 +5,10 @@
 
 void CCSDS::Manager::setPacketTemplate(CCSDS::Packet packet){
   m_packetTemplate = std::move(packet);
-  //RETURN_IF_ERROR(, ErrorCode::NO_DATA );
 }
 
-CCSDS::ResultBool CCSDS::Manager::setDatFieldSize(const uint16_t size) {
+void CCSDS::Manager::setDatFieldSize(const uint16_t size) {
   m_packetTemplate.setDataFieldSize(size);
-  return true;
 }
 
 CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t>& data) {
@@ -89,13 +87,11 @@ CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataAtIndex(const uint16_t ind
   return m_packets[index].getApplicationData();
 }
 
-CCSDS::Result< uint16_t >  CCSDS::Manager::getTotalPackets() const {
-  RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
+uint16_t CCSDS::Manager::getTotalPackets() const {
   return m_packets.size();
 }
 
-CCSDS::Result<std::vector<CCSDS::Packet>> CCSDS::Manager::getPackets() {
-  RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
+std::vector<CCSDS::Packet> CCSDS::Manager::getPackets() {
   return m_packets;
 }
 
