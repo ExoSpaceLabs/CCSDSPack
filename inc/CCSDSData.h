@@ -1,6 +1,7 @@
 #ifndef CCSDSDATA_H
 #define CCSDSDATA_H
 
+#include <CCSDSResult.h>
 #include <cstdint>
 #include <vector>
 #include <memory>
@@ -29,12 +30,17 @@ namespace CCSDS{
 
         ~DataField() = default;
 
-        void setApplicationData(                                     const std::vector<uint8_t>& applicationData );
-        void setApplicationData(                                    const uint8_t* pData, const size_t &sizeData );
-        void setDataFieldHeader(                                    const uint8_t* pData, const size_t &sizeData );
-        void setDataFieldHeader( const uint8_t* pData, const size_t &sizeData, const ESecondaryHeaderType &pType );
-        void setDataFieldHeader(                  const std::vector<uint8_t>&, const ESecondaryHeaderType &pType );
-        void setDataFieldHeader(                                     const std::vector<uint8_t>& dataFieldHeader );
+        [[nodiscard]] ResultBool setApplicationData(const std::vector<uint8_t> &applicationData);
+
+        [[nodiscard]] ResultBool setApplicationData(const uint8_t *pData, const size_t &sizeData);
+
+        [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, const size_t &sizeData);
+
+        [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, const size_t &sizeData, const ESecondaryHeaderType &pType);
+
+        [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &, const ESecondaryHeaderType &pType);
+
+        [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &dataFieldHeader);
         void setDataFieldHeader(                                                              const PusA& header );
         void setDataFieldHeader(                                                              const PusB& header );
         void setDataFieldHeader(                                                              const PusC& header );

@@ -36,7 +36,7 @@ CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t>&
         sequenceFlag = CONTINUING_SEGMENT;
       }
       i += maxBytesPerPacket;
-      newPacket.setApplicationData(tmp);
+      FORWARD_RESULT( newPacket.setApplicationData(tmp));
       newPacket.setSequenceCount(sequenceCount);
       newPacket.setSequenceFlags(sequenceFlag);
     } else {
@@ -46,7 +46,7 @@ CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t>&
         newPacket.setSequenceCount(sequenceCount);
         newPacket.setSequenceFlags(LAST_SEGMENT);
       }
-      newPacket.setApplicationData(tmp);
+      FORWARD_RESULT( newPacket.setApplicationData(tmp));
     }
     m_packets.push_back(std::move(newPacket));
     sequenceCount++;

@@ -154,18 +154,13 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
 
     uint8_t headerDataSizeBytes{0};
 
-    if (PusType != NA) {
+    if (PusType != NA && PusType != OTHER) {
         if (PusType == PUS_A) {
             headerDataSizeBytes = 6;
-            RET_IF_ERR_MSG( data.size() < 8 + headerDataSizeBytes, ErrorCode::INVALID_DATA,
-                "Cannot Deserialize Packet, Invalid Data provided PUS_A requires 6 bytes");
-            m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11]}, PUS_A);
-        }else {
+            FORWARD_RESULT( m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11]}, PUS_A));
+        }else if (PusType == PUS_B || PusType == PUS_C) {
             headerDataSizeBytes = 8;
-            RET_IF_ERR_MSG( data.size() < 8 + headerDataSizeBytes, ErrorCode::INVALID_DATA,
-                "Cannot Deserialize Packet, Invalid Data provided Secondary header requires 8 bytes");
-            //todo Deal with cases when it is not Pus
-            m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13]}, PusType);
+            FORWARD_RESULT( m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13]}, PusType));
         }
     }
 
@@ -187,7 +182,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
     std::vector<uint8_t> secondaryHeader;
     std::vector<uint8_t> dataFieldVector;
     std::copy(data.begin() + 6, data.begin() + 6 + headerDataSizeBytes, std::back_inserter(secondaryHeader));
-    m_dataField.setDataFieldHeader(secondaryHeader);
+    FORWARD_RESULT(m_dataField.setDataFieldHeader(secondaryHeader));
     if (data.size() > (7 + headerDataSizeBytes)) {
         std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
     }
@@ -207,7 +202,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &headerD
     if (data.size() == 2) return true; // returns since no application data is to be written.
 
     std::copy(data.begin(), data.end()-2, std::back_inserter(dataCopy));
-    m_dataField.setApplicationData(dataCopy);
+    FORWARD_RESULT( m_dataField.setApplicationData(dataCopy));
 
     return true;;
 }
@@ -312,9 +307,10 @@ void CCSDS::Packet::setDataFieldHeader(const PusC& header ) {
  * @param data A vector containing the data for the data field header.
  * @param type The PUS type that specifies the purpose of the data.
  */
-void CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const ESecondaryHeaderType type) {
-    m_dataField.setDataFieldHeader( data, type );
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const ESecondaryHeaderType type) {
+    FORWARD_RESULT( m_dataField.setDataFieldHeader( data, type ));
     m_updateStatus = false;
+    return true;
 }
 
 /**
@@ -331,9 +327,11 @@ void CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const E
  * @param sizeData The size of the data pointed to by pData, in bytes.
  * @param type The PUS type that specifies the purpose of the data.
  */
-void CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData, const ESecondaryHeaderType type) {
-    m_dataField.setDataFieldHeader( pData, sizeData, type );
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData,
+                                                    const ESecondaryHeaderType type) {
+    FORWARD_RESULT( m_dataField.setDataFieldHeader( pData, sizeData, type ));
     m_updateStatus = false;
+    return true;
 }
 
 /**
@@ -345,9 +343,10 @@ void CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeDa
  * @param data The vector containing the header bytes.
  * @return none.
  */
-void CCSDS::Packet::setDataFieldHeader( const std::vector<uint8_t>& data ) {
-    m_dataField.setDataFieldHeader( data );
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data) {
+    FORWARD_RESULT(m_dataField.setDataFieldHeader( data ) );
     m_updateStatus = false;
+    return true;
 }
 
 /**
@@ -364,9 +363,10 @@ void CCSDS::Packet::setDataFieldHeader( const std::vector<uint8_t>& data ) {
  * @param sizeData The size of the header data.
  * @return none.
  */
-void CCSDS::Packet::setDataFieldHeader( const uint8_t* pData, const size_t sizeData ) {
-    m_dataField.setDataFieldHeader( pData,sizeData );
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData) {
+    FORWARD_RESULT( m_dataField.setDataFieldHeader( pData,sizeData ));
     m_updateStatus = false;
+    return true;;
 }
 
 /**
@@ -378,9 +378,10 @@ void CCSDS::Packet::setDataFieldHeader( const uint8_t* pData, const size_t sizeD
  * @param data The vector containing the application data.
  * @return none.
  */
-void CCSDS::Packet::setApplicationData( const std::vector<uint8_t>& data ) {
-    m_dataField.setApplicationData( data );
+CCSDS::ResultBool CCSDS::Packet::setApplicationData(const std::vector<uint8_t> &data) {
+    FORWARD_RESULT( m_dataField.setApplicationData( data ));
     m_updateStatus = false;
+    return true;
 }
 
 /**
@@ -397,9 +398,10 @@ void CCSDS::Packet::setApplicationData( const std::vector<uint8_t>& data ) {
  * @param sizeData The size of the application data.
  * @return none.
  */
-void CCSDS::Packet::setApplicationData( const uint8_t* pData, const size_t sizeData ) {
-    m_dataField.setApplicationData( pData,sizeData );
+CCSDS::ResultBool CCSDS::Packet::setApplicationData(const uint8_t *pData, const size_t sizeData) {
+    FORWARD_RESULT( m_dataField.setApplicationData( pData,sizeData ));
     m_updateStatus = false;
+    return true;
 }
 
 
@@ -436,6 +438,10 @@ void CCSDS::Packet::setDataFieldSize(const uint16_t size) {
     m_dataField.setDataPacketSize(size);
 }
 
+/**
+ * needs to be called as soon as possible, probably also from constructor.
+ * @param enable
+ */
 void CCSDS::Packet::setUpdatePacketEnable(const bool enable) {
     m_enableUpdatePacket = enable;
     m_dataField.setDataFieldHeaderAutoUpdateStatus(enable);
