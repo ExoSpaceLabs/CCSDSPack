@@ -74,7 +74,7 @@ CCSDS::ResultBuffer CCSDS::Manager::getApplicationData() const {
    RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA,"Cannot get Application data, no packets have been set."); // todo check if valid?
   std::vector<uint8_t> data;
   for (auto packet : m_packets) {
-    auto applicationData = packet.getApplicationData();
+    auto applicationData = packet.getApplicationDataBytes();
     data.insert(data.end(),    applicationData.begin(),    applicationData.end());
   }
   return data;
@@ -82,7 +82,7 @@ CCSDS::ResultBuffer CCSDS::Manager::getApplicationData() const {
 
 CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataAtIndex(const uint16_t index) {
   RET_IF_ERR_MSG(index < 0 || index >= m_packets.size(), ErrorCode::INVALID_DATA, "Cannot get Application data, index is out of bounds");
-  return m_packets[index].getApplicationData();
+  return m_packets[index].getApplicationDataBytes();
 }
 
 uint16_t CCSDS::Manager::getTotalPackets() const {
@@ -91,6 +91,53 @@ uint16_t CCSDS::Manager::getTotalPackets() const {
 
 std::vector<CCSDS::Packet> CCSDS::Manager::getPackets() {
   return m_packets;
+}
+
+bool CCSDS::Manager::isValidPacket(Packet packet) const {
+
+  // prepare testData
+  auto&& testPacket = packet;
+  testPacket.setUpdatePacketEnable(false);
+  auto testPrimaryHeader = testPacket.getPrimaryHeader();
+
+  // auto coherence checks
+  auto dataFieldBytes = testPacket.getFullDataFieldBytes();
+  auto dataFieldBytesSize = dataFieldBytes.size();
+
+  // test CRC therefore full data field coherence
+  if (crc16(dataFieldBytes) != testPacket.getCRC()) {
+    return false;
+  }
+  if ( testPrimaryHeader.getDataLength() != dataFieldBytesSize ) {
+    return false;
+  }
+  if (testPrimaryHeader.getDataFieldHeaderFlag() != testPacket.getDataFieldHeaderFlag()) {
+    return false;
+  }
+
+  // packet identification and version checks
+  auto validPacket = m_packetTemplate;
+  validPacket.setUpdatePacketEnable(false);
+  auto validPrimaryHeader = validPacket.getPrimaryHeader();
+
+  uint16_t validIdentificationAndVersion = (static_cast<uint16_t>(validPrimaryHeader.getVersionNumber()) << 13) |
+    (validPrimaryHeader.getType() << 12) | static_cast<uint16_t>((validPrimaryHeader.getDataFieldHeaderFlag()) << 11) |
+      validPrimaryHeader.getAPID();
+
+  uint16_t testIdentificationAndVersion = (static_cast<uint16_t>(testPrimaryHeader.getVersionNumber()) << 13) |
+    (testPrimaryHeader.getType() << 12) | static_cast<uint16_t>((testPrimaryHeader.getDataFieldHeaderFlag()) << 11) |
+      testPrimaryHeader.getAPID();
+
+  if (validIdentificationAndVersion != testIdentificationAndVersion) {
+    return false;
+  }
+
+  if (testPrimaryHeader.getDataFieldHeaderFlag() != validPrimaryHeader.getDataFieldHeaderFlag()) {
+    return false;
+  }
+  //todo the secondary header needs to be validated same goes for the sequence control. info can be retrieved from template?
+
+  return true;
 }
 
 

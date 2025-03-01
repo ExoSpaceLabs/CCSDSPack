@@ -115,7 +115,16 @@ namespace CCSDS {
      *
      * @return A vector containing all managed packets.
      */
-    std::vector<CCSDS::Packet> getPackets();
+    std::vector<Packet> getPackets();
+
+    /**
+     * @brief Checks if the provided packet is valid by confronting the primary header, CRC16 and data field length.
+     * If the template contains a known secondary header validates that as well.
+     *
+     * @param packet
+     * @return true if the packet is valid.
+     */
+    [[nodiscard]] bool isValidPacket(Packet packet) const;
 
   private:
     Packet m_packetTemplate{};  ///< The template packet used for generating new packets.

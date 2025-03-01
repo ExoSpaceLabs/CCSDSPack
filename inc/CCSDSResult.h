@@ -113,15 +113,27 @@ do {                                                    \
 } while (0)
 
 /**
- * @def ASSIGN_OR_RETURN(var, result)
- * @brief Macro to assign a result value to a variable or return an error.
+ * @def ASSIGN_MV(var, result)
+ * @brief Macro to assign a result value to a variable or return an error by moving.
  */
-#define ASSIGN_OR_RETURN(var, result)          \
+#define ASSIGN_MV(var, result)          \
 do {                                           \
     auto&& _res = (result);                    \
     if (!_res) return Result<T>(_res.error()); \
     var = std::move(_res.value());             \
 } while (0)
+
+/**
+ * @def ASSIGN_CP(var, result)
+ * @brief Macro to assign a result value to a variable or return an error by moving.
+ */
+#define ASSIGN_CP(var, result)          \
+do {                                           \
+auto&& _res = (result);                    \
+if (!_res) return Result<T>(_res.error()); \
+var = _res.value();             \
+} while (0)
+
 
 /**
  * @def ASSIGN_OR_PRINT(var, result)

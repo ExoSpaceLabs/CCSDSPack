@@ -166,7 +166,7 @@ namespace CCSDS{
         *
         * @return The absolute size of the data field in bytes.
         */
-        uint16_t getDataFieldAbsoluteSizeByes();
+        uint16_t getDataFieldAbsoluteBytesSize();
 
         /**
          * @brief Retrieves the used size of the data field in bytes.
@@ -175,7 +175,7 @@ namespace CCSDS{
          *
          * @return The used size of the data field in bytes.
          */
-        uint16_t getDataFieldUsedSizeByes();
+        uint16_t getDataFieldUsedBytesSize();
 
         /**
         * @brief Retrieves the available size of the data field in bytes.
@@ -184,7 +184,7 @@ namespace CCSDS{
         *
         * @return The available size of the data field in bytes.
         */
-        uint16_t getDataFieldAvailableSizeByes();
+        uint16_t getDataFieldAvailableBytesSize();
 
         /**
          * @brief Retrieves the secondary header data as a vector of bytes.
@@ -194,7 +194,7 @@ namespace CCSDS{
          *
          * @return A vector containing the header data bytes.
          */
-        std::vector<uint8_t> getDataFieldHeader();
+        std::vector<uint8_t> getDataFieldHeaderBytes();
 
         /**
          * @brief Retrieves the full data field by combining the data field header and application data.
@@ -204,7 +204,7 @@ namespace CCSDS{
          *
          * @return A vector containing the full data field (header + application data).
          */
-        std::vector<uint8_t> getFullDataField();
+        std::vector<uint8_t> getFullDataFieldBytes();
 
         /**
          * @brief Retrieves the application data from the data field.
@@ -214,9 +214,23 @@ namespace CCSDS{
          * @return A vector containing the application data bytes.
          */
         std::vector<uint8_t> getApplicationData();
-        [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const                            { return m_enableDataFieldUpdate; }
-        [[nodiscard]] bool getDataFieldHeaderFlag() const       { return !m_dataFieldHeader.empty() || m_pusHeaderData != nullptr; }
 
+        /** @brief returns true if auto update has been enabled for the secondary header */
+        [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const { return m_enableDataFieldUpdate; }
+
+        /**
+         * @brief retrieves true if a known secondary header has been set
+         *
+         * @return boolean
+         */
+        [[nodiscard]] bool getDataFieldHeaderFlag() const { return !m_dataFieldHeader.empty() || m_pusHeaderData != nullptr; }
+
+        /**
+         * @brief retrieves the known PUS type
+         *
+         * @return std::shared_ptr<SecondaryHeaderAbstract>
+         */
+        [[nodiscard]] std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
 
         /**
          * @brief Updates the data field header based on the current application data size.

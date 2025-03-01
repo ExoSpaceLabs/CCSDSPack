@@ -43,7 +43,7 @@ namespace CCSDS {
          * @param data The `PrimaryHeader` object containing the header data.
          * @return none.
          */
-        void setPrimaryHeader(                                   PrimaryHeader data );
+        void setPrimaryHeader( PrimaryHeader data );
 
         /**
          * @brief Sets the primary header using the provided 64-bit data.
@@ -55,7 +55,7 @@ namespace CCSDS {
          * @param data The 64-bit primary header data.
          * @return ResultBool.
          */
-        [[nodiscard]] ResultBool setPrimaryHeader(                   uint64_t  data );
+        [[nodiscard]] ResultBool setPrimaryHeader( uint64_t  data );
 
         /**
          * @brief Sets the primary header using the provided vector of uint8_tdata.
@@ -78,7 +78,7 @@ namespace CCSDS {
          * @param header The `PusA` header object.
          * @return none.
          */
-        void setDataFieldHeader(                                                       const PusA& header );
+        void setDataFieldHeader( const PusA& header );
 
         /**
          * @brief Sets the data field header using the provided PusB header.
@@ -89,7 +89,7 @@ namespace CCSDS {
          * @param header The `PusB` header object.
          * @return none.
          */
-        void setDataFieldHeader(                                                       const PusB& header );
+        void setDataFieldHeader( const PusB& header );
 
         /**
          * @brief Sets the data field header using the provided PusC header.
@@ -100,7 +100,7 @@ namespace CCSDS {
          * @param header The `PusC` header object.
          * @return none.
          */
-        void setDataFieldHeader(                                                       const PusC& header );
+        void setDataFieldHeader( const PusC& header );
 
         /**
          * @brief Sets the data field header for the packet using a vector of bytes.
@@ -115,7 +115,7 @@ namespace CCSDS {
          *
          * @return ResultBool
          */
-        [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data, ESecondaryHeaderType type);
+        [[nodiscard]] ResultBool setDataFieldHeader( const std::vector<uint8_t> &data, ESecondaryHeaderType type );
 
         /**
          * @brief Sets the data field header for the packet using a raw data pointer.
@@ -131,7 +131,7 @@ namespace CCSDS {
          *
          * @return ResultBool
          */
-        [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, size_t sizeData, ESecondaryHeaderType type);
+        [[nodiscard]] ResultBool setDataFieldHeader( const uint8_t *pData, size_t sizeData, ESecondaryHeaderType type );
 
         /**
          * @brief Sets the data field header using the provided vector of bytes.
@@ -144,7 +144,7 @@ namespace CCSDS {
          * @param data The vector containing the header bytes.
          * @return ResultBool.
          */
-        [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data);
+        [[nodiscard]] ResultBool setDataFieldHeader( const std::vector<uint8_t> &data );
 
         /**
          * @brief Sets the data field header using the provided pointer and size.
@@ -158,7 +158,7 @@ namespace CCSDS {
          * @param sizeData The size of the header data.
          * @return ResultBool.
          */
-        [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, size_t sizeData);
+        [[nodiscard]] ResultBool setDataFieldHeader( const uint8_t *pData, size_t sizeData );
 
         /**
          * @brief Sets the application data for the packet.
@@ -171,7 +171,7 @@ namespace CCSDS {
          * @param data The vector containing the application data.
          * @return ResultBool.
          */
-        [[nodiscard]] ResultBool setApplicationData(const std::vector<uint8_t> &data);
+        [[nodiscard]] ResultBool setApplicationData( const std::vector<uint8_t> &data );
 
         /**
          * @brief Sets the application data for the packet.
@@ -185,7 +185,7 @@ namespace CCSDS {
          * @param sizeData The size of the application data.
          * @return ResultBool.
          */
-        [[nodiscard]] ResultBool setApplicationData(const uint8_t *pData, size_t sizeData);
+        [[nodiscard]] ResultBool setApplicationData( const uint8_t *pData, size_t sizeData );
 
         /**
          * @brief Sets the sequence flags for the packet's primary header.
@@ -196,10 +196,10 @@ namespace CCSDS {
          *
          * @param flags The sequence flag to be set, represented by the ESequenceFlag enum : uint8_t.
          */
-        void setSequenceFlags(                                                        ESequenceFlag flags );
+        void setSequenceFlags( ESequenceFlag flags );
 
         /** @brief Sets the sequence count for the packet. */
-        void setSequenceCount(                                                             uint16_t count );
+        void setSequenceCount( uint16_t count );
 
         /**
          * @brief Sets the maximum data packet size for the CCSDS DataField.
@@ -210,22 +210,22 @@ namespace CCSDS {
          *
          * @param size The maximum size of the data packet, in bytes.
          */
-        void setDataFieldSize(                                                              uint16_t size );
+        void setDataFieldSize( uint16_t size );
 
         /**
          * needs to be called as soon as possible, probably also from constructor.
          * @param enable
          */
-        void setUpdatePacketEnable(                                                           bool enable );
+        void setUpdatePacketEnable( bool enable );
 
         /** @brief Deserializes a vector of bytes into a CCSDS packet. */
-        [[nodiscard]] ResultBool deserialize(                                         const std::vector<uint8_t> &data );
+        [[nodiscard]] ResultBool deserialize( const std::vector<uint8_t> &data );
 
         /** @brief Deserializes a CCSDS packet using a vector and a PUS type. */
-        [[nodiscard]] ResultBool deserialize(           const std::vector<uint8_t> &data, ESecondaryHeaderType PusType );
+        [[nodiscard]] ResultBool deserialize( const std::vector<uint8_t> &data, ESecondaryHeaderType PusType );
 
         /** @brief Deserializes a CCSDS packet using a vector and a header data size. */
-        [[nodiscard]] ResultBool deserialize(           const std::vector<uint8_t> &data, uint16_t headerDataSizeBytes );
+        [[nodiscard]] ResultBool deserialize( const std::vector<uint8_t> &data, uint16_t headerDataSizeBytes );
 
         /** @brief Deserializes a CCSDS packet using separate header and data vectors. */
         [[nodiscard]] ResultBool deserialize( const std::vector<uint8_t> &headerData, const std::vector<uint8_t> &data );
@@ -269,28 +269,28 @@ namespace CCSDS {
          *
          * @return A vector containing the six bytes of the primary header.
          */
-        std::vector<uint8_t> getPrimaryHeader();
+        std::vector<uint8_t> getPrimaryHeaderBytes();
 
         /**
          * @brief Retrieves the secondary header data from the data field.
          *
          * @return A vector containing the Secondary header data.
          */
-        std::vector<uint8_t> getDataFieldHeader();
+        std::vector<uint8_t> getDataFieldHeaderBytes();
 
         /**
          * @brief Retrieves the application data from the data field.
          *
          * @return A vector containing the Application data.
          */
-        std::vector<uint8_t> getApplicationData();
+        std::vector<uint8_t> getApplicationDataBytes();
 
         /**
          * @brief Retrieves the full data field data. i.e. Application data and Secondary header data if applicable.
          *
          * @return A vector containing the data field data.
          */
-        std::vector<uint8_t> getFullDataField();
+        std::vector<uint8_t> getFullDataFieldBytes();
 
         /**
          * @brief Retrieves the CRC-16 checksum as a vector of bytes.
@@ -300,7 +300,7 @@ namespace CCSDS {
          *
          * @return A vector containing the MSB and LSB of the CRC-16 checksum.
          */
-        std::vector<uint8_t> getCRCVector();
+        std::vector<uint8_t> getCRCVectorBytes();
 
         /**
          * @brief Computes and retrieves the CRC-16 checksum of the packet.
@@ -319,11 +319,11 @@ namespace CCSDS {
         /** @ returns the data field header flag */
         bool getDataFieldHeaderFlag();
 
-        /** @brief Deserializes a CCSDS packet using separate header and data vectors. */
-        Result<DataField> getDataField();
+        /** @brief returns the CCSDS packet's DataField. */
+        CCSDS::DataField getDataField();
 
-        // other
-
+        /** @brief returns the CCSDS packet's Primary Header. */
+        CCSDS::Header getPrimaryHeader();
 
         /**
          * @brief Updates Primary headers data field size.

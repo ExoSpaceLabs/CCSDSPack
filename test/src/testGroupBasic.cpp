@@ -52,7 +52,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         const std::vector<uint8_t> expectedHeaderData( {0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00} );
         CCSDS::Packet packet;
         TEST_VOID(packet.setPrimaryHeader(data));
-        const auto ret = packet.getPrimaryHeader();
+        const auto ret = packet.getPrimaryHeaderBytes();
         return std::equal(expectedHeaderData.begin(), expectedHeaderData.end(), ret.begin());
     });
 
@@ -61,12 +61,12 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
 
         tester->unitTest("Assign Data field using vector, DataFieldHeader shall be empty.",[&packet]() {
             TEST_VOID( packet.setApplicationData({1, 2, 3, 4, 5}));
-            const auto dfh = packet.getDataFieldHeader();
+            const auto dfh = packet.getDataFieldHeaderBytes();
             return dfh.empty();
         } );
 
         tester->unitTest("Assign Data field using vector, ApplicationData shall be of correct size.",[&packet] {
-            const auto apd = packet.getApplicationData();
+            const auto apd = packet.getApplicationDataBytes();
             return apd.size() == 5;
         });
 
@@ -83,12 +83,12 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         tester->unitTest("Assign Secondary Header and Data using vector, DataFieldHeader shall be of correct size.",[&packet] {
             TEST_VOID( packet.setDataFieldHeader({0x1,0x2,0x3}));
             TEST_VOID( packet.setApplicationData({4, 5}));
-            const auto dfh = packet.getDataFieldHeader();
+            const auto dfh = packet.getDataFieldHeaderBytes();
             return dfh.size() == 3;
         });
 
         tester->unitTest("Assign Secondary Header and Data using vector, ApplicationData, shall be of correct size.", [&packet] {
-            const auto apd = packet.getApplicationData();
+            const auto apd = packet.getApplicationDataBytes();
             return apd.size() == 2;
         });
 
@@ -106,12 +106,12 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         tester->unitTest("Assign Data field using array*, DataFieldHeader shall be empty.",[&packet] {
             const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
             TEST_VOID( packet.setApplicationData( data,5));
-            const auto dfh = packet.getDataFieldHeader();
+            const auto dfh = packet.getDataFieldHeaderBytes();
             return dfh.empty();
         });
 
         tester->unitTest("Assign Data field using array*, ApplicationData shall be of correct size.",[&packet] {
-            const auto apd = packet.getApplicationData();
+            const auto apd = packet.getApplicationDataBytes();
             return apd.size() == 5;
         });
 
@@ -128,7 +128,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         tester->unitTest("Primary header vector shall be default valued.",[&packet] {
             // although the header is set to FFFF for data field size, its content is updated by data field size.
             std::vector<uint8_t> expectedHeader{0x0,0x0,0xc0,0x0,0x0,0x0};
-            const auto header = packet.getPrimaryHeader();
+            const auto header = packet.getPrimaryHeaderBytes();
             return std::equal(expectedHeader.begin(), expectedHeader.end(), header.begin());
         });
         tester->unitTest("Assign Secondary header and data field using array*, DataFieldHeader shall be of correct size.", [&packet] {
@@ -136,12 +136,12 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
             constexpr uint8_t data[] = {0x3,0x4,0x5};
             TEST_VOID( packet.setApplicationData( data,3));
             TEST_VOID( packet.setDataFieldHeader( secondaryHeader, 2));
-            const auto dfh = packet.getDataFieldHeader();
+            const auto dfh = packet.getDataFieldHeaderBytes();
             return dfh.size() == 2;
         });
 
         tester->unitTest("Assign Secondary header and data field using array*, ApplicationData shall be of correct size.",[&packet] {
-            const auto apd = packet.getApplicationData();
+            const auto apd = packet.getApplicationDataBytes();
             return apd.size() == 3;
         });
 
@@ -157,13 +157,13 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
             const std::vector<uint8_t> expectedHeader = {
                 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05
             };
-            const auto header = packet.getPrimaryHeader();
+            const auto header = packet.getPrimaryHeaderBytes();
 
             return std::equal(expectedHeader.begin(), expectedHeader.end(), header.begin());
         });
 
         tester->unitTest("CRC16 vector getter values shall be correctly returned.",[&packet] {
-            const auto crc = packet.getCRCVector();
+            const auto crc = packet.getCRCVectorBytes();
             auto res(true);
             res &= crc[0] == 0x93;
             res &= crc[1] == 0x04;;
@@ -171,15 +171,15 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         });
 
         tester->unitTest("Get full packet size. Header, Data field and CRC shall be correctly positioned.",[&packet] {
-            const auto header = packet.getPrimaryHeader();
-            const auto data = packet.getFullDataField();
+            const auto header = packet.getPrimaryHeaderBytes();
+            const auto data = packet.getFullDataFieldBytes();
             const size_t packetSize = 6 + 2 + data.size();
             const auto pack = packet.serialize();
             bool res(pack.size() == packetSize);
             res &= header[3] == pack[3];
             res &= pack[6] == data[0];
             res &= pack[10] == data[4];
-            const auto crc = packet.getCRCVector();
+            const auto crc = packet.getCRCVectorBytes();
             res &= crc[0] == pack[packetSize-2];
             res &= crc[1] == pack[packetSize-1];;
             return res;
@@ -192,7 +192,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet packet;
         TEST_VOID( packet.setDataFieldHeader(expected,CCSDS::PUS_A) );
         packet.setUpdatePacketEnable(false);
-        auto ret = packet.getDataFieldHeader();
+        auto ret = packet.getDataFieldHeaderBytes();
         return  std::equal(expected.begin(), expected.end(), ret.begin());
     });
 
@@ -202,7 +202,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet packet;
         TEST_VOID( packet.setDataFieldHeader(data,CCSDS::PUS_B) );
         packet.setUpdatePacketEnable(false);
-        auto dfh = packet.getDataFieldHeader();
+        auto dfh = packet.getDataFieldHeaderBytes();
 
         return  std::equal(data.begin(), data.end(), dfh.begin());
     });
@@ -213,7 +213,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet packet;
         packet.setUpdatePacketEnable(false);
         TEST_VOID( packet.setDataFieldHeader(data,CCSDS::PUS_C) );
-        auto dfh = packet.getDataFieldHeader();
+        auto dfh = packet.getDataFieldHeaderBytes();
 
         return std::equal(data.begin(), data.end(), dfh.begin());
     });
@@ -223,7 +223,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet packet;
         packet.setUpdatePacketEnable(false);
         TEST_VOID( packet.setDataFieldHeader(data,6,CCSDS::PUS_A));
-        auto dfh = packet.getDataFieldHeader();
+        auto dfh = packet.getDataFieldHeaderBytes();
         std::vector<uint8_t> tmp;
         tmp.assign(data,data+6);
 
@@ -235,7 +235,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet packet;
         packet.setUpdatePacketEnable(false);
         TEST_VOID( packet.setDataFieldHeader(data,8,CCSDS::PUS_B));
-        auto dfh = packet.getDataFieldHeader();
+        auto dfh = packet.getDataFieldHeaderBytes();
         std::vector<uint8_t> tmp;
         tmp.assign(data,data+8);
 
@@ -247,7 +247,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         CCSDS::Packet packet;
         packet.setUpdatePacketEnable(false);
         TEST_VOID( packet.setDataFieldHeader(data,8,CCSDS::PUS_C));
-        auto dfh = packet.getDataFieldHeader();
+        auto dfh = packet.getDataFieldHeaderBytes();
         std::vector<uint8_t> tmp;
         tmp.assign(data,data+8);
 
@@ -259,7 +259,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
         //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
         const CCSDS::PusA pusAHeader(1,2,3,4,5);
         packet.setDataFieldHeader(pusAHeader);
-        const auto dfh = packet.getDataFieldHeader();
+        const auto dfh = packet.getDataFieldHeaderBytes();
         return dfh.size() == pusAHeader.getSize();
     });
 
@@ -267,7 +267,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
          CCSDS::Packet packet;
          const CCSDS::PusB pusBHeader(1,2,3,4,5,6);
          packet.setDataFieldHeader(pusBHeader);
-         const auto dfh = packet.getDataFieldHeader();
+         const auto dfh = packet.getDataFieldHeaderBytes();
          return dfh.size() == pusBHeader.getSize();
     });
 
@@ -278,7 +278,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
 
              const CCSDS::PusC pusCHeader(1,2,3,4,5,6);
              packet.setDataFieldHeader(pusCHeader);
-             const auto dfh = packet.getDataFieldHeader();
+             const auto dfh = packet.getDataFieldHeaderBytes();
              return dfh.size() == pusCHeader.getSize();
         });
 
@@ -294,7 +294,7 @@ void testGroupBasic(TestManager *tester, const std::string& description) {
             constexpr uint8_t data[] = {0x3,0x4,0x5};
             TEST_VOID(packet.setApplicationData( data,3));
             const auto primaryHeaderSize = packet.getPrimaryHeader64bit() & 0xFFFF;
-            const auto dataFieldHeader = packet.getDataFieldHeader();
+            const auto dataFieldHeader = packet.getDataFieldHeaderBytes();
             const auto dataFieldHeaderSize = dataFieldHeader[7];
             return primaryHeaderSize == 0xB && dataFieldHeaderSize == 0x3;
         });

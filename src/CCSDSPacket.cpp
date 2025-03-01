@@ -5,7 +5,7 @@
 
 void CCSDS::Packet::update() {
     if (!m_updateStatus && m_enableUpdatePacket) {
-        const auto dataField = m_dataField.getFullDataField();
+        const auto dataField = m_dataField.getFullDataFieldBytes();
         const auto dataFiledSize = static_cast<uint16_t>( dataField.size() );
         const auto dataFieldHeaderFlag(m_dataField.getDataFieldHeaderFlag());
         m_primaryHeader.setDataLength(dataFiledSize);
@@ -22,7 +22,7 @@ uint16_t CCSDS::Packet::getCRC() {
 }
 
 uint16_t CCSDS::Packet::getDataFieldMaximumSize() {
-    return m_dataField.getDataFieldAvailableSizeByes();
+    return m_dataField.getDataFieldAvailableBytesSize();
 }
 
 bool CCSDS::Packet::getDataFieldHeaderFlag() {
@@ -30,7 +30,7 @@ bool CCSDS::Packet::getDataFieldHeaderFlag() {
     return m_primaryHeader.getDataFieldHeaderFlag();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getCRCVector() {
+std::vector<uint8_t> CCSDS::Packet::getCRCVectorBytes() {
     std::vector<uint8_t> crc(2);
     const auto crcVar = getCRC();
     crc[0] = (crcVar >> 8) & 0xFF; // MSB (Most Significant Byte)
@@ -38,9 +38,14 @@ std::vector<uint8_t> CCSDS::Packet::getCRCVector() {
     return crc;
 }
 
-CCSDS::Result<CCSDS::DataField> CCSDS::Packet::getDataField() {
+CCSDS::DataField CCSDS::Packet::getDataField() {
     update();
     return m_dataField;
+}
+
+CCSDS::Header CCSDS::Packet::getPrimaryHeader() {
+    update();
+    return m_primaryHeader;
 }
 
 uint64_t CCSDS::Packet::getPrimaryHeader64bit() {
@@ -48,34 +53,34 @@ uint64_t CCSDS::Packet::getPrimaryHeader64bit() {
     return  m_primaryHeader.getFullHeader();
 };
 
-std::vector<uint8_t> CCSDS::Packet::getPrimaryHeader() {
+std::vector<uint8_t> CCSDS::Packet::getPrimaryHeaderBytes() {
     update();
     return m_primaryHeader.serialize();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getDataFieldHeader() {
+std::vector<uint8_t> CCSDS::Packet::getDataFieldHeaderBytes() {
     update();
-    return m_dataField.getDataFieldHeader();
+    return m_dataField.getDataFieldHeaderBytes();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getApplicationData() {
+std::vector<uint8_t> CCSDS::Packet::getApplicationDataBytes() {
     update();
     return m_dataField.getApplicationData();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getFullDataField() {
-    return   m_dataField.getFullDataField();
+std::vector<uint8_t> CCSDS::Packet::getFullDataFieldBytes() {
+    return   m_dataField.getFullDataFieldBytes();
 }
 
 std::vector<uint8_t> CCSDS::Packet::serialize() {
-    auto header         =       getPrimaryHeader();
-    auto dataField = m_dataField.getFullDataField();
-    const auto crc      =                 getCRCVector();
+    auto header         =       getPrimaryHeaderBytes();
+    auto dataField = m_dataField.getFullDataFieldBytes();
+    const auto crc      =                 getCRCVectorBytes();
 
     std::vector<uint8_t> packet;
     packet.reserve(header.size() + dataField.size() + crc.size());
     packet.insert(packet.end(),    header.begin(),    header.end());
-    if (!getFullDataField().empty()) {
+    if (!getFullDataFieldBytes().empty()) {
         packet.insert(packet.end(), dataField.begin(), dataField.end());
     }
     packet.insert(packet.end(),       crc.begin(),       crc.end());
@@ -156,7 +161,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &headerD
 
 uint16_t CCSDS::Packet::getFullPacketLength() {
     // where 8 is derived from 6 bytes for Primary header and 2 bytes for CRC16.
-    return 8 + m_dataField.getDataFieldUsedSizeByes();
+    return 8 + m_dataField.getDataFieldUsedBytesSize();
 }
 
 CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const uint64_t data) {

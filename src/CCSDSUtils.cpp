@@ -43,7 +43,7 @@ void printBufferData(const std::vector<uint8_t>& buffer) {
 }
 
 void printData(CCSDS::DataField dataField) {
-    const auto dataFieldHeader = dataField.getDataFieldHeader();
+    const auto dataFieldHeader = dataField.getDataFieldHeaderBytes();
     auto applicationData = dataField.getApplicationData();
     const uint16_t maxSize = (applicationData.size() > dataFieldHeader.size()) ? applicationData.size() : dataFieldHeader.size();
 
@@ -83,15 +83,14 @@ void printHeader(CCSDS::Header &header) {
 
 CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet) {
     CCSDS::Header header;
-    FORWARD_RESULT( header.deserialize({packet.getPrimaryHeader()}));
+    FORWARD_RESULT( header.deserialize({packet.getPrimaryHeaderBytes()}));
     printHeader(header);
     return true;
 }
 
 void printDataField(CCSDS::Packet& packet) {
 
-    CCSDS::DataField dataField{};
-    ASSIGN_OR_PRINT(dataField, packet.getDataField());
+    auto dataField = packet.getDataField();
 
     printData(dataField);
     std::cout << "[ CCSDSPack ] CRC-16                   [Hex] : [ "<< "0x" << std::hex << packet.getCRC() << " ]" << std::endl;
