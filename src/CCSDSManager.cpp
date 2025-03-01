@@ -12,7 +12,7 @@ void CCSDS::Manager::setDatFieldSize(const uint16_t size) {
 }
 
 CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t>& data) {
-   RETURN_IF_ERROR(data.empty(), ErrorCode::NO_DATA);
+   RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA,"Cannot set Application data, Provided data is empty");
   if (!m_packets.empty()) {
     m_packets.clear();
   }
@@ -61,18 +61,17 @@ void CCSDS::Manager::setAutoUpdateEnable(const bool enable) {
 
 CCSDS::ResultBuffer CCSDS::Manager::getPacketTemplate() {
   auto data = m_packetTemplate.serialize();
-  RETURN_IF_ERROR(data.empty(), ErrorCode::NO_DATA);
+   RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA,"Cannot get Packet template data, data is empty");
   return data;
 }
 
 CCSDS::ResultBuffer CCSDS::Manager::getPacketAtIndex(const uint16_t index) {
-  RETURN_IF_ERROR(index < 0, ErrorCode::INVALID_DATA);
-  RETURN_IF_ERROR(index >= m_packets.size(), ErrorCode::INVALID_DATA);
+  RET_IF_ERR_MSG(index < 0 || index >= m_packets.size(), ErrorCode::INVALID_DATA, "Cannot get packet, index is out of bounds");
   return m_packets[index].serialize();
 }
 
 CCSDS::ResultBuffer CCSDS::Manager::getApplicationData() const {
-  RETURN_IF_ERROR(m_packets.empty(), ErrorCode::NO_DATA);
+   RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA,"Cannot get Application data, no packets have been set."); // todo check if valid?
   std::vector<uint8_t> data;
   for (auto packet : m_packets) {
     auto applicationData = packet.getApplicationData();
@@ -82,8 +81,7 @@ CCSDS::ResultBuffer CCSDS::Manager::getApplicationData() const {
 }
 
 CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataAtIndex(const uint16_t index) {
-  RETURN_IF_ERROR(index < 0, ErrorCode::INVALID_DATA);
-  RETURN_IF_ERROR(index >= m_packets.size(), ErrorCode::INVALID_DATA);
+  RET_IF_ERR_MSG(index < 0 || index >= m_packets.size(), ErrorCode::INVALID_DATA, "Cannot get Application data, index is out of bounds");
   return m_packets[index].getApplicationData();
 }
 

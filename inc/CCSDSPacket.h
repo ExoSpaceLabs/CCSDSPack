@@ -197,6 +197,8 @@ namespace CCSDS {
          * @param flags The sequence flag to be set, represented by the ESequenceFlag enum : uint8_t.
          */
         void setSequenceFlags(                                                        ESequenceFlag flags );
+
+        /** @brief Sets the sequence count for the packet. */
         void setSequenceCount(                                                             uint16_t count );
 
         /**
@@ -216,9 +218,16 @@ namespace CCSDS {
          */
         void setUpdatePacketEnable(                                                           bool enable );
 
+        /** @brief Deserializes a vector of bytes into a CCSDS packet. */
         [[nodiscard]] ResultBool deserialize(                                         const std::vector<uint8_t> &data );
+
+        /** @brief Deserializes a CCSDS packet using a vector and a PUS type. */
         [[nodiscard]] ResultBool deserialize(           const std::vector<uint8_t> &data, ESecondaryHeaderType PusType );
+
+        /** @brief Deserializes a CCSDS packet using a vector and a header data size. */
         [[nodiscard]] ResultBool deserialize(           const std::vector<uint8_t> &data, uint16_t headerDataSizeBytes );
+
+        /** @brief Deserializes a CCSDS packet using separate header and data vectors. */
         [[nodiscard]] ResultBool deserialize( const std::vector<uint8_t> &headerData, const std::vector<uint8_t> &data );
 
         /**
@@ -261,8 +270,26 @@ namespace CCSDS {
          * @return A vector containing the six bytes of the primary header.
          */
         std::vector<uint8_t> getPrimaryHeader();
+
+        /**
+         * @brief Retrieves the secondary header data from the data field.
+         *
+         * @return A vector containing the Secondary header data.
+         */
         std::vector<uint8_t> getDataFieldHeader();
+
+        /**
+         * @brief Retrieves the application data from the data field.
+         *
+         * @return A vector containing the Application data.
+         */
         std::vector<uint8_t> getApplicationData();
+
+        /**
+         * @brief Retrieves the full data field data. i.e. Application data and Secondary header data if applicable.
+         *
+         * @return A vector containing the data field data.
+         */
         std::vector<uint8_t> getFullDataField();
 
         /**
@@ -285,8 +312,14 @@ namespace CCSDS {
          * @return The 16-bit CRC-16 checksum.
          */
         uint16_t getCRC();
+
+        /** @brief returns the maximum data field size */
         uint16_t getDataFieldMaximumSize();
+
+        /** @ returns the data field header flag */
         bool getDataFieldHeaderFlag();
+
+        /** @brief Deserializes a CCSDS packet using separate header and data vectors. */
         Result<DataField> getDataField();
 
         // other

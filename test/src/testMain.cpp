@@ -4,7 +4,6 @@
 
 int main() {
 
-
     std::cout << std::endl;
     std::cout <<"Running Tests..." << std::endl;
     TestManager tester{};
@@ -18,6 +17,5 @@ int main() {
 
     // end tests and return number of tests failed (0 in case all passed)
     return tester.Result();
-
 }
 

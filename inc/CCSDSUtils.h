@@ -22,7 +22,11 @@ uint16_t crc16(const std::vector<uint8_t>& data,
     uint16_t finalXorValue = 0x0000
 );
 
-
+/**
+ * @brief Prints to console a series of CCSDS Packets, breaking it down to Primary header and Data field.
+ *
+ * @param packets
+ */
 void printPackets(std::vector<CCSDS::Packet>& packets);
 
 /**
@@ -42,6 +46,11 @@ std::string getBinaryString(uint32_t value, int bits);
  */
 std::string getBitsSpaces(int num);
 
+/**
+ * @brief Prints to console the HEX data from the bytes vector.
+ *
+ * @param buffer
+ */
 void printBufferData(const std::vector<uint8_t>& buffer);
 
 /**
@@ -65,6 +74,12 @@ void printData(CCSDS::DataField dataField);
  */
 void printHeader(CCSDS::Header& header);
 
+/**
+ * @brief Prints to console the primary header of a provided CCSDS packet
+ *
+ * @param packet
+ * @return ResultBool
+ */
 CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet);
 
 /**

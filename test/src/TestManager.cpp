@@ -1,12 +1,10 @@
 
-
 #include "TestManager.h"
 #include <iostream>
 #include <iomanip>
 
 //###########################################################################
 #define VERBOSE 1
-
 
 void TestManager::unitTestStart() {
     if (!m_testStarted) {

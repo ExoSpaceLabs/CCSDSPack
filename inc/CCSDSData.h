@@ -158,9 +158,32 @@ namespace CCSDS{
          */
         void setDataFieldHeaderAutoUpdateStatus( const bool enable)          { m_enableDataFieldUpdate = enable; }
 
-
+        /**
+        * @brief Retrieves the absolute size of the data field in bytes.
+        *
+        * This method returns the total allocated size for the data field, including both the header
+        * and application data.
+        *
+        * @return The absolute size of the data field in bytes.
+        */
         uint16_t getDataFieldAbsoluteSizeByes();
+
+        /**
+         * @brief Retrieves the used size of the data field in bytes.
+         *
+         * This method returns the amount of space currently occupied by valid data within the data field.
+         *
+         * @return The used size of the data field in bytes.
+         */
         uint16_t getDataFieldUsedSizeByes();
+
+        /**
+        * @brief Retrieves the available size of the data field in bytes.
+        *
+        * This method calculates and returns the remaining free space within the data field that can be utilized.
+        *
+        * @return The available size of the data field in bytes.
+        */
         uint16_t getDataFieldAvailableSizeByes();
 
         /**
@@ -182,6 +205,14 @@ namespace CCSDS{
          * @return A vector containing the full data field (header + application data).
          */
         std::vector<uint8_t> getFullDataField();
+
+        /**
+         * @brief Retrieves the application data from the data field.
+         *
+         * This method returns a vector containing the raw application data stored in the data field.
+         *
+         * @return A vector containing the application data bytes.
+         */
         std::vector<uint8_t> getApplicationData();
         [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const                            { return m_enableDataFieldUpdate; }
         [[nodiscard]] bool getDataFieldHeaderFlag() const       { return !m_dataFieldHeader.empty() || m_pusHeaderData != nullptr; }
