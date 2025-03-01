@@ -1,5 +1,5 @@
 //
-// Created by dev on 2/16/25.
+// Created by inczert on 2/16/25.
 //
 
 #ifndef CCSDSRESULT_H

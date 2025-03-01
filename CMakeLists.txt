@@ -60,15 +60,9 @@ set_target_properties(${LIB_VERSIONED} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
 
-# Collect source files for the test executable
-set(TEST_SOURCES
-        "${TEST_SOURCE_DIR}/testMain.cpp"
-        "${TEST_SOURCE_DIR}/TestManager.cpp"
-)
-# Collect source files for the test executable
-set(TEST_INCLUDES
-        "${TEST_INCLUDE_DIR}/TestManager.h"
-)
+# Collect all source files in the test src folder for the test executable
+file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
+
 
 # Create the test executable target
 add_executable(${TESTER_EXEC} ${TEST_SOURCES})
