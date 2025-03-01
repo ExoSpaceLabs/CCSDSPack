@@ -26,8 +26,9 @@ project(${LIB_VERSIONED})
 
 # Define directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
-set(TEST_DIR "${CMAKE_SOURCE_DIR}/test")
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/inc")
+set(TEST_SOURCE_DIR "${CMAKE_SOURCE_DIR}/test/src")
+set(TEST_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/test/inc")
 
 # Set output directories for different OSes
 if (WIN32)
@@ -60,13 +61,20 @@ set_target_properties(${LIB_VERSIONED} PROPERTIES
 )
 
 # Collect source files for the test executable
-set(TEST_SOURCES "${TEST_DIR}/CCSDSPack_test.cpp")
+set(TEST_SOURCES
+        "${TEST_SOURCE_DIR}/testMain.cpp"
+        "${TEST_SOURCE_DIR}/TestManager.cpp"
+)
+# Collect source files for the test executable
+set(TEST_INCLUDES
+        "${TEST_INCLUDE_DIR}/TestManager.h"
+)
 
 # Create the test executable target
 add_executable(${TESTER_EXEC} ${TEST_SOURCES})
 
 # Add include directories to the test target
-target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR})
+target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR} ${TEST_INCLUDE_DIR})
 
 # Link the test executable with the library
 target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_VERSIONED})

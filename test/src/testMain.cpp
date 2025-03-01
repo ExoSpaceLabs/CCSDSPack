@@ -2,6 +2,7 @@
 #include "CCSDSManager.h"
 #include "CCSDSUtils.h"
 #include "CCSDSResult.h"
+#include "TestManager.h"
 
 void testGroupBasic(TestManager *tester, const std::string& description) {
     std::cout << "  testGroupBasic: " << description <<  std::endl;
