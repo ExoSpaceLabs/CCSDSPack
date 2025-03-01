@@ -3,7 +3,6 @@
 #include "CCSDSData.h"
 #include "CCSDSUtils.h"
 #include <iostream>
-#include <stdexcept>
 
 /**
  * @brief Retrieves the full data field by combining the data field header and application data.
@@ -11,7 +10,6 @@
  * Combines the secondary header (if present) and application data into a single vector.
  * Ensures that the total size does not exceed the maximum allowed data packet size.
  *
- * @throws std::invalid_argument If the total size of the header and data exceeds the allowed size.
  * @return A vector containing the full data field (header + application data).
  */
 std::vector<uint8_t> CCSDS::DataField::getFullDataField() {
@@ -81,7 +79,6 @@ void CCSDS::DataField::update() {
  * @param pData A pointer to the application data.
  * @param sizeData The size of the application data in bytes.
  *
- * @throws std::invalid_argument If the data is null, size is zero, or exceeds the allowed size.
  * @return none.
  */
 CCSDS::ResultBool CCSDS::DataField::setApplicationData(const uint8_t *pData, const size_t &sizeData) {
@@ -152,7 +149,6 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, con
  * @param sizeData The size of the header data in bytes.
  * @param pType enum of type PUSType to select
  *
- * @throws std::invalid_argument If the header is null, size is zero, or exceeds the allowed size.
  * @return none.
  */
 CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, const size_t &sizeData,
@@ -187,11 +183,9 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, con
  * @param data A vector containing the data for the data field header.
  * @param pType The PUS type (PUS_A, PUS_B, PUS_C, or OTHER) indicating the header format.
  *
- * @throws std::invalid_argument If the data size exceeds the allowed limits or
- *         if the header size does not match the expected size for the given PUS type.
  *
  * @note If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method.
- * @warning The method will log an error to standard error and throw an exception if the total
+ * @warning The method will log an error to standard error and return an exception if the total
  *          size of the header and application data exceeds the allowed packet size.
  */
 CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data,
@@ -210,18 +204,28 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
     m_dataFieldHeaderType = pType;
 
     switch (pType) {
-        case PUS_A:
-            m_pusHeaderData = std::make_unique<PusA>(data);
+        case PUS_A: {
+            PusA PusAHeader;
+            FORWARD_RESULT( PusAHeader.deserialize(data) );
+            m_pusHeaderData = std::make_unique<PusA>(PusAHeader);
+        }
         break;
-        case PUS_B:
-            m_pusHeaderData = std::make_unique<PusB>(data);
+        case PUS_B: {
+            PusB PusBHeader;
+            FORWARD_RESULT( PusBHeader.deserialize(data) );
+            m_pusHeaderData = std::make_unique<PusB>(PusBHeader);
+        }
         break;
-        case PUS_C:
-            m_pusHeaderData = std::make_unique<PusC>(data);
+        case PUS_C: {
+            PusC PusCHeader;
+            FORWARD_RESULT( PusCHeader.deserialize(data) );
+            m_pusHeaderData = std::make_unique<PusC>(PusCHeader);
+        }
         break;
-        case OTHER:
-            FORWARD_RESULT(setDataFieldHeader(data));
-            break;
+        case OTHER: {
+            FORWARD_RESULT( setDataFieldHeader(data) );
+        }
+        break;
         default: ;
     }
     m_dataFieldHeaderUpdated = false;

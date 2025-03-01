@@ -21,7 +21,6 @@ CCSDS::ResultBool CCSDS::Header::deserialize(const std::vector<uint8_t> &data) {
  * type, data field header flag, APID, sequence flags, sequence count, and data length.
  *
  * @param data The 64-bit integer representing the header data.
- * @throws std::invalid_argument If the input data exceeds the valid bit range for the header.
  * @return none.
  */
 CCSDS::ResultBool CCSDS::Header::setData(const uint64_t &data){

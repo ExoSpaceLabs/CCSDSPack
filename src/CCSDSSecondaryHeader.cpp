@@ -3,18 +3,19 @@
 //
 
 #include "CCSDSSecondaryHeader.h"
+
+#include <CCSDSResult.h>
 #include <vector>
-#include <stdexcept>
 #include <cstdint>
 
 void CCSDS::SecondaryHeaderAbstract::setDataLength(const uint16_t dataLength) {
-  // Default implementation (optional or could throw an exception)
+
   (void)dataLength; // To avoid unused parameter warning
 }
 
-void CCSDS::SecondaryHeaderAbstract::deserialize(const std::vector<uint8_t> &data) {
-  //todo return ResultBool
+CCSDS::ResultBool CCSDS::SecondaryHeaderAbstract::deserialize(const std::vector<uint8_t> &data) {
   (void)data;
+  return true;
 }
 
 uint16_t CCSDS::SecondaryHeaderAbstract::getDataLength() const {
@@ -31,22 +32,15 @@ std::vector<uint8_t> CCSDS::SecondaryHeaderAbstract::serialize() const {
   return {}; // Return an empty vector
 }
 
-CCSDS::PusA::PusA(const std::vector<uint8_t> &data) {
-  //todo return ResultBool not possible, deal with it possibly move iot out
-  // from constructor and leave a single one as default.
-  deserialize(data);
-}
+CCSDS::ResultBool CCSDS::PusA::deserialize(const std::vector<uint8_t> &data) {
+  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA, "PUS-A header not correct size (size != 6 bytes)");
 
-void CCSDS::PusA::deserialize(const std::vector<uint8_t> &data) {
-  //todo return ResultBool
-  if (data.size() != m_size) {
-    throw std::invalid_argument("[ PUS ] Error: PUS-A header not correct size.");
-  }
   m_version = data[0] &0x5;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];
   m_dataLength = data[4] << 8 | data[5];
+  return true;
 }
 
 std::vector<uint8_t> CCSDS::PusA::serialize() const {
@@ -62,23 +56,15 @@ std::vector<uint8_t> CCSDS::PusA::serialize() const {
   return data;
 }
 
-CCSDS::PusB::PusB(const std::vector<uint8_t>& data) {
-  //todo return ResultBool not possible, deal with it possibly move iot out
-  // from constructor and leave a single one as default.
-  deserialize(data);
-}
-
-void CCSDS::PusB::deserialize(const std::vector<uint8_t> &data) {
-  //todo return ResultBool
-  if (data.size() != m_size) {
-    throw std::invalid_argument("[ PUS ] Error: PUS-B header not correct size.");
-  }
+CCSDS::ResultBool CCSDS::PusB::deserialize(const std::vector<uint8_t> &data) {
+  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA, "PUS-B header not correct size (size != 8 bytes)");
   m_version = data[0] &0x7;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];
   m_eventID = data[4] << 8 | data[5];
   m_dataLength = data[6] << 8 | data[7];
+  return true;
 }
 
 std::vector<uint8_t> CCSDS::PusB::serialize() const {
@@ -96,23 +82,17 @@ std::vector<uint8_t> CCSDS::PusB::serialize() const {
   return data;
 }
 
-CCSDS::PusC::PusC(const std::vector<uint8_t>& data) {
-  //todo return ResultBool not possible, deal with it possibly move iot out
-  // from constructor and leave a single one as default.
-  deserialize(data);
-}
+CCSDS::ResultBool CCSDS::PusC::deserialize(const std::vector<uint8_t> &data) {
 
-void CCSDS::PusC::deserialize(const std::vector<uint8_t> &data) {
-  //todo return ResultBool
-  if (data.size() != m_size) {
-    throw std::invalid_argument("[ PUS ] Error: PUS-C header not correct size.");
-  }
+  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA, "PUS-C header not correct size (size != 8 bytes)");
+
   m_version = data[0] &0x7;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];
   m_timeCode = data[4] << 8 | data[5];
   m_dataLength = data[6] << 8 | data[7];
+  return true;
 }
 
 std::vector<uint8_t> CCSDS::PusC::serialize() const {
