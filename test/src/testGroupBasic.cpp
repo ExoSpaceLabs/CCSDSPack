@@ -1,6 +1,10 @@
 //
 // Created by inczert on 3/1/25.
 //
+
+#include <iostream>
+#include "CCSDSUtils.h"
+#include "CCSDSResult.h"
 #include "tests.h"
 
 void testGroupBasic(TestManager *tester, const std::string& description) {

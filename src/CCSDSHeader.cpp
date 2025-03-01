@@ -2,7 +2,6 @@
 #include "CCSDSHeader.h"
 #include "CCSDSUtils.h"
 
-
 CCSDS::ResultBool CCSDS::Header::deserialize(const std::vector<uint8_t> &data) {
     RET_IF_ERR_MSG( data.size() != 6, ErrorCode::INVALID_HEADER_DATA, "Invalid Header Data provided: size != 6" );
 
@@ -14,22 +13,13 @@ CCSDS::ResultBool CCSDS::Header::deserialize(const std::vector<uint8_t> &data) {
     return true;
 }
 
-/**
- * @brief Sets the header data from a 64-bit integer representation.
- *
- * Decomposes the 64-bit input data into various header fields, including the version number,
- * type, data field header flag, APID, sequence flags, sequence count, and data length.
- *
- * @param data The 64-bit integer representing the header data.
- * @return none.
- */
 CCSDS::ResultBool CCSDS::Header::setData(const uint64_t &data){
 
     RET_IF_ERR_MSG(data > 0xFFFFFFFFFFFF, ErrorCode::INVALID_HEADER_DATA ,"Input data exceeds expected bit size for version or size.");
     // Decompose data using mask and shifts
-    m_dataLength                     = (data & 0xFFFF);               // last 16 bits
-    m_packetSequenceControl          = (data >> 16) & 0xFFFF;         // middle 16 bits
-    m_packetIdentificationAndVersion = (data >> 32);                  // first 16 bits
+    m_dataLength                     = (data & 0xFFFF);                        // last 16 bits
+    m_packetSequenceControl          = (data >> 16) & 0xFFFF;                  // middle 16 bits
+    m_packetIdentificationAndVersion = (data >> 32);                           // first 16 bits
 
     // decompose packet identifier
     m_versionNumber       = (m_packetIdentificationAndVersion >> 13);          // First 3 bits for version
@@ -38,8 +28,8 @@ CCSDS::ResultBool CCSDS::Header::setData(const uint64_t &data){
     m_APID                = (m_packetIdentificationAndVersion & 0x07FF);       // Last 11 bits
 
     // decompose sequence control
-    m_sequenceFlags = (m_packetSequenceControl >> 14);                // first 2 bits
-    m_sequenceCount = (m_packetSequenceControl & 0x3FFF);             // Last 14 bits.
+    m_sequenceFlags = (m_packetSequenceControl >> 14);                         // first 2 bits
+    m_sequenceCount = (m_packetSequenceControl & 0x3FFF);                      // Last 14 bits.
     return true;
 }
 
@@ -59,15 +49,6 @@ std::vector<uint8_t> CCSDS::Header::serialize()  {
     return data;
 }
 
-/**
- * @brief Sets the header data from a `PrimaryHeader` structure.
- *
- * Assigns values from a `PrimaryHeader` structure to the internal header fields.
- * Combines certain fields into their packed representations for efficient storage.
- *
- * @param data A `PrimaryHeader` structure containing the header data.
- * @return none.
- */
 void CCSDS::Header::setData(const PrimaryHeader &data){
 
     m_versionNumber       =       data.versionNumber & 0x0007;

@@ -80,21 +80,27 @@ namespace CCSDS {
     public:
         Header() = default;
 
-        // getters
-        [[nodiscard]] uint8_t  getVersionNumber()       const { return m_versionNumber;       }
-        [[nodiscard]] uint8_t  getType()                const { return m_type;                }
-        [[nodiscard]] uint8_t  getDataFieldHeaderFlag() const { return m_dataFieldHeaderFlag; }
-        [[nodiscard]] uint16_t getAPID()                const { return m_APID;                }
-        [[nodiscard]] uint8_t  getSequenceFlags()       const { return m_sequenceFlags;       }
-        [[nodiscard]] uint16_t getSequenceCount()       const { return m_sequenceCount;       }
-        [[nodiscard]] uint16_t getDataLength()          const { return m_dataLength;          }
+        [[nodiscard]] uint8_t  getVersionNumber()       const { return m_versionNumber;       } ///< 3 bits
+        [[nodiscard]] uint8_t  getType()                const { return m_type;                } ///< 1 bits
+        [[nodiscard]] uint8_t  getDataFieldHeaderFlag() const { return m_dataFieldHeaderFlag; } ///< 1 bits
+        [[nodiscard]] uint16_t getAPID()                const { return m_APID;                } ///< 11 bits
+        [[nodiscard]] uint8_t  getSequenceFlags()       const { return m_sequenceFlags;       } ///< 2 bits
+        [[nodiscard]] uint16_t getSequenceCount()       const { return m_sequenceCount;       } ///< 14 bits
+        [[nodiscard]] uint16_t getDataLength()          const { return m_dataLength;          } ///< 16 bits
 
+        /**
+         * @brief decomposes the Primary header class and returns it as a vector of bytes.
+         * @note if data has not been set it is initialized as all 0s.
+         *
+         * @return std::vector<uint8_t>
+         */
         std::vector<uint8_t>serialize();
 
         /**
-         * @brief Computes and retrieves the full header as a 64-bit value.
+         * @brief Computes and retrieves the full header as a 64-bit value. Combines individual header fields into a
+         * single 64-bit representation.
          *
-         * Combines individual header fields into a single 64-bit representation.
+         * @note if data has not been set it is initialized as all 0s.
          *
          * @return The full header as a 64-bit integer.
          */
@@ -104,44 +110,70 @@ namespace CCSDS {
             return (static_cast<uint64_t>(m_packetIdentificationAndVersion) << 32) | (static_cast<uint32_t>(m_packetSequenceControl) << 16) | m_dataLength;
         }
 
-        // setters
-        void setVersionNumber(const uint8_t &value)        { m_versionNumber       = value & 0x0007; }
-        void setType(const uint8_t &value)                 { m_type                = value & 0x0001; }
-        void setDataFieldHeaderFlag(const uint8_t &value)  { m_dataFieldHeaderFlag = value & 0x0001; }
-        void setAPID(const uint16_t &value)                { m_APID                = value & 0x07FF; }
-        void setSequenceFlags(const uint8_t &value)        { m_sequenceFlags       = value & 0x0003; }
-        void setSequenceCount(const uint16_t &value)       { m_sequenceCount       = value & 0x3FFF; }
-        void setDataLength(const uint16_t &value)          { m_dataLength          = value;          }
+        void setVersionNumber(const uint8_t &value)        { m_versionNumber       = value & 0x0007; } ///< 3 bits
+        void setType(const uint8_t &value)                 { m_type                = value & 0x0001; } ///< 1 bits
+        void setDataFieldHeaderFlag(const uint8_t &value)  { m_dataFieldHeaderFlag = value & 0x0001; } ///< 1 bits
+        void setAPID(const uint16_t &value)                { m_APID                = value & 0x07FF; } ///< 11 bits
+        void setSequenceFlags(const uint8_t &value)        { m_sequenceFlags       = value & 0x0003; } ///< 2 bits
+        void setSequenceCount(const uint16_t &value)       { m_sequenceCount       = value & 0x3FFF; } ///< 14 bits
+        void setDataLength(const uint16_t &value)          { m_dataLength          = value;          } ///< 16 bits
 
-        // Full data setter
+        /**
+         * @brief Sets the header data from a 64-bit integer representation.
+         *
+         * Decomposes the 64-bit input data into various header fields, including the version number,
+         * type, data field header flag, APID, sequence flags, sequence count, and data length.
+         *
+         * @note returns an error code if the provided data exceeds maximum available value (max 6 bytes).
+         *
+         * @param data The 64-bit integer representing the header data.
+         * @return ResultBool.
+         */
         [[nodiscard]] ResultBool setData(const uint64_t &data);
 
-        // Full data setter
+        /**
+         * @brief Sets the header data from a 64-bit integer representation.
+         *
+         * Decomposes the 64-bit input data into various header fields, including the version number,
+         * type, data field header flag, APID, sequence flags, sequence count, and data length.
+         *
+         * @note returns an error code if the provided data exceeds maximum available value (max 6 bytes i.e. elements).
+         *
+         * @param data reference to an uint8_t vector.
+         * @return ResultBool.
+         */
+        [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data);
+
+
+        /**
+         * @brief Sets the header data from a `PrimaryHeader` structure.
+         *
+         * Assigns values from a `PrimaryHeader` structure to the internal header fields.
+         * Combines certain fields into their packed representations for efficient storage.
+         *
+         * @param data A `PrimaryHeader` structure containing the header data.
+         * @return none.
+         */
         void setData(const PrimaryHeader &data);
-
-        [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data);
-        // print out the header
-
-
     private:
 
         // version and packet identification 16 bit 4 hex
-        uint8_t                   m_versionNumber{}; // 3 bit
+        uint8_t                   m_versionNumber{}; ///< 3 bit first of packet identification
 
         // packet identification 4 hex
-        uint8_t                            m_type{}; // 1 bit
-        uint8_t             m_dataFieldHeaderFlag{}; // 1 bit
-        uint16_t                           m_APID{}; // 11 bit
+        uint8_t                            m_type{}; ///< 1 bit second of packet identification
+        uint8_t             m_dataFieldHeaderFlag{}; ///< 1 bit third of packet identification
+        uint16_t                           m_APID{}; ///< 11 bit last of packet identification
 
         // packet sequence control 16 bit 4 hex
-        uint8_t      m_sequenceFlags{ UNSEGMENTED }; // 2 bit
-        uint16_t                  m_sequenceCount{}; // 14 bit
+        uint8_t      m_sequenceFlags{ UNSEGMENTED }; ///< 2 bit first of sequence control / ESequenceFlag enum.
+        uint16_t                  m_sequenceCount{}; ///< 14 bit last of sequence control
 
 
         // full packet size 48 bit fixed 6 byes
-        uint16_t m_packetIdentificationAndVersion{}; // packet id and version 16 bit 4 hex
-        uint16_t          m_packetSequenceControl{}; // packet sequence control 16 bit 4 hex
-        uint16_t                     m_dataLength{}; // data packet length 16 bits 4 hex
+        uint16_t m_packetIdentificationAndVersion{}; ///< packet id and version 16 bit 4 hex
+        uint16_t          m_packetSequenceControl{}; ///< packet sequence control 16 bit 4 hex
+        uint16_t                     m_dataLength{}; ///< data packet length 16 bits 4 hex
 
     };
 }

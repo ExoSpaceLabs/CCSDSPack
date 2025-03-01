@@ -8,11 +8,6 @@
 #define VERBOSE 1
 
 
-/**
- * @brief Marks the start of a unit test.
- *
- * Initializes the timer and tracks whether this is the first test in a series.
- */
 void TestManager::unitTestStart() {
     if (!m_testStarted) {
         m_testStarted = true;
@@ -23,12 +18,6 @@ void TestManager::unitTestStart() {
     }
 }
 
-/**
- * @brief Marks the end of a unit test and logs its result.
- *
- * @param condition The result of the test (true for pass, false for fail).
- * @param message A message describing the test.
- */
 void TestManager::unitTestEnd(const bool condition, const std::string& message) {
     m_unitEndTime = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsed = m_unitEndTime - m_unitStartTime;

@@ -2,14 +2,11 @@
 #define TESTMANAGER_H
 
 #include <string>
-#include <cstdint>
 #include <chrono>
-#include <vector>
 
 const std::string GREEN = "\033[32m"; ///< print Green color after this
 const std::string   RED = "\033[31m"; ///< print Red color after this
 const std::string RESET =  "\033[0m"; ///< print Reset color after this
-
 
 /**
  * @brief A utility class for testing and validation.
@@ -48,6 +45,7 @@ public:
      */
     template <typename Callable >
     void unitTest(const std::string& message, Callable condition){
+
         unitTestStart();
         unitTestEnd(condition(),message);
     }
@@ -62,9 +60,21 @@ public:
     int Result();
 
 private:
-    void unitTestStart();
-    void unitTestEnd(bool condition, const std::string& message);
 
+    /**
+     * @brief Marks the start of a unit test.
+     *
+     * Initializes the timer and tracks whether this is the first test in a series.
+     */
+    void unitTestStart();
+
+    /**
+     * @brief Marks the end of a unit test and logs its result.
+     *
+     * @param condition The result of the test (true for pass, false for fail).
+     * @param message A message describing the test.
+     */
+    void unitTestEnd(bool condition, const std::string& message);
 
     size_t m_testCounter{};
     size_t m_testsFailed{};

@@ -5,10 +5,6 @@
 #ifndef TESTS_H
 #define TESTS_H
 
-#include <iostream>
-#include "CCSDSManager.h"
-#include "CCSDSUtils.h"
-#include "CCSDSResult.h"
 #include "TestManager.h"
 
 

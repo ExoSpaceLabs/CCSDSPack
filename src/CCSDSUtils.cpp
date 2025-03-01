@@ -42,14 +42,6 @@ void printBufferData(const std::vector<uint8_t>& buffer) {
     std::cout << "]" << std::endl;
 }
 
-/**
- * @brief Prints the data field details, including the secondary header and application data.
- *
- * Outputs information about the presence of a secondary header and the content
- * of both the secondary header and the application data in hexadecimal format.
- *
- * @return none.
- */
 void printData(CCSDS::DataField dataField) {
     const auto dataFieldHeader = dataField.getDataFieldHeader();
     auto applicationData = dataField.getApplicationData();
@@ -72,16 +64,6 @@ void printData(CCSDS::DataField dataField) {
     std::cout << std::endl;
 }
 
-
-/**
- * @brief Prints the header fields and their binary or hexadecimal representations.
- *
- * Outputs all relevant header fields, including the full primary header, version number,
- * type, data field header flag, APID, sequence flags, sequence count, and data length.
- * Each field is displayed with appropriate formatting and spacing.
- *
- * @return none.
- */
 void printHeader(CCSDS::Header &header) {
 
     std::cout << std::endl;
@@ -106,14 +88,6 @@ CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet) {
     return true;
 }
 
-/**
- * @brief Prints the data field and the CRC-16 checksum of the packet.
- *
- * Outputs the content of the data field and the CRC-16 checksum
- * in hexadecimal format to the standard output.
- *
- * @return none.
- */
 void printDataField(CCSDS::Packet& packet) {
 
     CCSDS::DataField dataField{};
