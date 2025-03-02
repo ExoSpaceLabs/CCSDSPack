@@ -4,6 +4,7 @@
 #include <utility>
 #include "CCSDSPacket.h"
 #include "CCSDSResult.h"
+#include "CCSDSValidator.h"
 
 namespace CCSDS {
 
@@ -28,7 +29,9 @@ namespace CCSDS {
      *
      * @param packet The packet template to be used as a reference.
      */
-    explicit Manager(Packet packet) : m_packetTemplate(std::move(packet)) {}
+    explicit Manager(Packet packet) : m_packetTemplate(std::move(packet)) {
+      m_validator.setTemplatePacket(m_packetTemplate);
+    }
 
     /**
      * @brief Sets a new packet template.
@@ -117,19 +120,12 @@ namespace CCSDS {
      */
     std::vector<Packet> getPackets();
 
-    /**
-     * @brief Checks if the provided packet is valid by confronting the primary header, CRC16 and data field length.
-     * If the template contains a known secondary header validates that as well.
-     *
-     * @param packet
-     * @return true if the packet is valid.
-     */
-    [[nodiscard]] bool isValidPacket(Packet packet) const;
-
   private:
     Packet m_packetTemplate{};  ///< The template packet used for generating new packets.
     bool m_updateEnable{true};  ///< Flag indicating whether automatic updates are enabled (default: true).
     std::vector<Packet> m_packets; ///< Collection of stored packets.
+
+    Validator m_validator{};
   };
 
 } // namespace CCSDS
