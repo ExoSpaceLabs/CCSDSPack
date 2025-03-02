@@ -1,12 +1,7 @@
-//
-// Created by inczert on 3/1/25.
-//
-
 #ifndef TESTS_H
 #define TESTS_H
 
 #include "TestManager.h"
-
 
 /**
  * testGroupBasic : A group of unit tests that perform basic functionalities of the system

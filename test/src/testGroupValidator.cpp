@@ -1,6 +1,4 @@
-//
-// Created by inczert on 3/1/25.
-//
+
 
 #include <CCSDSValidator.h>
 #include <iostream>

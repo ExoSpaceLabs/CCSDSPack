@@ -9,8 +9,9 @@
 ![Build Status](https://github.com/Inczert/CCSDSPack/actions/workflows/windows.yml/badge.svg)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/linux.yml?branch=main)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/windows.yml?branch=main)
-### ubuntu-22.04  ubuntu-latest   windows-2019   ubuntu-latest
+### ubuntu-22.04 ubuntu-24.04  ubuntu-latest   windows-2019   windows-latest
 ![Ubuntu 22.04](https://github.com/Inczert/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-22-04)
+![Ubuntu 24.04](https://github.com/Inczert/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-24-04)
 ![Ubuntu Latest](https://github.com/Inczert/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest)
 ![Windows 10](https://github.com/Inczert/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-2019)
 ![Windows Latest](https://github.com/Inczert/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest)
