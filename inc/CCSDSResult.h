@@ -19,7 +19,7 @@ namespace CCSDS {
      */
     enum ErrorCode : uint8_t {
         NONE = 0,                       ///< No error
-        NO_DATA = 128,                  ///< No data available
+        NO_DATA,                        ///< No data available
         INVALID_DATA,                   ///< Data is invalid
         INVALID_HEADER_DATA,            ///< Header data is invalid
         INVALID_SECONDARY_HEADER_DATA,  ///< Secondary header data is invalid
@@ -30,10 +30,9 @@ namespace CCSDS {
         UNKNOWN_ERROR                   ///< Unknown error
     };
 
-//TODO to be used instead of simple ErrorCode
 /**
  * @brief Represents an error with both an error code and a message.
- * 
+ *
  * This class is used to provide additional error context by combining
  * an `ErrorCode` with a detailed message, allowing differentiation
  * between multiple errors of the same type.
@@ -45,38 +44,38 @@ public:
      * @param code The error code representing the type of error.
      * @param message A detailed description of the error.
      */
-    Error(ErrorCode code, std::string message)
+    Error(const ErrorCode code, std::string message)
         : m_code(code), m_message(std::move(message)) {}
 
     /**
      * @brief Retrieves the error code.
      * @return The associated `ErrorCode`.
      */
-    ErrorCode code() const { return m_code; }
+    [[nodiscard]] ErrorCode code() const { return m_code; }
 
     /**
      * @brief Retrieves the error message.
      * @return The detailed error description.
      */
-    const std::string& message() const { return m_message; }
+    [[nodiscard]] const std::string& message() const { return m_message; }
 
 private:
-    ErrorCode m_code;    ///< The error type.
+    ErrorCode m_code;      ///< The error type.
     std::string m_message; ///< A detailed message describing the error.
 };
 
     /**
      * @class Result
-     * @brief Encapsulates a result that can hold either a value or an error code.
+     * @brief Encapsulates a result that can hold either a value or an Error.
      *
      * This class simplifies error handling by allowing functions to return either a
-     * valid result or an error code, reducing the need for exception handling.
+     * valid result or an Error, reducing the need for exception handling.
      *
      * @tparam T The type of value to be stored in the result.
      */
     template <typename T>
     class Result {
-        std::variant<T, ErrorCode> data; ///< Holds either a valid value or an error code.
+        std::variant<T, Error> data; ///< Holds either a valid value or an Error.
 
     public:
         /**
@@ -87,9 +86,9 @@ private:
 
         /**
          * @brief Constructor for failure case.
-         * @param error The error code.
+         * @param error The Error.
          */
-        Result(ErrorCode error) : data(error) {}
+        Result(Error error) : data(error) {}
 
         /**
          * @brief Checks if the result contains a valid value.
@@ -108,11 +107,11 @@ private:
         const T& value() const { return std::get<T>(data); }
 
         /**
-         * @brief Retrieves the stored error code.
-         * @return The error code.
+         * @brief Retrieves the stored error.
+         * @return The error.
          */
-        [[nodiscard]] ErrorCode error() const {
-            return std::get<ErrorCode>(data);
+        [[nodiscard]] Error error() const {
+            return std::get<Error>(data);
         }
 
         /**
@@ -128,45 +127,47 @@ private:
 
 }
 
+/* ERROR MANAGEMENT MACROS */
+
 /**
  * @def RETURN_IF_ERROR(condition, errorCode)
  * @brief Macro to return an error code if a condition is met.
  */
-#define RETURN_IF_ERROR(condition, errorCode)  \
+#define RETURN_IF_ERROR(condition, errorCode)            \
 do { if (condition) return errorCode; } while (0)
 
 /**
  * @def RET_IF_ERR_MSG(condition, errorCode, message)
- * @brief Macro to return an error code with an error message if a condition is met.
+ * @brief Macro to return an error with an error message if a condition is met.
  */
-#define RET_IF_ERR_MSG(condition, errorCode, message)   \
-do {                                                    \
+#define RET_IF_ERR_MSG(condition, errorCode, message)    \
+do {                                                     \
     if (condition) {                                     \
-        std::cerr << "[ Error ]: Code [" << errorCode << "]: " << message << '\n'; \
-        return errorCode;                                \
-    }                                                   \
+        std::cerr << "[ Error ]: Code [" << errorCode << "]: " << message << '\n';  /* todo tobe removed*/\
+        return Error{errorCode,message};                 \
+    }                                                    \
 } while (0)
 
 /**
  * @def ASSIGN_MV(var, result)
  * @brief Macro to assign a result value to a variable or return an error by moving.
  */
-#define ASSIGN_MV(var, result)          \
+#define ASSIGN_MV(var, result)                 \
 do {                                           \
     auto&& _res = (result);                    \
-    if (!_res) return Result<T>(_res.error()); \
+    if (!_res) return _res.error();            \
     var = std::move(_res.value());             \
 } while (0)
 
 /**
  * @def ASSIGN_CP(var, result)
- * @brief Macro to assign a result value to a variable or return an error by moving.
+ * @brief Macro to assign a result value to a variable or return an error by copy.
  */
-#define ASSIGN_CP(var, result)          \
+#define ASSIGN_CP(var, result)                 \
 do {                                           \
-auto&& _res = (result);                    \
-if (!_res) return Result<T>(_res.error()); \
-var = _res.value();             \
+auto&& _res = (result);                        \
+if (!_res) return _res.error();                \
+var = _res.value();                            \
 } while (0)
 
 
@@ -178,7 +179,7 @@ var = _res.value();             \
 do {                                           \
     auto&& _res = (result);                    \
     if (!_res) {                               \
-        std::cerr << "[ Error ]: Code [" << _res.error() << "]: " << '\n'; \
+        std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: "<< _res.error().message() << '\n'; \
     } else {                                   \
         var = std::move(_res.value());         \
     }                                          \
@@ -192,7 +193,7 @@ do {                                           \
 do {                                           \
     auto&& _res = (result);                    \
     if (!_res) {                               \
-        std::cerr << "[ Error ]: Code [" << _res.error() << "]: " << '\n'; \
+        std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: "<< _res.error().message() << '\n'; \
         return false;                          \
     } else {                                   \
         var = std::move(_res.value());         \
@@ -207,7 +208,7 @@ do {                                           \
 do {                                           \
     auto&& _res = (result);                    \
     if (!_res) {                               \
-        std::cerr << "[ Error ]: Code [" << _res.error() << "]: " << "Test Void Failure Detected" << '\n'; \
+        std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: " << _res.error().message() << '\n'; \
         return false;                          \
     }                                          \
 } while (0)
