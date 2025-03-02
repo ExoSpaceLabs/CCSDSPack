@@ -30,6 +30,41 @@ namespace CCSDS {
         UNKNOWN_ERROR                   ///< Unknown error
     };
 
+//TODO to be used instead of simple ErrorCode
+/**
+ * @brief Represents an error with both an error code and a message.
+ * 
+ * This class is used to provide additional error context by combining
+ * an `ErrorCode` with a detailed message, allowing differentiation
+ * between multiple errors of the same type.
+ */
+class Error {
+public:
+    /**
+     * @brief Constructs an error with a given error code and message.
+     * @param code The error code representing the type of error.
+     * @param message A detailed description of the error.
+     */
+    Error(ErrorCode code, std::string message)
+        : m_code(code), m_message(std::move(message)) {}
+
+    /**
+     * @brief Retrieves the error code.
+     * @return The associated `ErrorCode`.
+     */
+    ErrorCode code() const { return m_code; }
+
+    /**
+     * @brief Retrieves the error message.
+     * @return The detailed error description.
+     */
+    const std::string& message() const { return m_message; }
+
+private:
+    ErrorCode m_code;    ///< The error type.
+    std::string m_message; ///< A detailed message describing the error.
+};
+
     /**
      * @class Result
      * @brief Encapsulates a result that can hold either a value or an error code.
