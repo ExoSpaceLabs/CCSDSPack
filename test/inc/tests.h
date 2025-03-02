@@ -17,6 +17,14 @@
 void testGroupBasic(TestManager *tester, const std::string& description);
 
 /**
+ * testGroupManagement : A group of unit tests that perform packet validation functionalities of the system.
+ *
+ * @param tester
+ * @param description
+ */
+void testGroupValidator(TestManager *tester, const std::string& description);
+
+/**
  * testGroupManagement : A group of unit tests that perform packet management functionalities of the system.
  *
  * @param tester
