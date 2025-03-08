@@ -9,12 +9,11 @@
 #include <cstdint>
 
 void CCSDS::SecondaryHeaderAbstract::setDataLength(const uint16_t dataLength) {
-
-  (void)dataLength; // To avoid unused parameter warning
+  (void) dataLength; // To avoid unused parameter warning
 }
 
 CCSDS::ResultBool CCSDS::SecondaryHeaderAbstract::deserialize(const std::vector<uint8_t> &data) {
-  (void)data;
+  (void) data;
   return true;
 }
 
@@ -33,9 +32,10 @@ std::vector<uint8_t> CCSDS::SecondaryHeaderAbstract::serialize() const {
 }
 
 CCSDS::ResultBool CCSDS::PusA::deserialize(const std::vector<uint8_t> &data) {
-  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA, "PUS-A header not correct size (size != 6 bytes)");
+  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "PUS-A header not correct size (size != 6 bytes)");
 
-  m_version = data[0] &0x5;
+  m_version = data[0] & 0x5;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];
@@ -57,8 +57,9 @@ std::vector<uint8_t> CCSDS::PusA::serialize() const {
 }
 
 CCSDS::ResultBool CCSDS::PusB::deserialize(const std::vector<uint8_t> &data) {
-  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA, "PUS-B header not correct size (size != 8 bytes)");
-  m_version = data[0] &0x7;
+  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "PUS-B header not correct size (size != 8 bytes)");
+  m_version = data[0] & 0x7;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];
@@ -83,10 +84,10 @@ std::vector<uint8_t> CCSDS::PusB::serialize() const {
 }
 
 CCSDS::ResultBool CCSDS::PusC::deserialize(const std::vector<uint8_t> &data) {
+  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "PUS-C header not correct size (size != 8 bytes)");
 
-  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA, "PUS-C header not correct size (size != 8 bytes)");
-
-  m_version = data[0] &0x7;
+  m_version = data[0] & 0x7;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];

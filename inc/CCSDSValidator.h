@@ -6,16 +6,16 @@
 #include "CCSDSPacket.h"
 
 namespace CCSDS {
-
-/**
- * @brief Handles validation of CCSDS packets.
- *
- * The Validator class checks packet coherence and compares packets against a template.
- */
-class Validator {
+  /**
+   * @brief Handles validation of CCSDS packets.
+   *
+   * The Validator class checks packet coherence and compares packets against a template.
+   */
+  class Validator {
   public:
     /// @brief Default constructor.
     Validator() = default;
+
     /// @brief Default destructor.
     ~Validator() = default;
 
@@ -23,13 +23,14 @@ class Validator {
      * @brief Constructs a Validator with a template packet.
      * @param templatePacket The packet template to use for validation.
      */
-    explicit Validator(const Packet& templatePacket) : m_templatePacket(templatePacket){};
+    explicit Validator(const Packet &templatePacket) : m_templatePacket(templatePacket) {
+    };
 
     /**
      * @brief Sets the template packet for validation.
      * @param templatePacket The new template packet.
      */
-    void setTemplatePacket(const Packet& templatePacket) {m_templatePacket = templatePacket;}
+    void setTemplatePacket(const Packet &templatePacket) { m_templatePacket = templatePacket; }
 
     /**
      * @brief Configures validation options.
@@ -43,7 +44,7 @@ class Validator {
      * @param packet The packet to validate.
      * @return True if the packet passes validation, otherwise false.
      */
-    bool validate(const Packet& packet);
+    bool validate(const Packet &packet);
 
     /**
      * @brief Returns a report of performed validation checks.
@@ -61,13 +62,12 @@ class Validator {
     [[nodiscard]] std::vector<bool> getReport() const { return m_report; }
 
   private:
-    Packet m_templatePacket;                  ///< Template packet used for validation.
-    bool m_validatePacketCoherence{true};     ///< Whether to validate packet length and CRC.
-    bool m_validateAgainstTemplate{true};     ///< Whether to validate against the template packet.
-    std::vector<bool> m_report{};             ///< List of boolean results representing performed checks.
-    size_t m_reportSize{5};                   ///< Expected size of the validation report.
-};
-
+    Packet m_templatePacket; ///< Template packet used for validation.
+    bool m_validatePacketCoherence{true}; ///< Whether to validate packet length and CRC (default is true).
+    bool m_validateAgainstTemplate{false}; ///< Whether to validate against the template packet (default is false).
+    std::vector<bool> m_report{}; ///< List of boolean results representing performed checks.
+    size_t m_reportSize{5}; ///< Expected size of the validation report.
+  };
 } // namespace CCSDS
 
 #endif // CCSDSVALIDATOR_H

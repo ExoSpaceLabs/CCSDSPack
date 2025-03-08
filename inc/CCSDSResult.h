@@ -12,40 +12,41 @@
  * @brief Contains result handling utilities for CCSDS packet processing.
  */
 namespace CCSDS {
+  /**
+   * @enum ErrorCode
+   * @brief Defines various error codes used in CCSDS packet handling.
+   */
+  enum ErrorCode : uint8_t {
+    NONE = 0, ///< No error
+    NO_DATA, ///< No data available
+    INVALID_DATA, ///< Data is invalid
+    INVALID_HEADER_DATA, ///< Header data is invalid
+    INVALID_SECONDARY_HEADER_DATA, ///< Secondary header data is invalid
+    INVALID_APPLICATION_DATA, ///< Application data is invalid
+    NULL_POINTER, ///< Null pointer encountered
+    INVALID_CHECKSUM, ///< Checksum validation failed
+    VALIDATION_FAILURE, ///< Validation Failure
+    SOMETHING_WENT_WRONG, ///< General failure
+    UNKNOWN_ERROR ///< Unknown error
+  };
 
-    /**
-     * @enum ErrorCode
-     * @brief Defines various error codes used in CCSDS packet handling.
-     */
-    enum ErrorCode : uint8_t {
-        NONE = 0,                       ///< No error
-        NO_DATA,                        ///< No data available
-        INVALID_DATA,                   ///< Data is invalid
-        INVALID_HEADER_DATA,            ///< Header data is invalid
-        INVALID_SECONDARY_HEADER_DATA,  ///< Secondary header data is invalid
-        INVALID_APPLICATION_DATA,       ///< Application data is invalid
-        NULL_POINTER,                   ///< Null pointer encountered
-        INVALID_CHECKSUM,               ///< Checksum validation failed
-        SOMETHING_WENT_WRONG,           ///< General failure
-        UNKNOWN_ERROR                   ///< Unknown error
-    };
-
-/**
- * @brief Represents an error with both an error code and a message.
- *
- * This class is used to provide additional error context by combining
- * an `ErrorCode` with a detailed message, allowing differentiation
- * between multiple errors of the same type.
- */
-class Error {
-public:
+  /**
+   * @brief Represents an error with both an error code and a message.
+   *
+   * This class is used to provide additional error context by combining
+   * an `ErrorCode` with a detailed message, allowing differentiation
+   * between multiple errors of the same type.
+   */
+  class Error {
+  public:
     /**
      * @brief Constructs an error with a given error code and message.
      * @param code The error code representing the type of error.
      * @param message A detailed description of the error.
      */
     Error(const ErrorCode code, std::string message)
-        : m_code(code), m_message(std::move(message)) {}
+      : m_code(code), m_message(std::move(message)) {
+    }
 
     /**
      * @brief Retrieves the error code.
@@ -57,74 +58,75 @@ public:
      * @brief Retrieves the error message.
      * @return The detailed error description.
      */
-    [[nodiscard]] const std::string& message() const { return m_message; }
+    [[nodiscard]] const std::string &message() const { return m_message; }
 
-private:
-    ErrorCode m_code;      ///< The error type.
+  private:
+    ErrorCode m_code; ///< The error type.
     std::string m_message; ///< A detailed message describing the error.
-};
+  };
+
+  /**
+   * @class Result
+   * @brief Encapsulates a result that can hold either a value or an Error.
+   *
+   * This class simplifies error handling by allowing functions to return either a
+   * valid result or an Error, reducing the need for exception handling.
+   *
+   * @tparam T The type of value to be stored in the result.
+   */
+  template<typename T>
+  class Result {
+    std::variant<T, Error> data; ///< Holds either a valid value or an Error.
+
+  public:
+    /**
+     * @brief Constructor for success case.
+     * @param value The successful result value.
+     */
+    Result(T value) : data(std::move(value)) {
+    }
 
     /**
-     * @class Result
-     * @brief Encapsulates a result that can hold either a value or an Error.
-     *
-     * This class simplifies error handling by allowing functions to return either a
-     * valid result or an Error, reducing the need for exception handling.
-     *
-     * @tparam T The type of value to be stored in the result.
+     * @brief Constructor for failure case.
+     * @param error The Error.
      */
-    template <typename T>
-    class Result {
-        std::variant<T, Error> data; ///< Holds either a valid value or an Error.
+    Result(Error error) : data(error) {
+    }
 
-    public:
-        /**
-         * @brief Constructor for success case.
-         * @param value The successful result value.
-         */
-        Result(T value) : data(std::move(value)) {}
+    /**
+     * @brief Checks if the result contains a valid value.
+     * @return True if a valid value is present, false otherwise.
+     */
+    [[nodiscard]] bool has_value() const {
+      return std::holds_alternative<T>(data);
+    }
 
-        /**
-         * @brief Constructor for failure case.
-         * @param error The Error.
-         */
-        Result(Error error) : data(error) {}
+    /**
+     * @brief Retrieves the stored value.
+     * @return A reference to the stored value.
+     * @note Ensure `has_value()` returns true before calling this.
+     */
+    T &value() { return std::get<T>(data); }
+    const T &value() const { return std::get<T>(data); }
 
-        /**
-         * @brief Checks if the result contains a valid value.
-         * @return True if a valid value is present, false otherwise.
-         */
-        [[nodiscard]] bool has_value() const {
-            return std::holds_alternative<T>(data);
-        }
+    /**
+     * @brief Retrieves the stored error.
+     * @return The error.
+     */
+    [[nodiscard]] Error error() const {
+      return std::get<Error>(data);
+    }
 
-        /**
-         * @brief Retrieves the stored value.
-         * @return A reference to the stored value.
-         * @note Ensure `has_value()` returns true before calling this.
-         */
-        T& value() { return std::get<T>(data); }
-        const T& value() const { return std::get<T>(data); }
+    /**
+     * @brief Implicit conversion to `bool`, allowing usage like `if (result)`.
+     * @return True if the result contains a value, false otherwise.
+     */
+    explicit operator bool() const { return has_value(); }
+  };
 
-        /**
-         * @brief Retrieves the stored error.
-         * @return The error.
-         */
-        [[nodiscard]] Error error() const {
-            return std::get<Error>(data);
-        }
-
-        /**
-         * @brief Implicit conversion to `bool`, allowing usage like `if (result)`.
-         * @return True if the result contains a value, false otherwise.
-         */
-        explicit operator bool() const { return has_value(); }
-    };
-
-    // Convenient type aliases for common result types
-    using ResultBool = Result<bool>;
-    using ResultBuffer = Result<std::vector<uint8_t>>;
-
+  // Convenient type aliases for common result types
+  using ResultBool = Result<bool>;
+  using ResultBuffer = Result<std::vector<uint8_t> >;
 }
 
 /* ERROR MANAGEMENT MACROS */
@@ -143,7 +145,6 @@ do { if (condition) return errorCode; } while (0)
 #define RET_IF_ERR_MSG(condition, errorCode, message)    \
 do {                                                     \
     if (condition) {                                     \
-        std::cerr << "[ Error ]: Code [" << errorCode << "]: " << message << '\n';  /* todo tobe removed*/\
         return Error{errorCode,message};                 \
     }                                                    \
 } while (0)

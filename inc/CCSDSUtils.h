@@ -16,10 +16,10 @@
  * @param finalXorValue The final XOR value applied to the CRC result (default: 0x0000).
  * @return The computed 16-bit CRC value.
  */
-uint16_t crc16(const std::vector<uint8_t>& data,
-    uint16_t polynomial = 0x1021,
-    uint16_t initialValue = 0xFFFF,
-    uint16_t finalXorValue = 0x0000
+uint16_t crc16(const std::vector<uint8_t> &data,
+               uint16_t polynomial = 0x1021,
+               uint16_t initialValue = 0xFFFF,
+               uint16_t finalXorValue = 0x0000
 );
 
 /**
@@ -27,7 +27,7 @@ uint16_t crc16(const std::vector<uint8_t>& data,
  *
  * @param packets
  */
-void printPackets(std::vector<CCSDS::Packet>& packets);
+void printPackets(std::vector<CCSDS::Packet> &packets);
 
 /**
  * @brief Converts a given value to its binary representation as a string, with spaces every 4 bits.
@@ -51,7 +51,7 @@ std::string getBitsSpaces(int num);
  *
  * @param buffer
  */
-void printBufferData(const std::vector<uint8_t>& buffer);
+void printBufferData(const std::vector<uint8_t> &buffer);
 
 /**
  * @brief Prints the data field details, including the secondary header and application data.
@@ -72,7 +72,7 @@ void printData(CCSDS::DataField dataField);
  *
  * @return none.
  */
-void printHeader(CCSDS::Header& header);
+void printHeader(CCSDS::Header &header);
 
 /**
  * @brief Prints to console the primary header of a provided CCSDS packet
@@ -90,7 +90,6 @@ CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet);
  *
  * @return none.
  */
-void printDataField(CCSDS::Packet& packet);
+void printDataField(CCSDS::Packet &packet);
 
 #endif // CCSDSUTILS_H
-

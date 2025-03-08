@@ -7,7 +7,6 @@
 #include "CCSDSValidator.h"
 
 namespace CCSDS {
-
   /**
    * @class Manager
    * @brief Manages CCSDS packets and their templates.
@@ -17,20 +16,22 @@ namespace CCSDS {
    * application data and packet instances.
    */
   class Manager {
-
   public:
     /**
      * @brief Default constructor.
      */
-    Manager();
+    Manager() = default;
 
     /**
      * @brief Constructs a Manager with a given packet template.
      *
      * @param packet The packet template to be used as a reference.
      */
-    explicit Manager(Packet packet) : m_packetTemplate(std::move(packet)) {
-      m_validator.setTemplatePacket(m_packetTemplate);
+    explicit Manager(Packet packet) : m_templatePacket(std::move(packet)) {
+      m_templateIsSet = true;
+      m_validator.setTemplatePacket(m_templatePacket);
+      m_validator.configure(true, true);
+
     }
 
     /**
@@ -53,7 +54,7 @@ namespace CCSDS {
      * @param data The application data as a vector of bytes.
      * @return ResultBool indicating success or failure.
      */
-    ResultBool setApplicationData(const std::vector<uint8_t>& data);
+    ResultBool setApplicationData(const std::vector<uint8_t> &data);
 
     /**
      * @brief Enables or disables automatic updates for packets.
@@ -61,6 +62,13 @@ namespace CCSDS {
      * @param enable Set to true to enable automatic updates, false to disable.
      */
     void setAutoUpdateEnable(bool enable);
+
+    /**
+     * @brief Enables or disables automatic validation of packets.
+     *
+     * @param enable Set to true to enable automatic validation, false to disable.
+     */
+    void setAutoValidateEnable(bool enable);
 
     /**
      * @brief Retrieves the packet template in serialized form.
@@ -75,14 +83,14 @@ namespace CCSDS {
      * @param index The index of the packet to retrieve.
      * @return A ResultBuffer containing the requested packet.
      */
-    ResultBuffer getPacketAtIndex(uint16_t index);
+    ResultBuffer getPacketBufferAtIndex(uint16_t index);
 
     /**
      * @brief Retrieves the application data from the current packet.
      *
      * @return A ResultBuffer containing the application data.
      */
-    [[nodiscard]] ResultBuffer getApplicationData() const;
+    [[nodiscard]] ResultBuffer getApplicationDataBuffer() const;
 
     /**
      * @brief Retrieves the application data from a packet at the given index.
@@ -90,7 +98,7 @@ namespace CCSDS {
      * @param index The index of the packet.
      * @return A ResultBuffer containing the application data of the selected packet.
      */
-    ResultBuffer getApplicationDataAtIndex(uint16_t index);
+    ResultBuffer getApplicationDataBufferAtIndex(uint16_t index);
 
     /**
      * @brief Retrieves the total number of packets managed.
@@ -111,7 +119,7 @@ namespace CCSDS {
      *
      * @return The stored packet template.
      */
-    Packet getTemplate() { return m_packetTemplate; };
+    Packet getTemplate() { return m_templatePacket; };
 
     /**
      * @brief Retrieves all stored packets.
@@ -120,14 +128,24 @@ namespace CCSDS {
      */
     std::vector<Packet> getPackets();
 
+
+    /**
+     * @brief Adds a new packet to the list.
+     *
+     * @param packet The new packet to be added.
+     */
+    [[nodiscard]] ResultBool addPacket(Packet packet);
+
   private:
-    Packet m_packetTemplate{};  ///< The template packet used for generating new packets.
-    bool m_updateEnable{true};  ///< Flag indicating whether automatic updates are enabled (default: true).
+    Packet m_templatePacket{}; ///< The template packet used for generating new packets.
+    bool m_templateIsSet{false}; ///< Boolean to indicate if Template has been set or not.
+    bool m_updateEnable{true}; ///< bool indicating whether automatic updates are enabled (default: true).
+    bool m_validateEnable{true}; ///< bool indicating whether automatic validation is enabled (default: true).
     std::vector<Packet> m_packets; ///< Collection of stored packets.
+    uint16_t m_sequenceCount{0};
 
     Validator m_validator{};
   };
-
 } // namespace CCSDS
 
 #endif // CCSDSMANAGER_H
