@@ -10,7 +10,7 @@ int main() {
 
     /// Perform unit tests:
     // perform basic packet related tests on the library
-    testGroupBasic(&tester, "Basic CCSDS Packet feature tests.");
+    testGroupCore(&tester, "Basic CCSDS Packet feature tests.");
 
     // perform packet validation related tests on the library
     testGroupValidator(&tester, "Validation of CCSDS Packet tests.");

@@ -54,8 +54,7 @@ class Validator {
      *     - index [2]: Sequence Control flags and count coherence
      * - Compare Against Template:
      *     - index [3]: Identification and Version in packet matches template
-     *     - index [4]: Packet Header flag matches template
-     *     - index [5]: (Future) Include secondary header check
+     *     - index [4]: Template Sequence Control match
      *
      * @return A vector of boolean results for each performed check.
      */
@@ -66,7 +65,7 @@ class Validator {
     bool m_validatePacketCoherence{true};     ///< Whether to validate packet length and CRC.
     bool m_validateAgainstTemplate{true};     ///< Whether to validate against the template packet.
     std::vector<bool> m_report{};             ///< List of boolean results representing performed checks.
-    size_t m_reportSize{6};                   ///< Expected size of the validation report.
+    size_t m_reportSize{5};                   ///< Expected size of the validation report.
 };
 
 } // namespace CCSDS

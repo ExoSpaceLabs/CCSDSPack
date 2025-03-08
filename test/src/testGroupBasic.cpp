@@ -8,7 +8,7 @@
 #include "CCSDSResult.h"
 #include "tests.h"
 
-void testGroupBasic(TestManager *tester, const std::string& description) {
+void testGroupCore(TestManager *tester, const std::string& description) {
     std::cout << "  testGroupBasic: " << description <<  std::endl;
 
     tester->unitTest("Assign Primary header using an uint64_t as input.", []() {

@@ -10,6 +10,7 @@ void CCSDS::Validator::configure(const bool validatePacketCoherence, const bool 
 bool CCSDS::Validator::validate(const Packet &packet) {
     m_report.clear();
     m_report.reserve(m_reportSize);
+    m_report.assign({true,true,true,true,true});
     bool result{true};
     auto toValidate = packet;
     toValidate.setUpdatePacketEnable(false);
@@ -23,7 +24,8 @@ bool CCSDS::Validator::validate(const Packet &packet) {
     if (m_validatePacketCoherence) {
         m_report[0] = toValidateHeader.getDataLength() == dataFieldBytesSize;
         result &= m_report[0];
-        m_report[1] = crc16(dataFieldBytes) == toValidate.getCRC();
+        const auto calcCRC = crc16(dataFieldBytes);
+        m_report[1] = calcCRC == toValidate.getCRC();
         result &= m_report[1];
         if (toValidateHeader.getSequenceFlags() == UNSEGMENTED) {
             m_report[2] = toValidateHeader.getSequenceCount() == 0;
@@ -34,14 +36,18 @@ bool CCSDS::Validator::validate(const Packet &packet) {
         result &= m_report[2];
     }
 
-    m_templatePacket.setUpdatePacketEnable(false);
-    auto templateHeader = m_templatePacket.getPrimaryHeader();
-    const auto templateHeaderData = templateHeader.serialize();
-
     if (m_validateAgainstTemplate) {
+
+        m_templatePacket.setUpdatePacketEnable(false);
+        auto templateHeader = m_templatePacket.getPrimaryHeader();
+        const auto templateHeaderData = templateHeader.serialize();
         m_report[3] = templateHeaderData[0] == toValidateHeaderData[0] && templateHeaderData[1] == toValidateHeaderData[1];
         result &= m_report[3];
-        m_report[4] = templateHeader.getDataFieldHeaderFlag() == toValidate.getDataFieldHeaderFlag();
+        if (templateHeader.getSequenceFlags() == UNSEGMENTED) {
+            m_report[4] = toValidateHeader.getSequenceFlags() == UNSEGMENTED ;
+        }else {
+            m_report[4] = toValidateHeader.getSequenceFlags() != UNSEGMENTED ;
+        }
         result &= m_report[4];
     }
     return result;

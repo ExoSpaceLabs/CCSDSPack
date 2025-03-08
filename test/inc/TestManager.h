@@ -85,5 +85,61 @@ private:
     std::chrono::time_point<std::chrono::system_clock> m_unitEndTime;
     double m_totalTime{};
 };
+
+
+/**
+ * @def TEST_RET(var, result)
+ * @brief Macro used in unit testing to return false if an error occurs.
+ */
+#define TEST_RET(var, result)                  \
+do {                                           \
+auto&& _res = (result);                        \
+if (!_res) {                                   \
+std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: "<< _res.error().message() << '\n'; \
+return false;                                  \
+} else {                                       \
+var = std::move(_res.value());                 \
+}                                              \
+} while (0)
+
+/**
+ * @def TEST_RET_ERR(var, result)
+ * @brief Macro used in unit testing to return false if an error does not occur.
+ */
+#define TEST_RET_ERR(var, result)              \
+do {                                           \
+auto&& _res = (result);                        \
+if (_res) {                                    \
+return false;                                  \
+} else {                                       \
+var = std::move(_res.value());                 \
+}                                              \
+} while (0)
+
+/**
+ * @def TEST_VOID(result)
+ * @brief Macro used in unit testing to return false if an error occurs.
+ */
+#define TEST_VOID(result)                      \
+do {                                           \
+auto&& _res = (result);                        \
+if (!_res) {                                   \
+std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: " << _res.error().message() << '\n'; \
+return false;                                  \
+}                                              \
+} while (0)
+
+/**
+ * @def TEST_VOID_ERR(result)
+ * @brief Macro used in unit testing to return false if an error does not occur.
+ */
+#define TEST_VOID_ERR(result)                  \
+do {                                           \
+auto&& _res = (result);                        \
+if (_res) {                                    \
+return false;                                  \
+}                                              \
+} while (0)
+
 #endif // TESTMANAGER_H
 

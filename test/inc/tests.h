@@ -9,7 +9,7 @@
  * @param tester
  * @param description
  */
-void testGroupBasic(TestManager *tester, const std::string& description);
+void testGroupCore(TestManager *tester, const std::string& description);
 
 /**
  * testGroupManagement : A group of unit tests that perform packet validation functionalities of the system.

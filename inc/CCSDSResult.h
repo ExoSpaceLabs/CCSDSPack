@@ -186,34 +186,6 @@ do {                                           \
 } while (0)
 
 /**
- * @def TEST_RET(var, result)
- * @brief Macro used in unit testing to return false if an error occurs.
- */
-#define TEST_RET(var, result)                  \
-do {                                           \
-    auto&& _res = (result);                    \
-    if (!_res) {                               \
-        std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: "<< _res.error().message() << '\n'; \
-        return false;                          \
-    } else {                                   \
-        var = std::move(_res.value());         \
-    }                                          \
-} while (0)
-
-/**
- * @def TEST_VOID(result)
- * @brief Macro used in unit testing to return false if an error occurs.
- */
-#define TEST_VOID(result)                      \
-do {                                           \
-    auto&& _res = (result);                    \
-    if (!_res) {                               \
-        std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: " << _res.error().message() << '\n'; \
-        return false;                          \
-    }                                          \
-} while (0)
-
-/**
  * @def ASSERT_SUCCESS(result)
  * @brief Macro to return immediately if the result contains an error (for void functions).
  */
