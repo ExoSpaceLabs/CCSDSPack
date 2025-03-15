@@ -9,15 +9,24 @@
 #include "tests.h"
 
 void testGroupCore(TestManager *tester, const std::string &description) {
-  std::cout << "  testGroupBasic: " << description << std::endl;
+  std::cout << "  testGroupCore: " << description << std::endl;
 
-  tester->unitTest("Assign Primary header using an uint64_t as input.", []() {
+  tester->unitTest("Assign Primary header unsegmented using an uint64_t as input.", []() {
     constexpr uint64_t headerData(0xFFFFFFFFFFFF);
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(headerData));
     // getPrimaryHeader updated dependent fields to correct values.
     const auto ret = packet.getPrimaryHeader64bit();
     return ret == 0xf7ffc0000000;
+  });
+
+  tester->unitTest("Assign Primary header segmented using an uint64_t as input.", []() {
+    constexpr uint64_t headerData(0xF7FF4FFFFFFF);
+    CCSDS::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(headerData));
+    // getPrimaryHeader updated dependent fields to correct values.
+    const auto ret = packet.getPrimaryHeader64bit();
+    return ret == 0xf7ff4FFF0000;
   });
 
   tester->unitTest("Assign Primary header using PrimaryHeader struct as input.", []() {

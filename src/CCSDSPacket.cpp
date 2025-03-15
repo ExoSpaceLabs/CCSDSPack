@@ -9,6 +9,7 @@ void CCSDS::Packet::update() {
     const auto dataFieldHeaderFlag(m_dataField.getDataFieldHeaderFlag());
     m_primaryHeader.setDataLength(dataFiledSize);
     m_primaryHeader.setDataFieldHeaderFlag(dataFieldHeaderFlag);
+    // todo this part needs to be moved out of conditional updating
     if (m_primaryHeader.getSequenceFlags() == UNSEGMENTED) {
       m_primaryHeader.setSequenceCount(0);
     }else {
