@@ -1,5 +1,5 @@
-#ifndef CCSDSRESULT_H
-#define CCSDSRESULT_H
+#ifndef CCSDS_RESULT_H
+#define CCSDS_RESULT_H
 
 #include <unordered_map>
 #include <variant>
@@ -17,17 +17,17 @@ namespace CCSDS {
    * @brief Defines various error codes used in CCSDS packet handling.
    */
   enum ErrorCode : uint8_t {
-    NONE = 0, ///< No error
-    NO_DATA, ///< No data available
-    INVALID_DATA, ///< Data is invalid
-    INVALID_HEADER_DATA, ///< Header data is invalid
+    NONE = 0,                      ///< No error
+    NO_DATA,                       ///< No data available
+    INVALID_DATA,                  ///< Data is invalid
+    INVALID_HEADER_DATA,           ///< Header data is invalid
     INVALID_SECONDARY_HEADER_DATA, ///< Secondary header data is invalid
-    INVALID_APPLICATION_DATA, ///< Application data is invalid
-    NULL_POINTER, ///< Null pointer encountered
-    INVALID_CHECKSUM, ///< Checksum validation failed
-    VALIDATION_FAILURE, ///< Validation Failure
-    SOMETHING_WENT_WRONG, ///< General failure
-    UNKNOWN_ERROR ///< Unknown error
+    INVALID_APPLICATION_DATA,      ///< Application data is invalid
+    NULL_POINTER,                  ///< Null pointer encountered
+    INVALID_CHECKSUM,              ///< Checksum validation failed
+    VALIDATION_FAILURE,            ///< Validation Failure
+    SOMETHING_WENT_WRONG,          ///< General failure
+    UNKNOWN_ERROR                  ///< Unknown error
   };
 
   /**
@@ -206,4 +206,4 @@ do {                                           \
     if (!_res.has_value()) return _res;        \
 } while (0)
 
-#endif // CCSDSRESULT_H
+#endif // CCSDS_RESULT_H

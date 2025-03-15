@@ -1,5 +1,5 @@
-#ifndef CCSDSSECONDARYHEADER_H
-#define CCSDSSECONDARYHEADER_H
+#ifndef CCSDS_SECONDARY_HEADER_ABSTRACT_H
+#define CCSDS_SECONDARY_HEADER_ABSTRACT_H
 
 #include <CCSDSResult.h>
 #include <vector>
@@ -52,45 +52,45 @@ namespace CCSDS {
      */
     [[nodiscard]] virtual std::string getType() const = 0; // Pure virtual method for polymorphism
   };
-    /**
-   * @brief Represents a PUS Type A (Telemetry) header.
+
+  /**
+   * @brief Represents a fixed secondary header used as a data buffer.
    *
-   * Contains fields used for telemetry data.
+   * This class holds the raw data for the secondary header. It provides methods to serialize and deserialize
+   * the header data as a vector of bytes. The `DataOnlyHeader` is not associated with any specific PUS type.
    *
    * Field Summary:
-   * - Version: 3 bits, PUS standard version.
-   * - Service Type: 8 bits, type of service (e.g., 0x01 for telemetry).
-   * - Service Subtype: 8 bits, subtype of the service.
-   * - Source ID: 8 bits, source identifier (e.g., satellite ID).
-   * - Data Length: 16 bits, length of the telemetry data in bytes.
+   *  - m_data : A buffer holding the header data.
+   *  - m-Size : The length of the data.
+   *  - m_dataLength : unused / can be set and retrieved, completely standalone from data.
+   *
+   *  @note The `getSize` method returns the size of the data buffer, while `getDataLength` returns the length
+   *  of the data as set. The `m_dataLength` field is not tied to any other data structure or context.
    */
-  class DataOnlyHeader final : public CCSDS::SecondaryHeaderAbstract {
+  class BufferHeader final : public SecondaryHeaderAbstract {
   public:
-    DataOnlyHeader() = default;
+    BufferHeader() = default;
 
     /**
      * @brief Constructs a DataOnlyHeader object with all fields explicitly set.
-     *
-
      */
-    explicit DataOnlyHeader(const std::vector<uint8_t>& data) : m_data(data) {
+    explicit BufferHeader(const std::vector<uint8_t>& data) : m_data(data) {
     };
 
-    void setDataLength(const uint16_t dataLength) override { (void)dataLength; }
+    void setDataLength(const uint16_t dataLength) override { m_dataLength = dataLength; }
 
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
 
-    [[nodiscard]] uint16_t getDataLength() const override { return 0; }
+    [[nodiscard]] uint16_t getDataLength() const override { return m_dataLength; }
     [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
     [[nodiscard]] std::string getType() const override { return m_type; }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
 
-  private: // Field	            Size (bits)	Description
+  private:
     std::vector<uint8_t> m_data;
-    // Telemetry Data	    Variable    (based on Data Length)	The actual telemetry data (variable length)
-    const std::string m_type = "DataOnlyHeader";// Static registration (automatically called when the program starts)
-    static bool registered;
+    uint16_t m_dataLength = 0;
+    const std::string m_type = "DataOnlyHeader";
   };
 
 
@@ -99,4 +99,4 @@ namespace CCSDS {
 
 
 
-#endif //CCSDSSECONDARYHEADER_H
+#endif //CCSDS_SECONDARY_HEADER_ABSTRACT_H

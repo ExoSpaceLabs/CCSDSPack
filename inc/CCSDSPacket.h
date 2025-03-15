@@ -1,5 +1,5 @@
-#ifndef CCSDSPACKET_H
-#define CCSDSPACKET_H
+#ifndef CCSDS_PACKET_H
+#define CCSDS_PACKET_H
 
 #include <CCSDSResult.h>
 #include <cstdint>
@@ -297,10 +297,10 @@ namespace CCSDS {
     bool getDataFieldHeaderFlag();
 
     /** @brief returns the CCSDS packet's DataField. */
-    DataField getDataField();
+    CCSDS::DataField &getDataField();
 
     /** @brief returns the CCSDS packet's Primary Header. */
-    Header getPrimaryHeader();
+    CCSDS::Header &getPrimaryHeader();
 
     /**
      * @brief Updates Primary headers data field size.
@@ -312,13 +312,12 @@ namespace CCSDS {
     void update();
 
   private:
-    Header m_primaryHeader{}; // 6 bytes / 48 bits / 12 hex
-    DataField m_dataField{}; // variable
-    uint16_t m_CRC16{}; // Cyclic Redundancy check 16 bits
-
-    bool m_updateStatus{false}; // When setting data thus value should be set to false.
-    bool m_enableUpdatePacket{true}; // Enables primary header and secondary header update.
+    Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex
+    DataField m_dataField{};         ///< variable
+    uint16_t m_CRC16{};              ///< Cyclic Redundancy check 16 bits
+    bool m_updateStatus{false};      ///< When setting data thus value should be set to false.
+    bool m_enableUpdatePacket{true}; ///< Enables primary header and secondary header update.
     uint16_t m_sequenceCounter{0};
   };
 }
-#endif // CCSDSPACKET_H
+#endif // CCSDS_PACKET_H

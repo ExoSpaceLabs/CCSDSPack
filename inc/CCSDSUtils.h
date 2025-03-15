@@ -1,5 +1,5 @@
-#ifndef CCSDSUTILS_H
-#define CCSDSUTILS_H
+#ifndef CCSDS_UTILS_H
+#define CCSDS_UTILS_H
 
 #include <CCSDSPacket.h>
 #include <string>
@@ -92,4 +92,4 @@ CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet);
  */
 void printDataField(CCSDS::Packet &packet);
 
-#endif // CCSDSUTILS_H
+#endif // CCSDS_UTILS_H

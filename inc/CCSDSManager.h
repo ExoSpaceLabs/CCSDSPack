@@ -1,5 +1,5 @@
-#ifndef CCSDSMANAGER_H
-#define CCSDSMANAGER_H
+#ifndef CCSDS_MANAGER_H
+#define CCSDS_MANAGER_H
 
 #include <utility>
 #include "CCSDSPacket.h"
@@ -39,14 +39,14 @@ namespace CCSDS {
      *
      * @param packet The new packet template to use.
      */
-    void setPacketTemplate(Packet packet);
+    void setPacketTemplate( Packet packet );
 
     /**
      * @brief Sets the size of the data field.
      *
      * @param size The new data field size in bytes.
      */
-    void setDatFieldSize(uint16_t size);
+    void setDatFieldSize( uint16_t size );
 
     /**
      * @brief Sets the application data for the packet.
@@ -54,21 +54,21 @@ namespace CCSDS {
      * @param data The application data as a vector of bytes.
      * @return ResultBool indicating success or failure.
      */
-    ResultBool setApplicationData(const std::vector<uint8_t> &data);
+    ResultBool setApplicationData( const std::vector<uint8_t> &data );
 
     /**
      * @brief Enables or disables automatic updates for packets.
      *
      * @param enable Set to true to enable automatic updates, false to disable.
      */
-    void setAutoUpdateEnable(bool enable);
+    void setAutoUpdateEnable( bool enable );
 
     /**
      * @brief Enables or disables automatic validation of packets.
      *
      * @param enable Set to true to enable automatic validation, false to disable.
      */
-    void setAutoValidateEnable(bool enable);
+    void setAutoValidateEnable( bool enable );
 
     /**
      * @brief Retrieves the packet template in serialized form.
@@ -83,7 +83,7 @@ namespace CCSDS {
      * @param index The index of the packet to retrieve.
      * @return A ResultBuffer containing the requested packet.
      */
-    ResultBuffer getPacketBufferAtIndex(uint16_t index);
+    ResultBuffer getPacketBufferAtIndex( uint16_t index );
 
     /**
      * @brief Retrieves the application data from the current packet.
@@ -98,7 +98,7 @@ namespace CCSDS {
      * @param index The index of the packet.
      * @return A ResultBuffer containing the application data of the selected packet.
      */
-    ResultBuffer getApplicationDataBufferAtIndex(uint16_t index);
+    ResultBuffer getApplicationDataBufferAtIndex( uint16_t index );
 
     /**
      * @brief Retrieves the total number of packets managed.
@@ -137,15 +137,15 @@ namespace CCSDS {
     [[nodiscard]] ResultBool addPacket(Packet packet);
 
   private:
-    Packet m_templatePacket{}; ///< The template packet used for generating new packets.
-    bool m_templateIsSet{false}; ///< Boolean to indicate if Template has been set or not.
-    bool m_updateEnable{true}; ///< bool indicating whether automatic updates are enabled (default: true).
-    bool m_validateEnable{true}; ///< bool indicating whether automatic validation is enabled (default: true).
-    std::vector<Packet> m_packets; ///< Collection of stored packets.
-    uint16_t m_sequenceCount{0};
+    Packet m_templatePacket{};         ///< The template packet used for generating new packets.
+    bool m_templateIsSet  { false };   ///< Boolean to indicate if Template has been set or not.
+    bool m_updateEnable   {  true };   ///< bool indicating whether automatic updates are enabled (default: true).
+    bool m_validateEnable {  true };   ///< bool indicating whether automatic validation is enabled (default: true).
+    std::vector<Packet> m_packets;     ///< Collection of stored packets.
+    uint16_t m_sequenceCount{ 0 };
 
     Validator m_validator{};
   };
 } // namespace CCSDS
 
-#endif // CCSDSMANAGER_H
+#endif // CCSDS_MANAGER_H

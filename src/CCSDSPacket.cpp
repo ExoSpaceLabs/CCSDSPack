@@ -42,12 +42,12 @@ std::vector<uint8_t> CCSDS::Packet::getCRCVectorBytes() {
   return crc;
 }
 
-CCSDS::DataField CCSDS::Packet::getDataField() {
+CCSDS::DataField &CCSDS::Packet::getDataField() {
   update();
   return m_dataField;
 }
 
-CCSDS::Header CCSDS::Packet::getPrimaryHeader() {
+CCSDS::Header &CCSDS::Packet::getPrimaryHeader() {
   update();
   return m_primaryHeader;
 }
@@ -109,10 +109,10 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
                  "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
   RET_IF_ERR_MSG(headerType == "DataOnlyHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, DataOnlyHeader is not of defined size");
-  RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFacroty().typeIsRegistered(headerType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+  RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, Unregistered Secondary header: " + headerType);
 
-  auto secondaryHeader = m_dataField.getDataFieldHeaderFacroty().create(headerType);
+  auto secondaryHeader = m_dataField.getDataFieldHeaderFactory().create(headerType);
   const auto headerDataSizeBytes = secondaryHeader->getSize();
 
   std::vector<uint8_t> dataFieldHeaderVector;

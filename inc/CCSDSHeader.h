@@ -1,5 +1,5 @@
-#ifndef CCSDSHEADER_H
-#define CCSDSHEADER_H
+#ifndef CCSDS_HEADER_H
+#define CCSDS_HEADER_H
 
 #include <CCSDSResult.h>
 #include <cstdint>
@@ -18,9 +18,9 @@ namespace CCSDS {
    */
   enum ESequenceFlag : uint8_t {
     CONTINUING_SEGMENT, ///< 00 Intermediate segment of a packet.
-    FIRST_SEGMENT, ///< 01 First segment of a new packet.
-    LAST_SEGMENT, ///< 10 Last segment of a multi-frame packet.
-    UNSEGMENTED ///< 11 Complete packet in a single frame.
+    FIRST_SEGMENT,      ///< 01 First segment of a new packet.
+    LAST_SEGMENT,       ///< 10 Last segment of a multi-frame packet.
+    UNSEGMENTED         ///< 11 Complete packet in a single frame.
   };
 
   /**
@@ -40,17 +40,17 @@ namespace CCSDS {
    */
   struct PrimaryHeader {
     // version and packet identification 16 bit 4 hex
-    uint8_t versionNumber{}; ///< 3 bit first of packet identification
-    uint8_t type{}; ///< 1 bit second of packet identification
-    uint8_t dataFieldHeaderFlag{}; ///< 1 bit third of packet identification
-    uint16_t APID{}; ///< 11 bit last of packet identification
+    uint8_t versionNumber{};              ///< 3 bit first of packet identification
+    uint8_t type{};                       ///< 1 bit second of packet identification
+    uint8_t dataFieldHeaderFlag{};        ///< 1 bit third of packet identification
+    uint16_t APID{};                      ///< 11 bit last of packet identification
 
     //packet sequence control 16 bit 4 hex
-    uint8_t sequenceFlags{}; ///< 2 bit first of sequence control
-    uint16_t sequenceCount{}; ///< 14 bit last of sequence control
+    uint8_t sequenceFlags{};              ///< 2 bit first of sequence control
+    uint16_t sequenceCount{};             ///< 14 bit last of sequence control
 
     // data packet length
-    uint16_t dataLength{}; ///< 16 bits
+    uint16_t dataLength{};                ///< 16 bits
 
     /**
      * @brief Constructs a PrimaryHeader with specified field values.
@@ -81,13 +81,13 @@ namespace CCSDS {
   public:
     Header() = default;
 
-    [[nodiscard]] uint8_t getVersionNumber() const { return m_versionNumber; } ///< 3 bits
-    [[nodiscard]] uint8_t getType() const { return m_type; } ///< 1 bits
+    [[nodiscard]] uint8_t getVersionNumber()       const { return m_versionNumber;       } ///< 3 bits
+    [[nodiscard]] uint8_t getType()                const { return m_type;                } ///< 1 bits
     [[nodiscard]] uint8_t getDataFieldHeaderFlag() const { return m_dataFieldHeaderFlag; } ///< 1 bits
-    [[nodiscard]] uint16_t getAPID() const { return m_APID; } ///< 11 bits
-    [[nodiscard]] uint8_t getSequenceFlags() const { return m_sequenceFlags; } ///< 2 bits
-    [[nodiscard]] uint16_t getSequenceCount() const { return m_sequenceCount; } ///< 14 bits
-    [[nodiscard]] uint16_t getDataLength() const { return m_dataLength; } ///< 16 bits
+    [[nodiscard]] uint16_t getAPID()               const { return m_APID;                } ///< 11 bits
+    [[nodiscard]] uint8_t getSequenceFlags()       const { return m_sequenceFlags;       } ///< 2 bits
+    [[nodiscard]] uint16_t getSequenceCount()      const { return m_sequenceCount;       } ///< 14 bits
+    [[nodiscard]] uint16_t getDataLength()         const { return m_dataLength;          } ///< 16 bits
 
     /**
      * @brief decomposes the Primary header class and returns it as a vector of bytes.
@@ -113,13 +113,13 @@ namespace CCSDS {
                static_cast<uint32_t>(m_packetSequenceControl) << 16) | m_dataLength;
     }
 
-    void setVersionNumber(const uint8_t &value) { m_versionNumber = value & 0x0007; } ///< 3 bits
-    void setType(const uint8_t &value) { m_type = value & 0x0001; } ///< 1 bits
-    void setDataFieldHeaderFlag(const uint8_t &value) { m_dataFieldHeaderFlag = value & 0x0001; } ///< 1 bits
-    void setAPID(const uint16_t &value) { m_APID = value & 0x07FF; } ///< 11 bits
-    void setSequenceFlags(const uint8_t &value) { m_sequenceFlags = value & 0x0003; } ///< 2 bits
-    void setSequenceCount(const uint16_t &value) { m_sequenceCount = value & 0x3FFF; } ///< 14 bits
-    void setDataLength(const uint16_t &value) { m_dataLength = value; } ///< 16 bits
+    void setVersionNumber      ( const  uint8_t &value ) {       m_versionNumber = value & 0x0007; } ///< 3 bits
+    void setType               ( const  uint8_t &value ) {                m_type = value & 0x0001; } ///< 1 bits
+    void setDataFieldHeaderFlag( const  uint8_t &value ) { m_dataFieldHeaderFlag = value & 0x0001; } ///< 1 bits
+    void setAPID               ( const uint16_t &value ) {                m_APID = value & 0x07FF; } ///< 11 bits
+    void setSequenceFlags      ( const  uint8_t &value ) {       m_sequenceFlags = value & 0x0003; } ///< 2 bits
+    void setSequenceCount      ( const uint16_t &value ) {       m_sequenceCount = value & 0x3FFF; } ///< 14 bits
+    void setDataLength         ( const uint16_t &value ) {          m_dataLength = value;          } ///< 16 bits
 
     /**
      * @brief Sets the header data from a 64-bit integer representation.
@@ -161,22 +161,21 @@ namespace CCSDS {
 
   private:
     // version and packet identification 16 bit 4 hex
-    uint8_t m_versionNumber{}; ///< 3 bit first of packet identification
+    uint8_t m_versionNumber{};                    ///< 3 bit first of packet identification
 
     // packet identification 4 hex
-    uint8_t m_type{}; ///< 1 bit second of packet identification
-    uint8_t m_dataFieldHeaderFlag{}; ///< 1 bit third of packet identification
-    uint16_t m_APID{}; ///< 11 bit last of packet identification
+    uint8_t m_type{};                             ///< 1 bit second of packet identification
+    uint8_t m_dataFieldHeaderFlag{};              ///< 1 bit third of packet identification
+    uint16_t m_APID{};                            ///< 11 bit last of packet identification
 
     // packet sequence control 16 bit 4 hex
-    uint8_t m_sequenceFlags{UNSEGMENTED}; ///< 2 bit first of sequence control / ESequenceFlag enum.
-    uint16_t m_sequenceCount{}; ///< 14 bit last of sequence control
-
+    uint8_t m_sequenceFlags{UNSEGMENTED};         ///< 2 bit first of sequence control / ESequenceFlag enum.
+    uint16_t m_sequenceCount{};                   ///< 14 bit last of sequence control
 
     // full packet size 48 bit fixed 6 byes
-    uint16_t m_packetIdentificationAndVersion{}; ///< packet id and version 16 bit 4 hex
-    uint16_t m_packetSequenceControl{}; ///< packet sequence control 16 bit 4 hex
-    uint16_t m_dataLength{}; ///< data packet length 16 bits 4 hex
+    uint16_t m_packetIdentificationAndVersion{};  ///< packet id and version 16 bit 4 hex
+    uint16_t m_packetSequenceControl{};           ///< packet sequence control 16 bit 4 hex
+    uint16_t m_dataLength{};                      ///< data packet length 16 bits 4 hex
   };
 }
-#endif // CCSDSHEADER_H
+#endif // CCSDS_HEADER_H

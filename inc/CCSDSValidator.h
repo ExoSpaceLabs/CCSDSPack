@@ -1,7 +1,7 @@
 /// @file CCSDSValidator.h
 /// @brief Defines the Validator class for CCSDS packet validation.
-#ifndef CCSDSVALIDATOR_H
-#define CCSDSVALIDATOR_H
+#ifndef CCSDS_VALIDATOR_H
+#define CCSDS_VALIDATOR_H
 
 #include "CCSDSPacket.h"
 
@@ -62,12 +62,12 @@ namespace CCSDS {
     [[nodiscard]] std::vector<bool> getReport() const { return m_report; }
 
   private:
-    Packet m_templatePacket; ///< Template packet used for validation.
-    bool m_validatePacketCoherence{true}; ///< Whether to validate packet length and CRC (default is true).
+    Packet m_templatePacket;               ///< Template packet used for validation.
+    bool m_validatePacketCoherence{true};  ///< Whether to validate packet length and CRC (default is true).
     bool m_validateAgainstTemplate{false}; ///< Whether to validate against the template packet (default is false).
-    std::vector<bool> m_report{}; ///< List of boolean results representing performed checks.
-    size_t m_reportSize{5}; ///< Expected size of the validation report.
+    std::vector<bool> m_report{};          ///< List of boolean results representing performed checks.
+    size_t m_reportSize{5};                ///< Expected size of the validation report.
   };
 } // namespace CCSDS
 
-#endif // CCSDSVALIDATOR_H
+#endif // CCSDS_VALIDATOR_H

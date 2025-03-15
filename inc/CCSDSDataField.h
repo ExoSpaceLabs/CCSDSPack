@@ -1,5 +1,5 @@
-#ifndef CCSDSDATA_H
-#define CCSDSDATA_H
+#ifndef CCSDS_DATA_FIELD_H
+#define CCSDS_DATA_FIELD_H
 
 #include <CCSDSResult.h>
 #include <cstdint>
@@ -26,10 +26,10 @@ namespace CCSDS {
   class DataField {
   public:
     DataField() {
-      m_SecondaryHeaderFactory.registerType(std::make_shared<DataOnlyHeader>());
-      m_SecondaryHeaderFactory.registerType(std::make_shared<PusA>());
-      m_SecondaryHeaderFactory.registerType(std::make_shared<PusB>());
-      m_SecondaryHeaderFactory.registerType(std::make_shared<PusC>());
+      m_secondaryHeaderFactory.registerType(std::make_shared<BufferHeader>());
+      m_secondaryHeaderFactory.registerType(std::make_shared<PusA>());
+      m_secondaryHeaderFactory.registerType(std::make_shared<PusB>());
+      m_secondaryHeaderFactory.registerType(std::make_shared<PusC>());
     };
 
     ~DataField() = default;
@@ -133,7 +133,20 @@ namespace CCSDS {
      */
     void setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
 
-    SecondaryHeaderFactory& getDataFieldHeaderFacroty() {return m_SecondaryHeaderFactory;};
+    /**
+     * @brief returns the secondary header factory
+     *
+     * @return SecondaryHeaderFactory& .
+     */
+    SecondaryHeaderFactory& getDataFieldHeaderFactory() {return m_secondaryHeaderFactory;}
+
+    /**
+     * @brief returns the secondary header
+     * A SecondaryHeaderAbstract derived object containing the header data.
+     *
+     * @return std::shared_ptr<SecondaryHeaderAbstract>& .
+     */
+    SecondaryHeaderAbstract &getDataFieldHeader() {return *m_SecondaryHeader;}
 
     /**
      * @brief Sets the maximum data packet size for the CCSDS DataField.
@@ -239,18 +252,15 @@ namespace CCSDS {
     void update();
 
   private:
-    std::shared_ptr<SecondaryHeaderAbstract> m_SecondaryHeader{};
-    SecondaryHeaderFactory m_SecondaryHeaderFactory;
-    std::vector<uint8_t> m_applicationData{};
-    std::string m_dataFieldHeaderType{};
-    uint16_t m_dataPacketSize{2024};
-    bool m_dataFieldHeaderUpdated{false};
-    bool m_enableDataFieldUpdate{true};
+    std::shared_ptr<SecondaryHeaderAbstract> m_SecondaryHeader{};  ///< Shared pointer to the secondary header class
+    SecondaryHeaderFactory m_secondaryHeaderFactory;               ///< secondary header dispatcher factory
+    std::vector<uint8_t> m_applicationData{};                      ///< Application data buffer
+    std::string m_dataFieldHeaderType{};                           ///< Data field Header type
+    uint16_t m_dataPacketSize{2024};                               ///< Data field maximum size in bytes
+    bool m_dataFieldHeaderUpdated{false};                          ///< Boolean for secondary header updated status
+    bool m_enableDataFieldUpdate{true};                            ///< Boolean for secondary header update enable
 
   };
 }
 
-
-
-
-#endif // CCSDSDATA_H
+#endif // CCSDS_DATA_FIELD_H

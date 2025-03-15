@@ -1,3 +1,5 @@
+#include <CCSDSPacket.h>
+
 #include "tests.h"
 #include <iostream>
 
@@ -16,6 +18,5 @@ int main() {
   // perform packet management tests on the library
   testGroupManagement(&tester, "management of CCSDS packet tests.");
 
-  // end tests and return number of tests failed (0 in case all passed)
   return tester.Result();
 }
