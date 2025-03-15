@@ -77,29 +77,29 @@ namespace CCSDS {
      * @param header The `PusA` header object.
      * @return none.
      */
-    void setDataFieldHeader(const PusA &header);
+    void setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header);
 
-    /**
-     * @brief Sets the data field header using the provided PusB header.
-     *
-     * This function sets the data field header of the packet using a `PusB`
-     * header object.
-     *
-     * @param header The `PusB` header object.
-     * @return none.
-     */
-    void setDataFieldHeader(const PusB &header);
-
-    /**
-     * @brief Sets the data field header using the provided PusC header.
-     *
-     * This function sets the data field header of the packet using a `PusC`
-     * header object.
-     *
-     * @param header The `PusC` header object.
-     * @return none.
-     */
-    void setDataFieldHeader(const PusC &header);
+    // /**
+    //  * @brief Sets the data field header using the provided PusB header.
+    //  *
+    //  * This function sets the data field header of the packet using a `PusB`
+    //  * header object.
+    //  *
+    //  * @param header The `PusB` header object.
+    //  * @return none.
+    //  */
+    // void setDataFieldHeader(const PusB &header);
+    //
+    // /**
+    //  * @brief Sets the data field header using the provided PusC header.
+    //  *
+    //  * This function sets the data field header of the packet using a `PusC`
+    //  * header object.
+    //  *
+    //  * @param header The `PusC` header object.
+    //  * @return none.
+    //  */
+    // void setDataFieldHeader(const PusC &header);
 
     /**
      * @brief Sets the data field header for the packet using a vector of bytes.
@@ -110,11 +110,11 @@ namespace CCSDS {
      * @note The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
      *
      * @param data A vector containing the data for the data field header.
-     * @param type The PUS type that specifies the purpose of the data.
+     * @param headerType The PUS type that specifies the purpose of the data.
      *
      * @return ResultBool
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data, ESecondaryHeaderType type);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data, const std::string &headerType);
 
     /**
      * @brief Sets the data field header for the packet using a raw data pointer.
@@ -126,11 +126,11 @@ namespace CCSDS {
      *
      * @param pData Pointer to the raw data for the data field header.
      * @param sizeData The size of the data pointed to by pData, in bytes.
-     * @param type The PUS type that specifies the purpose of the data.
+     * @param headerType The PUS type that specifies the purpose of the data.
      *
      * @return ResultBool
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, size_t sizeData, ESecondaryHeaderType type);
+    [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, size_t sizeData, const std::string &headerType);
 
     /**
      * @brief Sets the data field header using the provided vector of bytes.
@@ -220,8 +220,8 @@ namespace CCSDS {
     /** @brief Deserializes a vector of bytes into a CCSDS packet. */
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data);
 
-    /** @brief Deserializes a CCSDS packet using a vector and a PUS type. */
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, ESecondaryHeaderType PusType);
+    /** @brief Deserializes a CCSDS packet using a vector and a registered header type. */
+    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, const std::string& headerType);
 
     /** @brief Deserializes a CCSDS packet using a vector and a header data size. */
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, uint16_t headerDataSizeBytes);

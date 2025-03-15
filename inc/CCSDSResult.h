@@ -145,7 +145,7 @@ do { if (condition) return errorCode; } while (0)
 #define RET_IF_ERR_MSG(condition, errorCode, message)    \
 do {                                                     \
     if (condition) {                                     \
-        return Error{errorCode,message};                 \
+        return CCSDS::Error{errorCode,message};                 \
     }                                                    \
 } while (0)
 

@@ -12,7 +12,7 @@ void CCSDS::Packet::update() {
     // todo this part needs to be moved out of conditional updating
     if (m_primaryHeader.getSequenceFlags() == UNSEGMENTED) {
       m_primaryHeader.setSequenceCount(0);
-    }else {
+    } else {
       m_primaryHeader.setSequenceCount(m_sequenceCounter);
     }
     m_CRC16 = crc16(dataField);
@@ -104,23 +104,21 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const ESecondaryHeaderType PusType) {
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const std::string &headerType) {
   RET_IF_ERR_MSG(data.size() <= 8, ErrorCode::INVALID_DATA,
                  "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
+  RET_IF_ERR_MSG(headerType == "DataOnlyHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Cannot Deserialize Packet, DataOnlyHeader is not of defined size");
+  RET_IF_ERR_MSG(!SecondaryHeaderFactory::instance().typeIsRegistered(headerType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Cannot Deserialize Packet, Unregistered Secondary header: " + headerType);
 
-  uint8_t headerDataSizeBytes{0};
+  auto secondaryHeader = SecondaryHeaderFactory::instance().create(headerType);
+  const auto headerDataSizeBytes = secondaryHeader->getSize();
 
-  if (PusType != NA && PusType != OTHER) {
-    if (PusType == PUS_A) {
-      headerDataSizeBytes = 6;
-      FORWARD_RESULT(m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11]}, PUS_A));
-    } else if (PusType == PUS_B || PusType == PUS_C) {
-      headerDataSizeBytes = 8;
-      FORWARD_RESULT(
-        m_dataField.setDataFieldHeader({data[6], data[7], data[8], data[9], data[10], data[11], data[12], data[13]},
-          PusType));
-    }
-  }
+  std::vector<uint8_t> dataFieldHeaderVector;
+  std::copy_n(data.begin() + 6, headerDataSizeBytes , std::back_inserter(dataFieldHeaderVector));
+  FORWARD_RESULT( secondaryHeader->deserialize(dataFieldHeaderVector ));
+  setDataFieldHeader(secondaryHeader);
 
   if (data.size() > (8 + headerDataSizeBytes)) {
     std::vector<uint8_t> dataFieldVector;
@@ -195,30 +193,20 @@ void CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
   m_updateStatus = false;
 }
 
-void CCSDS::Packet::setDataFieldHeader(const PusA &header) {
+void CCSDS::Packet::setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header) {
   m_dataField.setDataFieldHeader(header);
   m_updateStatus = false;
 }
 
-void CCSDS::Packet::setDataFieldHeader(const PusB &header) {
-  m_dataField.setDataFieldHeader(header);
-  m_updateStatus = false;
-}
-
-void CCSDS::Packet::setDataFieldHeader(const PusC &header) {
-  m_dataField.setDataFieldHeader(header);
-  m_updateStatus = false;
-}
-
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const ESecondaryHeaderType type) {
-  FORWARD_RESULT(m_dataField.setDataFieldHeader( data, type ));
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &data, const std::string &headerType) {
+  FORWARD_RESULT(m_dataField.setDataFieldHeader( data, headerType ));
   m_updateStatus = false;
   return true;
 }
 
 CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData,
-                                                    const ESecondaryHeaderType type) {
-  FORWARD_RESULT(m_dataField.setDataFieldHeader( pData, sizeData, type ));
+                                                    const std::string &headerType) {
+  FORWARD_RESULT(m_dataField.setDataFieldHeader( pData, sizeData, headerType ));
   m_updateStatus = false;
   return true;
 }
@@ -253,7 +241,8 @@ void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags) {
 }
 
 CCSDS::ResultBool CCSDS::Packet::setSequenceCount(const uint16_t count) {
-  RET_IF_ERR_MSG(m_primaryHeader.getSequenceFlags() == UNSEGMENTED && count != 0 , ErrorCode::INVALID_DATA, "Unable to set non 0 value for UNSEGMENTED packet");
+  RET_IF_ERR_MSG(m_primaryHeader.getSequenceFlags() == UNSEGMENTED && count != 0, ErrorCode::INVALID_DATA,
+                 "Unable to set non 0 value for UNSEGMENTED packet");
   m_sequenceCounter = count;
   m_updateStatus = false;
   return true;

@@ -1,38 +1,9 @@
-//
-// Created by inczert on 1/18/25.
-//
 
-#include "CCSDSSecondaryHeader.h"
+#include "PusServices.h"
 
-#include <CCSDSResult.h>
-#include <vector>
-#include <cstdint>
 
-void CCSDS::SecondaryHeaderAbstract::setDataLength(const uint16_t dataLength) {
-  (void) dataLength; // To avoid unused parameter warning
-}
-
-CCSDS::ResultBool CCSDS::SecondaryHeaderAbstract::deserialize(const std::vector<uint8_t> &data) {
-  (void) data;
-  return true;
-}
-
-uint16_t CCSDS::SecondaryHeaderAbstract::getDataLength() const {
-  return 0;
-}
-
-uint8_t CCSDS::SecondaryHeaderAbstract::getSize() const {
-  // Default implementation
-  return 0; // or an appropriate default value
-}
-
-std::vector<uint8_t> CCSDS::SecondaryHeaderAbstract::serialize() const {
-  // Default implementation
-  return {}; // Return an empty vector
-}
-
-CCSDS::ResultBool CCSDS::PusA::deserialize(const std::vector<uint8_t> &data) {
-  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+CCSDS::ResultBool PusA::deserialize(const std::vector<uint8_t> &data) {
+  RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-A header not correct size (size != 6 bytes)");
 
   m_version = data[0] & 0x5;
@@ -43,7 +14,7 @@ CCSDS::ResultBool CCSDS::PusA::deserialize(const std::vector<uint8_t> &data) {
   return true;
 }
 
-std::vector<uint8_t> CCSDS::PusA::serialize() const {
+std::vector<uint8_t> PusA::serialize() const {
   std::vector data{
     static_cast<uint8_t>(m_version & 0x7),
     m_serviceType,
@@ -56,8 +27,8 @@ std::vector<uint8_t> CCSDS::PusA::serialize() const {
   return data;
 }
 
-CCSDS::ResultBool CCSDS::PusB::deserialize(const std::vector<uint8_t> &data) {
-  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+CCSDS::ResultBool PusB::deserialize(const std::vector<uint8_t> &data) {
+  RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-B header not correct size (size != 8 bytes)");
   m_version = data[0] & 0x7;
   m_serviceType = data[1];
@@ -68,7 +39,7 @@ CCSDS::ResultBool CCSDS::PusB::deserialize(const std::vector<uint8_t> &data) {
   return true;
 }
 
-std::vector<uint8_t> CCSDS::PusB::serialize() const {
+std::vector<uint8_t> PusB::serialize() const {
   std::vector data{
     static_cast<uint8_t>(m_version & 0x7),
     m_serviceType,
@@ -83,8 +54,8 @@ std::vector<uint8_t> CCSDS::PusB::serialize() const {
   return data;
 }
 
-CCSDS::ResultBool CCSDS::PusC::deserialize(const std::vector<uint8_t> &data) {
-  RET_IF_ERR_MSG(data.size() != m_size, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+CCSDS::ResultBool PusC::deserialize(const std::vector<uint8_t> &data) {
+  RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-C header not correct size (size != 8 bytes)");
 
   m_version = data[0] & 0x7;
@@ -96,7 +67,7 @@ CCSDS::ResultBool CCSDS::PusC::deserialize(const std::vector<uint8_t> &data) {
   return true;
 }
 
-std::vector<uint8_t> CCSDS::PusC::serialize() const {
+std::vector<uint8_t> PusC::serialize() const {
   std::vector data{
     static_cast<uint8_t>(m_version & 0x7),
     m_serviceType,
@@ -110,3 +81,24 @@ std::vector<uint8_t> CCSDS::PusC::serialize() const {
 
   return data;
 }
+
+
+// Register class in factory (auto-register on startup)
+bool PusA::registered = [] {
+
+  CCSDS::SecondaryHeaderFactory::instance().registerType(std::make_unique<PusA>());
+  return true;
+}();
+
+// Register class in factory (auto-register on startup)
+bool PusB::registered = [] {
+  CCSDS::SecondaryHeaderFactory::instance().registerType(std::make_unique<PusB>());
+  return true;
+}();
+
+// Register class in factory (auto-register on startup)
+bool PusC::registered = [] {
+  CCSDS::SecondaryHeaderFactory::instance().registerType(std::make_unique<PusC>());
+  return true;
+}();
+

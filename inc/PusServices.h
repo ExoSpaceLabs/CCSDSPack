@@ -1,59 +1,9 @@
-#ifndef CCSDSSECONDARYHEADER_H
-#define CCSDSSECONDARYHEADER_H
+#ifndef PUSSERVICES_H
+#define PUSSERVICES_H
 
-#include <CCSDSResult.h>
-#include <vector>
-#include <cstdint>
-
-namespace CCSDS {
-  /**
-   * @brief Enumeration representing the different types of PUS headers.
-   */
-  enum ESecondaryHeaderType {
-    NA, ///< Not applicable or undefined.
-    PUS_A, ///< PUS Type A: Telemetry header.
-    PUS_B, ///< PUS Type B: Event Reporting header.
-    PUS_C, ///< PUS Type C: Time Code header.
-    OTHER ///< Other or custom PUS types.
-  };
-
-  /**
-   * @brief Abstract base class for a PUS (Packet Utilization Standard) header.
-   *
-   * Defines the common interface for all PUS header types.
-   */
-  class SecondaryHeaderAbstract {
-  public:
-    virtual ~SecondaryHeaderAbstract() = default;
-
-    /**
-   * @brief Sets the length of the data associated with the PUS packet.
-   * @param dataLength Length of the data in bytes.
-   */
-    virtual void setDataLength(uint16_t dataLength);
-
-
-    [[nodiscard]] virtual ResultBool deserialize(const std::vector<uint8_t> &data);
-
-    /**
-     * @brief Gets the length of the data associated with the PUS packet.
-     * @return The length of the data in bytes set in the header.
-     */
-    [[nodiscard]] virtual uint16_t getDataLength() const;
-
-    /**
-     * @brief Gets the size of the PUS header in bytes.
-     * @return The size of the header in bytes.
-     */
-    [[nodiscard]] virtual uint8_t getSize() const;
-
-    /**
-     * @brief Retrieves the serialized representation of the PUS header.
-     * @return A vector containing the header bytes. (does not include data field)
-     */
-    [[nodiscard]] virtual std::vector<uint8_t> serialize() const; // Pure virtual method for polymorphism
-  };
-
+#include "CCSDSSecondaryHeaderAbstract.h"
+#include "CCSDSSecondaryHeaderFactory.h"
+#include "CCSDSResult.h"
   /**
    * @brief Represents a PUS Type A (Telemetry) header.
    *
@@ -66,7 +16,7 @@ namespace CCSDS {
    * - Source ID: 8 bits, source identifier (e.g., satellite ID).
    * - Data Length: 16 bits, length of the telemetry data in bytes.
    */
-  class PusA final : public SecondaryHeaderAbstract {
+  class PusA final : public CCSDS::SecondaryHeaderAbstract {
   public:
     PusA() = default;
 
@@ -87,14 +37,15 @@ namespace CCSDS {
 
     void setDataLength(const uint16_t dataLength) override { m_dataLength = dataLength; }
 
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data) override;
+    [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override;
 
     [[nodiscard]] uint8_t getVersion() const { return m_version; }
     [[nodiscard]] uint8_t getServiceType() const { return m_serviceType; }
     [[nodiscard]] uint8_t getServiceSubtype() const { return m_serviceSubType; }
     [[nodiscard]] uint8_t getSourceID() const { return m_sourceID; }
     [[nodiscard]] uint16_t getDataLength() const override { return m_dataLength; }
-    [[nodiscard]] uint8_t getSize() const override { return m_size; }
+    [[nodiscard]] uint16_t getSize() const override { return m_size; }
+    [[nodiscard]] std::string getType() const override { return m_type; }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
 
@@ -105,7 +56,8 @@ namespace CCSDS {
     uint8_t m_sourceID{}; // Source ID	        8	        ID of the source (e.g., satellite or sensor)
     uint16_t m_dataLength{}; // Data Length	        16	        Length of the telemetry data in bytes
     // Telemetry Data	    Variable    (based on Data Length)	The actual telemetry data (variable length)
-
+    const std::string m_type = "PusA";// Static registration (automatically called when the program starts)
+    static bool registered;
     const uint16_t m_size = 6; // bytes
   };
 
@@ -122,7 +74,7 @@ namespace CCSDS {
    * - Event ID: 16 bits, identifier of the event.
    * - Data Length: 16 bits, length of the event data in bytes.
    */
-  class PusB final : public SecondaryHeaderAbstract {
+  class PusB final : public CCSDS::SecondaryHeaderAbstract {
   public:
     PusB() = default;
 
@@ -143,7 +95,7 @@ namespace CCSDS {
 
     void setDataLength(const uint16_t dataLength) override { m_dataLength = dataLength; };
 
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data) override;
+    [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override;
 
     [[nodiscard]] uint8_t getVersion() const { return m_version; }
     [[nodiscard]] uint8_t getServiceType() const { return m_serviceType; }
@@ -151,7 +103,8 @@ namespace CCSDS {
     [[nodiscard]] uint8_t getSourceID() const { return m_sourceID; }
     [[nodiscard]] uint8_t getEventID() const { return m_eventID; }
     [[nodiscard]] uint16_t getDataLength() const override { return m_dataLength; }
-    [[nodiscard]] uint8_t getSize() const override { return m_size; }
+    [[nodiscard]] uint16_t getSize() const override { return m_size; }
+    [[nodiscard]] std::string getType() const override { return m_type; }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
 
@@ -163,7 +116,8 @@ namespace CCSDS {
     uint16_t m_eventID{}; // Event ID	        16	        ID of the event being reported
     uint16_t m_dataLength{}; // Data Length	        16	        Length of the event data in bytes
     // Event Data	        Variable    (based on Data Length)	The actual event data (variable length)
-
+    const std::string m_type = "PusB";// Static registration (automatically called when the program starts)
+    static bool registered;
     const uint16_t m_size = 8; // bytes
   };
 
@@ -180,7 +134,7 @@ namespace CCSDS {
    * - Time Code: 16 bits, value representing the time.
    * - Data Length: 16 bits, length of the time data in bytes.
    */
-  class PusC final : public SecondaryHeaderAbstract {
+  class PusC final : public CCSDS::SecondaryHeaderAbstract {
   public:
     PusC() = default;
 
@@ -201,8 +155,9 @@ namespace CCSDS {
     }
 
     void setDataLength(const uint16_t dataLength) override { m_dataLength = dataLength; };
+    [[nodiscard]] std::string getType() const override { return m_type; }
 
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data) override;
+    [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override;
 
     [[nodiscard]] uint8_t getVersion() const { return m_version; }
     [[nodiscard]] uint8_t getServiceType() const { return m_serviceType; }
@@ -210,7 +165,7 @@ namespace CCSDS {
     [[nodiscard]] uint8_t getSourceID() const { return m_sourceID; }
     [[nodiscard]] uint16_t getTimeCode() const { return m_timeCode; }
     [[nodiscard]] uint16_t getDataLength() const override { return m_dataLength; }
-    [[nodiscard]] uint8_t getSize() const override { return m_size; }
+    [[nodiscard]] uint16_t getSize() const override { return m_size; }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
 
@@ -222,9 +177,10 @@ namespace CCSDS {
     uint16_t m_timeCode{}; // Time Code	        16	        Time code value, depending on the system
     uint16_t m_dataLength{}; // Data Length	        16	        Length of the time data in bytes
     // Time Data	        Variable    (based on Data Length)	The actual time-related data (variable length)
-
+    const std::string m_type = "PusC";// Static registration (automatically called when the program starts)
+    static bool registered;
     uint16_t m_size = 8; // bytes
   };
-}
 
-#endif //CCSDSSECONDARYHEADER_H
+
+#endif //PUSSERVICES_H

@@ -1,6 +1,10 @@
 #include "CCSDSData.h"
+
+#include <CCSDSSecondaryHeaderFactory.h>
+
 #include "CCSDSUtils.h"
 #include <iostream>
+#include <utility>
 
 std::vector<uint8_t> CCSDS::DataField::getFullDataFieldBytes() {
   update();
@@ -33,23 +37,20 @@ uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() {
   if (!getDataFieldHeaderFlag()) {
     return m_applicationData.size();
   }
-  if (!m_dataFieldHeader.empty()) {
-    return m_applicationData.size() + m_dataFieldHeader.size();
-  }
-  if (m_pusHeaderData != nullptr) {
-    return m_applicationData.size() + m_pusHeaderData->getSize();
+  if (m_SecondaryHeader != nullptr) {
+    return m_applicationData.size() + m_SecondaryHeader->getSize();
   }
   return 0;
 }
 
 std::shared_ptr<CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHeader() {
-  return m_pusHeaderData;
+  return m_SecondaryHeader;
 }
 
 void CCSDS::DataField::update() {
   if (!m_dataFieldHeaderUpdated && m_enableDataFieldUpdate) {
-    if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
-      m_pusHeaderData->setDataLength(m_applicationData.size());;
+    if (SecondaryHeaderFactory::instance().typeIsRegistered(m_dataFieldHeaderType) && m_dataFieldHeaderType != "DataOnlyHeader") {
+      m_SecondaryHeader->setDataLength(m_applicationData.size());;
     }
     m_dataFieldHeaderUpdated = true;
   }
@@ -83,25 +84,20 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, con
   RET_IF_ERR_MSG(sizeData > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size.");
 
-  if (!m_dataFieldHeader.empty()) {
-    m_dataFieldHeader.clear();
-  }
-  m_dataFieldHeader.assign(pData, pData + sizeData);
-  m_dataFieldHeaderType = OTHER;
-  m_dataFieldHeaderUpdated = false;
+  std::vector<uint8_t> data;
+  data.assign(pData, pData + sizeData);
+  FORWARD_RESULT( setDataFieldHeader(data) );
   return true;
 }
 
 CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, const size_t &sizeData,
-                                                       const ESecondaryHeaderType &pType) {
+                                                       const std::string &pType) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
-  RET_IF_ERR_MSG(pType == NA, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "Secondary header type is NA (NOT APPLICABLE).");
 
-  if (!m_dataFieldHeader.empty()) {
-    m_dataFieldHeader.clear();
-  }
-  if (pType != OTHER) {
+  RET_IF_ERR_MSG(!SecondaryHeaderFactory::instance().typeIsRegistered(pType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Secondary header type is not registered.");
+
+  if (SecondaryHeaderFactory::instance().typeIsRegistered(pType)) {
     std::vector<uint8_t> data;
     data.assign(pData, pData + sizeData);
     FORWARD_RESULT(setDataFieldHeader(data,pType));
@@ -114,44 +110,23 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, con
 }
 
 CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data,
-                                                       const ESecondaryHeaderType &pType) {
+                                                       const std::string &pType) {
   RET_IF_ERR_MSG(data.size() > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
+  RET_IF_ERR_MSG(!SecondaryHeaderFactory::instance().typeIsRegistered(pType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Secondary header type is not registered.");
 
-  RET_IF_ERR_MSG(data.size() != 6 && pType == ESecondaryHeaderType::PUS_A, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "Invalid PUS-A data provided, size != 6");
-  RET_IF_ERR_MSG(data.size() != 8 && pType == ESecondaryHeaderType::PUS_B, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "Invalid PUS-B data provided, size != 8");
-  RET_IF_ERR_MSG(data.size() != 8 && pType == ESecondaryHeaderType::PUS_C, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "Invalid PUS-C data provided, size != 8");
+  auto header = SecondaryHeaderFactory::instance().create(pType);
+
+  RET_IF_ERR_MSG(data.size() != header->getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Secondary header data size mismatch for type: " + pType);
+
+
+  m_SecondaryHeader = std::move(header);
+  FORWARD_RESULT(m_SecondaryHeader->deserialize(data));
 
   m_dataFieldHeaderType = pType;
 
-  switch (pType) {
-    case PUS_A: {
-      PusA PusAHeader;
-      FORWARD_RESULT(PusAHeader.deserialize(data));
-      m_pusHeaderData = std::make_unique<PusA>(PusAHeader);
-    }
-    break;
-    case PUS_B: {
-      PusB PusBHeader;
-      FORWARD_RESULT(PusBHeader.deserialize(data));
-      m_pusHeaderData = std::make_unique<PusB>(PusBHeader);
-    }
-    break;
-    case PUS_C: {
-      PusC PusCHeader;
-      FORWARD_RESULT(PusCHeader.deserialize(data));
-      m_pusHeaderData = std::make_unique<PusC>(PusCHeader);
-    }
-    break;
-    case OTHER: {
-      FORWARD_RESULT(setDataFieldHeader(data));
-    }
-    break;
-    default: ;
-  }
   m_dataFieldHeaderUpdated = false;
   return true;
 }
@@ -159,30 +134,19 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
 CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &dataFieldHeader) {
   RET_IF_ERR_MSG(dataFieldHeader.size() > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
-  if (!m_dataFieldHeader.empty()) {
-    m_dataFieldHeader.clear();
-  }
-  m_dataFieldHeader = dataFieldHeader;
-  m_dataFieldHeaderType = OTHER;
+
+  DataOnlyHeader header;
+  m_SecondaryHeader = std::make_unique<DataOnlyHeader>(dataFieldHeader);
+  FORWARD_RESULT(  m_SecondaryHeader->deserialize(dataFieldHeader) );
+
+  m_dataFieldHeaderType = m_SecondaryHeader->getType(); ;
   m_dataFieldHeaderUpdated = false;
   return true;
 }
 
-void CCSDS::DataField::setDataFieldHeader(const PusA &header) {
-  m_dataFieldHeaderType = PUS_A;
-  m_pusHeaderData = std::make_shared<PusA>(header);
-  m_dataFieldHeaderUpdated = false;
-}
-
-void CCSDS::DataField::setDataFieldHeader(const PusB &header) {
-  m_dataFieldHeaderType = PUS_B;
-  m_pusHeaderData = std::make_shared<PusB>(header);
-  m_dataFieldHeaderUpdated = false;
-}
-
-void CCSDS::DataField::setDataFieldHeader(const PusC &header) {
-  m_dataFieldHeaderType = PUS_C;
-  m_pusHeaderData = std::make_shared<PusC>(header);
+void CCSDS::DataField::setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header) {
+  m_SecondaryHeader = std::move(header);
+  m_dataFieldHeaderType = m_SecondaryHeader->getType();
   m_dataFieldHeaderUpdated = false;
 }
 
@@ -190,8 +154,16 @@ void CCSDS::DataField::setDataPacketSize(const uint16_t &value) { m_dataPacketSi
 
 std::vector<uint8_t> CCSDS::DataField::getDataFieldHeaderBytes() {
   update();
-  if (m_dataFieldHeaderType != OTHER && m_dataFieldHeaderType != NA) {
-    return m_pusHeaderData->serialize();;
+  if (m_SecondaryHeader) {
+    return m_SecondaryHeader->serialize();
   }
-  return m_dataFieldHeader;
+  return {};
 }
+
+
+
+// Register class in factory (auto-register on startup)
+bool CCSDS::DataOnlyHeader::registered = [] {
+  SecondaryHeaderFactory::instance().registerType(std::make_unique<DataOnlyHeader>());
+  return true;
+}();

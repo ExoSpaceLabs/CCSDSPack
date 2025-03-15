@@ -5,7 +5,8 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
-#include "CCSDSSecondaryHeader.h"
+#include "CCSDSSecondaryHeaderAbstract.h"
+#include "CCSDSSecondaryHeaderFactory.h"
 
 namespace CCSDS {
   /**
@@ -85,7 +86,7 @@ namespace CCSDS {
      * @return ResultBool.
      */
     [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, const size_t &sizeData,
-                                                const ESecondaryHeaderType &pType);
+                                                const std::string &pType);
 
     /**
      * @brief Sets the data field header for the CCSDS DataField with a specific PUS type.
@@ -101,7 +102,7 @@ namespace CCSDS {
      * @note If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method.
      * The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data, const ESecondaryHeaderType &pType);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data, const std::string &pType);
 
     /**
      * @brief Sets the data field header for the CCSDS DataField.
@@ -124,23 +125,23 @@ namespace CCSDS {
      * @param header A PusA object containing the header data.
      * @return None.
      */
-    void setDataFieldHeader(const PusA &header);
+    void setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
 
-    /**
-     * @brief Sets the secondary header for the data field using a PUS-B header.
-     *
-     * @param header A PusB object containing the header data.
-     * @return None.
-     */
-    void setDataFieldHeader(const PusB &header);
-
-    /**
-     * @brief Sets the secondary header for the data field using a PUS-C header.
-     *
-     * @param header A PusC object containing the header data.
-     * @return None.
-     */
-    void setDataFieldHeader(const PusC &header);
+    // /**
+    //  * @brief Sets the secondary header for the data field using a PUS-B header.
+    //  *
+    //  * @param header A PusB object containing the header data.
+    //  * @return None.
+    //  */
+    // void setDataFieldHeader(const PusB &header);
+    //
+    // /**
+    //  * @brief Sets the secondary header for the data field using a PUS-C header.
+    //  *
+    //  * @param header A PusC object containing the header data.
+    //  * @return None.
+    //  */
+    // void setDataFieldHeader(const PusC &header);
 
     /**
      * @brief Sets the maximum data packet size for the CCSDS DataField.
@@ -225,7 +226,7 @@ namespace CCSDS {
      * @return boolean
      */
     [[nodiscard]] bool getDataFieldHeaderFlag() const {
-      return !m_dataFieldHeader.empty() || m_pusHeaderData != nullptr;
+      return  m_SecondaryHeader != nullptr;
     }
 
     /**
@@ -246,13 +247,17 @@ namespace CCSDS {
     void update();
 
   private:
-    std::shared_ptr<SecondaryHeaderAbstract> m_pusHeaderData{};
-    std::vector<uint8_t> m_dataFieldHeader{};
+    std::shared_ptr<SecondaryHeaderAbstract> m_SecondaryHeader{};
     std::vector<uint8_t> m_applicationData{};
-    ESecondaryHeaderType m_dataFieldHeaderType{NA};
+    std::string m_dataFieldHeaderType{};
     uint16_t m_dataPacketSize{2024};
     bool m_dataFieldHeaderUpdated{false};
     bool m_enableDataFieldUpdate{true};
+
   };
 }
+
+
+
+
 #endif // CCSDSDATA_H
