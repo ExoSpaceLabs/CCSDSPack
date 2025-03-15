@@ -35,20 +35,20 @@ uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() {
   if (!getDataFieldHeaderFlag()) {
     return m_applicationData.size();
   }
-  if (m_SecondaryHeader != nullptr) {
-    return m_applicationData.size() + m_SecondaryHeader->getSize();
+  if (m_secondaryHeader != nullptr) {
+    return m_applicationData.size() + m_secondaryHeader->getSize();
   }
   return 0;
 }
 
 std::shared_ptr<CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHeader() {
-  return m_SecondaryHeader;
+  return m_secondaryHeader;
 }
 
 void CCSDS::DataField::update() {
   if (!m_dataFieldHeaderUpdated && m_enableDataFieldUpdate) {
     if (m_secondaryHeaderFactory.typeIsRegistered(m_dataFieldHeaderType) && m_dataFieldHeaderType != "BufferHeader") {
-      m_SecondaryHeader->setDataLength(m_applicationData.size());;
+      m_secondaryHeader->setDataLength(m_applicationData.size());;
     }
     m_dataFieldHeaderUpdated = true;
   }
@@ -120,8 +120,8 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
                    "Secondary header data size mismatch for type: " + pType);
 
 
-  m_SecondaryHeader = std::move(header);
-  FORWARD_RESULT(m_SecondaryHeader->deserialize(data));
+  m_secondaryHeader = std::move(header);
+  FORWARD_RESULT(m_secondaryHeader->deserialize(data));
 
   m_dataFieldHeaderType = pType;
 
@@ -134,17 +134,17 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
                  "Secondary header data exceeds available size");
 
   BufferHeader header;
-  m_SecondaryHeader = std::make_unique<BufferHeader>(dataFieldHeader);
-  FORWARD_RESULT(  m_SecondaryHeader->deserialize(dataFieldHeader) );
+  m_secondaryHeader = std::make_shared<BufferHeader>(dataFieldHeader);
+  FORWARD_RESULT(  m_secondaryHeader->deserialize(dataFieldHeader) );
 
-  m_dataFieldHeaderType = m_SecondaryHeader->getType(); ;
+  m_dataFieldHeaderType = m_secondaryHeader->getType(); ;
   m_dataFieldHeaderUpdated = false;
   return true;
 }
 
 void CCSDS::DataField::setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header) {
-  m_SecondaryHeader = std::move(header);
-  m_dataFieldHeaderType = m_SecondaryHeader->getType();
+  m_secondaryHeader = std::move(header);
+  m_dataFieldHeaderType = m_secondaryHeader->getType();
   m_dataFieldHeaderUpdated = false;
 }
 
@@ -152,8 +152,8 @@ void CCSDS::DataField::setDataPacketSize(const uint16_t &value) { m_dataPacketSi
 
 std::vector<uint8_t> CCSDS::DataField::getDataFieldHeaderBytes() {
   update();
-  if (m_SecondaryHeader) {
-    return m_SecondaryHeader->serialize();
+  if (m_secondaryHeader) {
+    return m_secondaryHeader->serialize();
   }
   return {};
 }

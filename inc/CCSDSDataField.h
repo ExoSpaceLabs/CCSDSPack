@@ -146,7 +146,7 @@ namespace CCSDS {
      *
      * @return std::shared_ptr<SecondaryHeaderAbstract>& .
      */
-    SecondaryHeaderAbstract &getDataFieldHeader() {return *m_SecondaryHeader;}
+    SecondaryHeaderAbstract &getDataFieldHeader() {return *m_secondaryHeader;}
 
     /**
      * @brief Sets the maximum data packet size for the CCSDS DataField.
@@ -231,7 +231,7 @@ namespace CCSDS {
      * @return boolean
      */
     [[nodiscard]] bool getDataFieldHeaderFlag() const {
-      return  m_SecondaryHeader != nullptr;
+      return  m_secondaryHeader != nullptr;
     }
 
     /**
@@ -252,7 +252,7 @@ namespace CCSDS {
     void update();
 
   private:
-    std::shared_ptr<SecondaryHeaderAbstract> m_SecondaryHeader{};  ///< Shared pointer to the secondary header class
+    std::shared_ptr<SecondaryHeaderAbstract> m_secondaryHeader{};  ///< Shared pointer to the secondary header class
     SecondaryHeaderFactory m_secondaryHeaderFactory;               ///< secondary header dispatcher factory
     std::vector<uint8_t> m_applicationData{};                      ///< Application data buffer
     std::string m_dataFieldHeaderType{};                           ///< Data field Header type
