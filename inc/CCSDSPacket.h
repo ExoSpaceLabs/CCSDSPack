@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include "CCSDSHeader.h"
-#include "CCSDSData.h"
+#include "CCSDSDataField.h"
 
 /**
  * @namespace CCSDS
@@ -78,28 +78,6 @@ namespace CCSDS {
      * @return none.
      */
     void setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header);
-
-    // /**
-    //  * @brief Sets the data field header using the provided PusB header.
-    //  *
-    //  * This function sets the data field header of the packet using a `PusB`
-    //  * header object.
-    //  *
-    //  * @param header The `PusB` header object.
-    //  * @return none.
-    //  */
-    // void setDataFieldHeader(const PusB &header);
-    //
-    // /**
-    //  * @brief Sets the data field header using the provided PusC header.
-    //  *
-    //  * This function sets the data field header of the packet using a `PusC`
-    //  * header object.
-    //  *
-    //  * @param header The `PusC` header object.
-    //  * @return none.
-    //  */
-    // void setDataFieldHeader(const PusC &header);
 
     /**
      * @brief Sets the data field header for the packet using a vector of bytes.
@@ -319,10 +297,10 @@ namespace CCSDS {
     bool getDataFieldHeaderFlag();
 
     /** @brief returns the CCSDS packet's DataField. */
-    CCSDS::DataField getDataField();
+    DataField getDataField();
 
     /** @brief returns the CCSDS packet's Primary Header. */
-    CCSDS::Header getPrimaryHeader();
+    Header getPrimaryHeader();
 
     /**
      * @brief Updates Primary headers data field size.

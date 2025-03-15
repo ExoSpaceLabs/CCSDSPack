@@ -10,12 +10,10 @@
 namespace CCSDS {
 class SecondaryHeaderFactory {
 public:
-  using CreatorFunc = std::function<std::shared_ptr<SecondaryHeaderAbstract>()>;
 
-  static SecondaryHeaderFactory& instance() {
-    static SecondaryHeaderFactory factory;
-    return factory;
-  }
+  SecondaryHeaderFactory() = default;
+
+  using CreatorFunc = std::function<std::shared_ptr<SecondaryHeaderAbstract>()>;
 
   // Register a new header type with its creation function
   void registerType(std::shared_ptr<SecondaryHeaderAbstract> header) {
@@ -24,16 +22,14 @@ public:
 
   // Create an instance of a registered header type
   std::shared_ptr<SecondaryHeaderAbstract> create(const std::string& type) {
-    auto it = m_creators.find(type);
-    if (it != m_creators.end()) {
+    if (const auto it = m_creators.find(type); it != m_creators.end()) {
       return it->second; // Call the stored creation function
     }
     return nullptr; // Return nullptr if type not found
   }
 
   bool typeIsRegistered(const std::string& type) {
-    auto it = m_creators.find(type);
-    if (it != m_creators.end()) {
+    if (const auto it = m_creators.find(type); it != m_creators.end()) {
       return true; // return true if found
     }
     return false; // Return false if type not found
@@ -41,9 +37,6 @@ public:
 
 private:
   std::unordered_map<std::string, std::shared_ptr<SecondaryHeaderAbstract> > m_creators;
-
-  // Private constructor to enforce singleton pattern
-  SecondaryHeaderFactory() = default;
 };
 }
 

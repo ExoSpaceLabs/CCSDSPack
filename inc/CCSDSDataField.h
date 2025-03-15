@@ -7,6 +7,7 @@
 #include <memory>
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "CCSDSSecondaryHeaderFactory.h"
+#include "PusServices.h"
 
 namespace CCSDS {
   /**
@@ -24,7 +25,12 @@ namespace CCSDS {
    */
   class DataField {
   public:
-    DataField() = default;
+    DataField() {
+      m_SecondaryHeaderFactory.registerType(std::make_shared<DataOnlyHeader>());
+      m_SecondaryHeaderFactory.registerType(std::make_shared<PusA>());
+      m_SecondaryHeaderFactory.registerType(std::make_shared<PusB>());
+      m_SecondaryHeaderFactory.registerType(std::make_shared<PusC>());
+    };
 
     ~DataField() = default;
 
@@ -127,21 +133,7 @@ namespace CCSDS {
      */
     void setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
 
-    // /**
-    //  * @brief Sets the secondary header for the data field using a PUS-B header.
-    //  *
-    //  * @param header A PusB object containing the header data.
-    //  * @return None.
-    //  */
-    // void setDataFieldHeader(const PusB &header);
-    //
-    // /**
-    //  * @brief Sets the secondary header for the data field using a PUS-C header.
-    //  *
-    //  * @param header A PusC object containing the header data.
-    //  * @return None.
-    //  */
-    // void setDataFieldHeader(const PusC &header);
+    SecondaryHeaderFactory& getDataFieldHeaderFacroty() {return m_SecondaryHeaderFactory;};
 
     /**
      * @brief Sets the maximum data packet size for the CCSDS DataField.
@@ -248,6 +240,7 @@ namespace CCSDS {
 
   private:
     std::shared_ptr<SecondaryHeaderAbstract> m_SecondaryHeader{};
+    SecondaryHeaderFactory m_SecondaryHeaderFactory;
     std::vector<uint8_t> m_applicationData{};
     std::string m_dataFieldHeaderType{};
     uint16_t m_dataPacketSize{2024};

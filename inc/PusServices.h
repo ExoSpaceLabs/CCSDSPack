@@ -57,7 +57,6 @@
     uint16_t m_dataLength{}; // Data Length	        16	        Length of the telemetry data in bytes
     // Telemetry Data	    Variable    (based on Data Length)	The actual telemetry data (variable length)
     const std::string m_type = "PusA";// Static registration (automatically called when the program starts)
-    static bool registered;
     const uint16_t m_size = 6; // bytes
   };
 
@@ -117,7 +116,6 @@
     uint16_t m_dataLength{}; // Data Length	        16	        Length of the event data in bytes
     // Event Data	        Variable    (based on Data Length)	The actual event data (variable length)
     const std::string m_type = "PusB";// Static registration (automatically called when the program starts)
-    static bool registered;
     const uint16_t m_size = 8; // bytes
   };
 
@@ -178,7 +176,6 @@
     uint16_t m_dataLength{}; // Data Length	        16	        Length of the time data in bytes
     // Time Data	        Variable    (based on Data Length)	The actual time-related data (variable length)
     const std::string m_type = "PusC";// Static registration (automatically called when the program starts)
-    static bool registered;
     uint16_t m_size = 8; // bytes
   };
 

@@ -1,4 +1,4 @@
-#include "CCSDSData.h"
+#include "CCSDSDataField.h"
 
 #include <CCSDSSecondaryHeaderFactory.h>
 
@@ -49,7 +49,7 @@ std::shared_ptr<CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHe
 
 void CCSDS::DataField::update() {
   if (!m_dataFieldHeaderUpdated && m_enableDataFieldUpdate) {
-    if (SecondaryHeaderFactory::instance().typeIsRegistered(m_dataFieldHeaderType) && m_dataFieldHeaderType != "DataOnlyHeader") {
+    if (m_SecondaryHeaderFactory.typeIsRegistered(m_dataFieldHeaderType) && m_dataFieldHeaderType != "DataOnlyHeader") {
       m_SecondaryHeader->setDataLength(m_applicationData.size());;
     }
     m_dataFieldHeaderUpdated = true;
@@ -94,10 +94,10 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, con
                                                        const std::string &pType) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
 
-  RET_IF_ERR_MSG(!SecondaryHeaderFactory::instance().typeIsRegistered(pType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+  RET_IF_ERR_MSG(!m_SecondaryHeaderFactory.typeIsRegistered(pType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header type is not registered.");
 
-  if (SecondaryHeaderFactory::instance().typeIsRegistered(pType)) {
+  if (m_SecondaryHeaderFactory.typeIsRegistered(pType)) {
     std::vector<uint8_t> data;
     data.assign(pData, pData + sizeData);
     FORWARD_RESULT(setDataFieldHeader(data,pType));
@@ -113,10 +113,10 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
                                                        const std::string &pType) {
   RET_IF_ERR_MSG(data.size() > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
-  RET_IF_ERR_MSG(!SecondaryHeaderFactory::instance().typeIsRegistered(pType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+  RET_IF_ERR_MSG(!m_SecondaryHeaderFactory.typeIsRegistered(pType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Secondary header type is not registered.");
 
-  auto header = SecondaryHeaderFactory::instance().create(pType);
+  auto header = m_SecondaryHeaderFactory.create(pType);
 
   RET_IF_ERR_MSG(data.size() != header->getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Secondary header data size mismatch for type: " + pType);
@@ -162,8 +162,3 @@ std::vector<uint8_t> CCSDS::DataField::getDataFieldHeaderBytes() {
 
 
 
-// Register class in factory (auto-register on startup)
-bool CCSDS::DataOnlyHeader::registered = [] {
-  SecondaryHeaderFactory::instance().registerType(std::make_unique<DataOnlyHeader>());
-  return true;
-}();

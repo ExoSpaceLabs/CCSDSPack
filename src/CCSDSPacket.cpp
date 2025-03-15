@@ -1,5 +1,5 @@
 #include "CCSDSPacket.h"
-#include "CCSDSData.h"
+#include "CCSDSDataField.h"
 #include "CCSDSUtils.h"
 
 void CCSDS::Packet::update() {
@@ -109,10 +109,10 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
                  "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
   RET_IF_ERR_MSG(headerType == "DataOnlyHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, DataOnlyHeader is not of defined size");
-  RET_IF_ERR_MSG(!SecondaryHeaderFactory::instance().typeIsRegistered(headerType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+  RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFacroty().typeIsRegistered(headerType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, Unregistered Secondary header: " + headerType);
 
-  auto secondaryHeader = SecondaryHeaderFactory::instance().create(headerType);
+  auto secondaryHeader = m_dataField.getDataFieldHeaderFacroty().create(headerType);
   const auto headerDataSizeBytes = secondaryHeader->getSize();
 
   std::vector<uint8_t> dataFieldHeaderVector;

@@ -81,24 +81,3 @@ std::vector<uint8_t> PusC::serialize() const {
 
   return data;
 }
-
-
-// Register class in factory (auto-register on startup)
-bool PusA::registered = [] {
-
-  CCSDS::SecondaryHeaderFactory::instance().registerType(std::make_unique<PusA>());
-  return true;
-}();
-
-// Register class in factory (auto-register on startup)
-bool PusB::registered = [] {
-  CCSDS::SecondaryHeaderFactory::instance().registerType(std::make_unique<PusB>());
-  return true;
-}();
-
-// Register class in factory (auto-register on startup)
-bool PusC::registered = [] {
-  CCSDS::SecondaryHeaderFactory::instance().registerType(std::make_unique<PusC>());
-  return true;
-}();
-
