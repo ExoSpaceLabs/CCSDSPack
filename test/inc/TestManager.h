@@ -1,5 +1,5 @@
-#ifndef TESTMANAGER_H
-#define TESTMANAGER_H
+#ifndef TEST_MANAGER_H
+#define TEST_MANAGER_H
 
 #include <string>
 #include <chrono>
@@ -141,4 +141,4 @@ return false;                                  \
 }                                              \
 } while (0)
 
-#endif // TESTMANAGER_H
+#endif // TEST_MANAGER_H
