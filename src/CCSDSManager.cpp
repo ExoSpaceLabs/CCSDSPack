@@ -114,7 +114,7 @@ CCSDS::ResultBool CCSDS::Manager::addPacket(Packet packet) {
 
   if (m_validateEnable && !m_updateEnable) {
     if (!m_templateIsSet) {
-      m_validator.configure(true, false);
+      m_validator.configure(true, true, false);
     }
     RET_IF_ERR_MSG(m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE, "packet is not valid");
   }

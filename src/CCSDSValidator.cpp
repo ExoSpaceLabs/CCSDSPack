@@ -1,7 +1,7 @@
 #include "CCSDSValidator.h"
 #include <CCSDSUtils.h>
 
-void CCSDS::Validator::configure(const bool validatePacketCoherence, const bool validateAgainstTemplate) {
+void CCSDS::Validator::configure(const bool validatePacketCoherence, bool validateSequenceCount, const bool validateAgainstTemplate) {
   m_validatePacketCoherence = validatePacketCoherence;
   m_validateAgainstTemplate = validateAgainstTemplate;
 }
@@ -9,7 +9,7 @@ void CCSDS::Validator::configure(const bool validatePacketCoherence, const bool 
 bool CCSDS::Validator::validate(const Packet &packet) {
   m_report.clear();
   m_report.reserve(m_reportSize);
-  m_report.assign({true, true, true, true, true});
+  m_report.assign({true, true, true, true, true, true});
   bool result{true};
   auto toValidate = packet;
   toValidate.setUpdatePacketEnable(false);
@@ -30,22 +30,31 @@ bool CCSDS::Validator::validate(const Packet &packet) {
       m_report[2] = toValidateHeader.getSequenceCount() == 0;
     } else {
       m_report[2] = toValidateHeader.getSequenceCount() > 0;
+      if (m_validateSegmentedCount) {
+        if (toValidateHeader.getSequenceFlags() == FIRST_SEGMENT) {
+          m_report[3] = toValidateHeader.getSequenceCount() == 1;
+        }else {
+          m_report[3] = toValidateHeader.getSequenceCount() == m_sequenceCounter;
+        }
+        m_sequenceCounter++;
+      }
     }
     result &= m_report[2];
+    result &= m_report[3];
   }
 
   if (m_validateAgainstTemplate) {
     m_templatePacket.setUpdatePacketEnable(false);
     auto templateHeader = m_templatePacket.getPrimaryHeader();
     const auto templateHeaderData = templateHeader.serialize();
-    m_report[3] = templateHeaderData[0] == toValidateHeaderData[0] && templateHeaderData[1] == toValidateHeaderData[1];
-    result &= m_report[3];
-    if (templateHeader.getSequenceFlags() == UNSEGMENTED) {
-      m_report[4] = toValidateHeader.getSequenceFlags() == UNSEGMENTED;
-    } else {
-      m_report[4] = toValidateHeader.getSequenceFlags() != UNSEGMENTED;
-    }
+    m_report[4] = templateHeaderData[0] == toValidateHeaderData[0] && templateHeaderData[1] == toValidateHeaderData[1];
     result &= m_report[4];
+    if (templateHeader.getSequenceFlags() == UNSEGMENTED) {
+      m_report[5] = toValidateHeader.getSequenceFlags() == UNSEGMENTED;
+    } else {
+      m_report[5] = toValidateHeader.getSequenceFlags() != UNSEGMENTED;
+    }
+    result &= m_report[5];
   }
   return result;
 }

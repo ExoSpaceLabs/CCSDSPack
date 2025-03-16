@@ -35,9 +35,10 @@ namespace CCSDS {
     /**
      * @brief Configures validation options.
      * @param validatePacketCoherence Enables/disables packet coherence validation.
+     * @param validateSequenceCount
      * @param validateAgainstTemplate Enables/disables comparison against the template.
      */
-    void configure(bool validatePacketCoherence, bool validateAgainstTemplate);
+    void configure(bool validatePacketCoherence, bool validateSequenceCount, bool validateAgainstTemplate);
 
     /**
      * @brief Validates a given packet.
@@ -53,9 +54,10 @@ namespace CCSDS {
      *     - index [0]: Data Field Length Header declared equals actual data field length
      *     - index [1]: CRC15 value declared equals calculated CRC16 of the data field
      *     - index [2]: Sequence Control flags and count coherence
+     *     - index [3]: Sequence Control count coherence (incremental start from 1)
      * - Compare Against Template:
-     *     - index [3]: Identification and Version in packet matches template
-     *     - index [4]: Template Sequence Control match
+     *     - index [4]: Identification and Version in packet matches template
+     *     - index [5]: Template Sequence Control match
      *
      * @return A vector of boolean results for each performed check.
      */
@@ -65,8 +67,10 @@ namespace CCSDS {
     Packet m_templatePacket;               ///< Template packet used for validation.
     bool m_validatePacketCoherence{true};  ///< Whether to validate packet length and CRC (default is true).
     bool m_validateAgainstTemplate{false}; ///< Whether to validate against the template packet (default is false).
+    bool m_validateSegmentedCount{true};  ///< Whether to validate the count of segmented packets.
+    uint16_t m_sequenceCounter{1};         ///< Counter for segmented Packets
     std::vector<bool> m_report{};          ///< List of boolean results representing performed checks.
-    size_t m_reportSize{5};                ///< Expected size of the validation report.
+    size_t m_reportSize{6};                ///< Expected size of the validation report.
   };
 } // namespace CCSDS
 
