@@ -2,10 +2,13 @@
 #include <utility>
 #include "CCSDSUtils.h"
 
-void CCSDS::Manager::setPacketTemplate(Packet packet) {
+CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
+  RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::SOMETHING_WENT_WRONG, "Cannot set Template as it is already set, please clear Manager first");
   m_templatePacket = std::move(packet);
   m_validator.setTemplatePacket(m_templatePacket);
   m_validateEnable = true;
+  m_templateIsSet = true;
+  return true;
 }
 
 void CCSDS::Manager::setDatFieldSize(const uint16_t size) {
@@ -14,6 +17,7 @@ void CCSDS::Manager::setDatFieldSize(const uint16_t size) {
 
 CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t> &data) {
   RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA, "Cannot set Application data, Provided data is empty");
+  RET_IF_ERR_MSG(!m_templateIsSet, ErrorCode::INVALID_HEADER_DATA, "Cannot set Application data, No template has been set");
 
   const auto maxBytesPerPacket = m_templatePacket.getDataFieldMaximumSize();
   const auto dataBytesSize = data.size();

@@ -39,7 +39,7 @@ namespace CCSDS {
      *
      * @param packet The new packet template to use.
      */
-    void setPacketTemplate( Packet packet );
+    [[nodiscard]] ResultBool setPacketTemplate(Packet packet);
 
     /**
      * @brief Sets the size of the data field.
@@ -173,6 +173,19 @@ namespace CCSDS {
      * @brief Clears the packets and sets the counter to 0.
      */
     void clearPackets();
+
+    /**
+     * @brief Returns a reverence to the manager's Validator
+     *
+     * @note changing settings of this instance will affect the manager
+     */
+    Validator& getValidatorReference() { return m_validator; }
+    /**
+     * @brief Returns a reference to the packets vector
+     *
+     * @note changing the data will affect the packets stored in the manager.
+     */
+    std::vector<Packet>& getPacketsReference() { return m_packets; }
 
   private:
     Packet m_templatePacket{};         ///< The template packet used for generating new packets.

@@ -1,4 +1,3 @@
-#include <CCSDSPacket.h>
 
 #include "tests.h"
 #include <iostream>
