@@ -128,13 +128,19 @@ namespace CCSDS {
      */
     std::vector<Packet> getPackets();
 
-
     /**
      * @brief Adds a new packet to the list.
      *
      * @param packet The new packet to be added.
      */
     [[nodiscard]] ResultBool addPacket(Packet packet);
+
+    /**
+     * @brief Adds a new packet to the list.
+     *
+     * @param packetBuffer The new packet to be added in the form of a buffer.
+     */
+    [[nodiscard]] ResultBool addPacketFromBuffer(const std::vector<uint8_t>& packetBuffer);
 
   private:
     Packet m_templatePacket{};         ///< The template packet used for generating new packets.

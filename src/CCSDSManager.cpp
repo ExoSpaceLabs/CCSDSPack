@@ -88,7 +88,6 @@ CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const uint16_t index)
 
 CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() const {
   RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA, "Cannot get Application data, no packets have been set.");
-  // todo check if valid?
   std::vector<uint8_t> data;
   for (auto packet: m_packets) {
     auto applicationData = packet.getApplicationDataBytes();
@@ -121,5 +120,12 @@ CCSDS::ResultBool CCSDS::Manager::addPacket(Packet packet) {
   }
   packet.setUpdatePacketEnable(m_updateEnable);
   m_packets.push_back(std::move(packet));
+  return true;
+}
+
+CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>& packetBuffer) {
+  Packet packet;
+  FORWARD_RESULT(packet.deserialize(packetBuffer));
+  FORWARD_RESULT(addPacket(packet));
   return true;
 }
