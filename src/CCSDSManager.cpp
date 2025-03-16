@@ -70,7 +70,7 @@ void CCSDS::Manager::setAutoValidateEnable(const bool enable) {
 
 CCSDS::ResultBuffer CCSDS::Manager::getPacketTemplate() {
   auto data = m_templatePacket.serialize();
-  RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA, "Cannot get Packet template data, data is empty");
+  RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA, "Cannot get Packet template data, data is empty (impossible)"); // possibly redundant.
   return data;
 }
 
@@ -84,6 +84,15 @@ CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const uint16_t index)
                    errorMessage);
   }
   return m_packets[index].serialize();
+}
+
+std::vector<uint8_t> CCSDS::Manager::getPacketsBuffer() const {
+  std::vector<uint8_t> buffer;
+  for (auto packet : m_packets) {
+    std::vector<uint8_t> packetBuffer = packet.serialize();
+    buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());
+  }
+  return buffer;
 }
 
 CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() const {

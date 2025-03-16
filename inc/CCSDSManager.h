@@ -85,8 +85,16 @@ namespace CCSDS {
      */
     ResultBuffer getPacketBufferAtIndex( uint16_t index );
 
+
     /**
-     * @brief Retrieves the application data from the current packet.
+     * @brief Retrieves a buffer containing all the stored packets sequentially.
+     *
+     * @return A vector of bytes containing the packets data.
+     */
+    std::vector<uint8_t> getPacketsBuffer() const;
+
+    /**
+     * @brief Retrieves the application data from the packets.
      *
      * @return A ResultBuffer containing the application data.
      */

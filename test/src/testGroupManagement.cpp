@@ -222,40 +222,56 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     return std::equal(expected.begin(), expected.end(), ret.begin()) && localPackets.size() == 3;
   });
 
-  tester->unitTest("Manager shall clear the managed packets.", [] {
+  tester->unitTest("Manager shall return a series of segmented packets to a buffer.", [] {
     // Note: Max data field size is set to 5 bytes, and header is already set.
     CCSDS::Manager manager{};
-    const std::vector<uint8_t> buffer{
+    const std::vector<uint8_t> expected{
           0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
           0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
           0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
         };
 
-    TEST_VOID(manager.load(buffer));
-    manager.clearPackets();
-    const auto ret = manager.getTotalPackets();
-    const auto packets = manager.getPackets();
+    TEST_VOID(manager.load(expected));
 
-    return ret == 0 && packets.empty();
+    auto ret = manager.getPacketsBuffer();
+    return std::equal(expected.begin(), expected.end(), ret.begin());
   });
 
-  tester->unitTest("Manager shall clear everything.", [] {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
+  {
     CCSDS::Manager manager{};
     const std::vector<uint8_t> buffer{
-          0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-          0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-          0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-        };
+      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
+    };
+    ASSERT_SUCCESS(manager.load(buffer));
 
-    TEST_VOID(manager.load(buffer));
-    manager.clear();
-    manager.setAutoUpdateEnable(false);
-    const auto packets = manager.getPackets();
-    std::vector<uint8_t> ret;
-    std::vector<uint8_t> expected{0x00, 0x00, 0xc0, 0x00, 0x00 , 0x00, 0xff, 0xff};
-    TEST_RET(ret, manager.getPacketTemplate());
+    tester->unitTest("Manager shall clear the managed packets.", [&manager] {
+      manager.clearPackets();
+      const auto ret = manager.getTotalPackets();
+      const auto packets = manager.getPackets();
+      return ret == 0 && packets.empty();
+    });
+  }
 
-    return packets.empty() && std::equal(expected.begin(), expected.end(), ret.begin());
-  });
+  {
+    CCSDS::Manager manager{};
+    const std::vector<uint8_t> buffer{
+      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
+    };
+    ASSERT_SUCCESS(manager.load(buffer));
+
+    tester->unitTest("Manager shall clear everything.", [&manager] {
+      manager.clear();
+      manager.setAutoUpdateEnable(false);
+      const auto packets = manager.getPackets();
+      std::vector<uint8_t> ret;
+      std::vector<uint8_t> expected{0x00, 0x00, 0xc0, 0x00, 0x00 , 0x00, 0xff, 0xff};
+      TEST_RET(ret, manager.getPacketTemplate());
+
+      return packets.empty() && std::equal(expected.begin(), expected.end(), ret.begin());
+    });
+  }
 }
