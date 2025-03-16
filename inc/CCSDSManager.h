@@ -142,6 +142,30 @@ namespace CCSDS {
      */
     [[nodiscard]] ResultBool addPacketFromBuffer(const std::vector<uint8_t>& packetBuffer);
 
+    /**
+     * @brief Load a vector of packets.
+     *
+     * @param packets The packets
+     */
+    [[nodiscard]] ResultBool load(const std::vector<Packet>& packets);
+
+    /**
+     * @brief Load a packet or a series of packets from a buffer
+     *
+     * @param packetsBuffer The buffer holding packet data.
+     */
+    [[nodiscard]] ResultBool load(const std::vector<uint8_t>& packetsBuffer);
+
+    /**
+     * @brief Clears the manager, removes all packets and template.
+     */
+    void clear();
+
+    /**
+     * @brief Clears the packets and sets the counter to 0.
+     */
+    void clearPackets();
+
   private:
     Packet m_templatePacket{};         ///< The template packet used for generating new packets.
     bool m_templateIsSet  { false };   ///< Boolean to indicate if Template has been set or not.

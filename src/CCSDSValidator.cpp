@@ -58,3 +58,10 @@ bool CCSDS::Validator::validate(const Packet &packet) {
   }
   return result;
 }
+
+void CCSDS::Validator::clear() {
+  m_sequenceCounter = 1;
+  m_report.clear();
+  m_templatePacket = {};
+  m_templatePacket.setUpdatePacketEnable(false);
+}

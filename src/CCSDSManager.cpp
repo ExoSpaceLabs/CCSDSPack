@@ -129,3 +129,44 @@ CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>
   FORWARD_RESULT(addPacket(packet));
   return true;
 }
+
+
+[[nodiscard]] CCSDS::ResultBool CCSDS::Manager::load(const std::vector<Packet>& packets) {
+
+  for (const auto& packet: packets) {
+    FORWARD_RESULT(addPacket(packet));
+  }
+  return true;
+}
+
+[[nodiscard]] CCSDS::ResultBool CCSDS::Manager::load(const std::vector<uint8_t>& packetsBuffer) {
+  RET_IF_ERR_MSG(packetsBuffer.size() < 8, ErrorCode::INVALID_DATA, "invalid packet buffer size");
+  int offset{0};
+  while (offset < packetsBuffer.size()) {
+    std::vector<uint8_t> headerData;
+    headerData.clear();
+    copy_n(packetsBuffer.begin() + offset, 6, std::back_inserter(headerData));
+    Header header;
+    FORWARD_RESULT( header.deserialize(headerData));
+
+    const uint16_t packetSize = header.getDataLength() + 8;
+    std::vector<uint8_t>packetData;
+    packetData.clear();
+    copy_n(packetsBuffer.begin() + offset, packetSize, std::back_inserter(packetData));
+    FORWARD_RESULT(addPacketFromBuffer(packetData));
+    offset += packetSize;
+  }
+  return true;
+}
+
+void CCSDS::Manager::clear() {
+  clearPackets();
+  m_templateIsSet = false;
+  m_templatePacket= {};
+}
+
+void CCSDS::Manager::clearPackets() {
+  m_packets.clear();
+  m_sequenceCount = 0;
+  m_validator.clear();
+}

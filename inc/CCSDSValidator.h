@@ -63,6 +63,12 @@ namespace CCSDS {
      */
     [[nodiscard]] std::vector<bool> getReport() const { return m_report; }
 
+    /**
+     * @brief Clears the validator, resets counter
+     *
+     */
+    void clear();
+
   private:
     Packet m_templatePacket;               ///< Template packet used for validation.
     bool m_validatePacketCoherence{true};  ///< Whether to validate packet length and CRC (default is true).

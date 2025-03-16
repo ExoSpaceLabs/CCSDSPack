@@ -7,7 +7,7 @@
 void testGroupValidator(TestManager *tester, const std::string &description) {
   std::cout << "\n  testGroupValidator: " << description << std::endl;
 
-  tester->unitTest("Validator UNSEGMENTED Packet Coherence shall pass.", []() {
+  tester->unitTest("Validator UNSEGMENTED Packet coherence shall pass.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
     const std::vector<uint8_t> packetData{
@@ -18,7 +18,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return validator.validate(packet);
   });
 
-  tester->unitTest("Validator UNSEGMENTED Packet Coherence shall fail.", []() {
+  tester->unitTest("Validator UNSEGMENTED Packet coherence shall fail.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
     const std::vector<uint8_t> packetData{
@@ -31,7 +31,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return !validator.validate(packet);
   });
 
-  tester->unitTest("Validator SEGMENTED Packet Coherence shall pass.", []() {
+  tester->unitTest("Validator SEGMENTED Packet coherence shall pass.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
     const std::vector<uint8_t> packetData{
@@ -44,7 +44,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return validator.validate(packet);
   });
 
-  tester->unitTest("Validator SEGMENTED Packet Coherence shall fail.", []() {
+  tester->unitTest("Validator SEGMENTED Packet coherence shall fail.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
     const std::vector<uint8_t> packetData{
@@ -159,7 +159,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return !validator.validate(packet);
   });
 
-  tester->unitTest("Validator UNSEGMENTED Packet Coherence & against template shall pass.", []() {
+  tester->unitTest("Validator UNSEGMENTED Packet coherence & against template shall pass.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, true);
 
@@ -179,7 +179,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
   });
 
 
-  tester->unitTest("Validator UNSEGMENTED Packet Coherence & against template shall fail.", []() {
+  tester->unitTest("Validator UNSEGMENTED Packet coherence & against template shall fail.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, true);
 
@@ -198,7 +198,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return !validator.validate(packet);
   });
 
-  tester->unitTest("Validator SEGMENTED Packet Coherence & against template shall pass.", []() {
+  tester->unitTest("Validator SEGMENTED Packet coherence & against template shall pass.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, true);
 
@@ -217,7 +217,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return validator.validate(packet);
   });
 
-  tester->unitTest("Validator SEGMENTED Packet Coherence & against template shall fail.", []() {
+  tester->unitTest("Validator SEGMENTED Packet coherence & against template shall fail.", []() {
     CCSDS::Validator validator;
     validator.configure(true, true, true);
 
@@ -234,6 +234,42 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.deserialize(packetData));
     return !validator.validate(packet);
   });
+
+  tester->unitTest("Validator SEGMENTED Packets sequence shall pass.", []() {
+  CCSDS::Validator validator;
+  validator.configure(true, true, true);
+
+  CCSDS::Packet templatePacket;
+  templatePacket.setUpdatePacketEnable(false);
+  TEST_VOID(templatePacket.setPrimaryHeader({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
+  validator.setTemplatePacket(templatePacket);
+
+  CCSDS::Packet packet1, packet2;
+  packet1.setUpdatePacketEnable(false);
+    TEST_VOID(packet1.deserialize({0xF7, 0xFF, 0x40, 0x01, 0x00, 0x0c, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
+      0xd9, 0x1e}));
+    TEST_VOID(packet2.deserialize({0xF7, 0xFF, 0x00, 0x02, 0x00, 0x0c, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
+      0xd9, 0x1e}));
+  return validator.validate(packet1) && validator.validate(packet2);
+});
+
+  tester->unitTest("Validator SEGMENTED Packets sequence shall fail.", []() {
+  CCSDS::Validator validator;
+  validator.configure(true, true, true);
+
+  CCSDS::Packet templatePacket;
+  templatePacket.setUpdatePacketEnable(false);
+  TEST_VOID(templatePacket.setPrimaryHeader({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
+  validator.setTemplatePacket(templatePacket);
+
+  CCSDS::Packet packet1, packet2;
+  packet1.setUpdatePacketEnable(false);
+    TEST_VOID(packet1.deserialize({0xF7, 0xFF, 0x40, 0x01, 0x00, 0x0c, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
+      0xd9, 0x1e}));
+    TEST_VOID(packet2.deserialize({0xF7, 0xFF, 0x00, 0x03, 0x00, 0x0c, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
+      0xd9, 0x1e}));
+  return validator.validate(packet1) && !validator.validate(packet2);
+});
 
   tester->unitTest("Validator report, shall pass.", []() {
     CCSDS::Validator validator;
@@ -298,7 +334,6 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     auto report = validator.getReport();
     return std::equal(expected.begin(), expected.end(), report.begin());;
   });
-
 
   tester->unitTest("Validator report, shall fail on sequence control.", []() {
     CCSDS::Validator validator;
@@ -405,4 +440,28 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     auto report = validator.getReport();
     return std::equal(expected.begin(), expected.end(), report.begin());;
   });
+
+
+  tester->unitTest("Validator shall clear its variables.", []() {
+    CCSDS::Validator validator;
+    validator.configure(true, true, true);
+
+    CCSDS::Packet templatePacket;
+    templatePacket.setUpdatePacketEnable(false);
+    TEST_VOID(templatePacket.setPrimaryHeader({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
+    validator.setTemplatePacket(templatePacket);
+
+    CCSDS::Packet packet1, packet2;
+    packet1.setUpdatePacketEnable(false);
+    packet2.setUpdatePacketEnable(false);
+    TEST_VOID(packet1.deserialize({0xF7, 0xFF, 0x40, 0x01, 0x00, 0x0c, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
+      0xd9, 0x1e}));
+    TEST_VOID(packet2.deserialize({0xF7, 0xFF, 0x00, 0x02, 0x00, 0x0c, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
+      0xd9, 0x1e}));
+    validator.validate(packet1);
+    validator.validate(packet2);
+    validator.clear();
+    validator.setTemplatePacket(templatePacket);
+  return validator.validate(packet1) && validator.validate(packet2);
+});
 }
