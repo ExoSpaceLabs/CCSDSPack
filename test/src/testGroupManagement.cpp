@@ -302,7 +302,6 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
         auto retPackets = manager1.getPacketsBuffer();
         return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
       });
-
     }
 
     tester->unitTest("Manager shall load template from binary file, template shall be as expected.", [] {
@@ -324,5 +323,39 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       TEST_RET(templatePacket, manager.getPacketTemplate());
       return std::equal(expected.begin(), expected.end(), templatePacket.begin());
     });
+
+    {
+      CCSDS::Manager manager1{};
+      const std::vector<uint8_t> expected{
+        0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+        0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+        0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
+      };
+      ASSERT_SUCCESS(manager1.load(expected));
+
+      tester->unitTest("Manager shall insert the sync pattern at the start of each packet.", [&manager1] {
+        bool ret;
+        manager1.enableSyncPattern(true);
+        TEST_RET(ret, manager1.write("test_resources/myPacketsSync.bin"));
+        return ret;
+      });
+    }
+
+    {
+      CCSDS::Manager manager1{};
+      const std::vector<uint8_t> expected{
+        0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+        0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+        0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
+      };
+      tester->unitTest("Manager shall read the packets with sync pattern and remove it.", [&manager1, &expected] {
+        bool ret;
+        manager1.enableSyncPattern(true);
+        TEST_RET(ret, manager1.read("test_resources/myPacketsSync.bin"));
+        manager1.enableSyncPattern(false);
+        auto retPackets = manager1.getPacketsBuffer();
+        return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
+      });
+    }
   }
 }

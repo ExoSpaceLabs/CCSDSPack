@@ -1,6 +1,12 @@
 #include "CCSDSManager.h"
+
+#include <random>
 #include <utility>
 #include "CCSDSUtils.h"
+
+void CCSDS::Manager::setSyncPattern(uint32_t syncPattern) { m_syncPattern = syncPattern; }
+
+void CCSDS::Manager::enableSyncPattern(const bool enable) { m_syncPattEnable = enable; }
 
 CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::SOMETHING_WENT_WRONG, "Cannot set Template as it is already set, please clear Manager first");
@@ -93,6 +99,12 @@ CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const uint16_t index)
 std::vector<uint8_t> CCSDS::Manager::getPacketsBuffer() const {
   std::vector<uint8_t> buffer;
   for (auto packet : m_packets) {
+    if (m_syncPattEnable) {
+      buffer.push_back(m_syncPattern >> 24 & 0xff);
+      buffer.push_back(m_syncPattern >> 16 & 0xff);
+      buffer.push_back(m_syncPattern >> 8 & 0xff);
+      buffer.push_back(m_syncPattern & 0xff);
+    }
     std::vector<uint8_t> packetBuffer = packet.serialize();
     buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());
   }
@@ -157,6 +169,14 @@ CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>
   int offset{0};
   while (offset < packetsBuffer.size()) {
     std::vector<uint8_t> headerData;
+    if (m_syncPattEnable) {
+      const uint32_t value = (static_cast<uint32_t>(packetsBuffer[offset]) << 24) |
+                             (static_cast<uint32_t>(packetsBuffer[offset+1]) << 16) |
+                             (static_cast<uint32_t>(packetsBuffer[offset+2]) << 8)  |
+                             (static_cast<uint32_t>(packetsBuffer[offset+3]));
+      RET_IF_ERR_MSG(value != m_syncPattern, ErrorCode::INVALID_DATA, "Sync Pattern mismatch.");
+      offset += 4;
+    }
     headerData.clear();
     copy_n(packetsBuffer.begin() + offset, 6, std::back_inserter(headerData));
     Header header;

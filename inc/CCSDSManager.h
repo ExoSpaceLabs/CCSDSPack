@@ -35,6 +35,21 @@ namespace CCSDS {
     }
 
     /**
+     * set sync pattern that should indicate the start of a CCSDS packet. insertion
+     * is disabled by default. use enableSyncPattern to enable.
+     *
+     * @param syncPattern uint32_t (default 0x1ACFFC1D)
+     */
+    void setSyncPattern(uint32_t syncPattern);
+
+    /**
+     * enable sync pattern utilization both in serialization, deserialization, read and write.
+     *
+     * @param enable bool (default false)
+     */
+    void enableSyncPattern(bool enable);
+
+    /**
      * @brief Sets a new packet template.
      *
      * @param packet The new packet template to use.
@@ -214,10 +229,12 @@ namespace CCSDS {
     bool m_templateIsSet  { false };   ///< Boolean to indicate if Template has been set or not.
     bool m_updateEnable   {  true };   ///< bool indicating whether automatic updates are enabled (default: true).
     bool m_validateEnable {  true };   ///< bool indicating whether automatic validation is enabled (default: true).
+    bool m_syncPattEnable { false };   ///< bool indicating whether automatic sync pattern insertion is enabled (default: false).
     std::vector<Packet> m_packets;     ///< Collection of stored packets.
     uint16_t m_sequenceCount{ 0 };
 
     Validator m_validator{};
+    uint32_t m_syncPattern{0x1ACFFC1D};
   };
 } // namespace CCSDS
 
