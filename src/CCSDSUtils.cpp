@@ -183,6 +183,8 @@ CCSDS::ResultBool Config::load(const std::string &filename) {
 
   std::string line;
   while (std::getline(file, line)) {
+    if (line.empty() || line.front() == '#') continue;
+
     auto [key, type, valueStr] = parseLine(line);
     RET_IF_ERR_MSG(key.empty() || type.empty(),CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Failed to parse configuration file");
     ConfigValue value;
