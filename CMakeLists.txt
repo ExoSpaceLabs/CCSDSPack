@@ -29,6 +29,7 @@ set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/inc")
 set(TEST_SOURCE_DIR "${CMAKE_SOURCE_DIR}/test/src")
 set(TEST_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/test/inc")
+set(TEST_RESOURCE_DIR "${CMAKE_SOURCE_DIR}/test/resources")
 
 # Set output directories for different OSes
 if (WIN32)
@@ -63,6 +64,8 @@ set_target_properties(${LIB_VERSIONED} PROPERTIES
 # Collect all source files in the test src folder for the test executable
 file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 
+# Collect all test resources from the test/resources directory
+file(GLOB TEST_RESOURCES "${TEST_RESOURCE_DIR}/*")
 
 # Create the test executable target
 add_executable(${TESTER_EXEC} ${TEST_SOURCES})
@@ -77,3 +80,10 @@ target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_VERSIONED})
 set_target_properties(${TESTER_EXEC} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
+
+# copy resources to bin directory.
+
+# Install resources to the bin directory
+file(COPY ${TEST_RESOURCES}
+        DESTINATION ${BINARY_OUTPUT_DIR})
+

@@ -45,5 +45,5 @@ jobs:
       - name: Run tests
         run: |
           echo "Running CCSDSPack_tester.exe from build/bin/"
-          ./build/bin/CCSDSPack_tester.exe
+          cd build/bin && ./CCSDSPack_tester.exe
         shell: bash

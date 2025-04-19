@@ -35,5 +35,6 @@ jobs:
           ls -l bin/
 
       - name: Run tests Linux
-        run: ./bin/CCSDSPack_tester     
+        run: |
+          cd bin && ./CCSDSPack_tester     
         
