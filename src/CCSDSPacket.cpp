@@ -15,7 +15,7 @@ void CCSDS::Packet::update() {
     } else {
       m_primaryHeader.setSequenceCount(m_sequenceCounter);
     }
-    m_CRC16 = crc16(dataField);
+    m_CRC16 = crc16(dataField, m_CRC16Config.polynomial, m_CRC16Config.initialValue, m_CRC16Config.finalXorValue);
     m_updateStatus = true;
   }
 }

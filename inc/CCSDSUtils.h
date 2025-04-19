@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <vector>
 
-// functions
+// free functions
 /**
  * @brief Computes the CRC-16 checksum for a given data vector with configurable parameters.
  *
@@ -91,5 +91,23 @@ CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet);
  * @return none.
  */
 void printDataField(CCSDS::Packet &packet);
+
+/**
+ * This function takes in a buffer of data and a file name. and writes the data in binary
+ * form to the file.
+ *
+ * @param data vector of uint8_t
+ * @param filename string
+ * @return  Result boolean true if successful or error
+ */
+CCSDS::ResultBool writeBinaryFile(const std::vector<uint8_t>& data, const std::string& filename);
+
+/**
+ * Read a specified binary file and return its contents as a buffer
+ *
+ * @param filename
+ * @return Result vector of uint8 or Error
+ */
+CCSDS::ResultBuffer readBinaryFile(const std::string& filename);
 
 #endif // CCSDS_UTILS_H

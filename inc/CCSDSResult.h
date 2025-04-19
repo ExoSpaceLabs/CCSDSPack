@@ -18,6 +18,7 @@ namespace CCSDS {
    */
   enum ErrorCode : uint8_t {
     NONE = 0,                      ///< No error
+    UNKNOWN_ERROR,                 ///< Unknown error
     NO_DATA,                       ///< No data available
     INVALID_DATA,                  ///< Data is invalid
     INVALID_HEADER_DATA,           ///< Header data is invalid
@@ -27,7 +28,8 @@ namespace CCSDS {
     INVALID_CHECKSUM,              ///< Checksum validation failed
     VALIDATION_FAILURE,            ///< Validation Failure
     SOMETHING_WENT_WRONG,          ///< General failure
-    UNKNOWN_ERROR                  ///< Unknown error
+    FILE_READ_ERROR,               ///< Reading from file failure
+    FILE_WRITE_ERROR               ///< Writing to file failure
   };
 
   /**

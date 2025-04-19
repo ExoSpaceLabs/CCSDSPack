@@ -77,6 +77,7 @@ namespace CCSDS {
     uint16_t m_sequenceCounter{1};         ///< Counter for segmented Packets
     std::vector<bool> m_report{};          ///< List of boolean results representing performed checks.
     size_t m_reportSize{6};                ///< Expected size of the validation report.
+    CRC16Config m_CRCConfig;
   };
 } // namespace CCSDS
 

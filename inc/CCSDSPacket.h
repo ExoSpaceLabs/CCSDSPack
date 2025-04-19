@@ -29,6 +29,13 @@ namespace CCSDS {
    * The `Packet` class also handles the internal state for CRC calculation and header
    * updates to ensure data consistency.
    */
+
+  struct CRC16Config {
+    uint16_t polynomial = 0x1021;
+    uint16_t initialValue = 0xFFFF;
+    uint16_t finalXorValue = 0x0000;
+  };
+
   class Packet {
   public:
     Packet() = default;
@@ -303,6 +310,35 @@ namespace CCSDS {
     CCSDS::Header &getPrimaryHeader();
 
     /**
+     * @brief Sets the crc configuration of the crc calculation
+     *
+     * This method sets the following variables to be used when performing the
+     * crc calculation of data passed as a structure of CRC16Config.
+     *  - polynomial
+     *  - initial value
+     *  - final xor value
+     *
+     * @param crcConfig
+     */
+    void setCrcConfig(const CRC16Config crcConfig) {m_CRC16Config = crcConfig;}
+
+
+    /**
+     * @brief Sets the crc configuration of the crc calculation
+     *
+     * This method sets the following variables to be used when performing the
+     * crc calculation of data passed as a structure of CRC16Config.
+     *  - polynomial
+     *  - initial value
+     *  - final xor value
+     *
+     * @param polynomial
+     * @param initialValue
+     * @param finalXorValue
+     */
+    void setCrcConfig(const uint16_t polynomial, const uint16_t initialValue, const uint16_t finalXorValue) {m_CRC16Config = {polynomial, initialValue, finalXorValue};}
+
+    /**
      * @brief Updates Primary headers data field size.
      *
      * Uses the currently set data field size to set the header.
@@ -315,6 +351,7 @@ namespace CCSDS {
     Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex
     DataField m_dataField{};         ///< variable
     uint16_t m_CRC16{};              ///< Cyclic Redundancy check 16 bits
+    CRC16Config m_CRC16Config;       ///< structure holding configuration of crc calculation.
     bool m_updateStatus{false};      ///< When setting data thus value should be set to false.
     bool m_enableUpdatePacket{true}; ///< Enables primary header and secondary header update.
     uint16_t m_sequenceCounter{0};

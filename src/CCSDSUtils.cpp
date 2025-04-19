@@ -1,6 +1,7 @@
 #include "CCSDSUtils.h"
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 //###########################################################################
 #define VERBOSE 1
@@ -140,4 +141,36 @@ void printPackets(std::vector<CCSDS::Packet> &packets) {
 
     idx++;
   }
+}
+
+CCSDS::ResultBool writeBinaryFile(const std::vector<uint8_t>& data, const std::string& filename) {
+  RET_IF_ERR_MSG(filename.empty(),CCSDS::ErrorCode::FILE_WRITE_ERROR, "No filename provided");
+  RET_IF_ERR_MSG(data.empty(),CCSDS::ErrorCode::FILE_WRITE_ERROR, "No data provided");
+  std::ofstream out(filename, std::ios::binary);
+
+  RET_IF_ERR_MSG(!out,CCSDS::ErrorCode::FILE_WRITE_ERROR, "Failed to open file for writing");
+
+  // Write the entire vector data to the file in one go
+  out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
+  RET_IF_ERR_MSG(!out,CCSDS::ErrorCode::FILE_WRITE_ERROR, "Failed to write the data to the file");
+
+  return true;
+}
+
+CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
+  RET_IF_ERR_MSG(filename.empty(),CCSDS::ErrorCode::FILE_READ_ERROR, "No filename provided");
+
+  std::ifstream in(filename, std::ios::binary | std::ios::ate);
+  RET_IF_ERR_MSG(!in,CCSDS::ErrorCode::FILE_READ_ERROR, "Failed to open file for reading");
+
+  // Get the file size using the 'ate' flag (seeks to the end automatically)
+  const std::streamsize size = in.tellg();
+  in.seekg(0, std::ios::beg);
+
+  // Read the entire file content into the vector
+  std::vector<uint8_t> data(size);
+  in.read(reinterpret_cast<char*>(data.data()), size);
+
+  RET_IF_ERR_MSG(!in,CCSDS::ErrorCode::FILE_READ_ERROR, "Failed to read the entire file");
+  return data;
 }
