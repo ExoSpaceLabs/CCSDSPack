@@ -81,8 +81,6 @@ set_target_properties(${TESTER_EXEC} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
 
-# copy resources to bin directory.
-
 # Install resources to the bin directory
 file(COPY ${TEST_RESOURCES}
         DESTINATION ${BINARY_OUTPUT_DIR})

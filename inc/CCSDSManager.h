@@ -165,6 +165,20 @@ namespace CCSDS {
     [[nodiscard]] ResultBool load(const std::vector<uint8_t>& packetsBuffer);
 
     /**
+     * @brief Load a packet or a series of packets from a binary file
+     *
+     * @param binaryFile path to the file holding packet data.
+     */
+    [[nodiscard]] ResultBool read(const std::string& binaryFile);
+
+    /**
+     * @brief Write a packet or a series of packets to a binary file
+     *
+     * @param binaryFile destination file path for packets data.
+     */
+    [[nodiscard]] ResultBool write(const std::string& binaryFile) const;
+
+    /**
      * @brief Clears the manager, removes all packets and template.
      */
     void clear();
@@ -180,6 +194,7 @@ namespace CCSDS {
      * @note changing settings of this instance will affect the manager
      */
     Validator& getValidatorReference() { return m_validator; }
+
     /**
      * @brief Returns a reference to the packets vector
      *

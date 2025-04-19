@@ -172,6 +172,19 @@ CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>
   return true;
 }
 
+CCSDS::ResultBool CCSDS::Manager::read(const std::string &binaryFile) {
+  std::vector<uint8_t> buffer;
+  ASSIGN_CP(buffer, readBinaryFile(binaryFile));
+  FORWARD_RESULT(load(buffer));
+  return true;
+}
+
+CCSDS::ResultBool CCSDS::Manager::write(const std::string& binaryFile) const {
+
+  FORWARD_RESULT(writeBinaryFile(getPacketsBuffer(),binaryFile));
+  return true;
+}
+
 void CCSDS::Manager::clear() {
   clearPackets();
   m_templateIsSet = false;
