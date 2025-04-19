@@ -468,9 +468,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
       return std::equal(expected.begin(), expected.end(), ret.begin());
     });
 
-  tester->unitTest(
-    "Write binary data to a file.",
-    [] {
+  tester->unitTest("Write binary data to a file.",[] {
       const std::vector<uint8_t> data{
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05, 0x97, 0xdf,
         0x01, 0x02, 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
@@ -483,9 +481,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
       return ret;
     });
 
-  tester->unitTest(
-    "Read binary data from file.",
-    [] {
+  tester->unitTest("Read binary data from file.",[] {
       std::vector<uint8_t> expected{
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05, 0x97, 0xdf,
         0x01, 0x02, 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
@@ -496,5 +492,41 @@ void testGroupCore(TestManager *tester, const std::string &description) {
       std::vector<uint8_t> ret;
       TEST_RET(ret, readBinaryFile("binaryFile.bin"));
       return std::equal(expected.begin(), expected.end(), ret.begin());
+    });
+
+  tester->unitTest("Read data from configure file.",[] {
+    Config cfg;
+    bool ret{false};
+    TEST_RET(ret, cfg.load("test_config.cfg"));
+
+    std::string stringValue;
+    TEST_RET(stringValue,cfg.get<std::string>("stringValue"));
+    if (stringValue != "Awsome string to test" ) return false;
+
+    int integerValue;
+    TEST_RET(integerValue,cfg.get<int>("integerValue"));
+    if (integerValue != 42 ) return false;
+
+    bool booleanValue;
+    TEST_RET(booleanValue,cfg.get<bool>("booleanValue"));
+    if (booleanValue != true) return false;
+
+    float floatValue;
+    TEST_RET(floatValue,cfg.get<float>("floatValue"));
+    if (floatValue != 0.85F ) return false;
+
+    std::vector<uint8_t> buffer;
+    TEST_RET(buffer, cfg.get<std::vector<uint8_t> >("buffer"));
+    if (buffer != std::vector<uint8_t>{1,2,3,4,5} ) return false;
+
+    std::vector<uint8_t> bufferHex;
+    TEST_RET(bufferHex, cfg.get<std::vector<uint8_t> >("bufferHex"));
+    if (bufferHex != std::vector<uint8_t>{0xFF,0xaa,0xBB,0xcc,0xEE}) return false;
+
+    std::vector<uint8_t> bufferHex2;
+    TEST_RET(bufferHex2, cfg.get<std::vector<uint8_t> >("bufferHex2"));
+    if (bufferHex2 != std::vector<uint8_t>{0x2,0x40,0x56,0x87,0xf0} ) return false;
+
+    return ret;
     });
 }

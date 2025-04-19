@@ -29,7 +29,8 @@ namespace CCSDS {
     VALIDATION_FAILURE,            ///< Validation Failure
     SOMETHING_WENT_WRONG,          ///< General failure
     FILE_READ_ERROR,               ///< Reading from file failure
-    FILE_WRITE_ERROR               ///< Writing to file failure
+    FILE_WRITE_ERROR,              ///< Writing to file failure
+    CONFIG_FILE_ERROR,
   };
 
   /**
