@@ -128,7 +128,7 @@ namespace CCSDS {
     /**
      * @brief Sets the secondary header for the data field using a PUS-A header.
      *
-     * @param header A PusA object containing the header data.
+     * @param header A SecondaryHeaderAbstract derived object containing the header data.
      * @return None.
      */
     void setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);

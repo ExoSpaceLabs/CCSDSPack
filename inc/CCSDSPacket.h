@@ -76,12 +76,12 @@ namespace CCSDS {
     [[nodiscard]] ResultBool setPrimaryHeader(const std::vector<uint8_t> &data);
 
     /**
-     * @brief Sets the data field header using the provided PusA header.
+     * @brief Sets the data field header using the provided SecondaryHeaderAbstract derived header.
      *
-     * This function sets the data field header of the packet using a `PusA`
+     * This function sets the data field header of the packet using a `SecondaryHeaderAbstract` derived
      * header object.
      *
-     * @param header The `PusA` header object.
+     * @param header The `SecondaryHeaderAbstract` header object.
      * @return none.
      */
     void setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header);
