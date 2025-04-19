@@ -284,7 +284,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
 
       tester->unitTest("Manager shall write the packets to a binary file successfully.", [&manager1] {
         bool ret;
-        TEST_RET(ret, manager1.write("myPackets.bin"));
+        TEST_RET(ret, manager1.write("test_resources/myPackets.bin"));
         return ret;
       });
     }
@@ -298,7 +298,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       };
       tester->unitTest("Manager shall read packets from a binary file successfully.", [&manager1, &expected] {
         bool ret;
-        TEST_RET(ret, manager1.read("myPackets.bin"));
+        TEST_RET(ret, manager1.read("test_resources/myPackets.bin"));
         auto retPackets = manager1.getPacketsBuffer();
         return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
       });
@@ -309,7 +309,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       CCSDS::Packet packet{};
       std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
       CCSDS::Manager manager;
-      TEST_VOID(manager.readTemplate("templatePacket.bin"));
+      TEST_VOID(manager.readTemplate("test_resources/templatePacket.bin"));
       std::vector<uint8_t> templatePacket;
       TEST_RET(templatePacket, manager.getPacketTemplate());
       return std::equal(expected.begin(), expected.end(), templatePacket.begin());
@@ -319,7 +319,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       CCSDS::Packet packet{};
       std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
       CCSDS::Manager manager;
-      TEST_VOID(manager.readTemplate("templatePacket.cfg"));
+      TEST_VOID(manager.readTemplate("test_resources/templatePacket.cfg"));
       std::vector<uint8_t> templatePacket;
       TEST_RET(templatePacket, manager.getPacketTemplate());
       return std::equal(expected.begin(), expected.end(), templatePacket.begin());

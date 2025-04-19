@@ -477,7 +477,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
         0x03, 0x03, 0x04, 0x05, 0x97, 0xdf, 0x01, 0x02
       };
       bool ret{false};
-      TEST_RET(ret, writeBinaryFile(data, "binaryFile.bin"));
+      TEST_RET(ret, writeBinaryFile(data, "test_resources/binaryFile.bin"));
       return ret;
     });
 
@@ -490,14 +490,14 @@ void testGroupCore(TestManager *tester, const std::string &description) {
         0x03, 0x03, 0x04, 0x05, 0x97, 0xdf, 0x01, 0x02
       };
       std::vector<uint8_t> ret;
-      TEST_RET(ret, readBinaryFile("binaryFile.bin"));
+      TEST_RET(ret, readBinaryFile("test_resources/binaryFile.bin"));
       return std::equal(expected.begin(), expected.end(), ret.begin());
     });
 
   tester->unitTest("Read data from configure file.",[] {
     Config cfg;
     bool ret{false};
-    TEST_RET(ret, cfg.load("test_config.cfg"));
+    TEST_RET(ret, cfg.load("test_resources/test_config.cfg"));
 
     std::string stringValue;
     TEST_RET(stringValue,cfg.get<std::string>("stringValue"));
