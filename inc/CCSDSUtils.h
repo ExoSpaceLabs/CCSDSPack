@@ -110,6 +110,15 @@ CCSDS::ResultBool writeBinaryFile(const std::vector<uint8_t>& data, const std::s
  */
 CCSDS::ResultBuffer readBinaryFile(const std::string& filename);
 
+/**
+ * Tests if str ends with suffix.
+ * equivalent to endsWith(str) in c++20
+ *
+ * @param str string
+ * @param suffix string
+ * @return boolean
+ */
+bool stringEndsWith(const std::string& str, const std::string& suffix);
 
 /* Classes */
 

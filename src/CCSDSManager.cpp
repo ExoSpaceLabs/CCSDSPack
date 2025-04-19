@@ -180,8 +180,28 @@ CCSDS::ResultBool CCSDS::Manager::read(const std::string &binaryFile) {
 }
 
 CCSDS::ResultBool CCSDS::Manager::write(const std::string& binaryFile) const {
-
   FORWARD_RESULT(writeBinaryFile(getPacketsBuffer(),binaryFile));
+  return true;
+}
+
+
+CCSDS::ResultBool CCSDS::Manager::readTemplate(const std::string& filename) {
+  Packet templatePacket;
+
+  if (stringEndsWith(filename, ".bin")) {
+    std::vector<uint8_t> buffer;
+    ASSIGN_CP(buffer, readBinaryFile(filename));
+    FORWARD_RESULT(templatePacket.deserialize(buffer));
+  }else if (stringEndsWith(filename, ".cfg")) {
+    Config cfg;
+    FORWARD_RESULT(cfg.load(filename));
+    std::vector<uint8_t> buffer;
+    ASSIGN_CP(buffer,cfg.get<std::vector<uint8_t>>("template_data"));
+    FORWARD_RESULT(templatePacket.deserialize(buffer));
+  } else {
+    return Error{INVALID_DATA,"Cannot load template, invalid file provided [supported extensions [.bin, .cfg]]"};
+  }
+  FORWARD_RESULT(setPacketTemplate(templatePacket));
   return true;
 }
 

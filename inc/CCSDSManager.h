@@ -179,6 +179,13 @@ namespace CCSDS {
     [[nodiscard]] ResultBool write(const std::string& binaryFile) const;
 
     /**
+     * @brief Load a template packet from a binary or configuration file
+     *
+     * @param filename path to the file holding template.
+     */
+    [[nodiscard]] ResultBool readTemplate(const std::string& filename);
+
+    /**
      * @brief Clears the manager, removes all packets and template.
      */
     void clear();

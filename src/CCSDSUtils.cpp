@@ -175,6 +175,11 @@ CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
   return data;
 }
 
+bool stringEndsWith(const std::string& str, const std::string& suffix) {
+  return str.size() >= suffix.size() &&
+         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
 /* Class methods*/
 
 CCSDS::ResultBool Config::load(const std::string &filename) {

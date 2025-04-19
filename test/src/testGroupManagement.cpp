@@ -274,35 +274,55 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       return packets.empty() && std::equal(expected.begin(), expected.end(), ret.begin());
     });
     {
-      CCSDS::Manager manager{};
+      CCSDS::Manager manager1{};
       const std::vector<uint8_t> expected{
         0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
         0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
         0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
       };
-      ASSERT_SUCCESS(manager.load(expected));
+      ASSERT_SUCCESS(manager1.load(expected));
 
-      tester->unitTest("Manager shall write the packets to a binary file successfully.", [&manager] {
+      tester->unitTest("Manager shall write the packets to a binary file successfully.", [&manager1] {
         bool ret;
-        TEST_RET(ret, manager.write("myPackets.bin"));
+        TEST_RET(ret, manager1.write("myPackets.bin"));
         return ret;
       });
     }
 
     {
-      CCSDS::Manager manager{};
+      CCSDS::Manager manager1{};
       const std::vector<uint8_t> expected{
         0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
         0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
         0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
       };
-      tester->unitTest("Manager shall read packets from a binary file successfully.", [&manager, &expected] {
+      tester->unitTest("Manager shall read packets from a binary file successfully.", [&manager1, &expected] {
         bool ret;
-        TEST_RET(ret, manager.read("myPackets.bin"));
-        auto retPackets = manager.getPacketsBuffer();
+        TEST_RET(ret, manager1.read("myPackets.bin"));
+        auto retPackets = manager1.getPacketsBuffer();
         return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
       });
 
     }
+
+    tester->unitTest("Manager shall load template from binary file, template shall be as expected.", [] {
+      CCSDS::Packet packet{};
+      std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
+      CCSDS::Manager manager;
+      TEST_VOID(manager.readTemplate("templatePacket.bin"));
+      std::vector<uint8_t> templatePacket;
+      TEST_RET(templatePacket, manager.getPacketTemplate());
+      return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+    });
+
+    tester->unitTest("Manager shall load template from config file, template shall be as expected.", [] {
+      CCSDS::Packet packet{};
+      std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
+      CCSDS::Manager manager;
+      TEST_VOID(manager.readTemplate("templatePacket.cfg"));
+      std::vector<uint8_t> templatePacket;
+      TEST_RET(templatePacket, manager.getPacketTemplate());
+      return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+    });
   }
 }
