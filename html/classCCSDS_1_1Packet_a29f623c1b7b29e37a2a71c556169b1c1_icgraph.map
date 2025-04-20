@@ -1,0 +1,9 @@
+<map id="CCSDS::Packet::setUpdatePacketEnable" name="CCSDS::Packet::setUpdatePacketEnable">
+<area shape="rect" id="Node000001" title="needs to be called as soon as possible, probably also from constructor." alt="" coords="316,47,507,87"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a4fd11a40ea4d569a483061892bfb688f" title="Adds a new packet to the list." alt="" coords="34,5,239,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,50,208,33,209,28,303,45"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#a2f6c84bec310a521c55d88ce49506395" title="Sets the application data for the packet." alt="" coords="5,55,268,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="302,70,268,70,268,65,302,65"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95" title="Validates a given packet." alt="" coords="40,104,233,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="303,90,209,107,208,101,302,84"/>
+</map>

@@ -1,0 +1,17 @@
+<map id="CCSDS::Manager" name="CCSDS::Manager">
+<area shape="rect" id="Node000001" title="Manages CCSDS packets and their templates." alt="" coords="125,357,255,383"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html" title="Represents a CCSDS (Consultative Committee for Space Data Systems) packet." alt="" coords="200,181,316,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,220,265,275,259,306,247,335,235,349,219,359,216,355,231,345,242,332,254,304,260,274,259,220"/>
+<area shape="rect" id="Node000007" href="$classCCSDS_1_1Validator.html" title="Handles validation of CCSDS packets." alt="" coords="52,269,184,295"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="187,208,146,219,131,225,122,232,116,250,117,269,112,269,110,249,117,229,128,221,144,213,186,203"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Header.html" title="Manages the decomposition and manipulation of CCSDS primary headers." alt="" coords="197,93,319,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="261,133,261,181,255,181,255,133"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1DataField.html" title="Represents the data field of a CCSDS packet." alt="" coords="343,93,479,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="404,133,395,147,384,159,352,177,317,188,316,183,350,173,380,155,391,144,400,130"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1SecondaryHeaderFactory.html" title="A singleton factory class responsible for registering and creating instances of SecondaryHeaderAbstra..." alt="" coords="293,5,529,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="414,45,414,93,409,93,409,45"/>
+<area shape="rect" id="Node000006" href="$structCCSDS_1_1CRC16Config.html" title="Configuration structure for CRC16 calculation parameters." alt="" coords="5,93,164,119"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="107,126,145,155,175,169,206,179,205,184,173,174,142,160,104,131"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="88,132,97,206,116,268,111,270,91,207,83,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="138,303,182,355,178,359,134,307"/>
+</map>

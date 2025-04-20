@@ -1,0 +1,5 @@
+<map id="CCSDS::Manager::write" name="CCSDS::Manager::write">
+<area shape="rect" id="Node000001" title="Write a packet or a series of packets to a binary file." alt="" coords="5,5,177,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSUtils_8cpp.html#ac3822e47eaaef0f66ec2b86d7a4b09fc" title="This function takes in a buffer of data and a file name." alt="" coords="225,5,345,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,15,211,15,211,21,178,21"/>
+</map>

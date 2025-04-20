@@ -1,0 +1,5 @@
+<map id="CCSDS::Manager::read" name="CCSDS::Manager::read">
+<area shape="rect" id="Node000001" title="Load a packet or a series of packets from a binary file." alt="" coords="5,5,173,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d" title="Read a specified binary file and return its contents as a buffer." alt="" coords="221,5,337,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,15,208,15,208,21,173,21"/>
+</map>

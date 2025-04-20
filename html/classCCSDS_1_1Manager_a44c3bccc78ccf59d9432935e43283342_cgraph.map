@@ -1,0 +1,21 @@
+<map id="CCSDS::Manager::readTemplate" name="CCSDS::Manager::readTemplate">
+<area shape="rect" id="Node000001" title="Load a template packet from a binary or configuration file." alt="" coords="5,107,233,132"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a1f6665c4b9e28efd62a30ff1c1db1223" title="Deserializes a vector of bytes into a CCSDS packet." alt="" coords="281,5,476,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,104,280,48,323,33,324,38,282,52,149,109"/>
+<area shape="rect" id="Node000003" href="$classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" title="Get value by key and type." alt="" coords="716,132,808,157"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,104,281,91,390,84,476,84,561,92,669,113,714,125,713,130,667,118,560,98,476,89,391,89,282,97,186,109"/>
+<area shape="rect" id="Node000004" href="$classConfig.html#a666e6d9c5510736d8ef85564abe834dd" title="Load config file." alt="" coords="329,107,428,132"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="234,117,315,117,315,122,234,122"/>
+<area shape="rect" id="Node000007" href="$CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d" title="Read a specified binary file and return its contents as a buffer." alt="" coords="321,156,437,181"/>
+<area shape="poly" id="edge10_Node000001_Node000007" title=" " alt="" coords="187,129,308,153,307,158,186,135"/>
+<area shape="rect" id="Node000008" href="$CCSDSUtils_8cpp.html#a3b974227bd1064e006f517e8423a0545" title="Tests if str ends with suffix." alt="" coords="319,205,439,231"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="146,130,207,160,282,191,307,199,305,204,280,197,205,165,143,135"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="734,133,728,124,732,114,743,108,762,105,785,109,794,117,791,121,782,114,762,111,745,113,736,117,734,123,739,130"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="428,120,703,138,702,143,428,125"/>
+<area shape="rect" id="Node000005" href="$classConfig.html#a0c3a6f1dbed78a72da53833b419491d9" title="Parse string &quot;[1,2,3]&quot; into vector&lt;uint8_t&gt;" alt="" coords="524,157,668,183"/>
+<area shape="poly" id="edge6_Node000004_Node000005" title=" " alt="" coords="429,128,529,152,527,157,428,133"/>
+<area shape="rect" id="Node000006" href="$classConfig.html#ae9010d142dcb6a29be942eb3b1513dda" title="Parse a single line from config." alt="" coords="529,207,663,232"/>
+<area shape="poly" id="edge8_Node000004_Node000006" title=" " alt="" coords="429,123,454,130,477,141,493,154,502,167,511,180,526,193,535,199,533,203,522,198,507,184,498,170,489,158,475,146,452,135,427,128"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="668,156,702,151,703,156,668,162"/>
+<area shape="poly" id="edge9_Node000006_Node000003" title=" " alt="" coords="638,204,667,193,727,162,729,167,669,198,640,209"/>
+</map>

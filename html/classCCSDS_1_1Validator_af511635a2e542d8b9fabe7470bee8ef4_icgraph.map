@@ -1,0 +1,5 @@
+<map id="CCSDS::Validator::setTemplatePacket" name="CCSDS::Validator::setTemplatePacket">
+<area shape="rect" id="Node000001" title="Sets the template packet for validation." alt="" coords="249,5,469,45"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs a Manager with a given packet template." alt="" coords="5,13,201,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,28,202,28,202,23,236,23"/>
+</map>

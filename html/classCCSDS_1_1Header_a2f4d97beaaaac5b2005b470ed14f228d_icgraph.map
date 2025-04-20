@@ -1,0 +1,9 @@
+<map id="CCSDS::Header::deserialize" name="CCSDS::Header::deserialize">
+<area shape="rect" id="Node000001" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="369,31,569,56"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a974f09b0a59fc6ed7083a467c1f7d67d" title="Load a packet or a series of packets from a buffer." alt="" coords="155,5,321,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="355,34,321,30,322,24,356,28"/>
+<area shape="rect" id="Node000003" href="$CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5" title="Prints to console the primary header of a provided CCSDS packet." alt="" coords="163,55,313,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="356,58,314,62,313,57,355,52"/>
+<area shape="rect" id="Node000004" href="$CCSDSUtils_8cpp.html#a5f93cc97b1a3bb506c38638251b15339" title="Prints to console a series of CCSDS Packets, breaking it down to Primary header and Data field." alt="" coords="5,55,107,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="148,70,107,70,107,65,148,65"/>
+</map>

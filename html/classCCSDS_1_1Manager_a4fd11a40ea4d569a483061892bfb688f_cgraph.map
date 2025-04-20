@@ -1,0 +1,5 @@
+<map id="CCSDS::Manager::addPacket" name="CCSDS::Manager::addPacket">
+<area shape="rect" id="Node000001" title="Adds a new packet to the list." alt="" coords="5,13,211,38"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a29f623c1b7b29e37a2a71c556169b1c1" title="needs to be called as soon as possible, probably also from constructor." alt="" coords="259,5,449,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,23,245,23,245,28,211,28"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="CCSDS::Validator" name="CCSDS::Validator">
+<area shape="rect" id="Node000001" title="Handles validation of CCSDS packets." alt="" coords="300,269,432,295"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html" title="Represents a CCSDS (Consultative Committee for Space Data Systems) packet." alt="" coords="211,181,327,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="292,215,322,243,352,267,349,271,319,247,288,219"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Header.html" title="Manages the decomposition and manipulation of CCSDS primary headers." alt="" coords="5,93,127,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,130,81,144,90,155,110,165,140,173,211,184,210,190,139,178,108,170,87,159,76,147,69,133"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1DataField.html" title="Represents the data field of a CCSDS packet." alt="" coords="151,93,287,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="218,132,223,156,233,169,246,179,243,183,229,173,218,158,213,133"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1SecondaryHeaderFactory.html" title="A singleton factory class responsible for registering and creating instances of SecondaryHeaderAbstra..." alt="" coords="101,5,337,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="222,45,222,93,217,93,217,45"/>
+<area shape="rect" id="Node000006" href="$structCCSDS_1_1CRC16Config.html" title="Configuration structure for CRC16 calculation parameters." alt="" coords="348,93,507,119"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="444,130,449,142,462,196,461,220,448,247,434,262,416,272,414,267,431,257,444,244,455,219,457,197,443,143,439,132"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="380,126,338,145,284,183,280,179,335,140,378,121"/>
+</map>

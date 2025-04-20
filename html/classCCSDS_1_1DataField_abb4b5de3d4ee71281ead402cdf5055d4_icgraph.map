@@ -1,0 +1,7 @@
+<map id="CCSDS::DataField::update" name="CCSDS::DataField::update">
+<area shape="rect" id="Node000001" title="Updates the data field header based on the current application data size." alt="" coords="459,13,648,38"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1DataField.html#adf40e2024bf3509e4ce28ff3a8e637e2" title="Retrieves the full data field by combining the data field header and application data." alt="" coords="223,5,411,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="445,28,411,28,411,23,445,23"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Updates Primary headers data field size." alt="" coords="5,13,175,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="209,28,175,28,175,23,209,23"/>
+</map>

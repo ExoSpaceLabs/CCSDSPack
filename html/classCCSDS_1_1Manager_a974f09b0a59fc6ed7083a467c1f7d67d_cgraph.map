@@ -1,0 +1,9 @@
+<map id="CCSDS::Manager::load" name="CCSDS::Manager::load">
+<area shape="rect" id="Node000001" title="Load a packet or a series of packets from a buffer." alt="" coords="5,31,172,56"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#a2f4d97beaaaac5b2005b470ed14f228d" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="233,5,433,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,32,219,27,219,32,172,37"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Header.html#a9c2ac8f4b16874076de742cb19833bd7" title="16 bits" alt="" coords="220,55,445,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="172,49,206,52,206,58,172,54"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Header.html#aad717b39dda3dff19adb10e3c7e38100" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="493,5,673,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="433,15,480,15,480,21,433,21"/>
+</map>

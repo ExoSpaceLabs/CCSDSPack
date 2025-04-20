@@ -1,0 +1,5 @@
+<map id="CCSDS::Manager::addPacketFromBuffer" name="CCSDS::Manager::addPacketFromBuffer">
+<area shape="rect" id="Node000001" title="Adds a new packet to the list." alt="" coords="5,5,211,45"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a1f6665c4b9e28efd62a30ff1c1db1223" title="Deserializes a vector of bytes into a CCSDS packet." alt="" coords="259,13,453,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,23,245,23,245,28,211,28"/>
+</map>

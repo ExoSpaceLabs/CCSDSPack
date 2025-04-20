@@ -1,0 +1,5 @@
+<map id="CCSDS::BufferHeader" name="CCSDS::BufferHeader">
+<area shape="rect" id="Node000001" title="Represents a fixed secondary header used as a data buffer." alt="" coords="47,79,207,104"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1SecondaryHeaderAbstract.html" title="Abstract base class for a (Packet Utilization Standard) header." alt="" coords="5,5,248,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,44,129,79,124,79,124,44"/>
+</map>

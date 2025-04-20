@@ -1,0 +1,5 @@
+<map id="writeBinaryFile" name="writeBinaryFile">
+<area shape="rect" id="Node000001" title="This function takes in a buffer of data and a file name." alt="" coords="225,5,345,31"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#ad80b2eb281ec093e68bcf349c75183c5" title="Write a packet or a series of packets to a binary file." alt="" coords="5,5,177,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,21,177,21,177,15,212,15"/>
+</map>

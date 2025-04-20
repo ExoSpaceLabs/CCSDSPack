@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classCCSDS_1_1SecondaryHeaderAbstract.html" title="Abstract base class for a (Packet Utilization Standard) header." alt="" coords="5,80,248,105"/>
+<area shape="rect" id="Node000001" href="$classCCSDS_1_1BufferHeader.html" title="Represents a fixed secondary header used as a data buffer." alt="" coords="296,5,456,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="182,73,332,28,334,33,184,78"/>
+<area shape="rect" id="Node000002" href="$classPusA.html" title="Represents a PUS Type A (Telemetry) header." alt="" coords="349,55,403,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="262,76,348,67,349,73,262,82"/>
+<area shape="rect" id="Node000003" href="$classPusB.html" title="Represents a PUS Type B (Event Reporting) header." alt="" coords="349,104,403,129"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="262,103,349,111,348,117,262,108"/>
+<area shape="rect" id="Node000004" href="$classPusC.html" title="Represents a PUS Type C (Time Code) header." alt="" coords="349,153,403,179"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="185,107,349,156,348,161,183,112"/>
+</map>
