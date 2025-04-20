@@ -9,13 +9,13 @@ int main() {
 
   /// Perform unit tests:
   // perform basic packet related tests on the library
-  testGroupCore(&tester, "Basic CCSDS Packet feature tests.");
+  testGroupCore(&tester, "Core CCSDS Packet features tests.");
 
   // perform packet validation related tests on the library
   testGroupValidator(&tester, "Validation of CCSDS Packet tests.");
 
   // perform packet management tests on the library
-  testGroupManagement(&tester, "management of CCSDS packet tests.");
+  testGroupManagement(&tester, "Management of CCSDS packet tests.");
 
   return tester.Result();
 }

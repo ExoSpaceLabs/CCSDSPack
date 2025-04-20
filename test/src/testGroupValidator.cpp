@@ -5,7 +5,7 @@
 #include "tests.h"
 
 void testGroupValidator(TestManager *tester, const std::string &description) {
-  std::cout << "\n  testGroupValidator: " << description << std::endl;
+  std::cout << "  testGroupValidator: " << description << std::endl;
 
   tester->unitTest("Validator UNSEGMENTED Packet coherence shall pass.", []() {
     CCSDS::Validator validator;
@@ -464,4 +464,5 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     validator.setTemplatePacket(templatePacket);
   return validator.validate(packet1) && validator.validate(packet2);
 });
+  std::cout << std::endl;
 }

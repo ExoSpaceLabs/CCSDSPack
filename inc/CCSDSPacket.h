@@ -1,6 +1,22 @@
 #ifndef CCSDS_PACKET_H
 #define CCSDS_PACKET_H
 
+/**
+ * @mainpage CCSDSPack Library
+ *
+ * @section intro_sec Introduction
+ * This library handles CCSDS packet management...
+ *
+ * @section features_sec Features
+ * - Encode/Decode CCSDS packets
+ * - Error handling with Result types
+ * - Binary I/O support
+ *
+ * @section usage_sec Usage
+ * See the class and function docs for usage examples.
+ */
+
+
 #include <CCSDSResult.h>
 #include <cstdint>
 #include <vector>
@@ -12,6 +28,15 @@
  * @brief Contains definitions and classes for handling CCSDS headers.
  */
 namespace CCSDS {
+
+  /** Configuration structure for CRC16 calculation parameters */
+  struct CRC16Config {
+    uint16_t polynomial = 0x1021;
+    uint16_t initialValue = 0xFFFF;
+    uint16_t finalXorValue = 0x0000;
+  };
+
+
   /**
    * @brief Represents a CCSDS (Consultative Committee for Space Data Systems) packet.
    *
@@ -29,13 +54,6 @@ namespace CCSDS {
    * The `Packet` class also handles the internal state for CRC calculation and header
    * updates to ensure data consistency.
    */
-
-  struct CRC16Config {
-    uint16_t polynomial = 0x1021;
-    uint16_t initialValue = 0xFFFF;
-    uint16_t finalXorValue = 0x0000;
-  };
-
   class Packet {
   public:
     Packet() = default;

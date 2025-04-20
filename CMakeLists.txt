@@ -80,8 +80,9 @@ target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_VERSIONED})
 set_target_properties(${TESTER_EXEC} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
-file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
+
 # Install resources to the bin directory
+file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
 file(COPY ${TEST_RESOURCES}
         DESTINATION "${BINARY_OUTPUT_DIR}/test_resources")
 

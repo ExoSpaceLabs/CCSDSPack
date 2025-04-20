@@ -5,7 +5,7 @@
 #include "tests.h"
 
 void testGroupManagement(TestManager *tester, const std::string &description) {
-  std::cout << "\n  testGroupManagement: " << description << std::endl;
+  std::cout << "  testGroupManagement: " << description << std::endl;
 
   tester->unitTest("Manager shall set packet template, returned shall be as expected.", [] {
     CCSDS::Packet packet{};
@@ -358,4 +358,5 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       });
     }
   }
+  std::cout << std::endl;
 }

@@ -529,4 +529,6 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
     return ret;
     });
+
+  std::cout << std::endl;
 }
