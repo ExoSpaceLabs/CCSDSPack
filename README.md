@@ -19,6 +19,7 @@
 
 
 C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, analisys and more
+for detailed information see ![Doxygen Documentation](https://exospacelabs.github.io/CCSDSPack/)
 
 
 ### Table of Contents
