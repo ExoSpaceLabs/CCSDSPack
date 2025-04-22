@@ -29,7 +29,7 @@ var searchData=
   ['m_5fsequencecount_26',['m_sequencecount',['../classCCSDS_1_1Header.html#a54ce2c3026969d4ed2a08dc9d363c53a',1,'CCSDS::Header::m_sequenceCount'],['../classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12',1,'CCSDS::Manager::m_sequenceCount']]],
   ['m_5fsequencecounter_27',['m_sequencecounter',['../classCCSDS_1_1Packet.html#ab61daf885ef11154832a6890772b3920',1,'CCSDS::Packet::m_sequenceCounter'],['../classCCSDS_1_1Validator.html#a607e5733848dbea63ae5c37eb82466be',1,'CCSDS::Validator::m_sequenceCounter']]],
   ['m_5fsequenceflags_28',['m_sequenceFlags',['../classCCSDS_1_1Header.html#a1732499dbb80a7b7155012599c4fdda2',1,'CCSDS::Header']]],
-  ['m_5fservicesubtype_29',['m_servicesubtype',['../classPusA.html#a655386165792828869da1501c4f90eaa',1,'PusA::m_serviceSubType'],['../classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded',1,'PusC::m_serviceSubType'],['../classPusB.html#ae512a33ba986066a91176ec8db4ba9e5',1,'PusB::m_serviceSubType']]],
+  ['m_5fservicesubtype_29',['m_servicesubtype',['../classPusB.html#ae512a33ba986066a91176ec8db4ba9e5',1,'PusB::m_serviceSubType'],['../classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded',1,'PusC::m_serviceSubType'],['../classPusA.html#a655386165792828869da1501c4f90eaa',1,'PusA::m_serviceSubType']]],
   ['m_5fservicetype_30',['m_servicetype',['../classPusA.html#ab66e83e111f2924e62d77107a2e85be9',1,'PusA::m_serviceType'],['../classPusB.html#a2cb9da92c980f220fceb633bd3f94f28',1,'PusB::m_serviceType'],['../classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d',1,'PusC::m_serviceType']]],
   ['m_5fsize_31',['m_size',['../classPusA.html#afcd6f5d3abb6f00259ce2a6ac8a8b0f5',1,'PusA::m_size'],['../classPusB.html#a74581d7abc72aa4f91a82ee46d981b69',1,'PusB::m_size'],['../classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614',1,'PusC::m_size']]],
   ['m_5fsourceid_32',['m_sourceid',['../classPusB.html#a614e61179f170cde5e5cc0c5946d8560',1,'PusB::m_sourceID'],['../classPusC.html#abcbba80f7a03e80b20ce4feb98f84023',1,'PusC::m_sourceID'],['../classPusA.html#a86f287f45bf45a17ae55567da25ed2d1',1,'PusA::m_sourceID']]],
@@ -38,7 +38,7 @@ var searchData=
   ['m_5ftemplateisset_35',['m_templateIsSet',['../classCCSDS_1_1Manager.html#a0028ecb98b97d9ef06f05d439394f05d',1,'CCSDS::Manager']]],
   ['m_5ftemplatepacket_36',['m_templatepacket',['../classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff',1,'CCSDS::Manager::m_templatePacket'],['../classCCSDS_1_1Validator.html#a9f30a41f475d832d55565acf6bd6c953',1,'CCSDS::Validator::m_templatePacket']]],
   ['m_5ftimecode_37',['m_timeCode',['../classPusC.html#a351b2ab56c28a55e979b9dec3485bc42',1,'PusC']]],
-  ['m_5ftype_38',['m_type',['../classCCSDS_1_1Header.html#ab978181f3d86edc9fd5b4dd80ffe9c34',1,'CCSDS::Header::m_type'],['../classPusC.html#a5d490209168142e4288084284e37bdfb',1,'PusC::m_type'],['../classPusB.html#a2d74183be689e37b21419c0292f1e449',1,'PusB::m_type'],['../classPusA.html#a3c659e8dbfddf9ac7d52f41fb0ba4b43',1,'PusA::m_type'],['../classCCSDS_1_1BufferHeader.html#a18780e39bd6a197bb4515328df5150e0',1,'CCSDS::BufferHeader::m_type']]],
+  ['m_5ftype_38',['m_type',['../classCCSDS_1_1BufferHeader.html#a18780e39bd6a197bb4515328df5150e0',1,'CCSDS::BufferHeader::m_type'],['../classPusC.html#a5d490209168142e4288084284e37bdfb',1,'PusC::m_type'],['../classPusB.html#a2d74183be689e37b21419c0292f1e449',1,'PusB::m_type'],['../classPusA.html#a3c659e8dbfddf9ac7d52f41fb0ba4b43',1,'PusA::m_type'],['../classCCSDS_1_1Header.html#ab978181f3d86edc9fd5b4dd80ffe9c34',1,'CCSDS::Header::m_type']]],
   ['m_5fupdateenable_39',['m_updateEnable',['../classCCSDS_1_1Manager.html#ac5621224363dfbc32b1bc51daafaabaf',1,'CCSDS::Manager']]],
   ['m_5fupdatestatus_40',['m_updateStatus',['../classCCSDS_1_1Packet.html#a12351e3563db4789e1a5fc77618a7440',1,'CCSDS::Packet']]],
   ['m_5fvalidateagainsttemplate_41',['m_validateAgainstTemplate',['../classCCSDS_1_1Validator.html#a45dad893afdc5f9cc78211382e060591',1,'CCSDS::Validator']]],
@@ -48,6 +48,7 @@ var searchData=
   ['m_5fvalidator_45',['m_validator',['../classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2',1,'CCSDS::Manager']]],
   ['m_5fversion_46',['m_version',['../classPusA.html#a91c7be31982ae316b52bd044f5449f33',1,'PusA::m_version'],['../classPusB.html#a5567416de5f1c76bd3bc611427b0639d',1,'PusB::m_version'],['../classPusC.html#a2d5539425efa3b4417ef37856855306f',1,'PusC::m_version']]],
   ['m_5fversionnumber_47',['m_versionNumber',['../classCCSDS_1_1Header.html#a9bed47e4fe20bf9e76a31062a6368bb4',1,'CCSDS::Header']]],
-  ['manager_48',['manager',['../classCCSDS_1_1Manager.html',1,'CCSDS::Manager'],['../classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966',1,'CCSDS::Manager::Manager(Packet packet)'],['../classCCSDS_1_1Manager.html#aec93569e975ea2a753692e5de7e17d32',1,'CCSDS::Manager::Manager()=default']]],
-  ['message_49',['message',['../classCCSDS_1_1Error.html#ac004503279e3146b2f9bd1f65f7cf5a6',1,'CCSDS::Error']]]
+  ['main_20page_48',['Main page',['../index.html#GitHub',1,'']]],
+  ['manager_49',['manager',['../classCCSDS_1_1Manager.html#aec93569e975ea2a753692e5de7e17d32',1,'CCSDS::Manager::Manager()=default'],['../classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966',1,'CCSDS::Manager::Manager(Packet packet)'],['../classCCSDS_1_1Manager.html',1,'CCSDS::Manager']]],
+  ['message_50',['message',['../classCCSDS_1_1Error.html#ac004503279e3146b2f9bd1f65f7cf5a6',1,'CCSDS::Error']]]
 ];
