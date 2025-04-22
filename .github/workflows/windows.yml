@@ -28,7 +28,7 @@ jobs:
 
       - name: Configure CMake
         run: |
-          mkdir build && cd build && cmake -G "MinGW Makefiles" ..
+          cd build && cmake -G "MinGW Makefiles" ..
           
       - name: Build project
         run: |

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This script builds the poject in the build directory and executes the Executible in the bin dir
+# This script builds the project in the build directory and executes the Executable in the bin dir
 
 cd build
 cmake ..

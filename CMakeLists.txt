@@ -15,8 +15,13 @@ set(LIB_NAME "CCSDSPack")
 
 # Versioning
 set(MAJOR "0")
-set(MINOR "5")
+set(MINOR "6")
 set(PATCH "0")
+
+message(STATUS "Flags:")
+option(BUILD_TESTER "Build the CCSDSPack tester executable" ON)
+message(STATUS "  -DBUILD_TESTER=${BUILD_TESTER}")
+
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
 set(LIB_VERSIONED "${LIB_NAME}${VER}")
@@ -47,42 +52,89 @@ include_directories(${INCLUDE_DIR})
 file(GLOB LIBRARY_SOURCES "${SOURCE_DIR}/*.cpp")
 
 # Create the shared library target
-add_library(${LIB_VERSIONED} SHARED ${LIBRARY_SOURCES})
-
+#add_library(${LIB_VERSIONED} SHARED ${LIBRARY_SOURCES})
+add_library(${LIB_NAME} SHARED ${LIBRARY_SOURCES})
+set_target_properties(${LIB_NAME} PROPERTIES
+        VERSION ${MAJOR}.${MINOR}.${PATCH}
+        SOVERSION ${MAJOR}
+)
 # Ensure Windows exports all symbols when building a shared library
 if (WIN32)
     set_target_properties(${LIB_VERSIONED} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
 # Set the output directories for different platforms
-set_target_properties(${LIB_VERSIONED} PROPERTIES
+set_target_properties(${LIB_NAME} PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
     LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
+if(BUILD_TESTER)
+    # Collect all source files in the test src folder for the test executable
+    file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 
-# Collect all source files in the test src folder for the test executable
-file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 
-# Collect all test resources from the test/resources directory
-file(GLOB TEST_RESOURCES "${TEST_RESOURCE_DIR}/*")
+    # Collect all test resources from the test/resources directory
+    file(GLOB TEST_RESOURCES "${TEST_RESOURCE_DIR}/*")
 
-# Create the test executable target
-add_executable(${TESTER_EXEC} ${TEST_SOURCES})
+    # Create the test executable target
+    add_executable(${TESTER_EXEC} ${TEST_SOURCES})
 
-# Add include directories to the test target
-target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR} ${TEST_INCLUDE_DIR})
+    # Add include directories to the test target
+    target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR} ${TEST_INCLUDE_DIR})
 
-# Link the test executable with the library
-target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_VERSIONED})
+    # Link the test executable with the library
+    target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_NAME})
 
-# Set the output directory for the test executable
-set_target_properties(${TESTER_EXEC} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
-)
+    # Set the output directory for the test executable
+    set_target_properties(${TESTER_EXEC} PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}          # Specifies where the executable is placed
+    )
 
-# Install resources to the bin directory
-file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
-file(COPY ${TEST_RESOURCES}
-        DESTINATION "${BINARY_OUTPUT_DIR}/test_resources")
+    # Platform-specific RPATH settings
+    if(UNIX)
+        # Linux or macOS
+        set_target_properties(${TESTER_EXEC} PROPERTIES
+                BUILD_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}"  # During build time, look in these paths for libraries
+                INSTALL_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}" # After installation, look in these paths for libraries
+        )
+    elseif(WIN32)
+        # Windows doesn't use RPATH. DLLs are usually placed in the same directory as the EXE or specified in PATH.
+        set_target_properties(${TESTER_EXEC} PROPERTIES
+                # No need to set RPATH on Windows
+                RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}  # Ensure DLL is next to the executable
+        )
+    endif()
+
+    # Install resources to the bin directory
+    file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
+    file(COPY ${TEST_RESOURCES}
+            DESTINATION "${BINARY_OUTPUT_DIR}/test_resources")
+
+endif ()
+
+
+if(WIN32)
+    # Install DLL to the bin directory
+    install(TARGETS ${LIB_NAME}
+            RUNTIME DESTINATION bin
+            ARCHIVE DESTINATION lib)
+
+    # Install headers
+    install(DIRECTORY ${INCLUDE_DIR}/
+            DESTINATION include
+            FILES_MATCHING PATTERN "*.h")
+else()
+    # Default Linux installation
+    install(TARGETS ${LIB_NAME}
+            LIBRARY DESTINATION lib
+            ARCHIVE DESTINATION lib
+            RUNTIME DESTINATION bin)
+
+    # Install headers
+    install(DIRECTORY ${INCLUDE_DIR}/
+            DESTINATION include
+            FILES_MATCHING PATTERN "*.h")
+
+endif()
 

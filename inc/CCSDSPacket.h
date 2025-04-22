@@ -4,8 +4,11 @@
 /**
  * @mainpage CCSDSPack Library
  *
+ * @section GitHub Main page
+ * https://github.com/ExoSpaceLabs/CCSDSPack
+ *
  * @section intro_sec Introduction
- * This library handles CCSDS packet management...
+ * This library handles CCSDS packets management...
  *
  * @section features_sec Features
  * - Encode/Decode CCSDS packets

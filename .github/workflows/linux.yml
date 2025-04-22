@@ -27,7 +27,7 @@ jobs:
 
       - name: Run build
         run: |
-          mkdir build && cd build && cmake .. && make
+          cd build && cmake .. && make
 
       - name: Verify build artifacts
         run: |
