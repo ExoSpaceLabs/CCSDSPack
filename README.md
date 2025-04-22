@@ -25,7 +25,7 @@ The following tables show the current overall build and regression test status o
 
 | Linux | Windows |
 |-------|---------|
-| ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/windows.yml?branch=main) | ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/linux.yml?branch=main) | 
+ | ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/linux.yml?branch=main)| ![Build Status](https://img.shields.io/github/actions/workflow/status/Inczert/CCSDSPack/windows.yml?branch=main) | 
 
 Specific distribution build and regression status are shown below
 
