@@ -58,9 +58,10 @@ set_target_properties(${LIB_NAME} PROPERTIES
         VERSION ${MAJOR}.${MINOR}.${PATCH}
         SOVERSION ${MAJOR}
 )
+
 # Ensure Windows exports all symbols when building a shared library
 if (WIN32)
-    set_target_properties(${LIB_VERSIONED} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    set_target_properties(${LIB_NAME} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
 # Set the output directories for different platforms
