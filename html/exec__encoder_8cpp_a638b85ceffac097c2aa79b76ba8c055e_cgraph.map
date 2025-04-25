@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,527,60,552"/>
 <area shape="rect" id="Node000002" href="$exec__encoder_8cpp.html#a314da15e7fc8f48e094a1a5ddabab89c" title=" " alt="" coords="178,23,301,48"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="31,526,34,434,43,292,53,219,66,151,83,95,94,74,106,57,133,40,164,31,165,36,135,44,110,61,98,77,88,97,71,152,58,219,49,293,39,434,37,526"/>
-<area shape="rect" id="Node000003" href="$exec__encoder_8cpp.html#a132eda413acdf67b79532c3b7f340e5c" title=" " alt="" coords="199,72,280,97"/>
+<area shape="rect" id="Node000003" href="$exec__encoder_8cpp.html#a132eda413acdf67b79532c3b7f340e5c" title="filesystem check fore file existence prepared for both windows and linux." alt="" coords="199,72,280,97"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="32,526,36,442,47,317,56,251,69,191,85,142,106,108,123,95,143,86,185,79,185,84,145,91,126,100,110,112,90,144,74,193,61,252,52,317,41,443,37,527"/>
 <area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a1b7106979c669a3be5c2ff950743c126" title="Retrieves a buffer containing all the stored packets sequentially." alt="" coords="135,122,344,162"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="32,526,38,454,51,347,73,242,88,201,106,172,121,160,124,164,110,176,93,203,78,244,57,348,43,454,37,527"/>
