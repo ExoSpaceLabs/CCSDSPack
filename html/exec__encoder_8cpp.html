@@ -247,7 +247,7 @@ Here is the caller graph for this function:</div>
 <div class="fragment"><div class="line"><span class="lineno">  185</span>                                           {</div>
 <div class="line"><span class="lineno">  186</span><span class="preprocessor">#ifdef _WIN32</span></div>
 <div class="line"><span class="lineno">  187</span>  <span class="comment">// Check if the fileName contains any non-ASCII characters</span></div>
-<div class="line"><span class="lineno">  188</span>  std::ifstream file(filename);</div>
+<div class="line"><span class="lineno">  188</span>  std::ifstream file(fileName);</div>
 <div class="line"><span class="lineno">  189</span>  <span class="keywordflow">return</span> file.good();</div>
 <div class="line"><span class="lineno">  190</span><span class="preprocessor">#else</span></div>
 <div class="line"><span class="lineno">  191</span>  <span class="keywordflow">return</span> std::filesystem::exists(fileName);</div>

@@ -268,7 +268,7 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno"><a class="line" href="exec__encoder_8cpp.html#a132eda413acdf67b79532c3b7f340e5c">  185</a></span><span class="keywordtype">bool</span> <a class="code hl_function" href="exec__encoder_8cpp.html#a132eda413acdf67b79532c3b7f340e5c">fileExists</a>(<span class="keyword">const</span> std::string &amp;fileName) {</div>
 <div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="preprocessor">#ifdef _WIN32</span></div>
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  <span class="comment">// Check if the fileName contains any non-ASCII characters</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  std::ifstream file(filename);</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  std::ifstream file(fileName);</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keywordflow">return</span> file.good();</div>
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="preprocessor">#else</span></div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  <span class="keywordflow">return</span> std::filesystem::exists(fileName);</div>
