@@ -43,7 +43,8 @@ jobs:
           Get-ChildItem -Path build/bin/      
 
       - name: Run tests
+        shell: pwsh
         run: |
-          echo "Running CCSDSPack_tester.exe from build/bin/"
-          cd build/bin && ./CCSDSPack_tester.exe
-        shell: bash
+          Write-Host "Running CCSDSPack_tester.exe from build\bin\"
+          cd build\bin
+          .\CCSDSPack_tester.exe
