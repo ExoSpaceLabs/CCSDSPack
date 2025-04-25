@@ -1,7 +1,9 @@
 <map id="readBinaryFile" name="readBinaryFile">
-<area shape="rect" id="Node000001" title="Read a specified binary file and return its contents as a buffer." alt="" coords="281,31,397,56"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a8be98b4fb7b61439308dfadfea9496f9" title="Load a packet or a series of packets from a binary file." alt="" coords="35,5,203,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="267,38,203,30,204,25,268,32"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" title="Load a template packet from a binary or configuration file." alt="" coords="5,55,233,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="268,54,234,58,233,52,267,48"/>
+<area shape="rect" id="Node000001" title="Read a specified binary file and return its contents as a buffer." alt="" coords="281,55,397,80"/>
+<area shape="rect" id="Node000002" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="92,5,147,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="273,54,233,45,147,26,148,21,234,39,274,49"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#a8be98b4fb7b61439308dfadfea9496f9" title="Load a packet or a series of packets from a binary file." alt="" coords="35,55,203,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,70,204,70,204,65,267,65"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" title="Load a template packet from a binary or configuration file." alt="" coords="5,104,233,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="270,86,234,94,178,107,177,101,233,89,269,81"/>
 </map>

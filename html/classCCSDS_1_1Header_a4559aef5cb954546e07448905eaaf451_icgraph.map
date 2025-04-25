@@ -1,0 +1,5 @@
+<map id="CCSDS::Header::setSequenceFlags" name="CCSDS::Header::setSequenceFlags">
+<area shape="rect" id="Node000001" title="2 bits" alt="" coords="108,5,320,45"/>
+<area shape="rect" id="Node000002" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,13,60,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,28,60,28,60,23,94,23"/>
+</map>

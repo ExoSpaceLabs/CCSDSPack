@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['unknown_5ferror_0',['UNKNOWN_ERROR',['../namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda3b7a976278f27d9b60ed6640fcd612db',1,'CCSDS']]],
-  ['unsegmented_1',['UNSEGMENTED',['../namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fac2d8eb488f6ca9a63f367614f9065634',1,'CCSDS']]]
+  ['other_0',['OTHER',['../exec__encoder_8cpp.html#a7e1c0cf6dabf7933acab828d6dd4c616adbf1dee1b8cd7ea3c82661943c7b74f4',1,'exec_encoder.cpp']]]
 ];

@@ -1,5 +1,0 @@
-<map id="printBufferData" name="printBufferData">
-<area shape="rect" id="Node000001" title="Prints to console the HEX data from the bytes vector." alt="" coords="155,5,277,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSUtils_8cpp.html#a5f93cc97b1a3bb506c38638251b15339" title="Prints to console a series of CCSDS Packets, breaking it down to Primary header and Data field." alt="" coords="5,5,107,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,21,107,21,107,15,141,15"/>
-</map>
