@@ -13,6 +13,7 @@
 #include <iomanip>
 #include <locale>
 #include <sstream>
+#include <fstream>
 #include "CCSDSManager.h"
 #include "CCSDSHeader.h"
 #include "CCSDSResult.h"
@@ -184,18 +185,10 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
 bool fileExists(const std::string &fileName) {
 #ifdef _WIN32
   // Check if the fileName contains any non-ASCII characters
-  bool isUnicode = std::any_of(fileName.begin(), fileName.end(), [](unsigned char c) {
-      return c & 0x80;  // Checks for characters outside the ASCII range
-  });
-
-  if (isUnicode) {
-    std::wstring wFileName(fileName.begin(), fileName.end());
-    return std::filesystem::exists(std::filesystem::path(wFileName));
-  } else {
-    return std::filesystem::exists(std::filesystem::path(fileName));
-  }
+  std::ifstream file(filename);
+  return file.good();
 #else
-   return std::filesystem::exists(fileName);
+  return std::filesystem::exists(fileName);
 #endif
 }
 
