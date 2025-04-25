@@ -335,7 +335,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
 
       tester->unitTest("Manager shall insert the sync pattern at the start of each packet.", [&manager1] {
         bool ret;
-        manager1.enableSyncPattern(true);
+        manager1.setSyncPatternEnable(true);
         TEST_RET(ret, manager1.write("test_resources/myPacketsSync.bin"));
         return ret;
       });
@@ -350,9 +350,9 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       };
       tester->unitTest("Manager shall read the packets with sync pattern and remove it.", [&manager1, &expected] {
         bool ret;
-        manager1.enableSyncPattern(true);
+        manager1.setSyncPatternEnable(true);
         TEST_RET(ret, manager1.read("test_resources/myPacketsSync.bin"));
-        manager1.enableSyncPattern(false);
+        manager1.setSyncPatternEnable(false);
         auto retPackets = manager1.getPacketsBuffer();
         return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
       });

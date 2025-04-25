@@ -19,22 +19,20 @@ set(MINOR "6")
 set(PATCH "0")
 
 message(STATUS "Flags:")
-option(BUILD_TESTER "Build the CCSDSPack tester executable" ON)
-message(STATUS "  -DBUILD_TESTER=${BUILD_TESTER}")
+option(ENABLE_TESTER "Build the CCSDSPack tester executable" ON)
+message(STATUS "  -DENABLE_TESTER=${ENABLE_TESTER}")
+option(ENABLE_ENCODER "Build the CCSDSPack encoder executable" ON)
+message(STATUS "  -ENABLE_ENCODER=${ENABLE_ENCODER}")
 
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
 set(LIB_VERSIONED "${LIB_NAME}${VER}")
-set(TESTER_EXEC "${LIB_NAME}_tester")
 
 project(${LIB_VERSIONED})
 
 # Define directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/src")
 set(INCLUDE_DIR "${CMAKE_SOURCE_DIR}/inc")
-set(TEST_SOURCE_DIR "${CMAKE_SOURCE_DIR}/test/src")
-set(TEST_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/test/inc")
-set(TEST_RESOURCE_DIR "${CMAKE_SOURCE_DIR}/test/resources")
 
 # Set output directories for different OSes
 if (WIN32)
@@ -52,7 +50,6 @@ include_directories(${INCLUDE_DIR})
 file(GLOB LIBRARY_SOURCES "${SOURCE_DIR}/*.cpp")
 
 # Create the shared library target
-#add_library(${LIB_VERSIONED} SHARED ${LIBRARY_SOURCES})
 add_library(${LIB_NAME} SHARED ${LIBRARY_SOURCES})
 set_target_properties(${LIB_NAME} PROPERTIES
         VERSION ${MAJOR}.${MINOR}.${PATCH}
@@ -70,48 +67,15 @@ set_target_properties(${LIB_NAME} PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
     RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
 )
-if(BUILD_TESTER)
-    # Collect all source files in the test src folder for the test executable
-    file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 
+# Enables build of tester
+if(ENABLE_TESTER)
+    include(${CMAKE_SOURCE_DIR}/cmake/tester.cmake)
+endif ()
 
-    # Collect all test resources from the test/resources directory
-    file(GLOB TEST_RESOURCES "${TEST_RESOURCE_DIR}/*")
-
-    # Create the test executable target
-    add_executable(${TESTER_EXEC} ${TEST_SOURCES})
-
-    # Add include directories to the test target
-    target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR} ${TEST_INCLUDE_DIR})
-
-    # Link the test executable with the library
-    target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_NAME})
-
-    # Set the output directory for the test executable
-    set_target_properties(${TESTER_EXEC} PROPERTIES
-            RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}          # Specifies where the executable is placed
-    )
-
-    # Platform-specific RPATH settings
-    if(UNIX)
-        # Linux or macOS
-        set_target_properties(${TESTER_EXEC} PROPERTIES
-                BUILD_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}"  # During build time, look in these paths for libraries
-                INSTALL_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}" # After installation, look in these paths for libraries
-        )
-    elseif(WIN32)
-        # Windows doesn't use RPATH. DLLs are usually placed in the same directory as the EXE or specified in PATH.
-        set_target_properties(${TESTER_EXEC} PROPERTIES
-                # No need to set RPATH on Windows
-                RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}  # Ensure DLL is next to the executable
-        )
-    endif()
-
-    # Install resources to the bin directory
-    file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
-    file(COPY ${TEST_RESOURCES}
-            DESTINATION "${BINARY_OUTPUT_DIR}/test_resources")
-
+# Enables build of encoder
+if(ENABLE_ENCODER)
+    include(${CMAKE_SOURCE_DIR}/cmake/encoder.cmake)
 endif ()
 
 
@@ -136,6 +100,5 @@ else()
     install(DIRECTORY ${INCLUDE_DIR}/
             DESTINATION include
             FILES_MATCHING PATTERN "*.h")
-
 endif()
 
