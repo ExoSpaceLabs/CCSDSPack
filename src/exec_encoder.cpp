@@ -9,7 +9,8 @@
 #include <set>
 #include <iostream>
 #include <filesystem>
-
+#include <chrono>
+#include <sstream>
 #include "CCSDSManager.h"
 #include "CCSDSHeader.h"
 #include "CCSDSResult.h"
@@ -173,18 +174,20 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
   return true;
 }
 
-
+/**
+ * @brief filesystem check fore file existence prepared for both windows and linux.
+ *
+ * @param fileName std:.string
+ * @return bool
+ */
 bool fileExists(const std::string &fileName) {
 #ifdef _WIN32
   std::wstring wFileName(fileName.begin(), fileName.end());
-  std::filesystem::exists(wFileName);
+  std::filesystem::exists(std::filesystem::path(wFileName));
 #else
    return std::filesystem::exists(fileName);
 #endif
 }
-
-#include <chrono>
-//#include <sstream>
 
 void customConsole(const std::string& appName, const std::string& message, const std::string& logLevel ) {
   // Get current timestamp with high precision
