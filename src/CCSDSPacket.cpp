@@ -179,12 +179,15 @@ CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const uint64_t data) {
   return true;
 }
 
-
 CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const std::vector<uint8_t> &data) {
   FORWARD_RESULT(m_primaryHeader.deserialize( data ));
   m_sequenceCounter = m_primaryHeader.getSequenceCount();
   m_updateStatus = false;
   return true;
+}
+
+void CCSDS::Packet::setPrimaryHeader(const Header &header) {
+  m_primaryHeader = header;
 }
 
 void CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {

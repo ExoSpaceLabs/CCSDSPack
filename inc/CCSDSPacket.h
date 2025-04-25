@@ -97,6 +97,16 @@ namespace CCSDS {
     [[nodiscard]] ResultBool setPrimaryHeader(const std::vector<uint8_t> &data);
 
     /**
+     * @brief Sets the primary header using the provided header object.
+     *
+     * This function sets the primary header of the packet using the header object
+     *
+     * @param header
+     * @return ResultBool.
+     */
+    void setPrimaryHeader(const Header &header);
+
+    /**
      * @brief Sets the data field header using the provided SecondaryHeaderAbstract derived header.
      *
      * This function sets the data field header of the packet using a `SecondaryHeaderAbstract` derived
