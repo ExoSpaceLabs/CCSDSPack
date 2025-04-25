@@ -137,7 +137,6 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
                                  std::unordered_map<std::string, std::string> &allowedMap,
                                  std::unordered_map<std::string, std::string> &outArgs)
 {
-  bool inputFileSet{false};
   const std::set<std::string> booleanArgs{"verbose", "help"};
   std::set<std::string> allowedKeys;
   std::set<std::string> allowedShortKeys;
@@ -183,7 +182,7 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
 bool fileExists(const std::string &fileName) {
 #ifdef _WIN32
   std::wstring wFileName(fileName.begin(), fileName.end());
-  std::filesystem::exists(std::filesystem::path(wFileName));
+  return std::filesystem::exists(std::filesystem::path(wFileName));
 #else
    return std::filesystem::exists(fileName);
 #endif
