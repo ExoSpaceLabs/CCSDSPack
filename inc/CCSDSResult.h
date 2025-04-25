@@ -17,20 +17,20 @@ namespace CCSDS {
    * @brief Defines various error codes used in CCSDS packet handling.
    */
   enum ErrorCode : uint8_t {
-    NONE = 0,                      ///< No error
-    UNKNOWN_ERROR,                 ///< Unknown error
-    NO_DATA,                       ///< No data available
-    INVALID_DATA,                  ///< Data is invalid
-    INVALID_HEADER_DATA,           ///< Header data is invalid
-    INVALID_SECONDARY_HEADER_DATA, ///< Secondary header data is invalid
-    INVALID_APPLICATION_DATA,      ///< Application data is invalid
-    NULL_POINTER,                  ///< Null pointer encountered
-    INVALID_CHECKSUM,              ///< Checksum validation failed
-    VALIDATION_FAILURE,            ///< Validation Failure
-    SOMETHING_WENT_WRONG,          ///< General failure
-    FILE_READ_ERROR,               ///< Reading from file failure
-    FILE_WRITE_ERROR,              ///< Writing to file failure
-    CONFIG_FILE_ERROR,
+    NONE = 0,                           ///< No error
+    UNKNOWN_ERROR = 1,                  ///< Unknown error
+    NO_DATA = 2,                        ///< No data available
+    INVALID_DATA = 3,                   ///< Data is invalid
+    INVALID_HEADER_DATA = 4,            ///< Header data is invalid
+    INVALID_SECONDARY_HEADER_DATA = 5,  ///< Secondary header data is invalid
+    INVALID_APPLICATION_DATA = 6,       ///< Application data is invalid
+    NULL_POINTER = 7,                   ///< Null pointer encountered
+    INVALID_CHECKSUM = 8,               ///< Checksum validation failed
+    VALIDATION_FAILURE = 9,             ///< Validation Failure
+    SOMETHING_WENT_WRONG = 10,          ///< General failure
+    FILE_READ_ERROR = 11,               ///< Reading from file failure
+    FILE_WRITE_ERROR = 12,              ///< Writing to file failure
+    CONFIG_FILE_ERROR = 13
   };
 
   /**
