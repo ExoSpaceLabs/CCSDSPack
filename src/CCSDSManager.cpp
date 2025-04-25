@@ -6,7 +6,11 @@
 
 void CCSDS::Manager::setSyncPattern(uint32_t syncPattern) { m_syncPattern = syncPattern; }
 
-void CCSDS::Manager::enableSyncPattern(const bool enable) { m_syncPattEnable = enable; }
+uint32_t CCSDS::Manager::getSyncPattern() const { return m_syncPattern; }
+
+void CCSDS::Manager::setSyncPatternEnable(const bool enable) { m_syncPattEnable = enable; }
+
+bool CCSDS::Manager::getSyncPatternEnable() const { return m_syncPattEnable; }
 
 CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::SOMETHING_WENT_WRONG, "Cannot set Template as it is already set, please clear Manager first");

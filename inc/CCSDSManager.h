@@ -36,18 +36,32 @@ namespace CCSDS {
 
     /**
      * set sync pattern that should indicate the start of a CCSDS packet. insertion
-     * is disabled by default. use enableSyncPattern to enable.
+     * is disabled by default. use setSyncPatternEnable to enable.
      *
      * @param syncPattern uint32_t (default 0x1ACFFC1D)
      */
     void setSyncPattern(uint32_t syncPattern);
 
     /**
+     * returns the currently set sync pattern.
+     *
+     * @return uint32_t
+     */
+    uint32_t getSyncPattern() const;
+
+    /**
      * enable sync pattern utilization both in serialization, deserialization, read and write.
      *
      * @param enable bool (default false)
      */
-    void enableSyncPattern(bool enable);
+    void setSyncPatternEnable(bool enable);
+
+    /**
+     * returns the current settings of the sync pattern enable
+     *
+     * @return bool
+     */
+    bool getSyncPatternEnable() const;
 
     /**
      * @brief Sets a new packet template.
