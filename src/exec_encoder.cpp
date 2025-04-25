@@ -10,6 +10,8 @@
 #include <iostream>
 #include <filesystem>
 #include <chrono>
+#include <iomanip>
+#include <locale>
 #include <sstream>
 #include "CCSDSManager.h"
 #include "CCSDSHeader.h"
@@ -176,13 +178,22 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
 /**
  * @brief filesystem check fore file existence prepared for both windows and linux.
  *
- * @param fileName std:.string
+ * @param fileName std::string
  * @return bool
  */
 bool fileExists(const std::string &fileName) {
 #ifdef _WIN32
-  std::wstring wFileName(fileName.begin(), fileName.end());
-  return std::filesystem::exists(std::filesystem::path(wFileName));
+  // Check if the fileName contains any non-ASCII characters
+  bool isUnicode = std::any_of(fileName.begin(), fileName.end(), [](unsigned char c) {
+      return c & 0x80;  // Checks for characters outside the ASCII range
+  });
+
+  if (isUnicode) {
+    std::wstring wFileName(fileName.begin(), fileName.end());
+    return std::filesystem::exists(std::filesystem::path(wFileName));
+  } else {
+    return std::filesystem::exists(std::filesystem::path(fileName));
+  }
 #else
    return std::filesystem::exists(fileName);
 #endif
