@@ -185,7 +185,7 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
 bool fileExists(const std::string &fileName) {
 #ifdef _WIN32
   // Check if the fileName contains any non-ASCII characters
-  std::ifstream file(filename);
+  std::ifstream file(fileName);
   return file.good();
 #else
   return std::filesystem::exists(fileName);
