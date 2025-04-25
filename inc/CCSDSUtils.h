@@ -2,6 +2,7 @@
 #define CCSDS_UTILS_H
 
 #include <CCSDSPacket.h>
+#include <CCSDSManager.h>
 #include <string>
 #include <cstdint>
 #include <vector>
@@ -23,11 +24,18 @@ uint16_t crc16(const std::vector<uint8_t> &data,
 );
 
 /**
- * @brief Prints to console a series of CCSDS Packets, breaking it down to Primary header and Data field.
+ * @brief Prints to console a  CCSDS Packets, breaking it down to Primary header and Data field.
  *
- * @param packets
+ * @param packet
  */
-void printPackets(std::vector<CCSDS::Packet> &packets);
+void printPacket(CCSDS::Packet &packet);
+
+/**
+ * @brief Prints to console a series of CCSDS Packets contained in the manager.
+ *
+ * @param manager
+ */
+void printPackets(CCSDS::Manager & manager);
 
 /**
  * @brief Converts a given value to its binary representation as a string, with spaces every 4 bits.
@@ -50,8 +58,9 @@ std::string getBitsSpaces(int num);
  * @brief Prints to console the HEX data from the bytes vector.
  *
  * @param buffer
+ * @param limitBytes
  */
-void printBufferData(const std::vector<uint8_t> &buffer);
+void printBufferData(const std::vector<uint8_t> &buffer, int limitBytes = 20);
 
 /**
  * @brief Prints the data field details, including the secondary header and application data.

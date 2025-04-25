@@ -1,4 +1,5 @@
 #include "CCSDSUtils.h"
+#include <cstddef>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -33,10 +34,20 @@ std::string getBitsSpaces(const int num) {
   return spaces;
 }
 
-void printBufferData(const std::vector<uint8_t> &buffer) {
+void printBufferData(const std::vector<uint8_t> &buffer, const int limitBytes) {
   std::cout << "[ ";
-  for (const unsigned char i: buffer) {
-    std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(i) << " ";
+  if (buffer.size() > limitBytes) {
+    for (size_t i= 0 ; i < static_cast<int>(limitBytes / 2); i++) {
+      std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(buffer[i]) << " ";
+    }
+    std::cout << "... ";
+    for (size_t i = buffer.size() - static_cast<int>(limitBytes / 2) ; i < buffer.size(); i++) {
+      std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(buffer[i]) << " ";
+    }
+  } else {
+    for (const unsigned char i: buffer) {
+      std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(i) << " ";
+    }
   }
   std::cout << "]" << std::endl;
 }
@@ -48,47 +59,71 @@ void printData(CCSDS::DataField dataField) {
                              ? applicationData.size()
                              : dataFieldHeader.size();
 
-  std::cout << std::endl;
-  std::cout << " [CCSDS DATA] Test result:" << std::endl;
+  std::cout << " [CCSDS DATA] Data Field Length              : " << applicationData.size() + dataFieldHeader.size() << " bytes" << std::endl;
   std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << (dataField.getDataFieldHeaderFlag()
                                                                          ? "True"
                                                                          : "False") << " ]" << std::endl;
-  std::cout << " [CCSDS DATA] Secondary Header         [Hex] : [ " << getBitsSpaces(
+  if (!dataFieldHeader.empty()) {
+    std::cout << " [CCSDS DATA] Secondary Header         [Hex] : " << getBitsSpaces(
     (maxSize - static_cast<uint16_t>(dataFieldHeader.size())) * 4);
-  for (const auto &data: dataFieldHeader) {
-    std::cout << "0x" << std::hex << static_cast<unsigned int>(data) << " ";
+    printBufferData(dataFieldHeader);
   }
 
-  std::cout << "]" << std::endl;
-  std::cout << " [CCSDS DATA] Data Field               [Hex] : [ " << getBitsSpaces(
-    (maxSize - static_cast<uint16_t>(applicationData.size())) * 4);
-  for (const auto &data: applicationData) {
-    std::cout << "0x" << std::hex << static_cast<unsigned int>(data) << " ";
-  }
-  std::cout << "]" << std::endl;
+  std::cout << " [CCSDS DATA] Application Data         [Hex] : ";
+  printBufferData(applicationData);
   std::cout << std::endl;
 }
 
 void printHeader(CCSDS::Header &header) {
-  std::cout << std::endl;
-  std::cout << " [CCSDS HEADER] Test result:" << std::endl;
   std::cout << " [CCSDS HEADER] Full Primary Header    [Hex] : [ " << getBitsSpaces(17 - 12) << "0x" << std::hex <<
       header.getFullHeader() << " ]" << std::endl;
   std::cout << std::endl;
-  std::cout << " [CCSDS HEADER] Info: Version Number         : [ " << getBitsSpaces(19 - 4) <<
-      getBinaryString(header.getVersionNumber(), 3) << " ]" << std::endl;
-  std::cout << " [CCSDS HEADER] Info: Type                   : [ " << getBitsSpaces(19 - 4) <<
-      getBinaryString(header.getType(), 1) << " ]" << std::endl;
-  std::cout << " [CCSDS HEADER] Info: Data Field Header Flag : [ " << getBitsSpaces(19 - 4) << getBinaryString(
-    header.getDataFieldHeaderFlag(), 1) << " ]" << std::endl;
-  std::cout << " [CCSDS HEADER] Info: APID                   : [ " << getBitsSpaces(17 - 12) <<
-      getBinaryString(header.getAPID(), 11) << " ]" << std::endl;
-  std::cout << " [CCSDS HEADER] Info: Sequence Flags         : [ " << getBitsSpaces(19 - 4) <<
-      getBinaryString(header.getSequenceFlags(), 2) << " ]" << std::endl;
-  std::cout << " [CCSDS HEADER] Info: Sequence Count         : [ " << getBitsSpaces(0) << getBinaryString(
-    header.getSequenceCount(), 14) << " ]" << std::endl;
-  std::cout << " [CCSDS HEADER] Info: DataLength             : [ " << getBinaryString(header.getDataLength(), 16) <<
-      " ]" << std::endl;
+
+  std::cout << " [CCSDS HEADER] Version Number               : [ " << getBitsSpaces(19 - 4) <<
+      getBinaryString(header.getVersionNumber(), 3) << " ]";
+  std::cout << " - [Dec] : "<< std::dec <<  static_cast<int>( header.getVersionNumber())  << std::endl;
+
+  std::cout << " [CCSDS HEADER] Type                         : [ " << getBitsSpaces(19 - 4) <<
+      getBinaryString(header.getType(), 1) << " ]";
+  std::cout << " - [Dec] : "<< std::dec << static_cast<int>( header.getType()) << std::endl;
+
+  std::cout << " [CCSDS HEADER] APID                         : [ " << getBitsSpaces(17 - 12) <<
+    getBinaryString(header.getAPID(), 11) << " ]";
+  std::cout << " - [Dec] : " << std::dec << header.getAPID() << std::endl;
+
+  std::cout << " [CCSDS HEADER] Data Field Header Flag       : [ " << getBitsSpaces(19 - 4) << getBinaryString(
+  header.getDataFieldHeaderFlag(), 1) << " ]";
+  std::cout << " -       : " << (header.getDataFieldHeaderFlag() ? "True" : "False")  << std::endl;
+
+  std::cout << " [CCSDS HEADER] Sequence Flags               : [ " << getBitsSpaces(19 - 4) <<
+    getBinaryString(header.getSequenceFlags(), 2) << " ]";
+  std::cout << " -       : ";
+  switch(header.getSequenceFlags()) {
+    case 0:
+      std::cout << "CONTINUING_SEGMENT";
+      break;
+    case 1:
+      std::cout << "FIRST_SEGMENT";
+      break;
+    case 2:
+      std::cout << "LAST_SEGMENT";
+      break;
+    case 3:
+      std::cout << "UNSEGMENTED";
+      break;
+    default:
+      break;
+  }
+  std::cout << std::endl;
+
+  std::cout << " [CCSDS HEADER] Sequence Count               : [ " << getBitsSpaces(0) << getBinaryString(
+  header.getSequenceCount(), 14) << " ]";
+  std::cout << " - [Dec] : "<< std::dec << header.getSequenceCount() << std::endl;
+
+  std::cout << " [CCSDS HEADER] DataLength                   : [ " << getBinaryString(header.getDataLength(), 16) <<
+    " ]";
+  std::cout << " - [Dec] : "<< std::dec << header.getDataLength() << std::endl;
+
   std::cout << std::endl;
 }
 
@@ -104,8 +139,9 @@ void printDataField(CCSDS::Packet &packet) {
   auto dataField = packet.getDataField();
 
   printData(dataField);
-  std::cout << "[ CCSDSPack ] CRC-16                   [Hex] : [ " << "0x" << std::hex << packet.getCRC() << " ]" <<
-      std::endl;
+  std::cout << "[ CCSDSPack ] CRC-16                   [Hex] : [ " << "0x" << std::hex << packet.getCRC() << " ]";
+  std::cout << " - [Dec] : "<< std::dec << packet.getCRC() << std::endl;
+
 }
 
 uint16_t crc16(
@@ -129,16 +165,28 @@ uint16_t crc16(
   return crc ^ finalXorValue; // Apply final XOR
 }
 
-void printPackets(std::vector<CCSDS::Packet> &packets) {
-  int idx = 0;
-  for (auto &packet: packets) {
+void printPacket(CCSDS::Packet &packet) {
+  printPrimaryHeader(packet);
+  printDataField(packet);
+}
+
+void printPackets(CCSDS::Manager& manager) {
+  std::cout << "[ CCSDS Manager ] Number of Packets    : " << manager.getTotalPackets() << std::endl;
+  std::cout << "[ CCSDS Manager ] Sync Pattern Enabled : " << (manager.getSyncPatternEnable() ? "True" : "False") << std::endl;
+  std::cout << "[ CCSDS Manager ] Sync Pattern         : 0x" << std::hex << manager.getSyncPattern() << std::dec << std::endl;
+
+  auto templatePacket = manager.getTemplate();
+  std::cout << "[ CCSDS Manager ] Template             : " << std::endl ;
+  printPrimaryHeader(templatePacket);
+
+  int idx = 1;
+  for (auto &packet: manager.getPacketsReference()) {
+    std::cout << "__________________________________________________________________________________________________________________" << std::endl;
     std::cout << "[ CCSDS Manager ] Printing Packet [ " << idx << " ]:" << std::endl;
+    std::cout << "[ CCSDS Manager ] Packet Length : " << packet.getFullPacketLength() << " bytes" << std::endl;
     std::cout << "[ CCSDS Manager ] Data ";
-    printBufferData(packet.serialize());
-
-    printPrimaryHeader(packet);
-    printDataField(packet);
-
+    printBufferData(packet.serialize(), 20);
+    printPacket(packet);
     idx++;
   }
 }
