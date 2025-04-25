@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['load_0',['load',['../classCCSDS_1_1Manager.html#a476ce8ef6b5a5c9aae31df69d81770a6',1,'CCSDS::Manager::load(const std::vector&lt; Packet &gt; &amp;packets)'],['../classCCSDS_1_1Manager.html#a974f09b0a59fc6ed7083a467c1f7d67d',1,'CCSDS::Manager::load(const std::vector&lt; uint8_t &gt; &amp;packetsBuffer)'],['../classConfig.html#a666e6d9c5510736d8ef85564abe834dd',1,'Config::load()']]]
+  ['has_5fvalue_0',['has_value',['../classCCSDS_1_1Result.html#a22dd52b6ed9b5be6cd6bfdd35e78cb7b',1,'CCSDS::Result']]],
+  ['header_1',['Header',['../classCCSDS_1_1Header.html#ac77c99237150d1f3a4740a6deaa0f51c',1,'CCSDS::Header']]]
 ];
