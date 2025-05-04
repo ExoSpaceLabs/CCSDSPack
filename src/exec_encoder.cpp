@@ -13,7 +13,6 @@
 #include <iomanip>
 #include <locale>
 #include <sstream>
-#include <fstream>
 #include "CCSDSManager.h"
 #include "CCSDSHeader.h"
 #include "CCSDSResult.h"
@@ -183,13 +182,11 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
  * @return bool
  */
 bool fileExists(const std::string &fileName) {
-#ifdef _WIN32
-  // Check if the fileName contains any non-ASCII characters
-  std::ifstream file(fileName);
-  return file.good();
-#else
-  return std::filesystem::exists(fileName);
-#endif
+  auto exp = readBinaryFile(fileName);
+  if ( exp.has_value()) {
+    return true;
+  }
+  return false;
 }
 
 void customConsole(const std::string& appName, const std::string& message, const std::string& logLevel ) {
