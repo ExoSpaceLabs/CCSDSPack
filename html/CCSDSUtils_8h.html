@@ -142,6 +142,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a7c53ed59dcb970211aa0217eb095cc4d" id="r_a7c53ed59dcb970211aa0217eb095cc4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">CCSDS::ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a> (const std::string &amp;filename)</td></tr>
 <tr class="memdesc:a7c53ed59dcb970211aa0217eb095cc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a specified binary file and return its contents as a buffer.  <br /></td></tr>
 <tr class="separator:a7c53ed59dcb970211aa0217eb095cc4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a132eda413acdf67b79532c3b7f340e5c" id="r_a132eda413acdf67b79532c3b7f340e5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a132eda413acdf67b79532c3b7f340e5c">fileExists</a> (const std::string &amp;fileName)</td></tr>
+<tr class="memdesc:a132eda413acdf67b79532c3b7f340e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">filesystem check fore file existence prepared for both windows and linux.  <br /></td></tr>
+<tr class="separator:a132eda413acdf67b79532c3b7f340e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b974227bd1064e006f517e8423a0545" id="r_a3b974227bd1064e006f517e8423a0545"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a> (const std::string &amp;str, const std::string &amp;suffix)</td></tr>
 <tr class="memdesc:a3b974227bd1064e006f517e8423a0545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests if str ends with suffix.  <br /></td></tr>
 <tr class="separator:a3b974227bd1064e006f517e8423a0545"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -220,6 +223,53 @@ Functions</h2></td></tr>
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a57e759a405c87ef115cf3d1c9a6c64be_icgraph.svg" width="310" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a132eda413acdf67b79532c3b7f340e5c" name="a132eda413acdf67b79532c3b7f340e5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a132eda413acdf67b79532c3b7f340e5c">&#9670;&#160;</a></span>fileExists()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool fileExists </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>fileName</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>filesystem check fore file existence prepared for both windows and linux. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">fileName</td><td>std::string </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00226">226</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  226</span>                                           {</div>
+<div class="line"><span class="lineno">  227</span>  <span class="keyword">auto</span> exp = <a class="code hl_function" href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a>(fileName);</div>
+<div class="line"><span class="lineno">  228</span>  <span class="keywordflow">if</span> ( exp.has_value()) {</div>
+<div class="line"><span class="lineno">  229</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  230</span>  }</div>
+<div class="line"><span class="lineno">  231</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  232</span>}</div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a7c53ed59dcb970211aa0217eb095cc4d"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBuffer readBinaryFile(const std::string &amp;filename)</div><div class="ttdoc">Read a specified binary file and return its contents as a buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00208">CCSDSUtils.cpp:208</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a132eda413acdf67b79532c3b7f340e5c_cgraph.svg" width="256" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a132eda413acdf67b79532c3b7f340e5c_icgraph.svg" width="195" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -834,11 +884,11 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>boolean </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00240">240</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  240</span>                                                                   {</div>
-<div class="line"><span class="lineno">  241</span>  <span class="keywordflow">return</span> str.size() &gt;= suffix.size() &amp;&amp;</div>
-<div class="line"><span class="lineno">  242</span>         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;</div>
-<div class="line"><span class="lineno">  243</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00234">234</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  234</span>                                                                   {</div>
+<div class="line"><span class="lineno">  235</span>  <span class="keywordflow">return</span> str.size() &gt;= suffix.size() &amp;&amp;</div>
+<div class="line"><span class="lineno">  236</span>         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;</div>
+<div class="line"><span class="lineno">  237</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
