@@ -505,6 +505,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
     int integerValue;
     TEST_RET(integerValue,cfg.get<int>("integerValue"));
+    std::cout << integerValue << std::endl;
     if (integerValue != 42 ) return false;
 
     bool booleanValue;

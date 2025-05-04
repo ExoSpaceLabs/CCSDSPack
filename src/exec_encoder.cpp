@@ -20,7 +20,8 @@
 enum ErrorCodeExec : uint8_t {
   ARG_PARSE_ERROR = 14,                           ///< Error Parsing argument
   CONFIG_MISSING_PARAMETER = 15,
-  OTHER = 15
+  INVALID_INPUT_DATA = 16,
+  OTHER = 17
 };
 CCSDS::ResultBool parseArguments(int argc, char *argv[],
                                  std::unordered_map<std::string, std::string> &allowedMap,
@@ -36,6 +37,18 @@ void printHelp() {
   std::cout << " -i or --input <filename>  : input file to be encoded" << std::endl;;
   std::cout << " -o or --output <filename> : Generated output file" << std::endl;;
   std::cout << " -c or --config <filename> : Configuration file" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Template override: the template CCSDS packet read from the config file" << std::endl;
+  std::cout << "can be overwritten by using the following options. In the case not all" << std::endl;
+  std::cout << "parameters are used, the remsaining parameters will be read from the" << std::endl;
+  std::cout << "configuration file." << std::endl;
+  std::cout << " -tv <int>                 : Template CCSDS version number (3 bits)" << std::endl;
+  std::cout << " -tt <bool>                : Template CCSDS Type" << std::endl;
+  std::cout << " -ta <int>                 : Template CCSDS APID" << std::endl;
+  std::cout << " -th <bool>                : Template CCSDS Secondary header presence" << std::endl;
+  std::cout << " -ts <bool>                : Template CCSDS Segmented" << std::endl;
+  std::cout << std::endl;
+  std::cout << "Examples:" << std::endl;
 }
 
 int main(const int argc, char* argv[]) {
@@ -48,6 +61,12 @@ int main(const int argc, char* argv[]) {
   allowed.insert({"o", "output"});
   allowed.insert({"c", "config"});
 
+  allowed.insert({"tv", "version_number"});
+  allowed.insert({"tt", "type"});
+  allowed.insert({"ta", "apid"});
+  allowed.insert({"th", "secondary_header"});
+  allowed.insert({"ts", "segmented"});
+
   std::unordered_map<std::string, std::string> args;
   args.insert({"verbose", "false"});
   args.insert({"help", "false"});
@@ -56,7 +75,10 @@ int main(const int argc, char* argv[]) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }
-
+   std::cout << "Parsed args:\n";
+   for (const auto& [k, v] : args) {
+     std::cout << "  " << k << ": " << v << '\n';
+   }
   if (args["help"] == "true") {
     printHelp();
     return 0;
@@ -111,36 +133,81 @@ int main(const int argc, char* argv[]) {
   uint8_t dataFieldHeaderFlag;
   uint16_t sequenceCount;
   CCSDS::ESequenceFlag sequenceFlag;
-  if (!cfg.isKey("ccsds_version_number")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_version_number" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  if (!cfg.isKey("ccsds_type")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_type" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  if (!cfg.isKey("ccsds_data_field_header_flag")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_data_field_header_flag" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  if (!cfg.isKey("ccsds_APID")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_APID" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  if (!cfg.isKey("ccsds_segmented")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_segmented" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-
-  // prepare template packet
-  customConsole(appName,"creating CCSDS template packet");
+  uint16_t dataFieldSize;
   bool segmented;
-  ASSIGN_OR_PRINT(versionNumber, cfg.get<int>("ccsds_version_number"));
-  ASSIGN_OR_PRINT(type, cfg.get<bool>("ccsds_type"));
-  ASSIGN_OR_PRINT(dataFieldHeaderFlag, cfg.get<bool>("ccsds_data_field_header_flag"));
-  ASSIGN_OR_PRINT(APID, cfg.get<int>("ccsds_APID"));
-  ASSIGN_OR_PRINT(segmented, cfg.get<bool>("ccsds_segmented"));
+  bool syncPatternEnable;
+  uint32_t syncPattern;
+  if (args.find("version_number") == args.end()) {
+    if (!cfg.isKey("ccsds_version_number")) {
+      std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_version_number"
+          << std::endl;
+      return CONFIG_MISSING_PARAMETER;
+    }
+    ASSIGN_OR_PRINT(versionNumber, cfg.get<int>("ccsds_version_number"));
+  }else {
+    versionNumber = std::stoi(args["version_number"]);
+  }
 
+  if (args.find("type") == args.end()) {
+    if (!cfg.isKey("ccsds_type")) {
+      std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_type" << std::endl;
+      return CONFIG_MISSING_PARAMETER;
+    }
+    ASSIGN_OR_PRINT(type, cfg.get<bool>("ccsds_type"));
+  }else {
+    type = args["type"] == "true";
+  }
+
+  if (args.find("secondary_header") == args.end()) {
+    if (!cfg.isKey("ccsds_data_field_header_flag")) {
+      std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_data_field_header_flag" << std::endl;
+      return CONFIG_MISSING_PARAMETER;
+    }
+    ASSIGN_OR_PRINT(dataFieldHeaderFlag, cfg.get<bool>("ccsds_data_field_header_flag"));
+  }else {
+    dataFieldHeaderFlag = args["secondary_header"] == "true";
+  }
+
+  if (args.find("apid") == args.end()) {
+    if (!cfg.isKey("ccsds_APID")) {
+      std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_APID" << std::endl;
+      return CONFIG_MISSING_PARAMETER;
+    }
+    ASSIGN_OR_PRINT(APID, cfg.get<int>("ccsds_APID"));
+  }else {
+    APID = std::stoi(args["apid"]);
+  }
+
+  if (args.find("segmented") == args.end()) {
+    if (!cfg.isKey("ccsds_segmented")) {
+      std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_segmented" << std::endl;
+      return CONFIG_MISSING_PARAMETER;
+    }
+    ASSIGN_OR_PRINT(segmented, cfg.get<bool>("ccsds_segmented"));
+  }else {
+    segmented = args["segmented"] == "true";
+  }
+
+  if (!cfg.isKey("data_field_size")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: data_field_size" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
+  }
+
+  if (!cfg.isKey("sync_pattern_enable")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: sync_pattern_enable" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
+  }
+
+  ASSIGN_OR_PRINT(dataFieldSize, cfg.get<int>("data_field_size"));
+  ASSIGN_OR_PRINT(syncPatternEnable, cfg.get<bool>("sync_pattern_enable"));
+
+  {  // optional definition of sync pattern
+    if (auto exp = cfg.get<int>("sync_pattern"); exp.has_value()) {
+      syncPattern = exp.value();
+    }
+  }
+
+  customConsole(appName,"creating CCSDS template packet");
   if (segmented) {
     sequenceCount = 1;
     sequenceFlag = CCSDS::ESequenceFlag::FIRST_SEGMENT;
@@ -164,8 +231,11 @@ int main(const int argc, char* argv[]) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }
-  manager.setDatFieldSize(256);
-  manager.setSyncPatternEnable(false);
+  manager.setDatFieldSize(dataFieldSize);
+  manager.setSyncPatternEnable(syncPatternEnable);
+  if (syncPatternEnable && cfg.isKey("sync_pattern")) {
+    manager.setSyncPattern(syncPattern);
+  }
   std::vector<uint8_t> inputBytes;
 
   customConsole(appName,"reading data from " + input);
@@ -174,12 +244,18 @@ int main(const int argc, char* argv[]) {
     return exp.error().code();
   }else {
     inputBytes = exp.value();
+    if (!segmented && inputBytes.size() > dataFieldSize){
+      std::cerr << "[ Error " << INVALID_INPUT_DATA << " ]: "<<  "Input data is too big for unsegmented packets, data "
+      << inputBytes.size() << " must be less than defined data packet length of " << dataFieldSize << std::endl ;
+      return INVALID_INPUT_DATA;
+    }
   }
   customConsole(appName, "generating CCSDS packets using input data");
   if (const auto exp = manager.setApplicationData(inputBytes); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }
+  if (verbose) customConsole(appName,"printing data to screen:");
   if (verbose) printPackets(manager);
 
   customConsole(appName,"serializing CCSDS packets");

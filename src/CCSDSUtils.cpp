@@ -252,7 +252,12 @@ CCSDS::ResultBool Config::load(const std::string &filename) {
     if (type == "string") {
       value = valueStr;
     } else if (type == "int") {
-      value = std::stoi(valueStr);
+      int base = 10;
+      if (valueStr.size() > 2 && valueStr.substr(0, 2) == "0x") {
+        valueStr = valueStr.substr(2);
+        base = 16;
+      }
+      value = std::stoi(valueStr, nullptr, base);
     } else if (type == "float") {
       value = std::stof(valueStr);
     } else if (type == "bool") {
@@ -310,8 +315,6 @@ CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
       if (token.size() > 2 && token.substr(0, 2) == "0x") {
         token = token.substr(2);
         base = 16;
-      } else if (std::all_of(token.begin(), token.end(), ::isxdigit) && token.size() <= 2) {
-        base = 16; // Assume short tokens with hex chars are meant to be hex
       }
       result.push_back(static_cast<uint8_t>(std::stoi(token, nullptr, base)));
     } catch (...) {
