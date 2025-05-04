@@ -19,14 +19,15 @@
 
 enum ErrorCodeExec : uint8_t {
   ARG_PARSE_ERROR = 14,                           ///< Error Parsing argument
+  CONFIG_MISSING_PARAMETER = 15,
   OTHER = 15
 };
 CCSDS::ResultBool parseArguments(int argc, char *argv[],
                                  std::unordered_map<std::string, std::string> &allowedMap,
                                  std::unordered_map<std::string, std::string> &outArgs);
 
-bool fileExists(const std::string &fileName);
 void customConsole(const std::string& appName, const std::string& message, const std::string& logLevel = "INFO");
+
 void printHelp() {
   std::cout << "Usage: ccsds_encoder [OPTIONS] - input and output file is mandatory." << std::endl;
   std::cout << "Options:" << std::endl;
@@ -56,11 +57,6 @@ int main(const int argc, char* argv[]) {
     return exp.error().code();
   }
 
-  // std::cout << "Parsed args:\n";
-  // for (const auto& [k, v] : args) {
-  //   std::cout << "  " << k << ": " << v << '\n';
-  // }
-
   if (args["help"] == "true") {
     printHelp();
     return 0;
@@ -72,6 +68,7 @@ int main(const int argc, char* argv[]) {
     printHelp();
     return ARG_PARSE_ERROR;
   }
+
   if (!fileExists(args["input"])) {
     std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Input \"" << args["input"] << "\" does not exist" << std::endl;
     return ARG_PARSE_ERROR;
@@ -85,26 +82,79 @@ int main(const int argc, char* argv[]) {
     return ARG_PARSE_ERROR;
   }
 
-  std::vector<uint8_t> inputBytes;
+  if (args.find("config") == args.end()) {
+    std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Config file must be specified" << std::endl;
+    printHelp();
+    return ARG_PARSE_ERROR;
+  }
 
-  customConsole(appName,"reading data from " + input);
-  if (const auto exp = readBinaryFile(input); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
-  }else {
-    inputBytes = exp.value();
+  if (!fileExists(args["config"])) {
+    std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Config \"" << args["config"] << "\" does not exist" << std::endl;
+    return ARG_PARSE_ERROR;
+  }
+  const std::string configFile{args["config"]};
+
+  // prepare template packet
+  customConsole(appName,"reading CCSDS configuration file: " + configFile);
+  Config cfg;
+  {
+    if (auto exp = cfg.load(configFile); !exp.has_value()) {
+      std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
+      return exp.error().code();
+    }
+  }
+
+  CCSDS::Header header;
+  uint8_t versionNumber;
+  uint8_t type;
+  uint8_t APID;
+  uint8_t dataFieldHeaderFlag;
+  uint16_t sequenceCount;
+  CCSDS::ESequenceFlag sequenceFlag;
+  if (!cfg.isKey("ccsds_version_number")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_version_number" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
+  }
+  if (!cfg.isKey("ccsds_type")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_type" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
+  }
+  if (!cfg.isKey("ccsds_data_field_header_flag")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_data_field_header_flag" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
+  }
+  if (!cfg.isKey("ccsds_APID")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_APID" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
+  }
+  if (!cfg.isKey("ccsds_segmented")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_segmented" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
   }
 
   // prepare template packet
-  //todo implement configuration file reading.
   customConsole(appName,"creating CCSDS template packet");
-  CCSDS::Header header;
-  header.setVersionNumber(1);
-  header.setType(1);
-  header.setAPID(126);
-  header.setDataFieldHeaderFlag(0);
-  header.setSequenceFlags(CCSDS::ESequenceFlag::FIRST_SEGMENT);
-  header.setSequenceCount(1);
+  bool segmented;
+  ASSIGN_OR_PRINT(versionNumber, cfg.get<int>("ccsds_version_number"));
+  ASSIGN_OR_PRINT(type, cfg.get<bool>("ccsds_type"));
+  ASSIGN_OR_PRINT(dataFieldHeaderFlag, cfg.get<bool>("ccsds_data_field_header_flag"));
+  ASSIGN_OR_PRINT(APID, cfg.get<int>("ccsds_APID"));
+  ASSIGN_OR_PRINT(segmented, cfg.get<bool>("ccsds_segmented"));
+
+  if (segmented) {
+    sequenceCount = 1;
+    sequenceFlag = CCSDS::ESequenceFlag::FIRST_SEGMENT;
+  }else {
+    sequenceCount = 0;
+    sequenceFlag = CCSDS::ESequenceFlag::UNSEGMENTED;
+  }
+
+  header.setVersionNumber(versionNumber);
+  header.setType(type);
+  header.setAPID(APID);
+  header.setDataFieldHeaderFlag(dataFieldHeaderFlag);
+  header.setSequenceFlags(sequenceFlag);
+  header.setSequenceCount(sequenceCount);
 
   CCSDS::Packet templatePacket;
   templatePacket.setPrimaryHeader(header);
@@ -116,6 +166,15 @@ int main(const int argc, char* argv[]) {
   }
   manager.setDatFieldSize(256);
   manager.setSyncPatternEnable(false);
+  std::vector<uint8_t> inputBytes;
+
+  customConsole(appName,"reading data from " + input);
+  if (const auto exp = readBinaryFile(input); !exp.has_value()) {
+    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
+    return exp.error().code();
+  }else {
+    inputBytes = exp.value();
+  }
   customConsole(appName, "generating CCSDS packets using input data");
   if (const auto exp = manager.setApplicationData(inputBytes); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;

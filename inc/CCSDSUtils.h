@@ -120,6 +120,14 @@ CCSDS::ResultBool writeBinaryFile(const std::vector<uint8_t>& data, const std::s
 CCSDS::ResultBuffer readBinaryFile(const std::string& filename);
 
 /**
+ * @brief filesystem check fore file existence prepared for both windows and linux.
+ *
+ * @param fileName std::string
+ * @return bool
+ */
+bool fileExists(const std::string &fileName);
+
+/**
  * Tests if str ends with suffix.
  * equivalent to endsWith(str) in c++20
  *
@@ -148,6 +156,8 @@ public:
     RET_IF_ERR_MSG(it == values.end(), CCSDS::ErrorCode::NO_DATA,"Config: No data found for key: " + key);
     return std::get<T>(values.at(key));
   }
+
+  bool isKey(const std::string& key) const;
 
 private:
   std::unordered_map<std::string, ConfigValue> values;

@@ -223,12 +223,6 @@ CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
   return data;
 }
 
-/**
- * @brief filesystem check fore file existence prepared for both windows and linux.
- *
- * @param fileName std::string
- * @return bool
- */
 bool fileExists(const std::string &fileName) {
   auto exp = readBinaryFile(fileName);
   if ( exp.has_value()) {
@@ -273,6 +267,13 @@ CCSDS::ResultBool Config::load(const std::string &filename) {
   }
 
   return true;
+}
+
+bool Config::isKey(const std::string &key) const {
+  if (values.find(key) != values.end()) {
+    return true;
+  }
+  return false;
 }
 
 std::tuple<std::string, std::string, std::string> Config::parseLine(const std::string& line) {
