@@ -15,7 +15,7 @@ set(LIB_NAME "CCSDSPack")
 
 # Versioning
 set(MAJOR "0")
-set(MINOR "6")
+set(MINOR "7")
 set(PATCH "0")
 
 message(STATUS "Flags:")

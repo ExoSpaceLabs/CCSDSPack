@@ -8,7 +8,6 @@
 #include <vector>
 #include <set>
 #include <iostream>
-#include <filesystem>
 #include <chrono>
 #include <iomanip>
 #include <locale>
@@ -173,20 +172,6 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
     }
   }
   return true;
-}
-
-/**
- * @brief filesystem check fore file existence prepared for both windows and linux.
- *
- * @param fileName std::string
- * @return bool
- */
-bool fileExists(const std::string &fileName) {
-  auto exp = readBinaryFile(fileName);
-  if ( exp.has_value()) {
-    return true;
-  }
-  return false;
 }
 
 void customConsole(const std::string& appName, const std::string& message, const std::string& logLevel ) {

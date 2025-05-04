@@ -223,6 +223,20 @@ CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
   return data;
 }
 
+/**
+ * @brief filesystem check fore file existence prepared for both windows and linux.
+ *
+ * @param fileName std::string
+ * @return bool
+ */
+bool fileExists(const std::string &fileName) {
+  auto exp = readBinaryFile(fileName);
+  if ( exp.has_value()) {
+    return true;
+  }
+  return false;
+}
+
 bool stringEndsWith(const std::string& str, const std::string& suffix) {
   return str.size() >= suffix.size() &&
          str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
