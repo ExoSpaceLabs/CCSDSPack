@@ -1,0 +1,5 @@
+<map id="CCSDS::Manager::setSyncPattern" name="CCSDS::Manager::setSyncPattern">
+<area shape="rect" id="Node000001" title="set sync pattern that should indicate the start of a CCSDS packet." alt="" coords="108,5,344,31"/>
+<area shape="rect" id="Node000002" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,5,60,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,21,60,21,60,15,94,15"/>
+</map>
