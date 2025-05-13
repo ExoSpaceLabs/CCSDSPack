@@ -40,6 +40,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     ASSERT_SUCCESS(newTestPacket.setPrimaryHeader({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
     CCSDS::Manager manager;
     ASSERT_SUCCESS(manager.setPacketTemplate(newTestPacket));
+    manager.setAutoValidateEnable(false);
     manager.setDatFieldSize(5);
     tester->unitTest("Manager shall set large data for multi packets with sequence control.", [&manager] {
 

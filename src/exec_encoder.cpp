@@ -37,7 +37,7 @@ void printHelp() {
   "▐        ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝       ▌\n"
   "▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌\n"
   << std::endl;
-  std::cout << "Usage: ccsds_encoder [OPTIONS] - input and output file is mandatory." << std::endl;
+  std::cout << "Usage: ccsds_encoder [OPTIONS] - take a file and packets it into ccsds packets and saves it to a binary file." << std::endl;
   std::cout << "Mandatory parameters:" << std::endl;
   std::cout << " -i or --input <filename>  : input file to be encoded" << std::endl;;
   std::cout << " -o or --output <filename> : Generated output file" << std::endl;;

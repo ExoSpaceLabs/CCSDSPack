@@ -127,7 +127,7 @@ namespace CCSDS {
      *
      * @return A ResultBuffer containing the application data.
      */
-    [[nodiscard]] ResultBuffer getApplicationDataBuffer() const;
+    [[nodiscard]] ResultBuffer getApplicationDataBuffer();
 
     /**
      * @brief Retrieves the application data from a packet at the given index.

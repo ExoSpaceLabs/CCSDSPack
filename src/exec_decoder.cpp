@@ -20,7 +20,6 @@ void printHelpDecoder() {
   // ascii art generated on https://www.asciiart.eu/text-to-ascii-art
   // with ANSI SHADOW Font, with 80 and Block frame
 
-  std::cout << "NOTE: THIS IS NOT YET IMPLEMENTED, IT WORKS JUST AS ENCODER." <<  std::endl;
   std::cout << std::endl <<
   "▐▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌\n"
   "▐         ██████╗ ██████╗███████╗██████╗ ███████╗                          ▌\n"
@@ -37,7 +36,7 @@ void printHelpDecoder() {
   "▐         ╚═════╝ ╚══════╝  ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝       ▌\n"
   "▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌\n"
   << std::endl;
-  std::cout << "Usage: ccsds_encoder [OPTIONS] - input and output file is mandatory." << std::endl;
+  std::cout << "Usage: ccsds_decoder [OPTIONS] - decode a ccsds binary file and generate a file from application data." << std::endl;
   std::cout << "Mandatory parameters:" << std::endl;
   std::cout << " -i or --input <filename>  : input file to be encoded" << std::endl;;
   std::cout << " -o or --output <filename> : Generated output file" << std::endl;;
@@ -61,7 +60,7 @@ void printHelpDecoder() {
 }
 
 int main(const int argc, char* argv[]) {
-  std::string appName = "ccsds_encoder";
+  std::string appName = "ccsds_decoder";
 
   std::unordered_map<std::string, std::string> allowed;
   allowed.insert({"h", "help"});
@@ -236,11 +235,7 @@ int main(const int argc, char* argv[]) {
   CCSDS::Packet templatePacket;
   templatePacket.setPrimaryHeader(header);
 
-  CCSDS::Manager manager;
-  if (const auto exp = manager.setPacketTemplate(templatePacket); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
-  }
+  CCSDS::Manager manager(templatePacket);
   manager.setDatFieldSize(dataFieldSize);
   manager.setSyncPatternEnable(syncPatternEnable);
   if (syncPatternEnable && cfg.isKey("sync_pattern")) {
@@ -260,18 +255,26 @@ int main(const int argc, char* argv[]) {
       return INVALID_INPUT_DATA;
     }
   }
-  customConsole(appName, "generating CCSDS packets using input data");
-  if (const auto exp = manager.setApplicationData(inputBytes); !exp.has_value()) {
+  customConsole(appName, "decoding CCSDS packets from file");
+  if (const auto exp = manager.load(inputBytes); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }
-  if (verbose) customConsole(appName,"printing data to screen:");
+  if (verbose) customConsole(appName,"printing loaded packets data to screen:");
   if (verbose) printPackets(manager);
 
   customConsole(appName,"serializing CCSDS packets");
-  auto packets = manager.getPacketsBuffer();
+  manager.setAutoValidateEnable(true);
+  std::vector<uint8_t> outputData;
+  if (const auto exp = manager.getApplicationDataBuffer(); !exp.has_value()) {
+    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
+    return exp.error().code();
+  }else {
+    outputData = exp.value();
+  }
+
   customConsole(appName,"writing data to " + output);
-  if (const auto exp = writeBinaryFile(packets, output); !exp.has_value()) {
+  if (const auto exp = writeBinaryFile(outputData, output); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }

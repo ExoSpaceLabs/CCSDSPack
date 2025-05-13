@@ -16,6 +16,7 @@ CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::SOMETHING_WENT_WRONG, "Cannot set Template as it is already set, please clear Manager first");
   m_templatePacket = std::move(packet);
   m_validator.setTemplatePacket(m_templatePacket);
+  m_validator.configure(true, true, true);
   m_validateEnable = true;
   m_templateIsSet = true;
   return true;
@@ -115,11 +116,17 @@ std::vector<uint8_t> CCSDS::Manager::getPacketsBuffer() const {
   return buffer;
 }
 
-CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() const {
+CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() {
   RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA, "Cannot get Application data, no packets have been set.");
   std::vector<uint8_t> data;
-  for (auto packet: m_packets) {
-    auto applicationData = packet.getApplicationDataBytes();
+
+  for (int index = 0; index < m_packets.size(); index++) {
+    if (m_validateEnable) {
+      const std::string errorMessage = "Validation failure for packet at index" + std::to_string(index);
+      RET_IF_ERR_MSG(!m_validator.validate(m_packets[index]), ErrorCode::VALIDATION_FAILURE,
+                     errorMessage);
+    }
+    auto applicationData = m_packets[index].getApplicationDataBytes();
     data.insert(data.end(), applicationData.begin(), applicationData.end());
   }
   return data;
