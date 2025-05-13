@@ -8,8 +8,6 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
-#include <iomanip>
-#include <locale>
 #include <sstream>
 #include "CCSDSManager.h"
 #include "CCSDSHeader.h"
@@ -18,9 +16,11 @@
 #include "exec_utils.h"
 
 
-void printHelp() {
+void printHelpDecoder() {
   // ascii art generated on https://www.asciiart.eu/text-to-ascii-art
   // with ANSI SHADOW Font, with 80 and Block frame
+
+  std::cout << "NOTE: THIS IS NOT YET IMPLEMENTED, IT WORKS JUST AS ENCODER." <<  std::endl;
   std::cout << std::endl <<
   "▐▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌\n"
   "▐         ██████╗ ██████╗███████╗██████╗ ███████╗                          ▌\n"
@@ -29,12 +29,12 @@ void printHelp() {
   "▐        ██║     ██║     ╚════██║██║  ██║╚════██║   █▀█░█▀█░█▀▀░█░█░       ▌\n"
   "▐        ╚██████╗╚██████╗███████║██████╔╝███████║   █▀▀░█▀█░█░░░█▀▄░       ▌\n"
   "▐         ╚═════╝ ╚═════╝╚══════╝╚═════╝ ╚══════╝   ▀░░░▀░▀░▀▀▀░▀░▀░       ▌\n"
-  "▐        ███████╗███╗   ██╗ ██████╗ ██████╗ ██████╗ ███████╗██████╗        ▌\n"
-  "▐        ██╔════╝████╗  ██║██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔══██╗       ▌\n"
-  "▐        █████╗  ██╔██╗ ██║██║     ██║   ██║██║  ██║█████╗  ██████╔╝       ▌\n"
-  "▐        ██╔══╝  ██║╚██╗██║██║     ██║   ██║██║  ██║██╔══╝  ██╔══██╗       ▌\n"
-  "▐        ███████╗██║ ╚████║╚██████╗╚██████╔╝██████╔╝███████╗██║  ██║       ▌\n"
-  "▐        ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝       ▌\n"
+  "▐         ██████╗ ███████╗  ██████╗ ██████╗ ██████╗ ███████╗██████╗        ▌\n"
+  "▐         ██╔══██╗██╔════╝ ██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔══██╗       ▌\n"
+  "▐         ██║  ██║█████╗   ██║     ██║   ██║██║  ██║█████╗  ██████╔╝       ▌\n"
+  "▐         ██║  ██║██╔══╝   ██║     ██║   ██║██║  ██║██╔══╝  ██╔══██╗       ▌\n"
+  "▐         ██████╔╝███████╗ ╚██████╗╚██████╔╝██████╔╝███████╗██║  ██║       ▌\n"
+  "▐         ╚═════╝ ╚══════╝  ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝       ▌\n"
   "▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌\n"
   << std::endl;
   std::cout << "Usage: ccsds_encoder [OPTIONS] - input and output file is mandatory." << std::endl;
@@ -90,14 +90,14 @@ int main(const int argc, char* argv[]) {
    //  std::cout << "  " << k << ": " << v << '\n';
    //}
   if (args["help"] == "true") {
-    printHelp();
+    printHelpDecoder();
     return 0;
   }
   bool verbose{args["verbose"] == "true"};
 
   if (args.find("input") == args.end()) {
     std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Input file must be specified" << std::endl;
-    printHelp();
+    printHelpDecoder();
     return ARG_PARSE_ERROR;
   }
 
@@ -110,13 +110,13 @@ int main(const int argc, char* argv[]) {
 
   if (output.empty()) {
     std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Output file must be specified" << std::endl;
-    printHelp();
+    printHelpDecoder();
     return ARG_PARSE_ERROR;
   }
 
   if (args.find("config") == args.end()) {
     std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Config file must be specified" << std::endl;
-    printHelp();
+    printHelpDecoder();
     return ARG_PARSE_ERROR;
   }
 

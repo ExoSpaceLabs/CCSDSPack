@@ -23,6 +23,8 @@ option(ENABLE_TESTER "Build the CCSDSPack tester executable" ON)
 message(STATUS "  -DENABLE_TESTER=${ENABLE_TESTER}")
 option(ENABLE_ENCODER "Build the CCSDSPack encoder executable" ON)
 message(STATUS "  -ENABLE_ENCODER=${ENABLE_ENCODER}")
+option(ENABLE_DECODER "Build the CCSDSPack decoder executable" ON)
+message(STATUS "  -ENABLE_DECODER=${ENABLE_DECODER}")
 
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
@@ -47,8 +49,15 @@ endif()
 include_directories(${INCLUDE_DIR})
 
 # Collect all source files in the src folder for the library
-file(GLOB LIBRARY_SOURCES "${SOURCE_DIR}/*.cpp")
-
+set(LIBRARY_SOURCES
+        "${SOURCE_DIR}/CCSDSDataField.cpp"
+        "${SOURCE_DIR}/CCSDSHeader.cpp"
+        "${SOURCE_DIR}/CCSDSManager.cpp"
+        "${SOURCE_DIR}/CCSDSPacket.cpp"
+        "${SOURCE_DIR}/CCSDSUtils.cpp"
+        "${SOURCE_DIR}/CCSDSValidator.cpp"
+        "${SOURCE_DIR}/PusServices.cpp"
+)
 # Create the shared library target
 add_library(${LIB_NAME} SHARED ${LIBRARY_SOURCES})
 set_target_properties(${LIB_NAME} PROPERTIES
@@ -78,6 +87,10 @@ if(ENABLE_ENCODER)
     include(${CMAKE_SOURCE_DIR}/cmake/encoder.cmake)
 endif ()
 
+# Enables build of decoder
+if(ENABLE_DECODER)
+    include(${CMAKE_SOURCE_DIR}/cmake/decoder.cmake)
+endif ()
 
 if(WIN32)
     # Install DLL to the bin directory
