@@ -3,7 +3,7 @@ var searchData=
   ['get_0',['get',['../classConfig.html#ac0eb207d3a0c9b3039000301c612aadb',1,'Config']]],
   ['getapid_1',['getAPID',['../classCCSDS_1_1Header.html#a3b171a18bfed281cfa837f349f7cc264',1,'CCSDS::Header']]],
   ['getapplicationdata_2',['getApplicationData',['../classCCSDS_1_1DataField.html#a692e61aef588439155bdd3e289bfa103',1,'CCSDS::DataField']]],
-  ['getapplicationdatabuffer_3',['getApplicationDataBuffer',['../classCCSDS_1_1Manager.html#ab0f57bf448ba9ad923b40666402d0657',1,'CCSDS::Manager']]],
+  ['getapplicationdatabuffer_3',['getApplicationDataBuffer',['../classCCSDS_1_1Manager.html#a6a5258f446003fc3d5687bb6bbe90ebd',1,'CCSDS::Manager']]],
   ['getapplicationdatabufferatindex_4',['getApplicationDataBufferAtIndex',['../classCCSDS_1_1Manager.html#a874020cc8688a4988cb8dd629ef11724',1,'CCSDS::Manager']]],
   ['getapplicationdatabytes_5',['getApplicationDataBytes',['../classCCSDS_1_1Packet.html#a8be105e51c65921032101df6d24f8564',1,'CCSDS::Packet']]],
   ['getautoupdateenable_6',['getAutoUpdateEnable',['../classCCSDS_1_1Manager.html#abae17bb1655a2fd356faf5e25190a91f',1,'CCSDS::Manager']]],
