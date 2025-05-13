@@ -1,6 +1,6 @@
 <map id="writeBinaryFile" name="writeBinaryFile">
 <area shape="rect" id="Node000001" title="This function takes in a buffer of data and a file name." alt="" coords="225,31,345,56"/>
-<area shape="rect" id="Node000002" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="64,5,119,31"/>
+<area shape="rect" id="Node000002" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="64,5,119,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,36,118,24,119,19,212,31"/>
 <area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#ad80b2eb281ec093e68bcf349c75183c5" title="Write a packet or a series of packets to a binary file." alt="" coords="5,55,177,80"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,55,178,59,177,54,211,50"/>

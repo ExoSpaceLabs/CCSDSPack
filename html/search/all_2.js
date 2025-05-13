@@ -22,13 +22,13 @@ var searchData=
   ['code_19',['code',['../classCCSDS_1_1Error.html#a18876667b5fa524daec31074d6f9314e',1,'CCSDS::Error']]],
   ['config_20',['Config',['../classConfig.html',1,'']]],
   ['config_5ffile_5ferror_21',['CONFIG_FILE_ERROR',['../namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8',1,'CCSDS']]],
-  ['config_5fmissing_5fparameter_22',['CONFIG_MISSING_PARAMETER',['../exec__encoder_8cpp.html#a7e1c0cf6dabf7933acab828d6dd4c616a64773e00796c166a229dfa3878340bf3',1,'exec_encoder.cpp']]],
+  ['config_5fmissing_5fparameter_22',['CONFIG_MISSING_PARAMETER',['../exec__utils_8h.html#a7e1c0cf6dabf7933acab828d6dd4c616a64773e00796c166a229dfa3878340bf3',1,'exec_utils.h']]],
   ['configure_23',['configure',['../classCCSDS_1_1Validator.html#abe3980b1c07f77551736b5a64d495d3b',1,'CCSDS::Validator']]],
   ['configvalue_24',['ConfigValue',['../classConfig.html#a0366bb07234eb62a3ed9a5b5bd2ff94f',1,'Config']]],
   ['continuing_5fsegment_25',['CONTINUING_SEGMENT',['../namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fac3ee5980e212d97bc75f01b6674fc1ca',1,'CCSDS']]],
-  ['crc16_26',['crc16',['../CCSDSUtils_8h.html#a57e759a405c87ef115cf3d1c9a6c64be',1,'crc16(const std::vector&lt; uint8_t &gt; &amp;data, uint16_t polynomial=0x1021, uint16_t initialValue=0xFFFF, uint16_t finalXorValue=0x0000):&#160;CCSDSUtils.cpp'],['../CCSDSUtils_8cpp.html#a2c103ebdbc6ee2ceda285e5834c07b8b',1,'crc16(const std::vector&lt; uint8_t &gt; &amp;data, const uint16_t polynomial, const uint16_t initialValue, const uint16_t finalXorValue):&#160;CCSDSUtils.cpp']]],
+  ['crc16_26',['crc16',['../CCSDSUtils_8cpp.html#a2c103ebdbc6ee2ceda285e5834c07b8b',1,'crc16(const std::vector&lt; uint8_t &gt; &amp;data, const uint16_t polynomial, const uint16_t initialValue, const uint16_t finalXorValue):&#160;CCSDSUtils.cpp'],['../CCSDSUtils_8h.html#a57e759a405c87ef115cf3d1c9a6c64be',1,'crc16(const std::vector&lt; uint8_t &gt; &amp;data, uint16_t polynomial=0x1021, uint16_t initialValue=0xFFFF, uint16_t finalXorValue=0x0000):&#160;CCSDSUtils.cpp']]],
   ['crc16config_27',['CRC16Config',['../structCCSDS_1_1CRC16Config.html',1,'CCSDS']]],
   ['create_28',['create',['../classCCSDS_1_1SecondaryHeaderFactory.html#a5cc98f9b65ee10e06f86afb7526bd324',1,'CCSDS::SecondaryHeaderFactory']]],
   ['creatorfunc_29',['CreatorFunc',['../classCCSDS_1_1SecondaryHeaderFactory.html#a2ec3664f23effc678a2fb8f3d048a07d',1,'CCSDS::SecondaryHeaderFactory']]],
-  ['customconsole_30',['customConsole',['../exec__encoder_8cpp.html#a314da15e7fc8f48e094a1a5ddabab89c',1,'exec_encoder.cpp']]]
+  ['customconsole_30',['customconsole',['../exec__utils_8h.html#a314da15e7fc8f48e094a1a5ddabab89c',1,'customConsole(const std::string &amp;appName, const std::string &amp;message, const std::string &amp;logLevel=&quot;INFO&quot;):&#160;exec_utils.cpp'],['../exec__utils_8cpp.html#a9e185650945304fff798a065a8f29936',1,'customConsole(const std::string &amp;appName, const std::string &amp;message, const std::string &amp;logLevel):&#160;exec_utils.cpp']]]
 ];
