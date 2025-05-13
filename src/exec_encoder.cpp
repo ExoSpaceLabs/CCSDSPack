@@ -30,17 +30,37 @@ CCSDS::ResultBool parseArguments(int argc, char *argv[],
 void customConsole(const std::string& appName, const std::string& message, const std::string& logLevel = "INFO");
 
 void printHelp() {
+  // ascii art generated on https://www.asciiart.eu/text-to-ascii-art
+  // with ANSI SHADOW Font, with 80 and Block frame
+  std::cout <<
+  "▐▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌\n"
+  "▐         ██████╗ ██████╗███████╗██████╗ ███████╗                          ▌\n"
+  "▐        ██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝                          ▌\n"
+  "▐        ██║     ██║     ███████╗██║  ██║███████╗                          ▌\n"
+  "▐        ██║     ██║     ╚════██║██║  ██║╚════██║   █▀█░█▀█░█▀▀░█░█░       ▌\n"
+  "▐        ╚██████╗╚██████╗███████║██████╔╝███████║   █▀▀░█▀█░█░░░█▀▄░       ▌\n"
+  "▐         ╚═════╝ ╚═════╝╚══════╝╚═════╝ ╚══════╝   ▀░░░▀░▀░▀▀▀░▀░▀░       ▌\n"
+  "▐        ███████╗███╗   ██╗ ██████╗ ██████╗ ██████╗ ███████╗██████╗        ▌\n"
+  "▐        ██╔════╝████╗  ██║██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔══██╗       ▌\n"
+  "▐        █████╗  ██╔██╗ ██║██║     ██║   ██║██║  ██║█████╗  ██████╔╝       ▌\n"
+  "▐        ██╔══╝  ██║╚██╗██║██║     ██║   ██║██║  ██║██╔══╝  ██╔══██╗       ▌\n"
+  "▐        ███████╗██║ ╚████║╚██████╗╚██████╔╝██████╔╝███████╗██║  ██║       ▌\n"
+  "▐        ╚══════╝╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝       ▌\n"
+  "▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌\n"
+  << std::endl;
   std::cout << "Usage: ccsds_encoder [OPTIONS] - input and output file is mandatory." << std::endl;
-  std::cout << "Options:" << std::endl;
-  std::cout << " -h or --help              : Show this help and exit" << std::endl;
-  std::cout << " -v or --verbose           : Show generated packets information" << std::endl;
+  std::cout << "Mandatory parameters:" << std::endl;
   std::cout << " -i or --input <filename>  : input file to be encoded" << std::endl;;
   std::cout << " -o or --output <filename> : Generated output file" << std::endl;;
   std::cout << " -c or --config <filename> : Configuration file" << std::endl;
   std::cout << std::endl;
+  std::cout << "Optionals:" << std::endl;
+  std::cout << " -h or --help              : Show this help and message" << std::endl;
+  std::cout << " -v or --verbose           : Show generated packets information" << std::endl;
+  std::cout << std::endl;
   std::cout << "Template override: the template CCSDS packet read from the config file" << std::endl;
   std::cout << "can be overwritten by using the following options. In the case not all" << std::endl;
-  std::cout << "parameters are used, the remsaining parameters will be read from the" << std::endl;
+  std::cout << "parameters are used, the remaining parameters will be read from the" << std::endl;
   std::cout << "configuration file." << std::endl;
   std::cout << " -tv <int>                 : Template CCSDS version number (3 bits)" << std::endl;
   std::cout << " -tt <bool>                : Template CCSDS Type" << std::endl;
@@ -48,7 +68,7 @@ void printHelp() {
   std::cout << " -th <bool>                : Template CCSDS Secondary header presence" << std::endl;
   std::cout << " -ts <bool>                : Template CCSDS Segmented" << std::endl;
   std::cout << std::endl;
-  std::cout << "Examples:" << std::endl;
+  std::cout << "For further information please visit: https://github.com/ExoSpaceLabs/CCSDSPack" << std::endl;
 }
 
 int main(const int argc, char* argv[]) {
@@ -71,14 +91,15 @@ int main(const int argc, char* argv[]) {
   args.insert({"verbose", "false"});
   args.insert({"help", "false"});
 
+  const auto start = std::chrono::high_resolution_clock::now();
   if (const auto exp = parseArguments(argc, argv, allowed, args); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }
-   std::cout << "Parsed args:\n";
-   for (const auto& [k, v] : args) {
-     std::cout << "  " << k << ": " << v << '\n';
-   }
+   // std::cout << "Parsed args:\n";
+   //for (const auto& [k, v] : args) {
+   //  std::cout << "  " << k << ": " << v << '\n';
+   //}
   if (args["help"] == "true") {
     printHelp();
     return 0;
@@ -265,7 +286,11 @@ int main(const int argc, char* argv[]) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }
-  customConsole(appName,"done [Exit code: 0]");
+
+  const auto end = std::chrono::high_resolution_clock::now();
+  const auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  customConsole(appName,"execution time: " + std::to_string(duration.count()) + " [us]");
+  customConsole(appName,"[ Exit code 0 ]");
   return 0;
 }
 
