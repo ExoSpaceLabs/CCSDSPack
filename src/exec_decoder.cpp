@@ -145,6 +145,7 @@ int main(const int argc, char* argv[]) {
   uint16_t dataFieldSize;
   bool segmented;
   bool syncPatternEnable;
+  bool validationEnable;
   uint32_t syncPattern;
   if (args.find("version_number") == args.end()) {
     if (!cfg.isKey("ccsds_version_number")) {
@@ -197,6 +198,11 @@ int main(const int argc, char* argv[]) {
     segmented = args["segmented"] == "true";
   }
 
+  if (!cfg.isKey("validation_enable")) {
+    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: validation_enable" << std::endl;
+    return CONFIG_MISSING_PARAMETER;
+  }
+
   if (!cfg.isKey("data_field_size")) {
     std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: data_field_size" << std::endl;
     return CONFIG_MISSING_PARAMETER;
@@ -209,6 +215,7 @@ int main(const int argc, char* argv[]) {
 
   ASSIGN_OR_PRINT(dataFieldSize, cfg.get<int>("data_field_size"));
   ASSIGN_OR_PRINT(syncPatternEnable, cfg.get<bool>("sync_pattern_enable"));
+  ASSIGN_OR_PRINT(validationEnable, cfg.get<bool>("validation_enable"));
 
   {  // optional definition of sync pattern
     if (auto exp = cfg.get<int>("sync_pattern"); exp.has_value()) {
@@ -255,7 +262,7 @@ int main(const int argc, char* argv[]) {
       return INVALID_INPUT_DATA;
     }
   }
-  customConsole(appName, "decoding CCSDS packets from file");
+  customConsole(appName, "deserializing CCSDS packets from file");
   if (const auto exp = manager.load(inputBytes); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
@@ -263,8 +270,8 @@ int main(const int argc, char* argv[]) {
   if (verbose) customConsole(appName,"printing loaded packets data to screen:");
   if (verbose) printPackets(manager);
 
-  customConsole(appName,"serializing CCSDS packets");
-  manager.setAutoValidateEnable(true);
+  customConsole(appName,"retrieving Application data from CCSDS packets");
+  manager.setAutoValidateEnable(validationEnable);
   std::vector<uint8_t> outputData;
   if (const auto exp = manager.getApplicationDataBuffer(); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
