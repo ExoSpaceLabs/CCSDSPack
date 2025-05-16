@@ -8,13 +8,8 @@
 #include <vector>
 #include <iostream>
 #include <chrono>
-#include <iomanip>
-#include <locale>
 #include <sstream>
-#include "CCSDSManager.h"
-#include "CCSDSHeader.h"
-#include "CCSDSResult.h"
-#include "CCSDSUtils.h"
+#include "CCSDSPack.h"
 #include "exec_utils.h"
 
 

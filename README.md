@@ -71,21 +71,20 @@ The CCSDS packet is described by:
 ![ccsds packet image](docs/imgs/ccsdsPacket.png)
 
 
-NOTE: These Images are to be replaced as the source is not attendible and not clear.
 ### PUS TC (PUS-A) inclusion
 This section shows how a PUS-A Packet can be included in the CCSDS packet
 
-![PUS TC packet image](docs/imgs/PUS_TC.png)
-
+[insert image of a PUS-A packet]()
 
 ### PUS TM (PUS-B) inclusion
 This section shows how a PUS-B Packet can be inluded in the CCSDS packet
 
-![PUS TM packet image](docs/imgs/PUS_TM.png)
-
+[insert image of a PUS-B packet]()
 
 ###  PUS-C inclusion
 A more flexible and variable sized standard.
+
+[insert image of a PUS-C packet]()
 
 ### Other Documents
 Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Reccomended documents are within the Blue books.
@@ -99,15 +98,27 @@ Also take a look of the following documents:
 ---
 
 ## Install
-1) Source - use the cmake and make commands to compile the whole project and install it.
-2) TODO Deb / RPM    - Use the precompiled rpm installers and linux commands to extract and install.
-3) TODO Docker - Installation within a Docker container, use the provided bash script under the "docker" directory.
+1) Source  - use the cmake and make commands to compile the whole project and install it.
+2) Package - Install using prebuilt .deb package from [release link to be implemented](). Build and package library using github actions and let github host them.
+3) Docker  - Docker image available github hosted container repo [link to repo usage readme]() to be built using actions.
 
+### Source
 CMake flags:
-- -DBUILD_TESTER=ON (default) build tester, set to OFF to skip tester build.
+
+The following flags can be provided to cmake when building the project to enable disable build of 
+specific provided features. such as tester, which may or may not be of interest. 
+
+| Cmake Flag (default value)  |  Description                                                 |
+|-----------------------------|--------------------------------------------------------------|
+| -DBUILD_TESTER=ON           | build tester, that performs regression tests of the library. | 
+| -DENABLE_ENCODER=ON         | build encoder executable that encodes a file using ccsds packets |
+| -DENABLE_DECODER=ON         | build decoder executable that decodes a binary file containing ccsdspackets |
 
 see example usage during cmake setup.
-### Linux
+
+---
+
+#### Linux
 
 Install dependencies (GCC ≥ 8.5.0, CMake ≥ 3.20,  C++17 or newer)
 ```bash
@@ -142,7 +153,7 @@ make install
 Note: this might require privileged `sudo` command as per permission restrictions.
 
 ---
-### Windows
+#### Windows
 tested on Windows-2019 and Windows-latest (see git hub [Actions](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml))
 
 Install dependencies:
@@ -171,33 +182,124 @@ bin directory some tests will fail.
 
 ---
 
+### Package (TBD)
+[the releases shall be built and deployed by github actions]()
+
+download your release from [releases link to be implemented]() and install it using dpkg. 
+
+```bash
+
+curl -LO hhtps://github.com/ExoSpaceLabs/CCSDSPack/ ... ccsdspack-<version>_<architecture>.deb
+sudo dpkg -i ccsdspack-<version>_<architecture>.deb
+
+```
+
+### Docker (TBD)
+[docker image still to be defined and deployed by github container repo ]()
+
+```bash
+
+docker build <link to repo>
+```
+
 ## Examples
+
+### Encoder:
+
+Encode a specific file into the application data of CCSDS packets and save streamed packets 
+data to a desired file.
+
+requirements: 
+* a file to encode
+* configuration file which holds the template packet data and settings
+
+```bash
+
+ccsds_encoder -i <file_to_encode> -o <encoded_binaryFile> -t <config_file>
+```
+### Decoder:
+
+Decode a previously encoded binary file holding serialized CCSDS packets, extract application 
+data and recreate orifinal file. 
+
+requirements:
+* an encoded binary file 
+* configuration file used to encode the packets holding template packet data and settings
+
+```bash
+
+ccsds_decoder -i <encoded_binaryFile> -o <decoded_file> -t <config_file>
+```
+
+Note: If the decoded file is named with the original file extension it will be usable as the original file,
+
+for configuration file and other info see [link to readme to be inserted]().
+
+### C++
+The following examples show how the high level C++ APIs can be used in a project
+
+Note: Assume a Big endian logic for data processing.
 1) This example shows how this library can be used to generate a ccsds packet or stream of packets using CCSDSPack
-* Assume a Big endian logic for data processing.
 
-TBD
 ```c++
 #include "CCSDSPack.h"
 
 int main(){
-  //Todo
 
+  std::vector<uint8_t> inputBytes; // assume data is present
+  // make a packet and set header to be used as template  
+  CCSDS::Packet templatePacket;
+  if(const auto exp = templatePacket.setPrimaryHeader(0xF7FF4FFFFFFF); !exp.has_value()){
+    std::cerr << exp.error().message() << std::endl;
+    return exp.error().code();
+  }
+
+  // set template packet in manager
+  CCSDS::Manager manager(templatePacket);
+  manager.setDatFieldSize(1024); // sets max datafield size
+  
+  // load data
+  if (const auto exp = manager.setApplicationData(inputBytes); !exp.has_value()) {
+    std::cerr <<  exp.error().message() << std::endl;
+    return exp.error().code();
+  }
+  std::vector<CCSDS::Packet> packets = manager.getPackets();
+  // to manipulate as required.
+  
   return 0;
 }
 ```
-Where "explanation" of what does it do.
+Where the 'inputBytes' are a set of bytes that are to be set as application into the packets. This is performed by 
+first setting a template packet in the manager. Which then will be used as reference for all packets generated. and the 
+application data is then set using the setApplicationData manager member method. This generates CCSDS packets in  the 
+manager. It can be retrieved by using the getPackets method. and further manipulation can be performed if required.
 
-2) Assuming you already have a CCSDS packet stream and want to extract the data from it
+2) Assuming you already have a CCSDS packet stream and want to extract the data from it.
 
-TBD
 ```c++
 #include "CCSDSPack.h"
 
 int main(){
- //Todo
+
+  std::vector<CCSDS::Packet> packets; // assume data is present
+
+  // set template packet in manager
+  CCSDS::Manager;
+  manager.setDatFieldSize(1024); // sets max datafield size
+  
+  // load data
+  if (const auto exp = manager.load(packets); !exp.has_value()) {
+    std::cerr <<  exp.error().message() << std::endl;
+    return exp.error().code();
+  }
+  // get the data buffer of the packets.
+  std::vector<uint8_t> data = manager.getApplicationDataBuffer();
   return 0;
 }
 ```
-Where "explanation" of what does it do.
+Assuming we have a vector of CCSDS packets prepared ad hoc. These packets then can be loaded by the manager.
+If required the manager allows the packets to be validated for coherence, or if the template is set against it.
+In the example above the application data is retrieved from all packets into a single stream of data.
 
-continue with a link to different README for more examples.
+for more examples see [link to readme for more examples to be inserted]()
+

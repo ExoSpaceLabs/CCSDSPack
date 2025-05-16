@@ -15,16 +15,16 @@ set(LIB_NAME "CCSDSPack")
 
 # Versioning
 set(MAJOR "0")
-set(MINOR "7")
+set(MINOR "8")
 set(PATCH "0")
 
 message(STATUS "Flags:")
 option(ENABLE_TESTER "Build the CCSDSPack tester executable" ON)
 message(STATUS "  -DENABLE_TESTER=${ENABLE_TESTER}")
 option(ENABLE_ENCODER "Build the CCSDSPack encoder executable" ON)
-message(STATUS "  -ENABLE_ENCODER=${ENABLE_ENCODER}")
+message(STATUS "  -DENABLE_ENCODER=${ENABLE_ENCODER}")
 option(ENABLE_DECODER "Build the CCSDSPack decoder executable" ON)
-message(STATUS "  -ENABLE_DECODER=${ENABLE_DECODER}")
+message(STATUS "  -DENABLE_DECODER=${ENABLE_DECODER}")
 
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
