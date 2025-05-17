@@ -284,7 +284,7 @@ int main(){
   std::vector<CCSDS::Packet> packets; // assume data is present
 
   // set template packet in manager
-  CCSDS::Manager;
+  CCSDS::Manager manager;
   manager.setDatFieldSize(1024); // sets max datafield size
   
   // load data
