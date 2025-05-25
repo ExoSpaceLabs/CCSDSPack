@@ -27,6 +27,11 @@ uint16_t CCSDS::DataField::getDataFieldAbsoluteBytesSize() const {
   return m_dataPacketSize;
 }
 
+uint16_t CCSDS::DataField::getApplicationDataBytesSize() const {
+  return m_applicationData.size();
+}
+
+
 uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() const {
   if (!getDataFieldHeaderFlag()) {
     return m_applicationData.size();

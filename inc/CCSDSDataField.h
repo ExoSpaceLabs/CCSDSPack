@@ -176,6 +176,13 @@ namespace CCSDS {
     uint16_t getDataFieldAbsoluteBytesSize() const;
 
     /**
+     * @brief Retrieves the size of the application data stored in the data field.
+     *
+     * @return The size of the application data in bytes
+     */
+    uint16_t getApplicationDataBytesSize() const;
+
+    /**
      * @brief Retrieves the used size of the data field in bytes.
      *
      * This method returns the amount of space currently occupied by valid data within the data field.

@@ -28,7 +28,7 @@ std::vector<uint8_t> PusA::serialize() const {
 }
 
 void PusA::update(CCSDS::DataField* dataField) {
-  m_dataLength = dataField->getDataFieldAbsoluteBytesSize();
+  m_dataLength = dataField->getApplicationDataBytesSize();
 }
 
 CCSDS::ResultBool PusB::deserialize(const std::vector<uint8_t> &data) {
@@ -59,7 +59,7 @@ std::vector<uint8_t> PusB::serialize() const {
 }
 
 void PusB::update(CCSDS::DataField* dataField) {
-  m_dataLength = dataField->getDataFieldAbsoluteBytesSize();
+  m_dataLength = dataField->getApplicationDataBytesSize();
 }
 CCSDS::ResultBool PusC::deserialize(const std::vector<uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -90,5 +90,5 @@ std::vector<uint8_t> PusC::serialize() const {
 }
 
 void PusC::update(CCSDS::DataField* dataField) {
-  m_dataLength = dataField->getDataFieldAbsoluteBytesSize();
+  m_dataLength = dataField->getApplicationDataBytesSize();
 }
