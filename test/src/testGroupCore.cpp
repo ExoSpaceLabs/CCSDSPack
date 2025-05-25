@@ -271,7 +271,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
                    [] {
                      CCSDS::Packet packet;
                      PusB pusBHeader(1, 2, 3, 4, 5, 6);
-                     auto ptr = std::make_shared<PusB>(pusBHeader);
+                     const auto ptr = std::make_shared<PusB>(pusBHeader);
                      packet.setDataFieldHeader(ptr);
                      const auto dfh = packet.getDataFieldHeaderBytes();
                      return dfh.size() == pusBHeader.getSize();
@@ -505,7 +505,6 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
     int integerValue;
     TEST_RET(integerValue,cfg.get<int>("integerValue"));
-    std::cout << integerValue << std::endl;
     if (integerValue != 42 ) return false;
 
     bool booleanValue;

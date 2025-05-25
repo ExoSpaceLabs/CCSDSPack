@@ -35,8 +35,6 @@
                                                                        m_sourceID(sourceID), m_dataLength(dataLength) {
     }
 
-    void setDataLength(const uint16_t dataLength)   override { m_dataLength = dataLength; }
-
     [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
     [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
@@ -47,6 +45,7 @@
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    void update(CCSDS::DataField* dataField) override;
 
   private:                          // Field	            Size (bits)	Description
     uint8_t m_version{};            // Version	            3	        Version of the PUS standard
@@ -91,8 +90,6 @@
       m_dataLength(dataLength) {
     }
 
-    void setDataLength(const uint16_t dataLength)   override { m_dataLength = dataLength; }
-
     [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
     [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
@@ -104,6 +101,7 @@
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    void update(CCSDS::DataField* dataField) override;
 
   private:                           // Field	            Size (bits)	Description
     uint8_t m_version{};             // Version	            3	        Version of the PUS standard
@@ -150,8 +148,6 @@
                                                m_timeCode(timeCode), m_dataLength(dataLength) {
     }
 
-    void setDataLength(const uint16_t dataLength)   override { m_dataLength = dataLength; }
-
     [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
     [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
@@ -163,6 +159,7 @@
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    void update(CCSDS::DataField* dataField) override;
 
   private:                           // Field	            Size (bits)	Description
     uint8_t m_version{};             // Version	            3	        Version of the PUS standard

@@ -16,22 +16,18 @@ std::vector<uint8_t> CCSDS::DataField::getFullDataFieldBytes() {
 }
 
 std::vector<uint8_t> CCSDS::DataField::getApplicationData() {
-  update();
   return m_applicationData;
 }
 
-uint16_t CCSDS::DataField::getDataFieldAvailableBytesSize() {
-  update();
+uint16_t CCSDS::DataField::getDataFieldAvailableBytesSize() const {
   return m_dataPacketSize - getDataFieldUsedBytesSize();
 }
 
-uint16_t CCSDS::DataField::getDataFieldAbsoluteBytesSize() {
-  update();
+uint16_t CCSDS::DataField::getDataFieldAbsoluteBytesSize() const {
   return m_dataPacketSize;
 }
 
-uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() {
-  update();
+uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() const {
   if (!getDataFieldHeaderFlag()) {
     return m_applicationData.size();
   }
@@ -42,13 +38,14 @@ uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() {
 }
 
 std::shared_ptr<CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHeader() {
+  update();
   return m_secondaryHeader;
 }
 
 void CCSDS::DataField::update() {
   if (!m_dataFieldHeaderUpdated && m_enableDataFieldUpdate) {
-    if (m_secondaryHeaderFactory.typeIsRegistered(m_dataFieldHeaderType) && m_dataFieldHeaderType != "BufferHeader") {
-      m_secondaryHeader->setDataLength(m_applicationData.size());;
+    if (m_secondaryHeaderFactory.typeIsRegistered(m_dataFieldHeaderType)) {
+      m_secondaryHeader->update(this);
     }
     m_dataFieldHeaderUpdated = true;
   }

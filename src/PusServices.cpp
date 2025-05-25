@@ -1,5 +1,6 @@
 
 #include "PusServices.h"
+#include "CCSDSDataField.h"
 
 CCSDS::ResultBool PusA::deserialize(const std::vector<uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -24,6 +25,10 @@ std::vector<uint8_t> PusA::serialize() const {
   };
 
   return data;
+}
+
+void PusA::update(CCSDS::DataField* dataField) {
+  m_dataLength = dataField->getDataFieldAbsoluteBytesSize();
 }
 
 CCSDS::ResultBool PusB::deserialize(const std::vector<uint8_t> &data) {
@@ -53,6 +58,9 @@ std::vector<uint8_t> PusB::serialize() const {
   return data;
 }
 
+void PusB::update(CCSDS::DataField* dataField) {
+  m_dataLength = dataField->getDataFieldAbsoluteBytesSize();
+}
 CCSDS::ResultBool PusC::deserialize(const std::vector<uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-C header not correct size (size != 8 bytes)");
@@ -79,4 +87,8 @@ std::vector<uint8_t> PusC::serialize() const {
   };
 
   return data;
+}
+
+void PusC::update(CCSDS::DataField* dataField) {
+  m_dataLength = dataField->getDataFieldAbsoluteBytesSize();
 }
