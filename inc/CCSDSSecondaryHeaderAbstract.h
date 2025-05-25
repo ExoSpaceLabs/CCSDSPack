@@ -23,14 +23,12 @@ namespace CCSDS {
      */
     [[nodiscard]] virtual ResultBool deserialize(const std::vector<uint8_t> &data) = 0;
 
-    /**
-     * @brief Gets the length of the data associated with the packet if applicable.
-     * @return The length of the data in bytes set in the header.
-     */
-    [[nodiscard]] virtual uint16_t getDataLength() const = 0;
 
     /**
      * @brief Defines how the packet secondary header is updated using the data field as reference.
+     * This method is called every time a data get is performed from the packet, that is if update is enabled and
+     * method successfully registered.
+     *
      * @param dataField
      */
     virtual void update(DataField* dataField) = 0;
@@ -80,7 +78,6 @@ namespace CCSDS {
 
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
 
-    [[nodiscard]] uint16_t getDataLength() const override { return m_dataLength; }
     [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
     [[nodiscard]] std::string getType() const override { return m_type; }
 

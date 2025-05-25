@@ -39,7 +39,7 @@
     [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
     [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
-    [[nodiscard]] uint16_t getDataLength()    const override { return m_dataLength;       }
+    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
     [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
     [[nodiscard]] std::string getType()       const override { return m_type;          }
 
@@ -95,7 +95,7 @@
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
     [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
     [[nodiscard]] uint16_t getEventID()       const          { return m_eventID;          }
-    [[nodiscard]] uint16_t getDataLength()    const override { return m_dataLength;       }
+    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
     [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
     [[nodiscard]] std::string getType()       const override { return m_type;          }
 
@@ -153,7 +153,7 @@
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
     [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
     [[nodiscard]] uint16_t getTimeCode()      const          { return m_timeCode;         }
-    [[nodiscard]] uint16_t getDataLength()    const override { return m_dataLength;       }
+    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
     [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
     [[nodiscard]] std::string getType()       const override { return m_type;          }
 
