@@ -25,6 +25,8 @@ option(ENABLE_ENCODER "Build the CCSDSPack encoder executable" ON)
 message(STATUS "  -DENABLE_ENCODER=${ENABLE_ENCODER}")
 option(ENABLE_DECODER "Build the CCSDSPack decoder executable" ON)
 message(STATUS "  -DENABLE_DECODER=${ENABLE_DECODER}")
+option(ENABLE_VALIDATOR "Build the CCSDSPack validator executable" ON)
+message(STATUS "  -DENABLE_VALIDATOR=${ENABLE_VALIDATOR}")
 
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
@@ -91,6 +93,12 @@ endif ()
 if(ENABLE_DECODER)
     include(${CMAKE_SOURCE_DIR}/cmake/decoder.cmake)
 endif ()
+
+# Enables build of validator
+if(ENABLE_VALIDATOR)
+    include(${CMAKE_SOURCE_DIR}/cmake/validator.cmake)
+endif ()
+
 
 if(WIN32)
     # Install DLL to the bin directory

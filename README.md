@@ -15,8 +15,11 @@ telecommand (TC) packets with a modern C++ design and customizable serialization
 - [Features](#Features)
 - [Documentation](#Documentation)
 - [Install](#Install)
-    - [Linux](#Linux)
-    - [Windows](#Windows)
+    - [Source](#Source)
+        - [Linux](#Linux)
+        - [Windows](#Windows)
+    - [Package](#Package)
+    - [Docker](#Docker)
 - [Examples](#Examples)
 
 ---
@@ -108,11 +111,13 @@ CMake flags:
 The following flags can be provided to cmake when building the project to enable disable build of 
 specific provided features. such as tester, which may or may not be of interest. 
 
-| Cmake Flag (default value)  |  Description                                                 |
-|-----------------------------|--------------------------------------------------------------|
-| -DBUILD_TESTER=ON           | build tester, that performs regression tests of the library. | 
-| -DENABLE_ENCODER=ON         | build encoder executable that encodes a file using ccsds packets |
-| -DENABLE_DECODER=ON         | build decoder executable that decodes a binary file containing ccsdspackets |
+| Cmake Flag (default value) | Description                                                                  |
+|----------------------------|------------------------------------------------------------------------------|
+| -DBUILD_TESTER=ON          | build tester, that performs regression tests of the library.                 | 
+| -DENABLE_ENCODER=ON        | build encoder executable that encodes a file using ccsds packets             |
+| -DENABLE_DECODER=ON        | build decoder executable that decodes a binary file containing ccsds packets |
+| -DENABLE_VALIDATOR=ON      | build validator executable that validates packets.                           |
+
 
 see example usage during cmake setup.
 
@@ -182,7 +187,7 @@ bin directory some tests will fail.
 
 ---
 
-### Package (TBD)
+### Package
 [the releases shall be built and deployed by github actions]()
 
 download your release from [releases link to be implemented]() and install it using dpkg. 
@@ -194,7 +199,7 @@ sudo dpkg -i ccsdspack-<version>_<architecture>.deb
 
 ```
 
-### Docker (TBD)
+### Docker
 [docker image still to be defined and deployed by github container repo ]()
 
 ```bash

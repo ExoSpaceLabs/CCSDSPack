@@ -72,12 +72,14 @@ int main(const int argc, char* argv[]) {
   allowed.insert({"th", "secondary_header"});
   allowed.insert({"ts", "segmented"});
 
+  const std::set<std::string> booleanArgs{"verbose", "help"};
+
   std::unordered_map<std::string, std::string> args;
   args.insert({"verbose", "false"});
   args.insert({"help", "false"});
 
   const auto start = std::chrono::high_resolution_clock::now();
-  if (const auto exp = parseArguments(argc, argv, allowed, args); !exp.has_value()) {
+  if (const auto exp = parseArguments(argc, argv, allowed, args, booleanArgs); !exp.has_value()) {
     std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
     return exp.error().code();
   }

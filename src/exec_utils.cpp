@@ -11,9 +11,8 @@
 
 CCSDS::ResultBool parseArguments(const int argc, char *argv[],
                                  std::unordered_map<std::string, std::string> &allowedMap,
-                                 std::unordered_map<std::string, std::string> &outArgs)
+                                 std::unordered_map<std::string, std::string> &outArgs, const std::set<std::string> &booleanArgs)
 {
-  const std::set<std::string> booleanArgs{"verbose", "help"};
   std::set<std::string> allowedKeys;
   std::set<std::string> allowedShortKeys;
   for (const auto& [k, v] : allowedMap) {
