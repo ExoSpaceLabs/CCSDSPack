@@ -34,19 +34,25 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const std::string &configPath) {
   uint16_t dataFieldSize;
   bool segmented;
 
-  RET_IF_ERR_MSG(!cfg.isKey(        "ccsds_version_number"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing int field: ccsds_version_number");
-  RET_IF_ERR_MSG(!cfg.isKey(                  "ccsds_type"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing bool field: ccsds_type");
-  RET_IF_ERR_MSG(!cfg.isKey("ccsds_data_field_header_flag"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing bool field: ccsds_data_field_header_flag");
-  RET_IF_ERR_MSG(!cfg.isKey(                  "ccsds_APID"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing int field: ccsds_APID");
-  RET_IF_ERR_MSG(!cfg.isKey(             "ccsds_segmented"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing bool field: ccsds_segmented");
-  RET_IF_ERR_MSG(!cfg.isKey(             "data_field_size"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing int field: data_field_size");
+  RET_IF_ERR_MSG(!cfg.isKey( "ccsds_version_number"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing int field: ccsds_version_number");
+  RET_IF_ERR_MSG(!cfg.isKey( "ccsds_type"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing bool field: ccsds_type");
+  RET_IF_ERR_MSG(!cfg.isKey("ccsds_data_field_header_flag"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing bool field: ccsds_data_field_header_flag");
+  RET_IF_ERR_MSG(!cfg.isKey( "ccsds_APID"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing int field: ccsds_APID");
+  RET_IF_ERR_MSG(!cfg.isKey( "ccsds_segmented"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing bool field: ccsds_segmented");
+  RET_IF_ERR_MSG(!cfg.isKey( "data_field_size"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing int field: data_field_size");
 
-  ASSIGN_OR_PRINT(versionNumber,       cfg.get< int>(        "ccsds_version_number"));
-  ASSIGN_OR_PRINT(type,                cfg.get<bool>(                  "ccsds_type"));
+  ASSIGN_OR_PRINT(versionNumber, cfg.get< int>( "ccsds_version_number"));
+  ASSIGN_OR_PRINT(type, cfg.get<bool>( "ccsds_type"));
   ASSIGN_OR_PRINT(dataFieldHeaderFlag, cfg.get<bool>("ccsds_data_field_header_flag"));
-  ASSIGN_OR_PRINT(APID,                cfg.get< int>(                  "ccsds_APID"));
-  ASSIGN_OR_PRINT(segmented,           cfg.get<bool>(             "ccsds_segmented"));
-  ASSIGN_OR_PRINT(dataFieldSize,       cfg.get< int>(             "data_field_size"));
+  ASSIGN_OR_PRINT(APID, cfg.get< int>( "ccsds_APID"));
+  ASSIGN_OR_PRINT(segmented, cfg.get<bool>( "ccsds_segmented"));
+  ASSIGN_OR_PRINT(dataFieldSize, cfg.get< int>( "data_field_size"));
 
   m_primaryHeader.setVersionNumber(versionNumber);
   m_primaryHeader.setType(type);
@@ -57,11 +63,13 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const std::string &configPath) {
   m_dataField.setDataPacketSize(dataFieldSize);
 
   bool secondaryHeader_flag{false};
-  RET_IF_ERR_MSG(!cfg.isKey("define_secondary_header"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing bool field: define_secondary_header");
+  RET_IF_ERR_MSG(!cfg.isKey("define_secondary_header"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing bool field: define_secondary_header");
   ASSIGN_OR_PRINT(secondaryHeader_flag, cfg.get<bool>("define_secondary_header"));
   if (secondaryHeader_flag) {
-    RET_IF_ERR_MSG(!cfg.isKey("secondary_header_type"), ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: secondary_header_type");
-
+    RET_IF_ERR_MSG(!cfg.isKey("secondary_header_type"), ErrorCode::CONFIG_FILE_ERROR,
+                   "Config: Missing string field: secondary_header_type");
+    //TODO to be finished
   }
   return true;
 }
@@ -155,15 +163,16 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
                  "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
   RET_IF_ERR_MSG(headerType == "BufferHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, BufferHeader is not of defined size");
-  RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+  RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, Unregistered Secondary header: " + headerType);
 
   const auto secondaryHeader = m_dataField.getDataFieldHeaderFactory().create(headerType);
   const auto headerDataSizeBytes = secondaryHeader->getSize();
 
   std::vector<uint8_t> dataFieldHeaderVector;
-  std::copy_n(data.begin() + 6, headerDataSizeBytes , std::back_inserter(dataFieldHeaderVector));
-  FORWARD_RESULT( secondaryHeader->deserialize(dataFieldHeaderVector ));
+  std::copy_n(data.begin() + 6, headerDataSizeBytes, std::back_inserter(dataFieldHeaderVector));
+  FORWARD_RESULT(secondaryHeader->deserialize(dataFieldHeaderVector ));
   setDataFieldHeader(secondaryHeader);
 
   if (data.size() > (8 + headerDataSizeBytes)) {

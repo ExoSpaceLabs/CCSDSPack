@@ -54,6 +54,7 @@ CCSDS::ResultBool PusA::loadFromConfig(const Config& cfg) {
   m_serviceType = serviceType & 0xFF;
   m_serviceSubType = serviceSubType & 0xFF;
   m_sourceID = sourceId & 0xFF;
+  //TODO check and finish implement
 
   return true;
 }
@@ -112,6 +113,7 @@ CCSDS::ResultBool PusB::loadFromConfig(const Config &cfg) {
   m_serviceType = serviceType & 0xFF;
   m_serviceSubType = serviceSubType & 0xFF;
   m_sourceID = sourceId & 0xFF;
+  //TODO check and finish implement
 
   return true;
 }
@@ -172,6 +174,7 @@ CCSDS::ResultBool PusC::loadFromConfig(const Config& cfg) {
   m_serviceSubType = serviceSubType & 0xFF;
   m_sourceID = sourceId & 0xFF;
   m_timeCode = timeCode & 0xFFFF;
+  //TODO check and finish implement
 
   return true;
 }

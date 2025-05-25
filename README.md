@@ -255,9 +255,9 @@ int main(){
   std::vector<uint8_t> inputBytes; // assume data is present
   // make a packet and set header to be used as template  
   CCSDS::Packet templatePacket;
-  if(const auto exp = templatePacket.setPrimaryHeader(0xF7FF4FFFFFFF); !exp.has_value()){
-    std::cerr << exp.error().message() << std::endl;
-    return exp.error().code();
+  if(const auto res = templatePacket.setPrimaryHeader(0xF7FF4FFFFFFF); !res.has_value()){
+    std::cerr << res.error().message() << std::endl;
+    return res.error().code();
   }
 
   // set template packet in manager
@@ -265,9 +265,9 @@ int main(){
   manager.setDatFieldSize(1024); // sets max datafield size
   
   // load data
-  if (const auto exp = manager.setApplicationData(inputBytes); !exp.has_value()) {
-    std::cerr <<  exp.error().message() << std::endl;
-    return exp.error().code();
+  if (const auto res = manager.setApplicationData(inputBytes); !res.has_value()) {
+    std::cerr <<  res.error().message() << std::endl;
+    return res.error().code();
   }
   std::vector<CCSDS::Packet> packets = manager.getPackets();
   // to manipulate as required.
@@ -294,9 +294,9 @@ int main(){
   manager.setDatFieldSize(1024); // sets max datafield size
   
   // load data
-  if (const auto exp = manager.load(packets); !exp.has_value()) {
-    std::cerr <<  exp.error().message() << std::endl;
-    return exp.error().code();
+  if (const auto res = manager.load(packets); !res.has_value()) {
+    std::cerr <<  res.error().message() << std::endl;
+    return res.error().code();
   }
   // get the data buffer of the packets.
   std::vector<uint8_t> data = manager.getApplicationDataBuffer();

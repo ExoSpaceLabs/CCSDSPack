@@ -79,9 +79,9 @@ int main(const int argc, char* argv[]) {
   args.insert({"help", "false"});
 
   const auto start = std::chrono::high_resolution_clock::now();
-  if (const auto exp = parseArguments(argc, argv, allowed, args, booleanArgs); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = parseArguments(argc, argv, allowed, args, booleanArgs); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }
    // std::cout << "Parsed args:\n";
    //for (const auto& [k, v] : args) {
@@ -128,9 +128,9 @@ int main(const int argc, char* argv[]) {
   customConsole(appName,"reading CCSDS configuration file: " + configFile);
   Config cfg;
   {
-    if (auto exp = cfg.load(configFile); !exp.has_value()) {
-      std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-      return exp.error().code();
+    if (auto res = cfg.load(configFile); !res.has_value()) {
+      std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+      return res.error().code();
     }
   }
 
@@ -217,8 +217,8 @@ int main(const int argc, char* argv[]) {
   ASSIGN_OR_PRINT(validationEnable, cfg.get<bool>("validation_enable"));
 
   {  // optional definition of sync pattern
-    if (auto exp = cfg.get<int>("sync_pattern"); exp.has_value()) {
-      syncPattern = exp.value();
+    if (auto res = cfg.get<int>("sync_pattern"); res.has_value()) {
+      syncPattern = res.value();
     }
   }
 
@@ -250,11 +250,11 @@ int main(const int argc, char* argv[]) {
   std::vector<uint8_t> inputBytes;
 
   customConsole(appName,"reading data from " + input);
-  if (const auto exp = readBinaryFile(input); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = readBinaryFile(input); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }else {
-    inputBytes = exp.value();
+    inputBytes = res.value();
     if (!segmented && inputBytes.size() > dataFieldSize){
       std::cerr << "[ Error " << INVALID_INPUT_DATA << " ]: "<<  "Input data is too big for unsegmented packets, data "
       << inputBytes.size() << " must be less than defined data packet length of " << dataFieldSize << std::endl ;
@@ -262,9 +262,9 @@ int main(const int argc, char* argv[]) {
     }
   }
   customConsole(appName, "deserializing CCSDS packets from file");
-  if (const auto exp = manager.load(inputBytes); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = manager.load(inputBytes); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }
   if (verbose) customConsole(appName,"printing loaded packets data to screen:");
   if (verbose) printPackets(manager);
@@ -272,17 +272,17 @@ int main(const int argc, char* argv[]) {
   customConsole(appName,"retrieving Application data from CCSDS packets");
   manager.setAutoValidateEnable(validationEnable);
   std::vector<uint8_t> outputData;
-  if (const auto exp = manager.getApplicationDataBuffer(); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = manager.getApplicationDataBuffer(); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }else {
-    outputData = exp.value();
+    outputData = res.value();
   }
 
   customConsole(appName,"writing data to " + output);
-  if (const auto exp = writeBinaryFile(outputData, output); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = writeBinaryFile(outputData, output); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }
 
   const auto end = std::chrono::high_resolution_clock::now();

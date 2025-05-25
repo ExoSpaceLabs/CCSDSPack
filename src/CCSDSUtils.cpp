@@ -224,8 +224,8 @@ CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
 }
 
 bool fileExists(const std::string &fileName) {
-  auto exp = readBinaryFile(fileName);
-  if ( exp.has_value()) {
+  auto res = readBinaryFile(fileName);
+  if ( res.has_value()) {
     return true;
   }
   return false;

@@ -123,9 +123,9 @@ int main(const int argc, char* argv[]) {
   args.insert({"print-packets", "false"});
 
   const auto start = std::chrono::high_resolution_clock::now();
-  if (const auto exp = parseArguments(argc, argv, allowed, args, booleanArgs); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = parseArguments(argc, argv, allowed, args, booleanArgs); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }
    // std::cout << "Parsed args:\n";
    //for (const auto& [k, v] : args) {
@@ -158,17 +158,17 @@ int main(const int argc, char* argv[]) {
   manager.setDatFieldSize(64*1023 ); // 1M Bytes * packet
   manager.setAutoUpdateEnable(false);
   customConsole(appName,"reading data from " + input);
-  if (const auto exp = readBinaryFile(input); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = readBinaryFile(input); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }else {
-    inputBytes = exp.value();
+    inputBytes = res.value();
   }
 
   customConsole(appName, "deserializing CCSDS packets from file");
-  if (const auto exp = manager.load(inputBytes); !exp.has_value()) {
-    std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-    return exp.error().code();
+  if (const auto res = manager.load(inputBytes); !res.has_value()) {
+    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+    return res.error().code();
   }
 
   // config argument specified
@@ -185,9 +185,9 @@ int main(const int argc, char* argv[]) {
     Config cfg;
 
     {
-      if (auto exp = cfg.load(configFile); !exp.has_value()) {
-        std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-        return exp.error().code();
+      if (auto res = cfg.load(configFile); !res.has_value()) {
+        std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+        return res.error().code();
       }
     }
 
@@ -253,8 +253,8 @@ int main(const int argc, char* argv[]) {
   ASSIGN_OR_PRINT(syncPatternEnable, cfg.get<bool>("sync_pattern_enable"));
 
   {  // optional definition of sync pattern
-    if (auto exp = cfg.get<int>("sync_pattern"); exp.has_value()) {
-      syncPattern = exp.value();
+    if (auto res = cfg.get<int>("sync_pattern"); res.has_value()) {
+      syncPattern = res.value();
     }
   }
 
@@ -277,9 +277,9 @@ int main(const int argc, char* argv[]) {
     CCSDS::Packet templatePacket;
     templatePacket.setPrimaryHeader(header);
 
-    if (const auto exp = manager.setPacketTemplate(templatePacket); !exp.has_value()) {
-      std::cerr << "[ Error " << exp.error().code() << " ]: "<<  exp.error().message() << std::endl ;
-      return exp.error().code();
+    if (const auto res = manager.setPacketTemplate(templatePacket); !res.has_value()) {
+      std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
+      return res.error().code();
     }
     manager.setDatFieldSize(dataFieldSize);
     manager.setSyncPatternEnable(syncPatternEnable);
