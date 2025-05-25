@@ -2,7 +2,6 @@
 #define CCSDS_DATA_FIELD_H
 
 #include <CCSDSResult.h>
-#include <cstdint>
 #include <vector>
 #include <memory>
 #include "CCSDSSecondaryHeaderAbstract.h"

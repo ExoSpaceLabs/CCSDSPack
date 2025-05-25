@@ -2,12 +2,12 @@
 #define CCSDS_SECONDARY_HEADER_ABSTRACT_H
 
 #include <CCSDSResult.h>
+#include "CCSDSConfig.h"
 #include <vector>
 #include <cstdint>
 
 namespace CCSDS {
   class DataField;
-
   /**
    * @brief Abstract base class for a (Packet Utilization Standard) header.
    *
@@ -50,6 +50,9 @@ namespace CCSDS {
      * @return A vector containing the header bytes. (does not include data field)
      */
     [[nodiscard]] virtual std::string getType() const = 0; // Pure virtual method for polymorphism
+
+
+    virtual ResultBool loadFromConfig(const Config &config) = 0;
   };
 
   /**
@@ -83,6 +86,7 @@ namespace CCSDS {
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
     void update(DataField* dataField) override {m_dataLength = m_data.size();}
+    ResultBool loadFromConfig(const Config &config) override{return true;};
 
   private:
     std::vector<uint8_t> m_data;

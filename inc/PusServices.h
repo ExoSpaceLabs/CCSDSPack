@@ -4,7 +4,9 @@
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "CCSDSSecondaryHeaderFactory.h"
 #include "CCSDSResult.h"
-  /**
+#include "CCSDSConfig.h"
+
+/**
    * @brief Represents a PUS Type A (Telemetry) header.
    *
    * Contains fields used for telemetry data.
@@ -46,6 +48,7 @@
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
+    CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
 
   private:                          // Field	            Size (bits)	Description
     uint8_t m_version{};            // Version	            3	        Version of the PUS standard
@@ -102,6 +105,7 @@
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
+    CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
 
   private:                           // Field	            Size (bits)	Description
     uint8_t m_version{};             // Version	            3	        Version of the PUS standard
@@ -160,6 +164,7 @@
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
+    CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
 
   private:                           // Field	            Size (bits)	Description
     uint8_t m_version{};             // Version	            3	        Version of the PUS standard

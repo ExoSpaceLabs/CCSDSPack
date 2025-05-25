@@ -5,6 +5,7 @@
 #include <CCSDSValidator.h>
 #include <iostream>
 #include "CCSDSUtils.h"
+#include "CCSDSConfig.h"
 #include "CCSDSResult.h"
 #include "tests.h"
 #include "PusServices.h"

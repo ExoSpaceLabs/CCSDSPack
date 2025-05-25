@@ -57,6 +57,7 @@ set(LIBRARY_SOURCES
         "${SOURCE_DIR}/CCSDSManager.cpp"
         "${SOURCE_DIR}/CCSDSPacket.cpp"
         "${SOURCE_DIR}/CCSDSUtils.cpp"
+        "${SOURCE_DIR}/CCSDSConfig.cpp"
         "${SOURCE_DIR}/CCSDSValidator.cpp"
         "${SOURCE_DIR}/PusServices.cpp"
 )

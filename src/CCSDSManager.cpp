@@ -22,6 +22,14 @@ CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   return true;
 }
 
+CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const std::string &configPath) {
+
+  Packet templatePacket;
+  FORWARD_RESULT(templatePacket.loadFromConfig(configPath));
+  m_templatePacket = std::move(templatePacket);
+  return true;;
+}
+
 void CCSDS::Manager::setDatFieldSize(const uint16_t size) {
   m_templatePacket.setDataFieldSize(size);
 }

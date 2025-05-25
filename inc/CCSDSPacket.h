@@ -21,7 +21,6 @@
 
 
 #include <CCSDSResult.h>
-#include <cstdint>
 #include <vector>
 #include "CCSDSHeader.h"
 #include "CCSDSDataField.h"
@@ -335,10 +334,10 @@ namespace CCSDS {
     bool getDataFieldHeaderFlag();
 
     /** @brief returns the CCSDS packet's DataField. */
-    CCSDS::DataField &getDataField();
+    DataField &getDataField();
 
     /** @brief returns the CCSDS packet's Primary Header. */
-    CCSDS::Header &getPrimaryHeader();
+    Header &getPrimaryHeader();
 
     /**
      * @brief Sets the crc configuration of the crc calculation
@@ -377,6 +376,8 @@ namespace CCSDS {
      * @return none.
      */
     void update();
+
+    ResultBool loadFromConfig(const std::string &configPath);
 
   private:
     Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex

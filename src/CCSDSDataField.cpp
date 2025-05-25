@@ -1,6 +1,5 @@
 #include "CCSDSDataField.h"
 #include <CCSDSSecondaryHeaderFactory.h>
-#include "CCSDSUtils.h"
 #include <iostream>
 #include <utility>
 

@@ -71,6 +71,13 @@ namespace CCSDS {
     [[nodiscard]] ResultBool setPacketTemplate(Packet packet);
 
     /**
+    * @brief Loads a template packet from a configuration file.
+    *
+    * @param configPath  path to the configuration file.
+    */
+    [[nodiscard]] ResultBool loadTemplateConfig(const std::string &configPath);
+
+    /**
      * @brief Sets the size of the data field.
      *
      * @param size The new data field size in bytes.
