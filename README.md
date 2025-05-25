@@ -45,10 +45,11 @@ Specific distribution build and regression status are shown below
 
 - 📦 Support for both **TM** and **TC** CCSDS packets using integrated PUS standards
 - ⚙️ Custom serialization with support for `std::vector`, `std::shared_ptr`, and user-defined types
-- 🔁 End-to-end encoding / decoding and validation
+- 🔁 End-to-end encoding / decoding and validation 
 - 🧪 Easy to test and integrate
 - 🛠️ Built-in extensibility with clear abstraction
 -  User-friendly installation and usage within your code.
+- Example Executables (encoder, decoder and validator) see [Executables](docs/EXECUTABLES.md) 
 - Optimised for fast execution.
 ---
 ## Documentation
@@ -102,7 +103,7 @@ Also take a look of the following documents:
 
 ## Install
 1) Source  - use the cmake and make commands to compile the whole project and install it.
-2) Package - Install using prebuilt .deb package from [release link to be implemented](). Build and package library using github actions and let github host them.
+2) Package - Install using prebuilt .deb package from [release link to be implemented](). Further info on [Packages](docs/PACKAGES.md).
 3) Docker  - Docker image available github hosted container repo [link to repo usage readme]() to be built using actions.
 
 ### Source
@@ -238,7 +239,7 @@ ccsds_decoder -i <encoded_binaryFile> -o <decoded_file> -t <config_file>
 
 Note: If the decoded file is named with the original file extension it will be usable as the original file,
 
-for configuration file and other info see [link to readme to be inserted]().
+for configuration file and other info see [Executables](docs/EXECUTABLES.md).
 
 ### C++
 The following examples show how the high level C++ APIs can be used in a project
@@ -306,5 +307,5 @@ Assuming we have a vector of CCSDS packets prepared ad hoc. These packets then c
 If required the manager allows the packets to be validated for coherence, or if the template is set against it.
 In the example above the application data is retrieved from all packets into a single stream of data.
 
-for more examples see [link to readme for more examples to be inserted]()
+for more examples see [Examples](docs/EXAMPLES.md).
 
