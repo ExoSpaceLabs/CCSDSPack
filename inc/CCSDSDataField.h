@@ -173,7 +173,14 @@ namespace CCSDS {
     *
     * @return The absolute size of the data field in bytes.
     */
-    uint16_t getDataFieldAbsoluteBytesSize();
+    uint16_t getDataFieldAbsoluteBytesSize() const;
+
+    /**
+     * @brief Retrieves the size of the application data stored in the data field.
+     *
+     * @return The size of the application data in bytes
+     */
+    uint16_t getApplicationDataBytesSize() const;
 
     /**
      * @brief Retrieves the used size of the data field in bytes.
@@ -182,7 +189,7 @@ namespace CCSDS {
      *
      * @return The used size of the data field in bytes.
      */
-    uint16_t getDataFieldUsedBytesSize();
+    uint16_t getDataFieldUsedBytesSize() const;
 
     /**
     * @brief Retrieves the available size of the data field in bytes.
@@ -191,7 +198,7 @@ namespace CCSDS {
     *
     * @return The available size of the data field in bytes.
     */
-    uint16_t getDataFieldAvailableBytesSize();
+    uint16_t getDataFieldAvailableBytesSize() const;
 
     /**
      * @brief Retrieves the secondary header data as a vector of bytes.

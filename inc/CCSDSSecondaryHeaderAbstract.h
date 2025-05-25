@@ -6,6 +6,8 @@
 #include <cstdint>
 
 namespace CCSDS {
+  class DataField;
+
   /**
    * @brief Abstract base class for a (Packet Utilization Standard) header.
    *
@@ -16,23 +18,20 @@ namespace CCSDS {
     virtual ~SecondaryHeaderAbstract() = default;
 
     /**
-   * @brief Sets the length of the data associated with the packet.
-   * @param dataLength Length of the data in bytes.
-   */
-    virtual void setDataLength(uint16_t dataLength) = 0;
-
-
-    /**
      * @brief takes a buffer if data (vector uint8) and creates the header
      * @return Boolean true on success or Error.
      */
     [[nodiscard]] virtual ResultBool deserialize(const std::vector<uint8_t> &data) = 0;
 
+
     /**
-     * @brief Gets the length of the data associated with the packet if applicable.
-     * @return The length of the data in bytes set in the header.
+     * @brief Defines how the packet secondary header is updated using the data field as reference.
+     * This method is called every time a data get is performed from the packet, that is if update is enabled and
+     * method successfully registered.
+     *
+     * @param dataField
      */
-    [[nodiscard]] virtual uint16_t getDataLength() const = 0;
+    virtual void update(DataField* dataField) = 0;
 
     /**
      * @brief Gets the size of the header in bytes.
@@ -77,15 +76,13 @@ namespace CCSDS {
     explicit BufferHeader(const std::vector<uint8_t>& data) : m_data(data) {
     };
 
-    void setDataLength(const uint16_t dataLength) override { m_dataLength = dataLength; }
-
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
 
-    [[nodiscard]] uint16_t getDataLength() const override { return m_dataLength; }
     [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
     [[nodiscard]] std::string getType() const override { return m_type; }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
+    void update(DataField* dataField) override {m_dataLength = m_data.size();}
 
   private:
     std::vector<uint8_t> m_data;

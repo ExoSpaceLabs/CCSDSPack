@@ -35,18 +35,17 @@
                                                                        m_sourceID(sourceID), m_dataLength(dataLength) {
     }
 
-    void setDataLength(const uint16_t dataLength)   override { m_dataLength = dataLength; }
-
     [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
     [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
     [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
-    [[nodiscard]] uint16_t getDataLength()    const override { return m_dataLength;       }
+    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
     [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
     [[nodiscard]] std::string getType()       const override { return m_type;          }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    void update(CCSDS::DataField* dataField) override;
 
   private:                          // Field	            Size (bits)	Description
     uint8_t m_version{};            // Version	            3	        Version of the PUS standard
@@ -91,19 +90,18 @@
       m_dataLength(dataLength) {
     }
 
-    void setDataLength(const uint16_t dataLength)   override { m_dataLength = dataLength; }
-
     [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
     [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
     [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
     [[nodiscard]] uint16_t getEventID()       const          { return m_eventID;          }
-    [[nodiscard]] uint16_t getDataLength()    const override { return m_dataLength;       }
+    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
     [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
     [[nodiscard]] std::string getType()       const override { return m_type;          }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    void update(CCSDS::DataField* dataField) override;
 
   private:                           // Field	            Size (bits)	Description
     uint8_t m_version{};             // Version	            3	        Version of the PUS standard
@@ -150,19 +148,18 @@
                                                m_timeCode(timeCode), m_dataLength(dataLength) {
     }
 
-    void setDataLength(const uint16_t dataLength)   override { m_dataLength = dataLength; }
-
     [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
     [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
     [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
     [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
     [[nodiscard]] uint16_t getTimeCode()      const          { return m_timeCode;         }
-    [[nodiscard]] uint16_t getDataLength()    const override { return m_dataLength;       }
+    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
     [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
     [[nodiscard]] std::string getType()       const override { return m_type;          }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    void update(CCSDS::DataField* dataField) override;
 
   private:                           // Field	            Size (bits)	Description
     uint8_t m_version{};             // Version	            3	        Version of the PUS standard
