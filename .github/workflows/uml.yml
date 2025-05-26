@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake g++ graphviz ninja-build
+          sudo apt install -y cmake g++ graphviz ninja-build libyaml-cpp-dev
           git clone https://github.com/bkryza/clang-uml.git
           cd clang-uml
           mkdir build && cd build
