@@ -1,4 +1,4 @@
-compilation_database_dir: build
+compilation_database_dir: .
 output_directory: uml
 
 diagrams:
