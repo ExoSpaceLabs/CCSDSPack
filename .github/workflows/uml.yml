@@ -36,7 +36,7 @@ jobs:
           clang-uml clang-uml.yaml
 
       - name: Upload UML diagram as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: uml-diagrams
           path: docs/
