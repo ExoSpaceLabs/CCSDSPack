@@ -1,0 +1,42 @@
+name: Generate UML Diagrams
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  generate-uml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cmake g++ graphviz ninja-build
+          git clone https://github.com/bkryza/clang-uml.git
+          cd clang-uml
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+          sudo make install
+
+      - name: Configure project
+        run: |
+          mkdir build && cd build
+          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
+      - name: Generate UML
+        run: |
+          clang-uml clang-uml.yaml
+
+      - name: Upload UML diagram as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: uml-diagrams
+          path: docs/
