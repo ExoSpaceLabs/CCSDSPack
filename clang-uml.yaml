@@ -1,5 +1,5 @@
 compilation_database_dir: .
-output_directory: uml
+output_directory: docs
 
 diagrams:
   class:
