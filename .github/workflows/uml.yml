@@ -42,8 +42,7 @@ jobs:
 
       - name: Configure project for compile commands
         run: |
-          mkdir build && cd build
-          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+          cd build && cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 
       - name: Generate UML diagrams
         run: |
