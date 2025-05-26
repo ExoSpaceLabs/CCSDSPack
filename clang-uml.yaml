@@ -1,0 +1,12 @@
+compilation_database_dir: build
+output_directory: uml
+
+diagrams:
+  class:
+    type: class
+    glob:
+      - inc/**/*.h
+    using_namespace:
+      - CCSDS
+    include_relations: true
+    generate_packages: true
