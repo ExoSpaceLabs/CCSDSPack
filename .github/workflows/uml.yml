@@ -11,6 +11,7 @@ on:
 jobs:
   generate-uml:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -18,21 +19,34 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake g++ graphviz ninja-build libyaml-cpp-dev
+          sudo apt install -y \
+            cmake \
+            g++ \
+            graphviz \
+            ninja-build \
+            llvm-17 \
+            clang-17 \
+            libclang-17-dev \
+            libyaml-cpp-dev
+
+      - name: Build and install clang-uml
+        run: |
           git clone https://github.com/bkryza/clang-uml.git
           cd clang-uml
           mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/usr/lib/llvm-17
           make -j$(nproc)
           sudo make install
 
-      - name: Configure project
+      - name: Configure your project
         run: |
-          mkdir build && cd build
-          cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 
-      - name: Generate UML
+      - name: Generate UML diagrams
         run: |
+          mkdir -p docs
           clang-uml clang-uml.yaml
 
       - name: Upload UML diagram as artifact
