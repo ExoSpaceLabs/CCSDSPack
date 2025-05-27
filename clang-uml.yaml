@@ -1,17 +1,34 @@
+# Path to compile_commands.json (assume it's in build/, change if different)
 compilation_database_dir: .
-output_directory: docs/uml
 
+# Where to put the generated .puml file(s)
+output_directory: docs
+
+# Generate method arguments (none/abbreviated/full)
+generate_method_arguments: abbreviated
+
+# Generate packages using C++ namespaces
+generate_packages: true
+package_type: namespace
+generate_links:
+  link: "https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/{{ element.source.path }}#L{{ element.source.line }}"
+  tooltip: "{{ element.name }}"
+
+# Define the diagrams
 diagrams:
-  class_diagram:
+  ccsds_all:
     type: class
-    name: CCSDSPack
-    filter:
-      namespaces:
-        - CCSDS
-        - ""
-      paths:
-        - inc/
-    generate_packages: true
-    generate_relationships: true
+    glob:
+      - inc/*.h
+      - src/*.cpp
+      - test/inc/*.h
+      - test/src/*.cpp
+    include:
+      # Include everything — no namespace, element, or relationship restrictions
+    exclude:
+      # Optional: exclude private members to declutter
+      access:
+        - private
     plantuml:
-      generate: true
+      before:
+        - 'title CCSDSPack UML Diagram'
