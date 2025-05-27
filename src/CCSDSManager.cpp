@@ -1,7 +1,7 @@
-#include "CCSDSManager.h"
-
 #include <random>
 #include <utility>
+#include <algorithm>
+#include "CCSDSManager.h"
 #include "CCSDSUtils.h"
 
 void CCSDS::Manager::setSyncPattern(uint32_t syncPattern) { m_syncPattern = syncPattern; }
