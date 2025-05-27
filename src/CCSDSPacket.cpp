@@ -2,6 +2,7 @@
 #include "CCSDSDataField.h"
 #include "CCSDSUtils.h"
 #include "CCSDSConfig.h"
+#include <algorithm>
 
 void CCSDS::Packet::update() {
   if (!m_updateStatus && m_enableUpdatePacket) {
