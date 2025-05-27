@@ -1,4 +1,3 @@
-# Path to compile_commands.json (assume it's in build/, change if different)
 compilation_database_dir: .
 
 # Where to put the generated .puml file(s)
@@ -23,8 +22,6 @@ diagrams:
       - src/*.cpp
       - test/inc/*.h
       - test/src/*.cpp
-    include:
-      # Include everything — no namespace, element, or relationship restrictions
     exclude:
       # Optional: exclude private members to declutter
       access:
