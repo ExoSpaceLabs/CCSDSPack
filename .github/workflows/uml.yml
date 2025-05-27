@@ -30,7 +30,11 @@ jobs:
             clang-17 \
             libclang-17-dev \
             libclang-cpp17-dev \
-            libyaml-cpp-dev
+            libyaml-cpp-dev \
+            wget \
+            openjdk-17-jre-headless
+            wget https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar -O plantuml.jar
+
 
       - name: Build and install clang-uml
         run: |
@@ -51,6 +55,11 @@ jobs:
       - name: Generate UML diagrams
         run: |
           clang-uml -c clang-uml.yaml
+          
+      - name: Convert .puml to .png
+        run: |
+          cd docs
+          find . -name "*.puml" -exec java -jar ../plantuml.jar {} \;
           
       - name: Commit UML diagrams
         run: |
