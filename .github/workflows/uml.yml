@@ -8,6 +8,9 @@ on:
     branches:
       - develop
 
+permissions:
+  contents: write
+
 jobs:
   generate-uml:
     runs-on: ubuntu-latest
@@ -48,9 +51,11 @@ jobs:
       - name: Generate UML diagrams
         run: |
           clang-uml -c clang-uml.yaml
-
-      - name: Upload UML diagrams as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: uml-diagrams
-          path: docs/
+          
+      - name: Commit UML diagrams
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add docs/
+          git commit -m "Update UML diagrams [skip ci]" || echo "No changes to commit"
+          git push origin develop
