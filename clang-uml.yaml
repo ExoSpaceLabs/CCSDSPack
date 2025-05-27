@@ -1,12 +1,14 @@
 compilation_database_dir: .
-output_directory: docs
+output_directory: docs/uml
 
 diagrams:
   class:
     type: class
-    glob:
-      - inc/**/*.h
-    using_namespace:
-      - CCSDS
-    include_relations: true
+    name: CCSDSPack
+    include:
+      - inc/.*
+    using_namespace: ExoSpaceLabs
     generate_packages: true
+    generate_relationships: true
+    plantuml:
+      generate: true
