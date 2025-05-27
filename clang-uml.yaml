@@ -2,12 +2,15 @@ compilation_database_dir: .
 output_directory: docs/uml
 
 diagrams:
-  class:
+  class_diagram:
     type: class
     name: CCSDSPack
-    include:
-      - inc/.*
-    using_namespace: ExoSpaceLabs
+    filter:
+      namespaces:
+        - CCSDS
+        - ""
+      paths:
+        - inc/
     generate_packages: true
     generate_relationships: true
     plantuml:
