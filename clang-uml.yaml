@@ -20,12 +20,26 @@ diagrams:
     glob:
       - inc/*.h
       - src/*.cpp
-      - test/inc/*.h
-      - test/src/*.cpp
     exclude:
-      # Optional: exclude private members to declutter
+      namespaces:
+        - std
       access:
         - private
     plantuml:
       before:
         - 'title CCSDSPack UML Diagram'
+
+#  ccsds_tester:
+#    type: class
+#    glob:
+#      - test/inc/*.h
+#      - test/src/*.cpp
+#    exclude:
+#      namespaces:
+#        - std
+#      # Optional: exclude private members to declutter
+#      access:
+#        - private
+#    plantuml:
+#      before:
+#        - 'title CCSDSPack Tester UML Diagram'

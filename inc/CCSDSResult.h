@@ -7,10 +7,6 @@
 #include <cstdint>
 #include <iostream>
 
-/**
- * @namespace CCSDS
- * @brief Contains result handling utilities for CCSDS packet processing.
- */
 namespace CCSDS {
   /**
    * @enum ErrorCode
