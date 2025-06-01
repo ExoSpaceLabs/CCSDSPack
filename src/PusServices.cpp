@@ -6,7 +6,7 @@ CCSDS::ResultBool PusA::deserialize(const std::vector<uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-A header not correct size (size != 6 bytes)");
 
-  m_version = data[0] & 0x5;
+  m_version = data[0] & 0x7;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];
