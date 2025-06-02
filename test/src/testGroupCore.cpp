@@ -572,5 +572,38 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     return !res.has_value();
   });
 
+  tester->unitTest("Load DataField PUS-A from config, shall be as expected.",[] {
+    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0x00};
+
+    Config cfg;
+    TEST_VOID( cfg.load("test_resources/pusA.cfg"));
+    CCSDS::DataField dataField;
+    TEST_VOID( dataField.setDataFieldHeader(cfg));
+    std::vector<uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
+    return std::equal(expected.begin(), expected.end(), pusRet.begin());
+  });
+
+  tester->unitTest("Load DataField PUS-B from config, shall be as expected.",[] {
+    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0xFF, 0x00, 0x00};
+
+    Config cfg;
+    TEST_VOID( cfg.load("test_resources/pusB.cfg"));
+    CCSDS::DataField dataField;
+    TEST_VOID( dataField.setDataFieldHeader(cfg));
+    std::vector<uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
+    return std::equal(expected.begin(), expected.end(), pusRet.begin());
+  });
+
+  tester->unitTest("Load DataField PUS-C from config, shall be as expected",[] {
+    std::vector<uint8_t> expected{0x01, 0x07, 0x08, 0x03, 0x00, 0xBF, 0x00, 0x00};
+
+    Config cfg;
+    TEST_VOID( cfg.load("test_resources/pusC.cfg"));
+    CCSDS::DataField dataField;
+    TEST_VOID( dataField.setDataFieldHeader(cfg));
+    std::vector<uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
+    return std::equal(expected.begin(), expected.end(), pusRet.begin());
+  });
+
   std::cout << std::endl;
 }

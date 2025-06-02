@@ -143,6 +143,21 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
   return true;
 }
 
+CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const Config& cfg) {
+  RET_IF_ERR_MSG(!cfg.isKey("secondary_header_type"), ErrorCode::CONFIG_FILE_ERROR,
+                     "Config: Missing string field: secondary_header_type");
+  std::string type{};
+  ASSIGN_OR_PRINT(type, cfg.get<std::string>("secondary_header_type"));
+  RET_IF_ERR_MSG(!m_secondaryHeaderFactory.typeIsRegistered(type), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Secondary header type is not registered: " + type);
+
+  m_secondaryHeader = m_secondaryHeaderFactory.create(type);
+  RET_IF_ERR_MSG(!m_secondaryHeader, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Failed to create secondary header of type: " + type);
+  m_secondaryHeader->loadFromConfig(cfg);
+  return true;
+}
+
 void CCSDS::DataField::setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header) {
   m_secondaryHeader = std::move(header);
   m_dataFieldHeaderType = m_secondaryHeader->getType();

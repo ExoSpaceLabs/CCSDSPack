@@ -121,8 +121,20 @@ namespace CCSDS {
      * @note The m_dataFieldHeaderType is set to OTHER after the header is updated. If the current data field header
      * is not empty, it will be cleared. The method will log an error to standard error and ErrorCode is returned
      * by ResultBool if provided data is invalid.
+     * @return ResultBool
      */
     [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &dataFieldHeader);
+
+    /**
+     * @brief Sets the data field header using a configuration file as reference.
+     *
+     * @note The config file must contain all required parameter for the interested secondary header, including
+     * the secondary_header_type string indicating which registered secondary header to be parsed.
+     *
+     * @param cfg configuration file parser object.
+     * @return ResultBool
+     */
+    [[nodiscard]] ResultBool setDataFieldHeader(const Config& cfg);
 
     /**
      * @brief Sets the secondary header for the data field using a PUS-A header.

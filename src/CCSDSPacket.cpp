@@ -63,14 +63,14 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const std::string &configPath) {
   m_primaryHeader.setSequenceCount(sequenceCount);
   m_dataField.setDataPacketSize(dataFieldSize);
 
-  bool secondaryHeader_flag{false};
+  bool secondaryHeaderFlag{false};
   RET_IF_ERR_MSG(!cfg.isKey("define_secondary_header"), ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Missing bool field: define_secondary_header");
-  ASSIGN_OR_PRINT(secondaryHeader_flag, cfg.get<bool>("define_secondary_header"));
-  if (secondaryHeader_flag) {
-    RET_IF_ERR_MSG(!cfg.isKey("secondary_header_type"), ErrorCode::CONFIG_FILE_ERROR,
-                   "Config: Missing string field: secondary_header_type");
-    //TODO to be finished
+  ASSIGN_OR_PRINT(secondaryHeaderFlag, cfg.get<bool>("define_secondary_header"));
+  if (secondaryHeaderFlag) {
+
+    //Todo set data field header from config
+
   }
   return true;
 }
