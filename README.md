@@ -221,7 +221,7 @@ requirements:
 
 ```bash
 
-ccsds_encoder -i <file_to_encode> -o <encoded_binaryFile> -t <config_file>
+ccsds_encoder -i <file_to_encode> -o <encoded_binaryFile> -c <config_file>
 ```
 ### Decoder:
 
@@ -234,7 +234,7 @@ requirements:
 
 ```bash
 
-ccsds_decoder -i <encoded_binaryFile> -o <decoded_file> -t <config_file>
+ccsds_decoder -i <encoded_binaryFile> -o <decoded_file> -c <config_file>
 ```
 
 Note: If the decoded file is named with the original file extension it will be usable as the original file,
