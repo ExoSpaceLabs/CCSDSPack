@@ -36,25 +36,21 @@ CCSDS::ResultBool PusA::loadFromConfig(const Config& cfg) {
   uint8_t serviceType = 0;
   uint8_t serviceSubType = 0;
   uint8_t sourceId = 0;
-  uint8_t timeCode = 0;
 
   RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
   RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");
   RET_IF_ERR_MSG(!cfg.isKey("pus_service_sub_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_sub_type");
   RET_IF_ERR_MSG(!cfg.isKey("pus_source_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_source_id");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_time_code"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: secondary_header_type");
 
   ASSIGN_OR_PRINT(version, cfg.get<int>("pus_version"));
   ASSIGN_OR_PRINT(serviceType, cfg.get<int>("pus_service_type"));
   ASSIGN_OR_PRINT(serviceSubType,cfg.get< int>("pus_service_sub_type"));
   ASSIGN_OR_PRINT(sourceId,cfg.get<int>("pus_source_id"));
-  ASSIGN_OR_PRINT(timeCode,cfg.get< int>("pus_time_code"));
 
   m_version = version & 0x7;
   m_serviceType = serviceType & 0xFF;
   m_serviceSubType = serviceSubType & 0xFF;
   m_sourceID = sourceId & 0xFF;
-  //TODO check and finish implement
 
   return true;
 }
@@ -95,25 +91,25 @@ CCSDS::ResultBool PusB::loadFromConfig(const Config &cfg) {
   uint8_t serviceType = 0;
   uint8_t serviceSubType = 0;
   uint8_t sourceId = 0;
-  uint8_t timeCode = 0;
+  uint8_t eventId = 0;
 
   RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
   RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");
   RET_IF_ERR_MSG(!cfg.isKey("pus_service_sub_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_sub_type");
   RET_IF_ERR_MSG(!cfg.isKey("pus_source_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_source_id");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_time_code"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: secondary_header_type");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_event_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: secondary_header_type");
 
   ASSIGN_OR_PRINT(version, cfg.get<int>("pus_version"));
   ASSIGN_OR_PRINT(serviceType, cfg.get<int>("pus_service_type"));
   ASSIGN_OR_PRINT(serviceSubType,cfg.get< int>("pus_service_sub_type"));
   ASSIGN_OR_PRINT(sourceId,cfg.get<int>("pus_source_id"));
-  ASSIGN_OR_PRINT(timeCode,cfg.get< int>("pus_time_code"));
+  ASSIGN_OR_PRINT(eventId,cfg.get<int>("pus_event_id"));
 
   m_version = version & 0x7;
   m_serviceType = serviceType & 0xFF;
   m_serviceSubType = serviceSubType & 0xFF;
   m_sourceID = sourceId & 0xFF;
-  //TODO check and finish implement
+  m_eventID = eventId & 0xFFFF;
 
   return true;
 }
@@ -174,7 +170,6 @@ CCSDS::ResultBool PusC::loadFromConfig(const Config& cfg) {
   m_serviceSubType = serviceSubType & 0xFF;
   m_sourceID = sourceId & 0xFF;
   m_timeCode = timeCode & 0xFFFF;
-  //TODO check and finish implement
 
   return true;
 }
