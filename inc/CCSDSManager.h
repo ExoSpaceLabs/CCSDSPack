@@ -29,6 +29,7 @@ namespace CCSDS {
      */
     explicit Manager(Packet packet) : m_templatePacket(std::move(packet)) {
       m_templateIsSet = true;
+      m_templatePacket.setUpdatePacketEnable(false);
       m_validator.setTemplatePacket(m_templatePacket);
       m_validator.configure(true, true, true);
 

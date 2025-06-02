@@ -14,6 +14,7 @@ bool CCSDS::Manager::getSyncPatternEnable() const { return m_syncPattEnable; }
 
 CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::SOMETHING_WENT_WRONG, "Cannot set Template as it is already set, please clear Manager first");
+  m_templatePacket.setUpdatePacketEnable(false);
   m_templatePacket = std::move(packet);
   m_validator.setTemplatePacket(m_templatePacket);
   m_validator.configure(true, true, true);
