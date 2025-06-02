@@ -90,7 +90,14 @@ namespace CCSDS {
      *
      * @param size The new data field size in bytes.
      */
-    void setDatFieldSize( uint16_t size );
+    void setDataFieldSize( uint16_t size );
+
+    /**
+     * @brief retrieves the set data field size (this includes the secondary header if present)
+     *
+     * @return uint16_t the size of data length in bytes.
+     */
+    uint16_t getDataFieldSize() const;
 
     /**
      * @brief Sets the application data for the packet.

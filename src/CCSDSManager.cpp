@@ -13,7 +13,7 @@ void CCSDS::Manager::setSyncPatternEnable(const bool enable) { m_syncPattEnable 
 bool CCSDS::Manager::getSyncPatternEnable() const { return m_syncPattEnable; }
 
 CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
-  RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::SOMETHING_WENT_WRONG, "Cannot set Template as it is already set, please clear Manager first");
+  RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::TEMPLATE_SET_FAILURE, "Cannot set Template as it is already set, please clear Manager first");
   m_templatePacket.setUpdatePacketEnable(false);
   m_templatePacket = std::move(packet);
   m_validator.setTemplatePacket(m_templatePacket);
@@ -28,6 +28,7 @@ CCSDS::ResultBool CCSDS::Manager::loadTemplateConfigFile(const std::string &conf
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfigFile(configPath));
   m_templatePacket = std::move(templatePacket);
+  m_templateIsSet = true;
   return true;;
 }
 
@@ -36,11 +37,16 @@ CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const Config &cfg) {
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfig(cfg));
   m_templatePacket = std::move(templatePacket);
+  m_templateIsSet = true;
   return true;;
 }
 
-void CCSDS::Manager::setDatFieldSize(const uint16_t size) {
+void CCSDS::Manager::setDataFieldSize(const uint16_t size) {
   m_templatePacket.setDataFieldSize(size);
+}
+
+uint16_t CCSDS::Manager::getDataFieldSize() const {
+  return m_templatePacket.getDataFieldMaximumSize();
 }
 
 CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t> &data) {

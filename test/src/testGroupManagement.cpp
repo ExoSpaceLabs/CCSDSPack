@@ -23,7 +23,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     CCSDS::Manager manager(packet);
 
     tester->unitTest("Manager set data, returned packet shall be as expected.", [&manager] {
-      manager.setDatFieldSize(5);
+      manager.setDataFieldSize(5);
       TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05}));
       std::vector<uint8_t> ret{};
       TEST_RET(ret, manager.getPacketBufferAtIndex(0));
@@ -41,7 +41,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     CCSDS::Manager manager;
     ASSERT_SUCCESS(manager.setPacketTemplate(newTestPacket));
     manager.setAutoValidateEnable(false);
-    manager.setDatFieldSize(5);
+    manager.setDataFieldSize(5);
     tester->unitTest("Manager shall set large data for multi packets with sequence control.", [&manager] {
 
       TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07}));
@@ -365,7 +365,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       const auto ptr = std::make_shared<PusC>(secondaryHeader);
       packet.setDataFieldHeader(ptr);
       CCSDS::Manager manager(packet);
-      manager.setDatFieldSize(13);
+      manager.setDataFieldSize(13);
       TEST_VOID(manager.setApplicationData(dataFieldData));
       auto packetBuffer = manager.getPacketsBuffer();
       return std::equal(expected.begin(), expected.end(), packetBuffer.begin());

@@ -23,10 +23,10 @@ namespace CCSDS {
     NULL_POINTER = 7,                   ///< Null pointer encountered
     INVALID_CHECKSUM = 8,               ///< Checksum validation failed
     VALIDATION_FAILURE = 9,             ///< Validation Failure
-    SOMETHING_WENT_WRONG = 10,          ///< General failure
+    TEMPLATE_SET_FAILURE = 10,          ///< Failed to set Template Packet
     FILE_READ_ERROR = 11,               ///< Reading from file failure
     FILE_WRITE_ERROR = 12,              ///< Writing to file failure
-    CONFIG_FILE_ERROR = 13
+    CONFIG_FILE_ERROR = 13              ///< Configuration file error
   };
 
   /**
