@@ -155,6 +155,7 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const Config& cfg) {
   RET_IF_ERR_MSG(!m_secondaryHeader, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Failed to create secondary header of type: " + type);
   m_secondaryHeader->loadFromConfig(cfg);
+  m_dataFieldHeaderType = m_secondaryHeader->getType();
   return true;
 }
 

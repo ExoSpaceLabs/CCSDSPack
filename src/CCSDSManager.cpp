@@ -26,7 +26,7 @@ CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
 CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const std::string &configPath) {
 
   Packet templatePacket;
-  FORWARD_RESULT(templatePacket.loadFromConfig(configPath));
+  FORWARD_RESULT(templatePacket.loadFromConfigFile(configPath));
   m_templatePacket = std::move(templatePacket);
   return true;;
 }

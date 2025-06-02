@@ -22,18 +22,21 @@ void CCSDS::Packet::update() {
   }
 }
 
-CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const std::string &configPath) {
+CCSDS::ResultBool CCSDS::Packet::loadFromConfigFile(const std::string &configPath) {
   Config cfg;
   cfg.load(configPath);
+  FORWARD_RESULT(loadFromConfig(cfg));
+  return true;
+}
 
+CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   uint8_t versionNumber;
   uint8_t type;
-  uint8_t APID = 0;
+  uint8_t APID{0};
   uint8_t dataFieldHeaderFlag;
   uint16_t sequenceCount;
-  ESequenceFlag sequenceFlag = {};
-  uint16_t dataFieldSize;
-  bool segmented;
+  ESequenceFlag sequenceFlag{};
+  bool segmented{false};
 
   RET_IF_ERR_MSG(!cfg.isKey( "ccsds_version_number"), ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Missing int field: ccsds_version_number");
@@ -45,33 +48,47 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const std::string &configPath) {
                  "Config: Missing int field: ccsds_APID");
   RET_IF_ERR_MSG(!cfg.isKey( "ccsds_segmented"), ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Missing bool field: ccsds_segmented");
-  RET_IF_ERR_MSG(!cfg.isKey( "data_field_size"), ErrorCode::CONFIG_FILE_ERROR,
-                 "Config: Missing int field: data_field_size");
 
   ASSIGN_OR_PRINT(versionNumber, cfg.get< int>( "ccsds_version_number"));
   ASSIGN_OR_PRINT(type, cfg.get<bool>( "ccsds_type"));
   ASSIGN_OR_PRINT(dataFieldHeaderFlag, cfg.get<bool>("ccsds_data_field_header_flag"));
   ASSIGN_OR_PRINT(APID, cfg.get< int>( "ccsds_APID"));
   ASSIGN_OR_PRINT(segmented, cfg.get<bool>( "ccsds_segmented"));
-  ASSIGN_OR_PRINT(dataFieldSize, cfg.get< int>( "data_field_size"));
 
   m_primaryHeader.setVersionNumber(versionNumber);
   m_primaryHeader.setType(type);
   m_primaryHeader.setDataFieldHeaderFlag(dataFieldHeaderFlag);
   m_primaryHeader.setAPID(APID);
+  if (segmented) {
+    sequenceCount = 1;
+    sequenceFlag = FIRST_SEGMENT;
+  }else {
+    sequenceCount = 0;
+    sequenceFlag = UNSEGMENTED;
+  }
   m_primaryHeader.setSequenceFlags(sequenceFlag);
   m_primaryHeader.setSequenceCount(sequenceCount);
-  m_dataField.setDataPacketSize(dataFieldSize);
 
-  bool secondaryHeaderFlag{false};
-  RET_IF_ERR_MSG(!cfg.isKey("define_secondary_header"), ErrorCode::CONFIG_FILE_ERROR,
-                 "Config: Missing bool field: define_secondary_header");
-  ASSIGN_OR_PRINT(secondaryHeaderFlag, cfg.get<bool>("define_secondary_header"));
-  if (secondaryHeaderFlag) {
-
-    //Todo set data field header from config
-
+  if (cfg.isKey( "data_field_size")) { // optional field
+    uint16_t dataFieldSize;
+    ASSIGN_OR_PRINT(dataFieldSize, cfg.get< int>( "data_field_size"));
+    m_dataField.setDataPacketSize(dataFieldSize);
   }
+
+  if (cfg.isKey("define_secondary_header")) { // optional field
+    bool secondaryHeaderFlag{false};
+    ASSIGN_OR_PRINT(secondaryHeaderFlag, cfg.get<bool>("define_secondary_header"));
+    if (secondaryHeaderFlag) {
+      FORWARD_RESULT( m_dataField.setDataFieldHeader(cfg));
+    }
+  }
+
+  if (cfg.isKey("application_data")) { // optional field
+    std::vector<uint8_t> applicationData{};
+    ASSIGN_OR_PRINT(applicationData, cfg.get<std::vector<uint8_t>>("application_data"));
+    FORWARD_RESULT( m_dataField.setApplicationData(applicationData));
+  }
+
   return true;
 }
 
@@ -80,7 +97,7 @@ uint16_t CCSDS::Packet::getCRC() {
   return m_CRC16;
 }
 
-uint16_t CCSDS::Packet::getDataFieldMaximumSize() {
+uint16_t CCSDS::Packet::getDataFieldMaximumSize() const {
   return m_dataField.getDataFieldAvailableBytesSize();
 }
 

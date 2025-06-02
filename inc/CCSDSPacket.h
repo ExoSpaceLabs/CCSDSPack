@@ -328,7 +328,7 @@ namespace CCSDS {
     uint16_t getCRC();
 
     /** @brief returns the maximum data field size */
-    uint16_t getDataFieldMaximumSize();
+    uint16_t getDataFieldMaximumSize() const;
 
     /** @ returns the data field header flag */
     bool getDataFieldHeaderFlag();
@@ -377,7 +377,22 @@ namespace CCSDS {
      */
     void update();
 
-    ResultBool loadFromConfig(const std::string &configPath);
+    /**
+     * @brief Loads a packet from a configuration file, including secondary header if present.
+     *
+     * @param configPath path to the configuration file.
+     * @return ResultBool
+     */
+    ResultBool loadFromConfigFile(const std::string &configPath);
+
+    /**
+     * @brief Loads a packet from a configuration object, including secondary header if present.
+     *
+     * @param cfg configuration object.
+     * @return ResultBool
+     */
+    ResultBool loadFromConfig(const Config &cfg);
+
 
   private:
     Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex
