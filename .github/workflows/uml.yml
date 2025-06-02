@@ -59,7 +59,7 @@ jobs:
       - name: Convert .puml to .png
         run: |
           cd docs
-          find . -name "*.puml" -exec java -jar ../plantuml.jar {} \;
+          find . -name "*.puml" -exec java -jar ../plantuml.jar -tsvg {} \;
           
       - name: Commit UML diagrams
         run: |

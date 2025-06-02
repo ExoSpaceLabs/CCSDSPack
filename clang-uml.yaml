@@ -15,11 +15,14 @@ generate_links:
 
 # Define the diagrams
 diagrams:
-  ccsds_all:
+  ccsds_packet:
     type: class
     glob:
-      - inc/*.h
-      - src/*.cpp
+      - inc/CCSDSPacket.h
+      - inc/CCSDSHeader.h
+      - inc/CCSDSResult.h
+      - src/CCSDSPacket.cpp
+      - src/CCSDSHeader.cpp
     exclude:
       namespaces:
         - std
@@ -27,8 +30,44 @@ diagrams:
         - private
     plantuml:
       before:
-        - 'title CCSDSPack UML Diagram'
+        - 'title CCSDS::Packet UML Diagram'
+  ccsds_data_field:
+    type: class
+    glob:
+      - inc/CCSDSDataField.h
+      - src/CCSDSDataField.cpp
+      - inc/CCSDSResult.h
+      - inc/CCSDSSecondaryHeaderAbstract.h
+      - inc/CCSDSSecondaryHeaderFactory.h
+      - inc/PusServices.h
+      - src/PusServices.cpp
+    exclude:
+      namespaces:
+        - std
+      access:
+        - private
+    plantuml:
+      before:
+        - 'title CCSDS::DataField UML Diagram'
 
+  ccsds_manager:
+    type: class
+    glob:
+      - inc/CCSDSManager.h
+      - src/CCSDSManager.cpp
+      - inc/CCSDSResult.h
+      - inc/CCSDSPacket.h
+      - src/CCSDSPacket.cpp
+      - inc/CCSDSValidator.h
+      - src/CCSDSValidator.h
+    exclude:
+      namespaces:
+        - std
+      access:
+        - private
+    plantuml:
+      before:
+        - 'title CCSDS::Manager UML Diagram'
 #  ccsds_tester:
 #    type: class
 #    glob:
