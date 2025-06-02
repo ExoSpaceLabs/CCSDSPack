@@ -41,7 +41,7 @@ void printHelp() {
   std::cout << "Optionals:" << std::endl;
   std::cout << " -c or --config <filename> : Configuration file" << std::endl;
   std::cout << " -h or --help              : Show this help and message" << std::endl;
-  std::cout << " -v or --verbose           : Show generated packets information" << std::endl;
+  std::cout << " -v or --verbose           : Show packet specific report" << std::endl;
   std::cout << " -p or --print-packets     : Show generated packets information" << std::endl;
   std::cout << std::endl;
   std::cout << "Note : If config file is provided, the loaded packets are validated against the the template packet." << std::endl;
@@ -155,7 +155,7 @@ int main(const int argc, char* argv[]) {
   bool isConfigProvided{false};
 
   manager.setAutoValidateEnable(false);
-  manager.setDatFieldSize(64*1023 ); // 1M Bytes * packet
+  manager.setDataFieldSize(64*1023 ); // 1M Bytes * packet
   manager.setAutoUpdateEnable(false);
   customConsole(appName,"reading data from " + input);
   if (const auto res = readBinaryFile(input); !res.has_value()) {
@@ -190,108 +190,8 @@ int main(const int argc, char* argv[]) {
         return res.error().code();
       }
     }
-
-  CCSDS::Header header;
-  uint8_t versionNumber;
-  uint8_t type;
-  uint8_t APID;
-  uint8_t dataFieldHeaderFlag;
-  uint16_t sequenceCount;
-  CCSDS::ESequenceFlag sequenceFlag;
-  uint16_t dataFieldSize;
-  bool segmented;
-  bool syncPatternEnable;
-  uint32_t syncPattern;
-
-  if (!cfg.isKey("ccsds_version_number")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_version_number"
-        << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  ASSIGN_OR_PRINT(versionNumber, cfg.get<int>("ccsds_version_number"));
-
-
-  if (!cfg.isKey("ccsds_type")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_type" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  ASSIGN_OR_PRINT(type, cfg.get<bool>("ccsds_type"));
-
-
-  if (!cfg.isKey("ccsds_data_field_header_flag")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_data_field_header_flag" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  ASSIGN_OR_PRINT(dataFieldHeaderFlag, cfg.get<bool>("ccsds_data_field_header_flag"));
-
-
-  if (!cfg.isKey("ccsds_APID")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: ccsds_APID" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  ASSIGN_OR_PRINT(APID, cfg.get<int>("ccsds_APID"));
-
-
-  if (!cfg.isKey("ccsds_segmented")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing bool field: ccsds_segmented" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-  ASSIGN_OR_PRINT(segmented, cfg.get<bool>("ccsds_segmented"));
-
-
-  if (!cfg.isKey("data_field_size")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: data_field_size" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-
-  if (!cfg.isKey("sync_pattern_enable")) {
-    std::cerr << "[ Error " << CONFIG_MISSING_PARAMETER << " ]: " << "Config: Missing int field: sync_pattern_enable" << std::endl;
-    return CONFIG_MISSING_PARAMETER;
-  }
-
-  ASSIGN_OR_PRINT(dataFieldSize, cfg.get<int>("data_field_size"));
-  ASSIGN_OR_PRINT(syncPatternEnable, cfg.get<bool>("sync_pattern_enable"));
-
-  {  // optional definition of sync pattern
-    if (auto res = cfg.get<int>("sync_pattern"); res.has_value()) {
-      syncPattern = res.value();
-    }
-  }
-
-  customConsole(appName,"creating CCSDS template packet");
-  if (segmented) {
-    sequenceCount = 1;
-    sequenceFlag = CCSDS::ESequenceFlag::FIRST_SEGMENT;
-  }else {
-    sequenceCount = 0;
-    sequenceFlag = CCSDS::ESequenceFlag::UNSEGMENTED;
-  }
-
-    header.setVersionNumber(versionNumber);
-    header.setType(type);
-    header.setAPID(APID);
-    header.setDataFieldHeaderFlag(dataFieldHeaderFlag);
-    header.setSequenceFlags(sequenceFlag);
-    header.setSequenceCount(sequenceCount);
-
     CCSDS::Packet templatePacket;
-    templatePacket.setPrimaryHeader(header);
-
-    if (const auto res = manager.setPacketTemplate(templatePacket); !res.has_value()) {
-      std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
-      return res.error().code();
-    }
-    manager.setDatFieldSize(dataFieldSize);
-    manager.setSyncPatternEnable(syncPatternEnable);
-    if (syncPatternEnable && cfg.isKey("sync_pattern")) {
-      manager.setSyncPattern(syncPattern);
-    }
-
-    if (!segmented && inputBytes.size() > dataFieldSize){
-      std::cerr << "[ Error " << INVALID_INPUT_DATA << " ]: "<<  "Input data is too big for unsegmented packets, data "
-      << inputBytes.size() << " must be less than defined data packet length of " << dataFieldSize << std::endl ;
-      return INVALID_INPUT_DATA;
-    }
+    templatePacket.loadFromConfig(cfg);
     validator.setTemplatePacket(templatePacket);
     validator.configure(true,true,true);
   }// end if config provided
