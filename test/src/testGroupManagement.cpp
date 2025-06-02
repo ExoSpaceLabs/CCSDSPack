@@ -9,7 +9,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Manager shall set packet template, returned shall be as expected.", [] {
     CCSDS::Packet packet{};
-    std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
+    std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00};
     TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
     CCSDS::Manager manager(packet);
     std::vector<uint8_t> templatePacket;
@@ -17,37 +17,6 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     return std::equal(expected.begin(), expected.end(), templatePacket.begin());
   });
 
-  tester->unitTest("Manager shall set packet template, with Pus-B secondary header from buffer.", [] {
-
-    CCSDS::Packet packet;
-    std::vector<uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x08, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00, 0x67, 0x36};
-    const std::vector<uint8_t> secondaryHeader = {0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x0b, 0xc};
-
-    TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
-    TEST_VOID(packet.setDataFieldHeader(secondaryHeader,"PusB"));
-    CCSDS::Manager manager(packet);
-    std::vector<uint8_t> templatePacket;
-    TEST_RET(templatePacket, manager.getPacketTemplate());
-    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
-  });
-
-  tester->unitTest("Manager shall set packet template, with Pus-A secondary header from class and data UNSEGMENTED.", [] {
-
-    CCSDS::Packet packet;
-    std::vector<uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x08, 0x2, 0x4, 0x5, 0x06, 0x00, 0x02, 0x07, 0x0a, 0xa7, 0x67};
-    const std::vector<uint8_t> secondaryHeaderData = {0x2, 0x4, 0x5, 0x06, 0x0b, 0xc};
-    const std::vector<uint8_t> dataFieldData = {0x07, 0x0a};
-
-    TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
-    PusA secondaryHeader;
-    TEST_VOID(secondaryHeader.deserialize(secondaryHeaderData));
-    const auto ptr = std::make_shared<PusA>( secondaryHeader);
-    packet.setDataFieldHeader(ptr);
-    CCSDS::Manager manager(packet);
-    TEST_VOID(manager.setApplicationData(dataFieldData));
-    auto packetBuffer = manager.getPacketsBuffer();
-    return std::equal(expected.begin(), expected.end(), packetBuffer.begin());
-  });
   {
     CCSDS::Packet packet{};
     ASSERT_SUCCESS(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
@@ -345,6 +314,61 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       TEST_RET(templatePacket, manager.getPacketTemplate());
       return std::equal(expected.begin(), expected.end(), templatePacket.begin());
     });
+
+  tester->unitTest("Manager shall set packet template, with Pus-B secondary header from buffer.", [] {
+
+    CCSDS::Packet packet;
+    std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00, 0x00, 0x00};
+    const std::vector<uint8_t> secondaryHeader = {0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00};
+
+    TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
+    TEST_VOID(packet.setDataFieldHeader(secondaryHeader,"PusB"));
+    CCSDS::Manager manager(packet);
+    std::vector<uint8_t> templatePacket;
+    TEST_RET(templatePacket, manager.getPacketTemplate());
+    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+  });
+
+  tester->unitTest("Manager shall set packet template, with Pus-A secondary header from class and data UNSEGMENTED.", [] {
+
+    CCSDS::Packet packet;
+    std::vector<uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x08, 0x2, 0x4, 0x5, 0x06, 0x00, 0x02, 0x07, 0x0a, 0xa7, 0x67};
+    const std::vector<uint8_t> secondaryHeaderData = {0x2, 0x4, 0x5, 0x06, 0x0b, 0xc};
+    const std::vector<uint8_t> dataFieldData = {0x07, 0x0a};
+
+    TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
+    PusA secondaryHeader;
+    TEST_VOID(secondaryHeader.deserialize(secondaryHeaderData));
+    const auto ptr = std::make_shared<PusA>( secondaryHeader);
+    packet.setDataFieldHeader(ptr);
+    CCSDS::Manager manager(packet);
+    TEST_VOID(manager.setApplicationData(dataFieldData));
+    auto packetBuffer = manager.getPacketsBuffer();
+    return std::equal(expected.begin(), expected.end(), packetBuffer.begin());
+  });
+
+  tester->unitTest("Manager shall set packet template, with Pus-C secondary header from class and data SEGMENTED.", [] {
+
+    CCSDS::Packet packet;
+    packet.setUpdatePacketEnable(true);
+
+    std::vector<uint8_t> expected{
+      0xCF, 0xF4, 0x40, 0x01, 0x00, 0x0d, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0xb4, 0x71,
+      0xCF, 0xF4, 0x00, 0x02, 0x00, 0x0d, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0xb4, 0x71,
+      0xCF, 0xF4, 0x80, 0x03, 0x00, 0x0a, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x02, 0x06, 0x07, 0x70, 0x09
+    };
+    const std::vector<uint8_t> dataFieldData = {0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
+    TEST_VOID(packet.setPrimaryHeader({0xCF, 0xF4, 0x40, 0x00, 0x00, 0x00}));
+    PusC secondaryHeader;
+    TEST_VOID(secondaryHeader.deserialize({0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00}));
+    const auto ptr = std::make_shared<PusC>(secondaryHeader);
+    packet.setDataFieldHeader(ptr);
+    CCSDS::Manager manager(packet);
+    manager.setDatFieldSize(13);
+    TEST_VOID(manager.setApplicationData(dataFieldData));
+    auto packetBuffer = manager.getPacketsBuffer();
+    return std::equal(expected.begin(), expected.end(), packetBuffer.begin());
+});
 
     tester->unitTest("Manager shall load template from config file, template shall be as expected.", [] {
       CCSDS::Packet packet{};
