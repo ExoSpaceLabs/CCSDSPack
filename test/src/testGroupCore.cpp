@@ -531,5 +531,46 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     return ret;
     });
 
+  tester->unitTest("Load PUS-A from config, shall be as expected.",[] {
+    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0x00};
+
+    Config cfg;
+    TEST_VOID( cfg.load("test_resources/pusA.cfg"));
+    PusA pusA;
+    TEST_VOID( pusA.loadFromConfig(cfg));
+    std::vector<uint8_t> pusRet = pusA.serialize();
+    return std::equal(expected.begin(), expected.end(), pusRet.begin());
+  });
+
+  tester->unitTest("Load PUS-B from config, shall be as expected.",[] {
+    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0xFF, 0x00, 0x00};
+
+    Config cfg;
+    TEST_VOID( cfg.load("test_resources/pusB.cfg"));
+    PusB pusB;
+    TEST_VOID( pusB.loadFromConfig(cfg));
+    std::vector<uint8_t> pusRet = pusB.serialize();
+    return std::equal(expected.begin(), expected.end(), pusRet.begin());
+  });
+
+  tester->unitTest("Load PUS-C from config, shall be as expected.",[] {
+    std::vector<uint8_t> expected{0x01, 0x07, 0x08, 0x03, 0x00, 0xBF, 0x00, 0x00};
+
+    Config cfg;
+    TEST_VOID( cfg.load("test_resources/pusC.cfg"));
+    PusC pusC;
+    TEST_VOID( pusC.loadFromConfig(cfg));
+    std::vector<uint8_t> pusRet = pusC.serialize();
+    return std::equal(expected.begin(), expected.end(), pusRet.begin());
+  });
+
+  tester->unitTest("Load PUS-C from wrong config, shall fail for missing parameter.",[] {
+    Config cfg;
+    TEST_VOID( cfg.load("test_resources/pusA.cfg"));
+    PusC pusC;
+    const auto res = pusC.loadFromConfig(cfg);
+    return !res.has_value();
+  });
+
   std::cout << std::endl;
 }
