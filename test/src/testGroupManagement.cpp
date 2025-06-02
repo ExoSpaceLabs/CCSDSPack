@@ -304,16 +304,17 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
         return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
       });
     }
+  }
 
-    tester->unitTest("Manager shall load template from binary file, template shall be as expected.", [] {
-      CCSDS::Packet packet{};
-      std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
-      CCSDS::Manager manager;
-      TEST_VOID(manager.readTemplate("test_resources/templatePacket.bin"));
-      std::vector<uint8_t> templatePacket;
-      TEST_RET(templatePacket, manager.getPacketTemplate());
-      return std::equal(expected.begin(), expected.end(), templatePacket.begin());
-    });
+  tester->unitTest("Manager shall load template from binary file, template shall be as expected.", [] {
+    CCSDS::Packet packet{};
+    std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
+    CCSDS::Manager manager;
+    TEST_VOID(manager.readTemplate("test_resources/templatePacket.bin"));
+    std::vector<uint8_t> templatePacket;
+    TEST_RET(templatePacket, manager.getPacketTemplate());
+    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+  });
 
   tester->unitTest("Manager shall set packet template, with Pus-B secondary header from buffer.", [] {
 
@@ -357,62 +358,63 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       0xCF, 0xF4, 0x00, 0x02, 0x00, 0x0d, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0xb4, 0x71,
       0xCF, 0xF4, 0x80, 0x03, 0x00, 0x0a, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x02, 0x06, 0x07, 0x70, 0x09
     };
-    const std::vector<uint8_t> dataFieldData = {0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
-    TEST_VOID(packet.setPrimaryHeader({0xCF, 0xF4, 0x40, 0x00, 0x00, 0x00}));
-    PusC secondaryHeader;
-    TEST_VOID(secondaryHeader.deserialize({0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00}));
-    const auto ptr = std::make_shared<PusC>(secondaryHeader);
-    packet.setDataFieldHeader(ptr);
-    CCSDS::Manager manager(packet);
-    manager.setDatFieldSize(13);
-    TEST_VOID(manager.setApplicationData(dataFieldData));
-    auto packetBuffer = manager.getPacketsBuffer();
-    return std::equal(expected.begin(), expected.end(), packetBuffer.begin());
-});
+      const std::vector<uint8_t> dataFieldData = {0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
+      TEST_VOID(packet.setPrimaryHeader({0xCF, 0xF4, 0x40, 0x00, 0x00, 0x00}));
+      PusC secondaryHeader;
+      TEST_VOID(secondaryHeader.deserialize({0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00}));
+      const auto ptr = std::make_shared<PusC>(secondaryHeader);
+      packet.setDataFieldHeader(ptr);
+      CCSDS::Manager manager(packet);
+      manager.setDatFieldSize(13);
+      TEST_VOID(manager.setApplicationData(dataFieldData));
+      auto packetBuffer = manager.getPacketsBuffer();
+      return std::equal(expected.begin(), expected.end(), packetBuffer.begin());
+  });
 
-    tester->unitTest("Manager shall load template from config file, template shall be as expected.", [] {
-      CCSDS::Packet packet{};
-      std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
-      CCSDS::Manager manager;
-      TEST_VOID(manager.readTemplate("test_resources/templatePacket.cfg"));
-      std::vector<uint8_t> templatePacket;
-      TEST_RET(templatePacket, manager.getPacketTemplate());
-      return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+  {
+    CCSDS::Manager manager1{};
+    const std::vector<uint8_t> expected{
+      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
+    };
+    ASSERT_SUCCESS(manager1.load(expected));
+
+    tester->unitTest("Manager shall insert the sync pattern at the start of each packet.", [&manager1] {
+      bool ret;
+      manager1.setSyncPatternEnable(true);
+      TEST_RET(ret, manager1.write("test_resources/myPacketsSync.bin"));
+      return ret;
     });
-
-    {
-      CCSDS::Manager manager1{};
-      const std::vector<uint8_t> expected{
-        0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-      };
-      ASSERT_SUCCESS(manager1.load(expected));
-
-      tester->unitTest("Manager shall insert the sync pattern at the start of each packet.", [&manager1] {
-        bool ret;
-        manager1.setSyncPatternEnable(true);
-        TEST_RET(ret, manager1.write("test_resources/myPacketsSync.bin"));
-        return ret;
-      });
-    }
-
-    {
-      CCSDS::Manager manager1{};
-      const std::vector<uint8_t> expected{
-        0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-      };
-      tester->unitTest("Manager shall read the packets with sync pattern and remove it.", [&manager1, &expected] {
-        bool ret;
-        manager1.setSyncPatternEnable(true);
-        TEST_RET(ret, manager1.read("test_resources/myPacketsSync.bin"));
-        manager1.setSyncPatternEnable(false);
-        auto retPackets = manager1.getPacketsBuffer();
-        return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
-      });
-    }
   }
+
+  {
+    CCSDS::Manager manager1{};
+    const std::vector<uint8_t> expected{
+      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
+      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
+    };
+
+    tester->unitTest("Manager shall read the packets with sync pattern and remove it.", [&manager1, &expected] {
+      bool ret;
+      manager1.setSyncPatternEnable(true);
+      TEST_RET(ret, manager1.read("test_resources/myPacketsSync.bin"));
+      manager1.setSyncPatternEnable(false);
+      auto retPackets = manager1.getPacketsBuffer();
+      return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
+    });
+  }
+
+  tester->unitTest("Manager shall load template from config file, template shall be as expected.", [] {
+    CCSDS::Packet packet{};
+    std::vector<uint8_t> expected{0x30, 0x7d, 0x40, 0x01, 0x00, 0x00, 0x01, 0x03, 0x08, 0x03, 0x00, 0xc0, 0x00, 0x00, 0x00, 0x00};
+    CCSDS::Manager manager;
+    TEST_VOID(manager.readTemplate("test_resources/templatePacket.cfg"));
+    std::vector<uint8_t> templatePacket;
+    TEST_RET(templatePacket, manager.getPacketTemplate());
+    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+  });
+
   std::cout << std::endl;
 }

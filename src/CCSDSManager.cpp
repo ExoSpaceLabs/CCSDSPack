@@ -23,10 +23,18 @@ CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const std::string &configPath) {
+CCSDS::ResultBool CCSDS::Manager::loadTemplateConfigFile(const std::string &configPath) {
 
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfigFile(configPath));
+  m_templatePacket = std::move(templatePacket);
+  return true;;
+}
+
+CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const Config &cfg) {
+
+  Packet templatePacket;
+  FORWARD_RESULT(templatePacket.loadFromConfig(cfg));
   m_templatePacket = std::move(templatePacket);
   return true;;
 }
@@ -227,17 +235,13 @@ CCSDS::ResultBool CCSDS::Manager::write(const std::string& binaryFile) const {
 
 CCSDS::ResultBool CCSDS::Manager::readTemplate(const std::string& filename) {
   Packet templatePacket;
-
+  templatePacket.setUpdatePacketEnable(false);
   if (stringEndsWith(filename, ".bin")) {
     std::vector<uint8_t> buffer;
     ASSIGN_CP(buffer, readBinaryFile(filename));
     FORWARD_RESULT(templatePacket.deserialize(buffer));
   }else if (stringEndsWith(filename, ".cfg")) {
-    Config cfg;
-    FORWARD_RESULT(cfg.load(filename));
-    std::vector<uint8_t> buffer;
-    ASSIGN_CP(buffer,cfg.get<std::vector<uint8_t>>("template_data"));
-    FORWARD_RESULT(templatePacket.deserialize(buffer));
+    FORWARD_RESULT(templatePacket.loadFromConfigFile(filename));
   } else {
     return Error{INVALID_DATA,"Cannot load template, invalid file provided [supported extensions [.bin, .cfg]]"};
   }
