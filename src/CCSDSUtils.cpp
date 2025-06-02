@@ -87,14 +87,14 @@ void printHeader(CCSDS::Header &header) {
       getBinaryString(header.getType(), 1) << " ]";
   std::cout << " - [Dec] : "<< std::dec << static_cast<int>( header.getType()) << std::endl;
 
-  std::cout << " [CCSDS HEADER] APID                         : [ " << getBitsSpaces(17 - 12) <<
-    getBinaryString(header.getAPID(), 11) << " ]";
-  std::cout << " - [Dec] : " << std::dec << header.getAPID() << std::endl;
-
   std::cout << " [CCSDS HEADER] Data Field Header Flag       : [ " << getBitsSpaces(19 - 4) << getBinaryString(
   header.getDataFieldHeaderFlag(), 1) << " ]";
   std::cout << " -       : " << (header.getDataFieldHeaderFlag() ? "True" : "False")  << std::endl;
 
+  std::cout << " [CCSDS HEADER] APID                         : [ " << getBitsSpaces(17 - 12) <<
+    getBinaryString(header.getAPID(), 11) << " ]";
+  std::cout << " - [Dec] : " << std::dec << header.getAPID() << std::endl;
+  
   std::cout << " [CCSDS HEADER] Sequence Flags               : [ " << getBitsSpaces(19 - 4) <<
     getBinaryString(header.getSequenceFlags(), 2) << " ]";
   std::cout << " -       : ";
