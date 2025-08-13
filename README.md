@@ -43,14 +43,15 @@ Specific distribution build and regression status are shown below
 
 ## Features
 
-- 📦 Support for both **TM** and **TC** CCSDS packets using integrated PUS standards
-- ⚙️ Custom serialization with support for `std::vector`, `std::shared_ptr`, and user-defined types
-- 🔁 End-to-end encoding / decoding and validation 
-- 🧪 Easy to test and integrate
-- 🛠️ Built-in extensibility with clear abstraction
--  User-friendly installation and usage within your code.
+- Support for both **TM** and **TC** CCSDS packets using integrated PUS standards
+- Custom serialization with support for `std::vector`, `std::shared_ptr`, and user-defined types
+- End-to-end encoding / decoding and validation 
+- Easy to test and integrate
+- Built-in extensibility with clear abstraction
+- User-friendly installation and usage within your code.
 - Example Executables (encoder, decoder and validator) see [Executables](docs/EXECUTABLES.md) 
 - Optimised for fast execution.
+- Exceptionless library, variant based error management enabling the usage within embedded systems see [Error management](docs/ERROR.md).  
 ---
 ## Documentation
 Full API documentation is available and hosted here:  [CCSDSPack Documentation](https://exospacelabs.github.io/CCSDSPack/html/)
@@ -70,26 +71,63 @@ Features Provided by the CCSDS::Manager class(Assuming the Packet identifier dat
 * Read / Write a binary file and extract CCSDS Packets.
 
 ### The CCSDS Packet protocol
-The CCSDS packet is described by:
+
+**General CCSDS Packet Layout:**
 
 ![ccsds packet image](docs/imgs/ccsdsPacket.png)
 
+- **Primary Header** — Fixed size, always present. Defines APID, packet type, data length, and other control flags.
+- **Secondary Header** — Optional; type depends on the mission and protocol standards used (e.g., PUS-A/B/C).
+- **Application Data** — Mission-specific payload bytes.
+- **Error Control Field (optional)** — CRC or checksum for integrity verification.
 
-### PUS TC (PUS-A) inclusion
-This section shows how a PUS-A Packet can be included in the CCSDS packet
+---
 
-[insert image of a PUS-A packet]()
+### PUS Standards in CCSDSPack
 
-### PUS TM (PUS-B) inclusion
-This section shows how a PUS-B Packet can be inluded in the CCSDS packet
+The **Packet Utilization Standard (PUS)** defines conventions for structuring the Secondary Header and Application Data in CCSDS packets for ESA missions.  
+CCSDSPack includes **built-in support** for several PUS standards out of the box:
 
-[insert image of a PUS-B packet]()
+---
 
-###  PUS-C inclusion
-A more flexible and variable sized standard.
+#### **PUS-A Telecommand (TC)**
 
-[insert image of a PUS-C packet]()
+A fixed-size secondary header format used in **Telecommand (TC)** packets.
 
+![PUS-A secondary header](docs/imgs/pus-a.png)
+
+- **Purpose:** Command packets sent from ground to spacecraft.
+- **Secondary Header size:** Fixed (typically 4–6 bytes depending on implementation).
+- **Common fields:** Service type, service subtype, source ID.
+- **Advantages:** Simple, low overhead, deterministic parsing.
+
+---
+
+#### **PUS-B Telemetry (TM)**
+
+A fixed-size secondary header format used in **Telemetry (TM)** packets.
+
+![PUS-B secondary header](docs/imgs/pus-b.png)
+
+- **Purpose:** Data packets sent from spacecraft to ground.
+- **Secondary Header size:** Fixed (typically 6–8 bytes).
+- **Common fields:** PUS version, service type/subtype, time information, source ID, optional event ID.
+- **Advantages:** Standardized time coding, predictable layout, widely supported in ESA ground systems.
+
+---
+
+#### **PUS-C** (Flexible / Variable)
+
+A more flexible and **variable-sized** secondary header format.
+
+![PUS-C secondary header](docs/imgs/pus-c.png)
+
+- **Purpose:** Allows missions to define a custom secondary header layout while still remaining PUS-compliant.
+- **Secondary Header size:** Variable (defined by mission config).
+- **Common use:** Missions requiring extended metadata, non-standard time formats, or extra identification fields.
+- **Advantages:** Flexibility for evolving mission requirements; still compatible with CCSDS framing.
+
+---
 ### Other Documents
 Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Reccomended documents are within the Blue books.
 
