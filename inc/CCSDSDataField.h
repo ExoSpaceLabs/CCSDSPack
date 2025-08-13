@@ -229,7 +229,7 @@ namespace CCSDS {
      *
      * @return A vector containing the full data field (header + application data).
      */
-    std::vector<uint8_t> getFullDataFieldBytes();
+    std::vector<uint8_t> serialize();
 
     /**
      * @brief Retrieves the application data from the data field.

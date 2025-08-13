@@ -1,6 +1,7 @@
 
 #include "PusServices.h"
 #include "CCSDSDataField.h"
+#include "CCSDSUtils.h"
 
 CCSDS::ResultBool PusA::deserialize(const std::vector<uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -115,15 +116,16 @@ CCSDS::ResultBool PusB::loadFromConfig(const Config &cfg) {
 }
 
 CCSDS::ResultBool PusC::deserialize(const std::vector<uint8_t> &data) {
-  RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-C header not correct size (size != 8 bytes)");
-
+  RET_IF_ERR_MSG(data.size() <= m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "PUS-C header not correct size (size <= 6 bytes)");
   m_version = data[0] & 0x7;
   m_serviceType = data[1];
   m_serviceSubType = data[2];
   m_sourceID = data[3];
-  m_timeCode = data[4] << 8 | data[5];
-  m_dataLength = data[6] << 8 | data[7];
+  m_dataLength = data[data.size()-2] << 8 | data[data.size()-1];
+  if (data.size() > 6) {
+    m_timeCode.assign(data.begin() + 4, data.end()-2);
+  }
   return true;
 }
 
@@ -132,12 +134,13 @@ std::vector<uint8_t> PusC::serialize() const {
     static_cast<uint8_t>(m_version & 0x7),
     m_serviceType,
     m_serviceSubType,
-    m_sourceID,
-    static_cast<uint8_t>(m_timeCode >> 8 & 0xFF),
-    static_cast<uint8_t>(m_timeCode & 0xFF),
-    static_cast<uint8_t>(m_dataLength >> 8 & 0xFF),
-    static_cast<uint8_t>(m_dataLength & 0xFF),
+    m_sourceID
   };
+  if (!m_timeCode.empty()) {
+    data.insert(data.end(), m_timeCode.begin(), m_timeCode.end());
+  }
+  data.push_back(m_dataLength >> 8 & 0xFF);
+  data.push_back(m_dataLength & 0xFF);
 
   return data;
 }
@@ -151,7 +154,7 @@ CCSDS::ResultBool PusC::loadFromConfig(const Config& cfg) {
   uint8_t serviceType = 0;
   uint8_t serviceSubType = 0;
   uint8_t sourceId = 0;
-  uint8_t timeCode = 0;
+  std::vector<uint8_t> timeCode{};
 
   RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
   RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");
@@ -163,13 +166,13 @@ CCSDS::ResultBool PusC::loadFromConfig(const Config& cfg) {
   ASSIGN_OR_PRINT(serviceType, cfg.get<int>("pus_service_type"));
   ASSIGN_OR_PRINT(serviceSubType,cfg.get< int>("pus_service_sub_type"));
   ASSIGN_OR_PRINT(sourceId,cfg.get<int>("pus_source_id"));
-  ASSIGN_OR_PRINT(timeCode,cfg.get< int>("pus_time_code"));
+  ASSIGN_OR_PRINT(timeCode,cfg.get<std::vector<uint8_t>>("pus_time_code"));
 
   m_version = version & 0x7;
   m_serviceType = serviceType & 0xFF;
   m_serviceSubType = serviceSubType & 0xFF;
   m_sourceID = sourceId & 0xFF;
-  m_timeCode = timeCode & 0xFFFF;
+  m_timeCode = timeCode;
 
   return true;
 }

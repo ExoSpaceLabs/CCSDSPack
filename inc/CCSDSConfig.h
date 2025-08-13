@@ -19,7 +19,11 @@ public:
   CCSDS::Result<T> get(const std::string& key) const {
     auto it = values.find(key);
     RET_IF_ERR_MSG(it == values.end(), CCSDS::ErrorCode::NO_DATA,"Config: No data found for key: " + key);
-    return std::get<T>(values.at(key));
+
+    if (const auto* p = std::get_if<T>(&it->second)) {
+      return *p;
+    }
+    return CCSDS::Error{ CCSDS::ErrorCode::INVALID_DATA, "Config: Wrong type for key: " + key};
   }
 
   bool isKey(const std::string& key) const;

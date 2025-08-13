@@ -142,40 +142,40 @@
      * @param serviceType Service type (8 bits).
      * @param serviceSubtype Service subtype (8 bits).
      * @param sourceID Source identifier (8 bits).
-     * @param timeCode Time code value (16 bits).
+     * @param timeCode Time code value (variable).
      * @param dataLength Length of the time data (16 bits).
      */
     explicit PusC(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype,
-                  const uint8_t sourceID, const uint16_t timeCode,
+                  const uint8_t sourceID, const std::vector<uint8_t>& timeCode,
                   const uint16_t dataLength) : m_version(version & 0x7), m_serviceType(serviceType),
                                                m_serviceSubType(serviceSubtype), m_sourceID(sourceID),
                                                m_timeCode(timeCode), m_dataLength(dataLength) {
     }
 
-    [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
-    [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
-    [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
-    [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
-    [[nodiscard]] uint16_t getTimeCode()      const          { return m_timeCode;         }
-    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
-    [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
-    [[nodiscard]] std::string getType()       const override { return m_type;          }
+    [[nodiscard]] uint8_t getVersion()                const          { return m_version;                  }
+    [[nodiscard]] uint8_t getServiceType()            const          { return m_serviceType;              }
+    [[nodiscard]] uint8_t getServiceSubtype()         const          { return m_serviceSubType;           }
+    [[nodiscard]] uint8_t getSourceID()               const          { return m_sourceID;                 }
+    [[nodiscard]] std::vector<uint8_t> getTimeCode()  const          { return m_timeCode;              }
+    [[nodiscard]] uint16_t getDataLength()            const          { return m_dataLength;               }
+    [[nodiscard]] uint16_t getSize()                  const override { return m_size + m_timeCode.size(); }
+    [[nodiscard]] std::string getType()               const override { return m_type;                  }
 
     [[nodiscard]] std::vector<uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
     CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
 
-  private:                           // Field	            Size (bits)	Description
-    uint8_t m_version{};             // Version	            3	        Version of the PUS standard
-    uint8_t m_serviceType{};         // Service Type	      8	        Type of service (e.g., 0x03 for time code)
-    uint8_t m_serviceSubType{};      // Service Subtype	    8	        Subtype of the service (e.g., specific time type
-    uint8_t m_sourceID{};            // Source ID	          8	        ID of the source (e.g., satellite or sensor)
-    uint16_t m_timeCode{};           // Time Code	          16	      Time code value, depending on the system
-    uint16_t m_dataLength{};         // Data Length	        16	      Length of the time data in bytes
+  private:                              // Field	            Size (bits)	Description
+    uint8_t m_version{};                // Version	            3	        Version of the PUS standard
+    uint8_t m_serviceType{};            // Service Type	        8	        Type of service (e.g., 0x03 for time code)
+    uint8_t m_serviceSubType{};         // Service Subtype	    8	        Subtype of the service (e.g., specific time type
+    uint8_t m_sourceID{};               // Source ID	          8	        ID of the source (e.g., satellite or sensor)
+    std::vector<uint8_t> m_timeCode{};  // Time Code	          16	      Time code value, depending on the system
+    uint16_t m_dataLength{};            // Data Length	        16	      Length of the time data in bytes
 
-    const std::string m_type = "PusC"; // Static registration (automatically called when the program starts)
-    const uint16_t m_size = 8;         // bytes
+    const std::string m_type = "PusC";  // Static registration (automatically called when the program starts)
+    const uint16_t m_size = 6;          // bytes minimum size
   };
 
 

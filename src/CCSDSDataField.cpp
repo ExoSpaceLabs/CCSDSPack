@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 
-std::vector<uint8_t> CCSDS::DataField::getFullDataFieldBytes() {
+std::vector<uint8_t> CCSDS::DataField::serialize() {
   update();
   const auto &dataFieldHeader = getDataFieldHeaderBytes();
   std::vector<uint8_t> fullData{};
@@ -117,9 +117,10 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
 
   auto header = m_secondaryHeaderFactory.create(pType);
 
-  RET_IF_ERR_MSG(data.size() != header->getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                   "Secondary header data size mismatch for type: " + pType);
-
+  if (pType != "PusC") {
+    RET_IF_ERR_MSG(data.size() != header->getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "Secondary header data size mismatch for type: " + pType);
+  }
 
   m_secondaryHeader = std::move(header);
   FORWARD_RESULT(m_secondaryHeader->deserialize(data));

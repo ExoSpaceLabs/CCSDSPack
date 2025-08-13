@@ -69,12 +69,16 @@ std::tuple<std::string, std::string, std::string> Config::parseLine(const std::s
 }
 
 CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
-  std::vector<uint8_t> result;
+  std::vector<uint8_t> result{};
   RET_IF_ERR_MSG(valueStr.front() != '[' || valueStr.back() != ']', CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Config: Invalid buffer formatting []");
+  if (valueStr == "[ ]" || valueStr == "[]") {
+    return result;
+  }
 
   std::string inner = valueStr.substr(1, valueStr.size() - 2);
   std::stringstream ss(inner);
   std::string token;
+
 
   while (std::getline(ss, token, ',')) {
     // Trim whitespace

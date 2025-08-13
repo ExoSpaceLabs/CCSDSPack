@@ -236,7 +236,7 @@ namespace CCSDS {
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data);
 
     /** @brief Deserializes a CCSDS packet using a vector and a registered header type. */
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, const std::string& headerType);
+    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, const std::string& headerType, int headerSize = -1);
 
     /** @brief Deserializes a CCSDS packet using a vector and a header data size. */
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, uint16_t headerDataSizeBytes);

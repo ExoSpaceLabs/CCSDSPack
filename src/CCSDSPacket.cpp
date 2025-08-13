@@ -6,7 +6,7 @@
 
 void CCSDS::Packet::update() {
   if (!m_updateStatus && m_enableUpdatePacket) {
-    const auto dataField = m_dataField.getFullDataFieldBytes();
+    const auto dataField = m_dataField.serialize();
     const auto dataFiledSize = static_cast<uint16_t>(dataField.size());
     const auto dataFieldHeaderFlag(m_dataField.getDataFieldHeaderFlag());
     m_primaryHeader.setDataLength(dataFiledSize);
@@ -145,12 +145,12 @@ std::vector<uint8_t> CCSDS::Packet::getApplicationDataBytes() {
 }
 
 std::vector<uint8_t> CCSDS::Packet::getFullDataFieldBytes() {
-  return m_dataField.getFullDataFieldBytes();
+  return m_dataField.serialize();
 }
 
 std::vector<uint8_t> CCSDS::Packet::serialize() {
   auto header = getPrimaryHeaderBytes();
-  auto dataField = m_dataField.getFullDataFieldBytes();
+  auto dataField = m_dataField.serialize();
   const auto crc = getCRCVectorBytes();
 
   std::vector<uint8_t> packet;
@@ -176,7 +176,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const std::string &headerType) {
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const std::string &headerType, int headerSize) {
   RET_IF_ERR_MSG(data.size() <= 8, ErrorCode::INVALID_DATA,
                  "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
   RET_IF_ERR_MSG(headerType == "BufferHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -184,9 +184,13 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
   RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, Unregistered Secondary header: " + headerType);
-
+  uint16_t headerDataSizeBytes{0};
   const auto secondaryHeader = m_dataField.getDataFieldHeaderFactory().create(headerType);
-  const auto headerDataSizeBytes = secondaryHeader->getSize();
+  if (headerType == "PusC" && headerSize > 0) {
+    headerDataSizeBytes = headerSize;
+  }else {
+    headerDataSizeBytes = secondaryHeader->getSize();
+  }
 
   std::vector<uint8_t> dataFieldHeaderVector;
   std::copy_n(data.begin() + 6, headerDataSizeBytes, std::back_inserter(dataFieldHeaderVector));
