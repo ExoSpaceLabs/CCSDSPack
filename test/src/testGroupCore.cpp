@@ -502,7 +502,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
     std::string stringValue;
     TEST_RET(stringValue,cfg.get<std::string>("stringValue"));
-    if (stringValue != "Awsome string to test" ) return false;
+    if (stringValue != "Awesome string to test" ) return false;
 
     int integerValue;
     TEST_RET(integerValue,cfg.get<int>("integerValue"));

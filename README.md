@@ -239,7 +239,9 @@ ccsds_decoder -i <encoded_binaryFile> -o <decoded_file> -c <config_file>
 
 Note: If the decoded file is named with the original file extension it will be usable as the original file,
 
-for configuration file and other info see [Executables](docs/EXECUTABLES.md).
+For more detailed info and other examples (e.g. Validator usage) see [Executables](docs/EXECUTABLES.md).
+
+The configuration file description and usage can be found under [Config file](docs/CONFIG.md). 
 
 ### C++
 The following examples show how the high level C++ APIs can be used in a project
