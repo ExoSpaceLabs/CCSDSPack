@@ -37,7 +37,6 @@ Specific distribution build and regression status are shown below
 | Linux   | ubuntu-22.04  | ![Ubuntu 22.04](https://github.com/Inczert/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-22-04)     |
 |         | ubuntu-24.04  | ![Ubuntu 24.04](https://github.com/Inczert/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-24-04)    |
 |         | ubuntu-latest | ![Ubuntu Latest](https://github.com/Inczert/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest)      |
-| Windows | 2019          | ![Windows 10](https://github.com/Inczert/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-2019)     |
 |         | latest        | ![Windows Latest](https://github.com/Inczert/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest)      |
 ---
 
@@ -64,15 +63,15 @@ C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, an
 ### Manager
 Features Provided by the CCSDS::Manager class(Assuming the Packet identifier data is known):
 
-* Generate CCSDS Packets with desired data (Segmented and Unsegmented).
+* Generate CCSDS packets with desired data (Segmented and Unsegmented).
 * Validate Packets coherence / against template (packet with set identifier).
 * Update Error Control and data specific parameters (CRC16, Counters, Flags Length...).
 * Include / remove / change Sync Pattern.
-* Read / Write a binary file and extract CCSDS Packets.
+* Read / Write a binary file and extract CCSDS packets.
 
-### The CCSDS Packet protocol
+### The CCSDS packet protocol
 
-**General CCSDS Packet Layout:**
+**General CCSDS packet Layout:**
 
 ![ccsds packet image](docs/imgs/ccsdsPacket.png)
 
@@ -129,7 +128,7 @@ A more flexible and **variable-sized** secondary header format.
 
 ---
 ### Other Documents
-Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Reccomended documents are within the Blue books.
+Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Recommended documents are within the Blue books.
 
 Also take a look of the following documents:
 

@@ -1,5 +1,7 @@
 # Error & Result (Non-exception Error Handling)
 
+[../](README.md) - CCSDSPack Documentation
+
 CCSDSPack uses a lightweight **error-first** pattern instead of C++ exceptions.  
 Core operations return a `Result<T>`: either a valid value (`T`) **or** an `Error` describing what went wrong. This makes control flow explicit, friendly to embedded targets, and easy to wire into CLIs and CI.
 
