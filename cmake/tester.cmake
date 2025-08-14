@@ -16,6 +16,10 @@ file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 # Collect all test test_resources from the test/test_resources directory
 file(GLOB TEST_RESOURCES "${TEST_RESOURCE_DIR}/*")
 
+file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
+file(COPY ${TEST_RESOURCES}
+    DESTINATION "${BINARY_OUTPUT_DIR}/test_resources" )
+
 # Create the test executable target
 add_executable(${TESTER_EXEC} ${TEST_SOURCES})
 
@@ -24,7 +28,6 @@ target_include_directories(${TESTER_EXEC} PRIVATE ${INCLUDE_DIR} ${TEST_INCLUDE_
 
 # Link the test executable with the library
 target_link_libraries(${TESTER_EXEC} PRIVATE ${LIB_NAME})
-
 # Set the output directory for the test executable
 set_target_properties(${TESTER_EXEC} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}          # Specifies where the executable is placed
