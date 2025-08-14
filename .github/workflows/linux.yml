@@ -46,13 +46,13 @@ jobs:
         run: |
           rm -rf bin/* && rm -rf build/* && ./package.sh && ls -la packages
 
-      - name: Upload package artifact
-        if: matrix.os == 'ubuntu-22.04'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ccsdspack-deb-${{ github.sha }}
-          path: packages/*.deb
-          if-no-files-found: error
+      #- name: Upload package artifact
+      #  if: matrix.os == 'ubuntu-22.04'
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: ccsdspack-deb-${{ github.sha }}
+      #    path: packages/*.deb
+      #    if-no-files-found: error
       # --------------------------
       # Release publishing (only on tags, only from ubuntu-22.04)
       # --------------------------
