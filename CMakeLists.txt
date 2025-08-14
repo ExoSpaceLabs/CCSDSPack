@@ -12,8 +12,8 @@ set(LIB_NAME "CCSDSPack")
 #PATCH: Increases for backward-compatible bug fixes or small improvements. A patch update fixes issues, improves stability, or makes minor improvements without adding new features.
 
 # Versioning
-set(MAJOR "1")
-set(MINOR "0")
+set(MAJOR "0")
+set(MINOR "9")
 set(PATCH "0")
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")

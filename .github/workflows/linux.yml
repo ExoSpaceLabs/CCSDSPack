@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+    tags:    [ 'v*.*.*' ]   # build on tags too (for releases)
   pull_request:
     branches:
       - main
@@ -43,4 +44,20 @@ jobs:
       - name: cleanup and generate .deb
         if: matrix.os == 'ubuntu-22.04'
         run: |
-          rm -rf bin/* build/* && ./package.sh && ls -la packages
+          rm -rf bin/* && rm -rf build/* && ./package.sh && ls -la packages
+
+      - name: Upload package artifact
+        if: matrix.os == 'ubuntu-22.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccsdspack-deb-${{ github.sha }}
+          path: packages/*.deb
+          if-no-files-found: error
+      # --------------------------
+      # Release publishing (only on tags, only from ubuntu-22.04)
+      # --------------------------
+      - name: Upload to GitHub Release (tag builds)
+        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packages/*.deb
