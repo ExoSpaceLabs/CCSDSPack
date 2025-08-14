@@ -40,3 +40,7 @@ jobs:
         run: |
           cd bin && ./CCSDSPack_tester     
         
+      - name: cleanup and generate .deb
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          rm -rf bin/* build/* && ./package.sh && ls -la packages
