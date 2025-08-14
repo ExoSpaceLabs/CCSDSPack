@@ -6,14 +6,14 @@ message(STATUS "Building: ${TESTER_EXEC}")
 
 set(TEST_SOURCE_DIR "${CMAKE_SOURCE_DIR}/test/src")
 set(TEST_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/test/inc")
-set(TEST_RESOURCE_DIR "${CMAKE_SOURCE_DIR}/test/resources")
+set(TEST_RESOURCE_DIR "${CMAKE_SOURCE_DIR}/test/test_resources")
 
 
 # Collect all source files in the test src folder for the test executable
 file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 
 
-# Collect all test resources from the test/resources directory
+# Collect all test test_resources from the test/test_resources directory
 file(GLOB TEST_RESOURCES "${TEST_RESOURCE_DIR}/*")
 
 # Create the test executable target
@@ -34,8 +34,8 @@ set_target_properties(${TESTER_EXEC} PROPERTIES
 if(UNIX)
     # Linux or macOS
     set_target_properties(${TESTER_EXEC} PROPERTIES
-            BUILD_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}"  # During build time, look in these paths for libraries
-            INSTALL_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}" # After installation, look in these paths for libraries
+            BUILD_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib"  # During build time, look in these paths for libraries
+            INSTALL_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib" # After installation, look in these paths for libraries
     )
 elseif(WIN32)
     # Windows doesn't use RPATH. DLLs are usually placed in the same directory as the EXE or specified in PATH.
@@ -45,7 +45,11 @@ elseif(WIN32)
     )
 endif()
 
-# Install resources to the bin directory
-file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
-file(COPY ${TEST_RESOURCES}
-        DESTINATION "${BINARY_OUTPUT_DIR}/test_resources")
+install(TARGETS ${TESTER_EXEC}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}   # .dll / executables on Windows
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+# Install test_resources to the bin directory
+install(DIRECTORY ${TEST_RESOURCE_DIR}
+        DESTINATION "${CMAKE_INSTALL_BINDIR}")

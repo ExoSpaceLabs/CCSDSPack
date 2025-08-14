@@ -29,8 +29,8 @@ set_target_properties(${DECODER_EXEC} PROPERTIES
 if(UNIX)
     # Linux or macOS
     set_target_properties(${DECODER_EXEC} PROPERTIES
-            BUILD_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}"  # During build time, look in these paths for libraries
-            INSTALL_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}" # After installation, look in these paths for libraries
+            BUILD_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib"  # During build time, look in these paths for libraries
+            INSTALL_RPATH "/usr/local/lib:${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib" # After installation, look in these paths for libraries
     )
 elseif(WIN32)
     # Windows doesn't use RPATH. DLLs are usually placed in the same directory as the EXE or specified in PATH.
@@ -39,3 +39,9 @@ elseif(WIN32)
             RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}  # Ensure DLL is next to the executable
     )
 endif()
+
+install(TARGETS ${DECODER_EXEC}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}   # .dll / executables on Windows
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
