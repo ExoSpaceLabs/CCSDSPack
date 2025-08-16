@@ -117,6 +117,18 @@ namespace CCSDS {
     void setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header);
 
     /**
+    * @brief Registers a new header type with the data field secondary header creation function.
+    *
+    * This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.
+    *
+    * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
+    */
+    template <typename T>
+    void RegisterSecondaryHeader() {
+      m_dataField.RegisterSecondaryHeader<T>();
+    }
+
+    /**
      * @brief Sets the data field header for the packet using a vector of bytes.
      *
      * This method updates the data field header of the packet by providing the

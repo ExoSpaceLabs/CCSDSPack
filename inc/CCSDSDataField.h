@@ -34,6 +34,18 @@ namespace CCSDS {
     ~DataField() = default;
 
     /**
+    * @brief Registers a new header type with its creation function.
+    *
+    * This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.
+    *
+    * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
+    */
+    template <typename T>
+    void RegisterSecondaryHeader() {
+      m_secondaryHeaderFactory.registerType(std::make_shared<T>());
+    }
+
+    /**
      * @brief Sets the application data using a vector of bytes.
      *
      * Replaces the current application data with the given vector and updates the header.

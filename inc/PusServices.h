@@ -134,7 +134,7 @@
    */
   class PusC final : public CCSDS::SecondaryHeaderAbstract {
   public:
-    PusC() = default;
+    PusC() {variableLength=true;}
 
     /**
      * @brief Constructs a PusC object with all fields explicitly set.
@@ -150,6 +150,7 @@
                   const uint16_t dataLength) : m_version(version & 0x7), m_serviceType(serviceType),
                                                m_serviceSubType(serviceSubtype), m_sourceID(sourceID),
                                                m_timeCode(timeCode), m_dataLength(dataLength) {
+      variableLength=true;
     }
 
     [[nodiscard]] uint8_t getVersion()                const          { return m_version;                  }
@@ -176,6 +177,7 @@
 
     const std::string m_type = "PusC";  // Static registration (automatically called when the program starts)
     const uint16_t m_size = 6;          // bytes minimum size
+
   };
 
 

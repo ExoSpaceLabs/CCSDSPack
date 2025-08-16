@@ -15,6 +15,7 @@ All snippets assume C++17 or newer and big‑endian wire format, as per CCSDS.
 - [5) Using a config file for template & settings](#5-using-a-config-file-for-template--settings)
 - [6) Validating packets (CLI helper)](#6-validating-packets-cli-helper)
 - [7) Error‑first pattern (no exceptions)](#7-error-first-pattern-no-exceptions)
+- [8)Using a custom Secondary header](#8-Using-a-custom-secondary-header)
 
 ---
 
@@ -235,6 +236,72 @@ std::cerr << "[CCSDSPack] " << res.error().code() << ": " << res.error().message
 return res.error().code();
 }
 ```
+
+## 8) Using a custom secondary header
+Custom secondary headers can be defined and used where necessary. Custom secondary header definition:
+```c++
+
+class CustomSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
+public:
+  CustomSecondaryHeader() {variableLength = true;};
+
+  /**
+   * @brief Constructs a CustomSecondaryHeader object with all fields explicitly set.
+   */
+  explicit CustomSecondaryHeader(const std::vector<uint8_t>& data) : m_data(data) {
+    variableLength= true;
+  };
+
+  [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
+
+  [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
+  [[nodiscard]] std::string getType() const override { return m_type; }
+
+  [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
+  void update(CCSDS::DataField* dataField) override {m_dataLength = m_data.size();}
+  CCSDS::ResultBool loadFromConfig(const Config &config) override{return true;};
+
+private:
+  std::vector<uint8_t> m_data{};
+  uint16_t m_dataLength = 0;
+  const std::string m_type = "CustomSecondaryHeader";
+};
+```
+Where:
+- The custom secondary header class extends from `CCSDS::SecondaryHeaderAbstract` class.
+- All `virtual` member functions to be defined (all which are defined in the example above).
+- In case of secondary header length is variable set `variableLength= true;` in the constructor /s.
+
+It is also recommended to view PUS service classes in the `PusServices.h` header and source file.
+
+The defined custom class must then be registered and set by each packet where used. This can be achieved as follows:
+```c++
+
+  CCSDS::Packet packet;
+  packet.RegisterSecondaryHeader<CustomSecondaryHeader>();
+  
+  if (const auto res = templatePacket.setDataFieldHeader(data, "CustomSecondaryHeader"); !res.has_value()) {
+    std::cerr << "Error: "<< res.error().message() << ". CODE: " << res.error().code() << std::endl;
+    return res.error().code();
+  }
+  
+  // alternatively using the setDataFieldHeader overload 
+  CustomSecondaryHeader myHeader{};
+  auto ptr = std::make_shared<CustomSecondaryHeader>(myHeader);
+  templatePacket.setDataFieldHeader(ptr);
+  
+```
+
+At this point the custom secondary header is part of the selected packet. If the secondary header is registered on a 
+packet used as a template packet for the `CCSDS::Manager`, than no successive registrations are required. Otherwise, 
+the registration is required to be performed on each individual packet where necessary.
+
+---
+
+---
+
+
+
 
 Notes:
 * Replace the example primary‑header constant with values suitable for your mission (APID, etc.).

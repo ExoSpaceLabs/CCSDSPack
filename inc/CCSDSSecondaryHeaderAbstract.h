@@ -53,6 +53,8 @@ namespace CCSDS {
 
 
     virtual ResultBool loadFromConfig(const Config &config) = 0;
+    void setVariableLength(const bool bEnable){ variableLength =  bEnable;}
+    bool variableLength{false};
   };
 
   /**

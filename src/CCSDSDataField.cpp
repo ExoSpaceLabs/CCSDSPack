@@ -117,7 +117,7 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
 
   auto header = m_secondaryHeaderFactory.create(pType);
 
-  if (pType != "PusC") {
+  if (!header->variableLength) {
     RET_IF_ERR_MSG(data.size() != header->getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                      "Secondary header data size mismatch for type: " + pType);
   }
