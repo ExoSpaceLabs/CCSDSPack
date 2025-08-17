@@ -46,10 +46,12 @@ Specific distribution build and regression status are shown below
 - Custom serialization with support for `std::vector`, `std::shared_ptr`, and user-defined types
 - End-to-end encoding / decoding and validation 
 - Easy to test and integrate
-- Built-in extensibility with clear abstraction
+- Built-in extensibility for secondary headers with clear abstraction
 - User-friendly installation and usage within your code.
 - Example Executables (encoder, decoder and validator) see [Executables](docs/EXECUTABLES.md) 
 - Optimised for fast execution.
+- Pre-built .deb package downloadable from [Releases](https://github.com/ExoSpaceLabs/CCSDSPack/releases).
+- Pre-built docker image with library installed, see [docker](#docker).
 - Exceptionless library, variant based error management enabling the usage within embedded systems see [Error management](docs/ERROR.md).  
 ---
 ## Documentation
@@ -126,7 +128,8 @@ A more flexible and **variable-sized** secondary header format.
 
 ---
 ### Other Documents
-Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Recommended documents are within the Blue books.
+Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Recommended documents are within the Blue and Green
+books.
 
 Also take a look of the following documents:
 
@@ -138,8 +141,8 @@ Also take a look of the following documents:
 
 ## Install
 1) Source  - use the cmake and make commands to compile the whole project and install it.
-2) Package - Install using prebuilt .deb package from [release link to be implemented](). Further info on [Packages](docs/PACKAGES.md).
-3) Docker  - Docker image available github hosted container repo [link to repo usage readme]() to be built using actions.
+2) Package - Install using prebuilt .deb package from [Releases](https://github.com/ExoSpaceLabs/CCSDSPack/releases). Further info on [Packages](docs/PACKAGES.md).
+3) Docker  - Docker image available from github hosted repo [Container](https://github.com/ExoSpaceLabs/CCSDSPack/pkgs/container/ccsdspack), also see [docker](#docker) section.
 
 ### Source
 CMake flags:
@@ -238,13 +241,43 @@ following instructions in [Packages](docs/PACKAGES.md) document. Where detailed 
 is provided for library inclusion in private projects.
 
 ### Docker
-[docker image still to be defined and deployed by github container repo ]()
+Prebuilt Docker images of CCSDSPack are published on [GHCR](https://github.com/ExoSpaceLabs/CCSDSPack/pkgs/container/ccsdspack).  
+They provide a ready-to-use environment with the library and command-line tools already installed, 
+so you don’t need to compile from source or manage dependencies manually (almost none in this case).
 
+Pull a specific release image:
 ```bash
 
-docker build <link to repo>
+ docker pull ghcr.io/exospacelabs/ccsdspack:v<version>
+```
+**Example usage:**
+
+Pull version 1.0.0 of the container
+```bash
+
+docker pull ghcr.io/exospacelabs/ccsdspack:v1.0.0
 ```
 
+Test the library by run the `CCSDSPack_tester` executable as follows.
+```bash
+
+docker run ghcr.io/exospacelabs/ccsdspack:v1.0.0 /usr/bin/CCSDSPack_tester
+```
+The container includes the executables:
+
+- `ccsds_encoder`
+- `ccsds_decoder`
+- `ccsds_validator`
+- `CCSDSPack_tester`
+
+With a mounted volume, you can encode, decode, and validate packets against files on your host.
+For exploratory use, start an interactive shell inside the container:
+```bash
+
+docker run -it --rm ghcr.io/exospacelabs/ccsdspack:v1.0.0 /bin/bash
+```
+
+___
 ## Examples
 
 ### Encoder:
@@ -263,7 +296,7 @@ ccsds_encoder -i <file_to_encode> -o <encoded_binaryFile> -c <config_file>
 ### Decoder:
 
 Decode a previously encoded binary file holding serialized CCSDS packets, extract application 
-data and recreate orifinal file. 
+data and recreate original file. 
 
 requirements:
 * an encoded binary file 
