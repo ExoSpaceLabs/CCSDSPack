@@ -1,9 +1,13 @@
 <map id="Config::parseLine" name="Config::parseLine">
-<area shape="rect" id="Node000001" title="Parse a single line from config." alt="" coords="428,31,563,56"/>
-<area shape="rect" id="Node000002" href="$classConfig.html#a666e6d9c5510736d8ef85564abe834dd" title="Load config file." alt="" coords="281,31,380,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="414,46,380,46,380,41,414,41"/>
-<area shape="rect" id="Node000003" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="92,5,147,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="267,38,147,24,147,19,268,33"/>
-<area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" title="Load a template packet from a binary or configuration file." alt="" coords="5,55,233,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="268,53,231,57,231,52,267,48"/>
+<area shape="rect" id="Node000001" title="Parse a single line from config." alt="" coords="725,67,860,93"/>
+<area shape="rect" id="Node000002" href="$classConfig.html#a666e6d9c5510736d8ef85564abe834dd" title="Load config file." alt="" coords="579,67,677,93"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="711,83,677,83,677,77,711,77"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#a9ba3b255c1cd19b48a11dba5fc8819ff" title="Loads a packet from a configuration file, including secondary header if present." alt="" coords="281,42,531,67"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="565,76,517,70,518,65,566,70"/>
+<area shape="rect" id="Node000006" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="379,91,433,117"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="565,89,434,104,433,98,565,84"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a063eeb88f124db9af02bd033e95733b1" title="Loads a template packet from a configuration file." alt="" coords="6,5,233,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="268,43,233,40,233,34,269,38"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" title="Load a template packet from a binary or configuration file." alt="" coords="5,70,233,95"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="268,71,234,74,233,69,267,66"/>
 </map>

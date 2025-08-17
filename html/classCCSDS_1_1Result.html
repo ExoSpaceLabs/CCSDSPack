@@ -127,7 +127,7 @@ class CCSDS::Result&lt; T &gt;</div><p>Encapsulates a result that can hold eithe
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00081">81</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00077">77</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3b1b2c4db8ebb821283c302a7ad76671" name="a3b1b2c4db8ebb821283c302a7ad76671"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3b1b2c4db8ebb821283c302a7ad76671">&#9670;&#160;</a></span>Result() <span class="overload">[1/2]</span></h2>
@@ -163,11 +163,11 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00089">89</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>                    : <a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>(std::move(<a class="code hl_function" href="classCCSDS_1_1Result.html#ab9b85fa716a42b8387a39cfa34dbd5fb">value</a>)) {</div>
-<div class="line"><span class="lineno">   90</span>    }</div>
-<div class="ttc" id="aclassCCSDS_1_1Result_html_ab9b85fa716a42b8387a39cfa34dbd5fb"><div class="ttname"><a href="classCCSDS_1_1Result.html#ab9b85fa716a42b8387a39cfa34dbd5fb">CCSDS::Result::value</a></div><div class="ttdeci">T &amp; value()</div><div class="ttdoc">Retrieves the stored value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00112">CCSDSResult.h:112</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Result_html_ae817d7f455807fdfded628e1b2953822"><div class="ttname"><a href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">CCSDS::Result::data</a></div><div class="ttdeci">std::variant&lt; T, Error &gt; data</div><div class="ttdoc">Holds either a valid value or an Error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00082">CCSDSResult.h:82</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00085">85</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   85</span>                    : <a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>(std::move(<a class="code hl_function" href="classCCSDS_1_1Result.html#ab9b85fa716a42b8387a39cfa34dbd5fb">value</a>)) {</div>
+<div class="line"><span class="lineno">   86</span>    }</div>
+<div class="ttc" id="aclassCCSDS_1_1Result_html_ab9b85fa716a42b8387a39cfa34dbd5fb"><div class="ttname"><a href="classCCSDS_1_1Result.html#ab9b85fa716a42b8387a39cfa34dbd5fb">CCSDS::Result::value</a></div><div class="ttdeci">T &amp; value()</div><div class="ttdoc">Retrieves the stored value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00108">CCSDSResult.h:108</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Result_html_ae817d7f455807fdfded628e1b2953822"><div class="ttname"><a href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">CCSDS::Result::data</a></div><div class="ttdeci">std::variant&lt; T, Error &gt; data</div><div class="ttdoc">Holds either a valid value or an Error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00078">CCSDSResult.h:78</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -205,10 +205,10 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00096">96</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   96</span>                        : <a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>(<a class="code hl_function" href="classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456">error</a>) {</div>
-<div class="line"><span class="lineno">   97</span>    }</div>
-<div class="ttc" id="aclassCCSDS_1_1Result_html_a86d5488fa1a716043b07c8828cb5f456"><div class="ttname"><a href="classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456">CCSDS::Result::error</a></div><div class="ttdeci">Error error() const</div><div class="ttdoc">Retrieves the stored error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00119">CCSDSResult.h:119</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00092">92</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   92</span>                        : <a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>(<a class="code hl_function" href="classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456">error</a>) {</div>
+<div class="line"><span class="lineno">   93</span>    }</div>
+<div class="ttc" id="aclassCCSDS_1_1Result_html_a86d5488fa1a716043b07c8828cb5f456"><div class="ttname"><a href="classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456">CCSDS::Result::error</a></div><div class="ttdeci">Error error() const</div><div class="ttdoc">Retrieves the stored error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00115">CCSDSResult.h:115</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -241,10 +241,10 @@ template&lt;typename T &gt; </div>
 <p>Retrieves the stored error. </p>
 <dl class="section return"><dt>Returns</dt><dd>The error. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00119">119</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  119</span>                                      {</div>
-<div class="line"><span class="lineno">  120</span>      <span class="keywordflow">return</span> std::get&lt;Error&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>);</div>
-<div class="line"><span class="lineno">  121</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00115">115</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  115</span>                                      {</div>
+<div class="line"><span class="lineno">  116</span>      <span class="keywordflow">return</span> std::get&lt;Error&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>);</div>
+<div class="line"><span class="lineno">  117</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -276,10 +276,10 @@ template&lt;typename T &gt; </div>
 <p>Checks if the result contains a valid value. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if a valid value is present, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00103">103</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  103</span>                                         {</div>
-<div class="line"><span class="lineno">  104</span>      <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>);</div>
-<div class="line"><span class="lineno">  105</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00099">99</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>                                         {</div>
+<div class="line"><span class="lineno">  100</span>      <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>);</div>
+<div class="line"><span class="lineno">  101</span>    }</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -316,9 +316,9 @@ template&lt;typename T &gt; </div>
 <p>Implicit conversion to <code>bool</code>, allowing usage like <code>if (result)</code>. </p>
 <dl class="section return"><dt>Returns</dt><dd>True if the result contains a value, false otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00127">127</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  127</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classCCSDS_1_1Result.html#a22dd52b6ed9b5be6cd6bfdd35e78cb7b">has_value</a>(); }</div>
-<div class="ttc" id="aclassCCSDS_1_1Result_html_a22dd52b6ed9b5be6cd6bfdd35e78cb7b"><div class="ttname"><a href="classCCSDS_1_1Result.html#a22dd52b6ed9b5be6cd6bfdd35e78cb7b">CCSDS::Result::has_value</a></div><div class="ttdeci">bool has_value() const</div><div class="ttdoc">Checks if the result contains a valid value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00103">CCSDSResult.h:103</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00123">123</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  123</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classCCSDS_1_1Result.html#a22dd52b6ed9b5be6cd6bfdd35e78cb7b">has_value</a>(); }</div>
+<div class="ttc" id="aclassCCSDS_1_1Result_html_a22dd52b6ed9b5be6cd6bfdd35e78cb7b"><div class="ttname"><a href="classCCSDS_1_1Result.html#a22dd52b6ed9b5be6cd6bfdd35e78cb7b">CCSDS::Result::has_value</a></div><div class="ttdeci">bool has_value() const</div><div class="ttdoc">Checks if the result contains a valid value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00099">CCSDSResult.h:99</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -356,8 +356,8 @@ template&lt;typename T &gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>A reference to the stored value. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Ensure <code><a class="el" href="classCCSDS_1_1Result.html#a22dd52b6ed9b5be6cd6bfdd35e78cb7b" title="Checks if the result contains a valid value.">has_value()</a></code> returns true before calling this. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00112">112</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  112</span>{ <span class="keywordflow">return</span> std::get&lt;T&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>); }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00108">108</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  108</span>{ <span class="keywordflow">return</span> std::get&lt;T&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -386,8 +386,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00113">113</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  113</span>{ <span class="keywordflow">return</span> std::get&lt;T&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>); }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00109">109</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  109</span>{ <span class="keywordflow">return</span> std::get&lt;T&gt;(<a class="code hl_variable" href="classCCSDS_1_1Result.html#ae817d7f455807fdfded628e1b2953822">data</a>); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -416,7 +416,7 @@ template&lt;typename T &gt; </div>
 
 <p>Holds either a valid value or an <a class="el" href="classCCSDS_1_1Error.html" title="Represents an error with both an error code and a message.">Error</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00082">82</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00078">78</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
 
 </div>
 </div>

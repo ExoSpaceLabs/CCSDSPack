@@ -1,5 +1,7 @@
 <map id="CCSDS::Validator::configure" name="CCSDS::Validator::configure">
-<area shape="rect" id="Node000001" title="Configures validation options." alt="" coords="249,5,449,31"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs a Manager with a given packet template." alt="" coords="5,5,201,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,21,202,21,202,15,235,15"/>
+<area shape="rect" id="Node000001" title="Configures validation options." alt="" coords="249,31,449,56"/>
+<area shape="rect" id="Node000002" href="$exec__validator_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="76,5,131,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,34,131,23,131,18,236,29"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs a Manager with a given packet template." alt="" coords="5,55,201,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,57,202,60,201,55,235,52"/>
 </map>

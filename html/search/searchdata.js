@@ -8,7 +8,7 @@ var indexSectionsWithContent =
   5: "adfimpstv",
   6: "cr",
   7: "e",
-  8: "acfilnosuv",
+  8: "acfilnoptuv",
   9: "afrv",
   10: "cl"
 };

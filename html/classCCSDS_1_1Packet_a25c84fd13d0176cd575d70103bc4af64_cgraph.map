@@ -1,21 +1,21 @@
 <map id="CCSDS::Packet::update" name="CCSDS::Packet::update">
-<area shape="rect" id="Node000001" title="Updates Primary headers data field size." alt="" coords="5,191,175,216"/>
+<area shape="rect" id="Node000001" title="Updates Primary headers data field size." alt="" coords="5,184,175,209"/>
 <area shape="rect" id="Node000002" href="$CCSDSUtils_8cpp.html#a2c103ebdbc6ee2ceda285e5834c07b8b" title="Computes the CRC&#45;16 checksum for a given data vector with configurable parameters." alt="" coords="306,5,363,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,189,113,159,141,118,177,76,221,41,256,26,292,18,293,24,258,31,224,46,181,80,145,121,118,161,100,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,182,142,115,178,75,221,41,256,26,291,19,293,24,258,31,224,46,182,79,146,118,101,185"/>
 <area shape="rect" id="Node000003" href="$classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a" title="retrieves true if a known secondary header has been set" alt="" coords="237,55,433,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="104,189,153,148,186,125,221,105,238,98,240,102,224,110,189,129,157,152,107,193"/>
-<area shape="rect" id="Node000004" href="$classCCSDS_1_1DataField.html#adf40e2024bf3509e4ce28ff3a8e637e2" title="Retrieves the full data field by combining the data field header and application data." alt="" coords="241,119,429,159"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="139,188,243,160,245,166,140,193"/>
-<area shape="rect" id="Node000007" href="$classCCSDS_1_1Header.html#a7aec7b479769c8348584cab4b9d1197b" title="2 bits" alt="" coords="228,183,441,223"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="175,201,215,201,215,206,175,206"/>
-<area shape="rect" id="Node000008" href="$classCCSDS_1_1Header.html#acb05f2c875ad0148eabd8b60185bd4fd" title="1 bits" alt="" coords="229,247,440,287"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="140,214,245,241,243,246,139,219"/>
-<area shape="rect" id="Node000009" href="$classCCSDS_1_1Header.html#a393ea2e62793c0070aff3b654b0aa23b" title="16 bits" alt="" coords="223,312,447,337"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="106,214,156,255,189,278,224,297,246,306,245,311,222,302,186,282,153,259,103,218"/>
-<area shape="rect" id="Node000010" href="$classCCSDS_1_1Header.html#a436a51a4ee99dd21e63766aa5d213ad4" title="14 bits" alt="" coords="229,362,441,402"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="101,215,148,278,183,316,224,348,235,354,232,359,221,352,180,320,144,282,97,218"/>
-<area shape="rect" id="Node000005" href="$classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895" title="Retrieves the secondary header data as a vector of bytes." alt="" coords="495,91,691,131"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="429,126,481,121,482,126,429,132"/>
-<area shape="rect" id="Node000006" href="$classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4" title="Updates the data field header based on the current application data size." alt="" coords="498,156,687,181"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="429,147,485,154,484,159,429,153"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="105,182,155,144,221,105,239,98,241,103,224,110,158,149,108,186"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Header.html#a7aec7b479769c8348584cab4b9d1197b" title="2 bits" alt="" coords="228,119,441,159"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,181,235,160,236,165,146,187"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1DataField.html#a36e6685c51f6c5c60323df6bb10d781d" title="Retrieves the full data field by combining the data field header and application data." alt="" coords="235,184,434,209"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="175,194,221,194,221,199,175,199"/>
+<area shape="rect" id="Node000008" href="$classCCSDS_1_1Header.html#acb05f2c875ad0148eabd8b60185bd4fd" title="1 bits" alt="" coords="229,234,440,274"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="146,207,236,228,235,233,144,212"/>
+<area shape="rect" id="Node000009" href="$classCCSDS_1_1Header.html#a393ea2e62793c0070aff3b654b0aa23b" title="16 bits" alt="" coords="223,299,447,324"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="108,207,157,245,190,266,224,284,248,292,246,297,222,288,187,271,154,250,104,212"/>
+<area shape="rect" id="Node000010" href="$classCCSDS_1_1Header.html#a436a51a4ee99dd21e63766aa5d213ad4" title="14 bits" alt="" coords="229,349,441,389"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="102,208,149,269,184,304,224,334,236,341,233,345,221,339,181,308,145,272,98,211"/>
+<area shape="rect" id="Node000006" href="$classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895" title="Retrieves the secondary header data as a vector of bytes." alt="" coords="495,149,691,189"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="434,183,481,178,481,183,435,189"/>
+<area shape="rect" id="Node000007" href="$classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4" title="Updates the data field header based on the current application data size." alt="" coords="498,213,687,239"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="435,205,484,211,484,216,434,211"/>
 </map>

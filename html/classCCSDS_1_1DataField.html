@@ -98,6 +98,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a469d7a355a760935c0ddc027c634bc51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad25ec178e0798b12cb42f483bea01b87" id="r_ad25ec178e0798b12cb42f483bea01b87"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#ad25ec178e0798b12cb42f483bea01b87">~DataField</a> ()=default</td></tr>
 <tr class="separator:ad25ec178e0798b12cb42f483bea01b87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a339d345a47e95d258f5bec45c2e8d980" id="r_a339d345a47e95d258f5bec45c2e8d980"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a339d345a47e95d258f5bec45c2e8d980"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a339d345a47e95d258f5bec45c2e8d980">RegisterSecondaryHeader</a> ()</td></tr>
+<tr class="memdesc:a339d345a47e95d258f5bec45c2e8d980"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a new header type with its creation function.  <br /></td></tr>
+<tr class="separator:a339d345a47e95d258f5bec45c2e8d980"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93cc5afe0173fd185770e8b1a450a64e" id="r_a93cc5afe0173fd185770e8b1a450a64e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a93cc5afe0173fd185770e8b1a450a64e">setApplicationData</a> (const std::vector&lt; uint8_t &gt; &amp;applicationData)</td></tr>
 <tr class="memdesc:a93cc5afe0173fd185770e8b1a450a64e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the application data using a vector of bytes.  <br /></td></tr>
 <tr class="separator:a93cc5afe0173fd185770e8b1a450a64e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -116,6 +120,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5de9e5aaee0e9a5c1e26d45b00fb363e" id="r_a5de9e5aaee0e9a5c1e26d45b00fb363e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a5de9e5aaee0e9a5c1e26d45b00fb363e">setDataFieldHeader</a> (const std::vector&lt; uint8_t &gt; &amp;dataFieldHeader)</td></tr>
 <tr class="memdesc:a5de9e5aaee0e9a5c1e26d45b00fb363e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the data field header for the <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> <a class="el" href="classCCSDS_1_1DataField.html" title="Represents the data field of a CCSDS packet.">DataField</a>.  <br /></td></tr>
 <tr class="separator:a5de9e5aaee0e9a5c1e26d45b00fb363e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a723659bd61e24b21d2398bc88a95db86" id="r_a723659bd61e24b21d2398bc88a95db86"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a723659bd61e24b21d2398bc88a95db86">setDataFieldHeader</a> (const <a class="el" href="classConfig.html">Config</a> &amp;cfg)</td></tr>
+<tr class="memdesc:a723659bd61e24b21d2398bc88a95db86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the data field header using a configuration file as reference.  <br /></td></tr>
+<tr class="separator:a723659bd61e24b21d2398bc88a95db86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e9b12f7f00ff1b55cb92aae223ae442" id="r_a9e9b12f7f00ff1b55cb92aae223ae442"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a9e9b12f7f00ff1b55cb92aae223ae442">setDataFieldHeader</a> (std::shared_ptr&lt; <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">SecondaryHeaderAbstract</a> &gt; header)</td></tr>
 <tr class="memdesc:a9e9b12f7f00ff1b55cb92aae223ae442"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the secondary header for the data field using a PUS-A header.  <br /></td></tr>
 <tr class="separator:a9e9b12f7f00ff1b55cb92aae223ae442"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -131,21 +138,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acdba563fff2698828f743fb018b300e7" id="r_acdba563fff2698828f743fb018b300e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#acdba563fff2698828f743fb018b300e7">setDataFieldHeaderAutoUpdateStatus</a> (const bool enable)</td></tr>
 <tr class="memdesc:acdba563fff2698828f743fb018b300e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets The auto update variable, if disabled the data size in the header field will not be updated.  <br /></td></tr>
 <tr class="separator:acdba563fff2698828f743fb018b300e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af216bec570c41525f71ed7c221fe417e" id="r_af216bec570c41525f71ed7c221fe417e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#af216bec570c41525f71ed7c221fe417e">getDataFieldAbsoluteBytesSize</a> ()</td></tr>
-<tr class="memdesc:af216bec570c41525f71ed7c221fe417e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the absolute size of the data field in bytes.  <br /></td></tr>
-<tr class="separator:af216bec570c41525f71ed7c221fe417e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27f5515455b305a65343a44624806c31" id="r_a27f5515455b305a65343a44624806c31"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a27f5515455b305a65343a44624806c31">getDataFieldUsedBytesSize</a> ()</td></tr>
-<tr class="memdesc:a27f5515455b305a65343a44624806c31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the used size of the data field in bytes.  <br /></td></tr>
-<tr class="separator:a27f5515455b305a65343a44624806c31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24c39dc0a99e7e8b9c273e2f9219c013" id="r_a24c39dc0a99e7e8b9c273e2f9219c013"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a24c39dc0a99e7e8b9c273e2f9219c013">getDataFieldAvailableBytesSize</a> ()</td></tr>
-<tr class="memdesc:a24c39dc0a99e7e8b9c273e2f9219c013"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the available size of the data field in bytes.  <br /></td></tr>
-<tr class="separator:a24c39dc0a99e7e8b9c273e2f9219c013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa409823f7bd6cbbf1033e04c6b8dd3eb" id="r_aa409823f7bd6cbbf1033e04c6b8dd3eb"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#aa409823f7bd6cbbf1033e04c6b8dd3eb">getDataFieldAbsoluteBytesSize</a> () const</td></tr>
+<tr class="memdesc:aa409823f7bd6cbbf1033e04c6b8dd3eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the absolute size of the data field in bytes.  <br /></td></tr>
+<tr class="separator:aa409823f7bd6cbbf1033e04c6b8dd3eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae93a03f1003390cf74cfe190e30e221b" id="r_ae93a03f1003390cf74cfe190e30e221b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#ae93a03f1003390cf74cfe190e30e221b">getApplicationDataBytesSize</a> () const</td></tr>
+<tr class="memdesc:ae93a03f1003390cf74cfe190e30e221b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the size of the application data stored in the data field.  <br /></td></tr>
+<tr class="separator:ae93a03f1003390cf74cfe190e30e221b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a1edc1b3e6e5dd70b35a95d79b04408" id="r_a6a1edc1b3e6e5dd70b35a95d79b04408"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a6a1edc1b3e6e5dd70b35a95d79b04408">getDataFieldUsedBytesSize</a> () const</td></tr>
+<tr class="memdesc:a6a1edc1b3e6e5dd70b35a95d79b04408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the used size of the data field in bytes.  <br /></td></tr>
+<tr class="separator:a6a1edc1b3e6e5dd70b35a95d79b04408"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb748ff35aff05e52b6cd16b3b6f0946" id="r_afb748ff35aff05e52b6cd16b3b6f0946"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#afb748ff35aff05e52b6cd16b3b6f0946">getDataFieldAvailableBytesSize</a> () const</td></tr>
+<tr class="memdesc:afb748ff35aff05e52b6cd16b3b6f0946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the available size of the data field in bytes.  <br /></td></tr>
+<tr class="separator:afb748ff35aff05e52b6cd16b3b6f0946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a586f18dcf878e68efd197994e95c6895" id="r_a586f18dcf878e68efd197994e95c6895"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895">getDataFieldHeaderBytes</a> ()</td></tr>
 <tr class="memdesc:a586f18dcf878e68efd197994e95c6895"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the secondary header data as a vector of bytes.  <br /></td></tr>
 <tr class="separator:a586f18dcf878e68efd197994e95c6895"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf40e2024bf3509e4ce28ff3a8e637e2" id="r_adf40e2024bf3509e4ce28ff3a8e637e2"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#adf40e2024bf3509e4ce28ff3a8e637e2">getFullDataFieldBytes</a> ()</td></tr>
-<tr class="memdesc:adf40e2024bf3509e4ce28ff3a8e637e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the full data field by combining the data field header and application data.  <br /></td></tr>
-<tr class="separator:adf40e2024bf3509e4ce28ff3a8e637e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36e6685c51f6c5c60323df6bb10d781d" id="r_a36e6685c51f6c5c60323df6bb10d781d"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a36e6685c51f6c5c60323df6bb10d781d">serialize</a> ()</td></tr>
+<tr class="memdesc:a36e6685c51f6c5c60323df6bb10d781d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the full data field by combining the data field header and application data.  <br /></td></tr>
+<tr class="separator:a36e6685c51f6c5c60323df6bb10d781d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a692e61aef588439155bdd3e289bfa103" id="r_a692e61aef588439155bdd3e289bfa103"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1DataField.html#a692e61aef588439155bdd3e289bfa103">getApplicationData</a> ()</td></tr>
 <tr class="memdesc:a692e61aef588439155bdd3e289bfa103"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the application data from the data field.  <br /></td></tr>
 <tr class="separator:a692e61aef588439155bdd3e289bfa103"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -191,7 +201,7 @@ Private Attributes</h2></td></tr>
 <p>This class encapsulates the structure and operations for handling the data field of a <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> (Consultative Committee for Space Data Systems) packet. It allows for setting and retrieving application data, data field headers, and calculating the full data field. Additionally, it provides methods for managing the data field's size and printing its content.</p>
 <p>The data field consists of headers and application data, and the class supports different header types (<a class="el" href="classPusA.html" title="Represents a PUS Type A (Telemetry) header.">PusA</a>, <a class="el" href="classPusB.html" title="Represents a PUS Type B (Event Reporting) header.">PusB</a>, <a class="el" href="classPusC.html" title="Represents a PUS Type C (Time Code) header.">PusC</a>). It also allows setting and getting the data packet size, as well as managing the data field header flag. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00026">26</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00025">25</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a469d7a355a760935c0ddc027c634bc51" name="a469d7a355a760935c0ddc027c634bc51"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a469d7a355a760935c0ddc027c634bc51">&#9670;&#160;</a></span>DataField()</h2>
@@ -216,14 +226,14 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00028">28</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   28</span>                {</div>
-<div class="line"><span class="lineno">   29</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;BufferHeader&gt;());</div>
-<div class="line"><span class="lineno">   30</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;PusA&gt;());</div>
-<div class="line"><span class="lineno">   31</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;PusB&gt;());</div>
-<div class="line"><span class="lineno">   32</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;PusC&gt;());</div>
-<div class="line"><span class="lineno">   33</span>    };</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a8cd640a525df49907b6e9a29710e5533"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">CCSDS::DataField::m_secondaryHeaderFactory</a></div><div class="ttdeci">SecondaryHeaderFactory m_secondaryHeaderFactory</div><div class="ttdoc">secondary header dispatcher factory</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00256">CCSDSDataField.h:256</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00027">27</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   27</span>                {</div>
+<div class="line"><span class="lineno">   28</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;BufferHeader&gt;());</div>
+<div class="line"><span class="lineno">   29</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;PusA&gt;());</div>
+<div class="line"><span class="lineno">   30</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;PusB&gt;());</div>
+<div class="line"><span class="lineno">   31</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;PusC&gt;());</div>
+<div class="line"><span class="lineno">   32</span>    };</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a8cd640a525df49907b6e9a29710e5533"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">CCSDS::DataField::m_secondaryHeaderFactory</a></div><div class="ttdeci">SecondaryHeaderFactory m_secondaryHeaderFactory</div><div class="ttdoc">secondary header dispatcher factory</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00291">CCSDSDataField.h:291</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderFactory_html_a7794ddfd6f46ca20b967a1e57a7fa286"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">CCSDS::SecondaryHeaderFactory::registerType</a></div><div class="ttdeci">void registerType(std::shared_ptr&lt; SecondaryHeaderAbstract &gt; header)</div><div class="ttdoc">Registers a new header type with its creation function.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderFactory_8h_source.html#l00038">CCSDSSecondaryHeaderFactory.h:38</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -278,23 +288,51 @@ Here is the call graph for this function:</div>
 <p>This method returns a vector containing the raw application data stored in the data field.</p>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the application data bytes. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00018">18</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   18</span>                                                      {</div>
-<div class="line"><span class="lineno">   19</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
-<div class="line"><span class="lineno">   20</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>;</div>
-<div class="line"><span class="lineno">   21</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a3bb918ce67fe9f4db5f520ddbd97f2fc"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">CCSDS::DataField::m_applicationData</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; m_applicationData</div><div class="ttdoc">Application data buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00257">CCSDSDataField.h:257</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_abb4b5de3d4ee71281ead402cdf5055d4"><div class="ttname"><a href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">CCSDS::DataField::update</a></div><div class="ttdeci">void update()</div><div class="ttdoc">Updates the data field header based on the current application data size.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00048">CCSDSDataField.cpp:48</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00017">17</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   17</span>                                                      {</div>
+<div class="line"><span class="lineno">   18</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>;</div>
+<div class="line"><span class="lineno">   19</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a3bb918ce67fe9f4db5f520ddbd97f2fc"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">CCSDS::DataField::m_applicationData</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; m_applicationData</div><div class="ttdoc">Application data buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00292">CCSDSDataField.h:292</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a692e61aef588439155bdd3e289bfa103_icgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a692e61aef588439155bdd3e289bfa103_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
 </div>
-<a id="af216bec570c41525f71ed7c221fe417e" name="af216bec570c41525f71ed7c221fe417e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af216bec570c41525f71ed7c221fe417e">&#9670;&#160;</a></span>getDataFieldAbsoluteBytesSize()</h2>
+<a id="ae93a03f1003390cf74cfe190e30e221b" name="ae93a03f1003390cf74cfe190e30e221b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae93a03f1003390cf74cfe190e30e221b">&#9670;&#160;</a></span>getApplicationDataBytesSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t CCSDS::DataField::getApplicationDataBytesSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the size of the application data stored in the data field. </p>
+<dl class="section return"><dt>Returns</dt><dd>The size of the application data in bytes </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00029">29</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   29</span>                                                           {</div>
+<div class="line"><span class="lineno">   30</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.size();</div>
+<div class="line"><span class="lineno">   31</span>}</div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_ae93a03f1003390cf74cfe190e30e221b_icgraph.svg" width="404" height="135"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="aa409823f7bd6cbbf1033e04c6b8dd3eb" name="aa409823f7bd6cbbf1033e04c6b8dd3eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa409823f7bd6cbbf1033e04c6b8dd3eb">&#9670;&#160;</a></span>getDataFieldAbsoluteBytesSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,7 +341,7 @@ Here is the caller graph for this function:</div>
           <td class="memname">uint16_t CCSDS::DataField::getDataFieldAbsoluteBytesSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -312,17 +350,16 @@ Here is the caller graph for this function:</div>
 <p>This method returns the total allocated size for the data field, including both the header and application data.</p>
 <dl class="section return"><dt>Returns</dt><dd>The absolute size of the data field in bytes. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00028">28</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   28</span>                                                       {</div>
-<div class="line"><span class="lineno">   29</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
-<div class="line"><span class="lineno">   30</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">m_dataPacketSize</a>;</div>
-<div class="line"><span class="lineno">   31</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a327d5b595683a4cd5d69ee80d3592268"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">CCSDS::DataField::m_dataPacketSize</a></div><div class="ttdeci">uint16_t m_dataPacketSize</div><div class="ttdoc">Data field maximum size in bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00259">CCSDSDataField.h:259</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00025">25</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   25</span>                                                             {</div>
+<div class="line"><span class="lineno">   26</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">m_dataPacketSize</a>;</div>
+<div class="line"><span class="lineno">   27</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a327d5b595683a4cd5d69ee80d3592268"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">CCSDS::DataField::m_dataPacketSize</a></div><div class="ttdeci">uint16_t m_dataPacketSize</div><div class="ttdoc">Data field maximum size in bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00294">CCSDSDataField.h:294</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a24c39dc0a99e7e8b9c273e2f9219c013" name="a24c39dc0a99e7e8b9c273e2f9219c013"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24c39dc0a99e7e8b9c273e2f9219c013">&#9670;&#160;</a></span>getDataFieldAvailableBytesSize()</h2>
+<a id="afb748ff35aff05e52b6cd16b3b6f0946" name="afb748ff35aff05e52b6cd16b3b6f0946"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb748ff35aff05e52b6cd16b3b6f0946">&#9670;&#160;</a></span>getDataFieldAvailableBytesSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -331,7 +368,7 @@ Here is the caller graph for this function:</div>
           <td class="memname">uint16_t CCSDS::DataField::getDataFieldAvailableBytesSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -340,12 +377,11 @@ Here is the caller graph for this function:</div>
 <p>This method calculates and returns the remaining free space within the data field that can be utilized.</p>
 <dl class="section return"><dt>Returns</dt><dd>The available size of the data field in bytes. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00023">23</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   23</span>                                                        {</div>
-<div class="line"><span class="lineno">   24</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
-<div class="line"><span class="lineno">   25</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">m_dataPacketSize</a> - <a class="code hl_function" href="classCCSDS_1_1DataField.html#a27f5515455b305a65343a44624806c31">getDataFieldUsedBytesSize</a>();</div>
-<div class="line"><span class="lineno">   26</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a27f5515455b305a65343a44624806c31"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a27f5515455b305a65343a44624806c31">CCSDS::DataField::getDataFieldUsedBytesSize</a></div><div class="ttdeci">uint16_t getDataFieldUsedBytesSize()</div><div class="ttdoc">Retrieves the used size of the data field in bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00033">CCSDSDataField.cpp:33</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00021">21</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   21</span>                                                              {</div>
+<div class="line"><span class="lineno">   22</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">m_dataPacketSize</a> - <a class="code hl_function" href="classCCSDS_1_1DataField.html#a6a1edc1b3e6e5dd70b35a95d79b04408">getDataFieldUsedBytesSize</a>();</div>
+<div class="line"><span class="lineno">   23</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a6a1edc1b3e6e5dd70b35a95d79b04408"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a6a1edc1b3e6e5dd70b35a95d79b04408">CCSDS::DataField::getDataFieldUsedBytesSize</a></div><div class="ttdeci">uint16_t getDataFieldUsedBytesSize() const</div><div class="ttdoc">Retrieves the used size of the data field in bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00034">CCSDSDataField.cpp:34</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -375,9 +411,9 @@ Here is the caller graph for this function:</div>
 <p>returns the secondary header A <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html" title="Abstract base class for a (Packet Utilization Standard) header.">SecondaryHeaderAbstract</a> derived object containing the header data. </p>
 <dl class="section return"><dt>Returns</dt><dd>std::shared_ptr&lt;SecondaryHeaderAbstract&gt;&amp; . </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00149">149</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  149</span>{<span class="keywordflow">return</span> *<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>;}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a13cb0eb0016f81f07d14af99e7c2eba4"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">CCSDS::DataField::m_secondaryHeader</a></div><div class="ttdeci">std::shared_ptr&lt; SecondaryHeaderAbstract &gt; m_secondaryHeader</div><div class="ttdoc">Shared pointer to the secondary header class.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00255">CCSDSDataField.h:255</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00177">177</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  177</span>{<span class="keywordflow">return</span> *<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>;}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a13cb0eb0016f81f07d14af99e7c2eba4"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">CCSDS::DataField::m_secondaryHeader</a></div><div class="ttdeci">std::shared_ptr&lt; SecondaryHeaderAbstract &gt; m_secondaryHeader</div><div class="ttdoc">Shared pointer to the secondary header class.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00290">CCSDSDataField.h:290</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -406,9 +442,9 @@ Here is the caller graph for this function:</div>
 
 <p>returns true if auto update has been enabled for the secondary header </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00226">226</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  226</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">m_enableDataFieldUpdate</a>; }</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_ae006d1305167ab7f39a1e71244263379"><div class="ttname"><a href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">CCSDS::DataField::m_enableDataFieldUpdate</a></div><div class="ttdeci">bool m_enableDataFieldUpdate</div><div class="ttdoc">Boolean for secondary header update enable.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00261">CCSDSDataField.h:261</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00261">261</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  261</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">m_enableDataFieldUpdate</a>; }</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_ae006d1305167ab7f39a1e71244263379"><div class="ttname"><a href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">CCSDS::DataField::m_enableDataFieldUpdate</a></div><div class="ttdeci">bool m_enableDataFieldUpdate</div><div class="ttdoc">Boolean for secondary header update enable.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00296">CCSDSDataField.h:296</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -431,18 +467,19 @@ Here is the caller graph for this function:</div>
 <p>If the header type is not OTHER or NA, retrieves the data from the corresponding PUS header object.</p>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the header data bytes. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00153">153</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  153</span>                                                           {</div>
-<div class="line"><span class="lineno">  154</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
-<div class="line"><span class="lineno">  155</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>) {</div>
-<div class="line"><span class="lineno">  156</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;serialize();</div>
-<div class="line"><span class="lineno">  157</span>  }</div>
-<div class="line"><span class="lineno">  158</span>  <span class="keywordflow">return</span> {};</div>
-<div class="line"><span class="lineno">  159</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00171">171</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  171</span>                                                           {</div>
+<div class="line"><span class="lineno">  172</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
+<div class="line"><span class="lineno">  173</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>) {</div>
+<div class="line"><span class="lineno">  174</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;serialize();</div>
+<div class="line"><span class="lineno">  175</span>  }</div>
+<div class="line"><span class="lineno">  176</span>  <span class="keywordflow">return</span> {};</div>
+<div class="line"><span class="lineno">  177</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_abb4b5de3d4ee71281ead402cdf5055d4"><div class="ttname"><a href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">CCSDS::DataField::update</a></div><div class="ttdeci">void update()</div><div class="ttdoc">Updates the data field header based on the current application data size.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00049">CCSDSDataField.cpp:49</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a586f18dcf878e68efd197994e95c6895_icgraph.svg" width="100%" height="376"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a586f18dcf878e68efd197994e95c6895_icgraph.svg" width="100%" height="383"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -473,8 +510,8 @@ Here is the caller graph for this function:</div>
 <p>returns the secondary header factory </p>
 <dl class="section return"><dt>Returns</dt><dd><a class="el" href="classCCSDS_1_1SecondaryHeaderFactory.html" title="A singleton factory class responsible for registering and creating instances of SecondaryHeaderAbstra...">SecondaryHeaderFactory</a>&amp; . </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00141">141</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  141</span>{<span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>;}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00169">169</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  169</span>{<span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>;}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -504,20 +541,20 @@ Here is the caller graph for this function:</div>
 <p>retrieves true if a known secondary header has been set </p>
 <dl class="section return"><dt>Returns</dt><dd>boolean </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00233">233</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  233</span>                                                      {</div>
-<div class="line"><span class="lineno">  234</span>      <span class="keywordflow">return</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> != <span class="keyword">nullptr</span>;</div>
-<div class="line"><span class="lineno">  235</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00268">268</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  268</span>                                                      {</div>
+<div class="line"><span class="lineno">  269</span>      <span class="keywordflow">return</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> != <span class="keyword">nullptr</span>;</div>
+<div class="line"><span class="lineno">  270</span>    }</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a78c2894fc2650e0dc9ec892d58dfde7a_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a78c2894fc2650e0dc9ec892d58dfde7a_icgraph.svg" width="100%" height="383"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
 </div>
-<a id="a27f5515455b305a65343a44624806c31" name="a27f5515455b305a65343a44624806c31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27f5515455b305a65343a44624806c31">&#9670;&#160;</a></span>getDataFieldUsedBytesSize()</h2>
+<a id="a6a1edc1b3e6e5dd70b35a95d79b04408" name="a6a1edc1b3e6e5dd70b35a95d79b04408"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a1edc1b3e6e5dd70b35a95d79b04408">&#9670;&#160;</a></span>getDataFieldUsedBytesSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -526,7 +563,7 @@ Here is the caller graph for this function:</div>
           <td class="memname">uint16_t CCSDS::DataField::getDataFieldUsedBytesSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -535,9 +572,8 @@ Here is the caller graph for this function:</div>
 <p>This method returns the amount of space currently occupied by valid data within the data field.</p>
 <dl class="section return"><dt>Returns</dt><dd>The used size of the data field in bytes. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00033">33</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   33</span>                                                   {</div>
-<div class="line"><span class="lineno">   34</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00034">34</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   34</span>                                                         {</div>
 <div class="line"><span class="lineno">   35</span>  <span class="keywordflow">if</span> (!<a class="code hl_function" href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">getDataFieldHeaderFlag</a>()) {</div>
 <div class="line"><span class="lineno">   36</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.size();</div>
 <div class="line"><span class="lineno">   37</span>  }</div>
@@ -546,52 +582,8 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   40</span>  }</div>
 <div class="line"><span class="lineno">   41</span>  <span class="keywordflow">return</span> 0;</div>
 <div class="line"><span class="lineno">   42</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a78c2894fc2650e0dc9ec892d58dfde7a"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">CCSDS::DataField::getDataFieldHeaderFlag</a></div><div class="ttdeci">bool getDataFieldHeaderFlag() const</div><div class="ttdoc">retrieves true if a known secondary header has been set</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00233">CCSDSDataField.h:233</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a78c2894fc2650e0dc9ec892d58dfde7a"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">CCSDS::DataField::getDataFieldHeaderFlag</a></div><div class="ttdeci">bool getDataFieldHeaderFlag() const</div><div class="ttdoc">retrieves true if a known secondary header has been set</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00268">CCSDSDataField.h:268</a></div></div>
 </div><!-- fragment -->
-</div>
-</div>
-<a id="adf40e2024bf3509e4ce28ff3a8e637e2" name="adf40e2024bf3509e4ce28ff3a8e637e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf40e2024bf3509e4ce28ff3a8e637e2">&#9670;&#160;</a></span>getFullDataFieldBytes()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::vector&lt; uint8_t &gt; CCSDS::DataField::getFullDataFieldBytes </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Retrieves the full data field by combining the data field header and application data. </p>
-<p>Combines the secondary header (if present) and application data into a single vector. Ensures that the total size does not exceed the maximum allowed data packet size.</p>
-<dl class="section return"><dt>Returns</dt><dd>A vector containing the full data field (header + application data). </dd></dl>
-
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00007">7</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">    7</span>                                                         {</div>
-<div class="line"><span class="lineno">    8</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
-<div class="line"><span class="lineno">    9</span>  <span class="keyword">const</span> <span class="keyword">auto</span> &amp;dataFieldHeader = <a class="code hl_function" href="classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895">getDataFieldHeaderBytes</a>();</div>
-<div class="line"><span class="lineno">   10</span>  std::vector&lt;uint8_t&gt; fullData{};</div>
-<div class="line"><span class="lineno">   11</span>  <span class="keywordflow">if</span> (!dataFieldHeader.empty()) {</div>
-<div class="line"><span class="lineno">   12</span>    fullData.insert(fullData.end(), dataFieldHeader.begin(), dataFieldHeader.end());</div>
-<div class="line"><span class="lineno">   13</span>  }</div>
-<div class="line"><span class="lineno">   14</span>  fullData.insert(fullData.end(), <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.begin(), <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.end());</div>
-<div class="line"><span class="lineno">   15</span>  <span class="keywordflow">return</span> fullData;</div>
-<div class="line"><span class="lineno">   16</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a586f18dcf878e68efd197994e95c6895"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895">CCSDS::DataField::getDataFieldHeaderBytes</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; getDataFieldHeaderBytes()</div><div class="ttdoc">Retrieves the secondary header data as a vector of bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00153">CCSDSDataField.cpp:153</a></div></div>
-</div><!-- fragment --><div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_adf40e2024bf3509e4ce28ff3a8e637e2_cgraph.svg" width="443" height="102"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_adf40e2024bf3509e4ce28ff3a8e637e2_icgraph.svg" width="416" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
 </div>
 </div>
 <a id="a5cf5c7a389156995cebb62a114432310" name="a5cf5c7a389156995cebb62a114432310"></a>
@@ -614,9 +606,111 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00044">44</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   44</span>                                                                               {</div>
-<div class="line"><span class="lineno">   45</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>;</div>
-<div class="line"><span class="lineno">   46</span>}</div>
+<div class="line"><span class="lineno">   45</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
+<div class="line"><span class="lineno">   46</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>;</div>
+<div class="line"><span class="lineno">   47</span>}</div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="a339d345a47e95d258f5bec45c2e8d980" name="a339d345a47e95d258f5bec45c2e8d980"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a339d345a47e95d258f5bec45c2e8d980">&#9670;&#160;</a></span>RegisterSecondaryHeader()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a> CCSDS::DataField::RegisterSecondaryHeader </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Registers a new header type with its creation function. </p>
+<p>This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">header</td><td>A shared pointer to a <code><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html" title="Abstract base class for a (Packet Utilization Standard) header.">SecondaryHeaderAbstract</a></code> object to register. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00044">44</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   44</span>                                         {</div>
+<div class="line"><span class="lineno">   45</span>      <span class="keywordflow">try</span> {</div>
+<div class="line"><span class="lineno">   46</span>        <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a>(std::make_shared&lt;T&gt;());</div>
+<div class="line"><span class="lineno">   47</span>      }<span class="keywordflow">catch</span> (...) {</div>
+<div class="line"><span class="lineno">   48</span>        <span class="keywordflow">return</span> Error{<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5db5729b5037f809dd65a8043574158f">INVALID_HEADER_DATA</a>,<span class="stringliteral">&quot;Cannot register secondary header.&quot;</span>};</div>
+<div class="line"><span class="lineno">   49</span>      }</div>
+<div class="line"><span class="lineno">   50</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   51</span>    }</div>
+<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda5db5729b5037f809dd65a8043574158f"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5db5729b5037f809dd65a8043574158f">CCSDS::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdoc">Header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00020">CCSDSResult.h:20</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a339d345a47e95d258f5bec45c2e8d980_cgraph.svg" width="494" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a339d345a47e95d258f5bec45c2e8d980_icgraph.svg" width="504" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a36e6685c51f6c5c60323df6bb10d781d" name="a36e6685c51f6c5c60323df6bb10d781d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36e6685c51f6c5c60323df6bb10d781d">&#9670;&#160;</a></span>serialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::vector&lt; uint8_t &gt; CCSDS::DataField::serialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the full data field by combining the data field header and application data. </p>
+<p>Combines the secondary header (if present) and application data into a single vector. Ensures that the total size does not exceed the maximum allowed data packet size.</p>
+<dl class="section return"><dt>Returns</dt><dd>A vector containing the full data field (header + application data). </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00006">6</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">    6</span>                                             {</div>
+<div class="line"><span class="lineno">    7</span>  <a class="code hl_function" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4">update</a>();</div>
+<div class="line"><span class="lineno">    8</span>  <span class="keyword">const</span> <span class="keyword">auto</span> &amp;dataFieldHeader = <a class="code hl_function" href="classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895">getDataFieldHeaderBytes</a>();</div>
+<div class="line"><span class="lineno">    9</span>  std::vector&lt;uint8_t&gt; fullData{};</div>
+<div class="line"><span class="lineno">   10</span>  <span class="keywordflow">if</span> (!dataFieldHeader.empty()) {</div>
+<div class="line"><span class="lineno">   11</span>    fullData.insert(fullData.end(), dataFieldHeader.begin(), dataFieldHeader.end());</div>
+<div class="line"><span class="lineno">   12</span>  }</div>
+<div class="line"><span class="lineno">   13</span>  fullData.insert(fullData.end(), <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.begin(), <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.end());</div>
+<div class="line"><span class="lineno">   14</span>  <span class="keywordflow">return</span> fullData;</div>
+<div class="line"><span class="lineno">   15</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a586f18dcf878e68efd197994e95c6895"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895">CCSDS::DataField::getDataFieldHeaderBytes</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; getDataFieldHeaderBytes()</div><div class="ttdoc">Retrieves the secondary header data as a vector of bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00171">CCSDSDataField.cpp:171</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a36e6685c51f6c5c60323df6bb10d781d_cgraph.svg" width="454" height="102"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a36e6685c51f6c5c60323df6bb10d781d_icgraph.svg" width="427" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
 </div>
 </div>
 <a id="a93cc5afe0173fd185770e8b1a450a64e" name="a93cc5afe0173fd185770e8b1a450a64e"></a>
@@ -646,18 +740,18 @@ Here is the caller graph for this function:</div>
 <dl class="section note"><dt>Note</dt><dd>The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data exceeds available size. </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00071">71</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   71</span>                                                                                            {</div>
-<div class="line"><span class="lineno">   72</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(applicationData.size() &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#a24c39dc0a99e7e8b9c273e2f9219c013">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">ErrorCode::INVALID_APPLICATION_DATA</a>,</div>
-<div class="line"><span class="lineno">   73</span>                 <span class="stringliteral">&quot;Application data field exceeds available size.&quot;</span>);</div>
-<div class="line"><span class="lineno">   74</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a> = applicationData;</div>
-<div class="line"><span class="lineno">   75</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   77</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00148">CCSDSResult.h:148</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a24c39dc0a99e7e8b9c273e2f9219c013"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a24c39dc0a99e7e8b9c273e2f9219c013">CCSDS::DataField::getDataFieldAvailableBytesSize</a></div><div class="ttdeci">uint16_t getDataFieldAvailableBytesSize()</div><div class="ttdoc">Retrieves the available size of the data field in bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00023">CCSDSDataField.cpp:23</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a5d0adc9c4427cf159d2a977fee6e2342"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">CCSDS::DataField::m_dataFieldHeaderUpdated</a></div><div class="ttdeci">bool m_dataFieldHeaderUpdated</div><div class="ttdoc">Boolean for secondary header updated status.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00260">CCSDSDataField.h:260</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">CCSDS::INVALID_APPLICATION_DATA</a></div><div class="ttdeci">@ INVALID_APPLICATION_DATA</div><div class="ttdoc">Application data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00026">CCSDSResult.h:26</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00072">72</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                                                                            {</div>
+<div class="line"><span class="lineno">   73</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(applicationData.size() &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#afb748ff35aff05e52b6cd16b3b6f0946">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">ErrorCode::INVALID_APPLICATION_DATA</a>,</div>
+<div class="line"><span class="lineno">   74</span>                 <span class="stringliteral">&quot;Application data field exceeds available size.&quot;</span>);</div>
+<div class="line"><span class="lineno">   75</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a> = applicationData;</div>
+<div class="line"><span class="lineno">   76</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   77</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   78</span>}</div>
+<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00144">CCSDSResult.h:144</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a5d0adc9c4427cf159d2a977fee6e2342"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">CCSDS::DataField::m_dataFieldHeaderUpdated</a></div><div class="ttdeci">bool m_dataFieldHeaderUpdated</div><div class="ttdoc">Boolean for secondary header updated status.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00295">CCSDSDataField.h:295</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_afb748ff35aff05e52b6cd16b3b6f0946"><div class="ttname"><a href="classCCSDS_1_1DataField.html#afb748ff35aff05e52b6cd16b3b6f0946">CCSDS::DataField::getDataFieldAvailableBytesSize</a></div><div class="ttdeci">uint16_t getDataFieldAvailableBytesSize() const</div><div class="ttdoc">Retrieves the available size of the data field in bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00021">CCSDSDataField.cpp:21</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">CCSDS::INVALID_APPLICATION_DATA</a></div><div class="ttdeci">@ INVALID_APPLICATION_DATA</div><div class="ttdoc">Application data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00022">CCSDSResult.h:22</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -699,26 +793,84 @@ Here is the caller graph for this function:</div>
 <dl class="section note"><dt>Note</dt><dd>The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid. </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00057">57</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   57</span>                                                                                               {</div>
-<div class="line"><span class="lineno">   58</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!pData, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">ErrorCode::NULL_POINTER</a>, <span class="stringliteral">&quot;Application data is nullptr&quot;</span>);</div>
-<div class="line"><span class="lineno">   59</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &lt; 1, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">ErrorCode::INVALID_APPLICATION_DATA</a>, <span class="stringliteral">&quot;Application data size cannot be &lt; 1&quot;</span>);</div>
-<div class="line"><span class="lineno">   60</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#a24c39dc0a99e7e8b9c273e2f9219c013">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">ErrorCode::INVALID_APPLICATION_DATA</a>,</div>
-<div class="line"><span class="lineno">   61</span>                 <span class="stringliteral">&quot;Application data field exceeds available size&quot;</span>);</div>
-<div class="line"><span class="lineno">   62</span> </div>
-<div class="line"><span class="lineno">   63</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.empty()) {</div>
-<div class="line"><span class="lineno">   64</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Data ] Warning: Data field is not empty, it has been overwritten.&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   65</span>  }</div>
-<div class="line"><span class="lineno">   66</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.assign(pData, pData + sizeData);</div>
-<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   69</span>}</div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">CCSDS::NULL_POINTER</a></div><div class="ttdeci">@ NULL_POINTER</div><div class="ttdoc">Null pointer encountered.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00027">CCSDSResult.h:27</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00058">58</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   58</span>                                                                                               {</div>
+<div class="line"><span class="lineno">   59</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!pData, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">ErrorCode::NULL_POINTER</a>, <span class="stringliteral">&quot;Application data is nullptr&quot;</span>);</div>
+<div class="line"><span class="lineno">   60</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &lt; 1, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">ErrorCode::INVALID_APPLICATION_DATA</a>, <span class="stringliteral">&quot;Application data size cannot be &lt; 1&quot;</span>);</div>
+<div class="line"><span class="lineno">   61</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#afb748ff35aff05e52b6cd16b3b6f0946">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda4d38dca1932048b0f89f6aaf056773f8">ErrorCode::INVALID_APPLICATION_DATA</a>,</div>
+<div class="line"><span class="lineno">   62</span>                 <span class="stringliteral">&quot;Application data field exceeds available size&quot;</span>);</div>
+<div class="line"><span class="lineno">   63</span> </div>
+<div class="line"><span class="lineno">   64</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.empty()) {</div>
+<div class="line"><span class="lineno">   65</span>    std::cerr &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Data ] Warning: Data field is not empty, it has been overwritten.&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">   66</span>  }</div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.assign(pData, pData + sizeData);</div>
+<div class="line"><span class="lineno">   68</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   69</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   70</span>}</div>
+<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">CCSDS::NULL_POINTER</a></div><div class="ttdeci">@ NULL_POINTER</div><div class="ttdoc">Null pointer encountered.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00023">CCSDSResult.h:23</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a723659bd61e24b21d2398bc88a95db86" name="a723659bd61e24b21d2398bc88a95db86"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a723659bd61e24b21d2398bc88a95db86">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[1/6]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> CCSDS::DataField::setDataFieldHeader </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classConfig.html">Config</a> &amp;&#160;</td>
+          <td class="paramname"><em>cfg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the data field header using a configuration file as reference. </p>
+<dl class="section note"><dt>Note</dt><dd>The config file must contain all required parameter for the interested secondary header, including the secondary_header_type string indicating which registered secondary header to be parsed.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cfg</td><td>configuration file parser object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>ResultBool </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00147">147</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  147</span>                                                                    {</div>
+<div class="line"><span class="lineno">  148</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;secondary_header_type&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">ErrorCode::CONFIG_FILE_ERROR</a>,</div>
+<div class="line"><span class="lineno">  149</span>                     <span class="stringliteral">&quot;Config: Missing string field: secondary_header_type&quot;</span>);</div>
+<div class="line"><span class="lineno">  150</span>  std::string type{};</div>
+<div class="line"><span class="lineno">  151</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a>(type, cfg.<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">get</a>&lt;std::string&gt;(<span class="stringliteral">&quot;secondary_header_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  152</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(type), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  153</span>                   <span class="stringliteral">&quot;Secondary header type is not registered: &quot;</span> + type);</div>
+<div class="line"><span class="lineno">  154</span> </div>
+<div class="line"><span class="lineno">  155</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a5cc98f9b65ee10e06f86afb7526bd324">create</a>(type);</div>
+<div class="line"><span class="lineno">  156</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  157</span>                   <span class="stringliteral">&quot;Failed to create secondary header of type: &quot;</span> + type);</div>
+<div class="line"><span class="lineno">  158</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;loadFromConfig(cfg);</div>
+<div class="line"><span class="lineno">  159</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;getType();</div>
+<div class="line"><span class="lineno">  160</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  161</span>}</div>
+<div class="ttc" id="aCCSDSResult_8h_html_a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><div class="ttname"><a href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a></div><div class="ttdeci">#define ASSIGN_OR_PRINT(var, result)</div><div class="ttdoc">Macro to assign a result value or print an error message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00178">CCSDSResult.h:178</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a9f5218850d32dee6a0069e84bdd1b534"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">CCSDS::DataField::m_dataFieldHeaderType</a></div><div class="ttdeci">std::string m_dataFieldHeaderType</div><div class="ttdoc">Data field Header type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00293">CCSDSDataField.h:293</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderFactory_html_a5cc98f9b65ee10e06f86afb7526bd324"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderFactory.html#a5cc98f9b65ee10e06f86afb7526bd324">CCSDS::SecondaryHeaderFactory::create</a></div><div class="ttdeci">std::shared_ptr&lt; SecondaryHeaderAbstract &gt; create(const std::string &amp;type)</div><div class="ttdoc">Creates an instance of a registered header type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderFactory_8h_source.html#l00050">CCSDSSecondaryHeaderFactory.h:50</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderFactory_html_a703efe9a8e6d293309e69bc6c64bccef"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">CCSDS::SecondaryHeaderFactory::typeIsRegistered</a></div><div class="ttdeci">bool typeIsRegistered(const std::string &amp;type)</div><div class="ttdoc">Checks if a header type is registered.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderFactory_8h_source.html#l00065">CCSDSSecondaryHeaderFactory.h:65</a></div></div>
+<div class="ttc" id="aclassConfig_html_a093d1897ebdb889d382706a73b02d249"><div class="ttname"><a href="classConfig.html#a093d1897ebdb889d382706a73b02d249">Config::isKey</a></div><div class="ttdeci">bool isKey(const std::string &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00047">CCSDSConfig.cpp:47</a></div></div>
+<div class="ttc" id="aclassConfig_html_ac0eb207d3a0c9b3039000301c612aadb"><div class="ttname"><a href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">Config::get</a></div><div class="ttdeci">CCSDS::Result&lt; T &gt; get(const std::string &amp;key) const</div><div class="ttdoc">Get value by key and type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00019">CCSDSConfig.h:19</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::CONFIG_FILE_ERROR</a></div><div class="ttdeci">@ CONFIG_FILE_ERROR</div><div class="ttdoc">Configuration file error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00030">CCSDSResult.h:29</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">CCSDS::INVALID_SECONDARY_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_SECONDARY_HEADER_DATA</div><div class="ttdoc">Secondary header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00021">CCSDSResult.h:21</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_a723659bd61e24b21d2398bc88a95db86_cgraph.svg" width="500" height="70"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
 <a id="afb58d2580a1abd0d2a9e6346bc5c5318" name="afb58d2580a1abd0d2a9e6346bc5c5318"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb58d2580a1abd0d2a9e6346bc5c5318">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#afb58d2580a1abd0d2a9e6346bc5c5318">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[2/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -754,37 +906,34 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method. The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00110">110</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  111</span>                                                                               {</div>
-<div class="line"><span class="lineno">  112</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#a24c39dc0a99e7e8b9c273e2f9219c013">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">  113</span>                 <span class="stringliteral">&quot;Secondary header data exceeds available size&quot;</span>);</div>
-<div class="line"><span class="lineno">  114</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(pType), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">  115</span>                   <span class="stringliteral">&quot;Secondary header type is not registered: &quot;</span> + pType);</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>  <span class="keyword">auto</span> header = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a5cc98f9b65ee10e06f86afb7526bd324">create</a>(pType);</div>
-<div class="line"><span class="lineno">  118</span> </div>
-<div class="line"><span class="lineno">  119</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() != header-&gt;getSize(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">  120</span>                   <span class="stringliteral">&quot;Secondary header data size mismatch for type: &quot;</span> + pType);</div>
-<div class="line"><span class="lineno">  121</span> </div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> = std::move(header);</div>
-<div class="line"><span class="lineno">  124</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;deserialize(data));</div>
-<div class="line"><span class="lineno">  125</span> </div>
-<div class="line"><span class="lineno">  126</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = pType;</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00111">111</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  112</span>                                                                               {</div>
+<div class="line"><span class="lineno">  113</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#afb748ff35aff05e52b6cd16b3b6f0946">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  114</span>                 <span class="stringliteral">&quot;Secondary header data exceeds available size&quot;</span>);</div>
+<div class="line"><span class="lineno">  115</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(pType), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  116</span>                   <span class="stringliteral">&quot;Secondary header type is not registered: &quot;</span> + pType);</div>
+<div class="line"><span class="lineno">  117</span> </div>
+<div class="line"><span class="lineno">  118</span>  <span class="keyword">auto</span> header = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a5cc98f9b65ee10e06f86afb7526bd324">create</a>(pType);</div>
+<div class="line"><span class="lineno">  119</span> </div>
+<div class="line"><span class="lineno">  120</span>  <span class="keywordflow">if</span> (!header-&gt;variableLength) {</div>
+<div class="line"><span class="lineno">  121</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() != header-&gt;getSize(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  122</span>                     <span class="stringliteral">&quot;Secondary header data size mismatch for type: &quot;</span> + pType);</div>
+<div class="line"><span class="lineno">  123</span>  }</div>
+<div class="line"><span class="lineno">  124</span> </div>
+<div class="line"><span class="lineno">  125</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> = std::move(header);</div>
+<div class="line"><span class="lineno">  126</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;deserialize(data));</div>
 <div class="line"><span class="lineno">  127</span> </div>
-<div class="line"><span class="lineno">  128</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  129</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  130</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Macro to return a result as-is (for functions returning Result&lt;T&gt;).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00206">CCSDSResult.h:206</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a9f5218850d32dee6a0069e84bdd1b534"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">CCSDS::DataField::m_dataFieldHeaderType</a></div><div class="ttdeci">std::string m_dataFieldHeaderType</div><div class="ttdoc">Data field Header type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00258">CCSDSDataField.h:258</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderFactory_html_a5cc98f9b65ee10e06f86afb7526bd324"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderFactory.html#a5cc98f9b65ee10e06f86afb7526bd324">CCSDS::SecondaryHeaderFactory::create</a></div><div class="ttdeci">std::shared_ptr&lt; SecondaryHeaderAbstract &gt; create(const std::string &amp;type)</div><div class="ttdoc">Creates an instance of a registered header type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderFactory_8h_source.html#l00050">CCSDSSecondaryHeaderFactory.h:50</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderFactory_html_a703efe9a8e6d293309e69bc6c64bccef"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">CCSDS::SecondaryHeaderFactory::typeIsRegistered</a></div><div class="ttdeci">bool typeIsRegistered(const std::string &amp;type)</div><div class="ttdoc">Checks if a header type is registered.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderFactory_8h_source.html#l00065">CCSDSSecondaryHeaderFactory.h:65</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">CCSDS::INVALID_SECONDARY_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_SECONDARY_HEADER_DATA</div><div class="ttdoc">Secondary header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00025">CCSDSResult.h:25</a></div></div>
+<div class="line"><span class="lineno">  128</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = pType;</div>
+<div class="line"><span class="lineno">  129</span> </div>
+<div class="line"><span class="lineno">  130</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  131</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  132</span>}</div>
+<div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Macro to return a result as-is (for functions returning Result&lt;T&gt;).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00202">CCSDSResult.h:202</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a5de9e5aaee0e9a5c1e26d45b00fb363e" name="a5de9e5aaee0e9a5c1e26d45b00fb363e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5de9e5aaee0e9a5c1e26d45b00fb363e">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5de9e5aaee0e9a5c1e26d45b00fb363e">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[3/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -808,25 +957,26 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>The m_dataFieldHeaderType is set to OTHER after the header is updated. If the current data field header is not empty, it will be cleared. The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>ResultBool </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00132">132</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  132</span>                                                                                            {</div>
-<div class="line"><span class="lineno">  133</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(dataFieldHeader.size() &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#a24c39dc0a99e7e8b9c273e2f9219c013">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">  134</span>                 <span class="stringliteral">&quot;Secondary header data exceeds available size&quot;</span>);</div>
-<div class="line"><span class="lineno">  135</span> </div>
-<div class="line"><span class="lineno">  136</span>  BufferHeader header;</div>
-<div class="line"><span class="lineno">  137</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> = std::make_shared&lt;BufferHeader&gt;(dataFieldHeader);</div>
-<div class="line"><span class="lineno">  138</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;deserialize(dataFieldHeader) );</div>
-<div class="line"><span class="lineno">  139</span> </div>
-<div class="line"><span class="lineno">  140</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;getType(); ;</div>
-<div class="line"><span class="lineno">  141</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  142</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  143</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00134">134</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  134</span>                                                                                            {</div>
+<div class="line"><span class="lineno">  135</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(dataFieldHeader.size() &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#afb748ff35aff05e52b6cd16b3b6f0946">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  136</span>                 <span class="stringliteral">&quot;Secondary header data exceeds available size&quot;</span>);</div>
+<div class="line"><span class="lineno">  137</span> </div>
+<div class="line"><span class="lineno">  138</span>  BufferHeader header;</div>
+<div class="line"><span class="lineno">  139</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> = std::make_shared&lt;BufferHeader&gt;(dataFieldHeader);</div>
+<div class="line"><span class="lineno">  140</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;deserialize(dataFieldHeader) );</div>
+<div class="line"><span class="lineno">  141</span> </div>
+<div class="line"><span class="lineno">  142</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;getType(); ;</div>
+<div class="line"><span class="lineno">  143</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  145</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a1384311b897cd8fbb2d2c8fa7dd5a385" name="a1384311b897cd8fbb2d2c8fa7dd5a385"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1384311b897cd8fbb2d2c8fa7dd5a385">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a1384311b897cd8fbb2d2c8fa7dd5a385">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[4/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -863,24 +1013,24 @@ Here is the caller graph for this function:</div>
 <dl class="section note"><dt>Note</dt><dd>The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid. </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00079">79</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   79</span>                                                                                               {</div>
-<div class="line"><span class="lineno">   80</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!pData, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">ErrorCode::NULL_POINTER</a>, <span class="stringliteral">&quot;Secondary header data is nullptr&quot;</span>);</div>
-<div class="line"><span class="lineno">   81</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &lt; 1, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>, <span class="stringliteral">&quot;Secondary header data size cannot be &lt; 1&quot;</span>);</div>
-<div class="line"><span class="lineno">   82</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#a24c39dc0a99e7e8b9c273e2f9219c013">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">   83</span>                 <span class="stringliteral">&quot;Secondary header data exceeds available size.&quot;</span>);</div>
-<div class="line"><span class="lineno">   84</span> </div>
-<div class="line"><span class="lineno">   85</span>  std::vector&lt;uint8_t&gt; data;</div>
-<div class="line"><span class="lineno">   86</span>  data.assign(pData, pData + sizeData);</div>
-<div class="line"><span class="lineno">   87</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>( <a class="code hl_function" href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">setDataFieldHeader</a>(data) );</div>
-<div class="line"><span class="lineno">   88</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   89</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a1384311b897cd8fbb2d2c8fa7dd5a385"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">CCSDS::DataField::setDataFieldHeader</a></div><div class="ttdeci">ResultBool setDataFieldHeader(const uint8_t *pData, const size_t &amp;sizeData)</div><div class="ttdoc">Sets the secondary header data for the data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00079">CCSDSDataField.cpp:79</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00080">80</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   80</span>                                                                                               {</div>
+<div class="line"><span class="lineno">   81</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!pData, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">ErrorCode::NULL_POINTER</a>, <span class="stringliteral">&quot;Secondary header data is nullptr&quot;</span>);</div>
+<div class="line"><span class="lineno">   82</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &lt; 1, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>, <span class="stringliteral">&quot;Secondary header data size cannot be &lt; 1&quot;</span>);</div>
+<div class="line"><span class="lineno">   83</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(sizeData &gt; <a class="code hl_function" href="classCCSDS_1_1DataField.html#afb748ff35aff05e52b6cd16b3b6f0946">getDataFieldAvailableBytesSize</a>(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">   84</span>                 <span class="stringliteral">&quot;Secondary header data exceeds available size.&quot;</span>);</div>
+<div class="line"><span class="lineno">   85</span> </div>
+<div class="line"><span class="lineno">   86</span>  std::vector&lt;uint8_t&gt; data;</div>
+<div class="line"><span class="lineno">   87</span>  data.assign(pData, pData + sizeData);</div>
+<div class="line"><span class="lineno">   88</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>( <a class="code hl_function" href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">setDataFieldHeader</a>(data) );</div>
+<div class="line"><span class="lineno">   89</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   90</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a1384311b897cd8fbb2d2c8fa7dd5a385"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">CCSDS::DataField::setDataFieldHeader</a></div><div class="ttdeci">ResultBool setDataFieldHeader(const uint8_t *pData, const size_t &amp;sizeData)</div><div class="ttdoc">Sets the secondary header data for the data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00080">CCSDSDataField.cpp:80</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a930a650cd6a146b116703066e728cf42" name="a930a650cd6a146b116703066e728cf42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a930a650cd6a146b116703066e728cf42">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[4/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a930a650cd6a146b116703066e728cf42">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[5/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -924,29 +1074,29 @@ Here is the caller graph for this function:</div>
 <dl class="section note"><dt>Note</dt><dd>If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method. The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid. </dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00091">91</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>                                                                               {</div>
-<div class="line"><span class="lineno">   93</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!pData, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">ErrorCode::NULL_POINTER</a>, <span class="stringliteral">&quot;Secondary header data is nullptr&quot;</span>);</div>
-<div class="line"><span class="lineno">   94</span> </div>
-<div class="line"><span class="lineno">   95</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(pType), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">   96</span>                 <span class="stringliteral">&quot;Secondary header type is not registered: &quot;</span> + pType);</div>
-<div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(pType)) {</div>
-<div class="line"><span class="lineno">   99</span>    std::vector&lt;uint8_t&gt; data;</div>
-<div class="line"><span class="lineno">  100</span>    data.assign(pData, pData + sizeData);</div>
-<div class="line"><span class="lineno">  101</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">setDataFieldHeader</a>(data,pType));</div>
-<div class="line"><span class="lineno">  102</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  103</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">setDataFieldHeader</a>(pData, sizeData));</div>
-<div class="line"><span class="lineno">  104</span>    <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = pType;</div>
-<div class="line"><span class="lineno">  105</span>  }</div>
-<div class="line"><span class="lineno">  106</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  107</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  108</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00092">92</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   93</span>                                                                               {</div>
+<div class="line"><span class="lineno">   94</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!pData, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaf7bf4d293eb74724454471e8ea793e39">ErrorCode::NULL_POINTER</a>, <span class="stringliteral">&quot;Secondary header data is nullptr&quot;</span>);</div>
+<div class="line"><span class="lineno">   95</span> </div>
+<div class="line"><span class="lineno">   96</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(pType), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">   97</span>                 <span class="stringliteral">&quot;Secondary header type is not registered: &quot;</span> + pType);</div>
+<div class="line"><span class="lineno">   98</span> </div>
+<div class="line"><span class="lineno">   99</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(pType)) {</div>
+<div class="line"><span class="lineno">  100</span>    std::vector&lt;uint8_t&gt; data;</div>
+<div class="line"><span class="lineno">  101</span>    data.assign(pData, pData + sizeData);</div>
+<div class="line"><span class="lineno">  102</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">setDataFieldHeader</a>(data,pType));</div>
+<div class="line"><span class="lineno">  103</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  104</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1DataField.html#a1384311b897cd8fbb2d2c8fa7dd5a385">setDataFieldHeader</a>(pData, sizeData));</div>
+<div class="line"><span class="lineno">  105</span>    <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = pType;</div>
+<div class="line"><span class="lineno">  106</span>  }</div>
+<div class="line"><span class="lineno">  107</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  108</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  109</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
 <a id="a9e9b12f7f00ff1b55cb92aae223ae442" name="a9e9b12f7f00ff1b55cb92aae223ae442"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9e9b12f7f00ff1b55cb92aae223ae442">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e9b12f7f00ff1b55cb92aae223ae442">&#9670;&#160;</a></span>setDataFieldHeader() <span class="overload">[6/6]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -970,12 +1120,12 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>None. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00145">145</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  145</span>                                                                                     {</div>
-<div class="line"><span class="lineno">  146</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> = std::move(header);</div>
-<div class="line"><span class="lineno">  147</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;getType();</div>
-<div class="line"><span class="lineno">  148</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  149</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00163">163</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  163</span>                                                                                     {</div>
+<div class="line"><span class="lineno">  164</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a> = std::move(header);</div>
+<div class="line"><span class="lineno">  165</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> = <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;getType();</div>
+<div class="line"><span class="lineno">  166</span>  <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  167</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1011,8 +1161,8 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00166">166</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  166</span>{ <a class="code hl_variable" href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">m_enableDataFieldUpdate</a> = enable; }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00194">194</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  194</span>{ <a class="code hl_variable" href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">m_enableDataFieldUpdate</a> = enable; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1041,8 +1191,8 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00151">151</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  151</span>{ <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">m_dataPacketSize</a> = value; }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00169">169</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  169</span>{ <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a327d5b595683a4cd5d69ee80d3592268">m_dataPacketSize</a> = value; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1065,19 +1215,19 @@ Here is the caller graph for this function:</div>
 <p>Updates the length field in the secondary header to match the size of the application data. Ensures the header reflects the most recent data state.</p>
 <dl class="section return"><dt>Returns</dt><dd>None. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00048">48</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   48</span>                            {</div>
-<div class="line"><span class="lineno">   49</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> &amp;&amp; <a class="code hl_variable" href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">m_enableDataFieldUpdate</a>) {</div>
-<div class="line"><span class="lineno">   50</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a>) &amp;&amp; <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a> != <span class="stringliteral">&quot;BufferHeader&quot;</span>) {</div>
-<div class="line"><span class="lineno">   51</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;setDataLength(<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a3bb918ce67fe9f4db5f520ddbd97f2fc">m_applicationData</a>.size());;</div>
-<div class="line"><span class="lineno">   52</span>    }</div>
-<div class="line"><span class="lineno">   53</span>    <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   54</span>  }</div>
-<div class="line"><span class="lineno">   55</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8cpp_source.html#l00049">49</a> of file <a class="el" href="CCSDSDataField_8cpp_source.html">CCSDSDataField.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   49</span>                            {</div>
+<div class="line"><span class="lineno">   50</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> &amp;&amp; <a class="code hl_variable" href="classCCSDS_1_1DataField.html#ae006d1305167ab7f39a1e71244263379">m_enableDataFieldUpdate</a>) {</div>
+<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a8cd640a525df49907b6e9a29710e5533">m_secondaryHeaderFactory</a>.<a class="code hl_function" href="classCCSDS_1_1SecondaryHeaderFactory.html#a703efe9a8e6d293309e69bc6c64bccef">typeIsRegistered</a>(<a class="code hl_variable" href="classCCSDS_1_1DataField.html#a9f5218850d32dee6a0069e84bdd1b534">m_dataFieldHeaderType</a>)) {</div>
+<div class="line"><span class="lineno">   52</span>      <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a13cb0eb0016f81f07d14af99e7c2eba4">m_secondaryHeader</a>-&gt;update(<span class="keyword">this</span>);</div>
+<div class="line"><span class="lineno">   53</span>    }</div>
+<div class="line"><span class="lineno">   54</span>    <a class="code hl_variable" href="classCCSDS_1_1DataField.html#a5d0adc9c4427cf159d2a977fee6e2342">m_dataFieldHeaderUpdated</a> = <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   55</span>  }</div>
+<div class="line"><span class="lineno">   56</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_abb4b5de3d4ee71281ead402cdf5055d4_icgraph.svg" width="654" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1DataField_abb4b5de3d4ee71281ead402cdf5055d4_icgraph.svg" width="664" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1105,8 +1255,8 @@ Here is the caller graph for this function:</div>
 
 <p>Application data buffer. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00257">257</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  257</span>{};                      </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00292">292</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  292</span>{};                      </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1132,8 +1282,8 @@ Here is the caller graph for this function:</div>
 
 <p>Data field <a class="el" href="classCCSDS_1_1Header.html" title="Manages the decomposition and manipulation of CCSDS primary headers.">Header</a> type. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00258">258</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  258</span>{};                           </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00293">293</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  293</span>{};                           </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1159,8 +1309,8 @@ Here is the caller graph for this function:</div>
 
 <p>Boolean for secondary header updated status. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00260">260</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  260</span>{<span class="keyword">false</span>};                          </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00295">295</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  295</span>{<span class="keyword">false</span>};                          </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1186,8 +1336,8 @@ Here is the caller graph for this function:</div>
 
 <p>Data field maximum size in bytes. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00259">259</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  259</span>{2024};                               </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00294">294</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  294</span>{2024};                               </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1213,8 +1363,8 @@ Here is the caller graph for this function:</div>
 
 <p>Boolean for secondary header update enable. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00261">261</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  261</span>{<span class="keyword">true</span>};                            </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00296">296</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  296</span>{<span class="keyword">true</span>};                            </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1240,8 +1390,8 @@ Here is the caller graph for this function:</div>
 
 <p>Shared pointer to the secondary header class. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00255">255</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  255</span>{};  </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00290">290</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  290</span>{};  </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1267,7 +1417,7 @@ Here is the caller graph for this function:</div>
 
 <p>secondary header dispatcher factory </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00256">256</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSDataField_8h_source.html#l00291">291</a> of file <a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>.</p>
 
 </div>
 </div>

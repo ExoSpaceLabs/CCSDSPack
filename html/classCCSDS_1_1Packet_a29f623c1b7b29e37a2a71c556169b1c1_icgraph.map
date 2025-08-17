@@ -1,11 +1,17 @@
 <map id="CCSDS::Packet::setUpdatePacketEnable" name="CCSDS::Packet::setUpdatePacketEnable">
-<area shape="rect" id="Node000001" title="needs to be called as soon as possible, probably also from constructor." alt="" coords="419,47,609,87"/>
+<area shape="rect" id="Node000001" title="needs to be called as soon as possible, probably also from constructor." alt="" coords="419,97,609,137"/>
 <area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a4fd11a40ea4d569a483061892bfb688f" title="Adds a new packet to the list." alt="" coords="137,5,342,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="404,50,310,33,311,28,405,45"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#a2f6c84bec310a521c55d88ce49506395" title="Sets the application data for the packet." alt="" coords="108,55,371,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="405,70,371,70,371,65,405,65"/>
-<area shape="rect" id="Node000005" href="$classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95" title="Validates a given packet." alt="" coords="143,104,336,129"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="405,90,311,107,310,101,404,84"/>
-<area shape="rect" id="Node000004" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,55,60,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,70,60,70,60,65,94,65"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="468,92,422,67,370,45,329,33,330,28,372,39,424,62,471,87"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs a Manager with a given packet template." alt="" coords="141,55,337,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="404,100,310,83,311,77,405,94"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" title="Load a template packet from a binary or configuration file." alt="" coords="125,104,353,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="405,119,354,119,354,114,405,114"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1Manager.html#a2f6c84bec310a521c55d88ce49506395" title="Sets the application data for the packet." alt="" coords="108,153,371,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="405,139,311,156,310,151,404,134"/>
+<area shape="rect" id="Node000007" href="$classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95" title="Validates a given packet." alt="" coords="143,203,336,228"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="469,146,423,171,372,193,325,205,324,200,370,187,421,166,467,141"/>
+<area shape="rect" id="Node000006" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,153,60,179"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="94,169,60,169,60,163,94,163"/>
+<area shape="rect" id="Node000008" href="$exec__validator_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,203,60,228"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="129,218,60,218,60,213,129,213"/>
 </map>

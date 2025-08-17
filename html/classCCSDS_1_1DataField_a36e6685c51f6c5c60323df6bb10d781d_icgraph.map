@@ -1,0 +1,5 @@
+<map id="CCSDS::DataField::serialize" name="CCSDS::DataField::serialize">
+<area shape="rect" id="Node000001" title="Retrieves the full data field by combining the data field header and application data." alt="" coords="223,5,421,31"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Updates Primary headers data field size." alt="" coords="5,5,175,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,21,175,21,175,15,209,15"/>
+</map>

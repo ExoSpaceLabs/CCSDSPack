@@ -1,7 +1,5 @@
 <map id="CCSDS::Header::setSequenceCount" name="CCSDS::Header::setSequenceCount">
-<area shape="rect" id="Node000001" title="14 bits" alt="" coords="223,23,435,63"/>
-<area shape="rect" id="Node000002" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="63,5,117,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,33,117,23,118,18,209,28"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Updates Primary headers data field size." alt="" coords="5,55,175,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="209,58,175,61,175,56,209,53"/>
+<area shape="rect" id="Node000001" title="14 bits" alt="" coords="223,5,435,45"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Updates Primary headers data field size." alt="" coords="5,13,175,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,28,175,28,175,23,209,23"/>
 </map>

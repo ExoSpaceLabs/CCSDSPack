@@ -76,6 +76,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classCCSDS_1_1SecondaryHeaderAbstract-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">CCSDS::SecondaryHeaderAbstract Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div></div>
 </div><!--header-->
@@ -95,15 +96,12 @@ Inheritance diagram for CCSDS::SecondaryHeaderAbstract:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0bb132a381880133c97f096f92bce570" id="r_a0bb132a381880133c97f096f92bce570"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0bb132a381880133c97f096f92bce570">~SecondaryHeaderAbstract</a> ()=default</td></tr>
 <tr class="separator:a0bb132a381880133c97f096f92bce570"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dd327ee1b5eac6f0a9e968cc32ac88a" id="r_a7dd327ee1b5eac6f0a9e968cc32ac88a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a7dd327ee1b5eac6f0a9e968cc32ac88a">setDataLength</a> (uint16_t dataLength)=0</td></tr>
-<tr class="memdesc:a7dd327ee1b5eac6f0a9e968cc32ac88a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the length of the data associated with the packet.  <br /></td></tr>
-<tr class="separator:a7dd327ee1b5eac6f0a9e968cc32ac88a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f3daeac2ae6326912d1be8dca2c1e7d" id="r_a2f3daeac2ae6326912d1be8dca2c1e7d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a2f3daeac2ae6326912d1be8dca2c1e7d">deserialize</a> (const std::vector&lt; uint8_t &gt; &amp;data)=0</td></tr>
 <tr class="memdesc:a2f3daeac2ae6326912d1be8dca2c1e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a buffer if data (vector uint8) and creates the header  <br /></td></tr>
 <tr class="separator:a2f3daeac2ae6326912d1be8dca2c1e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22265ea792ab276d3c494750e8b216bf" id="r_a22265ea792ab276d3c494750e8b216bf"><td class="memItemLeft" align="right" valign="top">virtual uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a22265ea792ab276d3c494750e8b216bf">getDataLength</a> () const =0</td></tr>
-<tr class="memdesc:a22265ea792ab276d3c494750e8b216bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the length of the data associated with the packet if applicable.  <br /></td></tr>
-<tr class="separator:a22265ea792ab276d3c494750e8b216bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a180a60a3148dd126694b3bbd204cb4ac" id="r_a180a60a3148dd126694b3bbd204cb4ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a180a60a3148dd126694b3bbd204cb4ac">update</a> (<a class="el" href="classCCSDS_1_1DataField.html">DataField</a> *dataField)=0</td></tr>
+<tr class="memdesc:a180a60a3148dd126694b3bbd204cb4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how the packet secondary header is updated using the data field as reference.  <br /></td></tr>
+<tr class="separator:a180a60a3148dd126694b3bbd204cb4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1a7ca595af608165533e44b653a103fe" id="r_a1a7ca595af608165533e44b653a103fe"><td class="memItemLeft" align="right" valign="top">virtual uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1a7ca595af608165533e44b653a103fe">getSize</a> () const =0</td></tr>
 <tr class="memdesc:a1a7ca595af608165533e44b653a103fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the header in bytes.  <br /></td></tr>
 <tr class="separator:a1a7ca595af608165533e44b653a103fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -113,12 +111,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0663ddc6e890448e29d0c440b57ba5ec" id="r_a0663ddc6e890448e29d0c440b57ba5ec"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0663ddc6e890448e29d0c440b57ba5ec">getType</a> () const =0</td></tr>
 <tr class="memdesc:a0663ddc6e890448e29d0c440b57ba5ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of the packet.  <br /></td></tr>
 <tr class="separator:a0663ddc6e890448e29d0c440b57ba5ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1da5b04ff201d9071abd38288ac20db3" id="r_a1da5b04ff201d9071abd38288ac20db3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1da5b04ff201d9071abd38288ac20db3">loadFromConfig</a> (const <a class="el" href="classConfig.html">Config</a> &amp;config)=0</td></tr>
+<tr class="separator:a1da5b04ff201d9071abd38288ac20db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a500d02f23e54e103b1839132a7bdff80" id="r_a500d02f23e54e103b1839132a7bdff80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a500d02f23e54e103b1839132a7bdff80">setVariableLength</a> (const bool bEnable)</td></tr>
+<tr class="separator:a500d02f23e54e103b1839132a7bdff80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a81a42af8cef2a4f70cc251619b783e15" id="r_a81a42af8cef2a4f70cc251619b783e15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> {false}</td></tr>
+<tr class="separator:a81a42af8cef2a4f70cc251619b783e15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract base class for a (<a class="el" href="classCCSDS_1_1Packet.html" title="Represents a CCSDS (Consultative Committee for Space Data Systems) packet.">Packet</a> Utilization Standard) header. </p>
 <p>Defines the common interface for all header types. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00014">14</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00016">16</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0bb132a381880133c97f096f92bce570" name="a0bb132a381880133c97f096f92bce570"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0bb132a381880133c97f096f92bce570">&#9670;&#160;</a></span>~SecondaryHeaderAbstract()</h2>
@@ -174,36 +181,6 @@ Public Member Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>Boolean true on success or <a class="el" href="classCCSDS_1_1Error.html" title="Represents an error with both an error code and a message.">Error</a>. </dd></dl>
 
 <p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#a05b87a5e526290f7cd90dbfcaa34abc8">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a65a8d45cadf35280137770d7edaacad7">PusA</a>, <a class="el" href="classPusB.html#a7e68a625b390636192a61342e612d03c">PusB</a>, and <a class="el" href="classPusC.html#a7c8150adae09828855e30ec86cbe4934">PusC</a>.</p>
-
-</div>
-</div>
-<a id="a22265ea792ab276d3c494750e8b216bf" name="a22265ea792ab276d3c494750e8b216bf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22265ea792ab276d3c494750e8b216bf">&#9670;&#160;</a></span>getDataLength()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual uint16_t CCSDS::SecondaryHeaderAbstract::getDataLength </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Gets the length of the data associated with the packet if applicable. </p>
-<dl class="section return"><dt>Returns</dt><dd>The length of the data in bytes set in the header. </dd></dl>
-
-<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#aeee8da9587d2dc27c7411692008aeee9">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#abae5b35005329dc5c82f36aa04f70a08">PusA</a>, <a class="el" href="classPusB.html#a3a5352d477144d86aa7f08e3b53b7f8a">PusB</a>, and <a class="el" href="classPusC.html#a9603b2cac434200cdcb57900a81f5a86">PusC</a>.</p>
 
 </div>
 </div>
@@ -267,6 +244,34 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a1da5b04ff201d9071abd38288ac20db3" name="a1da5b04ff201d9071abd38288ac20db3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1da5b04ff201d9071abd38288ac20db3">&#9670;&#160;</a></span>loadFromConfig()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a> CCSDS::SecondaryHeaderAbstract::loadFromConfig </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classConfig.html">Config</a> &amp;&#160;</td>
+          <td class="paramname"><em>config</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#abf8a042338097293a3e5f118ab130644">CCSDS::BufferHeader</a>.</p>
+
+</div>
+</div>
 <a id="a5486955d6aff5721ba89203dd4523ddd" name="a5486955d6aff5721ba89203dd4523ddd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5486955d6aff5721ba89203dd4523ddd">&#9670;&#160;</a></span>serialize()</h2>
 
@@ -297,8 +302,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7dd327ee1b5eac6f0a9e968cc32ac88a" name="a7dd327ee1b5eac6f0a9e968cc32ac88a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7dd327ee1b5eac6f0a9e968cc32ac88a">&#9670;&#160;</a></span>setDataLength()</h2>
+<a id="a500d02f23e54e103b1839132a7bdff80" name="a500d02f23e54e103b1839132a7bdff80"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a500d02f23e54e103b1839132a7bdff80">&#9670;&#160;</a></span>setVariableLength()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -307,10 +312,40 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void CCSDS::SecondaryHeaderAbstract::setDataLength </td>
+          <td class="memname">void CCSDS::SecondaryHeaderAbstract::setVariableLength </td>
           <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>dataLength</em></td><td>)</td>
+          <td class="paramtype">const bool&#160;</td>
+          <td class="paramname"><em>bEnable</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00056">56</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   56</span>{ <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> =  bEnable;}</div>
+<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderAbstract_html_a81a42af8cef2a4f70cc251619b783e15"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">CCSDS::SecondaryHeaderAbstract::variableLength</a></div><div class="ttdeci">bool variableLength</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00057">CCSDSSecondaryHeaderAbstract.h:57</a></div></div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a180a60a3148dd126694b3bbd204cb4ac" name="a180a60a3148dd126694b3bbd204cb4ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a180a60a3148dd126694b3bbd204cb4ac">&#9670;&#160;</a></span>update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void CCSDS::SecondaryHeaderAbstract::update </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classCCSDS_1_1DataField.html">DataField</a> *&#160;</td>
+          <td class="paramname"><em>dataField</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -321,16 +356,35 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the length of the data associated with the packet. </p>
+<p>Defines how the packet secondary header is updated using the data field as reference. </p>
+<p>This method is called every time a data get is performed from the packet, that is if update is enabled and method successfully registered.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dataLength</td><td>Length of the data in bytes. </td></tr>
+    <tr><td class="paramname">dataField</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#a6111c7128cec079d219061988730fd92">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a3ac32dd19186917d2a72942bb1b30bc7">PusA</a>, <a class="el" href="classPusB.html#a9cd2910aee22c2f84bc515e475b6119b">PusB</a>, and <a class="el" href="classPusC.html#a8a08c54b88ff4b908c6093afa4912187">PusC</a>.</p>
+<p>Implemented in <a class="el" href="classPusA.html#a6d27498e8b9c91b2e5f9ca8c861d108f">PusA</a>, <a class="el" href="classPusB.html#acb20a9fe63de9986cb0c414e8b322a18">PusB</a>, <a class="el" href="classPusC.html#ac745199ef5306afd3376ce726070341c">PusC</a>, and <a class="el" href="classCCSDS_1_1BufferHeader.html#a6cfdb793f62972c65b3a93a1726eaec6">CCSDS::BufferHeader</a>.</p>
 
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a81a42af8cef2a4f70cc251619b783e15" name="a81a42af8cef2a4f70cc251619b783e15"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81a42af8cef2a4f70cc251619b783e15">&#9670;&#160;</a></span>variableLength</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool CCSDS::SecondaryHeaderAbstract::variableLength {false}</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00057">57</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   57</span>{<span class="keyword">false</span>};</div>
+</div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

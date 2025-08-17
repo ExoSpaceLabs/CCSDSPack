@@ -1,0 +1,7 @@
+<map id="CCSDS::Packet::loadFromConfigFile" name="CCSDS::Packet::loadFromConfigFile">
+<area shape="rect" id="Node000001" title="Loads a packet from a configuration file, including secondary header if present." alt="" coords="281,42,531,67"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a063eeb88f124db9af02bd033e95733b1" title="Loads a template packet from a configuration file." alt="" coords="6,5,233,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="268,43,233,40,233,34,269,38"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" title="Load a template packet from a binary or configuration file." alt="" coords="5,70,233,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="268,71,234,74,233,69,267,66"/>
+</map>

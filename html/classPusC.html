@@ -95,14 +95,11 @@ Collaboration diagram for PusC:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab7e71d6a048c3ca2e8b424eafb0ec682" id="r_ab7e71d6a048c3ca2e8b424eafb0ec682"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#ab7e71d6a048c3ca2e8b424eafb0ec682">PusC</a> ()=default</td></tr>
-<tr class="separator:ab7e71d6a048c3ca2e8b424eafb0ec682"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c08bfe97d917f0489243f480813c040" id="r_a4c08bfe97d917f0489243f480813c040"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a4c08bfe97d917f0489243f480813c040">PusC</a> (const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const uint16_t timeCode, const uint16_t dataLength)</td></tr>
-<tr class="memdesc:a4c08bfe97d917f0489243f480813c040"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classPusC.html" title="Represents a PUS Type C (Time Code) header.">PusC</a> object with all fields explicitly set.  <br /></td></tr>
-<tr class="separator:a4c08bfe97d917f0489243f480813c040"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a08c54b88ff4b908c6093afa4912187" id="r_a8a08c54b88ff4b908c6093afa4912187"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a8a08c54b88ff4b908c6093afa4912187">setDataLength</a> (const uint16_t dataLength) override</td></tr>
-<tr class="memdesc:a8a08c54b88ff4b908c6093afa4912187"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the length of the data associated with the packet.  <br /></td></tr>
-<tr class="separator:a8a08c54b88ff4b908c6093afa4912187"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab712a7571c19b72290c6a1955dca87ea" id="r_ab712a7571c19b72290c6a1955dca87ea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#ab712a7571c19b72290c6a1955dca87ea">PusC</a> ()</td></tr>
+<tr class="separator:ab712a7571c19b72290c6a1955dca87ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a40628032f9c1d2ed8241b65b9b124f" id="r_a4a40628032f9c1d2ed8241b65b9b124f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a4a40628032f9c1d2ed8241b65b9b124f">PusC</a> (const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype, const uint8_t sourceID, const std::vector&lt; uint8_t &gt; &amp;timeCode, const uint16_t dataLength)</td></tr>
+<tr class="memdesc:a4a40628032f9c1d2ed8241b65b9b124f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classPusC.html" title="Represents a PUS Type C (Time Code) header.">PusC</a> object with all fields explicitly set.  <br /></td></tr>
+<tr class="separator:a4a40628032f9c1d2ed8241b65b9b124f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad411195773eafbd22aa3587f2f4188a5" id="r_ad411195773eafbd22aa3587f2f4188a5"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#ad411195773eafbd22aa3587f2f4188a5">getVersion</a> () const</td></tr>
 <tr class="separator:ad411195773eafbd22aa3587f2f4188a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77a738ffbcb5b8d8870c598457a518b3" id="r_a77a738ffbcb5b8d8870c598457a518b3"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a77a738ffbcb5b8d8870c598457a518b3">getServiceType</a> () const</td></tr>
@@ -111,11 +108,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a22c95f6e31bb9ddda8bc9ed01c83e633"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b2b7f1cba5216affe34f36d1aef4ee2" id="r_a6b2b7f1cba5216affe34f36d1aef4ee2"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a6b2b7f1cba5216affe34f36d1aef4ee2">getSourceID</a> () const</td></tr>
 <tr class="separator:a6b2b7f1cba5216affe34f36d1aef4ee2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c6bdd28dc98b600214a30591ab1d3d6" id="r_a3c6bdd28dc98b600214a30591ab1d3d6"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a3c6bdd28dc98b600214a30591ab1d3d6">getTimeCode</a> () const</td></tr>
-<tr class="separator:a3c6bdd28dc98b600214a30591ab1d3d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9603b2cac434200cdcb57900a81f5a86" id="r_a9603b2cac434200cdcb57900a81f5a86"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a9603b2cac434200cdcb57900a81f5a86">getDataLength</a> () const override</td></tr>
-<tr class="memdesc:a9603b2cac434200cdcb57900a81f5a86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the length of the data associated with the packet if applicable.  <br /></td></tr>
-<tr class="separator:a9603b2cac434200cdcb57900a81f5a86"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14583c9bb2d3f9d572ff5e7faeaece23" id="r_a14583c9bb2d3f9d572ff5e7faeaece23"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a14583c9bb2d3f9d572ff5e7faeaece23">getTimeCode</a> () const</td></tr>
+<tr class="separator:a14583c9bb2d3f9d572ff5e7faeaece23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f9312a3159d6ecf7b21fb518e45400b" id="r_a7f9312a3159d6ecf7b21fb518e45400b"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a7f9312a3159d6ecf7b21fb518e45400b">getDataLength</a> () const</td></tr>
+<tr class="separator:a7f9312a3159d6ecf7b21fb518e45400b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af51b08ebeff1696a139e92a21b7a6244" id="r_af51b08ebeff1696a139e92a21b7a6244"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#af51b08ebeff1696a139e92a21b7a6244">getSize</a> () const override</td></tr>
 <tr class="memdesc:af51b08ebeff1696a139e92a21b7a6244"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the header in bytes.  <br /></td></tr>
 <tr class="separator:af51b08ebeff1696a139e92a21b7a6244"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,9 +124,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7c8150adae09828855e30ec86cbe4934" id="r_a7c8150adae09828855e30ec86cbe4934"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a7c8150adae09828855e30ec86cbe4934">deserialize</a> (const std::vector&lt; uint8_t &gt; &amp;data) override</td></tr>
 <tr class="memdesc:a7c8150adae09828855e30ec86cbe4934"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a buffer if data (vector uint8) and creates the header  <br /></td></tr>
 <tr class="separator:a7c8150adae09828855e30ec86cbe4934"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac745199ef5306afd3376ce726070341c" id="r_ac745199ef5306afd3376ce726070341c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#ac745199ef5306afd3376ce726070341c">update</a> (<a class="el" href="classCCSDS_1_1DataField.html">CCSDS::DataField</a> *dataField) override</td></tr>
+<tr class="memdesc:ac745199ef5306afd3376ce726070341c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how the packet secondary header is updated using the data field as reference.  <br /></td></tr>
+<tr class="separator:ac745199ef5306afd3376ce726070341c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a76afa586580e25a6e471add7151a4c" id="r_a7a76afa586580e25a6e471add7151a4c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a7a76afa586580e25a6e471add7151a4c">loadFromConfig</a> (const <a class="el" href="classConfig.html">::Config</a> &amp;cfg) override</td></tr>
+<tr class="separator:a7a76afa586580e25a6e471add7151a4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCCSDS_1_1SecondaryHeaderAbstract')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a></td></tr>
 <tr class="memitem:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a0bb132a381880133c97f096f92bce570"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0bb132a381880133c97f096f92bce570">~SecondaryHeaderAbstract</a> ()=default</td></tr>
 <tr class="separator:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1da5b04ff201d9071abd38288ac20db3 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a1da5b04ff201d9071abd38288ac20db3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1da5b04ff201d9071abd38288ac20db3">loadFromConfig</a> (const <a class="el" href="classConfig.html">Config</a> &amp;config)=0</td></tr>
+<tr class="separator:a1da5b04ff201d9071abd38288ac20db3 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a500d02f23e54e103b1839132a7bdff80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a500d02f23e54e103b1839132a7bdff80">setVariableLength</a> (const bool bEnable)</td></tr>
+<tr class="separator:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -142,14 +147,20 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a9bd4ea2184aebd2b0f6405ae53144ded"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcbba80f7a03e80b20ce4feb98f84023" id="r_abcbba80f7a03e80b20ce4feb98f84023"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a> {}</td></tr>
 <tr class="separator:abcbba80f7a03e80b20ce4feb98f84023"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a351b2ab56c28a55e979b9dec3485bc42" id="r_a351b2ab56c28a55e979b9dec3485bc42"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a351b2ab56c28a55e979b9dec3485bc42">m_timeCode</a> {}</td></tr>
-<tr class="separator:a351b2ab56c28a55e979b9dec3485bc42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48d33c61442c92097afb3ecae6d7f215" id="r_a48d33c61442c92097afb3ecae6d7f215"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a> {}</td></tr>
+<tr class="separator:a48d33c61442c92097afb3ecae6d7f215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a99848b8a0d2b736fb239b83ca7f6d8db" id="r_a99848b8a0d2b736fb239b83ca7f6d8db"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> {}</td></tr>
 <tr class="separator:a99848b8a0d2b736fb239b83ca7f6d8db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d490209168142e4288084284e37bdfb" id="r_a5d490209168142e4288084284e37bdfb"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a5d490209168142e4288084284e37bdfb">m_type</a> = &quot;PusC&quot;</td></tr>
 <tr class="separator:a5d490209168142e4288084284e37bdfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e646eb19bf49f9b9f637ff7cce62614" id="r_a3e646eb19bf49f9b9f637ff7cce62614"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">m_size</a> = 8</td></tr>
+<tr class="memitem:a3e646eb19bf49f9b9f637ff7cce62614" id="r_a3e646eb19bf49f9b9f637ff7cce62614"><td class="memItemLeft" align="right" valign="top">const uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">m_size</a> = 6</td></tr>
 <tr class="separator:a3e646eb19bf49f9b9f637ff7cce62614"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a></td></tr>
+<tr class="memitem:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a81a42af8cef2a4f70cc251619b783e15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> {false}</td></tr>
+<tr class="separator:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents a PUS Type C (Time Code) header. </p>
@@ -163,10 +174,10 @@ Private Attributes</h2></td></tr>
 <li>Data Length: 16 bits, length of the time data in bytes. </li>
 </ul>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00133">133</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00135">135</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ab7e71d6a048c3ca2e8b424eafb0ec682" name="ab7e71d6a048c3ca2e8b424eafb0ec682"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7e71d6a048c3ca2e8b424eafb0ec682">&#9670;&#160;</a></span>PusC() <span class="overload">[1/2]</span></h2>
+<a id="ab712a7571c19b72290c6a1955dca87ea" name="ab712a7571c19b72290c6a1955dca87ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab712a7571c19b72290c6a1955dca87ea">&#9670;&#160;</a></span>PusC() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -183,15 +194,19 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">default</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00137">137</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  137</span>{<a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a>=<span class="keyword">true</span>;}</div>
+<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderAbstract_html_a81a42af8cef2a4f70cc251619b783e15"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">CCSDS::SecondaryHeaderAbstract::variableLength</a></div><div class="ttdeci">bool variableLength</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00057">CCSDSSecondaryHeaderAbstract.h:57</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
-<a id="a4c08bfe97d917f0489243f480813c040" name="a4c08bfe97d917f0489243f480813c040"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4c08bfe97d917f0489243f480813c040">&#9670;&#160;</a></span>PusC() <span class="overload">[2/2]</span></h2>
+<a id="a4a40628032f9c1d2ed8241b65b9b124f" name="a4a40628032f9c1d2ed8241b65b9b124f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a40628032f9c1d2ed8241b65b9b124f">&#9670;&#160;</a></span>PusC() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -226,7 +241,7 @@ Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const uint16_t&#160;</td>
+          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>timeCode</em>, </td>
         </tr>
         <tr>
@@ -255,23 +270,24 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">serviceType</td><td>Service type (8 bits). </td></tr>
     <tr><td class="paramname">serviceSubtype</td><td>Service subtype (8 bits). </td></tr>
     <tr><td class="paramname">sourceID</td><td>Source identifier (8 bits). </td></tr>
-    <tr><td class="paramname">timeCode</td><td>Time code value (16 bits). </td></tr>
+    <tr><td class="paramname">timeCode</td><td>Time code value (variable). </td></tr>
     <tr><td class="paramname">dataLength</td><td>Length of the time data (16 bits). </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00146">146</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  148</span>                                             : <a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a>(version &amp; 0x7), <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a>(serviceType),</div>
-<div class="line"><span class="lineno">  149</span>                                               <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a>(serviceSubtype), <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a>(sourceID),</div>
-<div class="line"><span class="lineno">  150</span>                                               <a class="code hl_variable" href="classPusC.html#a351b2ab56c28a55e979b9dec3485bc42">m_timeCode</a>(timeCode), <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a>(dataLength) {</div>
-<div class="line"><span class="lineno">  151</span>    }</div>
-<div class="ttc" id="aclassPusC_html_a2d5539425efa3b4417ef37856855306f"><div class="ttname"><a href="classPusC.html#a2d5539425efa3b4417ef37856855306f">PusC::m_version</a></div><div class="ttdeci">uint8_t m_version</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00168">PusServices.h:168</a></div></div>
-<div class="ttc" id="aclassPusC_html_a351b2ab56c28a55e979b9dec3485bc42"><div class="ttname"><a href="classPusC.html#a351b2ab56c28a55e979b9dec3485bc42">PusC::m_timeCode</a></div><div class="ttdeci">uint16_t m_timeCode</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00172">PusServices.h:172</a></div></div>
-<div class="ttc" id="aclassPusC_html_a99848b8a0d2b736fb239b83ca7f6d8db"><div class="ttname"><a href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">PusC::m_dataLength</a></div><div class="ttdeci">uint16_t m_dataLength</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00173">PusServices.h:173</a></div></div>
-<div class="ttc" id="aclassPusC_html_a9bd4ea2184aebd2b0f6405ae53144ded"><div class="ttname"><a href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">PusC::m_serviceSubType</a></div><div class="ttdeci">uint8_t m_serviceSubType</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00170">PusServices.h:170</a></div></div>
-<div class="ttc" id="aclassPusC_html_abcbba80f7a03e80b20ce4feb98f84023"><div class="ttname"><a href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">PusC::m_sourceID</a></div><div class="ttdeci">uint8_t m_sourceID</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00171">PusServices.h:171</a></div></div>
-<div class="ttc" id="aclassPusC_html_afa9f21bdb8aec6f54491d54d5fcde13d"><div class="ttname"><a href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">PusC::m_serviceType</a></div><div class="ttdeci">uint8_t m_serviceType</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00169">PusServices.h:169</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00148">148</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  150</span>                                             : <a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a>(version &amp; 0x7), <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a>(serviceType),</div>
+<div class="line"><span class="lineno">  151</span>                                               <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a>(serviceSubtype), <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a>(sourceID),</div>
+<div class="line"><span class="lineno">  152</span>                                               <a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a>(timeCode), <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a>(dataLength) {</div>
+<div class="line"><span class="lineno">  153</span>      <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a>=<span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  154</span>    }</div>
+<div class="ttc" id="aclassPusC_html_a2d5539425efa3b4417ef37856855306f"><div class="ttname"><a href="classPusC.html#a2d5539425efa3b4417ef37856855306f">PusC::m_version</a></div><div class="ttdeci">uint8_t m_version</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00171">PusServices.h:171</a></div></div>
+<div class="ttc" id="aclassPusC_html_a48d33c61442c92097afb3ecae6d7f215"><div class="ttname"><a href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">PusC::m_timeCode</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; m_timeCode</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00175">PusServices.h:175</a></div></div>
+<div class="ttc" id="aclassPusC_html_a99848b8a0d2b736fb239b83ca7f6d8db"><div class="ttname"><a href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">PusC::m_dataLength</a></div><div class="ttdeci">uint16_t m_dataLength</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00176">PusServices.h:176</a></div></div>
+<div class="ttc" id="aclassPusC_html_a9bd4ea2184aebd2b0f6405ae53144ded"><div class="ttname"><a href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">PusC::m_serviceSubType</a></div><div class="ttdeci">uint8_t m_serviceSubType</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00173">PusServices.h:173</a></div></div>
+<div class="ttc" id="aclassPusC_html_abcbba80f7a03e80b20ce4feb98f84023"><div class="ttname"><a href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">PusC::m_sourceID</a></div><div class="ttdeci">uint8_t m_sourceID</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00174">PusServices.h:174</a></div></div>
+<div class="ttc" id="aclassPusC_html_afa9f21bdb8aec6f54491d54d5fcde13d"><div class="ttname"><a href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">PusC::m_serviceType</a></div><div class="ttdeci">uint8_t m_serviceType</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00172">PusServices.h:172</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -305,27 +321,28 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a2f3daeac2ae6326912d1be8dca2c1e7d">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00056">56</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>                                                                {</div>
-<div class="line"><span class="lineno">   57</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() != <a class="code hl_variable" href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">m_size</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">   58</span>                 <span class="stringliteral">&quot;PUS-C header not correct size (size != 8 bytes)&quot;</span>);</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a> = data[0] &amp; 0x7;</div>
-<div class="line"><span class="lineno">   61</span>  <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a> = data[1];</div>
-<div class="line"><span class="lineno">   62</span>  <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a> = data[2];</div>
-<div class="line"><span class="lineno">   63</span>  <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a> = data[3];</div>
-<div class="line"><span class="lineno">   64</span>  <a class="code hl_variable" href="classPusC.html#a351b2ab56c28a55e979b9dec3485bc42">m_timeCode</a> = data[4] &lt;&lt; 8 | data[5];</div>
-<div class="line"><span class="lineno">   65</span>  <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> = data[6] &lt;&lt; 8 | data[7];</div>
-<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   67</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00148">CCSDSResult.h:148</a></div></div>
-<div class="ttc" id="aclassPusC_html_a3e646eb19bf49f9b9f637ff7cce62614"><div class="ttname"><a href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">PusC::m_size</a></div><div class="ttdeci">const uint16_t m_size</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00176">PusServices.h:176</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">CCSDS::INVALID_SECONDARY_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_SECONDARY_HEADER_DATA</div><div class="ttdoc">Secondary header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00025">CCSDSResult.h:25</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00118">118</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  118</span>                                                                {</div>
+<div class="line"><span class="lineno">  119</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() &lt;= <a class="code hl_variable" href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">m_size</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  120</span>                 <span class="stringliteral">&quot;PUS-C header not correct size (size &lt;= 6 bytes)&quot;</span>);</div>
+<div class="line"><span class="lineno">  121</span>  <a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a> = data[0] &amp; 0x7;</div>
+<div class="line"><span class="lineno">  122</span>  <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a> = data[1];</div>
+<div class="line"><span class="lineno">  123</span>  <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a> = data[2];</div>
+<div class="line"><span class="lineno">  124</span>  <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a> = data[3];</div>
+<div class="line"><span class="lineno">  125</span>  <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> = data[data.size()-2] &lt;&lt; 8 | data[data.size()-1];</div>
+<div class="line"><span class="lineno">  126</span>  <span class="keywordflow">if</span> (data.size() &gt; 6) {</div>
+<div class="line"><span class="lineno">  127</span>    <a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a>.assign(data.begin() + 4, data.end()-2);</div>
+<div class="line"><span class="lineno">  128</span>  }</div>
+<div class="line"><span class="lineno">  129</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  130</span>}</div>
+<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00144">CCSDSResult.h:144</a></div></div>
+<div class="ttc" id="aclassPusC_html_a3e646eb19bf49f9b9f637ff7cce62614"><div class="ttname"><a href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">PusC::m_size</a></div><div class="ttdeci">const uint16_t m_size</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00179">PusServices.h:179</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdae184b937a1380440837ec5aef1e0df4f">CCSDS::INVALID_SECONDARY_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_SECONDARY_HEADER_DATA</div><div class="ttdoc">Secondary header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00021">CCSDSResult.h:21</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a9603b2cac434200cdcb57900a81f5a86" name="a9603b2cac434200cdcb57900a81f5a86"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9603b2cac434200cdcb57900a81f5a86">&#9670;&#160;</a></span>getDataLength()</h2>
+<a id="a7f9312a3159d6ecf7b21fb518e45400b" name="a7f9312a3159d6ecf7b21fb518e45400b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f9312a3159d6ecf7b21fb518e45400b">&#9670;&#160;</a></span>getDataLength()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -342,18 +359,13 @@ Private Attributes</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the length of the data associated with the packet if applicable. </p>
-<dl class="section return"><dt>Returns</dt><dd>The length of the data in bytes set in the header. </dd></dl>
-
-<p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a22265ea792ab276d3c494750e8b216bf">CCSDS::SecondaryHeaderAbstract</a>.</p>
-
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00160">160</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  160</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a>;       }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00161">161</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  161</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a>;               }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -380,8 +392,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00157">157</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  157</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a>;   }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00158">158</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  158</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a>;           }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -408,8 +420,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00156">156</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  156</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a>;      }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00157">157</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  157</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a>;              }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -441,8 +453,8 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1a7ca595af608165533e44b653a103fe">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00161">161</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  161</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">m_size</a>;             }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00162">162</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  162</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a3e646eb19bf49f9b9f637ff7cce62614">m_size</a> + <a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a>.size(); }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -469,13 +481,13 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00158">158</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  158</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a>;         }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00159">159</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  159</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a>;                 }</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a3c6bdd28dc98b600214a30591ab1d3d6" name="a3c6bdd28dc98b600214a30591ab1d3d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c6bdd28dc98b600214a30591ab1d3d6">&#9670;&#160;</a></span>getTimeCode()</h2>
+<a id="a14583c9bb2d3f9d572ff5e7faeaece23" name="a14583c9bb2d3f9d572ff5e7faeaece23"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14583c9bb2d3f9d572ff5e7faeaece23">&#9670;&#160;</a></span>getTimeCode()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -484,7 +496,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t PusC::getTimeCode </td>
+          <td class="memname">std::vector&lt; uint8_t &gt; PusC::getTimeCode </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -497,8 +509,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00159">159</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  159</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a351b2ab56c28a55e979b9dec3485bc42">m_timeCode</a>;         }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00160">160</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  160</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a>;              }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -530,9 +542,9 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0663ddc6e890448e29d0c440b57ba5ec">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00162">162</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  162</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a5d490209168142e4288084284e37bdfb">m_type</a>;          }</div>
-<div class="ttc" id="aclassPusC_html_a5d490209168142e4288084284e37bdfb"><div class="ttname"><a href="classPusC.html#a5d490209168142e4288084284e37bdfb">PusC::m_type</a></div><div class="ttdeci">const std::string m_type</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00175">PusServices.h:175</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00163">163</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  163</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a5d490209168142e4288084284e37bdfb">m_type</a>;                  }</div>
+<div class="ttc" id="aclassPusC_html_a5d490209168142e4288084284e37bdfb"><div class="ttname"><a href="classPusC.html#a5d490209168142e4288084284e37bdfb">PusC::m_type</a></div><div class="ttdeci">const std::string m_type</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00178">PusServices.h:178</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -559,9 +571,73 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00155">155</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  155</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a>;          }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00156">156</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  156</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a>;                  }</div>
 </div><!-- fragment -->
+</div>
+</div>
+<a id="a7a76afa586580e25a6e471add7151a4c" name="a7a76afa586580e25a6e471add7151a4c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a76afa586580e25a6e471add7151a4c">&#9670;&#160;</a></span>loadFromConfig()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> PusC::loadFromConfig </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classConfig.html">::Config</a> &amp;&#160;</td>
+          <td class="paramname"><em>cfg</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00152">152</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  152</span>                                                      {</div>
+<div class="line"><span class="lineno">  153</span>  uint8_t version = 0;</div>
+<div class="line"><span class="lineno">  154</span>  uint8_t serviceType = 0;</div>
+<div class="line"><span class="lineno">  155</span>  uint8_t serviceSubType = 0;</div>
+<div class="line"><span class="lineno">  156</span>  uint8_t sourceId = 0;</div>
+<div class="line"><span class="lineno">  157</span>  std::vector&lt;uint8_t&gt; timeCode{};</div>
+<div class="line"><span class="lineno">  158</span> </div>
+<div class="line"><span class="lineno">  159</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;pus_version&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::ErrorCode::CONFIG_FILE_ERROR</a>,<span class="stringliteral">&quot;Config: Missing string field: pus_version&quot;</span>);</div>
+<div class="line"><span class="lineno">  160</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;pus_service_type&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::ErrorCode::CONFIG_FILE_ERROR</a>,<span class="stringliteral">&quot;Config: Missing string field: pus_service_type&quot;</span>);</div>
+<div class="line"><span class="lineno">  161</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;pus_service_sub_type&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::ErrorCode::CONFIG_FILE_ERROR</a>,<span class="stringliteral">&quot;Config: Missing string field: pus_service_sub_type&quot;</span>);</div>
+<div class="line"><span class="lineno">  162</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;pus_source_id&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::ErrorCode::CONFIG_FILE_ERROR</a>,<span class="stringliteral">&quot;Config: Missing string field: pus_source_id&quot;</span>);</div>
+<div class="line"><span class="lineno">  163</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;pus_time_code&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::ErrorCode::CONFIG_FILE_ERROR</a>,<span class="stringliteral">&quot;Config: Missing string field: pus_time_code&quot;</span>);</div>
+<div class="line"><span class="lineno">  164</span> </div>
+<div class="line"><span class="lineno">  165</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a>(version, cfg.<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">get</a>&lt;<span class="keywordtype">int</span>&gt;(<span class="stringliteral">&quot;pus_version&quot;</span>));</div>
+<div class="line"><span class="lineno">  166</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a>(serviceType, cfg.<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">get</a>&lt;<span class="keywordtype">int</span>&gt;(<span class="stringliteral">&quot;pus_service_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  167</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a>(serviceSubType,cfg.<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">get</a>&lt; <span class="keywordtype">int</span>&gt;(<span class="stringliteral">&quot;pus_service_sub_type&quot;</span>));</div>
+<div class="line"><span class="lineno">  168</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a>(sourceId,cfg.<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">get</a>&lt;<span class="keywordtype">int</span>&gt;(<span class="stringliteral">&quot;pus_source_id&quot;</span>));</div>
+<div class="line"><span class="lineno">  169</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a>(timeCode,cfg.<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">get</a>&lt;std::vector&lt;uint8_t&gt;&gt;(<span class="stringliteral">&quot;pus_time_code&quot;</span>));</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>  <a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a> = version &amp; 0x7;</div>
+<div class="line"><span class="lineno">  172</span>  <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a> = serviceType &amp; 0xFF;</div>
+<div class="line"><span class="lineno">  173</span>  <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a> = serviceSubType &amp; 0xFF;</div>
+<div class="line"><span class="lineno">  174</span>  <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a> = sourceId &amp; 0xFF;</div>
+<div class="line"><span class="lineno">  175</span>  <a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a> = timeCode;</div>
+<div class="line"><span class="lineno">  176</span> </div>
+<div class="line"><span class="lineno">  177</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  178</span>}</div>
+<div class="ttc" id="aCCSDSResult_8h_html_a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><div class="ttname"><a href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a></div><div class="ttdeci">#define ASSIGN_OR_PRINT(var, result)</div><div class="ttdoc">Macro to assign a result value or print an error message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00178">CCSDSResult.h:178</a></div></div>
+<div class="ttc" id="aclassConfig_html_a093d1897ebdb889d382706a73b02d249"><div class="ttname"><a href="classConfig.html#a093d1897ebdb889d382706a73b02d249">Config::isKey</a></div><div class="ttdeci">bool isKey(const std::string &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00047">CCSDSConfig.cpp:47</a></div></div>
+<div class="ttc" id="aclassConfig_html_ac0eb207d3a0c9b3039000301c612aadb"><div class="ttname"><a href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">Config::get</a></div><div class="ttdeci">CCSDS::Result&lt; T &gt; get(const std::string &amp;key) const</div><div class="ttdoc">Get value by key and type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00019">CCSDSConfig.h:19</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::CONFIG_FILE_ERROR</a></div><div class="ttdeci">@ CONFIG_FILE_ERROR</div><div class="ttdoc">Configuration file error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00030">CCSDSResult.h:29</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classPusC_a7a76afa586580e25a6e471add7151a4c_cgraph.svg" width="470" height="62"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
 </div>
 </div>
 <a id="aabd6c18057aebdcbd20809cda078b6b7" name="aabd6c18057aebdcbd20809cda078b6b7"></a>
@@ -592,26 +668,27 @@ Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a5486955d6aff5721ba89203dd4523ddd">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00069">69</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   69</span>                                         {</div>
-<div class="line"><span class="lineno">   70</span>  std::vector data{</div>
-<div class="line"><span class="lineno">   71</span>    <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a> &amp; 0x7),</div>
-<div class="line"><span class="lineno">   72</span>    <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a>,</div>
-<div class="line"><span class="lineno">   73</span>    <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a>,</div>
-<div class="line"><span class="lineno">   74</span>    <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a>,</div>
-<div class="line"><span class="lineno">   75</span>    <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classPusC.html#a351b2ab56c28a55e979b9dec3485bc42">m_timeCode</a> &gt;&gt; 8 &amp; 0xFF),</div>
-<div class="line"><span class="lineno">   76</span>    <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classPusC.html#a351b2ab56c28a55e979b9dec3485bc42">m_timeCode</a> &amp; 0xFF),</div>
-<div class="line"><span class="lineno">   77</span>    <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> &gt;&gt; 8 &amp; 0xFF),</div>
-<div class="line"><span class="lineno">   78</span>    <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> &amp; 0xFF),</div>
-<div class="line"><span class="lineno">   79</span>  };</div>
-<div class="line"><span class="lineno">   80</span> </div>
-<div class="line"><span class="lineno">   81</span>  <span class="keywordflow">return</span> data;</div>
-<div class="line"><span class="lineno">   82</span>}</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00132">132</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  132</span>                                         {</div>
+<div class="line"><span class="lineno">  133</span>  std::vector data{</div>
+<div class="line"><span class="lineno">  134</span>    <span class="keyword">static_cast&lt;</span>uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classPusC.html#a2d5539425efa3b4417ef37856855306f">m_version</a> &amp; 0x7),</div>
+<div class="line"><span class="lineno">  135</span>    <a class="code hl_variable" href="classPusC.html#afa9f21bdb8aec6f54491d54d5fcde13d">m_serviceType</a>,</div>
+<div class="line"><span class="lineno">  136</span>    <a class="code hl_variable" href="classPusC.html#a9bd4ea2184aebd2b0f6405ae53144ded">m_serviceSubType</a>,</div>
+<div class="line"><span class="lineno">  137</span>    <a class="code hl_variable" href="classPusC.html#abcbba80f7a03e80b20ce4feb98f84023">m_sourceID</a></div>
+<div class="line"><span class="lineno">  138</span>  };</div>
+<div class="line"><span class="lineno">  139</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a>.empty()) {</div>
+<div class="line"><span class="lineno">  140</span>    data.insert(data.end(), <a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a>.begin(), <a class="code hl_variable" href="classPusC.html#a48d33c61442c92097afb3ecae6d7f215">m_timeCode</a>.end());</div>
+<div class="line"><span class="lineno">  141</span>  }</div>
+<div class="line"><span class="lineno">  142</span>  data.push_back(<a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> &gt;&gt; 8 &amp; 0xFF);</div>
+<div class="line"><span class="lineno">  143</span>  data.push_back(<a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> &amp; 0xFF);</div>
+<div class="line"><span class="lineno">  144</span> </div>
+<div class="line"><span class="lineno">  145</span>  <span class="keywordflow">return</span> data;</div>
+<div class="line"><span class="lineno">  146</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a8a08c54b88ff4b908c6093afa4912187" name="a8a08c54b88ff4b908c6093afa4912187"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a08c54b88ff4b908c6093afa4912187">&#9670;&#160;</a></span>setDataLength()</h2>
+<a id="ac745199ef5306afd3376ce726070341c" name="ac745199ef5306afd3376ce726070341c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac745199ef5306afd3376ce726070341c">&#9670;&#160;</a></span>update()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -620,33 +697,42 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void PusC::setDataLength </td>
+          <td class="memname">void PusC::update </td>
           <td>(</td>
-          <td class="paramtype">const uint16_t&#160;</td>
-          <td class="paramname"><em>dataLength</em></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classCCSDS_1_1DataField.html">CCSDS::DataField</a> *&#160;</td>
+          <td class="paramname"><em>dataField</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the length of the data associated with the packet. </p>
+<p>Defines how the packet secondary header is updated using the data field as reference. </p>
+<p>This method is called every time a data get is performed from the packet, that is if update is enabled and method successfully registered.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dataLength</td><td>Length of the data in bytes. </td></tr>
+    <tr><td class="paramname">dataField</td><td></td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a7dd327ee1b5eac6f0a9e968cc32ac88a">CCSDS::SecondaryHeaderAbstract</a>.</p>
+<p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a180a60a3148dd126694b3bbd204cb4ac">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00153">153</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  153</span>{ <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> = dataLength; }</div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00148">148</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  148</span>                                           {</div>
+<div class="line"><span class="lineno">  149</span>  <a class="code hl_variable" href="classPusC.html#a99848b8a0d2b736fb239b83ca7f6d8db">m_dataLength</a> = dataField-&gt;<a class="code hl_function" href="classCCSDS_1_1DataField.html#ae93a03f1003390cf74cfe190e30e221b">getApplicationDataBytesSize</a>();</div>
+<div class="line"><span class="lineno">  150</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_ae93a03f1003390cf74cfe190e30e221b"><div class="ttname"><a href="classCCSDS_1_1DataField.html#ae93a03f1003390cf74cfe190e30e221b">CCSDS::DataField::getApplicationDataBytesSize</a></div><div class="ttdeci">uint16_t getApplicationDataBytesSize() const</div><div class="ttdoc">Retrieves the size of the application data stored in the data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00029">CCSDSDataField.cpp:29</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classPusC_ac745199ef5306afd3376ce726070341c_cgraph.svg" width="404" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -670,8 +756,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00173">173</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  173</span>{};         <span class="comment">// Data Length          16        Length of the time data in bytes</span></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00176">176</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  176</span>{};            <span class="comment">// Data Length           16        Length of the time data in bytes</span></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -695,8 +781,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00170">170</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  170</span>{};      <span class="comment">// Service Subtype     8           Subtype of the service (e.g., specific time type</span></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00173">173</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  173</span>{};         <span class="comment">// Service Subtype      8           Subtype of the service (e.g., specific time type</span></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -720,8 +806,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00169">169</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  169</span>{};         <span class="comment">// Service Type       8         Type of service (e.g., 0x03 for time code)</span></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00172">172</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  172</span>{};            <span class="comment">// Service Type          8           Type of service (e.g., 0x03 for time code)</span></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -735,7 +821,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const uint16_t PusC::m_size = 8</td>
+          <td class="memname">const uint16_t PusC::m_size = 6</td>
         </tr>
       </table>
   </td>
@@ -745,7 +831,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00176">176</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00179">179</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
 
 </div>
 </div>
@@ -769,13 +855,13 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00171">171</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  171</span>{};            <span class="comment">// Source ID           8         ID of the source (e.g., satellite or sensor)</span></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00174">174</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  174</span>{};               <span class="comment">// Source ID            8         ID of the source (e.g., satellite or sensor)</span></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a351b2ab56c28a55e979b9dec3485bc42" name="a351b2ab56c28a55e979b9dec3485bc42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a351b2ab56c28a55e979b9dec3485bc42">&#9670;&#160;</a></span>m_timeCode</h2>
+<a id="a48d33c61442c92097afb3ecae6d7f215" name="a48d33c61442c92097afb3ecae6d7f215"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48d33c61442c92097afb3ecae6d7f215">&#9670;&#160;</a></span>m_timeCode</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -784,7 +870,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t PusC::m_timeCode {}</td>
+          <td class="memname">std::vector&lt;uint8_t&gt; PusC::m_timeCode {}</td>
         </tr>
       </table>
   </td>
@@ -794,8 +880,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00172">172</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  172</span>{};           <span class="comment">// Time Code            16          Time code value, depending on the system</span></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00175">175</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  175</span>{};  <span class="comment">// Time Code             16          Time code value, depending on the system</span></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -819,7 +905,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00175">175</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00178">178</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
 
 </div>
 </div>
@@ -843,8 +929,8 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00168">168</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  168</span>{};             <span class="comment">// Version              3           Version of the PUS standard</span></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00171">171</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  171</span>{};                <span class="comment">// Version               3           Version of the PUS standard</span></div>
 </div><!-- fragment -->
 </div>
 </div>

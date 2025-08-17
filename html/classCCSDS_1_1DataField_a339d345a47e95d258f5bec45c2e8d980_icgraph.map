@@ -1,0 +1,5 @@
+<map id="CCSDS::DataField::RegisterSecondaryHeader" name="CCSDS::DataField::RegisterSecondaryHeader">
+<area shape="rect" id="Node000001" title="Registers a new header type with its creation function." alt="" coords="300,5,499,45"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#ad08e87b95b8201e6c2fa373934bcf780" title="Registers a new header type with the data field secondary header creation function." alt="" coords="5,5,252,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,28,252,28,252,23,286,23"/>
+</map>

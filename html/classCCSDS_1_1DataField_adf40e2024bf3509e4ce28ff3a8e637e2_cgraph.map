@@ -1,7 +1,0 @@
-<map id="CCSDS::DataField::getFullDataFieldBytes" name="CCSDS::DataField::getFullDataFieldBytes">
-<area shape="rect" id="Node000001" title="Retrieves the full data field by combining the data field header and application data." alt="" coords="5,35,193,75"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895" title="Retrieves the secondary header data as a vector of bytes." alt="" coords="241,5,437,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,41,227,36,228,42,194,46"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4" title="Updates the data field header based on the current application data size." alt="" coords="245,70,434,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,63,231,67,231,73,193,68"/>
-</map>
