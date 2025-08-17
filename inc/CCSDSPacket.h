@@ -124,8 +124,9 @@ namespace CCSDS {
     * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
     */
     template <typename T>
-    void RegisterSecondaryHeader() {
-      m_dataField.RegisterSecondaryHeader<T>();
+    ResultBool RegisterSecondaryHeader() {
+      FORWARD_RESULT( m_dataField.RegisterSecondaryHeader<T>());
+      return true;
     }
 
     /**

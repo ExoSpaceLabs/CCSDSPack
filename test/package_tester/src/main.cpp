@@ -48,8 +48,11 @@ int main() {
 
   std::cout << "Stage: Register custom secondary header." << std::endl;
   const std::vector<uint8_t> data{0x77,0xFA,0xB,0x0,0x0,0xB,0x5};
-  templatePacket.RegisterSecondaryHeader<CustomSecondaryHeader>();
 
+  if (const auto res = templatePacket.RegisterSecondaryHeader<CustomSecondaryHeader>(); !res.has_value()) {
+    std::cerr << "Error: "<< res.error().message() << ". CODE: " << res.error().code() << std::endl;
+    return res.error().code();
+  }
   if (const auto res = templatePacket.setDataFieldHeader(data, "CustomSecondaryHeader"); !res.has_value()) {
     std::cerr << "Error: "<< res.error().message() << ". CODE: " << res.error().code() << std::endl;
     return res.error().code();

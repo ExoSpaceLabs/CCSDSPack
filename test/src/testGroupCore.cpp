@@ -10,6 +10,32 @@
 #include "tests.h"
 #include "PusServices.h"
 
+class TestSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
+  public:
+  TestSecondaryHeader() {variableLength= true;};
+
+  /**
+   * @brief Constructs a TestSecondaryHeader object with all fields explicitly set.
+   */
+  explicit TestSecondaryHeader(const std::vector<uint8_t>& data) : m_data(data) {
+    variableLength= true;
+  };
+
+  [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
+
+  [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
+  [[nodiscard]] std::string getType() const override { return m_type; }
+
+  [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
+  void update(CCSDS::DataField* dataField) override {m_dataLength = m_data.size();}
+  CCSDS::ResultBool loadFromConfig(const Config &config) override{return true;};
+
+  private:
+  std::vector<uint8_t> m_data{};
+  uint16_t m_dataLength = 0;
+  const std::string m_type = "TestSecondaryHeader";
+};
+
 void testGroupCore(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupCore: " << description << std::endl;
 
@@ -614,5 +640,58 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     std::vector<uint8_t> buffer = packet.serialize();
     return std::equal(expected.begin(), expected.end(), buffer.begin());
   });
+
+  tester->unitTest("Create custom secondary header to data field using shared ptr, result shall be as expected.",[] {
+    std::vector<uint8_t> expected{ 0x77, 0xfa, 0x0b, 0x00, 0x00, 0x0b, 0x05, 0x01, 0x02, 0x03};
+
+    const std::vector<uint8_t> data{1,2,3};
+    CCSDS::DataField df;
+    TestSecondaryHeader secondaryHeader({0x77,0xFA,0xB,0x0,0x0,0xB,0x5});
+    const auto ptr = std::make_shared<TestSecondaryHeader>(secondaryHeader);
+    TEST_VOID(df.RegisterSecondaryHeader<TestSecondaryHeader>());
+    df.setDataFieldHeader(ptr);
+    TEST_VOID(df.setApplicationData(data));
+
+    std::vector<uint8_t> res = df.serialize();
+    return std::equal(expected.begin(), expected.end(), res.begin());
+  });
+
+
+  tester->unitTest("Create custom secondary header to data field using using data and type, result shall be as expected.",[] {
+    std::vector<uint8_t> expected{ 0x77, 0xfa, 0x0b, 0x00, 0x00, 0x0b, 0x05, 0x01, 0x02, 0x03};
+
+    const std::vector<uint8_t> data{1,2,3};
+    CCSDS::DataField df;
+    TEST_VOID(df.RegisterSecondaryHeader<TestSecondaryHeader>());
+    TEST_VOID(df.setDataFieldHeader({0x77,0xFA,0xB,0x0,0x0,0xB,0x5},"TestSecondaryHeader"));
+    TEST_VOID(df.setApplicationData(data));
+
+    std::vector<uint8_t> res = df.serialize();
+    return std::equal(expected.begin(), expected.end(), res.begin());
+  });
+
+  tester->unitTest("Create custom secondary header to packet, result shall be as expected.",[] {
+    std::vector<uint8_t> expected{0x28, 0x37, 0x00, 0x00, 0x00, 0x0a, 0x77, 0xfa, 0x0b, 0x00, 0x00,
+    0x0b, 0x05, 0x01, 0x02, 0x03, 0x3e, 0x97};
+
+    const std::vector<uint8_t> data{1,2,3};
+
+    CCSDS::Packet packet;
+    packet.setPrimaryHeader(CCSDS::PrimaryHeader{
+    1,
+    2,
+    1,
+    55,
+    0,
+    0,
+    0});
+    TEST_VOID(packet.RegisterSecondaryHeader<TestSecondaryHeader>());
+    TEST_VOID(packet.setDataFieldHeader({0x77,0xFA,0xB,0x0,0x0,0xB,0x5},"TestSecondaryHeader"));
+    TEST_VOID(packet.setApplicationData(data));
+
+    std::vector<uint8_t> res = packet.serialize();
+    return std::equal(expected.begin(), expected.end(), res.begin());
+  });
+
   std::cout << std::endl;
 }

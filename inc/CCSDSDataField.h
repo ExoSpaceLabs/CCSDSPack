@@ -41,8 +41,13 @@ namespace CCSDS {
     * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
     */
     template <typename T>
-    void RegisterSecondaryHeader() {
-      m_secondaryHeaderFactory.registerType(std::make_shared<T>());
+    ResultBool RegisterSecondaryHeader() {
+      try {
+        m_secondaryHeaderFactory.registerType(std::make_shared<T>());
+      }catch (...) {
+        return Error{INVALID_HEADER_DATA,"Cannot register secondary header."};
+      }
+      return true;
     }
 
     /**
