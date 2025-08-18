@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <fstream>
 #include <algorithm>
+#include <charconv>
 
 
 //###########################################################################
@@ -70,30 +71,55 @@ std::tuple<std::string, std::string, std::string> Config::parseLine(const std::s
 
 CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
   std::vector<uint8_t> result{};
-  RET_IF_ERR_MSG(valueStr.front() != '[' || valueStr.back() != ']', CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Config: Invalid buffer formatting []");
-  if (valueStr == "[ ]" || valueStr == "[]") {
+  RET_IF_ERR_MSG(valueStr.empty() || valueStr.front() != '[' || valueStr.back() != ']',
+                 CCSDS::ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Invalid buffer formatting []");
+
+  if (valueStr == "[]" || valueStr == "[ ]") {
     return result;
   }
 
+  // Strip surrounding [ ... ]
   std::string inner = valueStr.substr(1, valueStr.size() - 2);
   std::stringstream ss(inner);
   std::string token;
 
-
   while (std::getline(ss, token, ',')) {
-    // Trim whitespace
-    token.erase(std::remove_if(token.begin(), token.end(), ::isspace), token.end());
+    // Remove all spaces inside each token
+    token.erase(std::remove_if(token.begin(), token.end(),
+                               [](unsigned char c){ return std::isspace(c); }),
+                token.end());
 
-    try {
-      int base = 10;
-      if (token.size() > 2 && token.substr(0, 2) == "0x") {
-        token = token.substr(2);
-        base = 16;
-      }
-      result.push_back(static_cast<uint8_t>(std::stoi(token, nullptr, base)));
-    } catch (...) {
-      return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: " + token};
+    // Empty token after trimming is invalid (e.g., "[12, ,34]")
+    if (token.empty()) {
+      return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: <empty>"};
     }
+
+    int base = 10;
+    std::string_view sv{token};
+
+    // Allow 0x / 0X prefix for hex
+    if (sv.size() > 2 && sv[0] == '0' && (sv[1] == 'x' || sv[1] == 'X')) {
+      sv.remove_prefix(2);
+      base = 16;
+      if (sv.empty()) {
+        return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: 0x"};
+      }
+    }
+
+    // Parse without exceptions
+    unsigned int tmp = 0;
+    const char* first = sv.data();
+    const char* last  = sv.data() + sv.size();
+    auto res = std::from_chars(first, last, tmp, base);
+
+    // Valid if parsed ok, consumed all characters, and fits in a byte
+    if (res.ec != std::errc{} || res.ptr != last || tmp > 0xFFu) {
+      return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR,
+                          std::string("Invalid byte value: ") + std::string(token)};
+    }
+    result.push_back(static_cast<uint8_t>(tmp));
   }
+
   return result;
 }

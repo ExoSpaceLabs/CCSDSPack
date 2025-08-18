@@ -25,10 +25,14 @@ namespace CCSDS {
   class DataField {
   public:
     DataField() {
-      m_secondaryHeaderFactory.registerType(std::make_shared<BufferHeader>());
-      m_secondaryHeaderFactory.registerType(std::make_shared<PusA>());
-      m_secondaryHeaderFactory.registerType(std::make_shared<PusB>());
-      m_secondaryHeaderFactory.registerType(std::make_shared<PusC>());
+      bool noError = true;
+      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<BufferHeader>()));
+      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusA>()));
+      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusB>()));
+      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusC>()));
+      if (!noError) {
+        std::cerr << "[CCSDS DataField] Unable to Create Data field, secondary header registration failed." << std::endl;
+      }
     };
 
     ~DataField() = default;
@@ -39,14 +43,13 @@ namespace CCSDS {
     * This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.
     *
     * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
+     * @return ResultBool.
     */
     template <typename T>
     ResultBool RegisterSecondaryHeader() {
-      try {
-        m_secondaryHeaderFactory.registerType(std::make_shared<T>());
-      }catch (...) {
-        return Error{INVALID_HEADER_DATA,"Cannot register secondary header."};
-      }
+
+      FORWARD_RESULT(  m_secondaryHeaderFactory.registerType(std::make_shared<T>()));
+
       return true;
     }
 

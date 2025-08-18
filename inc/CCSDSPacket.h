@@ -122,6 +122,7 @@ namespace CCSDS {
     * This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.
     *
     * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
+     * @return ResultBool.
     */
     template <typename T>
     ResultBool RegisterSecondaryHeader() {

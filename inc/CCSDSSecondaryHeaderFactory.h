@@ -34,9 +34,12 @@ public:
    * This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.
    *
    * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
+     * @return ResultBool.
    */
-  void registerType(std::shared_ptr<SecondaryHeaderAbstract> header) {
+  ResultBool registerType(std::shared_ptr<SecondaryHeaderAbstract> header) {
+    RET_IF_ERR_MSG(!header, INVALID_HEADER_DATA, "Cannot register, invalid Header provided.");
     m_creators[header->getType()] = std::move(header);
+    return true;
   }
 
   /**
