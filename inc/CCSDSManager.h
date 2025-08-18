@@ -39,16 +39,16 @@ namespace CCSDS {
      * set sync pattern that should indicate the start of a CCSDS packet. insertion
      * is disabled by default. use setSyncPatternEnable to enable.
      *
-     * @param syncPattern uint32_t (default 0x1ACFFC1D)
+     * @param syncPattern std::uint32_t (default 0x1ACFFC1D)
      */
-    void setSyncPattern(uint32_t syncPattern);
+    void setSyncPattern(std::uint32_t syncPattern);
 
     /**
      * returns the currently set sync pattern.
      *
-     * @return uint32_t
+     * @return std::uint32_t
      */
-    uint32_t getSyncPattern() const;
+    std::uint32_t getSyncPattern() const;
 
     /**
      * enable sync pattern utilization both in serialization, deserialization, read and write.
@@ -90,14 +90,14 @@ namespace CCSDS {
      *
      * @param size The new data field size in bytes.
      */
-    void setDataFieldSize( uint16_t size );
+    void setDataFieldSize( std::uint16_t size );
 
     /**
      * @brief retrieves the set data field size (this includes the secondary header if present)
      *
-     * @return uint16_t the size of data length in bytes.
+     * @return std::uint16_t the size of data length in bytes.
      */
-    uint16_t getDataFieldSize() const;
+    std::uint16_t getDataFieldSize() const;
 
     /**
      * @brief Sets the application data for the packet.
@@ -105,7 +105,7 @@ namespace CCSDS {
      * @param data The application data as a vector of bytes.
      * @return ResultBool indicating success or failure.
      */
-    ResultBool setApplicationData( const std::vector<uint8_t> &data );
+    ResultBool setApplicationData( const std::vector<std::uint8_t> &data );
 
     /**
      * @brief Enables or disables automatic updates for packets.
@@ -134,7 +134,7 @@ namespace CCSDS {
      * @param index The index of the packet to retrieve.
      * @return A ResultBuffer containing the requested packet.
      */
-    ResultBuffer getPacketBufferAtIndex( uint16_t index );
+    ResultBuffer getPacketBufferAtIndex( std::uint16_t index );
 
 
     /**
@@ -142,7 +142,7 @@ namespace CCSDS {
      *
      * @return A vector of bytes containing the packets data.
      */
-    std::vector<uint8_t> getPacketsBuffer() const;
+    std::vector<std::uint8_t> getPacketsBuffer() const;
 
     /**
      * @brief Retrieves the application data from the packets.
@@ -157,14 +157,14 @@ namespace CCSDS {
      * @param index The index of the packet.
      * @return A ResultBuffer containing the application data of the selected packet.
      */
-    ResultBuffer getApplicationDataBufferAtIndex( uint16_t index );
+    ResultBuffer getApplicationDataBufferAtIndex( std::uint16_t index );
 
     /**
      * @brief Retrieves the total number of packets managed.
      *
      * @return The total number of stored packets.
      */
-    [[nodiscard]] uint16_t getTotalPackets() const;
+    [[nodiscard]] std::uint16_t getTotalPackets() const;
 
     /**
      * @brief Checks if automatic updates are enabled.
@@ -199,7 +199,7 @@ namespace CCSDS {
      *
      * @param packetBuffer The new packet to be added in the form of a buffer.
      */
-    [[nodiscard]] ResultBool addPacketFromBuffer(const std::vector<uint8_t>& packetBuffer);
+    [[nodiscard]] ResultBool addPacketFromBuffer(const std::vector<std::uint8_t>& packetBuffer);
 
     /**
      * @brief Load a vector of packets.
@@ -213,7 +213,7 @@ namespace CCSDS {
      *
      * @param packetsBuffer The buffer holding packet data.
      */
-    [[nodiscard]] ResultBool load(const std::vector<uint8_t>& packetsBuffer);
+    [[nodiscard]] ResultBool load(const std::vector<std::uint8_t>& packetsBuffer);
 
     /**
      * @brief Load a packet or a series of packets from a binary file
@@ -267,10 +267,10 @@ namespace CCSDS {
     bool m_validateEnable {  true };   ///< bool indicating whether automatic validation is enabled (default: true).
     bool m_syncPattEnable { false };   ///< bool indicating whether automatic sync pattern insertion is enabled (default: false).
     std::vector<Packet> m_packets;     ///< Collection of stored packets.
-    uint16_t m_sequenceCount{ 0 };
+    std::uint16_t m_sequenceCount{ 0 };
 
     Validator m_validator{};
-    uint32_t m_syncPattern{0x1ACFFC1D};
+    std::uint32_t m_syncPattern{0x1ACFFC1D};
   };
 } // namespace CCSDS
 

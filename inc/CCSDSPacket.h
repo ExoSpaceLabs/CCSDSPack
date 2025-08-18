@@ -33,9 +33,9 @@ namespace CCSDS {
 
   /** Configuration structure for CRC16 calculation parameters */
   struct CRC16Config {
-    uint16_t polynomial = 0x1021;
-    uint16_t initialValue = 0xFFFF;
-    uint16_t finalXorValue = 0x0000;
+    std::uint16_t polynomial = 0x1021;
+    std::uint16_t initialValue = 0xFFFF;
+    std::uint16_t finalXorValue = 0x0000;
   };
 
 
@@ -81,10 +81,10 @@ namespace CCSDS {
      * @param data The 64-bit primary header data.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setPrimaryHeader(uint64_t data);
+    [[nodiscard]] ResultBool setPrimaryHeader(std::uint64_t data);
 
     /**
-     * @brief Sets the primary header using the provided vector of uint8_tdata.
+     * @brief Sets the primary header using the provided vector of std::uint8_tdata.
      *
      * This function sets the primary header of the packet using vector of 8-bit integers
      * as the header data.
@@ -93,7 +93,7 @@ namespace CCSDS {
      * @param data The vector of 8-bit integers primary header data.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setPrimaryHeader(const std::vector<uint8_t> &data);
+    [[nodiscard]] ResultBool setPrimaryHeader(const std::vector<std::uint8_t> &data);
 
     /**
      * @brief Sets the primary header using the provided header object.
@@ -143,7 +143,7 @@ namespace CCSDS {
      *
      * @return ResultBool
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data, const std::string &headerType);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data, const std::string &headerType);
 
     /**
      * @brief Sets the data field header for the packet using a raw data pointer.
@@ -159,7 +159,7 @@ namespace CCSDS {
      *
      * @return ResultBool
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, size_t sizeData, const std::string &headerType);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData, size_t sizeData, const std::string &headerType);
 
     /**
      * @brief Sets the data field header using the provided vector of bytes.
@@ -172,7 +172,7 @@ namespace CCSDS {
      * @param data The vector containing the header bytes.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data);
 
     /**
      * @brief Sets the data field header using the provided pointer and size.
@@ -186,7 +186,7 @@ namespace CCSDS {
      * @param sizeData The size of the header data.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, size_t sizeData);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData, size_t sizeData);
 
     /**
      * @brief Sets the application data for the packet.
@@ -199,7 +199,7 @@ namespace CCSDS {
      * @param data The vector containing the application data.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setApplicationData(const std::vector<uint8_t> &data);
+    [[nodiscard]] ResultBool setApplicationData(const std::vector<std::uint8_t> &data);
 
     /**
      * @brief Sets the application data for the packet.
@@ -213,7 +213,7 @@ namespace CCSDS {
      * @param sizeData The size of the application data.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setApplicationData(const uint8_t *pData, size_t sizeData);
+    [[nodiscard]] ResultBool setApplicationData(const std::uint8_t *pData, size_t sizeData);
 
     /**
      * @brief Sets the sequence flags for the packet's primary header.
@@ -222,12 +222,12 @@ namespace CCSDS {
      * The sequence flags indicate the position or type of the data segment within
      * the CCSDS telemetry transfer frame (e.g., first segment, last segment, etc.).
      *
-     * @param flags The sequence flag to be set, represented by the ESequenceFlag enum : uint8_t.
+     * @param flags The sequence flag to be set, represented by the ESequenceFlag enum : std::uint8_t.
      */
     void setSequenceFlags(ESequenceFlag flags);
 
     /** @brief Sets the sequence count for the packet. */
-    [[nodiscard]] ResultBool setSequenceCount(uint16_t count);
+    [[nodiscard]] ResultBool setSequenceCount(std::uint16_t count);
 
     /**
      * @brief Sets the maximum data packet size for the CCSDS DataField.
@@ -238,7 +238,7 @@ namespace CCSDS {
      *
      * @param size The maximum size of the data packet, in bytes.
      */
-    void setDataFieldSize(uint16_t size);
+    void setDataFieldSize(std::uint16_t size);
 
     /**
      * needs to be called as soon as possible, probably also from constructor.
@@ -247,13 +247,13 @@ namespace CCSDS {
     void setUpdatePacketEnable(bool enable);
 
     /** @brief Deserializes a vector of bytes into a CCSDS packet. */
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data);
+    [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data);
 
     /** @brief Deserializes a CCSDS packet using a vector and a registered header type. */
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, const std::string& headerType, int headerSize = -1);
+    [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data, const std::string& headerType, std::int32_t headerSize = -1);
 
     /** @brief Deserializes a CCSDS packet using a vector and a header data size. */
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, uint16_t headerDataSizeBytes);
+    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data, std::uint16_t headerDataSizeBytes);
 
     /** @brief Deserializes a CCSDS packet using separate header and data vectors. */
     [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &headerData, const std::vector<uint8_t> &data);
@@ -267,13 +267,13 @@ namespace CCSDS {
      *
      * @return The 64-bit primary header of the packet.
      */
-    uint64_t getPrimaryHeader64bit();
+    std::uint64_t getPrimaryHeader64bit();
 
     /** @brief Retrieves the current size of the CCSDS Packet
      *
      * @return 16bit unsigned integer
      */
-    uint16_t getFullPacketLength();
+    std::uint16_t getFullPacketLength();
 
     /**
      * @brief Retrieves the full packet as a vector of bytes.
@@ -339,10 +339,10 @@ namespace CCSDS {
      *
      * @return The 16-bit CRC-16 checksum.
      */
-    uint16_t getCRC();
+    std::uint16_t getCRC();
 
     /** @brief returns the maximum data field size */
-    uint16_t getDataFieldMaximumSize() const;
+    std::uint16_t getDataFieldMaximumSize() const;
 
     /** @ returns the data field header flag */
     bool getDataFieldHeaderFlag();
@@ -380,7 +380,7 @@ namespace CCSDS {
      * @param initialValue
      * @param finalXorValue
      */
-    void setCrcConfig(const uint16_t polynomial, const uint16_t initialValue, const uint16_t finalXorValue) {m_CRC16Config = {polynomial, initialValue, finalXorValue};}
+    void setCrcConfig(const std::uint16_t polynomial, const std::uint16_t initialValue, const std::uint16_t finalXorValue) {m_CRC16Config = {polynomial, initialValue, finalXorValue};}
 
     /**
      * @brief Updates Primary headers data field size.
@@ -411,11 +411,11 @@ namespace CCSDS {
   private:
     Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex
     DataField m_dataField{};         ///< variable
-    uint16_t m_CRC16{};              ///< Cyclic Redundancy check 16 bits
+    std::uint16_t m_CRC16{};              ///< Cyclic Redundancy check 16 bits
     CRC16Config m_CRC16Config;       ///< structure holding configuration of crc calculation.
     bool m_updateStatus{false};      ///< When setting data thus value should be set to false.
     bool m_enableUpdatePacket{true}; ///< Enables primary header and secondary header update.
-    uint16_t m_sequenceCounter{0};
+    std::uint16_t m_sequenceCounter{0};
   };
 }
 #endif // CCSDS_PACKET_H

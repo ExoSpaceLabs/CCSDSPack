@@ -74,7 +74,7 @@ namespace CCSDS {
     bool m_validatePacketCoherence{true};  ///< Whether to validate packet length and CRC (default is true).
     bool m_validateAgainstTemplate{false}; ///< Whether to validate against the template packet (default is false).
     bool m_validateSegmentedCount{true};  ///< Whether to validate the count of segmented packets.
-    uint16_t m_sequenceCounter{1};         ///< Counter for segmented Packets
+    std::uint16_t m_sequenceCounter{1};         ///< Counter for segmented Packets
     std::vector<bool> m_report{};          ///< List of boolean results representing performed checks.
     size_t m_reportSize{6};                ///< Expected size of the validation report.
     CRC16Config m_CRCConfig;

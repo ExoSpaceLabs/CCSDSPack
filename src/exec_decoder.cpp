@@ -124,7 +124,7 @@ int main(const int argc, char* argv[]) {
   CCSDS::Manager manager;
 
   if (cfg.isKey("data_field_size")) {
-    uint16_t dataFieldSize;
+    std::uint16_t dataFieldSize;
     ASSIGN_OR_PRINT(dataFieldSize, cfg.get<int>("data_field_size"));
     manager.setDataFieldSize(dataFieldSize);
 
@@ -135,7 +135,7 @@ int main(const int argc, char* argv[]) {
     ASSIGN_OR_PRINT(syncPatternEnable, cfg.get<bool>("sync_pattern_enable"));
     manager.setSyncPatternEnable(syncPatternEnable);
     if (syncPatternEnable && cfg.isKey("sync_pattern")) {
-      uint32_t syncPattern;
+      std::uint32_t syncPattern;
       ASSIGN_OR_PRINT(syncPattern, cfg.get<int>("sync_pattern"));
       manager.setSyncPattern(syncPattern);
     }
@@ -154,7 +154,7 @@ int main(const int argc, char* argv[]) {
     return res.error().code();
   }
 
-  std::vector<uint8_t> inputBytes;
+  std::vector<std::uint8_t> inputBytes;
   customConsole(appName,"reading data from " + input);
 
   if (const auto res = readBinaryFile(input); !res.has_value()) {
@@ -178,7 +178,7 @@ int main(const int argc, char* argv[]) {
 
   customConsole(appName,"retrieving Application data from CCSDS packets");
   manager.setAutoValidateEnable(validationEnable);
-  std::vector<uint8_t> outputData;
+  std::vector<std::uint8_t> outputData;
   if (const auto res = manager.getApplicationDataBuffer(); !res.has_value()) {
     std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
     return res.error().code();

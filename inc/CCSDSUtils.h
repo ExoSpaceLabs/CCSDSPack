@@ -16,11 +16,22 @@
  * @param finalXorValue The final XOR value applied to the CRC result (default: 0x0000).
  * @return The computed 16-bit CRC value.
  */
-uint16_t crc16(const std::vector<uint8_t> &data,
-               uint16_t polynomial = 0x1021,
-               uint16_t initialValue = 0xFFFF,
-               uint16_t finalXorValue = 0x0000
+uint16_t crc16(const std::vector<std::uint8_t> &data,
+               std::uint16_t polynomial = 0x1021,
+               std::uint16_t initialValue = 0xFFFF,
+               std::uint16_t finalXorValue = 0x0000
 );
+
+
+/**
+ * Tests if str ends with suffix.
+ * equivalent to endsWith(str) in c++20
+ *
+ * @param str string
+ * @param suffix string
+ * @return boolean
+ */
+bool stringEndsWith(const std::string& str, const std::string& suffix);
 
 /**
  * @brief Prints to console a  CCSDS Packets, breaking it down to Primary header and Data field.
@@ -43,7 +54,7 @@ void printPackets(CCSDS::Manager & manager);
  * @param bits The number of significant bits to include in the binary string.
  * @return A string representing the binary value with spaces every 4 bits.
  */
-std::string getBinaryString(uint32_t value, int bits);
+std::string getBinaryString(std::uint32_t value, std::int32_t bits);
 
 /**
  * @brief Generates a string of spaces for formatting binary outputs.
@@ -51,7 +62,7 @@ std::string getBinaryString(uint32_t value, int bits);
  * @param num The number of spaces required.
  * @return A string of spaces of length `num`.
  */
-std::string getBitsSpaces(int num);
+std::string getBitsSpaces(std::int32_t num);
 
 /**
  * @brief Prints to console the HEX data from the bytes vector.
@@ -59,7 +70,7 @@ std::string getBitsSpaces(int num);
  * @param buffer
  * @param limitBytes
  */
-void printBufferData(const std::vector<uint8_t> &buffer, int limitBytes = 20);
+void printBufferData(const std::vector<std::uint8_t> &buffer, std::int32_t limitBytes = 20);
 
 /**
  * @brief Prints the data field details, including the secondary header and application data.
@@ -104,17 +115,17 @@ void printDataField(CCSDS::Packet &packet);
  * This function takes in a buffer of data and a file name. and writes the data in binary
  * form to the file.
  *
- * @param data vector of uint8_t
+ * @param data vector of std::uint8_t
  * @param filename string
  * @return  Result boolean true if successful or error
  */
-CCSDS::ResultBool writeBinaryFile(const std::vector<uint8_t>& data, const std::string& filename);
+CCSDS::ResultBool writeBinaryFile(const std::vector<std::uint8_t>& data, const std::string& filename);
 
 /**
  * Read a specified binary file and return its contents as a buffer
  *
  * @param filename
- * @return Result vector of uint8 or Error
+ * @return Result vector of std::uint8 or Error
  */
 CCSDS::ResultBuffer readBinaryFile(const std::string& filename);
 
@@ -126,14 +137,5 @@ CCSDS::ResultBuffer readBinaryFile(const std::string& filename);
  */
 bool fileExists(const std::string &fileName);
 
-/**
- * Tests if str ends with suffix.
- * equivalent to endsWith(str) in c++20
- *
- * @param str string
- * @param suffix string
- * @return boolean
- */
-bool stringEndsWith(const std::string& str, const std::string& suffix);
 
 #endif // CCSDS_UTILS_H

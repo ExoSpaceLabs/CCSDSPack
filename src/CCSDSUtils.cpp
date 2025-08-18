@@ -1,19 +1,46 @@
 #include "CCSDSUtils.h"
 #include <cstddef>
-#include <iostream>
 #include <iomanip>
+
 #include <fstream>
+#include <iostream>
 
 //###########################################################################
 #define VERBOSE 1
 
 
-std::string getBinaryString(const uint32_t value, const int bits) {
+uint16_t crc16(
+  const std::vector<std::uint8_t> &data, const std::uint16_t polynomial, const std::uint16_t initialValue,
+  const std::uint16_t finalXorValue) {
+  std::uint16_t crc = initialValue;
+
+  for (const auto &byte: data) {
+    crc ^= static_cast<std::uint16_t>(byte) << 8; // Align byte with MSB of 16-bit CRC
+    for (std::int32_t i = 0; i < 8; ++i) {
+      // Process each bit
+      if (crc & 0x8000) {
+        // Check if MSB is set
+        crc = (crc << 1) ^ polynomial; // Shift and XOR with polynomial
+      } else {
+        crc = crc << 1; // Shift only
+      }
+    }
+  }
+
+  return crc ^ finalXorValue; // Apply final XOR
+}
+
+bool stringEndsWith(const std::string& str, const std::string& suffix) {
+  return str.size() >= suffix.size() &&
+         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
+std::string getBinaryString(const std::uint32_t value, const std::int32_t bits) {
   std::string binaryString;
   // Calculate the minimum number of bits required to represent in groups of 4
-  const int paddedBits = ((bits + 3) / 4) * 4; // Round up to the nearest multiple of 4
+  const std::int32_t paddedBits = ((bits + 3) / 4) * 4; // Round up to the nearest multiple of 4
 
-  for (int i = paddedBits - 1; i >= 0; --i) {
+  for (std::int32_t i = paddedBits - 1; i >= 0; --i) {
     binaryString += ((value >> i) & 1) ? '1' : '0';
 
     // Add a space after every 4 bits, except at the end
@@ -24,17 +51,17 @@ std::string getBinaryString(const uint32_t value, const int bits) {
   return binaryString;
 }
 
-std::string getBitsSpaces(const int num) {
+std::string getBitsSpaces(const std::int32_t num) {
   std::string spaces;
 
-  for (int i = num - 1; i >= 0; --i) {
+  for (std::int32_t i = num - 1; i >= 0; --i) {
     spaces += ' ';
   }
 
   return spaces;
 }
 
-void printBufferData(const std::vector<uint8_t> &buffer, const int limitBytes) {
+void printBufferData(const std::vector<std::uint8_t> &buffer, const std::int32_t limitBytes) {
   std::cout << "[ ";
   if (buffer.size() > limitBytes) {
     for (size_t i= 0 ; i < static_cast<int>(limitBytes / 2); i++) {
@@ -55,7 +82,7 @@ void printBufferData(const std::vector<uint8_t> &buffer, const int limitBytes) {
 void printData(CCSDS::DataField dataField) {
   const auto dataFieldHeader = dataField.getDataFieldHeaderBytes();
   auto applicationData = dataField.getApplicationData();
-  const uint16_t maxSize = (applicationData.size() > dataFieldHeader.size())
+  const std::uint16_t maxSize = (applicationData.size() > dataFieldHeader.size())
                              ? applicationData.size()
                              : dataFieldHeader.size();
 
@@ -65,7 +92,7 @@ void printData(CCSDS::DataField dataField) {
                                                                          : "False") << " ]" << std::endl;
   if (!dataFieldHeader.empty()) {
     std::cout << " [CCSDS DATA] Secondary Header         [Hex] : " << getBitsSpaces(
-    (maxSize - static_cast<uint16_t>(dataFieldHeader.size())) * 4);
+    (maxSize - static_cast<std::uint16_t>(dataFieldHeader.size())) * 4);
     printBufferData(dataFieldHeader);
   }
 
@@ -144,27 +171,6 @@ void printDataField(CCSDS::Packet &packet) {
 
 }
 
-uint16_t crc16(
-  const std::vector<uint8_t> &data, const uint16_t polynomial, const uint16_t initialValue,
-  const uint16_t finalXorValue) {
-  uint16_t crc = initialValue;
-
-  for (const auto &byte: data) {
-    crc ^= static_cast<uint16_t>(byte) << 8; // Align byte with MSB of 16-bit CRC
-    for (int i = 0; i < 8; ++i) {
-      // Process each bit
-      if (crc & 0x8000) {
-        // Check if MSB is set
-        crc = (crc << 1) ^ polynomial; // Shift and XOR with polynomial
-      } else {
-        crc = crc << 1; // Shift only
-      }
-    }
-  }
-
-  return crc ^ finalXorValue; // Apply final XOR
-}
-
 void printPacket(CCSDS::Packet &packet) {
   printPrimaryHeader(packet);
   printDataField(packet);
@@ -179,7 +185,7 @@ void printPackets(CCSDS::Manager& manager) {
   std::cout << "[ CCSDS Manager ] Template             : " << std::endl ;
   printPrimaryHeader(templatePacket);
 
-  int idx = 1;
+  std::int32_t idx = 1;
   for (auto &packet: manager.getPacketsReference()) {
     std::cout << "__________________________________________________________________________________________________________________" << std::endl;
     std::cout << "[ CCSDS Manager ] Printing Packet [ " << idx << " ]:" << std::endl;
@@ -191,7 +197,7 @@ void printPackets(CCSDS::Manager& manager) {
   }
 }
 
-CCSDS::ResultBool writeBinaryFile(const std::vector<uint8_t>& data, const std::string& filename) {
+CCSDS::ResultBool writeBinaryFile(const std::vector<std::uint8_t>& data, const std::string& filename) {
   RET_IF_ERR_MSG(filename.empty(),CCSDS::ErrorCode::FILE_WRITE_ERROR, "No filename provided");
   RET_IF_ERR_MSG(data.empty(),CCSDS::ErrorCode::FILE_WRITE_ERROR, "No data provided");
   std::ofstream out(filename, std::ios::binary);
@@ -216,7 +222,7 @@ CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
   in.seekg(0, std::ios::beg);
 
   // Read the entire file content into the vector
-  std::vector<uint8_t> data(size);
+  std::vector<std::uint8_t> data(size);
   in.read(reinterpret_cast<char*>(data.data()), size);
 
   RET_IF_ERR_MSG(!in,CCSDS::ErrorCode::FILE_READ_ERROR, "Failed to read the entire file");
@@ -231,7 +237,3 @@ bool fileExists(const std::string &fileName) {
   return false;
 }
 
-bool stringEndsWith(const std::string& str, const std::string& suffix) {
-  return str.size() >= suffix.size() &&
-         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
-}

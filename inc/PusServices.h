@@ -30,35 +30,35 @@
      * @param sourceID Source identifier (8 bits).
      * @param dataLength Length of the telemetry data (16 bits).
      */
-    explicit PusA(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype,
-                  const uint8_t sourceID, const uint32_t dataLength) : m_version(version & 0x7),
+    explicit PusA(const std::uint8_t version, const std::uint8_t serviceType, const std::uint8_t serviceSubtype,
+                  const std::uint8_t sourceID, const std::uint32_t dataLength) : m_version(version & 0x7),
                                                                        m_serviceType(serviceType),
                                                                        m_serviceSubType(serviceSubtype),
                                                                        m_sourceID(sourceID), m_dataLength(dataLength) {
     }
 
-    [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
-    [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
-    [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
-    [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
-    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
-    [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
-    [[nodiscard]] std::string getType()       const override { return m_type;          }
+    [[nodiscard]] std::uint8_t getVersion()        const          { return m_version;          }
+    [[nodiscard]] std::uint8_t getServiceType()    const          { return m_serviceType;      }
+    [[nodiscard]] std::uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
+    [[nodiscard]] std::uint8_t getSourceID()       const          { return m_sourceID;         }
+    [[nodiscard]] std::uint16_t getDataLength()    const          { return m_dataLength;       }
+    [[nodiscard]] std::uint16_t getSize()          const override { return m_size;             }
+    [[nodiscard]] std::string getType()            const override { return m_type;          }
 
-    [[nodiscard]] std::vector<uint8_t> serialize() const override;
-    [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
+    [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<std::uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
     CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
 
-  private:                          // Field	            Size (bits)	Description
-    uint8_t m_version{};            // Version	            3	        Version of the PUS standard
-    uint8_t m_serviceType{};        // Service Type	        8	        Type of service (e.g., 0x01 for telemetry)
-    uint8_t m_serviceSubType{};     // Service Subtype	    8	        Subtype of the service (e.g., specific telemetry type)
-    uint8_t m_sourceID{};           // Source ID	          8	        ID of the source (e.g., satellite or sensor)
-    uint16_t m_dataLength{};        // Data Length	        16	      Length of the telemetry data in bytes
+  private:                               // Field	            Size (bits)	Description
+    std::uint8_t m_version{};            // Version	            3	        Version of the PUS standard
+    std::uint8_t m_serviceType{};        // Service Type	        8	        Type of service (e.g., 0x01 for telemetry)
+    std::uint8_t m_serviceSubType{};     // Service Subtype	    8	        Subtype of the service (e.g., specific telemetry type)
+    std::uint8_t m_sourceID{};           // Source ID	          8	        ID of the source (e.g., satellite or sensor)
+    std::uint16_t m_dataLength{};        // Data Length	        16	      Length of the telemetry data in bytes
 
-    const std::string m_type = "PusA";  // Static registration (automatically called when the program starts)
-    const uint16_t m_size = 6;          // bytes
+    const std::string m_type = "PusA";   // Static registration (automatically called when the program starts)
+    const std::uint16_t m_size = 6;      // bytes
   };
 
   /**
@@ -87,36 +87,36 @@
      * @param eventID Event identifier (16 bits).
      * @param dataLength Length of the event data (16 bits).
      */
-    explicit PusB(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype,
-                  const uint8_t sourceID, const uint8_t eventID, const uint16_t dataLength) : m_version(version & 0x7),
+    explicit PusB(const std::uint8_t version, const std::uint8_t serviceType, const std::uint8_t serviceSubtype,
+                  const std::uint8_t sourceID, const std::uint8_t eventID, const std::uint16_t dataLength) : m_version(version & 0x7),
       m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_eventID(eventID),
       m_dataLength(dataLength) {
     }
 
-    [[nodiscard]] uint8_t getVersion()        const          { return m_version;          }
-    [[nodiscard]] uint8_t getServiceType()    const          { return m_serviceType;      }
-    [[nodiscard]] uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
-    [[nodiscard]] uint8_t getSourceID()       const          { return m_sourceID;         }
-    [[nodiscard]] uint16_t getEventID()       const          { return m_eventID;          }
-    [[nodiscard]] uint16_t getDataLength()    const          { return m_dataLength;       }
-    [[nodiscard]] uint16_t getSize()          const override { return m_size;             }
-    [[nodiscard]] std::string getType()       const override { return m_type;          }
+    [[nodiscard]] std::uint8_t getVersion()        const          { return m_version;          }
+    [[nodiscard]] std::uint8_t getServiceType()    const          { return m_serviceType;      }
+    [[nodiscard]] std::uint8_t getServiceSubtype() const          { return m_serviceSubType;   }
+    [[nodiscard]] std::uint8_t getSourceID()       const          { return m_sourceID;         }
+    [[nodiscard]] std::uint16_t getEventID()       const          { return m_eventID;          }
+    [[nodiscard]] std::uint16_t getDataLength()    const          { return m_dataLength;       }
+    [[nodiscard]] std::uint16_t getSize()          const override { return m_size;             }
+    [[nodiscard]] std::string getType()            const override { return m_type;          }
 
-    [[nodiscard]] std::vector<uint8_t> serialize() const override;
-    [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
+    [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<std::uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
     CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
 
-  private:                           // Field	            Size (bits)	Description
-    uint8_t m_version{};             // Version	            3	        Version of the PUS standard
-    uint8_t m_serviceType{};         // Service Type	      8	        Type of service (e.g., 0x02 for event reporting)
-    uint8_t m_serviceSubType{};      // Service Subtype	    8	        Subtype of the service (e.g., specific event type)
-    uint8_t m_sourceID{};            // Source ID	          8	        ID of the source (e.g., satellite or sensor)
-    uint16_t m_eventID{};            // Event ID	          16	      ID of the event being reported
-    uint16_t m_dataLength{};         // Data Length	        16	      Length of the event data in bytes
+  private:                                // Field	            Size (bits)	Description
+    std::uint8_t m_version{};             // Version	            3	        Version of the PUS standard
+    std::uint8_t m_serviceType{};         // Service Type	      8	        Type of service (e.g., 0x02 for event reporting)
+    std::uint8_t m_serviceSubType{};      // Service Subtype	    8	        Subtype of the service (e.g., specific event type)
+    std::uint8_t m_sourceID{};            // Source ID	          8	        ID of the source (e.g., satellite or sensor)
+    std::uint16_t m_eventID{};            // Event ID	          16	      ID of the event being reported
+    std::uint16_t m_dataLength{};         // Data Length	        16	      Length of the event data in bytes
 
-    const std::string m_type = "PusB";  // Static registration (automatically called when the program starts)
-    const uint16_t m_size = 8;          // bytes
+    const std::string m_type = "PusB";    // Static registration (automatically called when the program starts)
+    const std::uint16_t m_size = 8;       // bytes
   };
 
   /**
@@ -145,38 +145,38 @@
      * @param timeCode Time code value (variable).
      * @param dataLength Length of the time data (16 bits).
      */
-    explicit PusC(const uint8_t version, const uint8_t serviceType, const uint8_t serviceSubtype,
-                  const uint8_t sourceID, const std::vector<uint8_t>& timeCode,
-                  const uint16_t dataLength) : m_version(version & 0x7), m_serviceType(serviceType),
+    explicit PusC(const std::uint8_t version, const std::uint8_t serviceType, const std::uint8_t serviceSubtype,
+                  const std::uint8_t sourceID, const std::vector<std::uint8_t>& timeCode,
+                  const std::uint16_t dataLength) : m_version(version & 0x7), m_serviceType(serviceType),
                                                m_serviceSubType(serviceSubtype), m_sourceID(sourceID),
                                                m_timeCode(timeCode), m_dataLength(dataLength) {
       variableLength=true;
     }
 
-    [[nodiscard]] uint8_t getVersion()                const          { return m_version;                  }
-    [[nodiscard]] uint8_t getServiceType()            const          { return m_serviceType;              }
-    [[nodiscard]] uint8_t getServiceSubtype()         const          { return m_serviceSubType;           }
-    [[nodiscard]] uint8_t getSourceID()               const          { return m_sourceID;                 }
-    [[nodiscard]] std::vector<uint8_t> getTimeCode()  const          { return m_timeCode;              }
-    [[nodiscard]] uint16_t getDataLength()            const          { return m_dataLength;               }
-    [[nodiscard]] uint16_t getSize()                  const override { return m_size + m_timeCode.size(); }
+    [[nodiscard]] std::uint8_t getVersion()                const          { return m_version;                  }
+    [[nodiscard]] std::uint8_t getServiceType()            const          { return m_serviceType;              }
+    [[nodiscard]] std::uint8_t getServiceSubtype()         const          { return m_serviceSubType;           }
+    [[nodiscard]] std::uint8_t getSourceID()               const          { return m_sourceID;                 }
+    [[nodiscard]] std::vector<std::uint8_t> getTimeCode()  const          { return m_timeCode;              }
+    [[nodiscard]] std::uint16_t getDataLength()            const          { return m_dataLength;               }
+    [[nodiscard]] std::uint16_t getSize()                  const override { return m_size + m_timeCode.size(); }
     [[nodiscard]] std::string getType()               const override { return m_type;                  }
 
-    [[nodiscard]] std::vector<uint8_t> serialize() const override;
-    [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<uint8_t> &data ) override;
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
+    [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<std::uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
     CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
 
-  private:                              // Field	            Size (bits)	Description
-    uint8_t m_version{};                // Version	            3	        Version of the PUS standard
-    uint8_t m_serviceType{};            // Service Type	        8	        Type of service (e.g., 0x03 for time code)
-    uint8_t m_serviceSubType{};         // Service Subtype	    8	        Subtype of the service (e.g., specific time type
-    uint8_t m_sourceID{};               // Source ID	          8	        ID of the source (e.g., satellite or sensor)
-    std::vector<uint8_t> m_timeCode{};  // Time Code	          16	      Time code value, depending on the system
-    uint16_t m_dataLength{};            // Data Length	        16	      Length of the time data in bytes
+  private:                                   // Field	            Size (bits)	Description
+    std::uint8_t m_version{};                // Version	            3	        Version of the PUS standard
+    std::uint8_t m_serviceType{};            // Service Type	        8	        Type of service (e.g., 0x03 for time code)
+    std::uint8_t m_serviceSubType{};         // Service Subtype	    8	        Subtype of the service (e.g., specific time type
+    std::uint8_t m_sourceID{};               // Source ID	          8	        ID of the source (e.g., satellite or sensor)
+    std::vector<std::uint8_t> m_timeCode{};  // Time Code	          16	      Time code value, depending on the system
+    std::uint16_t m_dataLength{};            // Data Length	        16	      Length of the time data in bytes
 
-    const std::string m_type = "PusC";  // Static registration (automatically called when the program starts)
-    const uint16_t m_size = 6;          // bytes minimum size
+    const std::string m_type = "PusC";       // Static registration (automatically called when the program starts)
+    const std::uint16_t m_size = 6;          // bytes minimum size
 
   };
 

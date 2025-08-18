@@ -31,7 +31,7 @@ namespace CCSDS {
       ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusB>()));
       ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusC>()));
       if (!noError) {
-        std::cerr << "[CCSDS DataField] Unable to Create Data field, secondary header registration failed." << std::endl;
+        printf("[CCSDS DataField] Unable to Create Data field, secondary header registration failed.");
       }
     };
 
@@ -64,7 +64,7 @@ namespace CCSDS {
      * exceeds available size.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setApplicationData(const std::vector<uint8_t> &applicationData);
+    [[nodiscard]] ResultBool setApplicationData(const std::vector<std::uint8_t> &applicationData);
 
     /**
      * @brief Sets the application data for the data field.
@@ -78,7 +78,7 @@ namespace CCSDS {
      * @note The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setApplicationData(const uint8_t *pData, const size_t &sizeData);
+    [[nodiscard]] ResultBool setApplicationData(const std::uint8_t *pData, const size_t &sizeData);
 
     /**
      * @brief Sets the secondary header data for the data field.
@@ -93,7 +93,7 @@ namespace CCSDS {
      * @note The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, const size_t &sizeData);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData, const size_t &sizeData);
 
     /**
      * @brief Sets the secondary header for the data field using a PUS Type.
@@ -110,7 +110,7 @@ namespace CCSDS {
      * The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
      * @return ResultBool.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const uint8_t *pData, const size_t &sizeData,
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData, const size_t &sizeData,
                                                 const std::string &pType);
 
     /**
@@ -127,7 +127,7 @@ namespace CCSDS {
      * @note If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method.
      * The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &data, const std::string &pType);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data, const std::string &pType);
 
     /**
      * @brief Sets the data field header for the CCSDS DataField.
@@ -143,7 +143,7 @@ namespace CCSDS {
      * by ResultBool if provided data is invalid.
      * @return ResultBool
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<uint8_t> &dataFieldHeader);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &dataFieldHeader);
 
     /**
      * @brief Sets the data field header using a configuration file as reference.
@@ -188,7 +188,7 @@ namespace CCSDS {
      *
      * @param value The maximum size of the data packet, in bytes.
      */
-    void setDataPacketSize(const uint16_t &value);
+    void setDataPacketSize(const std::uint16_t &value);
 
     /** @brief Sets The auto update variable, if disabled the data size in the header field will not be updated.
      *
@@ -204,14 +204,14 @@ namespace CCSDS {
     *
     * @return The absolute size of the data field in bytes.
     */
-    uint16_t getDataFieldAbsoluteBytesSize() const;
+    std::uint16_t getDataFieldAbsoluteBytesSize() const;
 
     /**
      * @brief Retrieves the size of the application data stored in the data field.
      *
      * @return The size of the application data in bytes
      */
-    uint16_t getApplicationDataBytesSize() const;
+    std::uint16_t getApplicationDataBytesSize() const;
 
     /**
      * @brief Retrieves the used size of the data field in bytes.
@@ -220,7 +220,7 @@ namespace CCSDS {
      *
      * @return The used size of the data field in bytes.
      */
-    uint16_t getDataFieldUsedBytesSize() const;
+    std::uint16_t getDataFieldUsedBytesSize() const;
 
     /**
     * @brief Retrieves the available size of the data field in bytes.
@@ -229,7 +229,7 @@ namespace CCSDS {
     *
     * @return The available size of the data field in bytes.
     */
-    uint16_t getDataFieldAvailableBytesSize() const;
+    std::uint16_t getDataFieldAvailableBytesSize() const;
 
     /**
      * @brief Retrieves the secondary header data as a vector of bytes.
@@ -239,7 +239,7 @@ namespace CCSDS {
      *
      * @return A vector containing the header data bytes.
      */
-    std::vector<uint8_t> getDataFieldHeaderBytes();
+    std::vector<std::uint8_t> getDataFieldHeaderBytes();
 
     /**
      * @brief Retrieves the full data field by combining the data field header and application data.
@@ -249,7 +249,7 @@ namespace CCSDS {
      *
      * @return A vector containing the full data field (header + application data).
      */
-    std::vector<uint8_t> serialize();
+    std::vector<std::uint8_t> serialize();
 
     /**
      * @brief Retrieves the application data from the data field.
@@ -258,7 +258,7 @@ namespace CCSDS {
      *
      * @return A vector containing the application data bytes.
      */
-    std::vector<uint8_t> getApplicationData();
+    std::vector<std::uint8_t> getApplicationData();
 
     /** @brief returns true if auto update has been enabled for the secondary header */
     [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const { return m_enableDataFieldUpdate; }
@@ -292,9 +292,9 @@ namespace CCSDS {
   private:
     std::shared_ptr<SecondaryHeaderAbstract> m_secondaryHeader{};  ///< Shared pointer to the secondary header class
     SecondaryHeaderFactory m_secondaryHeaderFactory;               ///< secondary header dispatcher factory
-    std::vector<uint8_t> m_applicationData{};                      ///< Application data buffer
+    std::vector<std::uint8_t> m_applicationData{};                      ///< Application data buffer
     std::string m_dataFieldHeaderType{};                           ///< Data field Header type
-    uint16_t m_dataPacketSize{2024};                               ///< Data field maximum size in bytes
+    std::uint16_t m_dataPacketSize{2024};                               ///< Data field maximum size in bytes
     bool m_dataFieldHeaderUpdated{false};                          ///< Boolean for secondary header updated status
     bool m_enableDataFieldUpdate{true};                            ///< Boolean for secondary header update enable
 

@@ -203,7 +203,7 @@ int main(const int argc, char* argv[]) {
   std::vector<std::vector<bool>> reports;
   std::string reportsStream;
   bool overallResult{true};
-  int packetIndex{1};
+  std::int32_t packetIndex{1};
   std::vector<int> failedPackets;
   const bool printPackets{args["print-packets"] == "true"};
 

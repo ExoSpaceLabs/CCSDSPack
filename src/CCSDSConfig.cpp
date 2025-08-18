@@ -23,7 +23,7 @@ CCSDS::ResultBool Config::load(const std::string &filename) {
     if (type == "string") {
       value = valueStr;
     } else if (type == "int") {
-      int base = 10;
+      std::uint8_t base = 10;
       if (valueStr.size() > 2 && valueStr.substr(0, 2) == "0x") {
         valueStr = valueStr.substr(2);
         base = 16;
@@ -95,7 +95,7 @@ CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
       return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: <empty>"};
     }
 
-    int base = 10;
+    std::uint8_t base = 10;
     std::string_view sv{token};
 
     // Allow 0x / 0X prefix for hex
@@ -108,7 +108,7 @@ CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
     }
 
     // Parse without exceptions
-    unsigned int tmp = 0;
+    std::uint8_t tmp = 0;
     const char* first = sv.data();
     const char* last  = sv.data() + sv.size();
     auto res = std::from_chars(first, last, tmp, base);

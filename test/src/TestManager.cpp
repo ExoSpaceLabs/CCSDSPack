@@ -38,7 +38,7 @@ void TestManager::unitTestEnd(const bool condition, const std::string &message) 
   }
 }
 
-int TestManager::Result() {
+std::int32_t TestManager::Result() {
   constexpr int spaceSize = 7;
   m_testStarted = false;
   const std::chrono::duration<double> elapsed = m_unitEndTime - m_startTime;

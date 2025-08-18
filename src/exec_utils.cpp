@@ -9,7 +9,7 @@
 #include <chrono>
 #include <set>
 
-CCSDS::ResultBool parseArguments(const int argc, char *argv[],
+CCSDS::ResultBool parseArguments(const std::int32_t argc, char *argv[],
                                  std::unordered_map<std::string, std::string> &allowedMap,
                                  std::unordered_map<std::string, std::string> &outArgs, const std::set<std::string> &booleanArgs)
 {
@@ -19,7 +19,7 @@ CCSDS::ResultBool parseArguments(const int argc, char *argv[],
     allowedShortKeys.insert(k);
     allowedKeys.insert(v);
   }
-  for (int i = 1; i < argc; ++i) {
+  for ( std::int32_t i = 1; i < argc; ++i) {
     std::string current = argv[i];
 
     // Check if this is a key

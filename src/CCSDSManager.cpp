@@ -4,7 +4,7 @@
 #include "CCSDSManager.h"
 #include "CCSDSUtils.h"
 
-void CCSDS::Manager::setSyncPattern(uint32_t syncPattern) { m_syncPattern = syncPattern; }
+void CCSDS::Manager::setSyncPattern(std::uint32_t syncPattern) { m_syncPattern = syncPattern; }
 
 uint32_t CCSDS::Manager::getSyncPattern() const { return m_syncPattern; }
 
@@ -41,7 +41,7 @@ CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const Config &cfg) {
   return true;;
 }
 
-void CCSDS::Manager::setDataFieldSize(const uint16_t size) {
+void CCSDS::Manager::setDataFieldSize(const std::uint16_t size) {
   m_templatePacket.setDataFieldSize(size);
 }
 
@@ -49,7 +49,7 @@ uint16_t CCSDS::Manager::getDataFieldSize() const {
   return m_templatePacket.getDataFieldMaximumSize();
 }
 
-CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t> &data) {
+CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<std::uint8_t> &data) {
   RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA, "Cannot set Application data, Provided data is empty");
   RET_IF_ERR_MSG(!m_templateIsSet, ErrorCode::INVALID_HEADER_DATA, "Cannot set Application data, No template has been set");
 
@@ -60,12 +60,12 @@ CCSDS::ResultBool CCSDS::Manager::setApplicationData(const std::vector<uint8_t> 
     m_packets.clear();
   }
 
-  int i = 0;
-  auto remainderBytes = static_cast<int>(dataBytesSize);
+  std::uint32_t i = 0;
+  auto remainderBytes = static_cast<std::int32_t>(dataBytesSize);
   auto sequenceFlag = UNSEGMENTED;
   while (i < dataBytesSize) {
     Packet newPacket = m_templatePacket;
-    std::vector<uint8_t> tmp;
+    std::vector<std::uint8_t> tmp;
     if (remainderBytes > maxBytesPerPacket) {
       tmp.insert(tmp.end(), data.begin() + i, data.begin() + i + maxBytesPerPacket);
       remainderBytes -= maxBytesPerPacket;
@@ -112,7 +112,7 @@ CCSDS::ResultBuffer CCSDS::Manager::getPacketTemplate() {
   return data;
 }
 
-CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const uint16_t index) {
+CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const std::uint16_t index) {
   RET_IF_ERR_MSG(index < 0 || index >= m_packets.size(), ErrorCode::INVALID_DATA,
                  "Cannot get packet, index is out of bounds");
   if (m_validateEnable) {
@@ -124,8 +124,8 @@ CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const uint16_t index)
   return m_packets[index].serialize();
 }
 
-std::vector<uint8_t> CCSDS::Manager::getPacketsBuffer() const {
-  std::vector<uint8_t> buffer;
+std::vector<std::uint8_t> CCSDS::Manager::getPacketsBuffer() const {
+  std::vector<std::uint8_t> buffer;
   for (auto packet : m_packets) {
     if (m_syncPattEnable) {
       buffer.push_back(m_syncPattern >> 24 & 0xff);
@@ -133,7 +133,7 @@ std::vector<uint8_t> CCSDS::Manager::getPacketsBuffer() const {
       buffer.push_back(m_syncPattern >> 8 & 0xff);
       buffer.push_back(m_syncPattern & 0xff);
     }
-    std::vector<uint8_t> packetBuffer = packet.serialize();
+    std::vector<std::uint8_t> packetBuffer = packet.serialize();
     buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());
   }
   return buffer;
@@ -141,9 +141,9 @@ std::vector<uint8_t> CCSDS::Manager::getPacketsBuffer() const {
 
 CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() {
   RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA, "Cannot get Application data, no packets have been set.");
-  std::vector<uint8_t> data;
+  std::vector<std::uint8_t> data;
 
-  for (int index = 0; index < m_packets.size(); index++) {
+  for (std::uint32_t index = 0; index < m_packets.size(); index++) {
     if (m_validateEnable) {
       const std::string errorMessage = "Validation failure for packet at index" + std::to_string(index);
       RET_IF_ERR_MSG(!m_validator.validate(m_packets[index]), ErrorCode::VALIDATION_FAILURE,
@@ -155,7 +155,7 @@ CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() {
   return data;
 }
 
-CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBufferAtIndex(const uint16_t index) {
+CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBufferAtIndex(const std::uint16_t index) {
   RET_IF_ERR_MSG(index < 0 || index >= m_packets.size(), ErrorCode::INVALID_DATA,
                  "Cannot get Application data, index is out of bounds");
   return m_packets[index].getApplicationDataBytes();
@@ -182,7 +182,7 @@ CCSDS::ResultBool CCSDS::Manager::addPacket(Packet packet) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>& packetBuffer) {
+CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<std::uint8_t>& packetBuffer) {
   Packet packet;
   FORWARD_RESULT(packet.deserialize(packetBuffer));
   FORWARD_RESULT(addPacket(packet));
@@ -198,16 +198,16 @@ CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>
   return true;
 }
 
-[[nodiscard]] CCSDS::ResultBool CCSDS::Manager::load(const std::vector<uint8_t>& packetsBuffer) {
+[[nodiscard]] CCSDS::ResultBool CCSDS::Manager::load(const std::vector<std::uint8_t>& packetsBuffer) {
   RET_IF_ERR_MSG(packetsBuffer.size() < 8, ErrorCode::INVALID_DATA, "invalid packet buffer size");
-  int offset{0};
+  std::uint32_t offset{0};
   while (offset < packetsBuffer.size()) {
-    std::vector<uint8_t> headerData;
+    std::vector<std::uint8_t> headerData;
     if (m_syncPattEnable) {
-      const uint32_t value = (static_cast<uint32_t>(packetsBuffer[offset]) << 24) |
-                             (static_cast<uint32_t>(packetsBuffer[offset+1]) << 16) |
-                             (static_cast<uint32_t>(packetsBuffer[offset+2]) << 8)  |
-                             (static_cast<uint32_t>(packetsBuffer[offset+3]));
+      const std::uint32_t value = (static_cast<std::uint32_t>(packetsBuffer[offset]) << 24) |
+                             (static_cast<std::uint32_t>(packetsBuffer[offset+1]) << 16) |
+                             (static_cast<std::uint32_t>(packetsBuffer[offset+2]) << 8)  |
+                             (static_cast<std::uint32_t>(packetsBuffer[offset+3]));
       RET_IF_ERR_MSG(value != m_syncPattern, ErrorCode::INVALID_DATA, "Sync Pattern mismatch.");
       offset += 4;
     }
@@ -216,8 +216,8 @@ CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>
     Header header;
     FORWARD_RESULT( header.deserialize(headerData));
 
-    const uint16_t packetSize = header.getDataLength() + 8;
-    std::vector<uint8_t>packetData;
+    const std::uint16_t packetSize = header.getDataLength() + 8;
+    std::vector<std::uint8_t>packetData;
     packetData.clear();
     copy_n(packetsBuffer.begin() + offset, packetSize, std::back_inserter(packetData));
     FORWARD_RESULT(addPacketFromBuffer(packetData));
@@ -227,7 +227,7 @@ CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<uint8_t>
 }
 
 CCSDS::ResultBool CCSDS::Manager::read(const std::string &binaryFile) {
-  std::vector<uint8_t> buffer;
+  std::vector<std::uint8_t> buffer;
   ASSIGN_CP(buffer, readBinaryFile(binaryFile));
   FORWARD_RESULT(load(buffer));
   return true;
@@ -243,7 +243,7 @@ CCSDS::ResultBool CCSDS::Manager::readTemplate(const std::string& filename) {
   Packet templatePacket;
   templatePacket.setUpdatePacketEnable(false);
   if (stringEndsWith(filename, ".bin")) {
-    std::vector<uint8_t> buffer;
+    std::vector<std::uint8_t> buffer;
     ASSIGN_CP(buffer, readBinaryFile(filename));
     FORWARD_RESULT(templatePacket.deserialize(buffer));
   }else if (stringEndsWith(filename, ".cfg")) {

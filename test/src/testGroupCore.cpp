@@ -17,30 +17,30 @@ class TestSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
   /**
    * @brief Constructs a TestSecondaryHeader object with all fields explicitly set.
    */
-  explicit TestSecondaryHeader(const std::vector<uint8_t>& data) : m_data(data) {
+  explicit TestSecondaryHeader(const std::vector<std::uint8_t>& data) : m_data(data) {
     variableLength= true;
   };
 
-  [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
+  [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<std::uint8_t> &data) override {m_data = data; return true;};
 
-  [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
+  [[nodiscard]] std::uint16_t getSize() const override { return m_data.size(); }
   [[nodiscard]] std::string getType() const override { return m_type; }
 
-  [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
+  [[nodiscard]] std::vector<std::uint8_t> serialize() const override {return m_data;};
   void update(CCSDS::DataField* dataField) override {m_dataLength = m_data.size();}
   CCSDS::ResultBool loadFromConfig(const Config &config) override{return true;};
 
   private:
-  std::vector<uint8_t> m_data{};
-  uint16_t m_dataLength = 0;
+  std::vector<std::uint8_t> m_data{};
+  std::uint16_t m_dataLength = 0;
   const std::string m_type = "TestSecondaryHeader";
 };
 
 void testGroupCore(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupCore: " << description << std::endl;
 
-  tester->unitTest("Assign Primary header unsegmented using an uint64_t as input.", []() {
-    constexpr uint64_t headerData(0xFFFFFFFFFFFF);
+  tester->unitTest("Assign Primary header unsegmented using an std::uint64_t as input.", []() {
+    constexpr std::uint64_t headerData(0xFFFFFFFFFFFF);
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(headerData));
     // getPrimaryHeader updated dependent fields to correct values.
@@ -48,8 +48,8 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     return ret == 0xf7ffc0000000;
   });
 
-  tester->unitTest("Assign Primary header segmented using an uint64_t as input.", []() {
-    constexpr uint64_t headerData(0xF7FF4FFFFFFF);
+  tester->unitTest("Assign Primary header segmented using an std::uint64_t as input.", []() {
+    constexpr std::uint64_t headerData(0xF7FF4FFFFFFF);
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(headerData));
     // getPrimaryHeader updated dependent fields to correct values.
@@ -58,7 +58,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Assign Primary header using PrimaryHeader struct as input.", []() {
-    constexpr uint64_t expectedHeaderData(0x300140010000);
+    constexpr std::uint64_t expectedHeaderData(0x300140010000);
     const CCSDS::PrimaryHeader headerData(1,
                                           1,
                                           1,
@@ -73,8 +73,8 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Assign Primary header performing vector deserialization.", []() {
-    constexpr uint64_t expectedHeaderData(0xf7ffc0000000);
-    const std::vector<uint8_t> data({0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF});
+    constexpr std::uint64_t expectedHeaderData(0xf7ffc0000000);
+    const std::vector<std::uint8_t> data({0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF});
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(data));
     const auto ret = packet.getPrimaryHeader64bit();
@@ -82,8 +82,8 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Get Header using vector serialization.", []() {
-    constexpr uint64_t data(0xf7ffc0000000);
-    const std::vector<uint8_t> expectedHeaderData({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00});
+    constexpr std::uint64_t data(0xf7ffc0000000);
+    const std::vector<std::uint8_t> expectedHeaderData({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00});
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(data));
     const auto ret = packet.getPrimaryHeaderBytes();
@@ -103,7 +103,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     });
 
     tester->unitTest("Assign Data field using vector, CRC16 shall be correct.", [&packet]() {
-      constexpr uint16_t expectedCRC16(0x9304);
+      constexpr std::uint16_t expectedCRC16(0x9304);
       const auto crc(packet.getCRC());
       return crc == expectedCRC16;
     });
@@ -126,7 +126,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
 
     tester->unitTest("Assign Secondary Header and Data using vector, CRC16 shall be correct.", [&packet] {
-      constexpr uint16_t expectedCRC16(0x9304);
+      constexpr std::uint16_t expectedCRC16(0x9304);
       const auto crc(packet.getCRC());
       return crc == expectedCRC16;
     });
@@ -134,7 +134,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
 
     tester->unitTest("Assign Data field using array*, DataFieldHeader shall be empty.", [&packet] {
-      const uint8_t data[] = {0x1, 0x2, 0x3, 0x4, 0x5};
+      const std::uint8_t data[] = {0x1, 0x2, 0x3, 0x4, 0x5};
       TEST_VOID(packet.setApplicationData( data,5));
       const auto dfh = packet.getDataFieldHeaderBytes();
       return dfh.empty();
@@ -146,7 +146,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     });
 
     tester->unitTest("Assign Data field using array*, CRC16 shall be correct.", [&packet] {
-      constexpr uint16_t expectedCRC16(0x9304);
+      constexpr std::uint16_t expectedCRC16(0x9304);
       const auto crc(packet.getCRC());
       return crc == expectedCRC16;
     });
@@ -155,14 +155,14 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
     tester->unitTest("Primary header vector shall be default valued.", [&packet] {
       // although the header is set to FFFF for data field size, its content is updated by data field size.
-      std::vector<uint8_t> expectedHeader{0x0, 0x0, 0xc0, 0x0, 0x0, 0x0};
+      std::vector<std::uint8_t> expectedHeader{0x0, 0x0, 0xc0, 0x0, 0x0, 0x0};
       const auto header = packet.getPrimaryHeaderBytes();
       return std::equal(expectedHeader.begin(), expectedHeader.end(), header.begin());
     });
     tester->unitTest("Assign Secondary header and data field using array*, DataFieldHeader shall be of correct size.",
                      [&packet] {
-                       constexpr uint8_t secondaryHeader[] = {0x1, 0x2};
-                       constexpr uint8_t data[] = {0x3, 0x4, 0x5};
+                       constexpr std::uint8_t secondaryHeader[] = {0x1, 0x2};
+                       constexpr std::uint8_t data[] = {0x3, 0x4, 0x5};
                        TEST_VOID(packet.setApplicationData( data,3));
                        TEST_VOID(packet.setDataFieldHeader( secondaryHeader, 2));
                        const auto dfh = packet.getDataFieldHeaderBytes();
@@ -176,7 +176,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
                      });
 
     tester->unitTest("Assign Secondary header and data field using array*, CRC16 shall be correct.", [&packet] {
-      constexpr uint16_t expectedCRC16(0x9304);
+      constexpr std::uint16_t expectedCRC16(0x9304);
       const auto crc(packet.getCRC());
       return crc == expectedCRC16;
     });
@@ -184,7 +184,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     tester->unitTest("Primary header vector getter values shall be correctly returned.", [&packet] {
       TEST_VOID(packet.setPrimaryHeader(0xffffffffffff));
       // although the header is set to FFFF for data field size, its content is Header getters.
-      const std::vector<uint8_t> expectedHeader = {
+      const std::vector<std::uint8_t> expectedHeader = {
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05
       };
       const auto header = packet.getPrimaryHeaderBytes();
@@ -216,7 +216,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   }
 
   tester->unitTest("PUS-A data field header assignment using vector buffer.", [] {
-    std::vector<uint8_t> expected = {0x1, 0x4, 0x5, 0x06, 0x07, 0xa};
+    std::vector<std::uint8_t> expected = {0x1, 0x4, 0x5, 0x06, 0x07, 0xa};
 
     CCSDS::Packet packet;
     TEST_VOID(packet.setDataFieldHeader(expected,"PusA"));
@@ -226,7 +226,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("PUS-B data field header assignment using vector buffer.", [] {
-    std::vector<uint8_t> data = {0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x0b, 0xc};
+    std::vector<std::uint8_t> data = {0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x0b, 0xc};
 
     CCSDS::Packet packet;
     TEST_VOID(packet.setDataFieldHeader(data,"PusB"));
@@ -237,7 +237,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("PUS-C data field header assignment using vector buffer.", [] {
-    std::vector<uint8_t> data = {0x3, 0x4, 0x5, 0x00, 0xBF, 0x00, 0xBF, 0xb, 0xc, 0xf};
+    std::vector<std::uint8_t> data = {0x3, 0x4, 0x5, 0x00, 0xBF, 0x00, 0xBF, 0xb, 0xc, 0xf};
 
     CCSDS::Packet packet;
     packet.setUpdatePacketEnable(false);
@@ -246,37 +246,37 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     return std::equal(data.begin(), data.end(), dfh.begin());
   });
 
-  tester->unitTest("PUS-A data field header assignment using uint8 buffer*, size and Type.", [] {
-    constexpr uint8_t data[] = {0x1, 0x4, 0x5, 0x06, 0x07, 0xa};
+  tester->unitTest("PUS-A data field header assignment using std::uint8 buffer*, size and Type.", [] {
+    constexpr std::uint8_t data[] = {0x1, 0x4, 0x5, 0x06, 0x07, 0xa};
     CCSDS::Packet packet;
     packet.setUpdatePacketEnable(false);
     TEST_VOID(packet.setDataFieldHeader(data,6,"PusA"));
     auto dfh = packet.getDataFieldHeaderBytes();
-    std::vector<uint8_t> tmp;
+    std::vector<std::uint8_t> tmp;
     tmp.assign(data, data + 6);
 
     return std::equal(tmp.begin(), tmp.end(), dfh.begin());
   });
 
-  tester->unitTest("PUS-B data field header assignment using uint8 buffer*, size and Type.", [] {
-    constexpr uint8_t data[] = {0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x0b, 0xc};
+  tester->unitTest("PUS-B data field header assignment using std::uint8 buffer*, size and Type.", [] {
+    constexpr std::uint8_t data[] = {0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x0b, 0xc};
     CCSDS::Packet packet;
     packet.setUpdatePacketEnable(false);
     TEST_VOID(packet.setDataFieldHeader(data,8,"PusB"));
     auto dfh = packet.getDataFieldHeaderBytes();
-    std::vector<uint8_t> tmp;
+    std::vector<std::uint8_t> tmp;
     tmp.assign(data, data + 8);
 
     return std::equal(tmp.begin(), tmp.end(), dfh.begin());
   });
 
-  tester->unitTest("PUS-C data field header assignment using uint8 buffer*, size and Type.", [] {
-    constexpr uint8_t data[] = {0x3, 0x4, 0x5, 0x00, 0xBF, 0x00, 0xBF, 0xb, 0xc, 0xd};
+  tester->unitTest("PUS-C data field header assignment using std::uint8 buffer*, size and Type.", [] {
+    constexpr std::uint8_t data[] = {0x3, 0x4, 0x5, 0x00, 0xBF, 0x00, 0xBF, 0xb, 0xc, 0xd};
     CCSDS::Packet packet;
     packet.setUpdatePacketEnable(false);
     TEST_VOID(packet.setDataFieldHeader(data,10,"PusC"));
     auto dfh = packet.getDataFieldHeaderBytes();
-    std::vector<uint8_t> tmp;
+    std::vector<std::uint8_t> tmp;
     tmp.assign(data, data + 8);
 
     return std::equal(tmp.begin(), tmp.end(), dfh.begin());
@@ -285,7 +285,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   tester->unitTest("PUS-A secondary header assignment. returned data field header size is of correct size of 6 bytes.",
                    [] {
                      CCSDS::Packet packet;
-                     //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+                     //const std::uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
                      PusA pusAHeader(1, 2, 3, 4, 5);
                      const auto ptr = std::make_shared<PusA>(pusAHeader);
                      packet.setDataFieldHeader(ptr);
@@ -315,14 +315,14 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
     tester->unitTest("Automatic data Length update in Primary header (PUS-C size).", [&packet] {
       //ccsds.setPrimaryHeader(0xffffffff);
-      //const uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
+      //const std::uint8_t data[] = {0x1,0x2,0x3,0x4,0x5};
       const auto primaryHeader = packet.getPrimaryHeader64bit();
       return (primaryHeader & 0xFFFF) == 0xa;
     });
 
     tester->unitTest("Automatic data Length update in Primary header and Secondary header after data inclusion.",
                      [&packet] {
-                       constexpr uint8_t data[] = {0x3, 0x4, 0x5};
+                       constexpr std::uint8_t data[] = {0x3, 0x4, 0x5};
                        TEST_VOID(packet.setApplicationData( data,3));
                        const auto primaryHeaderSize = packet.getPrimaryHeader64bit() & 0xFFFF;
                        const auto dataFieldHeader = packet.getDataFieldHeaderBytes();
@@ -345,7 +345,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   tester->unitTest("Deserialize vector data to header and application data and serialize it.", [] {
     CCSDS::Packet packet;
     // note when using deserialize the header sequence flag stays the same, therefore make sure  it is correct.
-    std::vector<uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
+    std::vector<std::uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
     TEST_VOID(packet.deserialize({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02}));
     auto ret = packet.serialize();
     return std::equal(expected.begin(), expected.end(), ret.begin());
@@ -353,7 +353,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Deserialize vector data to header, secondary header and application data and serialize it.", [] {
     CCSDS::Packet packet;
-    std::vector<uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
+    std::vector<std::uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
     TEST_VOID(packet.deserialize({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02}, 2));
     auto ret = packet.serialize();
     return std::equal(expected.begin(), expected.end(), ret.begin());
@@ -361,7 +361,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Deserialize vector data to header, PUS-A and application data and serialize it.", [] {
     CCSDS::Packet packet;
-    std::vector<uint8_t> expected{
+    std::vector<std::uint8_t> expected{
       0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x00, 0x5, 0x01, 0x02, 0x03, 0x04, 0x05, 0x97, 0x7d
     };
     TEST_VOID(
@@ -373,7 +373,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Deserialize vector data to header, PUS-B and application data and serialize it.", [] {
     CCSDS::Packet packet;
-    std::vector<uint8_t> expected{
+    std::vector<std::uint8_t> expected{
       0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05, 0x97, 0xdf
     };
     TEST_VOID(
@@ -385,7 +385,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Deserialize vector data to header, PUS-C and application data and serialize it.", [] {
     CCSDS::Packet packet;
-    std::vector<uint8_t> expected{
+    std::vector<std::uint8_t> expected{
       0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0d, 0x1, 0x4, 0x5, 0x06, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x03, 0x03, 0x04, 0x05, 0x98, 0xd7
     };
     TEST_VOID(
@@ -397,7 +397,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
   tester->unitTest(
     "Construct Packet using vector data to header, secondary header and application data and serialize it.", [] {
-      std::vector<uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
+      std::vector<std::uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
       CCSDS::Packet packet;
       TEST_VOID(packet.deserialize({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02}, 2 ));
 
@@ -410,7 +410,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(
       packet.deserialize({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x01, 0x02, 0x03, 0x04,
                 0x05, 0x01, 0x02}, "PusA"));
-    std::vector<uint8_t> expected{
+    std::vector<std::uint8_t> expected{
       0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x00, 0x5, 0x01, 0x02, 0x03, 0x04, 0x05, 0x97, 0x7d
     };
     auto ret = packet.serialize();
@@ -422,7 +422,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(
       packet.deserialize({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x01, 0x02, 0x03, 0x04,
                 0x05, 0x01, 0x02}, "PusB"));
-    std::vector<uint8_t> expected{
+    std::vector<std::uint8_t> expected{
       0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05, 0x97, 0xdf
     };
     auto ret = packet.serialize();
@@ -434,7 +434,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(
       packet.deserialize({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x1, 0x4, 0x5, 0x06, 0x00, 0xBF, 0x00, 0xBF, 0x01, 0x02, 0x03, 0x04,
         0x05, 0x01, 0x02}, "PusC", 10));
-    std::vector<uint8_t> expected{
+    std::vector<std::uint8_t> expected{
       0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0d, 0x1, 0x4, 0x5, 0x06, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x03, 0x03, 0x04, 0x05, 0x98, 0xd7
     };
     auto ret = packet.serialize();
@@ -442,7 +442,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Construct Packet disable auto update, returned data shall be as set.", [] {
-    std::vector<uint8_t> expected{
+    std::vector<std::uint8_t> expected{
       0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04, 0x01, 0x02
     };
     CCSDS::Packet packet;
@@ -455,7 +455,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   tester->unitTest(
     "Construct Packet using vector data to header, PUS-A and application data, disable auto update, returned data shall be as set.",
     [] {
-      std::vector<uint8_t> expected{
+      std::vector<std::uint8_t> expected{
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x00, 0x5, 0x01, 0x02, 0x03, 0x04, 0x05, 0x97, 0x7d,
         0x01, 0x02
       };
@@ -469,7 +469,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   tester->unitTest(
     "Construct Packet using vector data to header, PUS-B and application data, disable auto update, returned data shall be as set.",
     [] {
-      std::vector<uint8_t> expected{
+      std::vector<std::uint8_t> expected{
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05, 0x97, 0xdf,
         0x01, 0x02
       };
@@ -483,7 +483,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   tester->unitTest(
     "Construct Packet using vector data to header, PUS-C and application data, disable auto update, returned data shall be as set.",
     [] {
-      std::vector<uint8_t> expected{
+      std::vector<std::uint8_t> expected{
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x03, 0x03, 0x04, 0x05, 0x98, 0xd7,
         0x01, 0x02
       };
@@ -495,7 +495,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     });
 
   tester->unitTest("Write binary data to a file.",[] {
-      const std::vector<uint8_t> data{
+      const std::vector<std::uint8_t> data{
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05, 0x97, 0xdf,
         0x01, 0x02, 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
         0x97, 0xdf, 0x01, 0x02, 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03,
@@ -508,14 +508,14 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     });
 
   tester->unitTest("Read binary data from file.",[] {
-      std::vector<uint8_t> expected{
+      std::vector<std::uint8_t> expected{
         0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05, 0x97, 0xdf,
         0x01, 0x02, 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03, 0x04, 0x05,
         0x97, 0xdf, 0x01, 0x02, 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00, 0x03, 0x03,
         0x04, 0x05, 0x97, 0xdf,0x01, 0x02, 0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x0b, 0x1, 0x4, 0x5, 0x06, 0x07, 0xa, 0x00,
         0x03, 0x03, 0x04, 0x05, 0x97, 0xdf, 0x01, 0x02
       };
-      std::vector<uint8_t> ret;
+      std::vector<std::uint8_t> ret;
       TEST_RET(ret, readBinaryFile("test_resources/binaryFile.bin"));
       return std::equal(expected.begin(), expected.end(), ret.begin());
     });
@@ -529,7 +529,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_RET(stringValue,cfg.get<std::string>("stringValue"));
     if (stringValue != "Awesome string to test" ) return false;
 
-    int integerValue;
+    std::int32_t integerValue;
     TEST_RET(integerValue,cfg.get<int>("integerValue"));
     if (integerValue != 42 ) return false;
 
@@ -541,51 +541,51 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_RET(floatValue,cfg.get<float>("floatValue"));
     if (floatValue != 0.85F ) return false;
 
-    std::vector<uint8_t> buffer;
-    TEST_RET(buffer, cfg.get<std::vector<uint8_t> >("buffer"));
-    if (buffer != std::vector<uint8_t>{1,2,3,4,5} ) return false;
+    std::vector<std::uint8_t> buffer;
+    TEST_RET(buffer, cfg.get<std::vector<std::uint8_t> >("buffer"));
+    if (buffer != std::vector<std::uint8_t>{1,2,3,4,5} ) return false;
 
-    std::vector<uint8_t> bufferHex;
-    TEST_RET(bufferHex, cfg.get<std::vector<uint8_t> >("bufferHex"));
-    if (bufferHex != std::vector<uint8_t>{0xFF,0xaa,0xBB,0xcc,0xEE}) return false;
+    std::vector<std::uint8_t> bufferHex;
+    TEST_RET(bufferHex, cfg.get<std::vector<std::uint8_t> >("bufferHex"));
+    if (bufferHex != std::vector<std::uint8_t>{0xFF,0xaa,0xBB,0xcc,0xEE}) return false;
 
-    std::vector<uint8_t> bufferHex2;
-    TEST_RET(bufferHex2, cfg.get<std::vector<uint8_t> >("bufferHex2"));
-    if (bufferHex2 != std::vector<uint8_t>{0x2,0x40,0x56,0x87,0xf0} ) return false;
+    std::vector<std::uint8_t> bufferHex2;
+    TEST_RET(bufferHex2, cfg.get<std::vector<std::uint8_t> >("bufferHex2"));
+    if (bufferHex2 != std::vector<std::uint8_t>{0x2,0x40,0x56,0x87,0xf0} ) return false;
 
     return ret;
     });
 
   tester->unitTest("Load PUS-A from config, shall be as expected.",[] {
-    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0x00};
+    std::vector<std::uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0x00};
 
     Config cfg;
     TEST_VOID( cfg.load("test_resources/pusA.cfg"));
     PusA pusA;
     TEST_VOID( pusA.loadFromConfig(cfg));
-    std::vector<uint8_t> pusRet = pusA.serialize();
+    std::vector<std::uint8_t> pusRet = pusA.serialize();
     return std::equal(expected.begin(), expected.end(), pusRet.begin());
   });
 
   tester->unitTest("Load PUS-B from config, shall be as expected.",[] {
-    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0xFF, 0x00, 0x00};
+    std::vector<std::uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0xFF, 0x00, 0x00};
 
     Config cfg;
     TEST_VOID( cfg.load("test_resources/pusB.cfg"));
     PusB pusB;
     TEST_VOID( pusB.loadFromConfig(cfg));
-    std::vector<uint8_t> pusRet = pusB.serialize();
+    std::vector<std::uint8_t> pusRet = pusB.serialize();
     return std::equal(expected.begin(), expected.end(), pusRet.begin());
   });
 
   tester->unitTest("Load PUS-C from config, shall be as expected.",[] {
-    std::vector<uint8_t> expected{0x01, 0x07, 0x08, 0x03, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x00};
+    std::vector<std::uint8_t> expected{0x01, 0x07, 0x08, 0x03, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x00};
 
     Config cfg;
     TEST_VOID( cfg.load("test_resources/pusC.cfg"));
     PusC pusC;
     TEST_VOID( pusC.loadFromConfig(cfg));
-    std::vector<uint8_t> pusRet = pusC.serialize();
+    std::vector<std::uint8_t> pusRet = pusC.serialize();
     return std::equal(expected.begin(), expected.end(), pusRet.begin());
   });
 
@@ -598,51 +598,51 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Load DataField secondary header PUS-A from config, shall be as expected.",[] {
-    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0x00};
+    std::vector<std::uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0x00};
 
     Config cfg;
     TEST_VOID( cfg.load("test_resources/pusA.cfg"));
     CCSDS::DataField dataField;
     TEST_VOID( dataField.setDataFieldHeader(cfg));
-    std::vector<uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
+    std::vector<std::uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
     return std::equal(expected.begin(), expected.end(), pusRet.begin());
   });
 
   tester->unitTest("Load DataField secondary header PUS-B from config, shall be as expected.",[] {
-    std::vector<uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0xFF, 0x00, 0x00};
+    std::vector<std::uint8_t> expected{0x01, 0x03, 0x08, 0x03, 0x00, 0xFF, 0x00, 0x00};
 
     Config cfg;
     TEST_VOID( cfg.load("test_resources/pusB.cfg"));
     CCSDS::DataField dataField;
     TEST_VOID( dataField.setDataFieldHeader(cfg));
-    std::vector<uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
+    std::vector<std::uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
     return std::equal(expected.begin(), expected.end(), pusRet.begin());
   });
 
   tester->unitTest("Load DataField secondary header PUS-C from config, shall be as expected",[] {
-    std::vector<uint8_t> expected{0x01, 0x07, 0x08, 0x03, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x00};
+    std::vector<std::uint8_t> expected{0x01, 0x07, 0x08, 0x03, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x00};
 
     Config cfg;
     TEST_VOID( cfg.load("test_resources/pusC.cfg"));
     CCSDS::DataField dataField;
     TEST_VOID( dataField.setDataFieldHeader(cfg));
-    std::vector<uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
+    std::vector<std::uint8_t> pusRet = dataField.getSecondaryHeader()->serialize();
     return std::equal(expected.begin(), expected.end(), pusRet.begin());
   });
 
   tester->unitTest("Load Packet from config, shall be as expected.",[] {
-    std::vector<uint8_t> expected{0x38, 0x7d, 0x40, 0x00, 0x00, 0x0a, 0x01, 0x03, 0x08, 0x03, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x00, 0xfc, 0x69};
+    std::vector<std::uint8_t> expected{0x38, 0x7d, 0x40, 0x00, 0x00, 0x0a, 0x01, 0x03, 0x08, 0x03, 0x00, 0xBF, 0x00, 0xBF, 0x00, 0x00, 0xfc, 0x69};
 
     Config cfg;
     TEST_VOID( cfg.load("test_resources/templatePacket.cfg"));
     CCSDS::Packet packet;
     TEST_VOID( packet.loadFromConfig(cfg));
-    std::vector<uint8_t> buffer = packet.serialize();
+    std::vector<std::uint8_t> buffer = packet.serialize();
     return std::equal(expected.begin(), expected.end(), buffer.begin());
   });
 
   tester->unitTest("Create custom secondary header to data field using shared ptr, result shall be as expected.",[] {
-    std::vector<uint8_t> expected{ 0x77, 0xfa, 0x0b, 0x00, 0x00, 0x0b, 0x05, 0x01, 0x02, 0x03};
+    std::vector<std::uint8_t> expected{ 0x77, 0xfa, 0x0b, 0x00, 0x00, 0x0b, 0x05, 0x01, 0x02, 0x03};
 
     const std::vector<uint8_t> data{1,2,3};
     CCSDS::DataField df;

@@ -7,7 +7,7 @@
 void CCSDS::Packet::update() {
   if (!m_updateStatus && m_enableUpdatePacket) {
     const auto dataField = m_dataField.serialize();
-    const auto dataFiledSize = static_cast<uint16_t>(dataField.size());
+    const auto dataFiledSize = static_cast<std::uint16_t>(dataField.size());
     const auto dataFieldHeaderFlag(m_dataField.getDataFieldHeaderFlag());
     m_primaryHeader.setDataLength(dataFiledSize);
     m_primaryHeader.setDataFieldHeaderFlag(dataFieldHeaderFlag);
@@ -30,11 +30,11 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfigFile(const std::string &configPat
 }
 
 CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
-  uint8_t versionNumber;
-  uint8_t type;
-  uint8_t APID{0};
-  uint8_t dataFieldHeaderFlag;
-  uint16_t sequenceCount;
+  std::uint8_t versionNumber;
+  std::uint8_t type;
+  std::uint8_t APID{0};
+  std::uint8_t dataFieldHeaderFlag;
+  std::uint16_t sequenceCount;
   ESequenceFlag sequenceFlag{};
   bool segmented{false};
 
@@ -70,7 +70,7 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   m_primaryHeader.setSequenceCount(sequenceCount);
 
   if (cfg.isKey( "data_field_size")) { // optional field
-    uint16_t dataFieldSize;
+    std::uint16_t dataFieldSize;
     ASSIGN_OR_PRINT(dataFieldSize, cfg.get< int>( "data_field_size"));
     m_dataField.setDataPacketSize(dataFieldSize);
   }
@@ -84,8 +84,8 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   }
 
   if (cfg.isKey("application_data")) { // optional field
-    std::vector<uint8_t> applicationData{};
-    ASSIGN_OR_PRINT(applicationData, cfg.get<std::vector<uint8_t>>("application_data"));
+    std::vector<std::uint8_t> applicationData{};
+    ASSIGN_OR_PRINT(applicationData, cfg.get<std::vector<std::uint8_t>>("application_data"));
     FORWARD_RESULT( m_dataField.setApplicationData(applicationData));
   }
 
@@ -106,8 +106,8 @@ bool CCSDS::Packet::getDataFieldHeaderFlag() {
   return m_primaryHeader.getDataFieldHeaderFlag();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getCRCVectorBytes() {
-  std::vector<uint8_t> crc(2);
+std::vector<std::uint8_t> CCSDS::Packet::getCRCVectorBytes() {
+  std::vector<std::uint8_t> crc(2);
   const auto crcVar = getCRC();
   crc[0] = (crcVar >> 8) & 0xFF; // MSB (Most Significant Byte)
   crc[1] = crcVar & 0xFF; // LSB (Least Significant Byte)
@@ -129,31 +129,31 @@ uint64_t CCSDS::Packet::getPrimaryHeader64bit() {
   return m_primaryHeader.getFullHeader();
 };
 
-std::vector<uint8_t> CCSDS::Packet::getPrimaryHeaderBytes() {
+std::vector<std::uint8_t> CCSDS::Packet::getPrimaryHeaderBytes() {
   update();
   return m_primaryHeader.serialize();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getDataFieldHeaderBytes() {
+std::vector<std::uint8_t> CCSDS::Packet::getDataFieldHeaderBytes() {
   update();
   return m_dataField.getDataFieldHeaderBytes();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getApplicationDataBytes() {
+std::vector<std::uint8_t> CCSDS::Packet::getApplicationDataBytes() {
   update();
   return m_dataField.getApplicationData();
 }
 
-std::vector<uint8_t> CCSDS::Packet::getFullDataFieldBytes() {
+std::vector<std::uint8_t> CCSDS::Packet::getFullDataFieldBytes() {
   return m_dataField.serialize();
 }
 
-std::vector<uint8_t> CCSDS::Packet::serialize() {
+std::vector<std::uint8_t> CCSDS::Packet::serialize() {
   auto header = getPrimaryHeaderBytes();
   auto dataField = m_dataField.serialize();
   const auto crc = getCRCVectorBytes();
 
-  std::vector<uint8_t> packet;
+  std::vector<std::uint8_t> packet;
   packet.reserve(header.size() + dataField.size() + crc.size());
   packet.insert(packet.end(), header.begin(), header.end());
   if (!getFullDataFieldBytes().empty()) {
@@ -164,11 +164,11 @@ std::vector<uint8_t> CCSDS::Packet::serialize() {
   return packet;
 }
 
-CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data) {
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() <= 7, ErrorCode::INVALID_HEADER_DATA,
                  "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
 
-  std::vector<uint8_t> dataFieldVector;
+  std::vector<std::uint8_t> dataFieldVector;
   std::copy(data.begin() + 6, data.end(), std::back_inserter(dataFieldVector));
 
   FORWARD_RESULT(deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector));
@@ -176,7 +176,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const std::string &headerType, int headerSize) {
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &data, const std::string &headerType, const std::int32_t headerSize) {
   RET_IF_ERR_MSG(data.size() <= 8, ErrorCode::INVALID_DATA,
                  "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
   RET_IF_ERR_MSG(headerType == "BufferHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -184,7 +184,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
   RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, Unregistered Secondary header: " + headerType);
-  uint16_t headerDataSizeBytes{0};
+  std::uint16_t headerDataSizeBytes{0};
   const auto secondaryHeader = m_dataField.getDataFieldHeaderFactory().create(headerType);
   if (headerType == "PusC" && headerSize > 0) {
     headerDataSizeBytes = headerSize;
@@ -192,13 +192,13 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
     headerDataSizeBytes = secondaryHeader->getSize();
   }
 
-  std::vector<uint8_t> dataFieldHeaderVector;
+  std::vector<std::uint8_t> dataFieldHeaderVector;
   std::copy_n(data.begin() + 6, headerDataSizeBytes, std::back_inserter(dataFieldHeaderVector));
   FORWARD_RESULT(secondaryHeader->deserialize(dataFieldHeaderVector ));
   setDataFieldHeader(secondaryHeader);
 
   if (data.size() > (8 + headerDataSizeBytes)) {
-    std::vector<uint8_t> dataFieldVector;
+    std::vector<std::uint8_t> dataFieldVector;
 
     if (data.size() > (9 + headerDataSizeBytes)) {
       std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
@@ -209,12 +209,12 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, const uint16_t headerDataSizeBytes) {
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &data, const std::uint16_t headerDataSizeBytes) {
   RET_IF_ERR_MSG(data.size() <= (8 + headerDataSizeBytes), ErrorCode::INVALID_DATA,
                  "Cannot Serialize Packet, Invalid Data provided");
 
-  std::vector<uint8_t> secondaryHeader;
-  std::vector<uint8_t> dataFieldVector;
+  std::vector<std::uint8_t> secondaryHeader;
+  std::vector<std::uint8_t> dataFieldVector;
   std::copy(data.begin() + 6, data.begin() + 6 + headerDataSizeBytes, std::back_inserter(secondaryHeader));
   FORWARD_RESULT(m_dataField.setDataFieldHeader(secondaryHeader));
   if (data.size() > (7 + headerDataSizeBytes)) {
@@ -224,7 +224,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &data, c
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<uint8_t> &headerData, const std::vector<uint8_t> &data) {
+CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &headerData, const std::vector<std::uint8_t> &data) {
   RET_IF_ERR_MSG(headerData.size() != 6, ErrorCode::INVALID_HEADER_DATA,
                  "Cannot Deserialize Packet, Invalid Header Data provided.");
   FORWARD_RESULT(m_primaryHeader.deserialize( headerData ));
@@ -249,7 +249,7 @@ uint16_t CCSDS::Packet::getFullPacketLength() {
   return 8 + m_dataField.getDataFieldUsedBytesSize();
 }
 
-CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const uint64_t data) {
+CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const std::uint64_t data) {
   FORWARD_RESULT(m_primaryHeader.setData( data ));
   m_sequenceCounter = m_primaryHeader.getSequenceCount();
   m_updateStatus = false;
@@ -284,7 +284,7 @@ CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData,
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::uint8_t *pData, const size_t sizeData,
                                                     const std::string &headerType) {
   FORWARD_RESULT(m_dataField.setDataFieldHeader( pData, sizeData, headerType ));
   m_updateStatus = false;
@@ -297,19 +297,19 @@ CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::vector<uint8_t> &
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const uint8_t *pData, const size_t sizeData) {
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::uint8_t *pData, const size_t sizeData) {
   FORWARD_RESULT(m_dataField.setDataFieldHeader( pData,sizeData ));
   m_updateStatus = false;
   return true;;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setApplicationData(const std::vector<uint8_t> &data) {
+CCSDS::ResultBool CCSDS::Packet::setApplicationData(const std::vector<std::uint8_t> &data) {
   FORWARD_RESULT(m_dataField.setApplicationData( data ));
   m_updateStatus = false;
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setApplicationData(const uint8_t *pData, const size_t sizeData) {
+CCSDS::ResultBool CCSDS::Packet::setApplicationData(const std::uint8_t *pData, const size_t sizeData) {
   FORWARD_RESULT(m_dataField.setApplicationData( pData,sizeData ));
   m_updateStatus = false;
   return true;
@@ -320,7 +320,7 @@ void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags) {
   m_updateStatus = false;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setSequenceCount(const uint16_t count) {
+CCSDS::ResultBool CCSDS::Packet::setSequenceCount(const std::uint16_t count) {
   RET_IF_ERR_MSG(m_primaryHeader.getSequenceFlags() == UNSEGMENTED && count != 0, ErrorCode::INVALID_DATA,
                  "Unable to set non 0 value for UNSEGMENTED packet");
   m_sequenceCounter = count;
@@ -328,7 +328,7 @@ CCSDS::ResultBool CCSDS::Packet::setSequenceCount(const uint16_t count) {
   return true;
 }
 
-void CCSDS::Packet::setDataFieldSize(const uint16_t size) {
+void CCSDS::Packet::setDataFieldSize(const std::uint16_t size) {
   m_dataField.setDataPacketSize(size);
 }
 

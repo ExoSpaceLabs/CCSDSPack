@@ -1,12 +1,12 @@
 #include "CCSDSDataField.h"
 #include <CCSDSSecondaryHeaderFactory.h>
-#include <iostream>
+
 #include <utility>
 
-std::vector<uint8_t> CCSDS::DataField::serialize() {
+std::vector<std::uint8_t> CCSDS::DataField::serialize() {
   update();
   const auto &dataFieldHeader = getDataFieldHeaderBytes();
-  std::vector<uint8_t> fullData{};
+  std::vector<std::uint8_t> fullData{};
   if (!dataFieldHeader.empty()) {
     fullData.insert(fullData.end(), dataFieldHeader.begin(), dataFieldHeader.end());
   }
@@ -14,7 +14,7 @@ std::vector<uint8_t> CCSDS::DataField::serialize() {
   return fullData;
 }
 
-std::vector<uint8_t> CCSDS::DataField::getApplicationData() {
+std::vector<std::uint8_t> CCSDS::DataField::getApplicationData() {
   return m_applicationData;
 }
 
@@ -55,21 +55,21 @@ void CCSDS::DataField::update() {
   }
 }
 
-CCSDS::ResultBool CCSDS::DataField::setApplicationData(const uint8_t *pData, const size_t &sizeData) {
+CCSDS::ResultBool CCSDS::DataField::setApplicationData(const std::uint8_t *pData, const size_t &sizeData) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Application data is nullptr");
   RET_IF_ERR_MSG(sizeData < 1, ErrorCode::INVALID_APPLICATION_DATA, "Application data size cannot be < 1");
   RET_IF_ERR_MSG(sizeData > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_APPLICATION_DATA,
                  "Application data field exceeds available size");
 
   if (!m_applicationData.empty()) {
-    std::cerr << "[ CCSDS Data ] Warning: Data field is not empty, it has been overwritten." << std::endl;
+    printf( "[ CCSDS Data ] Warning: Data field is not empty, it has been overwritten.");
   }
   m_applicationData.assign(pData, pData + sizeData);
   m_dataFieldHeaderUpdated = false;
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setApplicationData(const std::vector<uint8_t> &applicationData) {
+CCSDS::ResultBool CCSDS::DataField::setApplicationData(const std::vector<std::uint8_t> &applicationData) {
   RET_IF_ERR_MSG(applicationData.size() > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_APPLICATION_DATA,
                  "Application data field exceeds available size.");
   m_applicationData = applicationData;
@@ -77,19 +77,19 @@ CCSDS::ResultBool CCSDS::DataField::setApplicationData(const std::vector<uint8_t
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, const size_t &sizeData) {
+CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::uint8_t *pData, const size_t &sizeData) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
   RET_IF_ERR_MSG(sizeData < 1, ErrorCode::INVALID_SECONDARY_HEADER_DATA, "Secondary header data size cannot be < 1");
   RET_IF_ERR_MSG(sizeData > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size.");
 
-  std::vector<uint8_t> data;
+  std::vector<std::uint8_t> data;
   data.assign(pData, pData + sizeData);
   FORWARD_RESULT( setDataFieldHeader(data) );
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, const size_t &sizeData,
+CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::uint8_t *pData, const size_t &sizeData,
                                                        const std::string &pType) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
 
@@ -97,7 +97,7 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, con
                  "Secondary header type is not registered: " + pType);
 
   if (m_secondaryHeaderFactory.typeIsRegistered(pType)) {
-    std::vector<uint8_t> data;
+    std::vector<std::uint8_t> data;
     data.assign(pData, pData + sizeData);
     FORWARD_RESULT(setDataFieldHeader(data,pType));
   } else {
@@ -108,7 +108,7 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const uint8_t *pData, con
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &data,
+CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<std::uint8_t> &data,
                                                        const std::string &pType) {
   RET_IF_ERR_MSG(data.size() > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
@@ -131,7 +131,7 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<uint8_t> &dataFieldHeader) {
+CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<std::uint8_t> &dataFieldHeader) {
   RET_IF_ERR_MSG(dataFieldHeader.size() > getDataFieldAvailableBytesSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
 
@@ -166,9 +166,9 @@ void CCSDS::DataField::setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstrac
   m_dataFieldHeaderUpdated = false;
 }
 
-void CCSDS::DataField::setDataPacketSize(const uint16_t &value) { m_dataPacketSize = value; }
+void CCSDS::DataField::setDataPacketSize(const std::uint16_t &value) { m_dataPacketSize = value; }
 
-std::vector<uint8_t> CCSDS::DataField::getDataFieldHeaderBytes() {
+std::vector<std::uint8_t> CCSDS::DataField::getDataFieldHeaderBytes() {
   update();
   if (m_secondaryHeader) {
     return m_secondaryHeader->serialize();

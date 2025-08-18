@@ -58,7 +58,7 @@ public:
    *
    * @return integer representing the number of tests failed, 0 if all passed.
    */
-  int Result();
+  std::int32_t Result();
 
 private:
   /**

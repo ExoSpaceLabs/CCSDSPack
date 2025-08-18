@@ -8,7 +8,7 @@
 
 #include "CCSDSResult.h"
 
-enum ErrorCodeExec : uint8_t {
+enum ErrorCodeExec : std::uint8_t {
   ARG_PARSE_ERROR = 14,                           ///< Error Parsing argument
   CONFIG_MISSING_PARAMETER = 15,
   INVALID_INPUT_DATA = 16,

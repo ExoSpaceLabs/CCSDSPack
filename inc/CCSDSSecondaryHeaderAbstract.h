@@ -18,10 +18,10 @@ namespace CCSDS {
     virtual ~SecondaryHeaderAbstract() = default;
 
     /**
-     * @brief takes a buffer if data (vector uint8) and creates the header
+     * @brief takes a buffer if data (vector std::uint8) and creates the header
      * @return Boolean true on success or Error.
      */
-    [[nodiscard]] virtual ResultBool deserialize(const std::vector<uint8_t> &data) = 0;
+    [[nodiscard]] virtual ResultBool deserialize(const std::vector<std::uint8_t> &data) = 0;
 
 
     /**
@@ -37,13 +37,13 @@ namespace CCSDS {
      * @brief Gets the size of the header in bytes.
      * @return The size of the header in bytes.
      */
-    [[nodiscard]] virtual uint16_t getSize() const = 0;
+    [[nodiscard]] virtual std::uint16_t getSize() const = 0;
 
     /**
      * @brief Retrieves the serialized representation of the  header.
      * @return A vector containing the header bytes. (does not include data field)
      */
-    [[nodiscard]] virtual std::vector<uint8_t> serialize() const = 0; // Pure virtual method for polymorphism
+    [[nodiscard]] virtual std::vector<std::uint8_t> serialize() const = 0; // Pure virtual method for polymorphism
 
     /**
      * @brief Retrieves the name of the packet.
@@ -78,21 +78,21 @@ namespace CCSDS {
     /**
      * @brief Constructs a DataOnlyHeader object with all fields explicitly set.
      */
-    explicit BufferHeader(const std::vector<uint8_t>& data) : m_data(data) {
+    explicit BufferHeader(const std::vector<std::uint8_t>& data) : m_data(data) {
     };
 
-    [[nodiscard]] ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
+    [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override {m_data = data; return true;};
 
-    [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
+    [[nodiscard]] std::uint16_t getSize() const override { return m_data.size(); }
     [[nodiscard]] std::string getType() const override { return m_type; }
 
-    [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override {return m_data;};
     void update(DataField* dataField) override {m_dataLength = m_data.size();}
     ResultBool loadFromConfig(const Config &config) override{return true;};
 
   private:
-    std::vector<uint8_t> m_data;
-    uint16_t m_dataLength = 0;
+    std::vector<std::uint8_t> m_data;
+    std::uint16_t m_dataLength = 0;
     const std::string m_type = "DataOnlyHeader";
   };
 

@@ -12,7 +12,7 @@ namespace CCSDS {
    * @enum ErrorCode
    * @brief Defines various error codes used in CCSDS packet handling.
    */
-  enum ErrorCode : uint8_t {
+  enum ErrorCode : std::uint8_t {
     NONE = 0,                           ///< No error
     UNKNOWN_ERROR = 1,                  ///< Unknown error
     NO_DATA = 2,                        ///< No data available
@@ -125,7 +125,7 @@ namespace CCSDS {
 
   // Convenient type aliases for common result types
   using ResultBool = Result<bool>;
-  using ResultBuffer = Result<std::vector<uint8_t> >;
+  using ResultBuffer = Result<std::vector<std::uint8_t> >;
 }
 
 /* ERROR MANAGEMENT MACROS */
@@ -144,7 +144,7 @@ do { if (condition) return errorCode; } while (0)
 #define RET_IF_ERR_MSG(condition, errorCode, message)    \
 do {                                                     \
     if (condition) {                                     \
-        return CCSDS::Error{errorCode,message};                 \
+        return CCSDS::Error{errorCode,message};          \
     }                                                    \
 } while (0)
 
@@ -179,7 +179,7 @@ var = _res.value();                            \
 do {                                           \
     auto&& _res = (result);                    \
     if (!_res) {                               \
-        std::cerr << "[ Error ]: Code [" << _res.error().code() << "]: "<< _res.error().message() << '\n'; \
+        printf("[ Error ]: Code [%u]: %s\n", static_cast<unsigned>(_res.error().code()), _res.error().message().c_str());; \
     } else {                                   \
         var = std::move(_res.value());         \
     }                                          \
