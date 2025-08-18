@@ -4,8 +4,11 @@
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "CCSDSSecondaryHeaderFactory.h"
 #include "CCSDSResult.h"
-#include "CCSDSConfig.h"
 
+//exclude includes when building for MCU
+#ifndef CCSDS_MCU
+  #include "CCSDSConfig.h"
+#endif //CCSDS_MCU
 /**
    * @brief Represents a PUS Type A (Telemetry) header.
    *
@@ -48,7 +51,11 @@
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<std::uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
+
+#ifndef CCSDS_MCU
     CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
+#endif
+
 
   private:                               // Field	            Size (bits)	Description
     std::uint8_t m_version{};            // Version	            3	        Version of the PUS standard
@@ -105,7 +112,10 @@
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<std::uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
+
+#ifndef CCSDS_MCU
     CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
+#endif
 
   private:                                // Field	            Size (bits)	Description
     std::uint8_t m_version{};             // Version	            3	        Version of the PUS standard
@@ -165,7 +175,10 @@
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
     [[nodiscard]] CCSDS::ResultBool    deserialize( const std::vector<std::uint8_t> &data ) override;
     void update(CCSDS::DataField* dataField) override;
+
+#ifndef CCSDS_MCU
     CCSDS::ResultBool loadFromConfig(const ::Config &cfg) override;
+#endif
 
   private:                                   // Field	            Size (bits)	Description
     std::uint8_t m_version{};                // Version	            3	        Version of the PUS standard

@@ -1,8 +1,12 @@
 #include "CCSDSPacket.h"
 #include "CCSDSDataField.h"
 #include "CCSDSUtils.h"
-#include "CCSDSConfig.h"
 #include <algorithm>
+
+//exclude includes when building for MCU
+#ifndef CCSDS_MCU
+  #include "CCSDSConfig.h"
+#endif //CCSDS_MCU
 
 void CCSDS::Packet::update() {
   if (!m_updateStatus && m_enableUpdatePacket) {
@@ -22,6 +26,7 @@ void CCSDS::Packet::update() {
   }
 }
 
+#ifndef CCSDS_MCU
 CCSDS::ResultBool CCSDS::Packet::loadFromConfigFile(const std::string &configPath) {
   Config cfg;
   cfg.load(configPath);
@@ -91,6 +96,7 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
 
   return true;
 }
+#endif
 
 uint16_t CCSDS::Packet::getCRC() {
   update();

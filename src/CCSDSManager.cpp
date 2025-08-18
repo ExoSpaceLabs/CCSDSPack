@@ -31,8 +31,8 @@ CCSDS::ResultBool CCSDS::Manager::loadTemplateConfigFile(const std::string &conf
   m_templateIsSet = true;
   return true;;
 }
-
-CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const Config &cfg) {
+#ifndef CCSDS_MCU
+  CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const Config &cfg) {
 
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfig(cfg));
@@ -40,7 +40,7 @@ CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const Config &cfg) {
   m_templateIsSet = true;
   return true;;
 }
-
+#endif
 void CCSDS::Manager::setDataFieldSize(const std::uint16_t size) {
   m_templatePacket.setDataFieldSize(size);
 }

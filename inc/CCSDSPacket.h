@@ -405,8 +405,9 @@ namespace CCSDS {
      * @param cfg configuration object.
      * @return ResultBool
      */
+#ifndef CCSDS_MCU
     ResultBool loadFromConfig(const Config &cfg);
-
+#endif
 
   private:
     Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex

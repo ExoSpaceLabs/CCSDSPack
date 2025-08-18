@@ -16,4 +16,9 @@
 #include "CCSDSValidator.h"
 #include "PusServices.h"
 
+//exclude includes when building for MCU
+#ifndef CCSDS_MCU
+  #include "CCSDSConfig.h"
+#endif //CCSDS_MCU
+
 #endif //CCSDSPACK_H

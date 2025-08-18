@@ -5,7 +5,11 @@
 #include <variant>
 #include <vector>
 #include <cstdint>
-#include <iostream>
+
+//exclude includes when building for MCU
+#ifndef CCSDS_MCU
+  #include <iostream>
+#endif //CCSDS_MCU
 
 namespace CCSDS {
   /**

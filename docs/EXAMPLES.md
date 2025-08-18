@@ -45,7 +45,7 @@ int main() {
   }
 
   // 2) Application bytes (e.g., file contents you loaded elsewhere)
-  std::vector<uint8_t> app(5000, 0xAB);
+  std::vector<std::uint8_t> app(5000, 0xAB);
 
   // 3) Segment & build packets
   CCSDS::Manager m(tpl);
@@ -88,7 +88,7 @@ return r.error().code();
 }
 
 // Reassemble application bytes
-std::vector<uint8_t> app = m.getApplicationDataBuffer();
+std::vector<std::uint8_t> app = m.getApplicationDataBuffer();
 std::cout << "Recovered " << app.size() << " bytes\n";
 return 0;
 }
@@ -105,7 +105,7 @@ return 0;
 
 int main() {
 // Source data
-std::vector<uint8_t> src(8192);
+std::vector<std::uint8_t> src(8192);
 for (size_t i = 0; i < src.size(); ++i) src[i] = static_cast<uint8_t>(i & 0xFF);
 
 // Template header
@@ -254,7 +254,7 @@ public:
 
   [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
 
-  [[nodiscard]] uint16_t getSize() const override { return m_data.size(); }
+  [[nodiscard]] std::uint16_t getSize() const override { return m_data.size(); }
   [[nodiscard]] std::string getType() const override { return m_type; }
 
   [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};

@@ -52,7 +52,8 @@ Specific distribution build and regression status are shown below
 - Optimised for fast execution.
 - Pre-built .deb package downloadable from [Releases](https://github.com/ExoSpaceLabs/CCSDSPack/releases).
 - Pre-built docker image with library installed, see [docker](#docker).
-- Exceptionless library, variant based error management enabling the usage within embedded systems see [Error management](docs/ERROR.md).  
+- Exceptionless library, variant based error management enabling the usage within embedded systems see [Error management](docs/ERROR.md).
+- Baremetal build for targeted devices see [Cross-compile](docs/CROSSCOMPILE.md).
 ---
 ## Documentation
 Full API documentation is available and hosted here:  [CCSDSPack Documentation](https://exospacelabs.github.io/CCSDSPack/html/)
@@ -152,13 +153,15 @@ specific provided features. such as tester, which may or may not be of interest.
 
 | Cmake Flag (default value) | Description                                                                  |
 |----------------------------|------------------------------------------------------------------------------|
-| -DENABLE_TESTER=ON          | build tester, that performs regression tests of the library.                 | 
+| -DCCSDSPACK_BUILD_MCU=OFF  | build the project as a static library for microcontrollers. *                |
+| -DENABLE_TESTER=ON         | build tester, that performs regression tests of the library.                 | 
 | -DENABLE_ENCODER=ON        | build encoder executable that encodes a file using ccsds packets             |
 | -DENABLE_DECODER=ON        | build decoder executable that decodes a binary file containing ccsds packets |
 | -DENABLE_VALIDATOR=ON      | build validator executable that validates packets.                           |
 
+*Used when compiling library for baremetal, refer to [cross-compilation](docs/CROSSCOMPILE.md) for usage.
 
-see example usage during cmake setup.
+see executable enabler example usage during cmake setup below.
 
 ---
 
@@ -324,7 +327,7 @@ Note: Assume a Big endian logic for data processing.
 
 int main(){
 
-  std::vector<uint8_t> inputBytes; // assume data is present
+  std::vector<std::uint8_t> inputBytes; // assume data is present
   // make a packet and set header to be used as template  
   CCSDS::Packet templatePacket;
   if(const auto res = templatePacket.setPrimaryHeader(0xF7FF4FFFFFFF); !res.has_value()){
@@ -371,7 +374,7 @@ int main(){
     return res.error().code();
   }
   // get the data buffer of the packets.
-  std::vector<uint8_t> data = manager.getApplicationDataBuffer();
+  std::vector<std::uint8_t> data = manager.getApplicationDataBuffer();
   return 0;
 }
 ```

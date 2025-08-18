@@ -46,7 +46,7 @@ A discriminated container: **exactly one** of `{ value<T>, Error }`.
 
 ## Error Codes
 
-Below is the canonical set of error codes from `inc/Result.h` (`enum ErrorCode : uint8_t`).
+Below is the canonical set of error codes from `inc/Result.h` (`enum ErrorCode : std::uint8_t`).
 
 | Code name                        | Value | Where it appears                        | Meaning / When raised                                                             |
 |----------------------------------|:-----:|------------------------------------------|------------------------------------------------------------------------------------|

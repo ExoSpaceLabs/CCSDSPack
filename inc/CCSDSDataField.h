@@ -145,6 +145,8 @@ namespace CCSDS {
      */
     [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &dataFieldHeader);
 
+
+#ifndef CCSDS_MCU
     /**
      * @brief Sets the data field header using a configuration file as reference.
      *
@@ -155,7 +157,7 @@ namespace CCSDS {
      * @return ResultBool
      */
     [[nodiscard]] ResultBool setDataFieldHeader(const Config& cfg);
-
+#endif
     /**
      * @brief Sets the secondary header for the data field using a PUS-A header.
      *

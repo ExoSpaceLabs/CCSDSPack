@@ -2,9 +2,13 @@
 #define CCSDS_SECONDARY_HEADER_ABSTRACT_H
 
 #include <CCSDSResult.h>
-#include "CCSDSConfig.h"
 #include <vector>
 #include <cstdint>
+
+//exclude includes when building for MCU
+#ifndef CCSDS_MCU
+  #include "CCSDSConfig.h"
+#endif //CCSDS_MCU
 
 namespace CCSDS {
   class DataField;
@@ -51,8 +55,9 @@ namespace CCSDS {
      */
     [[nodiscard]] virtual std::string getType() const = 0; // Pure virtual method for polymorphism
 
-
+#ifndef CCSDS_MCU
     virtual ResultBool loadFromConfig(const Config &config) = 0;
+#endif
     void setVariableLength(const bool bEnable){ variableLength =  bEnable;}
     bool variableLength{false};
   };
@@ -88,7 +93,9 @@ namespace CCSDS {
 
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override {return m_data;};
     void update(DataField* dataField) override {m_dataLength = m_data.size();}
+#ifndef CCSDS_MCU
     ResultBool loadFromConfig(const Config &config) override{return true;};
+#endif
 
   private:
     std::vector<std::uint8_t> m_data;

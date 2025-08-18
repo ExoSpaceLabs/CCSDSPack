@@ -2,8 +2,11 @@
 #include <cstddef>
 #include <iomanip>
 
-#include <fstream>
-#include <iostream>
+//exclude includes when building for MCU
+#ifndef CCSDS_MCU
+  #include <fstream>
+  #include <iostream>
+#endif //CCSDS_MCU
 
 //###########################################################################
 #define VERBOSE 1
@@ -60,7 +63,7 @@ std::string getBitsSpaces(const std::int32_t num) {
 
   return spaces;
 }
-
+#ifndef CCSDS_MCU
 void printBufferData(const std::vector<std::uint8_t> &buffer, const std::int32_t limitBytes) {
   std::cout << "[ ";
   if (buffer.size() > limitBytes) {
@@ -236,4 +239,4 @@ bool fileExists(const std::string &fileName) {
   }
   return false;
 }
-
+#endif

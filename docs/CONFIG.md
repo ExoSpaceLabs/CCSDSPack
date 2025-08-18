@@ -70,7 +70,7 @@ returned using the Result error management class.
 After successfully loading the configuration file, the data can be accessed using:
 ```c++
 if (cfg.isKey("data_field_size")) {
-    uint16_t dataFieldSize;
+    std::uint16_t dataFieldSize;
     
     // get data of type Result<T>
     const auto res = cfg.get<int>("data_field_size");

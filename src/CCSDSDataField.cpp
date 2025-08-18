@@ -144,6 +144,7 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const std::vector<std::ui
   return true;
 }
 
+#ifndef CCSDS_MCU
 CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const Config& cfg) {
   RET_IF_ERR_MSG(!cfg.isKey("secondary_header_type"), ErrorCode::CONFIG_FILE_ERROR,
                      "Config: Missing string field: secondary_header_type");
@@ -159,6 +160,7 @@ CCSDS::ResultBool CCSDS::DataField::setDataFieldHeader(const Config& cfg) {
   m_dataFieldHeaderType = m_secondaryHeader->getType();
   return true;
 }
+#endif
 
 void CCSDS::DataField::setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header) {
   m_secondaryHeader = std::move(header);

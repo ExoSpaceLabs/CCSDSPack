@@ -1,10 +1,10 @@
 #include "CCSDSConfig.h"
 #include <cstddef>
 #include <iomanip>
-#include <fstream>
 #include <algorithm>
 #include <charconv>
 
+#include <fstream>
 
 //###########################################################################
 #define VERBOSE 1

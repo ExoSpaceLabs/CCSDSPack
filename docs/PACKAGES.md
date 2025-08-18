@@ -2,9 +2,6 @@
 
 [../](README.md) - CCSDSPack Documentation
 
-### Todo:
-* implement automatic package generation using GitHub and auto host.
-
 ## Linux 
 ### Deb:
 A sample bash script has been prepared to generate .deb package using cpack.

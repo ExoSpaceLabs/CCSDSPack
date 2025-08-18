@@ -32,30 +32,6 @@ void PusA::update(CCSDS::DataField* dataField) {
   m_dataLength = dataField->getApplicationDataBytesSize();
 }
 
-CCSDS::ResultBool PusA::loadFromConfig(const Config& cfg) {
-  std::uint8_t version = 0;
-  std::uint8_t serviceType = 0;
-  std::uint8_t serviceSubType = 0;
-  std::uint8_t sourceId = 0;
-
-  RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_service_sub_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_sub_type");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_source_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_source_id");
-
-  ASSIGN_OR_PRINT(version, cfg.get<int>("pus_version"));
-  ASSIGN_OR_PRINT(serviceType, cfg.get<int>("pus_service_type"));
-  ASSIGN_OR_PRINT(serviceSubType,cfg.get< int>("pus_service_sub_type"));
-  ASSIGN_OR_PRINT(sourceId,cfg.get<int>("pus_source_id"));
-
-  m_version = version & 0x7;
-  m_serviceType = serviceType & 0xFF;
-  m_serviceSubType = serviceSubType & 0xFF;
-  m_sourceID = sourceId & 0xFF;
-
-  return true;
-}
-
 CCSDS::ResultBool PusB::deserialize(const std::vector<std::uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() != m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-B header not correct size (size != 8 bytes)");
@@ -87,33 +63,6 @@ void PusB::update(CCSDS::DataField* dataField) {
   m_dataLength = dataField->getApplicationDataBytesSize();
 }
 
-CCSDS::ResultBool PusB::loadFromConfig(const Config &cfg) {
-  std::uint8_t version = 0;
-  std::uint8_t serviceType = 0;
-  std::uint8_t serviceSubType = 0;
-  std::uint8_t sourceId = 0;
-  std::uint8_t eventId = 0;
-
-  RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_service_sub_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_sub_type");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_source_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_source_id");
-  RET_IF_ERR_MSG(!cfg.isKey("pus_event_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_event_id");
-
-  ASSIGN_OR_PRINT(version, cfg.get<int>("pus_version"));
-  ASSIGN_OR_PRINT(serviceType, cfg.get<int>("pus_service_type"));
-  ASSIGN_OR_PRINT(serviceSubType,cfg.get< int>("pus_service_sub_type"));
-  ASSIGN_OR_PRINT(sourceId,cfg.get<int>("pus_source_id"));
-  ASSIGN_OR_PRINT(eventId,cfg.get<int>("pus_event_id"));
-
-  m_version = version & 0x7;
-  m_serviceType = serviceType & 0xFF;
-  m_serviceSubType = serviceSubType & 0xFF;
-  m_sourceID = sourceId & 0xFF;
-  m_eventID = eventId & 0xFFFF;
-
-  return true;
-}
 
 CCSDS::ResultBool PusC::deserialize(const std::vector<std::uint8_t> &data) {
   RET_IF_ERR_MSG(data.size() <= m_size, CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -149,6 +98,60 @@ void PusC::update(CCSDS::DataField* dataField) {
   m_dataLength = dataField->getApplicationDataBytesSize();
 }
 
+#ifndef CCSDS_MCU
+
+CCSDS::ResultBool PusA::loadFromConfig(const Config& cfg) {
+  std::uint8_t version = 0;
+  std::uint8_t serviceType = 0;
+  std::uint8_t serviceSubType = 0;
+  std::uint8_t sourceId = 0;
+
+  RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_service_sub_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_sub_type");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_source_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_source_id");
+
+  ASSIGN_OR_PRINT(version, cfg.get<int>("pus_version"));
+  ASSIGN_OR_PRINT(serviceType, cfg.get<int>("pus_service_type"));
+  ASSIGN_OR_PRINT(serviceSubType,cfg.get< int>("pus_service_sub_type"));
+  ASSIGN_OR_PRINT(sourceId,cfg.get<int>("pus_source_id"));
+
+  m_version = version & 0x7;
+  m_serviceType = serviceType & 0xFF;
+  m_serviceSubType = serviceSubType & 0xFF;
+  m_sourceID = sourceId & 0xFF;
+
+  return true;
+}
+
+CCSDS::ResultBool PusB::loadFromConfig(const Config &cfg) {
+  std::uint8_t version = 0;
+  std::uint8_t serviceType = 0;
+  std::uint8_t serviceSubType = 0;
+  std::uint8_t sourceId = 0;
+  std::uint8_t eventId = 0;
+
+  RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_service_sub_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_sub_type");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_source_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_source_id");
+  RET_IF_ERR_MSG(!cfg.isKey("pus_event_id"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_event_id");
+
+  ASSIGN_OR_PRINT(version, cfg.get<int>("pus_version"));
+  ASSIGN_OR_PRINT(serviceType, cfg.get<int>("pus_service_type"));
+  ASSIGN_OR_PRINT(serviceSubType,cfg.get< int>("pus_service_sub_type"));
+  ASSIGN_OR_PRINT(sourceId,cfg.get<int>("pus_source_id"));
+  ASSIGN_OR_PRINT(eventId,cfg.get<int>("pus_event_id"));
+
+  m_version = version & 0x7;
+  m_serviceType = serviceType & 0xFF;
+  m_serviceSubType = serviceSubType & 0xFF;
+  m_sourceID = sourceId & 0xFF;
+  m_eventID = eventId & 0xFFFF;
+
+  return true;
+}
+
 CCSDS::ResultBool PusC::loadFromConfig(const Config& cfg) {
   std::uint8_t version = 0;
   std::uint8_t serviceType = 0;
@@ -176,3 +179,5 @@ CCSDS::ResultBool PusC::loadFromConfig(const Config& cfg) {
 
   return true;
 }
+
+#endif

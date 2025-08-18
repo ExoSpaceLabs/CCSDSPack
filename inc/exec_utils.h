@@ -5,7 +5,6 @@
 #ifndef EXEC_UTILS_H
 #define EXEC_UTILS_H
 #include <set>
-
 #include "CCSDSResult.h"
 
 enum ErrorCodeExec : std::uint8_t {

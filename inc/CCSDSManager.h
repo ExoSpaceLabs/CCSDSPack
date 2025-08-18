@@ -77,13 +77,14 @@ namespace CCSDS {
     * @param configPath  path to the configuration file.
     */
     [[nodiscard]] ResultBool loadTemplateConfigFile(const std::string &configPath);
-
+#ifndef CCSDS_MCU
     /**
     * @brief Loads a template packet from a configuration object.
     *
     * @param cfg  Configuration obj to load template from.
     */
     [[nodiscard]] ResultBool loadTemplateConfig(const Config &cfg);
+#endif
 
     /**
      * @brief Sets the size of the data field.
