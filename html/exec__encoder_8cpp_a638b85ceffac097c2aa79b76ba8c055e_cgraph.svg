@@ -156,7 +156,7 @@ var sectionId = 'dynsection-1';
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
-<g id="a_Node000007"><a xlink:href="classCCSDS_1_1Manager.html#a1b7106979c669a3be5c2ff950743c126" target="_top" xlink:title="Retrieves a buffer containing all the stored packets sequentially.">
+<g id="a_Node000007"><a xlink:href="classCCSDS_1_1Manager.html#a9d3d17e64725310ba7c4c39964438d16" target="_top" xlink:title="Retrieves a buffer containing all the stored packets sequentially.">
 <polygon fill="white" stroke="#666666" points="254,-573 97,-573 97,-543 254,-543 254,-573"/>
 <text text-anchor="start" x="105" y="-561" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::getPackets</text>
 <text text-anchor="middle" x="175.5" y="-550" font-family="Helvetica,sans-Serif" font-size="10.00">Buffer</text>
@@ -194,7 +194,7 @@ var sectionId = 'dynsection-1';
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
-<g id="a_Node000009"><a xlink:href="classCCSDS_1_1Header.html#a7aec7b479769c8348584cab4b9d1197b" target="_top" xlink:title="2 bits">
+<g id="a_Node000009"><a xlink:href="classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770" target="_top" xlink:title="2 bits">
 <polygon fill="white" stroke="#666666" points="1036.5,-668 876.5,-668 876.5,-638 1036.5,-638 1036.5,-668"/>
 <text text-anchor="start" x="884.5" y="-656" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::getSequence</text>
 <text text-anchor="middle" x="956.5" y="-645" font-family="Helvetica,sans-Serif" font-size="10.00">Flags</text>
@@ -305,7 +305,7 @@ var sectionId = 'dynsection-1';
 <!-- Node18 -->
 <g id="Node000018" class="node">
 <title>Node18</title>
-<g id="a_Node000018"><a xlink:href="exec__utils_8cpp.html#a4a4f23e2053b71081b19a09cd0c9db54" target="_top" xlink:title="Parses the input arguments with defined values returns an unordered map with given keys and input val...">
+<g id="a_Node000018"><a xlink:href="exec__utils_8h.html#ab7c2b867530c6e37b267cd1a9e6d495b" target="_top" xlink:title="Parses the input arguments with defined values returns an unordered map with given keys and input val...">
 <polygon fill="white" stroke="#666666" points="224,-314.5 127,-314.5 127,-295.5 224,-295.5 224,-314.5"/>
 <text text-anchor="middle" x="175.5" y="-302.5" font-family="Helvetica,sans-Serif" font-size="10.00">parseArguments</text>
 </a>
@@ -359,7 +359,7 @@ var sectionId = 'dynsection-1';
 <!-- Node47 -->
 <g id="Node000047" class="node">
 <title>Node47</title>
-<g id="a_Node000047"><a xlink:href="classCCSDS_1_1Manager.html#a2f6c84bec310a521c55d88ce49506395" target="_top" xlink:title="Sets the application data for the packet.">
+<g id="a_Node000047"><a xlink:href="classCCSDS_1_1Manager.html#abb8e2225df8018c04ad76c874cadee69" target="_top" xlink:title="Sets the application data for the packet.">
 <polygon fill="white" stroke="#666666" points="274,-240.5 77,-240.5 77,-221.5 274,-221.5 274,-240.5"/>
 <text text-anchor="middle" x="175.5" y="-228.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::setApplicationData</text>
 </a>
@@ -377,7 +377,7 @@ var sectionId = 'dynsection-1';
 <!-- Node52 -->
 <g id="Node000052" class="node">
 <title>Node52</title>
-<g id="a_Node000052"><a xlink:href="classCCSDS_1_1Manager.html#ace4b1386f4bad46724ba01884543ecc1" target="_top" xlink:title="Sets the size of the data field.">
+<g id="a_Node000052"><a xlink:href="classCCSDS_1_1Manager.html#aab1b7a157fa5a6db038152860d0b3031" target="_top" xlink:title="Sets the size of the data field.">
 <polygon fill="white" stroke="#666666" points="268.5,-203.5 82.5,-203.5 82.5,-184.5 268.5,-184.5 268.5,-203.5"/>
 <text text-anchor="middle" x="175.5" y="-191.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::setDataFieldSize</text>
 </a>
@@ -395,7 +395,7 @@ var sectionId = 'dynsection-1';
 <!-- Node53 -->
 <g id="Node000053" class="node">
 <title>Node53</title>
-<g id="a_Node000053"><a xlink:href="classCCSDS_1_1Manager.html#a85510a068db565792051e787667e1ff0" target="_top" xlink:title="set sync pattern that should indicate the start of a CCSDS packet.">
+<g id="a_Node000053"><a xlink:href="classCCSDS_1_1Manager.html#a45f1e86e3a1e892c8244a2b0f8967c88" target="_top" xlink:title="set sync pattern that should indicate the start of a CCSDS packet.">
 <polygon fill="white" stroke="#666666" points="264,-166.5 87,-166.5 87,-147.5 264,-147.5 264,-166.5"/>
 <text text-anchor="middle" x="175.5" y="-154.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::setSyncPattern</text>
 </a>
@@ -432,7 +432,7 @@ var sectionId = 'dynsection-1';
 <!-- Node55 -->
 <g id="Node000055" class="node">
 <title>Node55</title>
-<g id="a_Node000055"><a xlink:href="CCSDSUtils_8cpp.html#ac3822e47eaaef0f66ec2b86d7a4b09fc" target="_top" xlink:title="This function takes in a buffer of data and a file name.">
+<g id="a_Node000055"><a xlink:href="CCSDSUtils_8cpp.html#aacff77e4c89f07aa9969373450552caa" target="_top" xlink:title="This function takes in a buffer of data and a file name.">
 <polygon fill="white" stroke="#666666" points="220.5,-80.5 130.5,-80.5 130.5,-61.5 220.5,-61.5 220.5,-80.5"/>
 <text text-anchor="middle" x="175.5" y="-68.5" font-family="Helvetica,sans-Serif" font-size="10.00">writeBinaryFile</text>
 </a>
@@ -651,7 +651,7 @@ var sectionId = 'dynsection-1';
 <!-- Node25 -->
 <g id="Node000025" class="node">
 <title>Node25</title>
-<g id="a_Node000025"><a xlink:href="CCSDSUtils_8cpp.html#ac77b078f446e1e3842c118709505e87b" target="_top" xlink:title="Prints to console the HEX data from the bytes vector.">
+<g id="a_Node000025"><a xlink:href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f" target="_top" xlink:title="Prints to console the HEX data from the bytes vector.">
 <polygon fill="white" stroke="#666666" points="1002.5,-299.5 910.5,-299.5 910.5,-280.5 1002.5,-280.5 1002.5,-299.5"/>
 <text text-anchor="middle" x="956.5" y="-287.5" font-family="Helvetica,sans-Serif" font-size="10.00">printBufferData</text>
 </a>
@@ -795,7 +795,7 @@ var sectionId = 'dynsection-1';
 <!-- Node32 -->
 <g id="Node000032" class="node">
 <title>Node32</title>
-<g id="a_Node000032"><a xlink:href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf" target="_top" xlink:title="Generates a string of spaces for formatting binary outputs.">
+<g id="a_Node000032"><a xlink:href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1" target="_top" xlink:title="Generates a string of spaces for formatting binary outputs.">
 <polygon fill="white" stroke="#666666" points="999.5,-336.5 913.5,-336.5 913.5,-317.5 999.5,-317.5 999.5,-336.5"/>
 <text text-anchor="middle" x="956.5" y="-324.5" font-family="Helvetica,sans-Serif" font-size="10.00">getBitsSpaces</text>
 </a>
@@ -813,7 +813,7 @@ var sectionId = 'dynsection-1';
 <!-- Node36 -->
 <g id="Node000036" class="node">
 <title>Node36</title>
-<g id="a_Node000036"><a xlink:href="classCCSDS_1_1Header.html#a2f4d97beaaaac5b2005b470ed14f228d" target="_top" xlink:title="Sets the header data from a 64&#45;bit integer representation.">
+<g id="a_Node000036"><a xlink:href="classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de" target="_top" xlink:title="Sets the header data from a 64&#45;bit integer representation.">
 <polygon fill="white" stroke="#666666" points="833.5,-448.5 683.5,-448.5 683.5,-429.5 833.5,-429.5 833.5,-448.5"/>
 <text text-anchor="middle" x="758.5" y="-436.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::deserialize</text>
 </a>
@@ -849,7 +849,7 @@ var sectionId = 'dynsection-1';
 <!-- Node37 -->
 <g id="Node000037" class="node">
 <title>Node37</title>
-<g id="a_Node000037"><a xlink:href="classCCSDS_1_1Header.html#aad717b39dda3dff19adb10e3c7e38100" target="_top" xlink:title="Sets the header data from a 64&#45;bit integer representation.">
+<g id="a_Node000037"><a xlink:href="classCCSDS_1_1Header.html#ac4a56ea430e71c2cf43dfa9a0c3df534" target="_top" xlink:title="Sets the header data from a 64&#45;bit integer representation.">
 <polygon fill="white" stroke="#666666" points="1024,-373.5 889,-373.5 889,-354.5 1024,-354.5 1024,-373.5"/>
 <text text-anchor="middle" x="956.5" y="-361.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::setData</text>
 </a>
@@ -885,7 +885,7 @@ var sectionId = 'dynsection-1';
 <!-- Node39 -->
 <g id="Node000039" class="node">
 <title>Node39</title>
-<g id="a_Node000039"><a xlink:href="classCCSDS_1_1Header.html#a3b171a18bfed281cfa837f349f7cc264" target="_top" xlink:title="11 bits">
+<g id="a_Node000039"><a xlink:href="classCCSDS_1_1Header.html#a5cc2c58961e2088dee19d65effccfba5" target="_top" xlink:title="11 bits">
 <polygon fill="white" stroke="#666666" points="1024.5,-533.5 888.5,-533.5 888.5,-514.5 1024.5,-514.5 1024.5,-533.5"/>
 <text text-anchor="middle" x="956.5" y="-521.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::getAPID</text>
 </a>
@@ -903,7 +903,7 @@ var sectionId = 'dynsection-1';
 <!-- Node40 -->
 <g id="Node000040" class="node">
 <title>Node40</title>
-<g id="a_Node000040"><a xlink:href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c" target="_top" xlink:title="Converts a given value to its binary representation as a string, with spaces every 4 bits.">
+<g id="a_Node000040"><a xlink:href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321" target="_top" xlink:title="Converts a given value to its binary representation as a string, with spaces every 4 bits.">
 <polygon fill="white" stroke="#666666" points="1002.5,-496.5 910.5,-496.5 910.5,-477.5 1002.5,-477.5 1002.5,-496.5"/>
 <text text-anchor="middle" x="956.5" y="-484.5" font-family="Helvetica,sans-Serif" font-size="10.00">getBinaryString</text>
 </a>
@@ -921,7 +921,7 @@ var sectionId = 'dynsection-1';
 <!-- Node41 -->
 <g id="Node000041" class="node">
 <title>Node41</title>
-<g id="a_Node000041"><a xlink:href="classCCSDS_1_1Header.html#a836aab2a197579a57a7901071075f685" target="_top" xlink:title="1 bits">
+<g id="a_Node000041"><a xlink:href="classCCSDS_1_1Header.html#acf533901cf3bf0e1d5bc3e4fe2ff876b" target="_top" xlink:title="1 bits">
 <polygon fill="white" stroke="#666666" points="1036,-459 877,-459 877,-429 1036,-429 1036,-459"/>
 <text text-anchor="start" x="885" y="-447" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::getDataField</text>
 <text text-anchor="middle" x="956.5" y="-436" font-family="Helvetica,sans-Serif" font-size="10.00">HeaderFlag</text>
@@ -940,7 +940,7 @@ var sectionId = 'dynsection-1';
 <!-- Node42 -->
 <g id="Node000042" class="node">
 <title>Node42</title>
-<g id="a_Node000042"><a xlink:href="classCCSDS_1_1Header.html#a9c2ac8f4b16874076de742cb19833bd7" target="_top" xlink:title="16 bits">
+<g id="a_Node000042"><a xlink:href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73" target="_top" xlink:title="16 bits">
 <polygon fill="white" stroke="#666666" points="1041,-410.5 872,-410.5 872,-391.5 1041,-391.5 1041,-410.5"/>
 <text text-anchor="middle" x="956.5" y="-398.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::getDataLength</text>
 </a>
@@ -958,7 +958,7 @@ var sectionId = 'dynsection-1';
 <!-- Node43 -->
 <g id="Node000043" class="node">
 <title>Node43</title>
-<g id="a_Node000043"><a xlink:href="classCCSDS_1_1Header.html#af1ae6079606846982ff0552a2d684a1b" target="_top" xlink:title="Computes and retrieves the full header as a 64&#45;bit value.">
+<g id="a_Node000043"><a xlink:href="classCCSDS_1_1Header.html#a7a3302acb3fccf699f6917feeed9a1b1" target="_top" xlink:title="Computes and retrieves the full header as a 64&#45;bit value.">
 <polygon fill="white" stroke="#666666" points="1039,-619.5 874,-619.5 874,-600.5 1039,-600.5 1039,-619.5"/>
 <text text-anchor="middle" x="956.5" y="-607.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::getFullHeader</text>
 </a>
@@ -976,7 +976,7 @@ var sectionId = 'dynsection-1';
 <!-- Node44 -->
 <g id="Node000044" class="node">
 <title>Node44</title>
-<g id="a_Node000044"><a xlink:href="classCCSDS_1_1Header.html#a8847364755456604a86e894a950f81c6" target="_top" xlink:title="14 bits">
+<g id="a_Node000044"><a xlink:href="classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68" target="_top" xlink:title="14 bits">
 <polygon fill="white" stroke="#666666" points="1036.5,-582 876.5,-582 876.5,-552 1036.5,-552 1036.5,-582"/>
 <text text-anchor="start" x="884.5" y="-570" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header::getSequence</text>
 <text text-anchor="middle" x="956.5" y="-559" font-family="Helvetica,sans-Serif" font-size="10.00">Count</text>
@@ -995,7 +995,7 @@ var sectionId = 'dynsection-1';
 <!-- Node48 -->
 <g id="Node000048" class="node">
 <title>Node48</title>
-<g id="a_Node000048"><a xlink:href="classCCSDS_1_1Packet.html#a25e1bfe92e9b301eebcda0b932895a6d" target="_top" xlink:title="Sets the application data for the packet.">
+<g id="a_Node000048"><a xlink:href="classCCSDS_1_1Packet.html#aa2c650db1c72b36817f9df154de993d9" target="_top" xlink:title="Sets the application data for the packet.">
 <polygon fill="white" stroke="#666666" points="496,-163.5 310,-163.5 310,-144.5 496,-144.5 496,-163.5"/>
 <text text-anchor="middle" x="403" y="-151.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::setApplicationData</text>
 </a>
@@ -1013,7 +1013,7 @@ var sectionId = 'dynsection-1';
 <!-- Node49 -->
 <g id="Node000049" class="node">
 <title>Node49</title>
-<g id="a_Node000049"><a xlink:href="classCCSDS_1_1Packet.html#a0574c8d03d7c0eb6593353947623e239" target="_top" xlink:title="Sets the sequence count for the packet.">
+<g id="a_Node000049"><a xlink:href="classCCSDS_1_1Packet.html#a2d27750f942d30600093f6267592cef7" target="_top" xlink:title="Sets the sequence count for the packet.">
 <polygon fill="white" stroke="#666666" points="480.5,-126 325.5,-126 325.5,-96 480.5,-96 480.5,-126"/>
 <text text-anchor="start" x="333.5" y="-114" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::setSequence</text>
 <text text-anchor="middle" x="403" y="-103" font-family="Helvetica,sans-Serif" font-size="10.00">Count</text>

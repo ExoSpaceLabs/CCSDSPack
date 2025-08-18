@@ -99,9 +99,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afdaaad276cedec4c918df5e1d51d7953" id="r_afdaaad276cedec4c918df5e1d51d7953"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderFactory.html#afdaaad276cedec4c918df5e1d51d7953">SecondaryHeaderFactory</a> ()=default</td></tr>
 <tr class="memdesc:afdaaad276cedec4c918df5e1d51d7953"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor for the factory.  <br /></td></tr>
 <tr class="separator:afdaaad276cedec4c918df5e1d51d7953"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7794ddfd6f46ca20b967a1e57a7fa286" id="r_a7794ddfd6f46ca20b967a1e57a7fa286"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderFactory.html#a7794ddfd6f46ca20b967a1e57a7fa286">registerType</a> (std::shared_ptr&lt; <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">SecondaryHeaderAbstract</a> &gt; header)</td></tr>
-<tr class="memdesc:a7794ddfd6f46ca20b967a1e57a7fa286"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a new header type with its creation function.  <br /></td></tr>
-<tr class="separator:a7794ddfd6f46ca20b967a1e57a7fa286"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33fd604ab613a17c9e1fca10753d4ef5" id="r_a33fd604ab613a17c9e1fca10753d4ef5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderFactory.html#a33fd604ab613a17c9e1fca10753d4ef5">registerType</a> (std::shared_ptr&lt; <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">SecondaryHeaderAbstract</a> &gt; header)</td></tr>
+<tr class="memdesc:a33fd604ab613a17c9e1fca10753d4ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Registers a new header type with its creation function.  <br /></td></tr>
+<tr class="separator:a33fd604ab613a17c9e1fca10753d4ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5cc98f9b65ee10e06f86afb7526bd324" id="r_a5cc98f9b65ee10e06f86afb7526bd324"><td class="memItemLeft" align="right" valign="top">std::shared_ptr&lt; <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">SecondaryHeaderAbstract</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderFactory.html#a5cc98f9b65ee10e06f86afb7526bd324">create</a> (const std::string &amp;type)</td></tr>
 <tr class="memdesc:a5cc98f9b65ee10e06f86afb7526bd324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an instance of a registered header type.  <br /></td></tr>
 <tr class="separator:a5cc98f9b65ee10e06f86afb7526bd324"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -202,19 +202,19 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A shared pointer to a <code><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html" title="Abstract base class for a (Packet Utilization Standard) header.">SecondaryHeaderAbstract</a></code> object, or <code>nullptr</code> if the type is not registered. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00050">50</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>                                                                       {</div>
-<div class="line"><span class="lineno">   51</span>    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> it = <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.find(type); it != <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.end()) {</div>
-<div class="line"><span class="lineno">   52</span>      <span class="keywordflow">return</span> it-&gt;second; <span class="comment">// Call the stored creation function</span></div>
-<div class="line"><span class="lineno">   53</span>    }</div>
-<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>; <span class="comment">// Return nullptr if type not found</span></div>
-<div class="line"><span class="lineno">   55</span>  }</div>
-<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderFactory_html_a6a3a7d003fbe625e9dcd001b98d0ea6f"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">CCSDS::SecondaryHeaderFactory::m_creators</a></div><div class="ttdeci">std::unordered_map&lt; std::string, std::shared_ptr&lt; SecondaryHeaderAbstract &gt; &gt; m_creators</div><div class="ttdoc">A map of header types to their corresponding SecondaryHeaderAbstract objects.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderFactory_8h_source.html#l00078">CCSDSSecondaryHeaderFactory.h:78</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00053">53</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   53</span>                                                                       {</div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> it = <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.find(type); it != <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.end()) {</div>
+<div class="line"><span class="lineno">   55</span>      <span class="keywordflow">return</span> it-&gt;second; <span class="comment">// Call the stored creation function</span></div>
+<div class="line"><span class="lineno">   56</span>    }</div>
+<div class="line"><span class="lineno">   57</span>    <span class="keywordflow">return</span> <span class="keyword">nullptr</span>; <span class="comment">// Return nullptr if type not found</span></div>
+<div class="line"><span class="lineno">   58</span>  }</div>
+<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderFactory_html_a6a3a7d003fbe625e9dcd001b98d0ea6f"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">CCSDS::SecondaryHeaderFactory::m_creators</a></div><div class="ttdeci">std::unordered_map&lt; std::string, std::shared_ptr&lt; SecondaryHeaderAbstract &gt; &gt; m_creators</div><div class="ttdoc">A map of header types to their corresponding SecondaryHeaderAbstract objects.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderFactory_8h_source.html#l00081">CCSDSSecondaryHeaderFactory.h:81</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a7794ddfd6f46ca20b967a1e57a7fa286" name="a7794ddfd6f46ca20b967a1e57a7fa286"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7794ddfd6f46ca20b967a1e57a7fa286">&#9670;&#160;</a></span>registerType()</h2>
+<a id="a33fd604ab613a17c9e1fca10753d4ef5" name="a33fd604ab613a17c9e1fca10753d4ef5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33fd604ab613a17c9e1fca10753d4ef5">&#9670;&#160;</a></span>registerType()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -223,7 +223,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void CCSDS::SecondaryHeaderFactory::registerType </td>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a> CCSDS::SecondaryHeaderFactory::registerType </td>
           <td>(</td>
           <td class="paramtype">std::shared_ptr&lt; <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">SecondaryHeaderAbstract</a> &gt;&#160;</td>
           <td class="paramname"><em>header</em></td><td>)</td>
@@ -245,15 +245,20 @@ Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd>ResultBool. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00038">38</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   38</span>                                                                   {</div>
-<div class="line"><span class="lineno">   39</span>    <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>[header-&gt;getType()] = std::move(header);</div>
-<div class="line"><span class="lineno">   40</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00039">39</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   39</span>                                                                         {</div>
+<div class="line"><span class="lineno">   40</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!header, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Cannot register, invalid Header provided.&quot;</span>);</div>
+<div class="line"><span class="lineno">   41</span>    <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>[header-&gt;getType()] = std::move(header);</div>
+<div class="line"><span class="lineno">   42</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   43</span>  }</div>
+<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00144">CCSDSResult.h:144</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">CCSDS::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdoc">Header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00020">CCSDSResult.h:20</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1SecondaryHeaderFactory_a7794ddfd6f46ca20b967a1e57a7fa286_icgraph.svg" width="100%" height="376"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1SecondaryHeaderFactory_a33fd604ab613a17c9e1fca10753d4ef5_icgraph.svg" width="100%" height="376"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -292,13 +297,13 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if the type is registered, <code>false</code> otherwise. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00065">65</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>                                               {</div>
-<div class="line"><span class="lineno">   66</span>    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> it = <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.find(type); it != <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.end()) {</div>
-<div class="line"><span class="lineno">   67</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>; <span class="comment">// return true if found</span></div>
-<div class="line"><span class="lineno">   68</span>    }</div>
-<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>; <span class="comment">// Return false if type not found</span></div>
-<div class="line"><span class="lineno">   70</span>  }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00068">68</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   68</span>                                               {</div>
+<div class="line"><span class="lineno">   69</span>    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> it = <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.find(type); it != <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderFactory.html#a6a3a7d003fbe625e9dcd001b98d0ea6f">m_creators</a>.end()) {</div>
+<div class="line"><span class="lineno">   70</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>; <span class="comment">// return true if found</span></div>
+<div class="line"><span class="lineno">   71</span>    }</div>
+<div class="line"><span class="lineno">   72</span>    <span class="keywordflow">return</span> <span class="keyword">false</span>; <span class="comment">// Return false if type not found</span></div>
+<div class="line"><span class="lineno">   73</span>  }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -326,7 +331,7 @@ Here is the caller graph for this function:</div>
 <p>A map of header types to their corresponding <code><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html" title="Abstract base class for a (Packet Utilization Standard) header.">SecondaryHeaderAbstract</a></code> objects. </p>
 <p>This private member stores the registered header types along with their corresponding shared pointers. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00078">78</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html#l00081">81</a> of file <a class="el" href="CCSDSSecondaryHeaderFactory_8h_source.html">CCSDSSecondaryHeaderFactory.h</a>.</p>
 
 </div>
 </div>

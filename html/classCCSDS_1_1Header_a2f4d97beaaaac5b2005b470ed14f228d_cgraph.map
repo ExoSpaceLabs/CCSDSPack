@@ -1,5 +1,0 @@
-<map id="CCSDS::Header::deserialize" name="CCSDS::Header::deserialize">
-<area shape="rect" id="Node000001" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="5,5,205,31"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#aad717b39dda3dff19adb10e3c7e38100" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="253,5,433,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,15,240,15,240,21,205,21"/>
-</map>

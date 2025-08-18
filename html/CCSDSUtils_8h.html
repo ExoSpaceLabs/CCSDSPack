@@ -98,24 +98,27 @@ This graph shows which files directly or indirectly include this file:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a57e759a405c87ef115cf3d1c9a6c64be" id="r_a57e759a405c87ef115cf3d1c9a6c64be"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a57e759a405c87ef115cf3d1c9a6c64be">crc16</a> (const std::vector&lt; uint8_t &gt; &amp;data, uint16_t polynomial=0x1021, uint16_t initialValue=0xFFFF, uint16_t finalXorValue=0x0000)</td></tr>
-<tr class="memdesc:a57e759a405c87ef115cf3d1c9a6c64be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the CRC-16 checksum for a given data vector with configurable parameters.  <br /></td></tr>
-<tr class="separator:a57e759a405c87ef115cf3d1c9a6c64be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b022f75ce5de64c158ce2faa3a45cf7" id="r_a6b022f75ce5de64c158ce2faa3a45cf7"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a6b022f75ce5de64c158ce2faa3a45cf7">crc16</a> (const std::vector&lt; std::uint8_t &gt; &amp;data, std::uint16_t polynomial=0x1021, std::uint16_t initialValue=0xFFFF, std::uint16_t finalXorValue=0x0000)</td></tr>
+<tr class="memdesc:a6b022f75ce5de64c158ce2faa3a45cf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the CRC-16 checksum for a given data vector with configurable parameters.  <br /></td></tr>
+<tr class="separator:a6b022f75ce5de64c158ce2faa3a45cf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b974227bd1064e006f517e8423a0545" id="r_a3b974227bd1064e006f517e8423a0545"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a> (const std::string &amp;str, const std::string &amp;suffix)</td></tr>
+<tr class="memdesc:a3b974227bd1064e006f517e8423a0545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests if str ends with suffix.  <br /></td></tr>
+<tr class="separator:a3b974227bd1064e006f517e8423a0545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e40e3867139b28c1b2fa0465c3afd7e" id="r_a2e40e3867139b28c1b2fa0465c3afd7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a> (<a class="el" href="classCCSDS_1_1Packet.html">CCSDS::Packet</a> &amp;packet)</td></tr>
 <tr class="memdesc:a2e40e3867139b28c1b2fa0465c3afd7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console a <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> Packets, breaking it down to Primary header and Data field.  <br /></td></tr>
 <tr class="separator:a2e40e3867139b28c1b2fa0465c3afd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad200055b4cb44dddba0ced16faee7d69" id="r_ad200055b4cb44dddba0ced16faee7d69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#ad200055b4cb44dddba0ced16faee7d69">printPackets</a> (<a class="el" href="classCCSDS_1_1Manager.html">CCSDS::Manager</a> &amp;manager)</td></tr>
 <tr class="memdesc:ad200055b4cb44dddba0ced16faee7d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console a series of <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> Packets contained in the manager.  <br /></td></tr>
 <tr class="separator:ad200055b4cb44dddba0ced16faee7d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f3e800c0842ab5bc50d09496bcf36f7" id="r_a2f3e800c0842ab5bc50d09496bcf36f7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a2f3e800c0842ab5bc50d09496bcf36f7">getBinaryString</a> (uint32_t value, int bits)</td></tr>
-<tr class="memdesc:a2f3e800c0842ab5bc50d09496bcf36f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a given value to its binary representation as a string, with spaces every 4 bits.  <br /></td></tr>
-<tr class="separator:a2f3e800c0842ab5bc50d09496bcf36f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a804185ef70e91dbaff07e6e074ec21ea" id="r_a804185ef70e91dbaff07e6e074ec21ea"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a804185ef70e91dbaff07e6e074ec21ea">getBitsSpaces</a> (int num)</td></tr>
-<tr class="memdesc:a804185ef70e91dbaff07e6e074ec21ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a string of spaces for formatting binary outputs.  <br /></td></tr>
-<tr class="separator:a804185ef70e91dbaff07e6e074ec21ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9ffb7c9d057050539115958f28f6ee0" id="r_af9ffb7c9d057050539115958f28f6ee0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#af9ffb7c9d057050539115958f28f6ee0">printBufferData</a> (const std::vector&lt; uint8_t &gt; &amp;buffer, int limitBytes=20)</td></tr>
-<tr class="memdesc:af9ffb7c9d057050539115958f28f6ee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console the HEX data from the bytes vector.  <br /></td></tr>
-<tr class="separator:af9ffb7c9d057050539115958f28f6ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04ed69d56bb1969aa5766d037fa19c35" id="r_a04ed69d56bb1969aa5766d037fa19c35"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a04ed69d56bb1969aa5766d037fa19c35">getBinaryString</a> (std::uint32_t value, std::int32_t bits)</td></tr>
+<tr class="memdesc:a04ed69d56bb1969aa5766d037fa19c35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a given value to its binary representation as a string, with spaces every 4 bits.  <br /></td></tr>
+<tr class="separator:a04ed69d56bb1969aa5766d037fa19c35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac344bffa026a6db7ea10b24e284cbbc2" id="r_ac344bffa026a6db7ea10b24e284cbbc2"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#ac344bffa026a6db7ea10b24e284cbbc2">getBitsSpaces</a> (std::int32_t num)</td></tr>
+<tr class="memdesc:ac344bffa026a6db7ea10b24e284cbbc2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a string of spaces for formatting binary outputs.  <br /></td></tr>
+<tr class="separator:ac344bffa026a6db7ea10b24e284cbbc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09a379a950c5bd6309c0972271f12860" id="r_a09a379a950c5bd6309c0972271f12860"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a09a379a950c5bd6309c0972271f12860">printBufferData</a> (const std::vector&lt; std::uint8_t &gt; &amp;buffer, std::int32_t limitBytes=20)</td></tr>
+<tr class="memdesc:a09a379a950c5bd6309c0972271f12860"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console the HEX data from the bytes vector.  <br /></td></tr>
+<tr class="separator:a09a379a950c5bd6309c0972271f12860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e927daa91ea42db4bb94bfc51425b96" id="r_a6e927daa91ea42db4bb94bfc51425b96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a> (<a class="el" href="classCCSDS_1_1DataField.html">CCSDS::DataField</a> dataField)</td></tr>
 <tr class="memdesc:a6e927daa91ea42db4bb94bfc51425b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the data field details, including the secondary header and application data.  <br /></td></tr>
 <tr class="separator:a6e927daa91ea42db4bb94bfc51425b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,22 +131,19 @@ Functions</h2></td></tr>
 <tr class="memitem:aed99c8e7576ac25c49f6b913b46d1b76" id="r_aed99c8e7576ac25c49f6b913b46d1b76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a> (<a class="el" href="classCCSDS_1_1Packet.html">CCSDS::Packet</a> &amp;packet)</td></tr>
 <tr class="memdesc:aed99c8e7576ac25c49f6b913b46d1b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the data field and the CRC-16 checksum of the packet.  <br /></td></tr>
 <tr class="separator:aed99c8e7576ac25c49f6b913b46d1b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac3822e47eaaef0f66ec2b86d7a4b09fc" id="r_ac3822e47eaaef0f66ec2b86d7a4b09fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#ac3822e47eaaef0f66ec2b86d7a4b09fc">writeBinaryFile</a> (const std::vector&lt; uint8_t &gt; &amp;data, const std::string &amp;filename)</td></tr>
-<tr class="memdesc:ac3822e47eaaef0f66ec2b86d7a4b09fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in a buffer of data and a file name.  <br /></td></tr>
-<tr class="separator:ac3822e47eaaef0f66ec2b86d7a4b09fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7c53ed59dcb970211aa0217eb095cc4d" id="r_a7c53ed59dcb970211aa0217eb095cc4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">CCSDS::ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a> (const std::string &amp;filename)</td></tr>
+<tr class="memitem:aacff77e4c89f07aa9969373450552caa" id="r_aacff77e4c89f07aa9969373450552caa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#aacff77e4c89f07aa9969373450552caa">writeBinaryFile</a> (const std::vector&lt; std::uint8_t &gt; &amp;data, const std::string &amp;filename)</td></tr>
+<tr class="memdesc:aacff77e4c89f07aa9969373450552caa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in a buffer of data and a file name.  <br /></td></tr>
+<tr class="separator:aacff77e4c89f07aa9969373450552caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c53ed59dcb970211aa0217eb095cc4d" id="r_a7c53ed59dcb970211aa0217eb095cc4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a> (const std::string &amp;filename)</td></tr>
 <tr class="memdesc:a7c53ed59dcb970211aa0217eb095cc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a specified binary file and return its contents as a buffer.  <br /></td></tr>
 <tr class="separator:a7c53ed59dcb970211aa0217eb095cc4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a132eda413acdf67b79532c3b7f340e5c" id="r_a132eda413acdf67b79532c3b7f340e5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a132eda413acdf67b79532c3b7f340e5c">fileExists</a> (const std::string &amp;fileName)</td></tr>
 <tr class="memdesc:a132eda413acdf67b79532c3b7f340e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">filesystem check fore file existence prepared for both windows and linux.  <br /></td></tr>
 <tr class="separator:a132eda413acdf67b79532c3b7f340e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b974227bd1064e006f517e8423a0545" id="r_a3b974227bd1064e006f517e8423a0545"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8h.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a> (const std::string &amp;str, const std::string &amp;suffix)</td></tr>
-<tr class="memdesc:a3b974227bd1064e006f517e8423a0545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests if str ends with suffix.  <br /></td></tr>
-<tr class="separator:a3b974227bd1064e006f517e8423a0545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a57e759a405c87ef115cf3d1c9a6c64be" name="a57e759a405c87ef115cf3d1c9a6c64be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a57e759a405c87ef115cf3d1c9a6c64be">&#9670;&#160;</a></span>crc16()</h2>
+<a id="a6b022f75ce5de64c158ce2faa3a45cf7" name="a6b022f75ce5de64c158ce2faa3a45cf7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b022f75ce5de64c158ce2faa3a45cf7">&#9670;&#160;</a></span>crc16()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -151,25 +151,25 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">uint16_t crc16 </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramtype">std::uint16_t&#160;</td>
           <td class="paramname"><em>polynomial</em> = <code>0x1021</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramtype">std::uint16_t&#160;</td>
           <td class="paramname"><em>initialValue</em> = <code>0xFFFF</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramtype">std::uint16_t&#160;</td>
           <td class="paramname"><em>finalXorValue</em> = <code>0x0000</code>&#160;</td>
         </tr>
         <tr>
@@ -192,29 +192,29 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The computed 16-bit CRC value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00147">147</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  149</span>                                {</div>
-<div class="line"><span class="lineno">  150</span>  uint16_t crc = initialValue;</div>
-<div class="line"><span class="lineno">  151</span> </div>
-<div class="line"><span class="lineno">  152</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;<span class="keywordtype">byte</span>: data) {</div>
-<div class="line"><span class="lineno">  153</span>    crc ^= <span class="keyword">static_cast&lt;</span>uint16_t<span class="keyword">&gt;</span>(byte) &lt;&lt; 8; <span class="comment">// Align byte with MSB of 16-bit CRC</span></div>
-<div class="line"><span class="lineno">  154</span>    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 0; i &lt; 8; ++i) {</div>
-<div class="line"><span class="lineno">  155</span>      <span class="comment">// Process each bit</span></div>
-<div class="line"><span class="lineno">  156</span>      <span class="keywordflow">if</span> (crc &amp; 0x8000) {</div>
-<div class="line"><span class="lineno">  157</span>        <span class="comment">// Check if MSB is set</span></div>
-<div class="line"><span class="lineno">  158</span>        crc = (crc &lt;&lt; 1) ^ polynomial; <span class="comment">// Shift and XOR with polynomial</span></div>
-<div class="line"><span class="lineno">  159</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  160</span>        crc = crc &lt;&lt; 1; <span class="comment">// Shift only</span></div>
-<div class="line"><span class="lineno">  161</span>      }</div>
-<div class="line"><span class="lineno">  162</span>    }</div>
-<div class="line"><span class="lineno">  163</span>  }</div>
-<div class="line"><span class="lineno">  164</span> </div>
-<div class="line"><span class="lineno">  165</span>  <span class="keywordflow">return</span> crc ^ finalXorValue; <span class="comment">// Apply final XOR</span></div>
-<div class="line"><span class="lineno">  166</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00012">12</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   14</span>                                   {</div>
+<div class="line"><span class="lineno">   15</span>  std::uint16_t crc = initialValue;</div>
+<div class="line"><span class="lineno">   16</span> </div>
+<div class="line"><span class="lineno">   17</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;<span class="keywordtype">byte</span>: data) {</div>
+<div class="line"><span class="lineno">   18</span>    crc ^= <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(byte) &lt;&lt; 8; <span class="comment">// Align byte with MSB of 16-bit CRC</span></div>
+<div class="line"><span class="lineno">   19</span>    <span class="keywordflow">for</span> (std::int32_t i = 0; i &lt; 8; ++i) {</div>
+<div class="line"><span class="lineno">   20</span>      <span class="comment">// Process each bit</span></div>
+<div class="line"><span class="lineno">   21</span>      <span class="keywordflow">if</span> (crc &amp; 0x8000) {</div>
+<div class="line"><span class="lineno">   22</span>        <span class="comment">// Check if MSB is set</span></div>
+<div class="line"><span class="lineno">   23</span>        crc = (crc &lt;&lt; 1) ^ polynomial; <span class="comment">// Shift and XOR with polynomial</span></div>
+<div class="line"><span class="lineno">   24</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   25</span>        crc = crc &lt;&lt; 1; <span class="comment">// Shift only</span></div>
+<div class="line"><span class="lineno">   26</span>      }</div>
+<div class="line"><span class="lineno">   27</span>    }</div>
+<div class="line"><span class="lineno">   28</span>  }</div>
+<div class="line"><span class="lineno">   29</span> </div>
+<div class="line"><span class="lineno">   30</span>  <span class="keywordflow">return</span> crc ^ finalXorValue; <span class="comment">// Apply final XOR</span></div>
+<div class="line"><span class="lineno">   31</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a57e759a405c87ef115cf3d1c9a6c64be_icgraph.svg" width="412" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a6b022f75ce5de64c158ce2faa3a45cf7_icgraph.svg" width="412" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -244,15 +244,15 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>bool </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00226">226</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  226</span>                                           {</div>
-<div class="line"><span class="lineno">  227</span>  <span class="keyword">auto</span> res = <a class="code hl_function" href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a>(fileName);</div>
-<div class="line"><span class="lineno">  228</span>  <span class="keywordflow">if</span> ( res.has_value()) {</div>
-<div class="line"><span class="lineno">  229</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  230</span>  }</div>
-<div class="line"><span class="lineno">  231</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">  232</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a7c53ed59dcb970211aa0217eb095cc4d"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBuffer readBinaryFile(const std::string &amp;filename)</div><div class="ttdoc">Read a specified binary file and return its contents as a buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00208">CCSDSUtils.cpp:208</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00232">232</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  232</span>                                           {</div>
+<div class="line"><span class="lineno">  233</span>  <span class="keyword">auto</span> res = <a class="code hl_function" href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a>(fileName);</div>
+<div class="line"><span class="lineno">  234</span>  <span class="keywordflow">if</span> ( res.has_value()) {</div>
+<div class="line"><span class="lineno">  235</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  236</span>  }</div>
+<div class="line"><span class="lineno">  237</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">  238</span>}</div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a7c53ed59dcb970211aa0217eb095cc4d"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBuffer readBinaryFile(const std::string &amp;filename)</div><div class="ttdoc">Read a specified binary file and return its contents as a buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00214">CCSDSUtils.cpp:214</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -266,8 +266,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a2f3e800c0842ab5bc50d09496bcf36f7" name="a2f3e800c0842ab5bc50d09496bcf36f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f3e800c0842ab5bc50d09496bcf36f7">&#9670;&#160;</a></span>getBinaryString()</h2>
+<a id="a04ed69d56bb1969aa5766d037fa19c35" name="a04ed69d56bb1969aa5766d037fa19c35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04ed69d56bb1969aa5766d037fa19c35">&#9670;&#160;</a></span>getBinaryString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -275,13 +275,13 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">std::string getBinaryString </td>
           <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype">std::uint32_t&#160;</td>
           <td class="paramname"><em>value</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">std::int32_t&#160;</td>
           <td class="paramname"><em>bits</em>&#160;</td>
         </tr>
         <tr>
@@ -302,32 +302,32 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string representing the binary value with spaces every 4 bits. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00011">11</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   11</span>                                                                {</div>
-<div class="line"><span class="lineno">   12</span>  std::string binaryString;</div>
-<div class="line"><span class="lineno">   13</span>  <span class="comment">// Calculate the minimum number of bits required to represent in groups of 4</span></div>
-<div class="line"><span class="lineno">   14</span>  <span class="keyword">const</span> <span class="keywordtype">int</span> paddedBits = ((bits + 3) / 4) * 4; <span class="comment">// Round up to the nearest multiple of 4</span></div>
-<div class="line"><span class="lineno">   15</span> </div>
-<div class="line"><span class="lineno">   16</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = paddedBits - 1; i &gt;= 0; --i) {</div>
-<div class="line"><span class="lineno">   17</span>    binaryString += ((value &gt;&gt; i) &amp; 1) ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>;</div>
-<div class="line"><span class="lineno">   18</span> </div>
-<div class="line"><span class="lineno">   19</span>    <span class="comment">// Add a space after every 4 bits, except at the end</span></div>
-<div class="line"><span class="lineno">   20</span>    <span class="keywordflow">if</span> (i % 4 == 0 &amp;&amp; i != 0) {</div>
-<div class="line"><span class="lineno">   21</span>      binaryString += <span class="charliteral">&#39; &#39;</span>;</div>
-<div class="line"><span class="lineno">   22</span>    }</div>
-<div class="line"><span class="lineno">   23</span>  }</div>
-<div class="line"><span class="lineno">   24</span>  <span class="keywordflow">return</span> binaryString;</div>
-<div class="line"><span class="lineno">   25</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00038">38</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>                                                                          {</div>
+<div class="line"><span class="lineno">   39</span>  std::string binaryString;</div>
+<div class="line"><span class="lineno">   40</span>  <span class="comment">// Calculate the minimum number of bits required to represent in groups of 4</span></div>
+<div class="line"><span class="lineno">   41</span>  <span class="keyword">const</span> std::int32_t paddedBits = ((bits + 3) / 4) * 4; <span class="comment">// Round up to the nearest multiple of 4</span></div>
+<div class="line"><span class="lineno">   42</span> </div>
+<div class="line"><span class="lineno">   43</span>  <span class="keywordflow">for</span> (std::int32_t i = paddedBits - 1; i &gt;= 0; --i) {</div>
+<div class="line"><span class="lineno">   44</span>    binaryString += ((value &gt;&gt; i) &amp; 1) ? <span class="charliteral">&#39;1&#39;</span> : <span class="charliteral">&#39;0&#39;</span>;</div>
+<div class="line"><span class="lineno">   45</span> </div>
+<div class="line"><span class="lineno">   46</span>    <span class="comment">// Add a space after every 4 bits, except at the end</span></div>
+<div class="line"><span class="lineno">   47</span>    <span class="keywordflow">if</span> (i % 4 == 0 &amp;&amp; i != 0) {</div>
+<div class="line"><span class="lineno">   48</span>      binaryString += <span class="charliteral">&#39; &#39;</span>;</div>
+<div class="line"><span class="lineno">   49</span>    }</div>
+<div class="line"><span class="lineno">   50</span>  }</div>
+<div class="line"><span class="lineno">   51</span>  <span class="keywordflow">return</span> binaryString;</div>
+<div class="line"><span class="lineno">   52</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a2f3e800c0842ab5bc50d09496bcf36f7_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a04ed69d56bb1969aa5766d037fa19c35_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
 </div>
-<a id="a804185ef70e91dbaff07e6e074ec21ea" name="a804185ef70e91dbaff07e6e074ec21ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a804185ef70e91dbaff07e6e074ec21ea">&#9670;&#160;</a></span>getBitsSpaces()</h2>
+<a id="ac344bffa026a6db7ea10b24e284cbbc2" name="ac344bffa026a6db7ea10b24e284cbbc2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac344bffa026a6db7ea10b24e284cbbc2">&#9670;&#160;</a></span>getBitsSpaces()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -335,7 +335,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">std::string getBitsSpaces </td>
           <td>(</td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">std::int32_t&#160;</td>
           <td class="paramname"><em>num</em></td><td>)</td>
           <td></td>
         </tr>
@@ -351,26 +351,26 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A string of spaces of length <code>num</code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00027">27</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   27</span>                                       {</div>
-<div class="line"><span class="lineno">   28</span>  std::string spaces;</div>
-<div class="line"><span class="lineno">   29</span> </div>
-<div class="line"><span class="lineno">   30</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = num - 1; i &gt;= 0; --i) {</div>
-<div class="line"><span class="lineno">   31</span>    spaces += <span class="charliteral">&#39; &#39;</span>;</div>
-<div class="line"><span class="lineno">   32</span>  }</div>
-<div class="line"><span class="lineno">   33</span> </div>
-<div class="line"><span class="lineno">   34</span>  <span class="keywordflow">return</span> spaces;</div>
-<div class="line"><span class="lineno">   35</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00054">54</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>                                              {</div>
+<div class="line"><span class="lineno">   55</span>  std::string spaces;</div>
+<div class="line"><span class="lineno">   56</span> </div>
+<div class="line"><span class="lineno">   57</span>  <span class="keywordflow">for</span> (std::int32_t i = num - 1; i &gt;= 0; --i) {</div>
+<div class="line"><span class="lineno">   58</span>    spaces += <span class="charliteral">&#39; &#39;</span>;</div>
+<div class="line"><span class="lineno">   59</span>  }</div>
+<div class="line"><span class="lineno">   60</span> </div>
+<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">return</span> spaces;</div>
+<div class="line"><span class="lineno">   62</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a804185ef70e91dbaff07e6e074ec21ea_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_ac344bffa026a6db7ea10b24e284cbbc2_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
 </div>
-<a id="af9ffb7c9d057050539115958f28f6ee0" name="af9ffb7c9d057050539115958f28f6ee0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9ffb7c9d057050539115958f28f6ee0">&#9670;&#160;</a></span>printBufferData()</h2>
+<a id="a09a379a950c5bd6309c0972271f12860" name="a09a379a950c5bd6309c0972271f12860"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09a379a950c5bd6309c0972271f12860">&#9670;&#160;</a></span>printBufferData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -378,13 +378,13 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void printBufferData </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>buffer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&#160;</td>
+          <td class="paramtype">std::int32_t&#160;</td>
           <td class="paramname"><em>limitBytes</em> = <code>20</code>&#160;</td>
         </tr>
         <tr>
@@ -404,28 +404,28 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00037">37</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   37</span>                                                                             {</div>
-<div class="line"><span class="lineno">   38</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ &quot;</span>;</div>
-<div class="line"><span class="lineno">   39</span>  <span class="keywordflow">if</span> (buffer.size() &gt; limitBytes) {</div>
-<div class="line"><span class="lineno">   40</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i= 0 ; i &lt; static_cast&lt;int&gt;(limitBytes / 2); i++) {</div>
-<div class="line"><span class="lineno">   41</span>      std::cout &lt;&lt; std::hex &lt;&lt; std::setfill(&#39;0&#39;) &lt;&lt; std::setw(2) &lt;&lt; static_cast&lt;int&gt;(buffer[i]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><span class="lineno">   42</span>    }</div>
-<div class="line"><span class="lineno">   43</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;... &quot;</span>;</div>
-<div class="line"><span class="lineno">   44</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = buffer.size() - <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(limitBytes / 2) ; i &lt; buffer.size(); i++) {</div>
-<div class="line"><span class="lineno">   45</span>      std::cout &lt;&lt; std::hex &lt;&lt; std::setfill(&#39;0&#39;) &lt;&lt; std::setw(2) &lt;&lt; static_cast&lt;int&gt;(buffer[i]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><span class="lineno">   46</span>    }</div>
-<div class="line"><span class="lineno">   47</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   48</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> i: buffer) {</div>
-<div class="line"><span class="lineno">   49</span>      std::cout &lt;&lt; std::hex &lt;&lt; std::setfill(&#39;0&#39;) &lt;&lt; std::setw(2) &lt;&lt; static_cast&lt;int&gt;(i) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line"><span class="lineno">   50</span>    }</div>
-<div class="line"><span class="lineno">   51</span>  }</div>
-<div class="line"><span class="lineno">   52</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;]&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   53</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00064">64</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   64</span>                                                                                       {</div>
+<div class="line"><span class="lineno">   65</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ &quot;</span>;</div>
+<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">if</span> (buffer.size() &gt; limitBytes) {</div>
+<div class="line"><span class="lineno">   67</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i= 0 ; i &lt; static_cast&lt;int&gt;(limitBytes / 2); i++) {</div>
+<div class="line"><span class="lineno">   68</span>      std::cout &lt;&lt; std::hex &lt;&lt; std::setfill(&#39;0&#39;) &lt;&lt; std::setw(2) &lt;&lt; static_cast&lt;int&gt;(buffer[i]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><span class="lineno">   69</span>    }</div>
+<div class="line"><span class="lineno">   70</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;... &quot;</span>;</div>
+<div class="line"><span class="lineno">   71</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = buffer.size() - <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(limitBytes / 2) ; i &lt; buffer.size(); i++) {</div>
+<div class="line"><span class="lineno">   72</span>      std::cout &lt;&lt; std::hex &lt;&lt; std::setfill(&#39;0&#39;) &lt;&lt; std::setw(2) &lt;&lt; static_cast&lt;int&gt;(buffer[i]) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><span class="lineno">   73</span>    }</div>
+<div class="line"><span class="lineno">   74</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">   75</span>    <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> i: buffer) {</div>
+<div class="line"><span class="lineno">   76</span>      std::cout &lt;&lt; std::hex &lt;&lt; std::setfill(&#39;0&#39;) &lt;&lt; std::setw(2) &lt;&lt; static_cast&lt;int&gt;(i) &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
+<div class="line"><span class="lineno">   77</span>    }</div>
+<div class="line"><span class="lineno">   78</span>  }</div>
+<div class="line"><span class="lineno">   79</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;]&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">   80</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_af9ffb7c9d057050539115958f28f6ee0_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_a09a379a950c5bd6309c0972271f12860_icgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -450,33 +450,33 @@ Here is the caller graph for this function:</div>
 <p>Outputs information about the presence of a secondary header and the content of both the secondary header and the application data in hexadecimal format.</p>
 <dl class="section return"><dt>Returns</dt><dd>none. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00055">55</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   55</span>                                         {</div>
-<div class="line"><span class="lineno">   56</span>  <span class="keyword">const</span> <span class="keyword">auto</span> dataFieldHeader = dataField.<a class="code hl_function" href="classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895">getDataFieldHeaderBytes</a>();</div>
-<div class="line"><span class="lineno">   57</span>  <span class="keyword">auto</span> applicationData = dataField.<a class="code hl_function" href="classCCSDS_1_1DataField.html#a692e61aef588439155bdd3e289bfa103">getApplicationData</a>();</div>
-<div class="line"><span class="lineno">   58</span>  <span class="keyword">const</span> uint16_t maxSize = (applicationData.size() &gt; dataFieldHeader.size())</div>
-<div class="line"><span class="lineno">   59</span>                             ? applicationData.size()</div>
-<div class="line"><span class="lineno">   60</span>                             : dataFieldHeader.size();</div>
-<div class="line"><span class="lineno">   61</span> </div>
-<div class="line"><span class="lineno">   62</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Data Field Length              : &quot;</span> &lt;&lt; applicationData.size() + dataFieldHeader.size() &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   63</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Secondary Header Present       : [ &quot;</span> &lt;&lt; (dataField.<a class="code hl_function" href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">getDataFieldHeaderFlag</a>()</div>
-<div class="line"><span class="lineno">   64</span>                                                                         ? <span class="stringliteral">&quot;True&quot;</span></div>
-<div class="line"><span class="lineno">   65</span>                                                                         : <span class="stringliteral">&quot;False&quot;</span>) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   66</span>  <span class="keywordflow">if</span> (!dataFieldHeader.empty()) {</div>
-<div class="line"><span class="lineno">   67</span>    std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Secondary Header         [Hex] : &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(</div>
-<div class="line"><span class="lineno">   68</span>    (maxSize - <span class="keyword">static_cast&lt;</span>uint16_t<span class="keyword">&gt;</span>(dataFieldHeader.size())) * 4);</div>
-<div class="line"><span class="lineno">   69</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#ac77b078f446e1e3842c118709505e87b">printBufferData</a>(dataFieldHeader);</div>
-<div class="line"><span class="lineno">   70</span>  }</div>
-<div class="line"><span class="lineno">   71</span> </div>
-<div class="line"><span class="lineno">   72</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Application Data         [Hex] : &quot;</span>;</div>
-<div class="line"><span class="lineno">   73</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#ac77b078f446e1e3842c118709505e87b">printBufferData</a>(applicationData);</div>
-<div class="line"><span class="lineno">   74</span>  std::cout &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   75</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a6a4f98ed870a1cf55c943c9ace54a0cf"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a></div><div class="ttdeci">std::string getBitsSpaces(const int num)</div><div class="ttdoc">Generates a string of spaces for formatting binary outputs.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00027">CCSDSUtils.cpp:27</a></div></div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_ac77b078f446e1e3842c118709505e87b"><div class="ttname"><a href="CCSDSUtils_8cpp.html#ac77b078f446e1e3842c118709505e87b">printBufferData</a></div><div class="ttdeci">void printBufferData(const std::vector&lt; uint8_t &gt; &amp;buffer, const int limitBytes)</div><div class="ttdoc">Prints to console the HEX data from the bytes vector.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00037">CCSDSUtils.cpp:37</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a586f18dcf878e68efd197994e95c6895"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a586f18dcf878e68efd197994e95c6895">CCSDS::DataField::getDataFieldHeaderBytes</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; getDataFieldHeaderBytes()</div><div class="ttdoc">Retrieves the secondary header data as a vector of bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00171">CCSDSDataField.cpp:171</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a692e61aef588439155bdd3e289bfa103"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a692e61aef588439155bdd3e289bfa103">CCSDS::DataField::getApplicationData</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; getApplicationData()</div><div class="ttdoc">Retrieves the application data from the data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00017">CCSDSDataField.cpp:17</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a78c2894fc2650e0dc9ec892d58dfde7a"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">CCSDS::DataField::getDataFieldHeaderFlag</a></div><div class="ttdeci">bool getDataFieldHeaderFlag() const</div><div class="ttdoc">retrieves true if a known secondary header has been set</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00268">CCSDSDataField.h:268</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00082">82</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   82</span>                                         {</div>
+<div class="line"><span class="lineno">   83</span>  <span class="keyword">const</span> <span class="keyword">auto</span> dataFieldHeader = dataField.<a class="code hl_function" href="classCCSDS_1_1DataField.html#ac414a4c6ffe4d3cce1c225833e550a1f">getDataFieldHeaderBytes</a>();</div>
+<div class="line"><span class="lineno">   84</span>  <span class="keyword">auto</span> applicationData = dataField.<a class="code hl_function" href="classCCSDS_1_1DataField.html#af446e62e6a263dbd5ef993101fa0b3c4">getApplicationData</a>();</div>
+<div class="line"><span class="lineno">   85</span>  <span class="keyword">const</span> std::uint16_t maxSize = (applicationData.size() &gt; dataFieldHeader.size())</div>
+<div class="line"><span class="lineno">   86</span>                             ? applicationData.size()</div>
+<div class="line"><span class="lineno">   87</span>                             : dataFieldHeader.size();</div>
+<div class="line"><span class="lineno">   88</span> </div>
+<div class="line"><span class="lineno">   89</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Data Field Length              : &quot;</span> &lt;&lt; applicationData.size() + dataFieldHeader.size() &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">   90</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Secondary Header Present       : [ &quot;</span> &lt;&lt; (dataField.<a class="code hl_function" href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">getDataFieldHeaderFlag</a>()</div>
+<div class="line"><span class="lineno">   91</span>                                                                         ? <span class="stringliteral">&quot;True&quot;</span></div>
+<div class="line"><span class="lineno">   92</span>                                                                         : <span class="stringliteral">&quot;False&quot;</span>) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">   93</span>  <span class="keywordflow">if</span> (!dataFieldHeader.empty()) {</div>
+<div class="line"><span class="lineno">   94</span>    std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Secondary Header         [Hex] : &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(</div>
+<div class="line"><span class="lineno">   95</span>    (maxSize - <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(dataFieldHeader.size())) * 4);</div>
+<div class="line"><span class="lineno">   96</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a>(dataFieldHeader);</div>
+<div class="line"><span class="lineno">   97</span>  }</div>
+<div class="line"><span class="lineno">   98</span> </div>
+<div class="line"><span class="lineno">   99</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS DATA] Application Data         [Hex] : &quot;</span>;</div>
+<div class="line"><span class="lineno">  100</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a>(applicationData);</div>
+<div class="line"><span class="lineno">  101</span>  std::cout &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  102</span>}</div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a747efd8ca2488636101433b9a3e8f1b1"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a></div><div class="ttdeci">std::string getBitsSpaces(const std::int32_t num)</div><div class="ttdoc">Generates a string of spaces for formatting binary outputs.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00054">CCSDSUtils.cpp:54</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_aa9bf20021d73232b0769aa261e5b6e5f"><div class="ttname"><a href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a></div><div class="ttdeci">void printBufferData(const std::vector&lt; std::uint8_t &gt; &amp;buffer, const std::int32_t limitBytes)</div><div class="ttdoc">Prints to console the HEX data from the bytes vector.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00064">CCSDSUtils.cpp:64</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a78c2894fc2650e0dc9ec892d58dfde7a"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">CCSDS::DataField::getDataFieldHeaderFlag</a></div><div class="ttdeci">bool getDataFieldHeaderFlag() const</div><div class="ttdoc">retrieves true if a known secondary header has been set</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00271">CCSDSDataField.h:271</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_ac414a4c6ffe4d3cce1c225833e550a1f"><div class="ttname"><a href="classCCSDS_1_1DataField.html#ac414a4c6ffe4d3cce1c225833e550a1f">CCSDS::DataField::getDataFieldHeaderBytes</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; getDataFieldHeaderBytes()</div><div class="ttdoc">Retrieves the secondary header data as a vector of bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00171">CCSDSDataField.cpp:171</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_af446e62e6a263dbd5ef993101fa0b3c4"><div class="ttname"><a href="classCCSDS_1_1DataField.html#af446e62e6a263dbd5ef993101fa0b3c4">CCSDS::DataField::getApplicationData</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; getApplicationData()</div><div class="ttdoc">Retrieves the application data from the data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00017">CCSDSDataField.cpp:17</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -510,17 +510,17 @@ Here is the caller graph for this function:</div>
 <p>Outputs the content of the data field and the CRC-16 checksum in hexadecimal format to the standard output.</p>
 <dl class="section return"><dt>Returns</dt><dd>none. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00138">138</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  138</span>                                         {</div>
-<div class="line"><span class="lineno">  139</span>  <span class="keyword">auto</span> dataField = packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#ae788c8d3ae1fcec2c18787c9491cdca3">getDataField</a>();</div>
-<div class="line"><span class="lineno">  140</span> </div>
-<div class="line"><span class="lineno">  141</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a>(dataField);</div>
-<div class="line"><span class="lineno">  142</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDSPack ] CRC-16                   [Hex] : [ &quot;</span> &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span> &lt;&lt; std::hex &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">getCRC</a>() &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">  143</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">getCRC</a>() &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  144</span> </div>
-<div class="line"><span class="lineno">  145</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a6e927daa91ea42db4bb94bfc51425b96"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a></div><div class="ttdeci">void printData(CCSDS::DataField dataField)</div><div class="ttdoc">Prints the data field details, including the secondary header and application data.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00055">CCSDSUtils.cpp:55</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Packet_html_a6b0791e2a62a2db48b12a5ee6b762a7b"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">CCSDS::Packet::getCRC</a></div><div class="ttdeci">uint16_t getCRC()</div><div class="ttdoc">Computes and retrieves the CRC-16 checksum of the packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00095">CCSDSPacket.cpp:95</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00165">165</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  165</span>                                         {</div>
+<div class="line"><span class="lineno">  166</span>  <span class="keyword">auto</span> dataField = packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#ae788c8d3ae1fcec2c18787c9491cdca3">getDataField</a>();</div>
+<div class="line"><span class="lineno">  167</span> </div>
+<div class="line"><span class="lineno">  168</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a>(dataField);</div>
+<div class="line"><span class="lineno">  169</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDSPack ] CRC-16                   [Hex] : [ &quot;</span> &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span> &lt;&lt; std::hex &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">getCRC</a>() &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  170</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">getCRC</a>() &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  171</span> </div>
+<div class="line"><span class="lineno">  172</span>}</div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a6e927daa91ea42db4bb94bfc51425b96"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a></div><div class="ttdeci">void printData(CCSDS::DataField dataField)</div><div class="ttdoc">Prints the data field details, including the secondary header and application data.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00082">CCSDSUtils.cpp:82</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_a6b0791e2a62a2db48b12a5ee6b762a7b"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">CCSDS::Packet::getCRC</a></div><div class="ttdeci">std::uint16_t getCRC()</div><div class="ttdoc">Computes and retrieves the CRC-16 checksum of the packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00095">CCSDSPacket.cpp:95</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Packet_html_ae788c8d3ae1fcec2c18787c9491cdca3"><div class="ttname"><a href="classCCSDS_1_1Packet.html#ae788c8d3ae1fcec2c18787c9491cdca3">CCSDS::Packet::getDataField</a></div><div class="ttdeci">DataField &amp; getDataField()</div><div class="ttdoc">returns the CCSDS packet's DataField.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00117">CCSDSPacket.cpp:117</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -555,68 +555,68 @@ Here is the caller graph for this function:</div>
 <p>Outputs all relevant header fields, including the full primary header, version number, type, data field header flag, APID, sequence flags, sequence count, and data length. Each field is displayed with appropriate formatting and spacing.</p>
 <dl class="section return"><dt>Returns</dt><dd>none. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00077">77</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   77</span>                                      {</div>
-<div class="line"><span class="lineno">   78</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Full Primary Header    [Hex] : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(17 - 12) &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span> &lt;&lt; std::hex &lt;&lt;</div>
-<div class="line"><span class="lineno">   79</span>      header.<a class="code hl_function" href="classCCSDS_1_1Header.html#af1ae6079606846982ff0552a2d684a1b">getFullHeader</a>() &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   80</span>  std::cout &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   81</span> </div>
-<div class="line"><span class="lineno">   82</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Version Number               : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(19 - 4) &lt;&lt;</div>
-<div class="line"><span class="lineno">   83</span>      <a class="code hl_function" href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a2e77e7032a48a692bb8dd0754ecccdc5">getVersionNumber</a>(), 3) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">   84</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt;  static_cast&lt;int&gt;( header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a2e77e7032a48a692bb8dd0754ecccdc5">getVersionNumber</a>())  &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   85</span> </div>
-<div class="line"><span class="lineno">   86</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Type                         : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(19 - 4) &lt;&lt;</div>
-<div class="line"><span class="lineno">   87</span>      <a class="code hl_function" href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a6ac965b4a0dd459bb41e78225a376b18">getType</a>(), 1) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">   88</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; static_cast&lt;int&gt;( header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a6ac965b4a0dd459bb41e78225a376b18">getType</a>()) &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   89</span> </div>
-<div class="line"><span class="lineno">   90</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Data Field Header Flag       : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(19 - 4) &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a>(</div>
-<div class="line"><span class="lineno">   91</span>  header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a836aab2a197579a57a7901071075f685">getDataFieldHeaderFlag</a>(), 1) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">   92</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; -       : &quot;</span> &lt;&lt; (header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a836aab2a197579a57a7901071075f685">getDataFieldHeaderFlag</a>() ? <span class="stringliteral">&quot;True&quot;</span> : <span class="stringliteral">&quot;False&quot;</span>)  &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] APID                         : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(17 - 12) &lt;&lt;</div>
-<div class="line"><span class="lineno">   95</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a3b171a18bfed281cfa837f349f7cc264">getAPID</a>(), 11) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">   96</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span> &lt;&lt; std::dec &lt;&lt; header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a3b171a18bfed281cfa837f349f7cc264">getAPID</a>() &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   97</span>  </div>
-<div class="line"><span class="lineno">   98</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Sequence Flags               : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(19 - 4) &lt;&lt;</div>
-<div class="line"><span class="lineno">   99</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a7aec7b479769c8348584cab4b9d1197b">getSequenceFlags</a>(), 2) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">  100</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; -       : &quot;</span>;</div>
-<div class="line"><span class="lineno">  101</span>  <span class="keywordflow">switch</span>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a7aec7b479769c8348584cab4b9d1197b">getSequenceFlags</a>()) {</div>
-<div class="line"><span class="lineno">  102</span>    <span class="keywordflow">case</span> 0:</div>
-<div class="line"><span class="lineno">  103</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;CONTINUING_SEGMENT&quot;</span>;</div>
-<div class="line"><span class="lineno">  104</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">case</span> 1:</div>
-<div class="line"><span class="lineno">  106</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;FIRST_SEGMENT&quot;</span>;</div>
-<div class="line"><span class="lineno">  107</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  108</span>    <span class="keywordflow">case</span> 2:</div>
-<div class="line"><span class="lineno">  109</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;LAST_SEGMENT&quot;</span>;</div>
-<div class="line"><span class="lineno">  110</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  111</span>    <span class="keywordflow">case</span> 3:</div>
-<div class="line"><span class="lineno">  112</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;UNSEGMENTED&quot;</span>;</div>
-<div class="line"><span class="lineno">  113</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  114</span>    <span class="keywordflow">default</span>:</div>
-<div class="line"><span class="lineno">  115</span>      <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  116</span>  }</div>
-<div class="line"><span class="lineno">  117</span>  std::cout &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  118</span> </div>
-<div class="line"><span class="lineno">  119</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Sequence Count               : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf">getBitsSpaces</a>(0) &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a>(</div>
-<div class="line"><span class="lineno">  120</span>  header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a8847364755456604a86e894a950f81c6">getSequenceCount</a>(), 14) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">  121</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a8847364755456604a86e894a950f81c6">getSequenceCount</a>() &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  122</span> </div>
-<div class="line"><span class="lineno">  123</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] DataLength                   : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a9c2ac8f4b16874076de742cb19833bd7">getDataLength</a>(), 16) &lt;&lt;</div>
-<div class="line"><span class="lineno">  124</span>    <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">  125</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a9c2ac8f4b16874076de742cb19833bd7">getDataLength</a>() &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  126</span> </div>
-<div class="line"><span class="lineno">  127</span>  std::cout &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  128</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a1b76edce6a353d6dabf826e662d5f50c"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c">getBinaryString</a></div><div class="ttdeci">std::string getBinaryString(const uint32_t value, const int bits)</div><div class="ttdoc">Converts a given value to its binary representation as a string, with spaces every 4 bits.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00011">CCSDSUtils.cpp:11</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a2e77e7032a48a692bb8dd0754ecccdc5"><div class="ttname"><a href="classCCSDS_1_1Header.html#a2e77e7032a48a692bb8dd0754ecccdc5">CCSDS::Header::getVersionNumber</a></div><div class="ttdeci">uint8_t getVersionNumber() const</div><div class="ttdoc">3 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00084">CCSDSHeader.h:84</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a3b171a18bfed281cfa837f349f7cc264"><div class="ttname"><a href="classCCSDS_1_1Header.html#a3b171a18bfed281cfa837f349f7cc264">CCSDS::Header::getAPID</a></div><div class="ttdeci">uint16_t getAPID() const</div><div class="ttdoc">11 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00087">CCSDSHeader.h:87</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a6ac965b4a0dd459bb41e78225a376b18"><div class="ttname"><a href="classCCSDS_1_1Header.html#a6ac965b4a0dd459bb41e78225a376b18">CCSDS::Header::getType</a></div><div class="ttdeci">uint8_t getType() const</div><div class="ttdoc">1 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00085">CCSDSHeader.h:85</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a7aec7b479769c8348584cab4b9d1197b"><div class="ttname"><a href="classCCSDS_1_1Header.html#a7aec7b479769c8348584cab4b9d1197b">CCSDS::Header::getSequenceFlags</a></div><div class="ttdeci">uint8_t getSequenceFlags() const</div><div class="ttdoc">2 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00088">CCSDSHeader.h:88</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a836aab2a197579a57a7901071075f685"><div class="ttname"><a href="classCCSDS_1_1Header.html#a836aab2a197579a57a7901071075f685">CCSDS::Header::getDataFieldHeaderFlag</a></div><div class="ttdeci">uint8_t getDataFieldHeaderFlag() const</div><div class="ttdoc">1 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00086">CCSDSHeader.h:86</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a8847364755456604a86e894a950f81c6"><div class="ttname"><a href="classCCSDS_1_1Header.html#a8847364755456604a86e894a950f81c6">CCSDS::Header::getSequenceCount</a></div><div class="ttdeci">uint16_t getSequenceCount() const</div><div class="ttdoc">14 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00089">CCSDSHeader.h:89</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a9c2ac8f4b16874076de742cb19833bd7"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9c2ac8f4b16874076de742cb19833bd7">CCSDS::Header::getDataLength</a></div><div class="ttdeci">uint16_t getDataLength() const</div><div class="ttdoc">16 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00090">CCSDSHeader.h:90</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_af1ae6079606846982ff0552a2d684a1b"><div class="ttname"><a href="classCCSDS_1_1Header.html#af1ae6079606846982ff0552a2d684a1b">CCSDS::Header::getFullHeader</a></div><div class="ttdeci">uint64_t getFullHeader()</div><div class="ttdoc">Computes and retrieves the full header as a 64-bit value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00108">CCSDSHeader.h:108</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00104">104</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  104</span>                                      {</div>
+<div class="line"><span class="lineno">  105</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Full Primary Header    [Hex] : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(17 - 12) &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span> &lt;&lt; std::hex &lt;&lt;</div>
+<div class="line"><span class="lineno">  106</span>      header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a7a3302acb3fccf699f6917feeed9a1b1">getFullHeader</a>() &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  107</span>  std::cout &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  108</span> </div>
+<div class="line"><span class="lineno">  109</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Version Number               : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(19 - 4) &lt;&lt;</div>
+<div class="line"><span class="lineno">  110</span>      <a class="code hl_function" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a9e4cb3397871c6d3ea4e18d26592750a">getVersionNumber</a>(), 3) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  111</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt;  static_cast&lt;int&gt;( header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a9e4cb3397871c6d3ea4e18d26592750a">getVersionNumber</a>())  &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  112</span> </div>
+<div class="line"><span class="lineno">  113</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Type                         : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(19 - 4) &lt;&lt;</div>
+<div class="line"><span class="lineno">  114</span>      <a class="code hl_function" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a86aa79246f47cd0e724b1a5427a87895">getType</a>(), 1) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  115</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; static_cast&lt;int&gt;( header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a86aa79246f47cd0e724b1a5427a87895">getType</a>()) &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  116</span> </div>
+<div class="line"><span class="lineno">  117</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Data Field Header Flag       : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(19 - 4) &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a>(</div>
+<div class="line"><span class="lineno">  118</span>  header.<a class="code hl_function" href="classCCSDS_1_1Header.html#acf533901cf3bf0e1d5bc3e4fe2ff876b">getDataFieldHeaderFlag</a>(), 1) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  119</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; -       : &quot;</span> &lt;&lt; (header.<a class="code hl_function" href="classCCSDS_1_1Header.html#acf533901cf3bf0e1d5bc3e4fe2ff876b">getDataFieldHeaderFlag</a>() ? <span class="stringliteral">&quot;True&quot;</span> : <span class="stringliteral">&quot;False&quot;</span>)  &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  120</span> </div>
+<div class="line"><span class="lineno">  121</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] APID                         : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(17 - 12) &lt;&lt;</div>
+<div class="line"><span class="lineno">  122</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a5cc2c58961e2088dee19d65effccfba5">getAPID</a>(), 11) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  123</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span> &lt;&lt; std::dec &lt;&lt; header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a5cc2c58961e2088dee19d65effccfba5">getAPID</a>() &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  124</span>  </div>
+<div class="line"><span class="lineno">  125</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Sequence Flags               : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(19 - 4) &lt;&lt;</div>
+<div class="line"><span class="lineno">  126</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770">getSequenceFlags</a>(), 2) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  127</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; -       : &quot;</span>;</div>
+<div class="line"><span class="lineno">  128</span>  <span class="keywordflow">switch</span>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770">getSequenceFlags</a>()) {</div>
+<div class="line"><span class="lineno">  129</span>    <span class="keywordflow">case</span> 0:</div>
+<div class="line"><span class="lineno">  130</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;CONTINUING_SEGMENT&quot;</span>;</div>
+<div class="line"><span class="lineno">  131</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  132</span>    <span class="keywordflow">case</span> 1:</div>
+<div class="line"><span class="lineno">  133</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;FIRST_SEGMENT&quot;</span>;</div>
+<div class="line"><span class="lineno">  134</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  135</span>    <span class="keywordflow">case</span> 2:</div>
+<div class="line"><span class="lineno">  136</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;LAST_SEGMENT&quot;</span>;</div>
+<div class="line"><span class="lineno">  137</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  138</span>    <span class="keywordflow">case</span> 3:</div>
+<div class="line"><span class="lineno">  139</span>      std::cout &lt;&lt; <span class="stringliteral">&quot;UNSEGMENTED&quot;</span>;</div>
+<div class="line"><span class="lineno">  140</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  141</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><span class="lineno">  142</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  143</span>  }</div>
+<div class="line"><span class="lineno">  144</span>  std::cout &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  145</span> </div>
+<div class="line"><span class="lineno">  146</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] Sequence Count               : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a>(0) &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a>(</div>
+<div class="line"><span class="lineno">  147</span>  header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68">getSequenceCount</a>(), 14) &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  148</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68">getSequenceCount</a>() &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  149</span> </div>
+<div class="line"><span class="lineno">  150</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; [CCSDS HEADER] DataLength                   : [ &quot;</span> &lt;&lt; <a class="code hl_function" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73">getDataLength</a>(), 16) &lt;&lt;</div>
+<div class="line"><span class="lineno">  151</span>    <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  152</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; header.<a class="code hl_function" href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73">getDataLength</a>() &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  153</span> </div>
+<div class="line"><span class="lineno">  154</span>  std::cout &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  155</span>}</div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a5b5f08449f95e60ce977dbe45b21c321"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a></div><div class="ttdeci">std::string getBinaryString(const std::uint32_t value, const std::int32_t bits)</div><div class="ttdoc">Converts a given value to its binary representation as a string, with spaces every 4 bits.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00038">CCSDSUtils.cpp:38</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a5cc2c58961e2088dee19d65effccfba5"><div class="ttname"><a href="classCCSDS_1_1Header.html#a5cc2c58961e2088dee19d65effccfba5">CCSDS::Header::getAPID</a></div><div class="ttdeci">std::uint16_t getAPID() const</div><div class="ttdoc">11 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00087">CCSDSHeader.h:87</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a7a3302acb3fccf699f6917feeed9a1b1"><div class="ttname"><a href="classCCSDS_1_1Header.html#a7a3302acb3fccf699f6917feeed9a1b1">CCSDS::Header::getFullHeader</a></div><div class="ttdeci">std::uint64_t getFullHeader()</div><div class="ttdoc">Computes and retrieves the full header as a 64-bit value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00108">CCSDSHeader.h:108</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a86aa79246f47cd0e724b1a5427a87895"><div class="ttname"><a href="classCCSDS_1_1Header.html#a86aa79246f47cd0e724b1a5427a87895">CCSDS::Header::getType</a></div><div class="ttdeci">std::uint8_t getType() const</div><div class="ttdoc">1 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00085">CCSDSHeader.h:85</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a8f92d94e9ebdac82669058c75188e770"><div class="ttname"><a href="classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770">CCSDS::Header::getSequenceFlags</a></div><div class="ttdeci">std::uint8_t getSequenceFlags() const</div><div class="ttdoc">2 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00088">CCSDSHeader.h:88</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a9cf2da06f3bdb16fd02bcade045a2e68"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68">CCSDS::Header::getSequenceCount</a></div><div class="ttdeci">std::uint16_t getSequenceCount() const</div><div class="ttdoc">14 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00089">CCSDSHeader.h:89</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a9e4cb3397871c6d3ea4e18d26592750a"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9e4cb3397871c6d3ea4e18d26592750a">CCSDS::Header::getVersionNumber</a></div><div class="ttdeci">std::uint8_t getVersionNumber() const</div><div class="ttdoc">3 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00084">CCSDSHeader.h:84</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_acf533901cf3bf0e1d5bc3e4fe2ff876b"><div class="ttname"><a href="classCCSDS_1_1Header.html#acf533901cf3bf0e1d5bc3e4fe2ff876b">CCSDS::Header::getDataFieldHeaderFlag</a></div><div class="ttdeci">std::uint8_t getDataFieldHeaderFlag() const</div><div class="ttdoc">1 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00086">CCSDSHeader.h:86</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_af2033219620664beb7212c054874da73"><div class="ttname"><a href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73">CCSDS::Header::getDataLength</a></div><div class="ttdeci">std::uint16_t getDataLength() const</div><div class="ttdoc">16 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00090">CCSDSHeader.h:90</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -654,13 +654,13 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00168">168</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  168</span>                                      {</div>
-<div class="line"><span class="lineno">  169</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a>(packet);</div>
-<div class="line"><span class="lineno">  170</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a>(packet);</div>
-<div class="line"><span class="lineno">  171</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a3c45ef84a35555519e34164e000dada5"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a></div><div class="ttdeci">CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints to console the primary header of a provided CCSDS packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00131">CCSDSUtils.cpp:131</a></div></div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_aed99c8e7576ac25c49f6b913b46d1b76"><div class="ttname"><a href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a></div><div class="ttdeci">void printDataField(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints the data field and the CRC-16 checksum of the packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00138">CCSDSUtils.cpp:138</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00174">174</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  174</span>                                      {</div>
+<div class="line"><span class="lineno">  175</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a>(packet);</div>
+<div class="line"><span class="lineno">  176</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a>(packet);</div>
+<div class="line"><span class="lineno">  177</span>}</div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a3c45ef84a35555519e34164e000dada5"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a></div><div class="ttdeci">CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints to console the primary header of a provided CCSDS packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00158">CCSDSUtils.cpp:158</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_aed99c8e7576ac25c49f6b913b46d1b76"><div class="ttname"><a href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a></div><div class="ttdeci">void printDataField(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints the data field and the CRC-16 checksum of the packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00165">CCSDSUtils.cpp:165</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -698,30 +698,30 @@ Here is the caller graph for this function:</div>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00173">173</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  173</span>                                         {</div>
-<div class="line"><span class="lineno">  174</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Number of Packets    : &quot;</span> &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">getTotalPackets</a>() &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  175</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Sync Pattern Enabled : &quot;</span> &lt;&lt; (manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#ab57dc694191ba220e81f7b7d833504e7">getSyncPatternEnable</a>() ? <span class="stringliteral">&quot;True&quot;</span> : <span class="stringliteral">&quot;False&quot;</span>) &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  176</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Sync Pattern         : 0x&quot;</span> &lt;&lt; std::hex &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">getSyncPattern</a>() &lt;&lt; std::dec &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  177</span> </div>
-<div class="line"><span class="lineno">  178</span>  <span class="keyword">auto</span> templatePacket = manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a6a35b16dd386f9519552d43a079263c2">getTemplate</a>();</div>
-<div class="line"><span class="lineno">  179</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Template             : &quot;</span> &lt;&lt; std::endl ;</div>
-<div class="line"><span class="lineno">  180</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a>(templatePacket);</div>
-<div class="line"><span class="lineno">  181</span> </div>
-<div class="line"><span class="lineno">  182</span>  <span class="keywordtype">int</span> idx = 1;</div>
-<div class="line"><span class="lineno">  183</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;packet: manager.getPacketsReference()) {</div>
-<div class="line"><span class="lineno">  184</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;__________________________________________________________________________________________________________________&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  185</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Printing Packet [ &quot;</span> &lt;&lt; idx &lt;&lt; <span class="stringliteral">&quot; ]:&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  186</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Packet Length : &quot;</span> &lt;&lt; packet.getFullPacketLength() &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  187</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Data &quot;</span>;</div>
-<div class="line"><span class="lineno">  188</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#ac77b078f446e1e3842c118709505e87b">printBufferData</a>(packet.serialize(), 20);</div>
-<div class="line"><span class="lineno">  189</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a>(packet);</div>
-<div class="line"><span class="lineno">  190</span>    idx++;</div>
-<div class="line"><span class="lineno">  191</span>  }</div>
-<div class="line"><span class="lineno">  192</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a2e40e3867139b28c1b2fa0465c3afd7e"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a></div><div class="ttdeci">void printPacket(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints to console a CCSDS Packets, breaking it down to Primary header and Data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00168">CCSDSUtils.cpp:168</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a540afafc78a4450dd6d2a2113d5a3640"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">CCSDS::Manager::getSyncPattern</a></div><div class="ttdeci">uint32_t getSyncPattern() const</div><div class="ttdoc">returns the currently set sync pattern.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00009">CCSDSManager.cpp:9</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a67eb2b2ef2b45dcd25cdd80fa4057bbf"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">CCSDS::Manager::getTotalPackets</a></div><div class="ttdeci">uint16_t getTotalPackets() const</div><div class="ttdoc">Retrieves the total number of packets managed.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00164">CCSDSManager.cpp:164</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00179">179</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  179</span>                                         {</div>
+<div class="line"><span class="lineno">  180</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Number of Packets    : &quot;</span> &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">getTotalPackets</a>() &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  181</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Sync Pattern Enabled : &quot;</span> &lt;&lt; (manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#ab57dc694191ba220e81f7b7d833504e7">getSyncPatternEnable</a>() ? <span class="stringliteral">&quot;True&quot;</span> : <span class="stringliteral">&quot;False&quot;</span>) &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  182</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Sync Pattern         : 0x&quot;</span> &lt;&lt; std::hex &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">getSyncPattern</a>() &lt;&lt; std::dec &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  183</span> </div>
+<div class="line"><span class="lineno">  184</span>  <span class="keyword">auto</span> templatePacket = manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a6a35b16dd386f9519552d43a079263c2">getTemplate</a>();</div>
+<div class="line"><span class="lineno">  185</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Template             : &quot;</span> &lt;&lt; std::endl ;</div>
+<div class="line"><span class="lineno">  186</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a>(templatePacket);</div>
+<div class="line"><span class="lineno">  187</span> </div>
+<div class="line"><span class="lineno">  188</span>  std::int32_t idx = 1;</div>
+<div class="line"><span class="lineno">  189</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> &amp;packet: manager.getPacketsReference()) {</div>
+<div class="line"><span class="lineno">  190</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;__________________________________________________________________________________________________________________&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  191</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Printing Packet [ &quot;</span> &lt;&lt; idx &lt;&lt; <span class="stringliteral">&quot; ]:&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  192</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Packet Length : &quot;</span> &lt;&lt; packet.getFullPacketLength() &lt;&lt; <span class="stringliteral">&quot; bytes&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  193</span>    std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Data &quot;</span>;</div>
+<div class="line"><span class="lineno">  194</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a>(packet.serialize(), 20);</div>
+<div class="line"><span class="lineno">  195</span>    <a class="code hl_function" href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a>(packet);</div>
+<div class="line"><span class="lineno">  196</span>    idx++;</div>
+<div class="line"><span class="lineno">  197</span>  }</div>
+<div class="line"><span class="lineno">  198</span>}</div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a2e40e3867139b28c1b2fa0465c3afd7e"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a></div><div class="ttdeci">void printPacket(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints to console a CCSDS Packets, breaking it down to Primary header and Data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00174">CCSDSUtils.cpp:174</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_a540afafc78a4450dd6d2a2113d5a3640"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">CCSDS::Manager::getSyncPattern</a></div><div class="ttdeci">std::uint32_t getSyncPattern() const</div><div class="ttdoc">returns the currently set sync pattern.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00009">CCSDSManager.cpp:9</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_a67eb2b2ef2b45dcd25cdd80fa4057bbf"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">CCSDS::Manager::getTotalPackets</a></div><div class="ttdeci">std::uint16_t getTotalPackets() const</div><div class="ttdoc">Retrieves the total number of packets managed.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00164">CCSDSManager.cpp:164</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Manager_html_a6a35b16dd386f9519552d43a079263c2"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a6a35b16dd386f9519552d43a079263c2">CCSDS::Manager::getTemplate</a></div><div class="ttdeci">Packet getTemplate()</div><div class="ttdoc">Retrieves the packet template.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00181">CCSDSManager.h:181</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Manager_html_ab57dc694191ba220e81f7b7d833504e7"><div class="ttname"><a href="classCCSDS_1_1Manager.html#ab57dc694191ba220e81f7b7d833504e7">CCSDS::Manager::getSyncPatternEnable</a></div><div class="ttdeci">bool getSyncPatternEnable() const</div><div class="ttdoc">returns the current settings of the sync pattern enable</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00013">CCSDSManager.cpp:13</a></div></div>
 </div><!-- fragment --><div class="dynheader">
@@ -762,17 +762,17 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00131">131</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  131</span>                                                        {</div>
-<div class="line"><span class="lineno">  132</span>  <a class="code hl_class" href="classCCSDS_1_1Header.html">CCSDS::Header</a> header;</div>
-<div class="line"><span class="lineno">  133</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#a2f4d97beaaaac5b2005b470ed14f228d">deserialize</a>({packet.getPrimaryHeaderBytes()}));</div>
-<div class="line"><span class="lineno">  134</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a>(header);</div>
-<div class="line"><span class="lineno">  135</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  136</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00158">158</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  158</span>                                                        {</div>
+<div class="line"><span class="lineno">  159</span>  <a class="code hl_class" href="classCCSDS_1_1Header.html">CCSDS::Header</a> header;</div>
+<div class="line"><span class="lineno">  160</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de">deserialize</a>({packet.getPrimaryHeaderBytes()}));</div>
+<div class="line"><span class="lineno">  161</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a>(header);</div>
+<div class="line"><span class="lineno">  162</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  163</span>}</div>
 <div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Macro to return a result as-is (for functions returning Result&lt;T&gt;).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00202">CCSDSResult.h:202</a></div></div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a993788a78365e86ff065ba8bedff543a"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a></div><div class="ttdeci">void printHeader(CCSDS::Header &amp;header)</div><div class="ttdoc">Prints the header fields and their binary or hexadecimal representations.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00077">CCSDSUtils.cpp:77</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a993788a78365e86ff065ba8bedff543a"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a></div><div class="ttdeci">void printHeader(CCSDS::Header &amp;header)</div><div class="ttdoc">Prints the header fields and their binary or hexadecimal representations.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00104">CCSDSUtils.cpp:104</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Header_html"><div class="ttname"><a href="classCCSDS_1_1Header.html">CCSDS::Header</a></div><div class="ttdoc">Manages the decomposition and manipulation of CCSDS primary headers.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00080">CCSDSHeader.h:80</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a2f4d97beaaaac5b2005b470ed14f228d"><div class="ttname"><a href="classCCSDS_1_1Header.html#a2f4d97beaaaac5b2005b470ed14f228d">CCSDS::Header::deserialize</a></div><div class="ttdeci">ResultBool deserialize(const std::vector&lt; uint8_t &gt; &amp;data)</div><div class="ttdoc">Sets the header data from a 64-bit integer representation.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00004">CCSDSHeader.cpp:4</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_ab9bf408f60a412980700518122b5e3de"><div class="ttname"><a href="classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de">CCSDS::Header::deserialize</a></div><div class="ttdeci">ResultBool deserialize(const std::vector&lt; std::uint8_t &gt; &amp;data)</div><div class="ttdoc">Sets the header data from a 64-bit integer representation.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00004">CCSDSHeader.cpp:4</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -793,7 +793,7 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">CCSDS::ResultBuffer</a> readBinaryFile </td>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a> readBinaryFile </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
           <td class="paramname"><em>filename</em></td><td>)</td>
@@ -809,28 +809,28 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Result vector of uint8 or Error </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Result vector of std::uint8 or Error </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00208">208</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  208</span>                                                            {</div>
-<div class="line"><span class="lineno">  209</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(filename.empty(),<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda39e0479a35f4c44672ecbf797ca57a37">CCSDS::ErrorCode::FILE_READ_ERROR</a>, <span class="stringliteral">&quot;No filename provided&quot;</span>);</div>
-<div class="line"><span class="lineno">  210</span> </div>
-<div class="line"><span class="lineno">  211</span>  std::ifstream in(filename, std::ios::binary | std::ios::ate);</div>
-<div class="line"><span class="lineno">  212</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!in,<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda39e0479a35f4c44672ecbf797ca57a37">CCSDS::ErrorCode::FILE_READ_ERROR</a>, <span class="stringliteral">&quot;Failed to open file for reading&quot;</span>);</div>
-<div class="line"><span class="lineno">  213</span> </div>
-<div class="line"><span class="lineno">  214</span>  <span class="comment">// Get the file size using the &#39;ate&#39; flag (seeks to the end automatically)</span></div>
-<div class="line"><span class="lineno">  215</span>  <span class="keyword">const</span> std::streamsize size = in.tellg();</div>
-<div class="line"><span class="lineno">  216</span>  in.seekg(0, std::ios::beg);</div>
-<div class="line"><span class="lineno">  217</span> </div>
-<div class="line"><span class="lineno">  218</span>  <span class="comment">// Read the entire file content into the vector</span></div>
-<div class="line"><span class="lineno">  219</span>  std::vector&lt;uint8_t&gt; data(size);</div>
-<div class="line"><span class="lineno">  220</span>  in.read(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data.data()), size);</div>
-<div class="line"><span class="lineno">  221</span> </div>
-<div class="line"><span class="lineno">  222</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!in,<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda39e0479a35f4c44672ecbf797ca57a37">CCSDS::ErrorCode::FILE_READ_ERROR</a>, <span class="stringliteral">&quot;Failed to read the entire file&quot;</span>);</div>
-<div class="line"><span class="lineno">  223</span>  <span class="keywordflow">return</span> data;</div>
-<div class="line"><span class="lineno">  224</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00214">214</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  214</span>                                                            {</div>
+<div class="line"><span class="lineno">  215</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(filename.empty(),<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37">CCSDS::ErrorCode::FILE_READ_ERROR</a>, <span class="stringliteral">&quot;No filename provided&quot;</span>);</div>
+<div class="line"><span class="lineno">  216</span> </div>
+<div class="line"><span class="lineno">  217</span>  std::ifstream in(filename, std::ios::binary | std::ios::ate);</div>
+<div class="line"><span class="lineno">  218</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!in,<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37">CCSDS::ErrorCode::FILE_READ_ERROR</a>, <span class="stringliteral">&quot;Failed to open file for reading&quot;</span>);</div>
+<div class="line"><span class="lineno">  219</span> </div>
+<div class="line"><span class="lineno">  220</span>  <span class="comment">// Get the file size using the &#39;ate&#39; flag (seeks to the end automatically)</span></div>
+<div class="line"><span class="lineno">  221</span>  <span class="keyword">const</span> std::streamsize size = in.tellg();</div>
+<div class="line"><span class="lineno">  222</span>  in.seekg(0, std::ios::beg);</div>
+<div class="line"><span class="lineno">  223</span> </div>
+<div class="line"><span class="lineno">  224</span>  <span class="comment">// Read the entire file content into the vector</span></div>
+<div class="line"><span class="lineno">  225</span>  std::vector&lt;std::uint8_t&gt; data(size);</div>
+<div class="line"><span class="lineno">  226</span>  in.read(<span class="keyword">reinterpret_cast&lt;</span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data.data()), size);</div>
+<div class="line"><span class="lineno">  227</span> </div>
+<div class="line"><span class="lineno">  228</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!in,<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37">CCSDS::ErrorCode::FILE_READ_ERROR</a>, <span class="stringliteral">&quot;Failed to read the entire file&quot;</span>);</div>
+<div class="line"><span class="lineno">  229</span>  <span class="keywordflow">return</span> data;</div>
+<div class="line"><span class="lineno">  230</span>}</div>
 <div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00144">CCSDSResult.h:144</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda39e0479a35f4c44672ecbf797ca57a37"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda39e0479a35f4c44672ecbf797ca57a37">CCSDS::FILE_READ_ERROR</a></div><div class="ttdeci">@ FILE_READ_ERROR</div><div class="ttdoc">Reading from file failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00027">CCSDSResult.h:27</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37">CCSDS::FILE_READ_ERROR</a></div><div class="ttdeci">@ FILE_READ_ERROR</div><div class="ttdoc">Reading from file failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00027">CCSDSResult.h:27</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -876,11 +876,11 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>boolean </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00234">234</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  234</span>                                                                   {</div>
-<div class="line"><span class="lineno">  235</span>  <span class="keywordflow">return</span> str.size() &gt;= suffix.size() &amp;&amp;</div>
-<div class="line"><span class="lineno">  236</span>         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;</div>
-<div class="line"><span class="lineno">  237</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00033">33</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   33</span>                                                                   {</div>
+<div class="line"><span class="lineno">   34</span>  <span class="keywordflow">return</span> str.size() &gt;= suffix.size() &amp;&amp;</div>
+<div class="line"><span class="lineno">   35</span>         str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;</div>
+<div class="line"><span class="lineno">   36</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -889,8 +889,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ac3822e47eaaef0f66ec2b86d7a4b09fc" name="ac3822e47eaaef0f66ec2b86d7a4b09fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac3822e47eaaef0f66ec2b86d7a4b09fc">&#9670;&#160;</a></span>writeBinaryFile()</h2>
+<a id="aacff77e4c89f07aa9969373450552caa" name="aacff77e4c89f07aa9969373450552caa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacff77e4c89f07aa9969373450552caa">&#9670;&#160;</a></span>writeBinaryFile()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -898,7 +898,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> writeBinaryFile </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>data</em>, </td>
         </tr>
         <tr>
@@ -919,32 +919,32 @@ Here is the caller graph for this function:</div>
 <p>and writes the data in binary form to the file.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>vector of uint8_t </td></tr>
+    <tr><td class="paramname">data</td><td>vector of std::uint8_t </td></tr>
     <tr><td class="paramname">filename</td><td>string </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Result boolean true if successful or error </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00194">194</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  194</span>                                                                                           {</div>
-<div class="line"><span class="lineno">  195</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(filename.empty(),<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdadaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;No filename provided&quot;</span>);</div>
-<div class="line"><span class="lineno">  196</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.empty(),<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdadaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;No data provided&quot;</span>);</div>
-<div class="line"><span class="lineno">  197</span>  std::ofstream out(filename, std::ios::binary);</div>
-<div class="line"><span class="lineno">  198</span> </div>
-<div class="line"><span class="lineno">  199</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!out,<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdadaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;Failed to open file for writing&quot;</span>);</div>
-<div class="line"><span class="lineno">  200</span> </div>
-<div class="line"><span class="lineno">  201</span>  <span class="comment">// Write the entire vector data to the file in one go</span></div>
-<div class="line"><span class="lineno">  202</span>  out.write(<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data.data()), <span class="keyword">static_cast&lt;</span>std::streamsize<span class="keyword">&gt;</span>(data.size()));</div>
-<div class="line"><span class="lineno">  203</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!out,<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdadaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;Failed to write the data to the file&quot;</span>);</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00200">200</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  200</span>                                                                                              {</div>
+<div class="line"><span class="lineno">  201</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(filename.empty(),<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;No filename provided&quot;</span>);</div>
+<div class="line"><span class="lineno">  202</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.empty(),<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;No data provided&quot;</span>);</div>
+<div class="line"><span class="lineno">  203</span>  std::ofstream out(filename, std::ios::binary);</div>
 <div class="line"><span class="lineno">  204</span> </div>
-<div class="line"><span class="lineno">  205</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  206</span>}</div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdadaec5753ff86c18492f1897c7ecf84f7"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdadaec5753ff86c18492f1897c7ecf84f7">CCSDS::FILE_WRITE_ERROR</a></div><div class="ttdeci">@ FILE_WRITE_ERROR</div><div class="ttdoc">Writing to file failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00028">CCSDSResult.h:28</a></div></div>
+<div class="line"><span class="lineno">  205</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!out,<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;Failed to open file for writing&quot;</span>);</div>
+<div class="line"><span class="lineno">  206</span> </div>
+<div class="line"><span class="lineno">  207</span>  <span class="comment">// Write the entire vector data to the file in one go</span></div>
+<div class="line"><span class="lineno">  208</span>  out.write(<span class="keyword">reinterpret_cast&lt;</span><span class="keyword">const </span><span class="keywordtype">char</span>*<span class="keyword">&gt;</span>(data.data()), <span class="keyword">static_cast&lt;</span>std::streamsize<span class="keyword">&gt;</span>(data.size()));</div>
+<div class="line"><span class="lineno">  209</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!out,<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7">CCSDS::ErrorCode::FILE_WRITE_ERROR</a>, <span class="stringliteral">&quot;Failed to write the data to the file&quot;</span>);</div>
+<div class="line"><span class="lineno">  210</span> </div>
+<div class="line"><span class="lineno">  211</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  212</span>}</div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7">CCSDS::FILE_WRITE_ERROR</a></div><div class="ttdeci">@ FILE_WRITE_ERROR</div><div class="ttdoc">Writing to file failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00028">CCSDSResult.h:28</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_ac3822e47eaaef0f66ec2b86d7a4b09fc_icgraph.svg" width="351" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8h_aacff77e4c89f07aa9969373450552caa_icgraph.svg" width="351" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

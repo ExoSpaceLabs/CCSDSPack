@@ -14,7 +14,7 @@
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="36,576,60,526,80,497,106,473,118,466,121,471,110,477,84,501,65,528,41,578"/>
 <area shape="rect" id="Node000008" href="$classCCSDS_1_1Packet.html#ad667850d2d8b9447a043baeaa686cc9a" title="returns the CCSDS packet&#39;s Primary Header." alt="" coords="135,487,331,527"/>
 <area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="52,575,107,544,143,529,145,534,109,548,54,579"/>
-<area shape="rect" id="Node000009" href="$classCCSDS_1_1Header.html#a7aec7b479769c8348584cab4b9d1197b" title="2 bits" alt="" coords="1172,287,1385,327"/>
+<area shape="rect" id="Node000009" href="$classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770" title="2 bits" alt="" coords="1172,287,1385,327"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="60,585,108,581,315,567,523,562,767,562,832,555,882,537,923,511,959,478,1035,404,1083,368,1143,337,1164,329,1166,334,1145,342,1085,372,1038,408,963,482,926,515,884,542,833,561,767,567,523,567,315,572,108,586,60,590"/>
 <area shape="rect" id="Node000010" href="$classCCSDS_1_1Manager.html#a6a35b16dd386f9519552d43a079263c2" title="Retrieves the packet template." alt="" coords="414,603,634,628"/>
 <area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="60,589,400,606,400,612,60,594"/>
@@ -28,7 +28,7 @@
 <area shape="poly" id="edge19_Node000001_Node000016" title=" " alt="" coords="38,602,45,633,57,675,79,718,93,737,110,753,137,768,135,773,106,757,89,740,74,720,52,677,39,635,33,603"/>
 <area shape="rect" id="Node000017" href="$classCCSDS_1_1Manager.html#a8adf5ba17eb8041092bcd6c4f1f2b135" title="Loads a template packet from a configuration object." alt="" coords="119,258,346,298"/>
 <area shape="poly" id="edge20_Node000001_Node000017" title=" " alt="" coords="31,577,32,529,40,459,49,420,63,382,81,347,106,315,120,303,124,307,110,319,86,349,68,384,54,422,45,460,37,529,36,577"/>
-<area shape="rect" id="Node000019" href="$exec__utils_8cpp.html#a4a4f23e2053b71081b19a09cd0c9db54" title="Parses the input arguments with defined values returns an unordered map with given keys and input val..." alt="" coords="168,817,297,843"/>
+<area shape="rect" id="Node000019" href="$exec__utils_8h.html#ab7c2b867530c6e37b267cd1a9e6d495b" title="Parses the input arguments with defined values returns an unordered map with given keys and input val..." alt="" coords="168,817,297,843"/>
 <area shape="poly" id="edge24_Node000001_Node000019" title=" " alt="" coords="37,603,40,643,51,698,73,755,89,782,110,804,131,817,155,825,153,830,128,822,106,808,85,785,68,758,46,699,35,643,32,603"/>
 <area shape="rect" id="Node000020" href="$exec__decoder_8cpp.html#a9b7b245017d9989e03e83c940d8d7271" title="This is the source file that holds the execution logic of ccsds_encoder binary file." alt="" coords="165,867,301,892"/>
 <area shape="poly" id="edge25_Node000001_Node000020" title=" " alt="" coords="36,603,36,650,44,719,53,755,67,791,85,825,110,853,129,866,152,874,150,879,127,871,106,857,81,828,62,794,48,757,39,720,31,651,31,603"/>
@@ -36,13 +36,13 @@
 <area shape="poly" id="edge26_Node000001_Node000021" title=" " alt="" coords="53,600,109,632,169,651,168,656,107,636,51,605"/>
 <area shape="rect" id="Node000048" href="$classCCSDS_1_1Manager.html#acea6a7e717d1edeefe212731ba0572ce" title="Enables or disables automatic validation of packets." alt="" coords="111,917,354,957"/>
 <area shape="poly" id="edge57_Node000001_Node000048" title=" " alt="" coords="38,603,45,666,60,757,82,845,95,880,110,903,114,906,110,910,106,906,90,882,76,847,55,758,40,667,33,603"/>
-<area shape="rect" id="Node000049" href="$classCCSDS_1_1Manager.html#ace4b1386f4bad46724ba01884543ecc1" title="Sets the size of the data field." alt="" coords="109,981,357,1007"/>
+<area shape="rect" id="Node000049" href="$classCCSDS_1_1Manager.html#aab1b7a157fa5a6db038152860d0b3031" title="Sets the size of the data field." alt="" coords="109,981,357,1007"/>
 <area shape="poly" id="edge58_Node000001_Node000049" title=" " alt="" coords="37,603,43,678,55,788,77,897,92,939,110,967,115,972,112,975,106,970,87,941,72,898,50,789,37,678,32,603"/>
-<area shape="rect" id="Node000050" href="$classCCSDS_1_1Manager.html#a85510a068db565792051e787667e1ff0" title="set sync pattern that should indicate the start of a CCSDS packet." alt="" coords="115,1031,351,1056"/>
+<area shape="rect" id="Node000050" href="$classCCSDS_1_1Manager.html#a45f1e86e3a1e892c8244a2b0f8967c88" title="set sync pattern that should indicate the start of a CCSDS packet." alt="" coords="115,1031,351,1056"/>
 <area shape="poly" id="edge59_Node000001_Node000050" title=" " alt="" coords="37,603,41,687,52,812,61,877,74,937,90,985,110,1018,113,1021,109,1024,106,1021,85,988,69,938,56,878,47,813,36,687,32,603"/>
 <area shape="rect" id="Node000051" href="$classCCSDS_1_1Manager.html#a24d0f60835c70b6101fe5be1233aa7b2" title="enable sync pattern utilization both in serialization, deserialization, read and write." alt="" coords="115,1081,351,1121"/>
 <area shape="poly" id="edge60_Node000001_Node000051" title=" " alt="" coords="37,603,40,695,50,835,59,908,72,975,89,1030,110,1067,113,1070,109,1074,106,1070,84,1032,67,976,54,909,45,835,34,695,31,603"/>
-<area shape="rect" id="Node000052" href="$CCSDSUtils_8cpp.html#ac3822e47eaaef0f66ec2b86d7a4b09fc" title="This function takes in a buffer of data and a file name." alt="" coords="173,1145,293,1171"/>
+<area shape="rect" id="Node000052" href="$CCSDSUtils_8cpp.html#aacff77e4c89f07aa9969373450552caa" title="This function takes in a buffer of data and a file name." alt="" coords="173,1145,293,1171"/>
 <area shape="poly" id="edge61_Node000001_Node000052" title=" " alt="" coords="36,603,37,705,45,865,54,949,67,1026,86,1089,97,1113,110,1131,132,1147,159,1155,158,1160,130,1151,106,1135,93,1116,81,1091,62,1027,49,950,40,866,32,706,31,603"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="273,113,452,98,453,103,274,119"/>
 <area shape="poly" id="edge12_Node000012_Node000005" title=" " alt="" coords="799,396,840,377,905,339,960,303,963,307,908,344,843,382,801,401"/>
@@ -66,7 +66,7 @@
 <area shape="poly" id="edge29_Node000021_Node000024" title=" " alt="" coords="284,662,324,669,343,677,359,689,379,716,387,744,388,771,385,799,381,826,382,853,389,879,407,906,411,909,407,913,403,909,384,882,376,854,376,826,380,798,383,771,382,745,374,719,355,693,340,682,322,674,283,667"/>
 <area shape="rect" id="Node000025" href="$classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf" title="Retrieves the total number of packets managed." alt="" coords="429,983,619,1023"/>
 <area shape="poly" id="edge31_Node000021_Node000025" title=" " alt="" coords="284,661,324,668,343,677,359,689,384,724,393,760,391,795,385,831,379,866,377,901,385,935,407,970,419,980,415,984,403,973,380,937,372,901,373,865,380,830,386,795,387,761,379,727,355,693,340,681,322,673,283,666"/>
-<area shape="rect" id="Node000026" href="$CCSDSUtils_8cpp.html#ac77b078f446e1e3842c118709505e87b" title="Prints to console the HEX data from the bytes vector." alt="" coords="1217,943,1340,968"/>
+<area shape="rect" id="Node000026" href="$CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f" title="Prints to console the HEX data from the bytes vector." alt="" coords="1217,943,1340,968"/>
 <area shape="poly" id="edge32_Node000021_Node000026" title=" " alt="" coords="284,667,322,674,359,689,374,702,384,715,392,728,407,740,439,756,468,766,520,775,575,779,643,790,785,828,894,861,1003,893,1145,929,1204,941,1203,946,1143,934,1001,898,892,866,783,833,642,795,574,784,520,780,467,771,437,761,404,744,388,732,379,718,371,705,356,694,320,679,283,672"/>
 <area shape="rect" id="Node000027" href="$CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e" title="Prints to console a CCSDS Packets, breaking it down to Primary header and Data field." alt="" coords="477,704,571,729"/>
 <area shape="poly" id="edge33_Node000021_Node000027" title=" " alt="" coords="284,672,464,704,463,709,283,677"/>
@@ -82,32 +82,32 @@
 <area shape="rect" id="Node000031" href="$CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96" title="Prints the data field details, including the secondary header and application data." alt="" coords="951,751,1034,776"/>
 <area shape="poly" id="edge37_Node000028_Node000031" title=" " alt="" coords="824,744,938,755,937,761,824,749"/>
 <area shape="poly" id="edge40_Node000031_Node000026" title=" " alt="" coords="1035,762,1068,769,1098,787,1112,805,1120,823,1122,860,1125,896,1132,913,1146,929,1173,945,1204,953,1203,958,1171,950,1142,933,1127,916,1119,898,1117,861,1115,825,1108,807,1094,791,1066,774,1034,767"/>
-<area shape="rect" id="Node000032" href="$classCCSDS_1_1DataField.html#a692e61aef588439155bdd3e289bfa103" title="Retrieves the application data from the data field." alt="" coords="1144,893,1413,919"/>
+<area shape="rect" id="Node000032" href="$classCCSDS_1_1DataField.html#af446e62e6a263dbd5ef993101fa0b3c4" title="Retrieves the application data from the data field." alt="" coords="1144,893,1413,919"/>
 <area shape="poly" id="edge38_Node000031_Node000032" title=" " alt="" coords="1035,763,1067,771,1098,787,1109,798,1116,811,1122,835,1128,859,1135,870,1146,880,1153,885,1150,889,1142,884,1131,873,1123,861,1117,836,1111,813,1105,801,1094,791,1065,776,1034,768"/>
-<area shape="rect" id="Node000033" href="$CCSDSUtils_8cpp.html#a6a4f98ed870a1cf55c943c9ace54a0cf" title="Generates a string of spaces for formatting binary outputs." alt="" coords="1221,844,1336,869"/>
+<area shape="rect" id="Node000033" href="$CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1" title="Generates a string of spaces for formatting binary outputs." alt="" coords="1221,844,1336,869"/>
 <area shape="poly" id="edge39_Node000031_Node000033" title=" " alt="" coords="1035,766,1066,774,1097,786,1112,798,1122,809,1131,820,1145,830,1176,842,1208,849,1207,854,1174,847,1143,835,1127,824,1118,813,1109,801,1095,791,1065,779,1034,771"/>
-<area shape="rect" id="Node000037" href="$classCCSDS_1_1Header.html#a2f4d97beaaaac5b2005b470ed14f228d" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="893,603,1093,628"/>
+<area shape="rect" id="Node000037" href="$classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="893,603,1093,628"/>
 <area shape="poly" id="edge42_Node000036_Node000037" title=" " alt="" coords="823,651,921,628,923,634,824,656"/>
 <area shape="rect" id="Node000039" href="$CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a" title="Prints the header fields and their binary or hexadecimal representations." alt="" coords="943,652,1042,677"/>
 <area shape="poly" id="edge44_Node000036_Node000039" title=" " alt="" coords="842,663,929,662,929,668,842,668"/>
-<area shape="rect" id="Node000038" href="$classCCSDS_1_1Header.html#aad717b39dda3dff19adb10e3c7e38100" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="1189,352,1369,377"/>
+<area shape="rect" id="Node000038" href="$classCCSDS_1_1Header.html#ac4a56ea430e71c2cf43dfa9a0c3df534" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="1189,352,1369,377"/>
 <area shape="poly" id="edge43_Node000037_Node000038" title=" " alt="" coords="1066,600,1094,581,1111,558,1117,534,1118,509,1116,485,1114,460,1115,435,1123,411,1142,387,1157,375,1174,368,1177,372,1160,380,1146,391,1128,413,1120,436,1119,460,1121,484,1124,509,1123,535,1115,560,1098,585,1069,605"/>
 <area shape="poly" id="edge52_Node000039_Node000009" title=" " alt="" coords="1042,662,1070,655,1094,639,1109,621,1118,602,1127,565,1125,528,1117,491,1110,453,1108,414,1117,376,1127,357,1142,337,1158,324,1162,328,1146,341,1132,359,1122,378,1113,415,1115,452,1123,490,1130,528,1132,566,1123,604,1113,623,1098,643,1072,660,1043,667"/>
 <area shape="poly" id="edge47_Node000039_Node000033" title=" " alt="" coords="1043,664,1072,672,1098,688,1112,706,1120,725,1122,762,1125,798,1132,814,1146,831,1175,847,1208,855,1207,860,1173,852,1142,835,1127,817,1119,799,1117,762,1115,726,1108,709,1094,692,1070,677,1042,669"/>
-<area shape="rect" id="Node000040" href="$classCCSDS_1_1Header.html#a3b171a18bfed281cfa837f349f7cc264" title="11 bits" alt="" coords="1188,795,1369,820"/>
+<area shape="rect" id="Node000040" href="$classCCSDS_1_1Header.html#a5cc2c58961e2088dee19d65effccfba5" title="11 bits" alt="" coords="1188,795,1369,820"/>
 <area shape="poly" id="edge45_Node000039_Node000040" title=" " alt="" coords="1043,666,1071,673,1098,688,1109,699,1116,712,1122,736,1128,759,1135,770,1146,780,1176,795,1173,800,1142,784,1131,773,1124,761,1117,737,1111,714,1105,703,1094,692,1069,678,1042,671"/>
-<area shape="rect" id="Node000041" href="$CCSDSUtils_8cpp.html#a1b76edce6a353d6dabf826e662d5f50c" title="Converts a given value to its binary representation as a string, with spaces every 4 bits." alt="" coords="1217,401,1340,427"/>
+<area shape="rect" id="Node000041" href="$CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321" title="Converts a given value to its binary representation as a string, with spaces every 4 bits." alt="" coords="1217,401,1340,427"/>
 <area shape="poly" id="edge46_Node000039_Node000041" title=" " alt="" coords="1042,661,1070,654,1094,639,1112,615,1119,590,1120,565,1117,540,1114,514,1115,488,1123,462,1142,437,1171,419,1203,411,1204,416,1173,424,1146,441,1128,465,1120,489,1119,514,1122,539,1125,565,1124,591,1116,617,1098,643,1072,659,1043,666"/>
-<area shape="rect" id="Node000042" href="$classCCSDS_1_1Header.html#a836aab2a197579a57a7901071075f685" title="1 bits" alt="" coords="1173,451,1385,491"/>
+<area shape="rect" id="Node000042" href="$classCCSDS_1_1Header.html#acf533901cf3bf0e1d5bc3e4fe2ff876b" title="1 bits" alt="" coords="1173,451,1385,491"/>
 <area shape="poly" id="edge48_Node000039_Node000042" title=" " alt="" coords="1042,660,1070,653,1094,639,1108,623,1114,606,1117,572,1120,536,1128,519,1142,501,1159,490,1162,494,1146,505,1132,521,1126,538,1123,572,1120,608,1112,626,1098,643,1072,658,1043,666"/>
-<area shape="rect" id="Node000043" href="$classCCSDS_1_1Header.html#a9c2ac8f4b16874076de742cb19833bd7" title="16 bits" alt="" coords="1166,516,1391,541"/>
+<area shape="rect" id="Node000043" href="$classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73" title="16 bits" alt="" coords="1166,516,1391,541"/>
 <area shape="poly" id="edge49_Node000039_Node000043" title=" " alt="" coords="1042,659,1069,652,1094,639,1111,618,1117,596,1124,573,1142,552,1153,545,1156,549,1146,556,1129,576,1122,598,1116,621,1098,643,1071,657,1043,664"/>
-<area shape="rect" id="Node000044" href="$classCCSDS_1_1Header.html#af1ae6079606846982ff0552a2d684a1b" title="Computes and retrieves the full header as a 64&#45;bit value." alt="" coords="1169,565,1389,591"/>
+<area shape="rect" id="Node000044" href="$classCCSDS_1_1Header.html#a7a3302acb3fccf699f6917feeed9a1b1" title="Computes and retrieves the full header as a 64&#45;bit value." alt="" coords="1169,565,1389,591"/>
 <area shape="poly" id="edge50_Node000039_Node000044" title=" " alt="" coords="1041,655,1095,638,1109,629,1118,620,1128,610,1143,601,1167,592,1169,597,1145,606,1131,614,1122,624,1112,634,1097,643,1043,660"/>
-<area shape="rect" id="Node000045" href="$classCCSDS_1_1Header.html#a8847364755456604a86e894a950f81c6" title="14 bits" alt="" coords="1172,615,1385,655"/>
+<area shape="rect" id="Node000045" href="$classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68" title="14 bits" alt="" coords="1172,615,1385,655"/>
 <area shape="poly" id="edge51_Node000039_Node000045" title=" " alt="" coords="1042,657,1158,645,1158,650,1042,662"/>
-<area shape="rect" id="Node000046" href="$classCCSDS_1_1Header.html#a6ac965b4a0dd459bb41e78225a376b18" title="1 bits" alt="" coords="1189,680,1369,705"/>
+<area shape="rect" id="Node000046" href="$classCCSDS_1_1Header.html#a86aa79246f47cd0e724b1a5427a87895" title="1 bits" alt="" coords="1189,680,1369,705"/>
 <area shape="poly" id="edge53_Node000039_Node000046" title=" " alt="" coords="1042,667,1175,680,1174,685,1042,672"/>
-<area shape="rect" id="Node000047" href="$classCCSDS_1_1Header.html#a2e77e7032a48a692bb8dd0754ecccdc5" title="3 bits" alt="" coords="1179,730,1378,770"/>
+<area shape="rect" id="Node000047" href="$classCCSDS_1_1Header.html#a9e4cb3397871c6d3ea4e18d26592750a" title="3 bits" alt="" coords="1179,730,1378,770"/>
 <area shape="poly" id="edge54_Node000039_Node000047" title=" " alt="" coords="1043,671,1097,688,1121,702,1145,716,1167,723,1165,728,1143,720,1119,706,1095,692,1041,676"/>
 </map>

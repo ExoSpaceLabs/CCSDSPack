@@ -94,9 +94,9 @@ Include dependency graph for exec_utils.cpp:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4a4f23e2053b71081b19a09cd0c9db54" id="r_a4a4f23e2053b71081b19a09cd0c9db54"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8cpp.html#a4a4f23e2053b71081b19a09cd0c9db54">parseArguments</a> (const int argc, char *argv[], std::unordered_map&lt; std::string, std::string &gt; &amp;allowedMap, std::unordered_map&lt; std::string, std::string &gt; &amp;outArgs, const std::set&lt; std::string &gt; &amp;booleanArgs)</td></tr>
-<tr class="memdesc:a4a4f23e2053b71081b19a09cd0c9db54"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the source file that holds the execution logic of ccsds_encoder binary file.  <br /></td></tr>
-<tr class="separator:a4a4f23e2053b71081b19a09cd0c9db54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb0a8d48e1e66b208c90bb74f3ac6a36" id="r_acb0a8d48e1e66b208c90bb74f3ac6a36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8cpp.html#acb0a8d48e1e66b208c90bb74f3ac6a36">parseArguments</a> (const std::int32_t argc, char *argv[], std::unordered_map&lt; std::string, std::string &gt; &amp;allowedMap, std::unordered_map&lt; std::string, std::string &gt; &amp;outArgs, const std::set&lt; std::string &gt; &amp;booleanArgs)</td></tr>
+<tr class="memdesc:acb0a8d48e1e66b208c90bb74f3ac6a36"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is the source file that holds the execution logic of ccsds_encoder binary file.  <br /></td></tr>
+<tr class="separator:acb0a8d48e1e66b208c90bb74f3ac6a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e185650945304fff798a065a8f29936" id="r_a9e185650945304fff798a065a8f29936"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8cpp.html#a9e185650945304fff798a065a8f29936">customConsole</a> (const std::string &amp;appName, const std::string &amp;message, const std::string &amp;logLevel)</td></tr>
 <tr class="memdesc:a9e185650945304fff798a065a8f29936"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints log to console adding various information about.  <br /></td></tr>
 <tr class="separator:a9e185650945304fff798a065a8f29936"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -174,8 +174,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a4a4f23e2053b71081b19a09cd0c9db54" name="a4a4f23e2053b71081b19a09cd0c9db54"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a4f23e2053b71081b19a09cd0c9db54">&#9670;&#160;</a></span>parseArguments()</h2>
+<a id="acb0a8d48e1e66b208c90bb74f3ac6a36" name="acb0a8d48e1e66b208c90bb74f3ac6a36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acb0a8d48e1e66b208c90bb74f3ac6a36">&#9670;&#160;</a></span>parseArguments()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -183,7 +183,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> parseArguments </td>
           <td>(</td>
-          <td class="paramtype">const int&#160;</td>
+          <td class="paramtype">const std::int32_t&#160;</td>
           <td class="paramname"><em>argc</em>, </td>
         </tr>
         <tr>
@@ -219,7 +219,6 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>This is the source file that holds the execution logic of ccsds_encoder binary file. </p>
-<p>Parses the input arguments with defined values returns an unordered map with given keys and input values. </p>
 
 <p class="definition">Definition at line <a class="el" href="exec__utils_8cpp_source.html#l00012">12</a> of file <a class="el" href="exec__utils_8cpp_source.html">exec_utils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   15</span>{</div>
@@ -229,7 +228,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   19</span>    allowedShortKeys.insert(k);</div>
 <div class="line"><span class="lineno">   20</span>    allowedKeys.insert(v);</div>
 <div class="line"><span class="lineno">   21</span>  }</div>
-<div class="line"><span class="lineno">   22</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = 1; i &lt; argc; ++i) {</div>
+<div class="line"><span class="lineno">   22</span>  <span class="keywordflow">for</span> ( std::int32_t i = 1; i &lt; argc; ++i) {</div>
 <div class="line"><span class="lineno">   23</span>    std::string current = argv[i];</div>
 <div class="line"><span class="lineno">   24</span> </div>
 <div class="line"><span class="lineno">   25</span>    <span class="comment">// Check if this is a key</span></div>
@@ -239,34 +238,29 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   29</span>        key = current.substr(2);</div>
 <div class="line"><span class="lineno">   30</span>      }<span class="keywordflow">else</span> {</div>
 <div class="line"><span class="lineno">   31</span>        std::string sKey = current.substr(1);</div>
-<div class="line"><span class="lineno">   32</span>        <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(allowedShortKeys.find(sKey) == allowedShortKeys.end(), <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bd">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#a7e1c0cf6dabf7933acab828d6dd4c616aad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Unknown argument: -&quot;</span> + sKey);</div>
+<div class="line"><span class="lineno">   32</span>        <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(allowedShortKeys.find(sKey) == allowedShortKeys.end(), <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Unknown argument: -&quot;</span> + sKey);</div>
 <div class="line"><span class="lineno">   33</span>        key = allowedMap.at(sKey);</div>
 <div class="line"><span class="lineno">   34</span>      }</div>
-<div class="line"><span class="lineno">   35</span>      <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(allowedKeys.find(key) == allowedKeys.end(), <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bd">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#a7e1c0cf6dabf7933acab828d6dd4c616aad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Unknown argument: --&quot;</span> + key);</div>
+<div class="line"><span class="lineno">   35</span>      <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(allowedKeys.find(key) == allowedKeys.end(), <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Unknown argument: --&quot;</span> + key);</div>
 <div class="line"><span class="lineno">   36</span> </div>
 <div class="line"><span class="lineno">   37</span>      <span class="keywordflow">if</span> (booleanArgs.find(key) != booleanArgs.end()) {</div>
 <div class="line"><span class="lineno">   38</span>        outArgs[key] = <span class="stringliteral">&quot;true&quot;</span>;</div>
 <div class="line"><span class="lineno">   39</span>      }<span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   40</span>        <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(i + 1 &gt;= argc, <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bd">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#a7e1c0cf6dabf7933acab828d6dd4c616aad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Missing value for argument: --&quot;</span> + key);</div>
+<div class="line"><span class="lineno">   40</span>        <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(i + 1 &gt;= argc, <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Missing value for argument: --&quot;</span> + key);</div>
 <div class="line"><span class="lineno">   41</span>        <span class="keyword">const</span> std::string value = argv[++i];</div>
 <div class="line"><span class="lineno">   42</span>        outArgs[key] = value;</div>
 <div class="line"><span class="lineno">   43</span>      }</div>
 <div class="line"><span class="lineno">   44</span>    }<span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   45</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{ <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bd">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#a7e1c0cf6dabf7933acab828d6dd4c616aad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Unknown argument:&quot;</span> + std::string(argv[i]) };</div>
+<div class="line"><span class="lineno">   45</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{ <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>), <span class="stringliteral">&quot;Unknown argument:&quot;</span> + std::string(argv[i]) };</div>
 <div class="line"><span class="lineno">   46</span>    }</div>
 <div class="line"><span class="lineno">   47</span>  }</div>
 <div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   49</span>}</div>
 <div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00144">CCSDSResult.h:144</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Represents an error with both an error code and a message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00039">CCSDSResult.h:39</a></div></div>
-<div class="ttc" id="aexec__utils_8h_html_a7e1c0cf6dabf7933acab828d6dd4c616aad2a331458dbcb4d3cd9e9e1108354f5"><div class="ttname"><a href="exec__utils_8h.html#a7e1c0cf6dabf7933acab828d6dd4c616aad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a></div><div class="ttdeci">@ ARG_PARSE_ERROR</div><div class="ttdoc">Error Parsing argument.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00012">exec_utils.h:12</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bd"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bd">CCSDS::ErrorCode</a></div><div class="ttdeci">ErrorCode</div><div class="ttdoc">Defines various error codes used in CCSDS packet handling.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00015">CCSDSResult.h:15</a></div></div>
-</div><!-- fragment --><div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8cpp_a4a4f23e2053b71081b19a09cd0c9db54_icgraph.svg" width="243" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-
+<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a></div><div class="ttdeci">@ ARG_PARSE_ERROR</div><div class="ttdoc">Error Parsing argument.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00012">exec_utils.h:12</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">CCSDS::ErrorCode</a></div><div class="ttdeci">ErrorCode</div><div class="ttdoc">Defines various error codes used in CCSDS packet handling.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00015">CCSDSResult.h:15</a></div></div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

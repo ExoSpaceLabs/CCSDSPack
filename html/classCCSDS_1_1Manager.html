@@ -100,10 +100,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa47668beaea3b5b4f0ca9c85b374e966" id="r_aa47668beaea3b5b4f0ca9c85b374e966"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966">Manager</a> (<a class="el" href="classCCSDS_1_1Packet.html">Packet</a> packet)</td></tr>
 <tr class="memdesc:aa47668beaea3b5b4f0ca9c85b374e966"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classCCSDS_1_1Manager.html" title="Manages CCSDS packets and their templates.">Manager</a> with a given packet template.  <br /></td></tr>
 <tr class="separator:aa47668beaea3b5b4f0ca9c85b374e966"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85510a068db565792051e787667e1ff0" id="r_a85510a068db565792051e787667e1ff0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a85510a068db565792051e787667e1ff0">setSyncPattern</a> (uint32_t syncPattern)</td></tr>
-<tr class="memdesc:a85510a068db565792051e787667e1ff0"><td class="mdescLeft">&#160;</td><td class="mdescRight">set sync pattern that should indicate the start of a <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> packet.  <br /></td></tr>
-<tr class="separator:a85510a068db565792051e787667e1ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a540afafc78a4450dd6d2a2113d5a3640" id="r_a540afafc78a4450dd6d2a2113d5a3640"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">getSyncPattern</a> () const</td></tr>
+<tr class="memitem:a45f1e86e3a1e892c8244a2b0f8967c88" id="r_a45f1e86e3a1e892c8244a2b0f8967c88"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a45f1e86e3a1e892c8244a2b0f8967c88">setSyncPattern</a> (std::uint32_t syncPattern)</td></tr>
+<tr class="memdesc:a45f1e86e3a1e892c8244a2b0f8967c88"><td class="mdescLeft">&#160;</td><td class="mdescRight">set sync pattern that should indicate the start of a <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> packet.  <br /></td></tr>
+<tr class="separator:a45f1e86e3a1e892c8244a2b0f8967c88"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a540afafc78a4450dd6d2a2113d5a3640" id="r_a540afafc78a4450dd6d2a2113d5a3640"><td class="memItemLeft" align="right" valign="top">std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">getSyncPattern</a> () const</td></tr>
 <tr class="memdesc:a540afafc78a4450dd6d2a2113d5a3640"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the currently set sync pattern.  <br /></td></tr>
 <tr class="separator:a540afafc78a4450dd6d2a2113d5a3640"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24d0f60835c70b6101fe5be1233aa7b2" id="r_a24d0f60835c70b6101fe5be1233aa7b2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a24d0f60835c70b6101fe5be1233aa7b2">setSyncPatternEnable</a> (bool enable)</td></tr>
@@ -121,37 +121,37 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8adf5ba17eb8041092bcd6c4f1f2b135" id="r_a8adf5ba17eb8041092bcd6c4f1f2b135"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a8adf5ba17eb8041092bcd6c4f1f2b135">loadTemplateConfig</a> (const <a class="el" href="classConfig.html">Config</a> &amp;cfg)</td></tr>
 <tr class="memdesc:a8adf5ba17eb8041092bcd6c4f1f2b135"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a template packet from a configuration object.  <br /></td></tr>
 <tr class="separator:a8adf5ba17eb8041092bcd6c4f1f2b135"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace4b1386f4bad46724ba01884543ecc1" id="r_ace4b1386f4bad46724ba01884543ecc1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#ace4b1386f4bad46724ba01884543ecc1">setDataFieldSize</a> (uint16_t size)</td></tr>
-<tr class="memdesc:ace4b1386f4bad46724ba01884543ecc1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the size of the data field.  <br /></td></tr>
-<tr class="separator:ace4b1386f4bad46724ba01884543ecc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3534a80d338e94c2be89c76f8e76e1b7" id="r_a3534a80d338e94c2be89c76f8e76e1b7"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a3534a80d338e94c2be89c76f8e76e1b7">getDataFieldSize</a> () const</td></tr>
+<tr class="memitem:aab1b7a157fa5a6db038152860d0b3031" id="r_aab1b7a157fa5a6db038152860d0b3031"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#aab1b7a157fa5a6db038152860d0b3031">setDataFieldSize</a> (std::uint16_t size)</td></tr>
+<tr class="memdesc:aab1b7a157fa5a6db038152860d0b3031"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the size of the data field.  <br /></td></tr>
+<tr class="separator:aab1b7a157fa5a6db038152860d0b3031"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3534a80d338e94c2be89c76f8e76e1b7" id="r_a3534a80d338e94c2be89c76f8e76e1b7"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a3534a80d338e94c2be89c76f8e76e1b7">getDataFieldSize</a> () const</td></tr>
 <tr class="memdesc:a3534a80d338e94c2be89c76f8e76e1b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">retrieves the set data field size (this includes the secondary header if present)  <br /></td></tr>
 <tr class="separator:a3534a80d338e94c2be89c76f8e76e1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f6c84bec310a521c55d88ce49506395" id="r_a2f6c84bec310a521c55d88ce49506395"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a2f6c84bec310a521c55d88ce49506395">setApplicationData</a> (const std::vector&lt; uint8_t &gt; &amp;data)</td></tr>
-<tr class="memdesc:a2f6c84bec310a521c55d88ce49506395"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the application data for the packet.  <br /></td></tr>
-<tr class="separator:a2f6c84bec310a521c55d88ce49506395"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb8e2225df8018c04ad76c874cadee69" id="r_abb8e2225df8018c04ad76c874cadee69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#abb8e2225df8018c04ad76c874cadee69">setApplicationData</a> (const std::vector&lt; std::uint8_t &gt; &amp;data)</td></tr>
+<tr class="memdesc:abb8e2225df8018c04ad76c874cadee69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the application data for the packet.  <br /></td></tr>
+<tr class="separator:abb8e2225df8018c04ad76c874cadee69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1e77f177ff61c52fbd27e673083dcb5" id="r_aa1e77f177ff61c52fbd27e673083dcb5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#aa1e77f177ff61c52fbd27e673083dcb5">setAutoUpdateEnable</a> (bool enable)</td></tr>
 <tr class="memdesc:aa1e77f177ff61c52fbd27e673083dcb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables automatic updates for packets.  <br /></td></tr>
 <tr class="separator:aa1e77f177ff61c52fbd27e673083dcb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acea6a7e717d1edeefe212731ba0572ce" id="r_acea6a7e717d1edeefe212731ba0572ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#acea6a7e717d1edeefe212731ba0572ce">setAutoValidateEnable</a> (bool enable)</td></tr>
 <tr class="memdesc:acea6a7e717d1edeefe212731ba0572ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables or disables automatic validation of packets.  <br /></td></tr>
 <tr class="separator:acea6a7e717d1edeefe212731ba0572ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b2fa0628cc184803e127442879bc943" id="r_a1b2fa0628cc184803e127442879bc943"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a1b2fa0628cc184803e127442879bc943">getPacketTemplate</a> ()</td></tr>
+<tr class="memitem:a1b2fa0628cc184803e127442879bc943" id="r_a1b2fa0628cc184803e127442879bc943"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a1b2fa0628cc184803e127442879bc943">getPacketTemplate</a> ()</td></tr>
 <tr class="memdesc:a1b2fa0628cc184803e127442879bc943"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the packet template in serialized form.  <br /></td></tr>
 <tr class="separator:a1b2fa0628cc184803e127442879bc943"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeea9cc798894858a3cc5108342d036d6" id="r_aeea9cc798894858a3cc5108342d036d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#aeea9cc798894858a3cc5108342d036d6">getPacketBufferAtIndex</a> (uint16_t index)</td></tr>
-<tr class="memdesc:aeea9cc798894858a3cc5108342d036d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a packet at the specified index.  <br /></td></tr>
-<tr class="separator:aeea9cc798894858a3cc5108342d036d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b7106979c669a3be5c2ff950743c126" id="r_a1b7106979c669a3be5c2ff950743c126"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a1b7106979c669a3be5c2ff950743c126">getPacketsBuffer</a> () const</td></tr>
-<tr class="memdesc:a1b7106979c669a3be5c2ff950743c126"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a buffer containing all the stored packets sequentially.  <br /></td></tr>
-<tr class="separator:a1b7106979c669a3be5c2ff950743c126"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a5258f446003fc3d5687bb6bbe90ebd" id="r_a6a5258f446003fc3d5687bb6bbe90ebd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a6a5258f446003fc3d5687bb6bbe90ebd">getApplicationDataBuffer</a> ()</td></tr>
+<tr class="memitem:ae5ef4e5a89056a085462f86d3baea0a6" id="r_ae5ef4e5a89056a085462f86d3baea0a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#ae5ef4e5a89056a085462f86d3baea0a6">getPacketBufferAtIndex</a> (std::uint16_t index)</td></tr>
+<tr class="memdesc:ae5ef4e5a89056a085462f86d3baea0a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a packet at the specified index.  <br /></td></tr>
+<tr class="separator:ae5ef4e5a89056a085462f86d3baea0a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d3d17e64725310ba7c4c39964438d16" id="r_a9d3d17e64725310ba7c4c39964438d16"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a9d3d17e64725310ba7c4c39964438d16">getPacketsBuffer</a> () const</td></tr>
+<tr class="memdesc:a9d3d17e64725310ba7c4c39964438d16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a buffer containing all the stored packets sequentially.  <br /></td></tr>
+<tr class="separator:a9d3d17e64725310ba7c4c39964438d16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a5258f446003fc3d5687bb6bbe90ebd" id="r_a6a5258f446003fc3d5687bb6bbe90ebd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a6a5258f446003fc3d5687bb6bbe90ebd">getApplicationDataBuffer</a> ()</td></tr>
 <tr class="memdesc:a6a5258f446003fc3d5687bb6bbe90ebd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the application data from the packets.  <br /></td></tr>
 <tr class="separator:a6a5258f446003fc3d5687bb6bbe90ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a874020cc8688a4988cb8dd629ef11724" id="r_a874020cc8688a4988cb8dd629ef11724"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a874020cc8688a4988cb8dd629ef11724">getApplicationDataBufferAtIndex</a> (uint16_t index)</td></tr>
-<tr class="memdesc:a874020cc8688a4988cb8dd629ef11724"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the application data from a packet at the given index.  <br /></td></tr>
-<tr class="separator:a874020cc8688a4988cb8dd629ef11724"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67eb2b2ef2b45dcd25cdd80fa4057bbf" id="r_a67eb2b2ef2b45dcd25cdd80fa4057bbf"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">getTotalPackets</a> () const</td></tr>
+<tr class="memitem:ad6fbbf97d85328b3266b1d319a46ed6c" id="r_ad6fbbf97d85328b3266b1d319a46ed6c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#ad6fbbf97d85328b3266b1d319a46ed6c">getApplicationDataBufferAtIndex</a> (std::uint16_t index)</td></tr>
+<tr class="memdesc:ad6fbbf97d85328b3266b1d319a46ed6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the application data from a packet at the given index.  <br /></td></tr>
+<tr class="separator:ad6fbbf97d85328b3266b1d319a46ed6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a67eb2b2ef2b45dcd25cdd80fa4057bbf" id="r_a67eb2b2ef2b45dcd25cdd80fa4057bbf"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">getTotalPackets</a> () const</td></tr>
 <tr class="memdesc:a67eb2b2ef2b45dcd25cdd80fa4057bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the total number of packets managed.  <br /></td></tr>
 <tr class="separator:a67eb2b2ef2b45dcd25cdd80fa4057bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abae17bb1655a2fd356faf5e25190a91f" id="r_abae17bb1655a2fd356faf5e25190a91f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#abae17bb1655a2fd356faf5e25190a91f">getAutoUpdateEnable</a> () const</td></tr>
@@ -166,15 +166,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4fd11a40ea4d569a483061892bfb688f" id="r_a4fd11a40ea4d569a483061892bfb688f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a4fd11a40ea4d569a483061892bfb688f">addPacket</a> (<a class="el" href="classCCSDS_1_1Packet.html">Packet</a> packet)</td></tr>
 <tr class="memdesc:a4fd11a40ea4d569a483061892bfb688f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new packet to the list.  <br /></td></tr>
 <tr class="separator:a4fd11a40ea4d569a483061892bfb688f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd655ed43c36c02a3b44e48755a9a130" id="r_acd655ed43c36c02a3b44e48755a9a130"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#acd655ed43c36c02a3b44e48755a9a130">addPacketFromBuffer</a> (const std::vector&lt; uint8_t &gt; &amp;packetBuffer)</td></tr>
-<tr class="memdesc:acd655ed43c36c02a3b44e48755a9a130"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new packet to the list.  <br /></td></tr>
-<tr class="separator:acd655ed43c36c02a3b44e48755a9a130"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa15ff66d78688766157c560ff31384f0" id="r_aa15ff66d78688766157c560ff31384f0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#aa15ff66d78688766157c560ff31384f0">addPacketFromBuffer</a> (const std::vector&lt; std::uint8_t &gt; &amp;packetBuffer)</td></tr>
+<tr class="memdesc:aa15ff66d78688766157c560ff31384f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a new packet to the list.  <br /></td></tr>
+<tr class="separator:aa15ff66d78688766157c560ff31384f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a476ce8ef6b5a5c9aae31df69d81770a6" id="r_a476ce8ef6b5a5c9aae31df69d81770a6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a476ce8ef6b5a5c9aae31df69d81770a6">load</a> (const std::vector&lt; <a class="el" href="classCCSDS_1_1Packet.html">Packet</a> &gt; &amp;packets)</td></tr>
 <tr class="memdesc:a476ce8ef6b5a5c9aae31df69d81770a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a vector of packets.  <br /></td></tr>
 <tr class="separator:a476ce8ef6b5a5c9aae31df69d81770a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a974f09b0a59fc6ed7083a467c1f7d67d" id="r_a974f09b0a59fc6ed7083a467c1f7d67d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a974f09b0a59fc6ed7083a467c1f7d67d">load</a> (const std::vector&lt; uint8_t &gt; &amp;packetsBuffer)</td></tr>
-<tr class="memdesc:a974f09b0a59fc6ed7083a467c1f7d67d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a packet or a series of packets from a buffer.  <br /></td></tr>
-<tr class="separator:a974f09b0a59fc6ed7083a467c1f7d67d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a762d4d0408c548379cc3da09ba7d2052" id="r_a762d4d0408c548379cc3da09ba7d2052"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a762d4d0408c548379cc3da09ba7d2052">load</a> (const std::vector&lt; std::uint8_t &gt; &amp;packetsBuffer)</td></tr>
+<tr class="memdesc:a762d4d0408c548379cc3da09ba7d2052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a packet or a series of packets from a buffer.  <br /></td></tr>
+<tr class="separator:a762d4d0408c548379cc3da09ba7d2052"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8be98b4fb7b61439308dfadfea9496f9" id="r_a8be98b4fb7b61439308dfadfea9496f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a8be98b4fb7b61439308dfadfea9496f9">read</a> (const std::string &amp;binaryFile)</td></tr>
 <tr class="memdesc:a8be98b4fb7b61439308dfadfea9496f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load a packet or a series of packets from a binary file.  <br /></td></tr>
 <tr class="separator:a8be98b4fb7b61439308dfadfea9496f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -217,12 +217,12 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:a31f295c0e568751e1532287841189a1f" id="r_a31f295c0e568751e1532287841189a1f"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="classCCSDS_1_1Packet.html">Packet</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a></td></tr>
 <tr class="memdesc:a31f295c0e568751e1532287841189a1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collection of stored packets.  <br /></td></tr>
 <tr class="separator:a31f295c0e568751e1532287841189a1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fa2b4a3f69bd737dced2c1f4251af12" id="r_a1fa2b4a3f69bd737dced2c1f4251af12"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12">m_sequenceCount</a> { 0 }</td></tr>
-<tr class="separator:a1fa2b4a3f69bd737dced2c1f4251af12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb743e5d139e6d499441d1ee52f21794" id="r_aeb743e5d139e6d499441d1ee52f21794"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#aeb743e5d139e6d499441d1ee52f21794">m_sequenceCount</a> { 0 }</td></tr>
+<tr class="separator:aeb743e5d139e6d499441d1ee52f21794"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4e0a63944c35d2616fad92fb25a0ad2" id="r_af4e0a63944c35d2616fad92fb25a0ad2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCCSDS_1_1Validator.html">Validator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a> {}</td></tr>
 <tr class="separator:af4e0a63944c35d2616fad92fb25a0ad2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f3a4f18ae4ce9acc9141cc1d6c5414e" id="r_a7f3a4f18ae4ce9acc9141cc1d6c5414e"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a> {0x1ACFFC1D}</td></tr>
-<tr class="separator:a7f3a4f18ae4ce9acc9141cc1d6c5414e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73e61a16229c09ae917ef39befa0ff10" id="r_a73e61a16229c09ae917ef39befa0ff10"><td class="memItemLeft" align="right" valign="top">std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a> {0x1ACFFC1D}</td></tr>
+<tr class="separator:a73e61a16229c09ae917ef39befa0ff10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manages <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> packets and their templates. </p>
@@ -343,7 +343,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  175</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a0028ecb98b97d9ef06f05d439394f05d">m_templateIsSet</a>) {</div>
 <div class="line"><span class="lineno">  176</span>      <a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#abe3980b1c07f77551736b5a64d495d3b">configure</a>(<span class="keyword">true</span>, <span class="keyword">true</span>, <span class="keyword">false</span>);</div>
 <div class="line"><span class="lineno">  177</span>    }</div>
-<div class="line"><span class="lineno">  178</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95">validate</a>(packet), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdab1a276e8e96ce5d8af00472fcf0d3af8">ErrorCode::VALIDATION_FAILURE</a>, <span class="stringliteral">&quot;packet is not valid&quot;</span>);</div>
+<div class="line"><span class="lineno">  178</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95">validate</a>(packet), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57ab1a276e8e96ce5d8af00472fcf0d3af8">ErrorCode::VALIDATION_FAILURE</a>, <span class="stringliteral">&quot;packet is not valid&quot;</span>);</div>
 <div class="line"><span class="lineno">  179</span>  }</div>
 <div class="line"><span class="lineno">  180</span>  packet.setUpdatePacketEnable(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#ac5621224363dfbc32b1bc51daafaabaf">m_updateEnable</a>);</div>
 <div class="line"><span class="lineno">  181</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.push_back(std::move(packet));</div>
@@ -354,7 +354,7 @@ Here is the call graph for this function:</div>
 <div class="ttc" id="aclassCCSDS_1_1Manager_html_a36aaae5e666c3c057b20c7240aa25bec"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a36aaae5e666c3c057b20c7240aa25bec">CCSDS::Manager::m_validateEnable</a></div><div class="ttdeci">bool m_validateEnable</div><div class="ttdoc">bool indicating whether automatic validation is enabled (default: true).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00267">CCSDSManager.h:267</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Manager_html_ac5621224363dfbc32b1bc51daafaabaf"><div class="ttname"><a href="classCCSDS_1_1Manager.html#ac5621224363dfbc32b1bc51daafaabaf">CCSDS::Manager::m_updateEnable</a></div><div class="ttdeci">bool m_updateEnable</div><div class="ttdoc">bool indicating whether automatic updates are enabled (default: true).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00266">CCSDSManager.h:266</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Validator_html_af6e8699c7d3d0719934106ca2d58fb95"><div class="ttname"><a href="classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95">CCSDS::Validator::validate</a></div><div class="ttdeci">bool validate(const Packet &amp;packet)</div><div class="ttdoc">Validates a given packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8cpp_source.html#l00009">CCSDSValidator.cpp:9</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdab1a276e8e96ce5d8af00472fcf0d3af8"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdab1a276e8e96ce5d8af00472fcf0d3af8">CCSDS::VALIDATION_FAILURE</a></div><div class="ttdeci">@ VALIDATION_FAILURE</div><div class="ttdoc">Validation Failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00025">CCSDSResult.h:25</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57ab1a276e8e96ce5d8af00472fcf0d3af8"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57ab1a276e8e96ce5d8af00472fcf0d3af8">CCSDS::VALIDATION_FAILURE</a></div><div class="ttdeci">@ VALIDATION_FAILURE</div><div class="ttdoc">Validation Failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00025">CCSDSResult.h:25</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -363,8 +363,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="acd655ed43c36c02a3b44e48755a9a130" name="acd655ed43c36c02a3b44e48755a9a130"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd655ed43c36c02a3b44e48755a9a130">&#9670;&#160;</a></span>addPacketFromBuffer()</h2>
+<a id="aa15ff66d78688766157c560ff31384f0" name="aa15ff66d78688766157c560ff31384f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa15ff66d78688766157c560ff31384f0">&#9670;&#160;</a></span>addPacketFromBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -372,7 +372,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> CCSDS::Manager::addPacketFromBuffer </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>packetBuffer</em></td><td>)</td>
           <td></td>
         </tr>
@@ -388,7 +388,7 @@ Here is the call graph for this function:</div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00185">185</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  185</span>                                                                                        {</div>
+<div class="fragment"><div class="line"><span class="lineno">  185</span>                                                                                           {</div>
 <div class="line"><span class="lineno">  186</span>  Packet packet;</div>
 <div class="line"><span class="lineno">  187</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(packet.deserialize(packetBuffer));</div>
 <div class="line"><span class="lineno">  188</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1Manager.html#a4fd11a40ea4d569a483061892bfb688f">addPacket</a>(packet));</div>
@@ -399,7 +399,7 @@ Here is the call graph for this function:</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_acd655ed43c36c02a3b44e48755a9a130_cgraph.svg" width="459" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_aa15ff66d78688766157c560ff31384f0_cgraph.svg" width="459" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -451,10 +451,10 @@ Here is the call graph for this function:</div>
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00264">264</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  264</span>                                {</div>
 <div class="line"><span class="lineno">  265</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.clear();</div>
-<div class="line"><span class="lineno">  266</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12">m_sequenceCount</a> = 0;</div>
+<div class="line"><span class="lineno">  266</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#aeb743e5d139e6d499441d1ee52f21794">m_sequenceCount</a> = 0;</div>
 <div class="line"><span class="lineno">  267</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#a070046bfc620487ef6f33f8a7299ffda">clear</a>();</div>
 <div class="line"><span class="lineno">  268</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a1fa2b4a3f69bd737dced2c1f4251af12"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12">CCSDS::Manager::m_sequenceCount</a></div><div class="ttdeci">uint16_t m_sequenceCount</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00270">CCSDSManager.h:270</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_aeb743e5d139e6d499441d1ee52f21794"><div class="ttname"><a href="classCCSDS_1_1Manager.html#aeb743e5d139e6d499441d1ee52f21794">CCSDS::Manager::m_sequenceCount</a></div><div class="ttdeci">std::uint16_t m_sequenceCount</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00270">CCSDSManager.h:270</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Validator_html_a070046bfc620487ef6f33f8a7299ffda"><div class="ttname"><a href="classCCSDS_1_1Validator.html#a070046bfc620487ef6f33f8a7299ffda">CCSDS::Validator::clear</a></div><div class="ttdeci">void clear()</div><div class="ttdoc">Clears the validator, resets counter.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8cpp_source.html#l00062">CCSDSValidator.cpp:62</a></div></div>
 </div><!-- fragment -->
 </div>
@@ -466,7 +466,7 @@ Here is the call graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">CCSDS::ResultBuffer</a> CCSDS::Manager::getApplicationDataBuffer </td>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a> CCSDS::Manager::getApplicationDataBuffer </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -479,13 +479,13 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00142">142</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  142</span>                                                         {</div>
-<div class="line"><span class="lineno">  143</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.empty(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda04d9531f456074e3ae599a8d7d6a416d">ErrorCode::NO_DATA</a>, <span class="stringliteral">&quot;Cannot get Application data, no packets have been set.&quot;</span>);</div>
-<div class="line"><span class="lineno">  144</span>  std::vector&lt;uint8_t&gt; data;</div>
+<div class="line"><span class="lineno">  143</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.empty(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">ErrorCode::NO_DATA</a>, <span class="stringliteral">&quot;Cannot get Application data, no packets have been set.&quot;</span>);</div>
+<div class="line"><span class="lineno">  144</span>  std::vector&lt;std::uint8_t&gt; data;</div>
 <div class="line"><span class="lineno">  145</span> </div>
-<div class="line"><span class="lineno">  146</span>  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> index = 0; index &lt; <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.size(); index++) {</div>
+<div class="line"><span class="lineno">  146</span>  <span class="keywordflow">for</span> (std::uint32_t index = 0; index &lt; <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.size(); index++) {</div>
 <div class="line"><span class="lineno">  147</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a36aaae5e666c3c057b20c7240aa25bec">m_validateEnable</a>) {</div>
 <div class="line"><span class="lineno">  148</span>      <span class="keyword">const</span> std::string errorMessage = <span class="stringliteral">&quot;Validation failure for packet at index&quot;</span> + std::to_string(index);</div>
-<div class="line"><span class="lineno">  149</span>      <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95">validate</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index]), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdab1a276e8e96ce5d8af00472fcf0d3af8">ErrorCode::VALIDATION_FAILURE</a>,</div>
+<div class="line"><span class="lineno">  149</span>      <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95">validate</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index]), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57ab1a276e8e96ce5d8af00472fcf0d3af8">ErrorCode::VALIDATION_FAILURE</a>,</div>
 <div class="line"><span class="lineno">  150</span>                     errorMessage);</div>
 <div class="line"><span class="lineno">  151</span>    }</div>
 <div class="line"><span class="lineno">  152</span>    <span class="keyword">auto</span> applicationData = <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index].getApplicationDataBytes();</div>
@@ -493,7 +493,7 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  154</span>  }</div>
 <div class="line"><span class="lineno">  155</span>  <span class="keywordflow">return</span> data;</div>
 <div class="line"><span class="lineno">  156</span>}</div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda04d9531f456074e3ae599a8d7d6a416d"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda04d9531f456074e3ae599a8d7d6a416d">CCSDS::NO_DATA</a></div><div class="ttdeci">@ NO_DATA</div><div class="ttdoc">No data available.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00018">CCSDSResult.h:18</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">CCSDS::NO_DATA</a></div><div class="ttdeci">@ NO_DATA</div><div class="ttdoc">No data available.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00018">CCSDSResult.h:18</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -502,16 +502,16 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a874020cc8688a4988cb8dd629ef11724" name="a874020cc8688a4988cb8dd629ef11724"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a874020cc8688a4988cb8dd629ef11724">&#9670;&#160;</a></span>getApplicationDataBufferAtIndex()</h2>
+<a id="ad6fbbf97d85328b3266b1d319a46ed6c" name="ad6fbbf97d85328b3266b1d319a46ed6c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6fbbf97d85328b3266b1d319a46ed6c">&#9670;&#160;</a></span>getApplicationDataBufferAtIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">CCSDS::ResultBuffer</a> CCSDS::Manager::getApplicationDataBufferAtIndex </td>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a> CCSDS::Manager::getApplicationDataBufferAtIndex </td>
           <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramtype">std::uint16_t&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
           <td></td>
         </tr>
@@ -528,12 +528,12 @@ Here is the caller graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>A ResultBuffer containing the application data of the selected packet. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00158">158</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  158</span>                                                                                    {</div>
-<div class="line"><span class="lineno">  159</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(index &lt; 0 || index &gt;= <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.size(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>,</div>
+<div class="fragment"><div class="line"><span class="lineno">  158</span>                                                                                       {</div>
+<div class="line"><span class="lineno">  159</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(index &lt; 0 || index &gt;= <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.size(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>,</div>
 <div class="line"><span class="lineno">  160</span>                 <span class="stringliteral">&quot;Cannot get Application data, index is out of bounds&quot;</span>);</div>
 <div class="line"><span class="lineno">  161</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index].getApplicationDataBytes();</div>
 <div class="line"><span class="lineno">  162</span>}</div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda5b715c6917d6a363d9eafe6c2529cb31"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5b715c6917d6a363d9eafe6c2529cb31">CCSDS::INVALID_DATA</a></div><div class="ttdeci">@ INVALID_DATA</div><div class="ttdoc">Data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00019">CCSDSResult.h:19</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::INVALID_DATA</a></div><div class="ttdeci">@ INVALID_DATA</div><div class="ttdoc">Data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00019">CCSDSResult.h:19</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -584,13 +584,13 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>retrieves the set data field size (this includes the secondary header if present) </p>
-<dl class="section return"><dt>Returns</dt><dd>uint16_t the size of data length in bytes. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::uint16_t the size of data length in bytes. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00048">48</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   48</span>                                              {</div>
 <div class="line"><span class="lineno">   49</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a8460fa08ef697e80ca99d58fabc88f44">getDataFieldMaximumSize</a>();</div>
 <div class="line"><span class="lineno">   50</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1Packet_html_a8460fa08ef697e80ca99d58fabc88f44"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a8460fa08ef697e80ca99d58fabc88f44">CCSDS::Packet::getDataFieldMaximumSize</a></div><div class="ttdeci">uint16_t getDataFieldMaximumSize() const</div><div class="ttdoc">returns the maximum data field size</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00100">CCSDSPacket.cpp:100</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_a8460fa08ef697e80ca99d58fabc88f44"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a8460fa08ef697e80ca99d58fabc88f44">CCSDS::Packet::getDataFieldMaximumSize</a></div><div class="ttdeci">std::uint16_t getDataFieldMaximumSize() const</div><div class="ttdoc">returns the maximum data field size</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00100">CCSDSPacket.cpp:100</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -599,16 +599,16 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="aeea9cc798894858a3cc5108342d036d6" name="aeea9cc798894858a3cc5108342d036d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeea9cc798894858a3cc5108342d036d6">&#9670;&#160;</a></span>getPacketBufferAtIndex()</h2>
+<a id="ae5ef4e5a89056a085462f86d3baea0a6" name="ae5ef4e5a89056a085462f86d3baea0a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5ef4e5a89056a085462f86d3baea0a6">&#9670;&#160;</a></span>getPacketBufferAtIndex()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">CCSDS::ResultBuffer</a> CCSDS::Manager::getPacketBufferAtIndex </td>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a> CCSDS::Manager::getPacketBufferAtIndex </td>
           <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramtype">std::uint16_t&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
           <td></td>
         </tr>
@@ -625,13 +625,13 @@ Here is the caller graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>A ResultBuffer containing the requested packet. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00115">115</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  115</span>                                                                           {</div>
-<div class="line"><span class="lineno">  116</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(index &lt; 0 || index &gt;= <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.size(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>,</div>
+<div class="fragment"><div class="line"><span class="lineno">  115</span>                                                                              {</div>
+<div class="line"><span class="lineno">  116</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(index &lt; 0 || index &gt;= <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.size(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>,</div>
 <div class="line"><span class="lineno">  117</span>                 <span class="stringliteral">&quot;Cannot get packet, index is out of bounds&quot;</span>);</div>
 <div class="line"><span class="lineno">  118</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a36aaae5e666c3c057b20c7240aa25bec">m_validateEnable</a>) {</div>
 <div class="line"><span class="lineno">  119</span>    <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index].update();</div>
 <div class="line"><span class="lineno">  120</span>    <span class="keyword">const</span> std::string errorMessage = <span class="stringliteral">&quot;Validation failure for packet at index &quot;</span> + std::to_string(index);</div>
-<div class="line"><span class="lineno">  121</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95">validate</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index]), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdab1a276e8e96ce5d8af00472fcf0d3af8">ErrorCode::VALIDATION_FAILURE</a>,</div>
+<div class="line"><span class="lineno">  121</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95">validate</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index]), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57ab1a276e8e96ce5d8af00472fcf0d3af8">ErrorCode::VALIDATION_FAILURE</a>,</div>
 <div class="line"><span class="lineno">  122</span>                   errorMessage);</div>
 <div class="line"><span class="lineno">  123</span>  }</div>
 <div class="line"><span class="lineno">  124</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>[index].serialize();</div>
@@ -669,14 +669,14 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a1b7106979c669a3be5c2ff950743c126" name="a1b7106979c669a3be5c2ff950743c126"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b7106979c669a3be5c2ff950743c126">&#9670;&#160;</a></span>getPacketsBuffer()</h2>
+<a id="a9d3d17e64725310ba7c4c39964438d16" name="a9d3d17e64725310ba7c4c39964438d16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d3d17e64725310ba7c4c39964438d16">&#9670;&#160;</a></span>getPacketsBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt; uint8_t &gt; CCSDS::Manager::getPacketsBuffer </td>
+          <td class="memname">std::vector&lt; std::uint8_t &gt; CCSDS::Manager::getPacketsBuffer </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -688,26 +688,26 @@ Here is the caller graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>A vector of bytes containing the packets data. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00127">127</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  127</span>                                                        {</div>
-<div class="line"><span class="lineno">  128</span>  std::vector&lt;uint8_t&gt; buffer;</div>
+<div class="fragment"><div class="line"><span class="lineno">  127</span>                                                           {</div>
+<div class="line"><span class="lineno">  128</span>  std::vector&lt;std::uint8_t&gt; buffer;</div>
 <div class="line"><span class="lineno">  129</span>  <span class="keywordflow">for</span> (<span class="keyword">auto</span> packet : <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>) {</div>
 <div class="line"><span class="lineno">  130</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a5c672b103c416cc695dd4495924cbf81">m_syncPattEnable</a>) {</div>
-<div class="line"><span class="lineno">  131</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a> &gt;&gt; 24 &amp; 0xff);</div>
-<div class="line"><span class="lineno">  132</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a> &gt;&gt; 16 &amp; 0xff);</div>
-<div class="line"><span class="lineno">  133</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a> &gt;&gt; 8 &amp; 0xff);</div>
-<div class="line"><span class="lineno">  134</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a> &amp; 0xff);</div>
+<div class="line"><span class="lineno">  131</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a> &gt;&gt; 24 &amp; 0xff);</div>
+<div class="line"><span class="lineno">  132</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a> &gt;&gt; 16 &amp; 0xff);</div>
+<div class="line"><span class="lineno">  133</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a> &gt;&gt; 8 &amp; 0xff);</div>
+<div class="line"><span class="lineno">  134</span>      buffer.push_back(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a> &amp; 0xff);</div>
 <div class="line"><span class="lineno">  135</span>    }</div>
-<div class="line"><span class="lineno">  136</span>    std::vector&lt;uint8_t&gt; packetBuffer = packet.serialize();</div>
+<div class="line"><span class="lineno">  136</span>    std::vector&lt;std::uint8_t&gt; packetBuffer = packet.serialize();</div>
 <div class="line"><span class="lineno">  137</span>    buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());</div>
 <div class="line"><span class="lineno">  138</span>  }</div>
 <div class="line"><span class="lineno">  139</span>  <span class="keywordflow">return</span> buffer;</div>
 <div class="line"><span class="lineno">  140</span>}</div>
 <div class="ttc" id="aclassCCSDS_1_1Manager_html_a5c672b103c416cc695dd4495924cbf81"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a5c672b103c416cc695dd4495924cbf81">CCSDS::Manager::m_syncPattEnable</a></div><div class="ttdeci">bool m_syncPattEnable</div><div class="ttdoc">bool indicating whether automatic sync pattern insertion is enabled (default: false).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00268">CCSDSManager.h:268</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a7f3a4f18ae4ce9acc9141cc1d6c5414e"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">CCSDS::Manager::m_syncPattern</a></div><div class="ttdeci">uint32_t m_syncPattern</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00273">CCSDSManager.h:273</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_a73e61a16229c09ae917ef39befa0ff10"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">CCSDS::Manager::m_syncPattern</a></div><div class="ttdeci">std::uint32_t m_syncPattern</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00273">CCSDSManager.h:273</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a1b7106979c669a3be5c2ff950743c126_icgraph.svg" width="323" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a9d3d17e64725310ba7c4c39964438d16_icgraph.svg" width="323" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -755,7 +755,7 @@ Here is the caller graph for this function:</div>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="namespaceCCSDS.html#a71d2ff8e25a4dc63a0a009b2a30325a7">CCSDS::ResultBuffer</a> CCSDS::Manager::getPacketTemplate </td>
+          <td class="memname"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a> CCSDS::Manager::getPacketTemplate </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -768,11 +768,11 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00109">109</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  109</span>                                                  {</div>
-<div class="line"><span class="lineno">  110</span>  <span class="keyword">auto</span> data = <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a074cc50a8f7eed5fc059a133a2536e21">serialize</a>();</div>
-<div class="line"><span class="lineno">  111</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.empty(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda04d9531f456074e3ae599a8d7d6a416d">ErrorCode::NO_DATA</a>, <span class="stringliteral">&quot;Cannot get Packet template data, data is empty (impossible)&quot;</span>); <span class="comment">// possibly redundant.</span></div>
+<div class="line"><span class="lineno">  110</span>  <span class="keyword">auto</span> data = <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a9b726b5e2592c8dab6005e8a1a24d821">serialize</a>();</div>
+<div class="line"><span class="lineno">  111</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.empty(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">ErrorCode::NO_DATA</a>, <span class="stringliteral">&quot;Cannot get Packet template data, data is empty (impossible)&quot;</span>); <span class="comment">// possibly redundant.</span></div>
 <div class="line"><span class="lineno">  112</span>  <span class="keywordflow">return</span> data;</div>
 <div class="line"><span class="lineno">  113</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1Packet_html_a074cc50a8f7eed5fc059a133a2536e21"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a074cc50a8f7eed5fc059a133a2536e21">CCSDS::Packet::serialize</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; serialize()</div><div class="ttdoc">Retrieves the full packet as a vector of bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00151">CCSDSPacket.cpp:151</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_a9b726b5e2592c8dab6005e8a1a24d821"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a9b726b5e2592c8dab6005e8a1a24d821">CCSDS::Packet::serialize</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; serialize()</div><div class="ttdoc">Retrieves the full packet as a vector of bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00151">CCSDSPacket.cpp:151</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -792,10 +792,10 @@ Here is the caller graph for this function:</div>
 </div><div class="memdoc">
 
 <p>returns the currently set sync pattern. </p>
-<dl class="section return"><dt>Returns</dt><dd>uint32_t </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>std::uint32_t </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00009">9</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">    9</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a>; }</div>
+<div class="fragment"><div class="line"><span class="lineno">    9</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a>; }</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -969,8 +969,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a974f09b0a59fc6ed7083a467c1f7d67d" name="a974f09b0a59fc6ed7083a467c1f7d67d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a974f09b0a59fc6ed7083a467c1f7d67d">&#9670;&#160;</a></span>load() <span class="overload">[2/2]</span></h2>
+<a id="a762d4d0408c548379cc3da09ba7d2052" name="a762d4d0408c548379cc3da09ba7d2052"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a762d4d0408c548379cc3da09ba7d2052">&#9670;&#160;</a></span>load() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -978,7 +978,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> CCSDS::Manager::load </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>packetsBuffer</em></td><td>)</td>
           <td></td>
         </tr>
@@ -994,17 +994,17 @@ Here is the caller graph for this function:</div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00201">201</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  201</span>                                                                                        {</div>
-<div class="line"><span class="lineno">  202</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(packetsBuffer.size() &lt; 8, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>, <span class="stringliteral">&quot;invalid packet buffer size&quot;</span>);</div>
-<div class="line"><span class="lineno">  203</span>  <span class="keywordtype">int</span> offset{0};</div>
+<div class="fragment"><div class="line"><span class="lineno">  201</span>                                                                                           {</div>
+<div class="line"><span class="lineno">  202</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(packetsBuffer.size() &lt; 8, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>, <span class="stringliteral">&quot;invalid packet buffer size&quot;</span>);</div>
+<div class="line"><span class="lineno">  203</span>  std::uint32_t offset{0};</div>
 <div class="line"><span class="lineno">  204</span>  <span class="keywordflow">while</span> (offset &lt; packetsBuffer.size()) {</div>
-<div class="line"><span class="lineno">  205</span>    std::vector&lt;uint8_t&gt; headerData;</div>
+<div class="line"><span class="lineno">  205</span>    std::vector&lt;std::uint8_t&gt; headerData;</div>
 <div class="line"><span class="lineno">  206</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a5c672b103c416cc695dd4495924cbf81">m_syncPattEnable</a>) {</div>
-<div class="line"><span class="lineno">  207</span>      <span class="keyword">const</span> uint32_t value = (<span class="keyword">static_cast&lt;</span>uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset]) &lt;&lt; 24) |</div>
-<div class="line"><span class="lineno">  208</span>                             (<span class="keyword">static_cast&lt;</span>uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset+1]) &lt;&lt; 16) |</div>
-<div class="line"><span class="lineno">  209</span>                             (<span class="keyword">static_cast&lt;</span>uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset+2]) &lt;&lt; 8)  |</div>
-<div class="line"><span class="lineno">  210</span>                             (<span class="keyword">static_cast&lt;</span>uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset+3]));</div>
-<div class="line"><span class="lineno">  211</span>      <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(value != <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>, <span class="stringliteral">&quot;Sync Pattern mismatch.&quot;</span>);</div>
+<div class="line"><span class="lineno">  207</span>      <span class="keyword">const</span> std::uint32_t value = (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset]) &lt;&lt; 24) |</div>
+<div class="line"><span class="lineno">  208</span>                             (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset+1]) &lt;&lt; 16) |</div>
+<div class="line"><span class="lineno">  209</span>                             (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset+2]) &lt;&lt; 8)  |</div>
+<div class="line"><span class="lineno">  210</span>                             (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(packetsBuffer[offset+3]));</div>
+<div class="line"><span class="lineno">  211</span>      <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(value != <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">ErrorCode::INVALID_DATA</a>, <span class="stringliteral">&quot;Sync Pattern mismatch.&quot;</span>);</div>
 <div class="line"><span class="lineno">  212</span>      offset += 4;</div>
 <div class="line"><span class="lineno">  213</span>    }</div>
 <div class="line"><span class="lineno">  214</span>    headerData.clear();</div>
@@ -1012,20 +1012,20 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  216</span>    Header header;</div>
 <div class="line"><span class="lineno">  217</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>( header.deserialize(headerData));</div>
 <div class="line"><span class="lineno">  218</span> </div>
-<div class="line"><span class="lineno">  219</span>    <span class="keyword">const</span> uint16_t packetSize = header.getDataLength() + 8;</div>
-<div class="line"><span class="lineno">  220</span>    std::vector&lt;uint8_t&gt;packetData;</div>
+<div class="line"><span class="lineno">  219</span>    <span class="keyword">const</span> std::uint16_t packetSize = header.getDataLength() + 8;</div>
+<div class="line"><span class="lineno">  220</span>    std::vector&lt;std::uint8_t&gt;packetData;</div>
 <div class="line"><span class="lineno">  221</span>    packetData.clear();</div>
 <div class="line"><span class="lineno">  222</span>    copy_n(packetsBuffer.begin() + offset, packetSize, std::back_inserter(packetData));</div>
-<div class="line"><span class="lineno">  223</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1Manager.html#acd655ed43c36c02a3b44e48755a9a130">addPacketFromBuffer</a>(packetData));</div>
+<div class="line"><span class="lineno">  223</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1Manager.html#aa15ff66d78688766157c560ff31384f0">addPacketFromBuffer</a>(packetData));</div>
 <div class="line"><span class="lineno">  224</span>    offset += packetSize;</div>
 <div class="line"><span class="lineno">  225</span>  }</div>
 <div class="line"><span class="lineno">  226</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">  227</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_acd655ed43c36c02a3b44e48755a9a130"><div class="ttname"><a href="classCCSDS_1_1Manager.html#acd655ed43c36c02a3b44e48755a9a130">CCSDS::Manager::addPacketFromBuffer</a></div><div class="ttdeci">ResultBool addPacketFromBuffer(const std::vector&lt; uint8_t &gt; &amp;packetBuffer)</div><div class="ttdoc">Adds a new packet to the list.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00185">CCSDSManager.cpp:185</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_aa15ff66d78688766157c560ff31384f0"><div class="ttname"><a href="classCCSDS_1_1Manager.html#aa15ff66d78688766157c560ff31384f0">CCSDS::Manager::addPacketFromBuffer</a></div><div class="ttdeci">ResultBool addPacketFromBuffer(const std::vector&lt; std::uint8_t &gt; &amp;packetBuffer)</div><div class="ttdoc">Adds a new packet to the list.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00185">CCSDSManager.cpp:185</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a974f09b0a59fc6ed7083a467c1f7d67d_cgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a762d4d0408c548379cc3da09ba7d2052_cgraph.svg" width="100%" height="364"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 
 </div>
@@ -1143,13 +1143,13 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00229">229</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  229</span>                                                              {</div>
-<div class="line"><span class="lineno">  230</span>  std::vector&lt;uint8_t&gt; buffer;</div>
+<div class="line"><span class="lineno">  230</span>  std::vector&lt;std::uint8_t&gt; buffer;</div>
 <div class="line"><span class="lineno">  231</span>  <a class="code hl_define" href="CCSDSResult_8h.html#ac05d018e9e1b63588289c6b033246e4b">ASSIGN_CP</a>(buffer, <a class="code hl_function" href="CCSDSUtils_8h.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a>(binaryFile));</div>
 <div class="line"><span class="lineno">  232</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1Manager.html#a476ce8ef6b5a5c9aae31df69d81770a6">load</a>(buffer));</div>
 <div class="line"><span class="lineno">  233</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">  234</span>}</div>
 <div class="ttc" id="aCCSDSResult_8h_html_ac05d018e9e1b63588289c6b033246e4b"><div class="ttname"><a href="CCSDSResult_8h.html#ac05d018e9e1b63588289c6b033246e4b">ASSIGN_CP</a></div><div class="ttdeci">#define ASSIGN_CP(var, result)</div><div class="ttdoc">Macro to assign a result value to a variable or return an error by copy.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00166">CCSDSResult.h:166</a></div></div>
-<div class="ttc" id="aCCSDSUtils_8h_html_a7c53ed59dcb970211aa0217eb095cc4d"><div class="ttname"><a href="CCSDSUtils_8h.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBuffer readBinaryFile(const std::string &amp;filename)</div><div class="ttdoc">Read a specified binary file and return its contents as a buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00208">CCSDSUtils.cpp:208</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8h_html_a7c53ed59dcb970211aa0217eb095cc4d"><div class="ttname"><a href="CCSDSUtils_8h.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBuffer readBinaryFile(const std::string &amp;filename)</div><div class="ttdoc">Read a specified binary file and return its contents as a buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00214">CCSDSUtils.cpp:214</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Manager_html_a476ce8ef6b5a5c9aae31df69d81770a6"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a476ce8ef6b5a5c9aae31df69d81770a6">CCSDS::Manager::load</a></div><div class="ttdeci">ResultBool load(const std::vector&lt; Packet &gt; &amp;packets)</div><div class="ttdoc">Load a vector of packets.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00193">CCSDSManager.cpp:193</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -1188,18 +1188,18 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">  243</span>  Packet templatePacket;</div>
 <div class="line"><span class="lineno">  244</span>  templatePacket.setUpdatePacketEnable(<span class="keyword">false</span>);</div>
 <div class="line"><span class="lineno">  245</span>  <span class="keywordflow">if</span> (<a class="code hl_function" href="CCSDSUtils_8h.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a>(filename, <span class="stringliteral">&quot;.bin&quot;</span>)) {</div>
-<div class="line"><span class="lineno">  246</span>    std::vector&lt;uint8_t&gt; buffer;</div>
+<div class="line"><span class="lineno">  246</span>    std::vector&lt;std::uint8_t&gt; buffer;</div>
 <div class="line"><span class="lineno">  247</span>    <a class="code hl_define" href="CCSDSResult_8h.html#ac05d018e9e1b63588289c6b033246e4b">ASSIGN_CP</a>(buffer, <a class="code hl_function" href="CCSDSUtils_8h.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a>(filename));</div>
 <div class="line"><span class="lineno">  248</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(templatePacket.deserialize(buffer));</div>
 <div class="line"><span class="lineno">  249</span>  }<span class="keywordflow">else</span> <span class="keywordflow">if</span> (<a class="code hl_function" href="CCSDSUtils_8h.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a>(filename, <span class="stringliteral">&quot;.cfg&quot;</span>)) {</div>
 <div class="line"><span class="lineno">  250</span>    <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(templatePacket.loadFromConfigFile(filename));</div>
 <div class="line"><span class="lineno">  251</span>  } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  252</span>    <span class="keywordflow">return</span> Error{<a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5b715c6917d6a363d9eafe6c2529cb31">INVALID_DATA</a>,<span class="stringliteral">&quot;Cannot load template, invalid file provided [supported extensions [.bin, .cfg]]&quot;</span>};</div>
+<div class="line"><span class="lineno">  252</span>    <span class="keywordflow">return</span> Error{<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">INVALID_DATA</a>,<span class="stringliteral">&quot;Cannot load template, invalid file provided [supported extensions [.bin, .cfg]]&quot;</span>};</div>
 <div class="line"><span class="lineno">  253</span>  }</div>
 <div class="line"><span class="lineno">  254</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1Manager.html#a12705ae8e0c680ec128a3d0d55b738b6">setPacketTemplate</a>(templatePacket));</div>
 <div class="line"><span class="lineno">  255</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">  256</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8h_html_a3b974227bd1064e006f517e8423a0545"><div class="ttname"><a href="CCSDSUtils_8h.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a></div><div class="ttdeci">bool stringEndsWith(const std::string &amp;str, const std::string &amp;suffix)</div><div class="ttdoc">Tests if str ends with suffix.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00234">CCSDSUtils.cpp:234</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8h_html_a3b974227bd1064e006f517e8423a0545"><div class="ttname"><a href="CCSDSUtils_8h.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a></div><div class="ttdeci">bool stringEndsWith(const std::string &amp;str, const std::string &amp;suffix)</div><div class="ttdoc">Tests if str ends with suffix.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00033">CCSDSUtils.cpp:33</a></div></div>
 <div class="ttc" id="aclassCCSDS_1_1Manager_html_a12705ae8e0c680ec128a3d0d55b738b6"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a12705ae8e0c680ec128a3d0d55b738b6">CCSDS::Manager::setPacketTemplate</a></div><div class="ttdeci">ResultBool setPacketTemplate(Packet packet)</div><div class="ttdoc">Sets a new packet template.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00015">CCSDSManager.cpp:15</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -1209,8 +1209,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a2f6c84bec310a521c55d88ce49506395" name="a2f6c84bec310a521c55d88ce49506395"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f6c84bec310a521c55d88ce49506395">&#9670;&#160;</a></span>setApplicationData()</h2>
+<a id="abb8e2225df8018c04ad76c874cadee69" name="abb8e2225df8018c04ad76c874cadee69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb8e2225df8018c04ad76c874cadee69">&#9670;&#160;</a></span>setApplicationData()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1218,7 +1218,7 @@ Here is the call graph for this function:</div>
         <tr>
           <td class="memname"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> CCSDS::Manager::setApplicationData </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1235,9 +1235,9 @@ Here is the call graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool indicating success or failure. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00052">52</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>                                                                               {</div>
-<div class="line"><span class="lineno">   53</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.empty(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda04d9531f456074e3ae599a8d7d6a416d">ErrorCode::NO_DATA</a>, <span class="stringliteral">&quot;Cannot set Application data, Provided data is empty&quot;</span>);</div>
-<div class="line"><span class="lineno">   54</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a0028ecb98b97d9ef06f05d439394f05d">m_templateIsSet</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5db5729b5037f809dd65a8043574158f">ErrorCode::INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Cannot set Application data, No template has been set&quot;</span>);</div>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>                                                                                  {</div>
+<div class="line"><span class="lineno">   53</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.empty(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">ErrorCode::NO_DATA</a>, <span class="stringliteral">&quot;Cannot set Application data, Provided data is empty&quot;</span>);</div>
+<div class="line"><span class="lineno">   54</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a0028ecb98b97d9ef06f05d439394f05d">m_templateIsSet</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">ErrorCode::INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Cannot set Application data, No template has been set&quot;</span>);</div>
 <div class="line"><span class="lineno">   55</span> </div>
 <div class="line"><span class="lineno">   56</span>  <span class="keyword">const</span> <span class="keyword">auto</span> maxBytesPerPacket = <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a8460fa08ef697e80ca99d58fabc88f44">getDataFieldMaximumSize</a>();</div>
 <div class="line"><span class="lineno">   57</span>  <span class="keyword">const</span> <span class="keyword">auto</span> dataBytesSize = data.size();</div>
@@ -1246,54 +1246,54 @@ Here is the call graph for this function:</div>
 <div class="line"><span class="lineno">   60</span>    <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.clear();</div>
 <div class="line"><span class="lineno">   61</span>  }</div>
 <div class="line"><span class="lineno">   62</span> </div>
-<div class="line"><span class="lineno">   63</span>  <span class="keywordtype">int</span> i = 0;</div>
-<div class="line"><span class="lineno">   64</span>  <span class="keyword">auto</span> remainderBytes = <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(dataBytesSize);</div>
-<div class="line"><span class="lineno">   65</span>  <span class="keyword">auto</span> sequenceFlag = <a class="code hl_enumvalue" href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fac2d8eb488f6ca9a63f367614f9065634">UNSEGMENTED</a>;</div>
+<div class="line"><span class="lineno">   63</span>  std::uint32_t i = 0;</div>
+<div class="line"><span class="lineno">   64</span>  <span class="keyword">auto</span> remainderBytes = <span class="keyword">static_cast&lt;</span>std::int32_t<span class="keyword">&gt;</span>(dataBytesSize);</div>
+<div class="line"><span class="lineno">   65</span>  <span class="keyword">auto</span> sequenceFlag = <a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">UNSEGMENTED</a>;</div>
 <div class="line"><span class="lineno">   66</span>  <span class="keywordflow">while</span> (i &lt; dataBytesSize) {</div>
 <div class="line"><span class="lineno">   67</span>    Packet newPacket = <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>;</div>
-<div class="line"><span class="lineno">   68</span>    std::vector&lt;uint8_t&gt; tmp;</div>
+<div class="line"><span class="lineno">   68</span>    std::vector&lt;std::uint8_t&gt; tmp;</div>
 <div class="line"><span class="lineno">   69</span>    <span class="keywordflow">if</span> (remainderBytes &gt; maxBytesPerPacket) {</div>
 <div class="line"><span class="lineno">   70</span>      tmp.insert(tmp.end(), data.begin() + i, data.begin() + i + maxBytesPerPacket);</div>
 <div class="line"><span class="lineno">   71</span>      remainderBytes -= maxBytesPerPacket;</div>
 <div class="line"><span class="lineno">   72</span>      <span class="keywordflow">if</span> (i == 0) {</div>
-<div class="line"><span class="lineno">   73</span>        sequenceFlag = <a class="code hl_enumvalue" href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168faf8d7b2eb95f980d09bf4ff0e8944b277">FIRST_SEGMENT</a>;</div>
-<div class="line"><span class="lineno">   74</span>        <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12">m_sequenceCount</a>++;</div>
+<div class="line"><span class="lineno">   73</span>        sequenceFlag = <a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aaf8d7b2eb95f980d09bf4ff0e8944b277">FIRST_SEGMENT</a>;</div>
+<div class="line"><span class="lineno">   74</span>        <a class="code hl_variable" href="classCCSDS_1_1Manager.html#aeb743e5d139e6d499441d1ee52f21794">m_sequenceCount</a>++;</div>
 <div class="line"><span class="lineno">   75</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">   76</span>        sequenceFlag = <a class="code hl_enumvalue" href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fac3ee5980e212d97bc75f01b6674fc1ca">CONTINUING_SEGMENT</a>;</div>
+<div class="line"><span class="lineno">   76</span>        sequenceFlag = <a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac3ee5980e212d97bc75f01b6674fc1ca">CONTINUING_SEGMENT</a>;</div>
 <div class="line"><span class="lineno">   77</span>      }</div>
 <div class="line"><span class="lineno">   78</span>      i += maxBytesPerPacket;</div>
 <div class="line"><span class="lineno">   79</span>      <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(newPacket.setApplicationData(tmp));</div>
 <div class="line"><span class="lineno">   80</span>      newPacket.setSequenceFlags(sequenceFlag);</div>
-<div class="line"><span class="lineno">   81</span>      <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(newPacket.setSequenceCount(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12">m_sequenceCount</a>));</div>
+<div class="line"><span class="lineno">   81</span>      <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(newPacket.setSequenceCount(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#aeb743e5d139e6d499441d1ee52f21794">m_sequenceCount</a>));</div>
 <div class="line"><span class="lineno">   82</span>    } <span class="keywordflow">else</span> {</div>
 <div class="line"><span class="lineno">   83</span>      tmp.insert(tmp.end(), data.begin() + i, data.begin() + i + remainderBytes);</div>
 <div class="line"><span class="lineno">   84</span>      i += remainderBytes;</div>
-<div class="line"><span class="lineno">   85</span>      <span class="keywordflow">if</span> (sequenceFlag != <a class="code hl_enumvalue" href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fac2d8eb488f6ca9a63f367614f9065634">UNSEGMENTED</a>) {</div>
-<div class="line"><span class="lineno">   86</span>        newPacket.setSequenceFlags(<a class="code hl_enumvalue" href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fa5a53f5b2563f182dd33517d389bf5803">LAST_SEGMENT</a>);</div>
-<div class="line"><span class="lineno">   87</span>        <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(newPacket.setSequenceCount(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12">m_sequenceCount</a>));</div>
+<div class="line"><span class="lineno">   85</span>      <span class="keywordflow">if</span> (sequenceFlag != <a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">UNSEGMENTED</a>) {</div>
+<div class="line"><span class="lineno">   86</span>        newPacket.setSequenceFlags(<a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aa5a53f5b2563f182dd33517d389bf5803">LAST_SEGMENT</a>);</div>
+<div class="line"><span class="lineno">   87</span>        <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(newPacket.setSequenceCount(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#aeb743e5d139e6d499441d1ee52f21794">m_sequenceCount</a>));</div>
 <div class="line"><span class="lineno">   88</span>      }</div>
 <div class="line"><span class="lineno">   89</span>      <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(newPacket.setApplicationData(tmp));</div>
 <div class="line"><span class="lineno">   90</span>    }</div>
 <div class="line"><span class="lineno">   91</span>    newPacket.setUpdatePacketEnable(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#ac5621224363dfbc32b1bc51daafaabaf">m_updateEnable</a>);</div>
 <div class="line"><span class="lineno">   92</span>    <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a31f295c0e568751e1532287841189a1f">m_packets</a>.push_back(std::move(newPacket));</div>
-<div class="line"><span class="lineno">   93</span>    <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a1fa2b4a3f69bd737dced2c1f4251af12">m_sequenceCount</a>++;</div>
+<div class="line"><span class="lineno">   93</span>    <a class="code hl_variable" href="classCCSDS_1_1Manager.html#aeb743e5d139e6d499441d1ee52f21794">m_sequenceCount</a>++;</div>
 <div class="line"><span class="lineno">   94</span>  }</div>
 <div class="line"><span class="lineno">   95</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   96</span>}</div>
-<div class="ttc" id="anamespaceCCSDS_html_ace181c8f99c1736c298d755868d6168fa5a53f5b2563f182dd33517d389bf5803"><div class="ttname"><a href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fa5a53f5b2563f182dd33517d389bf5803">CCSDS::LAST_SEGMENT</a></div><div class="ttdeci">@ LAST_SEGMENT</div><div class="ttdoc">10 Last segment of a multi-frame packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00022">CCSDSHeader.h:22</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_ace181c8f99c1736c298d755868d6168fac2d8eb488f6ca9a63f367614f9065634"><div class="ttname"><a href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fac2d8eb488f6ca9a63f367614f9065634">CCSDS::UNSEGMENTED</a></div><div class="ttdeci">@ UNSEGMENTED</div><div class="ttdoc">11 Complete packet in a single frame.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00024">CCSDSHeader.h:23</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_ace181c8f99c1736c298d755868d6168fac3ee5980e212d97bc75f01b6674fc1ca"><div class="ttname"><a href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168fac3ee5980e212d97bc75f01b6674fc1ca">CCSDS::CONTINUING_SEGMENT</a></div><div class="ttdeci">@ CONTINUING_SEGMENT</div><div class="ttdoc">00 Intermediate segment of a packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00020">CCSDSHeader.h:20</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_ace181c8f99c1736c298d755868d6168faf8d7b2eb95f980d09bf4ff0e8944b277"><div class="ttname"><a href="namespaceCCSDS.html#ace181c8f99c1736c298d755868d6168faf8d7b2eb95f980d09bf4ff0e8944b277">CCSDS::FIRST_SEGMENT</a></div><div class="ttdeci">@ FIRST_SEGMENT</div><div class="ttdoc">01 First segment of a new packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00021">CCSDSHeader.h:21</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bda5db5729b5037f809dd65a8043574158f"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bda5db5729b5037f809dd65a8043574158f">CCSDS::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdoc">Header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00020">CCSDSResult.h:20</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">CCSDS::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdoc">Header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00020">CCSDSResult.h:20</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_aa1fd1c39afd9a4f5a182b9c504f4178aa5a53f5b2563f182dd33517d389bf5803"><div class="ttname"><a href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aa5a53f5b2563f182dd33517d389bf5803">CCSDS::LAST_SEGMENT</a></div><div class="ttdeci">@ LAST_SEGMENT</div><div class="ttdoc">10 Last segment of a multi-frame packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00022">CCSDSHeader.h:22</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634"><div class="ttname"><a href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">CCSDS::UNSEGMENTED</a></div><div class="ttdeci">@ UNSEGMENTED</div><div class="ttdoc">11 Complete packet in a single frame.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00024">CCSDSHeader.h:23</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_aa1fd1c39afd9a4f5a182b9c504f4178aac3ee5980e212d97bc75f01b6674fc1ca"><div class="ttname"><a href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac3ee5980e212d97bc75f01b6674fc1ca">CCSDS::CONTINUING_SEGMENT</a></div><div class="ttdeci">@ CONTINUING_SEGMENT</div><div class="ttdoc">00 Intermediate segment of a packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00020">CCSDSHeader.h:20</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_aa1fd1c39afd9a4f5a182b9c504f4178aaf8d7b2eb95f980d09bf4ff0e8944b277"><div class="ttname"><a href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aaf8d7b2eb95f980d09bf4ff0e8944b277">CCSDS::FIRST_SEGMENT</a></div><div class="ttdeci">@ FIRST_SEGMENT</div><div class="ttdoc">01 First segment of a new packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00021">CCSDSHeader.h:21</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a2f6c84bec310a521c55d88ce49506395_cgraph.svg" width="570" height="230"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_abb8e2225df8018c04ad76c874cadee69_cgraph.svg" width="570" height="230"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a2f6c84bec310a521c55d88ce49506395_icgraph.svg" width="376" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_abb8e2225df8018c04ad76c874cadee69_icgraph.svg" width="376" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1373,8 +1373,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ace4b1386f4bad46724ba01884543ecc1" name="ace4b1386f4bad46724ba01884543ecc1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace4b1386f4bad46724ba01884543ecc1">&#9670;&#160;</a></span>setDataFieldSize()</h2>
+<a id="aab1b7a157fa5a6db038152860d0b3031" name="aab1b7a157fa5a6db038152860d0b3031"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab1b7a157fa5a6db038152860d0b3031">&#9670;&#160;</a></span>setDataFieldSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1382,7 +1382,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void CCSDS::Manager::setDataFieldSize </td>
           <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramtype">std::uint16_t&#160;</td>
           <td class="paramname"><em>size</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1398,14 +1398,14 @@ Here is the caller graph for this function:</div>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00044">44</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   44</span>                                                       {</div>
-<div class="line"><span class="lineno">   45</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a327002453c7e0e8986862c938d5f6d72">setDataFieldSize</a>(size);</div>
+<div class="fragment"><div class="line"><span class="lineno">   44</span>                                                          {</div>
+<div class="line"><span class="lineno">   45</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>.<a class="code hl_function" href="classCCSDS_1_1Packet.html#af432bc0a7c5e4ba3af47abd636ac1b14">setDataFieldSize</a>(size);</div>
 <div class="line"><span class="lineno">   46</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1Packet_html_a327002453c7e0e8986862c938d5f6d72"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a327002453c7e0e8986862c938d5f6d72">CCSDS::Packet::setDataFieldSize</a></div><div class="ttdeci">void setDataFieldSize(uint16_t size)</div><div class="ttdoc">Sets the maximum data packet size for the CCSDS DataField.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00331">CCSDSPacket.cpp:331</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_af432bc0a7c5e4ba3af47abd636ac1b14"><div class="ttname"><a href="classCCSDS_1_1Packet.html#af432bc0a7c5e4ba3af47abd636ac1b14">CCSDS::Packet::setDataFieldSize</a></div><div class="ttdeci">void setDataFieldSize(std::uint16_t size)</div><div class="ttdoc">Sets the maximum data packet size for the CCSDS DataField.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00331">CCSDSPacket.cpp:331</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_ace4b1386f4bad46724ba01884543ecc1_icgraph.svg" width="362" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_aab1b7a157fa5a6db038152860d0b3031_icgraph.svg" width="362" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1436,7 +1436,7 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00015">15</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   15</span>                                                             {</div>
-<div class="line"><span class="lineno">   16</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a0028ecb98b97d9ef06f05d439394f05d">m_templateIsSet</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaaea12dc8cc35a7f07db631a672557247">ErrorCode::TEMPLATE_SET_FAILURE</a>, <span class="stringliteral">&quot;Cannot set Template as it is already set, please clear Manager first&quot;</span>);</div>
+<div class="line"><span class="lineno">   16</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a0028ecb98b97d9ef06f05d439394f05d">m_templateIsSet</a>, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57aaea12dc8cc35a7f07db631a672557247">ErrorCode::TEMPLATE_SET_FAILURE</a>, <span class="stringliteral">&quot;Cannot set Template as it is already set, please clear Manager first&quot;</span>);</div>
 <div class="line"><span class="lineno">   17</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a29f623c1b7b29e37a2a71c556169b1c1">setUpdatePacketEnable</a>(<span class="keyword">false</span>);</div>
 <div class="line"><span class="lineno">   18</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a> = std::move(packet);</div>
 <div class="line"><span class="lineno">   19</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#af4e0a63944c35d2616fad92fb25a0ad2">m_validator</a>.<a class="code hl_function" href="classCCSDS_1_1Validator.html#af511635a2e542d8b9fabe7470bee8ef4">setTemplatePacket</a>(<a class="code hl_variable" href="classCCSDS_1_1Manager.html#a9925379891e17cc4b04c1a0d71edcaff">m_templatePacket</a>);</div>
@@ -1445,12 +1445,12 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   22</span>  <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a0028ecb98b97d9ef06f05d439394f05d">m_templateIsSet</a> = <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   23</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   24</span>}</div>
-<div class="ttc" id="anamespaceCCSDS_html_afeb92eec6ee5bfeb6ff7ff55fe0334bdaaea12dc8cc35a7f07db631a672557247"><div class="ttname"><a href="namespaceCCSDS.html#afeb92eec6ee5bfeb6ff7ff55fe0334bdaaea12dc8cc35a7f07db631a672557247">CCSDS::TEMPLATE_SET_FAILURE</a></div><div class="ttdeci">@ TEMPLATE_SET_FAILURE</div><div class="ttdoc">Failed to set Template Packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00026">CCSDSResult.h:26</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57aaea12dc8cc35a7f07db631a672557247"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57aaea12dc8cc35a7f07db631a672557247">CCSDS::TEMPLATE_SET_FAILURE</a></div><div class="ttdeci">@ TEMPLATE_SET_FAILURE</div><div class="ttdoc">Failed to set Template Packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00026">CCSDSResult.h:26</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a85510a068db565792051e787667e1ff0" name="a85510a068db565792051e787667e1ff0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85510a068db565792051e787667e1ff0">&#9670;&#160;</a></span>setSyncPattern()</h2>
+<a id="a45f1e86e3a1e892c8244a2b0f8967c88" name="a45f1e86e3a1e892c8244a2b0f8967c88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45f1e86e3a1e892c8244a2b0f8967c88">&#9670;&#160;</a></span>setSyncPattern()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1458,7 +1458,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="memname">void CCSDS::Manager::setSyncPattern </td>
           <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramtype">std::uint32_t&#160;</td>
           <td class="paramname"><em>syncPattern</em></td><td>)</td>
           <td></td>
         </tr>
@@ -1469,17 +1469,17 @@ Here is the caller graph for this function:</div>
 <p>insertion is disabled by default. use setSyncPatternEnable to enable.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">syncPattern</td><td>uint32_t (default 0x1ACFFC1D) </td></tr>
+    <tr><td class="paramname">syncPattern</td><td>std::uint32_t (default 0x1ACFFC1D) </td></tr>
   </table>
   </dd>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00007">7</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">    7</span>{ <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a7f3a4f18ae4ce9acc9141cc1d6c5414e">m_syncPattern</a> = syncPattern; }</div>
+<div class="fragment"><div class="line"><span class="lineno">    7</span>{ <a class="code hl_variable" href="classCCSDS_1_1Manager.html#a73e61a16229c09ae917ef39befa0ff10">m_syncPattern</a> = syncPattern; }</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a85510a068db565792051e787667e1ff0_icgraph.svg" width="350" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classCCSDS_1_1Manager_a45f1e86e3a1e892c8244a2b0f8967c88_icgraph.svg" width="350" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1544,11 +1544,11 @@ Here is the caller graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSManager_8cpp_source.html#l00236">236</a> of file <a class="el" href="CCSDSManager_8cpp_source.html">CCSDSManager.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  236</span>                                                                     {</div>
-<div class="line"><span class="lineno">  237</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="CCSDSUtils_8h.html#ac3822e47eaaef0f66ec2b86d7a4b09fc">writeBinaryFile</a>(<a class="code hl_function" href="classCCSDS_1_1Manager.html#a1b7106979c669a3be5c2ff950743c126">getPacketsBuffer</a>(),binaryFile));</div>
+<div class="line"><span class="lineno">  237</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="CCSDSUtils_8h.html#aacff77e4c89f07aa9969373450552caa">writeBinaryFile</a>(<a class="code hl_function" href="classCCSDS_1_1Manager.html#a9d3d17e64725310ba7c4c39964438d16">getPacketsBuffer</a>(),binaryFile));</div>
 <div class="line"><span class="lineno">  238</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">  239</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8h_html_ac3822e47eaaef0f66ec2b86d7a4b09fc"><div class="ttname"><a href="CCSDSUtils_8h.html#ac3822e47eaaef0f66ec2b86d7a4b09fc">writeBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBool writeBinaryFile(const std::vector&lt; uint8_t &gt; &amp;data, const std::string &amp;filename)</div><div class="ttdoc">This function takes in a buffer of data and a file name.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00194">CCSDSUtils.cpp:194</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a1b7106979c669a3be5c2ff950743c126"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a1b7106979c669a3be5c2ff950743c126">CCSDS::Manager::getPacketsBuffer</a></div><div class="ttdeci">std::vector&lt; uint8_t &gt; getPacketsBuffer() const</div><div class="ttdoc">Retrieves a buffer containing all the stored packets sequentially.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00127">CCSDSManager.cpp:127</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8h_html_aacff77e4c89f07aa9969373450552caa"><div class="ttname"><a href="CCSDSUtils_8h.html#aacff77e4c89f07aa9969373450552caa">writeBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBool writeBinaryFile(const std::vector&lt; std::uint8_t &gt; &amp;data, const std::string &amp;filename)</div><div class="ttdoc">This function takes in a buffer of data and a file name.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00200">CCSDSUtils.cpp:200</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_a9d3d17e64725310ba7c4c39964438d16"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a9d3d17e64725310ba7c4c39964438d16">CCSDS::Manager::getPacketsBuffer</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; getPacketsBuffer() const</div><div class="ttdoc">Retrieves a buffer containing all the stored packets sequentially.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00127">CCSDSManager.cpp:127</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -1584,8 +1584,8 @@ Here is the call graph for this function:</div>
 
 </div>
 </div>
-<a id="a1fa2b4a3f69bd737dced2c1f4251af12" name="a1fa2b4a3f69bd737dced2c1f4251af12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fa2b4a3f69bd737dced2c1f4251af12">&#9670;&#160;</a></span>m_sequenceCount</h2>
+<a id="aeb743e5d139e6d499441d1ee52f21794" name="aeb743e5d139e6d499441d1ee52f21794"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb743e5d139e6d499441d1ee52f21794">&#9670;&#160;</a></span>m_sequenceCount</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1594,7 +1594,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t CCSDS::Manager::m_sequenceCount { 0 }</td>
+          <td class="memname">std::uint16_t CCSDS::Manager::m_sequenceCount { 0 }</td>
         </tr>
       </table>
   </td>
@@ -1636,8 +1636,8 @@ Here is the call graph for this function:</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a7f3a4f18ae4ce9acc9141cc1d6c5414e" name="a7f3a4f18ae4ce9acc9141cc1d6c5414e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7f3a4f18ae4ce9acc9141cc1d6c5414e">&#9670;&#160;</a></span>m_syncPattern</h2>
+<a id="a73e61a16229c09ae917ef39befa0ff10" name="a73e61a16229c09ae917ef39befa0ff10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a73e61a16229c09ae917ef39befa0ff10">&#9670;&#160;</a></span>m_syncPattern</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1646,7 +1646,7 @@ Here is the call graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t CCSDS::Manager::m_syncPattern {0x1ACFFC1D}</td>
+          <td class="memname">std::uint32_t CCSDS::Manager::m_syncPattern {0x1ACFFC1D}</td>
         </tr>
       </table>
   </td>

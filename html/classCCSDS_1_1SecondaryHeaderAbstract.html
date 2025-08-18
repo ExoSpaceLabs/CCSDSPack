@@ -96,18 +96,18 @@ Inheritance diagram for CCSDS::SecondaryHeaderAbstract:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0bb132a381880133c97f096f92bce570" id="r_a0bb132a381880133c97f096f92bce570"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0bb132a381880133c97f096f92bce570">~SecondaryHeaderAbstract</a> ()=default</td></tr>
 <tr class="separator:a0bb132a381880133c97f096f92bce570"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2f3daeac2ae6326912d1be8dca2c1e7d" id="r_a2f3daeac2ae6326912d1be8dca2c1e7d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a2f3daeac2ae6326912d1be8dca2c1e7d">deserialize</a> (const std::vector&lt; uint8_t &gt; &amp;data)=0</td></tr>
-<tr class="memdesc:a2f3daeac2ae6326912d1be8dca2c1e7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a buffer if data (vector uint8) and creates the header  <br /></td></tr>
-<tr class="separator:a2f3daeac2ae6326912d1be8dca2c1e7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae01e4e99f5b31eee493d9316d166d03f" id="r_ae01e4e99f5b31eee493d9316d166d03f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#ae01e4e99f5b31eee493d9316d166d03f">deserialize</a> (const std::vector&lt; std::uint8_t &gt; &amp;data)=0</td></tr>
+<tr class="memdesc:ae01e4e99f5b31eee493d9316d166d03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a buffer if data (vector std::uint8) and creates the header  <br /></td></tr>
+<tr class="separator:ae01e4e99f5b31eee493d9316d166d03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a180a60a3148dd126694b3bbd204cb4ac" id="r_a180a60a3148dd126694b3bbd204cb4ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a180a60a3148dd126694b3bbd204cb4ac">update</a> (<a class="el" href="classCCSDS_1_1DataField.html">DataField</a> *dataField)=0</td></tr>
 <tr class="memdesc:a180a60a3148dd126694b3bbd204cb4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how the packet secondary header is updated using the data field as reference.  <br /></td></tr>
 <tr class="separator:a180a60a3148dd126694b3bbd204cb4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1a7ca595af608165533e44b653a103fe" id="r_a1a7ca595af608165533e44b653a103fe"><td class="memItemLeft" align="right" valign="top">virtual uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1a7ca595af608165533e44b653a103fe">getSize</a> () const =0</td></tr>
-<tr class="memdesc:a1a7ca595af608165533e44b653a103fe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the header in bytes.  <br /></td></tr>
-<tr class="separator:a1a7ca595af608165533e44b653a103fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5486955d6aff5721ba89203dd4523ddd" id="r_a5486955d6aff5721ba89203dd4523ddd"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a5486955d6aff5721ba89203dd4523ddd">serialize</a> () const =0</td></tr>
-<tr class="memdesc:a5486955d6aff5721ba89203dd4523ddd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the serialized representation of the header.  <br /></td></tr>
-<tr class="separator:a5486955d6aff5721ba89203dd4523ddd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88c3669b3f857d3bda25e2e188a91504" id="r_a88c3669b3f857d3bda25e2e188a91504"><td class="memItemLeft" align="right" valign="top">virtual std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504">getSize</a> () const =0</td></tr>
+<tr class="memdesc:a88c3669b3f857d3bda25e2e188a91504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the header in bytes.  <br /></td></tr>
+<tr class="separator:a88c3669b3f857d3bda25e2e188a91504"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05158ad557357e4bda4d6d0069e72bad" id="r_a05158ad557357e4bda4d6d0069e72bad"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a05158ad557357e4bda4d6d0069e72bad">serialize</a> () const =0</td></tr>
+<tr class="memdesc:a05158ad557357e4bda4d6d0069e72bad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the serialized representation of the header.  <br /></td></tr>
+<tr class="separator:a05158ad557357e4bda4d6d0069e72bad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0663ddc6e890448e29d0c440b57ba5ec" id="r_a0663ddc6e890448e29d0c440b57ba5ec"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0663ddc6e890448e29d0c440b57ba5ec">getType</a> () const =0</td></tr>
 <tr class="memdesc:a0663ddc6e890448e29d0c440b57ba5ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of the packet.  <br /></td></tr>
 <tr class="separator:a0663ddc6e890448e29d0c440b57ba5ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,8 +153,8 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2f3daeac2ae6326912d1be8dca2c1e7d" name="a2f3daeac2ae6326912d1be8dca2c1e7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2f3daeac2ae6326912d1be8dca2c1e7d">&#9670;&#160;</a></span>deserialize()</h2>
+<a id="ae01e4e99f5b31eee493d9316d166d03f" name="ae01e4e99f5b31eee493d9316d166d03f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae01e4e99f5b31eee493d9316d166d03f">&#9670;&#160;</a></span>deserialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -165,7 +165,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a> CCSDS::SecondaryHeaderAbstract::deserialize </td>
           <td>(</td>
-          <td class="paramtype">const std::vector&lt; uint8_t &gt; &amp;&#160;</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>data</em></td><td>)</td>
           <td></td>
         </tr>
@@ -177,15 +177,15 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>takes a buffer if data (vector uint8) and creates the header </p>
+<p>takes a buffer if data (vector std::uint8) and creates the header </p>
 <dl class="section return"><dt>Returns</dt><dd>Boolean true on success or <a class="el" href="classCCSDS_1_1Error.html" title="Represents an error with both an error code and a message.">Error</a>. </dd></dl>
 
-<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#a05b87a5e526290f7cd90dbfcaa34abc8">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a65a8d45cadf35280137770d7edaacad7">PusA</a>, <a class="el" href="classPusB.html#a7e68a625b390636192a61342e612d03c">PusB</a>, and <a class="el" href="classPusC.html#a7c8150adae09828855e30ec86cbe4934">PusC</a>.</p>
+<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#aa5fb3f4f04a61e07359e743a53e9b6be">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#aba786bb33db72e147b88bd540b23eea2">PusA</a>, <a class="el" href="classPusB.html#a4ce700fa9dc902a5244b5937408d7a42">PusB</a>, and <a class="el" href="classPusC.html#a2bd2b7df85ffcd4099e295aaa9471adf">PusC</a>.</p>
 
 </div>
 </div>
-<a id="a1a7ca595af608165533e44b653a103fe" name="a1a7ca595af608165533e44b653a103fe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1a7ca595af608165533e44b653a103fe">&#9670;&#160;</a></span>getSize()</h2>
+<a id="a88c3669b3f857d3bda25e2e188a91504" name="a88c3669b3f857d3bda25e2e188a91504"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88c3669b3f857d3bda25e2e188a91504">&#9670;&#160;</a></span>getSize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -194,7 +194,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual uint16_t CCSDS::SecondaryHeaderAbstract::getSize </td>
+          <td class="memname">virtual std::uint16_t CCSDS::SecondaryHeaderAbstract::getSize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -210,7 +210,7 @@ Public Attributes</h2></td></tr>
 <p>Gets the size of the header in bytes. </p>
 <dl class="section return"><dt>Returns</dt><dd>The size of the header in bytes. </dd></dl>
 
-<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#aff4666bfedbb5731a90330104acdaa48">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#aea67594499ea34e163a186b1e4cc77fe">PusA</a>, <a class="el" href="classPusB.html#a70eed3fa0ab1ebb0b805338a169712f5">PusB</a>, and <a class="el" href="classPusC.html#af51b08ebeff1696a139e92a21b7a6244">PusC</a>.</p>
+<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#a495161b70d7fbb63f32b1820e622bbce">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a3e323d9c185198360c8a4d9d7564eb97">PusA</a>, <a class="el" href="classPusB.html#ada32f9d3ed28d8f5cc212350331896e6">PusB</a>, and <a class="el" href="classPusC.html#a17809e38c372573ccfdc2068e4de179b">PusC</a>.</p>
 
 </div>
 </div>
@@ -272,8 +272,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5486955d6aff5721ba89203dd4523ddd" name="a5486955d6aff5721ba89203dd4523ddd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5486955d6aff5721ba89203dd4523ddd">&#9670;&#160;</a></span>serialize()</h2>
+<a id="a05158ad557357e4bda4d6d0069e72bad" name="a05158ad557357e4bda4d6d0069e72bad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05158ad557357e4bda4d6d0069e72bad">&#9670;&#160;</a></span>serialize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -282,7 +282,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::vector&lt; uint8_t &gt; CCSDS::SecondaryHeaderAbstract::serialize </td>
+          <td class="memname">virtual std::vector&lt; std::uint8_t &gt; CCSDS::SecondaryHeaderAbstract::serialize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -298,7 +298,7 @@ Public Attributes</h2></td></tr>
 <p>Retrieves the serialized representation of the header. </p>
 <dl class="section return"><dt>Returns</dt><dd>A vector containing the header bytes. (does not include data field) </dd></dl>
 
-<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#a0d8b01baee77f8ef501bb7979713f8de">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a14597d067cd4d193b846a1427cd15e05">PusA</a>, <a class="el" href="classPusB.html#a55de5f917cd5ee1c14cfa251e64858e5">PusB</a>, and <a class="el" href="classPusC.html#aabd6c18057aebdcbd20809cda078b6b7">PusC</a>.</p>
+<p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#aadda0ec1a8a3670fdad02b86327523d7">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a54ce2e0e9efae2feeb05a1def30553e6">PusA</a>, <a class="el" href="classPusB.html#a648839fec3f93b01f42609d1d2876c84">PusB</a>, and <a class="el" href="classPusC.html#a4e30362151bf29f4b4c3f62c19f3ab10">PusC</a>.</p>
 
 </div>
 </div>

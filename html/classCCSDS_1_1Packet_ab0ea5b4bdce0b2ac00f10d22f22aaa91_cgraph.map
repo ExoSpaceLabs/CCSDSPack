@@ -1,5 +1,5 @@
 <map id="CCSDS::Packet::setPrimaryHeader" name="CCSDS::Packet::setPrimaryHeader">
 <area shape="rect" id="Node000001" title="Sets the primary header using the provided PrimaryHeader object." alt="" coords="5,5,200,45"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#aad717b39dda3dff19adb10e3c7e38100" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="248,13,428,38"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#ac4a56ea430e71c2cf43dfa9a0c3df534" title="Sets the header data from a 64&#45;bit integer representation." alt="" coords="248,13,428,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,23,234,23,234,28,200,28"/>
 </map>

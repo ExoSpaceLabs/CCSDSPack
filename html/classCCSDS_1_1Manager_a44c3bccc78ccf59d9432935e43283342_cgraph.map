@@ -1,6 +1,6 @@
 <map id="CCSDS::Manager::readTemplate" name="CCSDS::Manager::readTemplate">
 <area shape="rect" id="Node000001" title="Load a template packet from a binary or configuration file." alt="" coords="5,104,233,129"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a1f6665c4b9e28efd62a30ff1c1db1223" title="Deserializes a vector of bytes into a CCSDS packet." alt="" coords="309,5,503,31"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#ac771c4d20e282fe43bc6938b30cc69ef" title="Deserializes a vector of bytes into a CCSDS packet." alt="" coords="309,5,503,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,102,203,71,280,39,310,31,312,36,282,45,206,75,145,106"/>
 <area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#a9ba3b255c1cd19b48a11dba5fc8819ff" title="Loads a packet from a configuration file, including secondary header if present." alt="" coords="281,55,531,80"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,101,318,80,319,85,194,107"/>
