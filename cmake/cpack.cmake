@@ -17,6 +17,13 @@ set(CPACK_PACKAGE_VERSION_MINOR ${MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${PATCH})
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE")
 
+set(ARCH "${CMAKE_SYSTEM_PROCESSOR}")
+# Ensure the DEB architecture is correct
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "arm64")
+    set(ARCH "arm64")
+endif()
+
 # Generators per platform
 if(WIN32)
     # Simple, reliable: zip the installed tree (DLL + EXEs + headers + libs)
@@ -36,6 +43,6 @@ endif()
 # set(CPACK_PACKAGING_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
 # define output filename
-set(CPACK_PACKAGE_FILE_NAME "ccsdspack${VER}-${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
+set(CPACK_PACKAGE_FILE_NAME "ccsdspack${VER}-${CMAKE_SYSTEM_NAME}-${ARCH}")
 
 include(CPack)
