@@ -34,6 +34,9 @@ mkdir build-mcu && cd build-mcu
 cmake .. \
 -DCCSDSPACK_BUILD_MCU=ON \
 -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-none-eabi.cmake \
--DCCSDSPACK_MCU_FLAGS="-fno-exceptions;-fno-rtti"
+-DMCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 cmake --build . -j
 ```
+Please note that this example is for the cortex-M7 Processor. To build for the M4 core update the flags accordingly.
+
+***TIP:*** Use the provided `package.sh` script to build with custom toolchain. 

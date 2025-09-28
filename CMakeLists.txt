@@ -27,6 +27,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 message(STATUS "Flags:")
 option(CCSDSPACK_BUILD_MCU "Build the CCSDSPack static library for mcu. " OFF)
+if(DEFINED MCU_FLAGS)
+  message(STATUS "  -DMCU_FLAGS=${MCU_FLAGS}")
+endif()
 message(STATUS "  -DCCSDSPACK_BUILD_MCU=${CCSDSPACK_BUILD_MCU}")
 
 # Define directories
@@ -37,6 +40,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 set(CCSDSPACK_MCU_FLAGS "" CACHE STRING "Extra MCU-specific compiler flags (e.g. -fno-exceptions -fno-rtti)")
+if(CCSDSPACK_MCU_FLAGS)
+    set(MCU_FLAGS "${CCSDSPACK_MCU_FLAGS}")
+endif()
 
 # for standard install directories
 include(GNUInstallDirs)
@@ -72,33 +78,33 @@ endif ()
 
 # MCU static library (optional)
 if (CCSDSPACK_BUILD_MCU)
-    add_library(${LIB_NAME}_mcu STATIC ${LIBRARY_SOURCES})
-    add_library(ccsdspack::mcu ALIAS ${LIB_NAME}_mcu)
+    add_library(${LIB_NAME} STATIC ${LIBRARY_SOURCES})
+    add_library(ccsdspack::mcu ALIAS ${LIB_NAME})
 
-    target_include_directories(${LIB_NAME}_mcu
+    target_include_directories(${LIB_NAME}
             PUBLIC
             $<BUILD_INTERFACE:${INCLUDE_DIR}>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
 
-    target_compile_features(${LIB_NAME}_mcu PUBLIC cxx_std_17)
+    target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
 
     # Typical MCU-friendly defaults; callers can add stricter flags via CCSDSPACK_MCU_FLAGS
-    target_compile_options(${LIB_NAME}_mcu PRIVATE
+    target_compile_options(${LIB_NAME} PRIVATE
             -Os
             -ffunction-sections -fdata-sections
             ${CCSDSPACK_MCU_FLAGS}
     )
-    target_link_options(${LIB_NAME}_mcu PRIVATE
+    target_link_options(${LIB_NAME} PRIVATE
             -Wl,--gc-sections
     )
 
     # Auto-define CCSDS_MCU for MCU builds
-    target_compile_definitions(${LIB_NAME}_mcu PUBLIC CCSDS_MCU)
+    target_compile_definitions(${LIB_NAME} PUBLIC CCSDS_MCU)
     # Bare-metal archives shouldn’t be PIC
-    set_target_properties(${LIB_NAME}_mcu PROPERTIES
+    set_target_properties(${LIB_NAME} PROPERTIES
             POSITION_INDEPENDENT_CODE OFF
-            OUTPUT_NAME ccsdspack_mcu
+            OUTPUT_NAME ccsdspack
             ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
     )
 else ()
@@ -164,13 +170,14 @@ if (NOT CCSDSPACK_BUILD_MCU)
     # Enables build of validator
     if(ENABLE_VALIDATOR)
         include(${CMAKE_SOURCE_DIR}/cmake/validator.cmake)
-endif ()
+    endif ()
+
 endif()
 
 
 
 if (CCSDSPACK_BUILD_MCU)
-    install(TARGETS ${LIB_NAME}_mcu
+    install(TARGETS ${LIB_NAME}
             EXPORT CCSDSPackTargets
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
