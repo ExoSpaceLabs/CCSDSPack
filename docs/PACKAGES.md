@@ -14,8 +14,10 @@ before running `bash`.
 bash package.sh
 ```
 Two parameters can be passed to the package.sh script:
-- `-p` or `--package-type` : to specify type of package to build `[DEB, RPM, TGZ]`, default `DEB`.
+- `-p` or `--package-type` : to specify type of package to build `[DEB, RPM, TGZ, MCU]`, default `DEB`.
 - `-t` or `--toolchain` : optionally to specify toolchain file for cross builds, default is none i.e. use system.
+- `-m` or `--mcu-flags` : optionally and if MCU type is used, custom flags can be provided. 
+- `--help` : prints the help menu and examples.
 
 ***NOTE:*** Dependencies for cross-builds are to be resolved manually see [aarch](#cross-compile)
 
