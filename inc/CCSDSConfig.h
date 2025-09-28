@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <vector>
 #include "CCSDSResult.h"
+#include <unordered_map>
 
 /// @brief Parses and stores config values from custom file format
 class Config {

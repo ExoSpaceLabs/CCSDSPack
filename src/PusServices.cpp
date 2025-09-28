@@ -79,14 +79,17 @@ CCSDS::ResultBool PusC::deserialize(const std::vector<std::uint8_t> &data) {
 }
 
 std::vector<std::uint8_t> PusC::serialize() const {
-  std::vector data{
-    static_cast<std::uint8_t>(m_version & 0x7),
-    m_serviceType,
-    m_serviceSubType,
-    m_sourceID
-  };
+  std::vector<std::uint8_t> data;
+  data.reserve(4 + m_timeCode.size() + 2);
+  data.push_back(static_cast<std::uint8_t>(m_version & 0x7));
+  data.push_back(m_serviceType);
+  data.push_back(m_serviceSubType);
+  data.push_back(m_sourceID);
+
   if (!m_timeCode.empty()) {
-    data.insert(data.end(), m_timeCode.begin(), m_timeCode.end());
+    const auto* p = m_timeCode.data();
+    const auto  n = m_timeCode.size();
+    data.insert(data.end(), p, p + n);
   }
   data.push_back(m_dataLength >> 8 & 0xFF);
   data.push_back(m_dataLength & 0xFF);

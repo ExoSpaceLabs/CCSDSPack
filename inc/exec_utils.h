@@ -6,6 +6,7 @@
 #define EXEC_UTILS_H
 #include <set>
 #include "CCSDSResult.h"
+#include <unordered_map>
 
 enum ErrorCodeExec : std::uint8_t {
   ARG_PARSE_ERROR = 14,                           ///< Error Parsing argument

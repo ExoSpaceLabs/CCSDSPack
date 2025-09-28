@@ -21,7 +21,7 @@ set(CMAKE_RANLIB       ${ARM_NONE_EABI_RANLIB})
 
 # Defaults; override with -DMCU_FLAGS="..."
 if(NOT DEFINED MCU_FLAGS)
-  set(MCU_FLAGS "-mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=softfp")
+  set(MCU_FLAGS "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard")
 endif()
 set(CMAKE_C_FLAGS_INIT   "${MCU_FLAGS}")
 set(CMAKE_CXX_FLAGS_INIT "${MCU_FLAGS}")

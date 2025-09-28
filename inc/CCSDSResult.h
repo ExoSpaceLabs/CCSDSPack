@@ -1,7 +1,6 @@
 #ifndef CCSDS_RESULT_H
 #define CCSDS_RESULT_H
 
-#include <unordered_map>
 #include <variant>
 #include <vector>
 #include <cstdint>
@@ -9,6 +8,8 @@
 //exclude includes when building for MCU
 #ifndef CCSDS_MCU
   #include <iostream>
+#else
+  #include <string>
 #endif //CCSDS_MCU
 
 namespace CCSDS {

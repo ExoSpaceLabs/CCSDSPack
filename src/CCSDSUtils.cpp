@@ -6,6 +6,8 @@
 #ifndef CCSDS_MCU
   #include <fstream>
   #include <iostream>
+#else
+  #include <string>
 #endif //CCSDS_MCU
 
 //###########################################################################
