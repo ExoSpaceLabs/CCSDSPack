@@ -2,7 +2,7 @@
 title CCSDS::Manager UML Diagram
 package [CCSDS] as C_0007081182557856067311 {
 enum "ErrorCode" as C_0009397388538647267500
-enum C_0009397388538647267500 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L19{ErrorCode}]] {
+enum C_0009397388538647267500 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L20{ErrorCode}]] {
 NONE
 UNKNOWN_ERROR
 NO_DATA
@@ -19,23 +19,23 @@ FILE_WRITE_ERROR
 CONFIG_FILE_ERROR
 }
 class "Error" as C_0016667887324179082906
-class C_0016667887324179082906 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L43{Error}]] {
-+Error(const ErrorC...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L50{Error}]]]
+class C_0016667887324179082906 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L44{Error}]] {
++Error(const ErrorC...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L51{Error}]]]
 ..
-+code() const : ErrorCode [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L58{code}]]]
-+message() const : const std::string & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L64{message}]]]
++code() const : ErrorCode [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L59{code}]]]
++message() const : const std::string & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L65{message}]]]
 __
 }
 class "Result<T>" as C_0008471204632575367201
-class C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L81{Result}]] {
-+Result(T value) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L89{Result}]]]
-+Result(Error error) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L96{Result}]]]
+class C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L82{Result}]] {
++Result(T value) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L90{Result}]]]
++Result(Error error) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L97{Result}]]]
 ..
-+error() const : Error [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L119{error}]]]
-+has_value() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L103{has_value}]]]
-+operator bool() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L127{operator bool}]]]
-+value() : T & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L112{value}]]]
-+value() const : const T & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L113{value}]]]
++error() const : Error [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L120{error}]]]
++has_value() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L104{has_value}]]]
++operator bool() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L128{operator bool}]]]
++value() : T & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L113{value}]]]
++value() const : const T & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L114{value}]]]
 __
 }
 enum "ESequenceFlag" as C_0009395536347375124815
@@ -87,7 +87,7 @@ class C_0000066884519575390086 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 __
 }
 class "Result<std::vector<uint8_t>>" as C_0003681749600908501807
-class C_0003681749600908501807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L38{Result}]] {
+class C_0003681749600908501807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{Result}]] {
 __
 }
 abstract "SecondaryHeaderAbstract" as C_0015357895956836170771
@@ -262,10 +262,10 @@ __
 }
 }
 class "Config" as C_0008289891971916880997
-class C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L10{Config}]] {
+class C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L11{Config}]] {
 +get<T>(const std::s...) const : CCSDS::Result<T>
-+isKey(const std::s...) const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L29{isKey}]]]
-+load(const std::s...) : CCSDS::ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L15{load}]]]
++isKey(const std::s...) const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L30{isKey}]]]
++load(const std::s...) : CCSDS::ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L16{load}]]]
 __
 }
 class "PusA" as C_0001404029779718103303
@@ -324,8 +324,8 @@ class C_0004565611741543840631 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +update(CCSDS::DataF...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L177{update}]]]
 __
 }
-C_0016667887324179082906 o-- C_0009397388538647267500 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L67{m_code}]] : -m_code
-C_0008471204632575367201 o-- C_0016667887324179082906 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L82{data}]] : -data
+C_0016667887324179082906 o-- C_0009397388538647267500 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L68{m_code}]] : -m_code
+C_0008471204632575367201 o-- C_0016667887324179082906 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L83{data}]] : -data
 C_0008762487699986143535 ..|> C_0008471204632575367201
 C_0000066884519575390086 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L135{}]]
 C_0000066884519575390086 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L135{}]]
@@ -366,9 +366,9 @@ C_0014627802343853026005 ..> C_0003681749600908501807 [[https://github.com/ExoSp
 C_0014627802343853026005 o-- C_0001106029959005870872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L265{m_templatePacket}]] : -m_templatePacket
 C_0014627802343853026005 o-- C_0001106029959005870872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L270{m_packets}]] : -m_packets
 C_0014627802343853026005 o-- C_0015262608491158149275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L273{m_validator}]] : -m_validator
-C_0008289891971916880997 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L15{}]]
-C_0008289891971916880997 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L15{}]]
-C_0008289891971916880997 ..> C_0003681749600908501807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L38{}]]
+C_0008289891971916880997 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L16{}]]
+C_0008289891971916880997 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L16{}]]
+C_0008289891971916880997 ..> C_0003681749600908501807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{}]]
 C_0001404029779718103303 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L52{}]]
 C_0001404029779718103303 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L52{}]]
 C_0001404029779718103303 ..> C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L53{}]]
@@ -385,6 +385,6 @@ C_0004565611741543840631 ..> C_0006701855109527716313 [[https://github.com/ExoSp
 C_0004565611741543840631 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L180{}]]
 C_0015357895956836170771 <|-- C_0004565611741543840631
 
-'Generated with clang-uml, version 0.6.2-24-ge1152da
+'Generated with clang-uml, version 0.6.2-25-g5e2993e
 'LLVM version Ubuntu clang version 17.0.6 (9ubuntu1)
 @enduml
