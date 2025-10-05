@@ -199,3 +199,6 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+  Portions of this repository, located under CCSDSPack/test/package_tester/stm32h7xx,
+  are © 2018 STMicroelectronics and distributed under the BSD 3-Clause License.
