@@ -1,21 +1,19 @@
-# CCSDSPack v1.0.0
+# CCSDSPack v1.1.0
 
-The first stable release of CCSDSPack, a lightweight C++ library for creating, parsing, and validating CCSDS Space Packets.
+Minor release of CCSDSPack, a lightweight C++ library for creating, parsing, and validating CCSDS Space Packets.
 This release marks the transition from prototype to production-ready, with packaging, CI, and Docker support.
+
+for previous releases checkout RELEASE_NOTES.md on tags
+- v1.0.0
 
 ___
 
 ## Features
+Cross build support for
+- arm-none-eabi (tested on STM32H755Z-Q)
+- aarch64-linux-gnu (tested on Raspberry PI 5)
 
-- Full support for CCSDS Primary Header encoding/decoding.
-- Abstract Secondary Header interface, allowing users to define mission-specific extensions.
-- Ready-to-use command-line tools:
-    - `ccsds_encoder`
-    - `ccsds_decoder` 
-    - `ccsds_validator` 
-    - `CCSDSPack_tester` (built-in test harness).
-- CMake integration for easy inclusion in external projects.
-
+pre-packaged static lib for arm baremetal and .deb for aarch64 libraries.
 ___
 
 ## Distribution
@@ -27,8 +25,8 @@ sudo dpkg -i ccsdspack-<version>-Linux-x86_64.deb
 
 - Docker image published to GHCR:
 ```bash
-docker pull ghcr.io/exospacelabs/ccsdspack:v1.0.0
-docker run --rm ghcr.io/exospacelabs/ccsdspack:v1.0.0 /usr/bin/CCSDSPack_tester
+docker pull ghcr.io/exospacelabs/ccsdspack:v1.1.0
+docker run --rm ghcr.io/exospacelabs/ccsdspack:v1.1.0 /usr/bin/CCSDSPack_tester
 ```
 ___
 
@@ -50,7 +48,6 @@ ___
 
 ## Next Steps
 - Expanded examples for real-world CCSDS telemetry/telecommand flows.
-- Additional packaging targets (RPM, Homebrew, etc.). 
 - Continuous improvements to documentation and diagrams.
 
 ___
