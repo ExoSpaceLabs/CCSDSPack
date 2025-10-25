@@ -19,7 +19,7 @@ Parameters can be passed to the package.sh script:
 - `-m` or `--mcu-flags` : optionally and if MCU type is used, custom flags can be provided. 
 - `--help` : prints the help menu and examples.
 
-***NOTE:*** Dependencies for cross-builds are to be resolved manually see [aarch](#cross-compile)
+***NOTE:*** For cross-build prerequisites and setup, see the consolidated [Cross-Build Guide](CROSSBUILD.md).
 
 If successful, the generated package will be placed under the `packages` directory.
 

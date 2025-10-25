@@ -126,11 +126,11 @@ else
 fi
 
 # check for consistency:
-# dpkg-deb --info ccsdspack-v1.0.0-Linux-x86_64.deb
-# dpkg-deb --contents ccsdspack-v1.0.0-Linux-x86_64.deb
+# dpkg-deb --info ccsdspack-v<version>-<system>-<architecture>.deb
+# dpkg-deb --contents ccsdspack-v<version>-<system>-<architecture>.deb
 
 # to install on the system (requires sudo)
-# dpkg -i ccsdspack-v1.0.0-Linux-x86_64.deb
+# dpkg -i ccsdspack-v<version>-<system>-<architecture>.deb
 
 # to remove:
 # dpkg --remove ccsdspack

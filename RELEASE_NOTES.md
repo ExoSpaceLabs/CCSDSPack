@@ -33,7 +33,7 @@ ___
 ## Development & CI
 
 - Automated build and test matrix via GitHub Actions.
-- `.deb` packaging and artifact upload. 
+- `.deb` / `.tar.gz` packaging and artifact upload. 
 - Automatic Docker image builds for tagged releases (published on GHCR). 
 - UML diagrams and docs generation integrated (clang-uml + Doxygen configs included).
 

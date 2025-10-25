@@ -3,6 +3,7 @@
 - The first stable release of the library see RELEASE_NOTES.md ON TAG v1.0.0
 
 # CCSDSPack v1.1.0
-***Date: TBD*** 
+***Date: 25/10/2025*** 
 - Baremetal static lib build support.
 - includes toolchain for arm and instructions for build.
+- include scripts to install cross-build dependencies.
