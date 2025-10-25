@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
 # Fetch latest CCSDSPack release .deb from GitHub
 RUN LATEST_DEB_URL=$(curl -s https://api.github.com/repos/ExoSpaceLabs/CCSDSPack/releases/latest \
     | grep browser_download_url \
-    | grep '\.deb' \
+    | grep '\Linux-x86_64.deb' \
     | cut -d '"' -f 4) \
  && echo "Downloading $LATEST_DEB_URL" \
  && curl -L -o /tmp/ccsdspack.deb "$LATEST_DEB_URL" \
