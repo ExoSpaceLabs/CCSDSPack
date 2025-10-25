@@ -30,7 +30,10 @@ jobs:
 
       - name: Configure and build (native x86_64)
         run: |
-          cd build && cmake .. && make
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . -- -j
 
       - name: Verify build artifacts
         run: |
@@ -39,7 +42,7 @@ jobs:
 
       - name: Run tests (native)
         run: |
-          test -x bin/CCSDSPack_tester && bin/CCSDSPack_tester || { echo "Tester not found"; exit 1; }    
+          cd bin && ./CCSDSPack_tester     
         
       - name: Install cross and packaging deps (22.04 only)
         if: matrix.os == 'ubuntu-22.04'
