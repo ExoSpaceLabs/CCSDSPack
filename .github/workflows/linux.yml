@@ -30,10 +30,7 @@ jobs:
 
       - name: Configure and build (native x86_64)
         run: |
-          mkdir -p build
-          cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-          cmake --build . -- -j
+          cd build && cmake .. && make
 
       - name: Verify build artifacts
         run: |
