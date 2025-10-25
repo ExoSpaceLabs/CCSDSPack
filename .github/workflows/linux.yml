@@ -23,28 +23,57 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Install base build deps
         run: |
-          sudo apt update
-          sudo apt install -y cmake make g++ 
+          sudo apt-get update
+          sudo apt-get install -y cmake make g++
 
-      - name: Run build
+      - name: Configure and build (native x86_64)
         run: |
-          cd build && cmake .. && make
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake --build . -- -j
 
       - name: Verify build artifacts
         run: |
           ls -l lib/
           ls -l bin/
 
-      - name: Run tests Linux
+      - name: Run tests (native)
         run: |
-          cd bin && ./CCSDSPack_tester     
+          test -x bin/CCSDSPack_tester && bin/CCSDSPack_tester || { echo "Tester not found"; exit 1; }    
         
-      - name: cleanup and generate .deb
+      - name: Install cross and packaging deps (22.04 only)
         if: matrix.os == 'ubuntu-22.04'
         run: |
-          rm -rf bin/* && rm -rf build/* && ./package.sh && ls -la packages
+          sudo apt-get update
+          # Enable arm64 architecture before installing :arm64 libs
+          sudo dpkg --add-architecture arm64
+          sudo apt-get update
+          sudo apt-get install -y \
+            rpm \
+            gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib \
+            gcc-aarch64-linux-gnu g++-aarch64-linux-gnu qemu-user-static rsync \
+            libc6:arm64 libgcc-s1:arm64 libstdc++6:arm64
+
+      - name: Cleanup and generate packages (22.04 only)
+        if: matrix.os == 'ubuntu-22.04'
+        run: |
+          mkdir -p build packages
+          # 1) Native x86_64 .deb
+          rm -rf bin/* build/*
+          ./package.sh -p DEB
+
+          # 2) Bare-metal Cortex-M7 TGZ
+          rm -rf bin/* build/*
+          ./package.sh -t cmake/toolchains/arm-none-eabi.cmake -p MCU -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+
+          # 3) aarch64 .deb
+          rm -rf bin/* build/*
+          ./package.sh -t cmake/toolchains/aarch64-linux-gnu.cmake -p DEB
+
+          ls -la packages
 
       #- name: Upload package artifact
       #  if: matrix.os == 'ubuntu-22.04'
@@ -60,7 +89,7 @@ jobs:
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: packages/*.deb
+          files: packages/*
 
       - name: Log in to GHCR
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')

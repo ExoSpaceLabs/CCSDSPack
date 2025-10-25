@@ -1,9 +1,11 @@
-# Cross-Compilation
+# Cross-Compilation (deprecated)
+
+> NOTE: This document is superseded by the consolidated cross-build guide: see [CROSSBUILD.md](CROSSBUILD.md) for aarch64 and MCU instructions, prerequisites per Ubuntu release, and `package.sh` examples.
 
 ## Baremetal Static Library
 
 The library can be built in MCU mode by using the cmake flag `-DCCSDSPACK_BUILD_MCU=ON`, this disables all exceptions
-and executables. If this version is required by cmake use `find_packa()` as follows:
+and executables. If this version is required by cmake use `find_package()` as follows:
 
 ```cmake
 find_package(CCSDSPack REQUIRED)

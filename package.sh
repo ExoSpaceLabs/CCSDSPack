@@ -1,6 +1,7 @@
 #!/bin/bash
-# defaults
+set -euo pipefail
 
+# defaults
 package_type="DEB"
 use_toolchain=0
 toolchain=""
@@ -72,43 +73,61 @@ fi
 
 print_config
 
+# Ensure directories exist
+mkdir -p build packages
 rm -rf build/*
 cd build
 
-if [[ use_toolchain -eq 1 ]]; then
+# Configure
+if [[ $use_toolchain -eq 1 ]]; then
   if [[ "${package_type^^}" == "MCU" ]]; then
-    if [[ "${mcu_flags^^}" == "" ]]; then
-      cmake -S . -DCMAKE_BUILD_TYPE=Release -DCCSDSPACK_BUILD_MCU=ON -DCMAKE_TOOLCHAIN_FILE="${toolchain}" ..
+    if [[ -z "${mcu_flags}" ]]; then
+      cmake -S .. -B . \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCCSDSPACK_BUILD_MCU=ON \
+        -DCMAKE_TOOLCHAIN_FILE="${toolchain}"
     else
-      cmake -S . -DCMAKE_BUILD_TYPE=Release -DCCSDSPACK_BUILD_MCU=ON -DMCU_FLAGS="${mcu_flags}" -DCMAKE_TOOLCHAIN_FILE="${toolchain}" ..
+      cmake -S .. -B . \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCCSDSPACK_BUILD_MCU=ON \
+        -DMCU_FLAGS="${mcu_flags}" \
+        -DCMAKE_TOOLCHAIN_FILE="${toolchain}"
     fi
   else
-    cmake -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="${toolchain}" ..
+    cmake -S .. -B . \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_TOOLCHAIN_FILE="${toolchain}"
   fi
 else
-  cmake -S . -DCMAKE_BUILD_TYPE=Release ..
+  cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release
 fi
 
+# Build
 cmake --build . --config Release -- -j
 
-# cpack might require super user privileges.
+# Package
 if [[ "${package_type^^}" == "MCU" ]]; then
-  cpack -G "TGZ" -C Release -V
+  cpack -G TGZ -C Release -V
 else
   cpack -G "${package_type^^}" -C Release -V
 fi
 
-if [[ "${package_type^^}" == "DEB" ]]; then
-  mv ccsdspack-v*.deb ../packages/.
-elif  [[ "${package_type^^}" == "RPM" ]]; then
-  mv ccsdspack-v*.rpm ../packages/.
+# Move artifacts to ../packages
+shopt -s nullglob
+if compgen -G "ccsdspack-v*.deb" > /dev/null; then
+  mv ccsdspack-v*.deb ../packages/
+elif compgen -G "ccsdspack-v*.rpm" > /dev/null; then
+  mv ccsdspack-v*.rpm ../packages/
+elif compgen -G "ccsdspack-v*.tar.gz" > /dev/null; then
+  mv ccsdspack-v*.tar.gz ../packages/
 else
-  mv ccsdspack-v*.tar.gz ../packages/.
+  echo "No package artifacts produced" >&2
+  exit 2
 fi
 
 # check for consistency:
-#dpkg-deb --info ccsdspack-v1.0.0-Linux-x86_64.deb
-#dpkg-deb --contents ccsdspack-v1.0.0-Linux-x86_64.deb
+# dpkg-deb --info ccsdspack-v1.0.0-Linux-x86_64.deb
+# dpkg-deb --contents ccsdspack-v1.0.0-Linux-x86_64.deb
 
 # to install on the system (requires sudo)
 # dpkg -i ccsdspack-v1.0.0-Linux-x86_64.deb

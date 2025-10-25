@@ -53,7 +53,7 @@ Specific distribution build and regression status are shown below
 - Pre-built .deb package downloadable from [Releases](https://github.com/ExoSpaceLabs/CCSDSPack/releases).
 - Pre-built docker image with library installed, see [docker](#docker).
 - Exceptionless library, variant based error management enabling the usage within embedded systems see [Error management](docs/ERROR.md).
-- Baremetal build for targeted devices see [Cross-compile](docs/CROSSCOMPILE.md).
+- Baremetal build for targeted devices see [Cross-Build Guide](docs/CROSSBUILD.md).
 ---
 ## Documentation
 Full API documentation is available and hosted here:  [CCSDSPack Documentation](https://exospacelabs.github.io/CCSDSPack/html/)
@@ -159,7 +159,7 @@ specific provided features. such as tester, which may or may not be of interest.
 | -DENABLE_DECODER=ON        | build decoder executable that decodes a binary file containing ccsds packets |
 | -DENABLE_VALIDATOR=ON      | build validator executable that validates packets.                           |
 
-*Used when compiling library for baremetal, refer to [cross-compilation](docs/CROSSCOMPILE.md) for usage.
+*Used when compiling library for baremetal, refer to the [Cross-Build Guide](docs/CROSSBUILD.md) for usage.
 
 see executable enabler example usage during cmake setup below.
 
