@@ -112,7 +112,7 @@ Private Attributes</h2></td></tr>
 <div class="textblock"><p>Represents an error with both an error code and a message. </p>
 <p>This class is used to provide additional error context by combining an <code>ErrorCode</code> with a detailed message, allowing differentiation between multiple errors of the same type. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00039">39</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00044">44</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a8c3cf7cf0b85f3875a352f7670e320e3" name="a8c3cf7cf0b85f3875a352f7670e320e3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8c3cf7cf0b85f3875a352f7670e320e3">&#9670;&#160;</a></span>Error()</h2>
@@ -157,13 +157,13 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00046">46</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   47</span>      : <a class="code hl_variable" href="classCCSDS_1_1Error.html#a6833867ac43656fae114e5d36d6fb059">m_code</a>(<a class="code hl_function" href="classCCSDS_1_1Error.html#a18876667b5fa524daec31074d6f9314e">code</a>), <a class="code hl_variable" href="classCCSDS_1_1Error.html#aeb8f2739ed0b5d7ad5490b080b2b1a03">m_message</a>(std::move(<a class="code hl_function" href="classCCSDS_1_1Error.html#ac004503279e3146b2f9bd1f65f7cf5a6">message</a>)) {</div>
-<div class="line"><span class="lineno">   48</span>    }</div>
-<div class="ttc" id="aclassCCSDS_1_1Error_html_a18876667b5fa524daec31074d6f9314e"><div class="ttname"><a href="classCCSDS_1_1Error.html#a18876667b5fa524daec31074d6f9314e">CCSDS::Error::code</a></div><div class="ttdeci">ErrorCode code() const</div><div class="ttdoc">Retrieves the error code.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00054">CCSDSResult.h:54</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Error_html_a6833867ac43656fae114e5d36d6fb059"><div class="ttname"><a href="classCCSDS_1_1Error.html#a6833867ac43656fae114e5d36d6fb059">CCSDS::Error::m_code</a></div><div class="ttdeci">ErrorCode m_code</div><div class="ttdoc">The error type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00063">CCSDSResult.h:63</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Error_html_ac004503279e3146b2f9bd1f65f7cf5a6"><div class="ttname"><a href="classCCSDS_1_1Error.html#ac004503279e3146b2f9bd1f65f7cf5a6">CCSDS::Error::message</a></div><div class="ttdeci">const std::string &amp; message() const</div><div class="ttdoc">Retrieves the error message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00060">CCSDSResult.h:60</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Error_html_aeb8f2739ed0b5d7ad5490b080b2b1a03"><div class="ttname"><a href="classCCSDS_1_1Error.html#aeb8f2739ed0b5d7ad5490b080b2b1a03">CCSDS::Error::m_message</a></div><div class="ttdeci">std::string m_message</div><div class="ttdoc">A detailed message describing the error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00064">CCSDSResult.h:64</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00051">51</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   52</span>      : <a class="code hl_variable" href="classCCSDS_1_1Error.html#a6833867ac43656fae114e5d36d6fb059">m_code</a>(<a class="code hl_function" href="classCCSDS_1_1Error.html#a18876667b5fa524daec31074d6f9314e">code</a>), <a class="code hl_variable" href="classCCSDS_1_1Error.html#aeb8f2739ed0b5d7ad5490b080b2b1a03">m_message</a>(std::move(<a class="code hl_function" href="classCCSDS_1_1Error.html#ac004503279e3146b2f9bd1f65f7cf5a6">message</a>)) {</div>
+<div class="line"><span class="lineno">   53</span>    }</div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html_a18876667b5fa524daec31074d6f9314e"><div class="ttname"><a href="classCCSDS_1_1Error.html#a18876667b5fa524daec31074d6f9314e">CCSDS::Error::code</a></div><div class="ttdeci">ErrorCode code() const</div><div class="ttdoc">Retrieves the error code.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00059">CCSDSResult.h:59</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html_a6833867ac43656fae114e5d36d6fb059"><div class="ttname"><a href="classCCSDS_1_1Error.html#a6833867ac43656fae114e5d36d6fb059">CCSDS::Error::m_code</a></div><div class="ttdeci">ErrorCode m_code</div><div class="ttdoc">The error type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00068">CCSDSResult.h:68</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html_ac004503279e3146b2f9bd1f65f7cf5a6"><div class="ttname"><a href="classCCSDS_1_1Error.html#ac004503279e3146b2f9bd1f65f7cf5a6">CCSDS::Error::message</a></div><div class="ttdeci">const std::string &amp; message() const</div><div class="ttdoc">Retrieves the error message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00065">CCSDSResult.h:65</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html_aeb8f2739ed0b5d7ad5490b080b2b1a03"><div class="ttname"><a href="classCCSDS_1_1Error.html#aeb8f2739ed0b5d7ad5490b080b2b1a03">CCSDS::Error::m_message</a></div><div class="ttdeci">std::string m_message</div><div class="ttdoc">A detailed message describing the error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00069">CCSDSResult.h:69</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -194,8 +194,8 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the error code. </p>
 <dl class="section return"><dt>Returns</dt><dd>The associated <code>ErrorCode</code>. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00054">54</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   54</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Error.html#a6833867ac43656fae114e5d36d6fb059">m_code</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00059">59</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Error.html#a6833867ac43656fae114e5d36d6fb059">m_code</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -225,8 +225,8 @@ Private Attributes</h2></td></tr>
 <p>Retrieves the error message. </p>
 <dl class="section return"><dt>Returns</dt><dd>The detailed error description. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00060">60</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Error.html#aeb8f2739ed0b5d7ad5490b080b2b1a03">m_message</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00065">65</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   65</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1Error.html#aeb8f2739ed0b5d7ad5490b080b2b1a03">m_message</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -253,7 +253,7 @@ Private Attributes</h2></td></tr>
 
 <p>The error type. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00063">63</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00068">68</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
 
 </div>
 </div>
@@ -279,7 +279,7 @@ Private Attributes</h2></td></tr>
 
 <p>A detailed message describing the error. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00064">64</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00069">69</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
 
 </div>
 </div>

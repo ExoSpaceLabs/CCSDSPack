@@ -83,15 +83,14 @@ $(function() {
   <div class="headertitle"><div class="title">CCSDSResult.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;unordered_map&gt;</code><br />
-<code>#include &lt;variant&gt;</code><br />
+<div class="textblock"><code>#include &lt;variant&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for CCSDSResult.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSResult_8h__incl.svg" width="510" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSResult_8h__incl.svg" width="362" height="110"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -195,11 +194,11 @@ Enumerations</h2></td></tr>
 </div><!-- fragment -->
 <p>Macro to return immediately if the result contains an error (for void functions). </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00192">192</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  193</span>   {                                           \</div>
-<div class="line"><span class="lineno">  194</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  195</span>    if (!_res.has_value()) return;             \</div>
-<div class="line"><span class="lineno">  196</span>} while (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00197">197</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  198</span>   {                                           \</div>
+<div class="line"><span class="lineno">  199</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  200</span>    if (!_res.has_value()) return;             \</div>
+<div class="line"><span class="lineno">  201</span>} while (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -236,12 +235,12 @@ Enumerations</h2></td></tr>
 </div><!-- fragment -->
 <p>Macro to assign a result value to a variable or return an error by copy. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00166">166</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  167</span>   {                                           \</div>
-<div class="line"><span class="lineno">  168</span><span class="keyword">auto</span>&amp;&amp; _res = (result);                        \</div>
-<div class="line"><span class="lineno">  169</span>if (!_res) <span class="keywordflow">return</span> _res.error();                \</div>
-<div class="line"><span class="lineno">  170</span>var = _res.value();                            \</div>
-<div class="line"><span class="lineno">  171</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00171">171</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  172</span>   {                                           \</div>
+<div class="line"><span class="lineno">  173</span><span class="keyword">auto</span>&amp;&amp; _res = (result);                        \</div>
+<div class="line"><span class="lineno">  174</span>if (!_res) <span class="keywordflow">return</span> _res.error();                \</div>
+<div class="line"><span class="lineno">  175</span>var = _res.value();                            \</div>
+<div class="line"><span class="lineno">  176</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -278,12 +277,12 @@ Enumerations</h2></td></tr>
 </div><!-- fragment -->
 <p>Macro to assign a result value to a variable or return an error by moving. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00155">155</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  156</span>   {                                           \</div>
-<div class="line"><span class="lineno">  157</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  158</span>    if (!_res) <span class="keywordflow">return</span> _res.error();            \</div>
-<div class="line"><span class="lineno">  159</span>    var = std::move(_res.value());             \</div>
-<div class="line"><span class="lineno">  160</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00160">160</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  161</span>   {                                           \</div>
+<div class="line"><span class="lineno">  162</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  163</span>    if (!_res) <span class="keywordflow">return</span> _res.error();            \</div>
+<div class="line"><span class="lineno">  164</span>    var = std::move(_res.value());             \</div>
+<div class="line"><span class="lineno">  165</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -323,15 +322,15 @@ Enumerations</h2></td></tr>
 </div><!-- fragment -->
 <p>Macro to assign a result value or print an error message. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00178">178</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  179</span>   {                                           \</div>
-<div class="line"><span class="lineno">  180</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  181</span>    if (!_res) {                               \</div>
-<div class="line"><span class="lineno">  182</span>        printf(<span class="stringliteral">&quot;[ Error ]: Code [%u]: %s\n&quot;</span>, <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(_res.error().code()), _res.error().message().c_str());; \</div>
-<div class="line"><span class="lineno">  183</span>    } <span class="keywordflow">else</span> {                                   \</div>
-<div class="line"><span class="lineno">  184</span>        var = std::move(_res.value());         \</div>
-<div class="line"><span class="lineno">  185</span>    }                                          \</div>
-<div class="line"><span class="lineno">  186</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00183">183</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  184</span>   {                                           \</div>
+<div class="line"><span class="lineno">  185</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  186</span>    if (!_res) {                               \</div>
+<div class="line"><span class="lineno">  187</span>        printf(<span class="stringliteral">&quot;[ Error ]: Code [%u]: %s\n&quot;</span>, <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(_res.error().code()), _res.error().message().c_str());; \</div>
+<div class="line"><span class="lineno">  188</span>    } <span class="keywordflow">else</span> {                                   \</div>
+<div class="line"><span class="lineno">  189</span>        var = std::move(_res.value());         \</div>
+<div class="line"><span class="lineno">  190</span>    }                                          \</div>
+<div class="line"><span class="lineno">  191</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -357,11 +356,11 @@ Enumerations</h2></td></tr>
 </div><!-- fragment -->
 <p>Macro to return a result as-is (for functions returning Result&lt;T&gt;). </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00202">202</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  203</span>   {                                           \</div>
-<div class="line"><span class="lineno">  204</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  205</span>    if (!_res.has_value()) return _res;        \</div>
-<div class="line"><span class="lineno">  206</span>} while (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00207">207</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  208</span>   {                                           \</div>
+<div class="line"><span class="lineno">  209</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  210</span>    if (!_res.has_value()) return _res;        \</div>
+<div class="line"><span class="lineno">  211</span>} while (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -401,16 +400,16 @@ Enumerations</h2></td></tr>
 <div class="line">        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{errorCode,message};          \</div>
 <div class="line">    }                                                    \</div>
 <div class="line">} <span class="keywordflow">while</span> (0)</div>
-<div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Represents an error with both an error code and a message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00039">CCSDSResult.h:39</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Represents an error with both an error code and a message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00044">CCSDSResult.h:44</a></div></div>
 </div><!-- fragment -->
 <p>Macro to return an error with an error message if a condition is met. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00144">144</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  145</span>   {                                                     \</div>
-<div class="line"><span class="lineno">  146</span>    if (condition) {                                     \</div>
-<div class="line"><span class="lineno">  147</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{errorCode,message};          \</div>
-<div class="line"><span class="lineno">  148</span>    }                                                    \</div>
-<div class="line"><span class="lineno">  149</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00149">149</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  150</span>   {                                                     \</div>
+<div class="line"><span class="lineno">  151</span>    if (condition) {                                     \</div>
+<div class="line"><span class="lineno">  152</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{errorCode,message};          \</div>
+<div class="line"><span class="lineno">  153</span>    }                                                    \</div>
+<div class="line"><span class="lineno">  154</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -442,8 +441,8 @@ Enumerations</h2></td></tr>
 
 <p>Macro to return an error code if a condition is met. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00137">137</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  138</span>   { <span class="keywordflow">if</span> (condition) <span class="keywordflow">return</span> errorCode; } <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00142">142</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  143</span>   { <span class="keywordflow">if</span> (condition) <span class="keywordflow">return</span> errorCode; } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
