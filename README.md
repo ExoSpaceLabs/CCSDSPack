@@ -37,7 +37,7 @@ Specific distribution build and regression status are shown below
 | Linux   | ubuntu-22.04  | ![Ubuntu 22.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-22-04)     |
 |         | ubuntu-24.04  | ![Ubuntu 24.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-24-04)    |
 |         | ubuntu-latest | ![Ubuntu Latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest)      |
-|         | latest        | ![Windows Latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest)      |
+| Windows | latest        | ![Windows Latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest)      |
 ---
 
 ## Features
