@@ -3,7 +3,7 @@
     <img alt="ccsds_pack_logo" src="docs/imgs/Logo.png" width="400" />
 </div>
 
-# CCSDSPack - [ExoSpaceLabs](https://github.com/ExoSpaceLabs)
+# CCSDSPack - [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
 **CCSDSPack** is a lightweight, high-performance C++ library for handling 
 [CCSDS (Consultative Committee for Space Data Systems)](https://public.ccsds.org/) packets.
 It provides utilities to create, parse, and manage CCSDS-compliant telemetry (TM) and 
