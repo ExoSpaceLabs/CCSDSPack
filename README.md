@@ -284,7 +284,7 @@ ___
 ## Examples
 
 > ***NOTE: Do not confuse with CFDP, it simply encode and decodes data into the application field.***
-> ***NOTE: Future release, might include CFDP Protocol utilization.***
+> ***Future release, might include CFDP Protocol utilization.***
 
 ### Encoder:
 
