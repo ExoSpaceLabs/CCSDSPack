@@ -283,6 +283,9 @@ docker run -it --rm ghcr.io/exospacelabs/ccsdspack:v1.0.0 /bin/bash
 ___
 ## Examples
 
+> ***NOTE: Do not confuse with CFDP, it simply encode and decodes data into the application field.***
+> ***NOTE: Future release, might include CFDP Protocol utilization.***
+
 ### Encoder:
 
 Encode a specific file into the application data of CCSDS packets and save streamed packets 
