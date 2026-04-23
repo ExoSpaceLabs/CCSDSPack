@@ -6,16 +6,16 @@ cmake_minimum_required(VERSION 3.16)
 # Project name
 set(LIB_NAME "CCSDSPack")
 
-#MAJOR: Increases when there are breaking changes that are incompatible with previous versions. A major version change indicates significant updates or overhauls, and often requires developers to modify their code to stay compatible.
+# MAJOR: Increases when there are breaking changes that are incompatible with previous versions. A major version change indicates significant updates or overhauls, and often requires developers to modify their code to stay compatible.
 
-#MINOR: Increases when new features or functionality are added in a backward-compatible way. These updates enhance the software but do not break existing functionality.
+# MINOR: Increases when new features or functionality are added in a backward-compatible way. These updates enhance the software but do not break existing functionality.
 
-#PATCH: Increases for backward-compatible bug fixes or small improvements. A patch update fixes issues, improves stability, or makes minor improvements without adding new features.
+# PATCH: Increases for backward-compatible bug fixes or small improvements. A patch update fixes issues, improves stability, or makes minor improvements without adding new features.
 
 # Versioning
 set(MAJOR "1")
 set(MINOR "1")
-set(PATCH "0")
+set(PATCH "1")
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
 set(LIB_VERSIONED "${LIB_NAME}${VER}")
@@ -202,16 +202,9 @@ install(DIRECTORY ${INCLUDE_DIR}/
 # -----------------------------
 include(CMakePackageConfigHelpers)
 
-# Write a minimal Config.cmake template on the fly (no repo file needed)
-set(_ccsds_cfg_in "${CMAKE_CURRENT_BINARY_DIR}/CCSDSPackConfig.cmake.in")
-file(WRITE "${_ccsds_cfg_in}"
-        "@PACKAGE_INIT@\n\
-include(CMakeFindDependencyMacro)\n\
-include(\"\${CMAKE_CURRENT_LIST_DIR}/CCSDSPackTargets.cmake\")\n")
-
 # Generate Config and ConfigVersion files
 configure_package_config_file(
-        "${_ccsds_cfg_in}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/CCSDSPackConfig.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/CCSDSPackConfig.cmake"
         INSTALL_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/CCSDSPack"
 )

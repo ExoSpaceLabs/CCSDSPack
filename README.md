@@ -283,6 +283,21 @@ docker run -it --rm ghcr.io/exospacelabs/ccsdspack:v1.0.0 /bin/bash
 ___
 ## Examples
 
+### CMake Integration
+You can easily integrate **CCSDSPack** into your CMake-based project. Once installed, use `find_package` to locate it and link against the exported target.
+
+```cmake
+find_package(CCSDSPack CONFIG REQUIRED)
+
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
+```
+
+If the library is installed in a non-standard location, you can specify the path using `CMAKE_PREFIX_PATH`:
+```bash
+cmake .. -DCMAKE_PREFIX_PATH=/path/to/install/prefix
+```
+
 ### Encoder:
 
 Encode a specific file into the application data of CCSDS packets and save streamed packets 
