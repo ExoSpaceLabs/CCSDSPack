@@ -3,7 +3,7 @@
     <img alt="ccsds_pack_logo" src="docs/imgs/Logo.png" width="400" />
 </div>
 
-# CCSDSPack - [ExoSpaceLabs](https://github.com/ExoSpaceLabs)
+# CCSDSPack [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
 **CCSDSPack** is a lightweight, high-performance C++ library for handling 
 [CCSDS (Consultative Committee for Space Data Systems)](https://public.ccsds.org/) packets.
 It provides utilities to create, parse, and manage CCSDS-compliant telemetry (TM) and 
@@ -37,7 +37,7 @@ Specific distribution build and regression status are shown below
 | Linux   | ubuntu-22.04  | ![Ubuntu 22.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-22-04)     |
 |         | ubuntu-24.04  | ![Ubuntu 24.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-24-04)    |
 |         | ubuntu-latest | ![Ubuntu Latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest)      |
-|         | latest        | ![Windows Latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest)      |
+| Windows | latest        | ![Windows Latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest)      |
 ---
 
 ## Features
@@ -248,23 +248,31 @@ Prebuilt Docker images of CCSDSPack are published on [GHCR](https://github.com/E
 They provide a ready-to-use environment with the library and command-line tools already installed, 
 so you don’t need to compile from source or manage dependencies manually (almost none in this case).
 
-Pull a specific release image:
+Pull a specific release image or the latest version:
 ```bash
 
  docker pull ghcr.io/exospacelabs/ccsdspack:v<version>
+ # OR
+ docker pull ghcr.io/exospacelabs/ccsdspack:latest
 ```
 **Example usage:**
 
-Pull version 1.1.0 of the container
+Pull version 1.1.1 of the container
 ```bash
 
-docker pull ghcr.io/exospacelabs/ccsdspack:v1.1.0
+docker pull ghcr.io/exospacelabs/ccsdspack:v1.1.1
 ```
 
-Test the library by run the `CCSDSPack_tester` executable as follows.
+Or pull the latest version:
 ```bash
 
-docker run ghcr.io/exospacelabs/ccsdspack:v1.1.0 /usr/bin/CCSDSPack_tester
+docker pull ghcr.io/exospacelabs/ccsdspack:latest
+```
+
+Test the library by running the `CCSDSPack_tester` executable as follows.
+```bash
+
+docker run --rm ghcr.io/exospacelabs/ccsdspack:latest /usr/bin/CCSDSPack_tester
 ```
 The container includes the executables:
 
@@ -277,14 +285,26 @@ With a mounted volume, you can encode, decode, and validate packets against file
 For exploratory use, start an interactive shell inside the container:
 ```bash
 
-docker run -it --rm ghcr.io/exospacelabs/ccsdspack:v1.0.0 /bin/bash
+docker run -it --rm ghcr.io/exospacelabs/ccsdspack:latest /bin/bash
 ```
 
 ___
 ## Examples
 
-> ***NOTE: Do not confuse with CFDP, it simply encode and decodes data into the application field.***
-> ***Future release, might include CFDP Protocol utilization.***
+### CMake Integration
+You can easily integrate **CCSDSPack** into your CMake-based project. Once installed, use `find_package` to locate it and link against the exported target.
+
+```cmake
+find_package(CCSDSPack CONFIG REQUIRED)
+
+add_executable(my_app main.cpp)
+target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
+```
+
+If the library is installed in a non-standard location, you can specify the path using `CMAKE_PREFIX_PATH`:
+```bash
+cmake .. -DCMAKE_PREFIX_PATH=/path/to/install/prefix
+```
 
 ### Encoder:
 

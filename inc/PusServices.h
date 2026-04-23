@@ -95,7 +95,7 @@
      * @param dataLength Length of the event data (16 bits).
      */
     explicit PusB(const std::uint8_t version, const std::uint8_t serviceType, const std::uint8_t serviceSubtype,
-                  const std::uint8_t sourceID, const std::uint8_t eventID, const std::uint16_t dataLength) : m_version(version & 0x7),
+                  const std::uint8_t sourceID, const std::uint16_t eventID, const std::uint16_t dataLength) : m_version(version & 0x7),
       m_serviceType(serviceType), m_serviceSubType(serviceSubtype), m_sourceID(sourceID), m_eventID(eventID),
       m_dataLength(dataLength) {
     }

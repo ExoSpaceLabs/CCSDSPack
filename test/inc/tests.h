@@ -26,6 +26,7 @@ void testGroupValidator(TestManager *tester, const std::string &description);
  * @param description
  */
 void testGroupManagement(TestManager *tester, const std::string &description);
+void testGroupEdgeCases(TestManager *tester, const std::string &description);
 
 
 #endif //TESTS_H
