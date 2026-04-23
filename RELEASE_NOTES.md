@@ -1,58 +1,30 @@
-# CCSDSPack v1.1.0
+# CCSDSPack v1.1.1
 
-Minor release of CCSDSPack, a lightweight C++ library for creating, parsing, and validating CCSDS Space Packets.
-This release marks the transition from prototype to production-ready, with packaging, CI, and Docker support.
+Maintenance release focusing on critical bug fixes and CMake integration improvements.
 
-for previous releases checkout RELEASE_NOTES.md on tags
-- v1.0.0
+## Highlights
+- Fixed a critical deserialization bug where primary headers were not correctly populated when using secondary headers.
+- Modernized CMake package configuration for easier integration in downstream projects.
+- Docker images now include a `:latest` tag for the most recent stable release.
 
-___
+## Bug Fixes
+- **#42 (Deserialize issue):** Fixed `CCSDS::Packet::deserialize(data, headerType, headerSize)` skipping primary header processing.
+- Fixed off-by-one errors in packet length validation during deserialization.
+- Corrected `PusB` `eventId` type from `uint8_t` to `uint16_t` to prevent data truncation.
+- Fixed `setApplicationData` return value handling in tests to resolve compiler warnings.
 
-## Features
-Cross build support for
-- arm-none-eabi (tested on STM32H755Z-Q)
-- aarch64-linux-gnu (tested on Raspberry PI 5)
-
-pre-packaged static lib for arm baremetal and .deb for aarch64 libraries.
-___
+## Enhancements
+- Added `CCSDSPackConfig.cmake.in` template for robust `find_package(CCSDSPack CONFIG)` support.
+- Improved `build_terminal.sh` for reliable test execution regardless of current working directory.
+- Expanded test suite with `testGroupEdgeCases.cpp` covering PUS B/C edge cases and large payloads.
 
 ## Distribution
-
-- Debian package (.deb) available in [Releases](https://github.com/ExoSpaceLabs/CCSDSPack/releases).
-```bash
-sudo dpkg -i ccsdspack-<version>-Linux-x86_64.deb
-```
-
 - Docker image published to GHCR:
 ```bash
-docker pull ghcr.io/exospacelabs/ccsdspack:v1.1.0
-docker run --rm ghcr.io/exospacelabs/ccsdspack:v1.1.0 /usr/bin/CCSDSPack_tester
+docker pull ghcr.io/exospacelabs/ccsdspack:latest
+docker run --rm ghcr.io/exospacelabs/ccsdspack:latest /usr/bin/CCSDSPack_tester
 ```
-___
-
-## Development & CI
-
-- Automated build and test matrix via GitHub Actions.
-- `.deb` / `.tar.gz` packaging and artifact upload. 
-- Automatic Docker image builds for tagged releases (published on GHCR). 
-- UML diagrams and docs generation integrated (clang-uml + Doxygen configs included).
 
 ___
 
-## Documentation
-
-- Project docs available at: https://exospacelabs.github.io/
-- See `EXAMPLES.md` for usage examples (including how to implement a custom abstract secondary header).
-
-___
-
-## Next Steps
-- Expanded examples for real-world CCSDS telemetry/telecommand flows.
-- Continuous improvements to documentation and diagrams.
-
-___
-
-This release provides a stable baseline for mission prototyping and educational use.
-From here, future updates will add optional features and refinements without breaking existing APIs.
-
-___
+For detailed changes, see `CHANGE_LOG.md`.

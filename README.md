@@ -248,23 +248,31 @@ Prebuilt Docker images of CCSDSPack are published on [GHCR](https://github.com/E
 They provide a ready-to-use environment with the library and command-line tools already installed, 
 so you don’t need to compile from source or manage dependencies manually (almost none in this case).
 
-Pull a specific release image:
+Pull a specific release image or the latest version:
 ```bash
 
  docker pull ghcr.io/exospacelabs/ccsdspack:v<version>
+ # OR
+ docker pull ghcr.io/exospacelabs/ccsdspack:latest
 ```
 **Example usage:**
 
-Pull version 1.1.0 of the container
+Pull version 1.1.1 of the container
 ```bash
 
-docker pull ghcr.io/exospacelabs/ccsdspack:v1.1.0
+docker pull ghcr.io/exospacelabs/ccsdspack:v1.1.1
 ```
 
-Test the library by run the `CCSDSPack_tester` executable as follows.
+Or pull the latest version:
 ```bash
 
-docker run ghcr.io/exospacelabs/ccsdspack:v1.1.0 /usr/bin/CCSDSPack_tester
+docker pull ghcr.io/exospacelabs/ccsdspack:latest
+```
+
+Test the library by running the `CCSDSPack_tester` executable as follows.
+```bash
+
+docker run --rm ghcr.io/exospacelabs/ccsdspack:latest /usr/bin/CCSDSPack_tester
 ```
 The container includes the executables:
 
@@ -277,7 +285,7 @@ With a mounted volume, you can encode, decode, and validate packets against file
 For exploratory use, start an interactive shell inside the container:
 ```bash
 
-docker run -it --rm ghcr.io/exospacelabs/ccsdspack:v1.0.0 /bin/bash
+docker run -it --rm ghcr.io/exospacelabs/ccsdspack:latest /bin/bash
 ```
 
 ___
