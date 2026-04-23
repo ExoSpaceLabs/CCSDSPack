@@ -97,9 +97,9 @@ Collaboration diagram for PusB:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:add881edda38f15bc3f25c955915caff5" id="r_add881edda38f15bc3f25c955915caff5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusB.html#add881edda38f15bc3f25c955915caff5">PusB</a> ()=default</td></tr>
 <tr class="separator:add881edda38f15bc3f25c955915caff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36ff94b04a5b708e79fa4efd7b9e9d8a" id="r_a36ff94b04a5b708e79fa4efd7b9e9d8a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusB.html#a36ff94b04a5b708e79fa4efd7b9e9d8a">PusB</a> (const std::uint8_t version, const std::uint8_t serviceType, const std::uint8_t serviceSubtype, const std::uint8_t sourceID, const std::uint8_t eventID, const std::uint16_t dataLength)</td></tr>
-<tr class="memdesc:a36ff94b04a5b708e79fa4efd7b9e9d8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classPusB.html" title="Represents a PUS Type B (Event Reporting) header.">PusB</a> object with all fields explicitly set.  <br /></td></tr>
-<tr class="separator:a36ff94b04a5b708e79fa4efd7b9e9d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c1c424b5bf3519ad9ce9e3c23c91ef4" id="r_a7c1c424b5bf3519ad9ce9e3c23c91ef4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusB.html#a7c1c424b5bf3519ad9ce9e3c23c91ef4">PusB</a> (const std::uint8_t version, const std::uint8_t serviceType, const std::uint8_t serviceSubtype, const std::uint8_t sourceID, const std::uint16_t eventID, const std::uint16_t dataLength)</td></tr>
+<tr class="memdesc:a7c1c424b5bf3519ad9ce9e3c23c91ef4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classPusB.html" title="Represents a PUS Type B (Event Reporting) header.">PusB</a> object with all fields explicitly set.  <br /></td></tr>
+<tr class="separator:a7c1c424b5bf3519ad9ce9e3c23c91ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97048e508a7db98824166c5e5d6b176f" id="r_a97048e508a7db98824166c5e5d6b176f"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusB.html#a97048e508a7db98824166c5e5d6b176f">getVersion</a> () const</td></tr>
 <tr class="separator:a97048e508a7db98824166c5e5d6b176f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5613b257c8144c6791a4512b1db17a9" id="r_ab5613b257c8144c6791a4512b1db17a9"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusB.html#ab5613b257c8144c6791a4512b1db17a9">getServiceType</a> () const</td></tr>
@@ -201,8 +201,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a36ff94b04a5b708e79fa4efd7b9e9d8a" name="a36ff94b04a5b708e79fa4efd7b9e9d8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36ff94b04a5b708e79fa4efd7b9e9d8a">&#9670;&#160;</a></span>PusB() <span class="overload">[2/2]</span></h2>
+<a id="a7c1c424b5bf3519ad9ce9e3c23c91ef4" name="a7c1c424b5bf3519ad9ce9e3c23c91ef4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c1c424b5bf3519ad9ce9e3c23c91ef4">&#9670;&#160;</a></span>PusB() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -237,7 +237,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const std::uint8_t&#160;</td>
+          <td class="paramtype">const std::uint16_t&#160;</td>
           <td class="paramname"><em>eventID</em>, </td>
         </tr>
         <tr>
@@ -273,7 +273,7 @@ Additional Inherited Members</h2></td></tr>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00097">97</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                                                                     : <a class="code hl_variable" href="classPusB.html#aa8fa3186f8a98c4c75302a59b331515c">m_version</a>(version &amp; 0x7),</div>
+<div class="fragment"><div class="line"><span class="lineno">   98</span>                                                                                                      : <a class="code hl_variable" href="classPusB.html#aa8fa3186f8a98c4c75302a59b331515c">m_version</a>(version &amp; 0x7),</div>
 <div class="line"><span class="lineno">   99</span>      <a class="code hl_variable" href="classPusB.html#a668a89c2575e1e3449db0fa94f11eb12">m_serviceType</a>(serviceType), <a class="code hl_variable" href="classPusB.html#a47c98bfe691ff9771280463a43726b9b">m_serviceSubType</a>(serviceSubtype), <a class="code hl_variable" href="classPusB.html#a6a9946923906a35b093b6ee8a3da06ab">m_sourceID</a>(sourceID), <a class="code hl_variable" href="classPusB.html#a7ae436a7014640da3fd4b5688b555531">m_eventID</a>(eventID),</div>
 <div class="line"><span class="lineno">  100</span>      <a class="code hl_variable" href="classPusB.html#a8f209e2c71dd532b14ff7e7cb47f48b9">m_dataLength</a>(dataLength) {</div>
 <div class="line"><span class="lineno">  101</span>    }</div>
@@ -599,7 +599,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">  132</span>  std::uint8_t serviceType = 0;</div>
 <div class="line"><span class="lineno">  133</span>  std::uint8_t serviceSubType = 0;</div>
 <div class="line"><span class="lineno">  134</span>  std::uint8_t sourceId = 0;</div>
-<div class="line"><span class="lineno">  135</span>  std::uint8_t eventId = 0;</div>
+<div class="line"><span class="lineno">  135</span>  std::uint16_t eventId = 0;</div>
 <div class="line"><span class="lineno">  136</span> </div>
 <div class="line"><span class="lineno">  137</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;pus_version&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::ErrorCode::CONFIG_FILE_ERROR</a>,<span class="stringliteral">&quot;Config: Missing string field: pus_version&quot;</span>);</div>
 <div class="line"><span class="lineno">  138</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!cfg.<a class="code hl_function" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a>(<span class="stringliteral">&quot;pus_service_type&quot;</span>), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::ErrorCode::CONFIG_FILE_ERROR</a>,<span class="stringliteral">&quot;Config: Missing string field: pus_service_type&quot;</span>);</div>
