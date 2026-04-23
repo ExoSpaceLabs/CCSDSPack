@@ -203,27 +203,24 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &da
   FORWARD_RESULT(secondaryHeader->deserialize(dataFieldHeaderVector ));
   setDataFieldHeader(secondaryHeader);
 
-  if (data.size() > (8 + headerDataSizeBytes)) {
-    std::vector<std::uint8_t> dataFieldVector;
-
-    if (data.size() > (9 + headerDataSizeBytes)) {
-      std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
-    }
-    FORWARD_RESULT(deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector));
+  std::vector<std::uint8_t> dataFieldVector;
+  if (data.size() > (6 + headerDataSizeBytes)) {
+    std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
   }
+  FORWARD_RESULT(deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector));
 
   return true;
 }
 
 CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &data, const std::uint16_t headerDataSizeBytes) {
-  RET_IF_ERR_MSG(data.size() <= (8 + headerDataSizeBytes), ErrorCode::INVALID_DATA,
-                 "Cannot Serialize Packet, Invalid Data provided");
+  RET_IF_ERR_MSG(data.size() < (8 + headerDataSizeBytes), ErrorCode::INVALID_DATA,
+                 "Cannot Deserialize Packet, Invalid Data provided");
 
   std::vector<std::uint8_t> secondaryHeader;
   std::vector<std::uint8_t> dataFieldVector;
   std::copy(data.begin() + 6, data.begin() + 6 + headerDataSizeBytes, std::back_inserter(secondaryHeader));
   FORWARD_RESULT(m_dataField.setDataFieldHeader(secondaryHeader));
-  if (data.size() > (7 + headerDataSizeBytes)) {
+  if (data.size() > (6 + headerDataSizeBytes)) {
     std::copy(data.begin() + 6 + headerDataSizeBytes, data.end(), std::back_inserter(dataFieldVector));
   }
   FORWARD_RESULT(deserialize({data[0], data[1], data[2], data[3], data[4], data[5]}, dataFieldVector));

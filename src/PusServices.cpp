@@ -132,7 +132,7 @@ CCSDS::ResultBool PusB::loadFromConfig(const Config &cfg) {
   std::uint8_t serviceType = 0;
   std::uint8_t serviceSubType = 0;
   std::uint8_t sourceId = 0;
-  std::uint8_t eventId = 0;
+  std::uint16_t eventId = 0;
 
   RET_IF_ERR_MSG(!cfg.isKey("pus_version"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_version");
   RET_IF_ERR_MSG(!cfg.isKey("pus_service_type"), CCSDS::ErrorCode::CONFIG_FILE_ERROR,"Config: Missing string field: pus_service_type");

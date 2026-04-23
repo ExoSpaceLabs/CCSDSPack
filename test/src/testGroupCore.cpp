@@ -463,7 +463,9 @@ void testGroupCore(TestManager *tester, const std::string &description) {
       packet.setUpdatePacketEnable(false);
       TEST_VOID(packet.deserialize(expected, "PusA"));
       auto ret = packet.serialize();
-      return std::equal(expected.begin(), expected.end(), ret.begin());
+      if (!std::equal(expected.begin(), expected.end(), ret.begin())) return false;
+      if (packet.getPrimaryHeader().getAPID() != 0x7FF) return false;
+      return true;
     });
 
   tester->unitTest(

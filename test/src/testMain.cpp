@@ -17,5 +17,8 @@ int main() {
   // perform packet management tests on the library
   testGroupManagement(&tester, "Management of CCSDS packet tests.");
 
+  // perform edge cases tests on the library
+  testGroupEdgeCases(&tester, "Edge cases and detailed PUS checks.");
+
   return tester.Result();
 }
