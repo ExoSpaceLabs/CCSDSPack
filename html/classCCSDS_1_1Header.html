@@ -182,7 +182,7 @@ Private Attributes</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Manages the decomposition and manipulation of <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> primary headers. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00080">80</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00083">83</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac77c99237150d1f3a4740a6deaa0f51c" name="ac77c99237150d1f3a4740a6deaa0f51c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac77c99237150d1f3a4740a6deaa0f51c">&#9670;&#160;</a></span>Header()</h2>
@@ -237,21 +237,21 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00004">4</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">    4</span>                                                                          {</div>
-<div class="line"><span class="lineno">    5</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() != 6, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">ErrorCode::INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid Header Data provided: size != 6&quot;</span>);</div>
-<div class="line"><span class="lineno">    6</span> </div>
-<div class="line"><span class="lineno">    7</span>  std::uint64_t headerData = 0;</div>
-<div class="line"><span class="lineno">    8</span>  <span class="keywordflow">for</span> (std::uint8_t i = 0; i &lt; 6; ++i) {</div>
-<div class="line"><span class="lineno">    9</span>    headerData |= <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(data[i]) &lt;&lt; (40 - i * 8); <span class="comment">// Combine MSB to LSB</span></div>
-<div class="line"><span class="lineno">   10</span>  }</div>
-<div class="line"><span class="lineno">   11</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1Header.html#ac4a56ea430e71c2cf43dfa9a0c3df534">setData</a>(headerData));</div>
-<div class="line"><span class="lineno">   12</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   13</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00149">CCSDSResult.h:149</a></div></div>
-<div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Macro to return a result as-is (for functions returning Result&lt;T&gt;).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00207">CCSDSResult.h:207</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_ac4a56ea430e71c2cf43dfa9a0c3df534"><div class="ttname"><a href="classCCSDS_1_1Header.html#ac4a56ea430e71c2cf43dfa9a0c3df534">CCSDS::Header::setData</a></div><div class="ttdeci">ResultBool setData(const std::uint64_t &amp;data)</div><div class="ttdoc">Sets the header data from a 64-bit integer representation.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00015">CCSDSHeader.cpp:15</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">CCSDS::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdoc">Header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00025">CCSDSResult.h:25</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00007">7</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">    7</span>                                                                          {</div>
+<div class="line"><span class="lineno">    8</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data.size() != 6, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">ErrorCode::INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid Header Data provided: size != 6&quot;</span>);</div>
+<div class="line"><span class="lineno">    9</span> </div>
+<div class="line"><span class="lineno">   10</span>  std::uint64_t headerData = 0;</div>
+<div class="line"><span class="lineno">   11</span>  <span class="keywordflow">for</span> (std::uint8_t i = 0; i &lt; 6; ++i) {</div>
+<div class="line"><span class="lineno">   12</span>    headerData |= <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(data[i]) &lt;&lt; (40 - i * 8); <span class="comment">// Combine MSB to LSB</span></div>
+<div class="line"><span class="lineno">   13</span>  }</div>
+<div class="line"><span class="lineno">   14</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classCCSDS_1_1Header.html#ac4a56ea430e71c2cf43dfa9a0c3df534">setData</a>(headerData));</div>
+<div class="line"><span class="lineno">   15</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   16</span>}</div>
+<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00152">CCSDSResult.h:152</a></div></div>
+<div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Macro to return a result as-is (for functions returning Result&lt;T&gt;).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00210">CCSDSResult.h:210</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_ac4a56ea430e71c2cf43dfa9a0c3df534"><div class="ttname"><a href="classCCSDS_1_1Header.html#ac4a56ea430e71c2cf43dfa9a0c3df534">CCSDS::Header::setData</a></div><div class="ttdeci">ResultBool setData(const std::uint64_t &amp;data)</div><div class="ttdoc">Sets the header data from a 64-bit integer representation.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00018">CCSDSHeader.cpp:18</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">CCSDS::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdoc">Header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00028">CCSDSResult.h:28</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -290,7 +290,7 @@ Here is the caller graph for this function:</div>
 
 <p>11 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00087">87</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00090">90</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -324,7 +324,7 @@ Here is the caller graph for this function:</div>
 
 <p>1 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00086">86</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00089">89</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -358,7 +358,7 @@ Here is the caller graph for this function:</div>
 
 <p>16 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00090">90</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00093">93</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -395,23 +395,23 @@ Here is the caller graph for this function:</div>
 <dl class="section note"><dt>Note</dt><dd>if data has not been set it is initialized as all 0s.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The full header as a 64-bit integer. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00108">108</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  108</span>                                {</div>
-<div class="line"><span class="lineno">  109</span>      <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a> &lt;&lt; 14) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a>;</div>
-<div class="line"><span class="lineno">  110</span>      <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a> &lt;&lt; 13) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> &lt;&lt; 12) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a> &lt;&lt; 11) |</div>
-<div class="line"><span class="lineno">  111</span>                                         <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a>;</div>
-<div class="line"><span class="lineno">  112</span>      <span class="keywordflow">return</span> (<span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a>) &lt;&lt; 32) | (</div>
-<div class="line"><span class="lineno">  113</span>               <span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a>) &lt;&lt; 16) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a>;</div>
-<div class="line"><span class="lineno">  114</span>    }</div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a14427bec85fa1c573ca2b1d1f2cc4900"><div class="ttname"><a href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">CCSDS::Header::m_type</a></div><div class="ttdeci">std::uint8_t m_type</div><div class="ttdoc">1 bit second of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00167">CCSDSHeader.h:167</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a4a068c6d86dec9fb003410e8a3dcb97f"><div class="ttname"><a href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">CCSDS::Header::m_sequenceCount</a></div><div class="ttdeci">std::uint16_t m_sequenceCount</div><div class="ttdoc">14 bit last of sequence control</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00173">CCSDSHeader.h:173</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a5816aadc486544cbe6fae3261f149f32"><div class="ttname"><a href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">CCSDS::Header::m_sequenceFlags</a></div><div class="ttdeci">std::uint8_t m_sequenceFlags</div><div class="ttdoc">2 bit first of sequence control / ESequenceFlag enum.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00172">CCSDSHeader.h:172</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a896e9ba2357c0ed3734d9c8bc0974004"><div class="ttname"><a href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">CCSDS::Header::m_dataLength</a></div><div class="ttdeci">std::uint16_t m_dataLength</div><div class="ttdoc">data packet length 16 bits 4 hex</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00178">CCSDSHeader.h:178</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a9a9e6f49a6bf4755142d4b570c000b1c"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">CCSDS::Header::m_versionNumber</a></div><div class="ttdeci">std::uint8_t m_versionNumber</div><div class="ttdoc">3 bit first of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00164">CCSDSHeader.h:164</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_aca94de1144b8a178805095b2ce2b2fe5"><div class="ttname"><a href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">CCSDS::Header::m_packetSequenceControl</a></div><div class="ttdeci">std::uint16_t m_packetSequenceControl</div><div class="ttdoc">packet sequence control 16 bit 4 hex</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00177">CCSDSHeader.h:177</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_ad25532ee627872be95df48fe10bcc042"><div class="ttname"><a href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">CCSDS::Header::m_APID</a></div><div class="ttdeci">std::uint16_t m_APID</div><div class="ttdoc">11 bit last of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00169">CCSDSHeader.h:169</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_ad3d253f470aa65059cc6b55c065fc810"><div class="ttname"><a href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">CCSDS::Header::m_packetIdentificationAndVersion</a></div><div class="ttdeci">std::uint16_t m_packetIdentificationAndVersion</div><div class="ttdoc">packet id and version 16 bit 4 hex</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00176">CCSDSHeader.h:176</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_aeadec19c8855007b356a7907b76b86ce"><div class="ttname"><a href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">CCSDS::Header::m_dataFieldHeaderFlag</a></div><div class="ttdeci">std::uint8_t m_dataFieldHeaderFlag</div><div class="ttdoc">1 bit third of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00168">CCSDSHeader.h:168</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00111">111</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  111</span>                                {</div>
+<div class="line"><span class="lineno">  112</span>      <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a> &lt;&lt; 14) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a>;</div>
+<div class="line"><span class="lineno">  113</span>      <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a> &lt;&lt; 13) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> &lt;&lt; 12) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a> &lt;&lt; 11) |</div>
+<div class="line"><span class="lineno">  114</span>                                         <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a>;</div>
+<div class="line"><span class="lineno">  115</span>      <span class="keywordflow">return</span> (<span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a>) &lt;&lt; 32) | (</div>
+<div class="line"><span class="lineno">  116</span>               <span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a>) &lt;&lt; 16) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a>;</div>
+<div class="line"><span class="lineno">  117</span>    }</div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a14427bec85fa1c573ca2b1d1f2cc4900"><div class="ttname"><a href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">CCSDS::Header::m_type</a></div><div class="ttdeci">std::uint8_t m_type</div><div class="ttdoc">1 bit second of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00170">CCSDSHeader.h:170</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a4a068c6d86dec9fb003410e8a3dcb97f"><div class="ttname"><a href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">CCSDS::Header::m_sequenceCount</a></div><div class="ttdeci">std::uint16_t m_sequenceCount</div><div class="ttdoc">14 bit last of sequence control</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00176">CCSDSHeader.h:176</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a5816aadc486544cbe6fae3261f149f32"><div class="ttname"><a href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">CCSDS::Header::m_sequenceFlags</a></div><div class="ttdeci">std::uint8_t m_sequenceFlags</div><div class="ttdoc">2 bit first of sequence control / ESequenceFlag enum.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00175">CCSDSHeader.h:175</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a896e9ba2357c0ed3734d9c8bc0974004"><div class="ttname"><a href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">CCSDS::Header::m_dataLength</a></div><div class="ttdeci">std::uint16_t m_dataLength</div><div class="ttdoc">data packet length 16 bits 4 hex</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00181">CCSDSHeader.h:181</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a9a9e6f49a6bf4755142d4b570c000b1c"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">CCSDS::Header::m_versionNumber</a></div><div class="ttdeci">std::uint8_t m_versionNumber</div><div class="ttdoc">3 bit first of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00167">CCSDSHeader.h:167</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_aca94de1144b8a178805095b2ce2b2fe5"><div class="ttname"><a href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">CCSDS::Header::m_packetSequenceControl</a></div><div class="ttdeci">std::uint16_t m_packetSequenceControl</div><div class="ttdoc">packet sequence control 16 bit 4 hex</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00180">CCSDSHeader.h:180</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_ad25532ee627872be95df48fe10bcc042"><div class="ttname"><a href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">CCSDS::Header::m_APID</a></div><div class="ttdeci">std::uint16_t m_APID</div><div class="ttdoc">11 bit last of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00172">CCSDSHeader.h:172</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_ad3d253f470aa65059cc6b55c065fc810"><div class="ttname"><a href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">CCSDS::Header::m_packetIdentificationAndVersion</a></div><div class="ttdeci">std::uint16_t m_packetIdentificationAndVersion</div><div class="ttdoc">packet id and version 16 bit 4 hex</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00179">CCSDSHeader.h:179</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_aeadec19c8855007b356a7907b76b86ce"><div class="ttname"><a href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">CCSDS::Header::m_dataFieldHeaderFlag</a></div><div class="ttdeci">std::uint8_t m_dataFieldHeaderFlag</div><div class="ttdoc">1 bit third of packet identification</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00171">CCSDSHeader.h:171</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -445,7 +445,7 @@ Here is the caller graph for this function:</div>
 
 <p>14 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00089">89</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00092">92</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -479,7 +479,7 @@ Here is the caller graph for this function:</div>
 
 <p>2 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00088">88</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00091">91</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -513,7 +513,7 @@ Here is the caller graph for this function:</div>
 
 <p>1 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00085">85</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00088">88</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -547,7 +547,7 @@ Here is the caller graph for this function:</div>
 
 <p>3 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00084">84</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00087">87</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -575,22 +575,22 @@ Here is the caller graph for this function:</div>
 <dl class="section note"><dt>Note</dt><dd>if data has not been set it is initialized as all 0s.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;std::uint8_t&gt; </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00035">35</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   35</span>                                             {</div>
-<div class="line"><span class="lineno">   36</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a>) &lt;&lt; 14) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a>;</div>
-<div class="line"><span class="lineno">   37</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a>) &lt;&lt; 13) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> &lt;&lt; 12) | <span class="keyword">static_cast&lt;</span></div>
-<div class="line"><span class="lineno">   38</span>                                       std::uint16_t<span class="keyword">&gt;</span>((<a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a>) &lt;&lt; 11) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a>;</div>
-<div class="line"><span class="lineno">   39</span> </div>
-<div class="line"><span class="lineno">   40</span>  std::vector data{</div>
-<div class="line"><span class="lineno">   41</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 8),</div>
-<div class="line"><span class="lineno">   42</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &amp; 0xFF),</div>
-<div class="line"><span class="lineno">   43</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &gt;&gt; 8),</div>
-<div class="line"><span class="lineno">   44</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &amp; 0xFF),</div>
-<div class="line"><span class="lineno">   45</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> &gt;&gt; 8),</div>
-<div class="line"><span class="lineno">   46</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> &amp; 0xFF),</div>
-<div class="line"><span class="lineno">   47</span>  };</div>
-<div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> data;</div>
-<div class="line"><span class="lineno">   49</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00038">38</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   38</span>                                             {</div>
+<div class="line"><span class="lineno">   39</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a>) &lt;&lt; 14) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a>;</div>
+<div class="line"><span class="lineno">   40</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a>) &lt;&lt; 13) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> &lt;&lt; 12) | <span class="keyword">static_cast&lt;</span></div>
+<div class="line"><span class="lineno">   41</span>                                       std::uint16_t<span class="keyword">&gt;</span>((<a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a>) &lt;&lt; 11) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a>;</div>
+<div class="line"><span class="lineno">   42</span> </div>
+<div class="line"><span class="lineno">   43</span>  std::vector data{</div>
+<div class="line"><span class="lineno">   44</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 8),</div>
+<div class="line"><span class="lineno">   45</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &amp; 0xFF),</div>
+<div class="line"><span class="lineno">   46</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &gt;&gt; 8),</div>
+<div class="line"><span class="lineno">   47</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &amp; 0xFF),</div>
+<div class="line"><span class="lineno">   48</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> &gt;&gt; 8),</div>
+<div class="line"><span class="lineno">   49</span>    <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span> <span class="keywordtype">char</span><span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> &amp; 0xFF),</div>
+<div class="line"><span class="lineno">   50</span>  };</div>
+<div class="line"><span class="lineno">   51</span>  <span class="keywordflow">return</span> data;</div>
+<div class="line"><span class="lineno">   52</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -620,7 +620,7 @@ Here is the caller graph for this function:</div>
 
 <p>11 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00119">119</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00122">122</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 
 </div>
 </div>
@@ -650,20 +650,20 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>none. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00051">51</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>                                                   {</div>
-<div class="line"><span class="lineno">   52</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a> = data.versionNumber &amp; 0x0007;</div>
-<div class="line"><span class="lineno">   53</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> = data.type &amp; 0x0001;</div>
-<div class="line"><span class="lineno">   54</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a> = data.dataFieldHeaderFlag &amp; 0x0001;</div>
-<div class="line"><span class="lineno">   55</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a> = data.APID &amp; 0x07FF;</div>
-<div class="line"><span class="lineno">   56</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a> = data.sequenceFlags &amp; 0x0003;</div>
-<div class="line"><span class="lineno">   57</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a> = data.sequenceCount &amp; 0x3FFF;</div>
-<div class="line"><span class="lineno">   58</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> = data.dataLength;</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a>) &lt;&lt; 14) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a>;</div>
-<div class="line"><span class="lineno">   61</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a>) &lt;&lt; 13) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> &lt;&lt; 12) | <span class="keyword">static_cast&lt;</span></div>
-<div class="line"><span class="lineno">   62</span>                                       std::uint16_t<span class="keyword">&gt;</span>((<a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a>) &lt;&lt; 11) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a>;</div>
-<div class="line"><span class="lineno">   63</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00054">54</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   54</span>                                                   {</div>
+<div class="line"><span class="lineno">   55</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a> = data.versionNumber &amp; 0x0007;</div>
+<div class="line"><span class="lineno">   56</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> = data.type &amp; 0x0001;</div>
+<div class="line"><span class="lineno">   57</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a> = data.dataFieldHeaderFlag &amp; 0x0001;</div>
+<div class="line"><span class="lineno">   58</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a> = data.APID &amp; 0x07FF;</div>
+<div class="line"><span class="lineno">   59</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a> = data.sequenceFlags &amp; 0x0003;</div>
+<div class="line"><span class="lineno">   60</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a> = data.sequenceCount &amp; 0x3FFF;</div>
+<div class="line"><span class="lineno">   61</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> = data.dataLength;</div>
+<div class="line"><span class="lineno">   62</span> </div>
+<div class="line"><span class="lineno">   63</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a>) &lt;&lt; 14) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a>;</div>
+<div class="line"><span class="lineno">   64</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a>) &lt;&lt; 13) | (<a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> &lt;&lt; 12) | <span class="keyword">static_cast&lt;</span></div>
+<div class="line"><span class="lineno">   65</span>                                       std::uint16_t<span class="keyword">&gt;</span>((<a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a>) &lt;&lt; 11) | <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a>;</div>
+<div class="line"><span class="lineno">   66</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -694,26 +694,26 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>ResultBool. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00015">15</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   15</span>                                                            {</div>
-<div class="line"><span class="lineno">   16</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data &gt; 0xFFFFFFFFFFFF, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">ErrorCode::INVALID_HEADER_DATA</a>,</div>
-<div class="line"><span class="lineno">   17</span>                 <span class="stringliteral">&quot;Input data exceeds expected bit size for version or size.&quot;</span>);</div>
-<div class="line"><span class="lineno">   18</span>  <span class="comment">// Decompose data using mask and shifts</span></div>
-<div class="line"><span class="lineno">   19</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> = (data &amp; 0xFFFF); <span class="comment">// last 16 bits</span></div>
-<div class="line"><span class="lineno">   20</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (data &gt;&gt; 16) &amp; 0xFFFF; <span class="comment">// middle 16 bits</span></div>
-<div class="line"><span class="lineno">   21</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (data &gt;&gt; 32); <span class="comment">// first 16 bits</span></div>
-<div class="line"><span class="lineno">   22</span> </div>
-<div class="line"><span class="lineno">   23</span>  <span class="comment">// decompose packet identifier</span></div>
-<div class="line"><span class="lineno">   24</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 13); <span class="comment">// First 3 bits for version</span></div>
-<div class="line"><span class="lineno">   25</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 12) &amp; 0x1; <span class="comment">// Next 1 bit</span></div>
-<div class="line"><span class="lineno">   26</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 11) &amp; 0x1; <span class="comment">// Next 1 bit</span></div>
-<div class="line"><span class="lineno">   27</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &amp; 0x07FF); <span class="comment">// Last 11 bits</span></div>
-<div class="line"><span class="lineno">   28</span> </div>
-<div class="line"><span class="lineno">   29</span>  <span class="comment">// decompose sequence control</span></div>
-<div class="line"><span class="lineno">   30</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &gt;&gt; 14); <span class="comment">// first 2 bits</span></div>
-<div class="line"><span class="lineno">   31</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &amp; 0x3FFF); <span class="comment">// Last 14 bits.</span></div>
-<div class="line"><span class="lineno">   32</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   33</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00018">18</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   18</span>                                                            {</div>
+<div class="line"><span class="lineno">   19</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(data &gt; 0xFFFFFFFFFFFF, <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">ErrorCode::INVALID_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">   20</span>                 <span class="stringliteral">&quot;Input data exceeds expected bit size for version or size.&quot;</span>);</div>
+<div class="line"><span class="lineno">   21</span>  <span class="comment">// Decompose data using mask and shifts</span></div>
+<div class="line"><span class="lineno">   22</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a896e9ba2357c0ed3734d9c8bc0974004">m_dataLength</a> = (data &amp; 0xFFFF); <span class="comment">// last 16 bits</span></div>
+<div class="line"><span class="lineno">   23</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> = (data &gt;&gt; 16) &amp; 0xFFFF; <span class="comment">// middle 16 bits</span></div>
+<div class="line"><span class="lineno">   24</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> = (data &gt;&gt; 32); <span class="comment">// first 16 bits</span></div>
+<div class="line"><span class="lineno">   25</span> </div>
+<div class="line"><span class="lineno">   26</span>  <span class="comment">// decompose packet identifier</span></div>
+<div class="line"><span class="lineno">   27</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a9a9e6f49a6bf4755142d4b570c000b1c">m_versionNumber</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 13); <span class="comment">// First 3 bits for version</span></div>
+<div class="line"><span class="lineno">   28</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a14427bec85fa1c573ca2b1d1f2cc4900">m_type</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 12) &amp; 0x1; <span class="comment">// Next 1 bit</span></div>
+<div class="line"><span class="lineno">   29</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#aeadec19c8855007b356a7907b76b86ce">m_dataFieldHeaderFlag</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &gt;&gt; 11) &amp; 0x1; <span class="comment">// Next 1 bit</span></div>
+<div class="line"><span class="lineno">   30</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#ad25532ee627872be95df48fe10bcc042">m_APID</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#ad3d253f470aa65059cc6b55c065fc810">m_packetIdentificationAndVersion</a> &amp; 0x07FF); <span class="comment">// Last 11 bits</span></div>
+<div class="line"><span class="lineno">   31</span> </div>
+<div class="line"><span class="lineno">   32</span>  <span class="comment">// decompose sequence control</span></div>
+<div class="line"><span class="lineno">   33</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a5816aadc486544cbe6fae3261f149f32">m_sequenceFlags</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &gt;&gt; 14); <span class="comment">// first 2 bits</span></div>
+<div class="line"><span class="lineno">   34</span>  <a class="code hl_variable" href="classCCSDS_1_1Header.html#a4a068c6d86dec9fb003410e8a3dcb97f">m_sequenceCount</a> = (<a class="code hl_variable" href="classCCSDS_1_1Header.html#aca94de1144b8a178805095b2ce2b2fe5">m_packetSequenceControl</a> &amp; 0x3FFF); <span class="comment">// Last 14 bits.</span></div>
+<div class="line"><span class="lineno">   35</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   36</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -748,7 +748,7 @@ Here is the caller graph for this function:</div>
 
 <p>1 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00118">118</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00121">121</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -783,7 +783,7 @@ Here is the caller graph for this function:</div>
 
 <p>16 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00122">122</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00125">125</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -818,7 +818,7 @@ Here is the caller graph for this function:</div>
 
 <p>14 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00121">121</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00124">124</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -853,7 +853,7 @@ Here is the caller graph for this function:</div>
 
 <p>2 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00120">120</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00123">123</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 
 </div>
 </div>
@@ -883,7 +883,7 @@ Here is the caller graph for this function:</div>
 
 <p>1 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00117">117</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00120">120</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 
 </div>
 </div>
@@ -913,7 +913,7 @@ Here is the caller graph for this function:</div>
 
 <p>3 bits </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00116">116</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00119">119</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
 
 </div>
 </div>
@@ -940,8 +940,8 @@ Here is the caller graph for this function:</div>
 
 <p>11 bit last of packet identification </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00169">169</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  169</span>{};                            </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00172">172</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  172</span>{};                            </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -967,8 +967,8 @@ Here is the caller graph for this function:</div>
 
 <p>1 bit third of packet identification </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00168">168</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  168</span>{};              </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00171">171</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  171</span>{};              </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -994,8 +994,8 @@ Here is the caller graph for this function:</div>
 
 <p>data packet length 16 bits 4 hex </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00178">178</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  178</span>{};                      </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00181">181</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  181</span>{};                      </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1021,8 +1021,8 @@ Here is the caller graph for this function:</div>
 
 <p>packet id and version 16 bit 4 hex </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00176">176</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  176</span>{};  </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00179">179</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  179</span>{};  </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1048,8 +1048,8 @@ Here is the caller graph for this function:</div>
 
 <p>packet sequence control 16 bit 4 hex </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00177">177</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  177</span>{};           </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00180">180</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  180</span>{};           </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1075,8 +1075,8 @@ Here is the caller graph for this function:</div>
 
 <p>14 bit last of sequence control </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00173">173</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  173</span>{};                   </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00176">176</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  176</span>{};                   </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1102,9 +1102,9 @@ Here is the caller graph for this function:</div>
 
 <p>2 bit first of sequence control / ESequenceFlag enum. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00172">172</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  172</span>{<a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">UNSEGMENTED</a>};         </div>
-<div class="ttc" id="anamespaceCCSDS_html_aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634"><div class="ttname"><a href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">CCSDS::UNSEGMENTED</a></div><div class="ttdeci">@ UNSEGMENTED</div><div class="ttdoc">11 Complete packet in a single frame.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00024">CCSDSHeader.h:23</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00175">175</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  175</span>{<a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">UNSEGMENTED</a>};         </div>
+<div class="ttc" id="anamespaceCCSDS_html_aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634"><div class="ttname"><a href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">CCSDS::UNSEGMENTED</a></div><div class="ttdeci">@ UNSEGMENTED</div><div class="ttdoc">11 Complete packet in a single frame.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00027">CCSDSHeader.h:26</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1130,8 +1130,8 @@ Here is the caller graph for this function:</div>
 
 <p>1 bit second of packet identification </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00167">167</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  167</span>{};                             </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00170">170</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  170</span>{};                             </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1157,8 +1157,8 @@ Here is the caller graph for this function:</div>
 
 <p>3 bit first of packet identification </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00164">164</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  164</span>{};                    </div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00167">167</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  167</span>{};                    </div>
 </div><!-- fragment -->
 </div>
 </div>
