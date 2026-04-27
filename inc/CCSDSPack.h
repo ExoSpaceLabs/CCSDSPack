@@ -1,6 +1,5 @@
-//
-// Created by dev on 5/16/25.
-//
+// Copyright 2025-2026 ExoSpaceLabs
+// SPDX-License-Identifier: Apache-2.0
 
 #ifndef CCSDSPACK_H
 #define CCSDSPACK_H

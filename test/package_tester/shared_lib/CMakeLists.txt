@@ -1,3 +1,6 @@
+# Copyright 2025-2026 ExoSpaceLabs
+# SPDX-License-Identifier: Apache-2.0
+
 cmake_minimum_required(VERSION 3.13)
 project(ccsdspack_hello LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)

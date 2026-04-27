@@ -1,3 +1,6 @@
+# Copyright 2025-2026 ExoSpaceLabs
+# SPDX-License-Identifier: Apache-2.0
+
 # cmake/toolchains/arm-none-eabi.cmake
 # Generic bare-metal ARM toolchain for CCSDSPack MCU builds
 
@@ -26,4 +29,3 @@ endif()
 set(CMAKE_C_FLAGS_INIT   "${MCU_FLAGS}")
 set(CMAKE_CXX_FLAGS_INIT "${MCU_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS_INIT "${MCU_FLAGS}")
-

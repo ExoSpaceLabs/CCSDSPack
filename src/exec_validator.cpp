@@ -1,3 +1,6 @@
+// Copyright 2025-2026 ExoSpaceLabs
+// SPDX-License-Identifier: Apache-2.0
+
 
 /**
  * This is the source file that holds the execution logic of ccsds_encoder binary file.

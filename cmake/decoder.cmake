@@ -1,3 +1,6 @@
+# Copyright 2025-2026 ExoSpaceLabs
+# SPDX-License-Identifier: Apache-2.0
+
 set(DECODER_EXEC "ccsds_decoder")
 
 message(STATUS "Building: ${DECODER_EXEC}")
@@ -44,4 +47,3 @@ install(TARGETS ${DECODER_EXEC}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}   # .dll / executables on Windows
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
-

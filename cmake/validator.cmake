@@ -1,3 +1,6 @@
+# Copyright 2025-2026 ExoSpaceLabs
+# SPDX-License-Identifier: Apache-2.0
+
 set(VALIDATOR_EXEC "ccsds_validator")
 
 message(STATUS "Building: ${VALIDATOR_EXEC}")

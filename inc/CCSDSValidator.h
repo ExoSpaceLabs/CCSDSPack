@@ -1,3 +1,6 @@
+// Copyright 2025-2026 ExoSpaceLabs
+// SPDX-License-Identifier: Apache-2.0
+
 /// @file CCSDSValidator.h
 /// @brief Defines the Validator class for CCSDS packet validation.
 #ifndef CCSDS_VALIDATOR_H

@@ -1,6 +1,5 @@
-//
-// Created by inczert on 3/1/25.
-//
+// Copyright 2025-2026 ExoSpaceLabs
+// SPDX-License-Identifier: Apache-2.0
 
 #include <CCSDSValidator.h>
 #include <iostream>

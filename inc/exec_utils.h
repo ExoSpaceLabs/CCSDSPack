@@ -1,6 +1,5 @@
-//
-// Created by dev on 5/13/25.
-//
+// Copyright 2025-2026 ExoSpaceLabs
+// SPDX-License-Identifier: Apache-2.0
 
 #ifndef EXEC_UTILS_H
 #define EXEC_UTILS_H

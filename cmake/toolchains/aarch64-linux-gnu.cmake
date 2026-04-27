@@ -1,3 +1,6 @@
+# Copyright 2025-2026 ExoSpaceLabs
+# SPDX-License-Identifier: Apache-2.0
+
 # cmake/toolchains/aarch64-linux-gnu.cmake
 # Cross-build for Raspberry Pi 5 (arm64 / aarch64)
 

@@ -1,3 +1,6 @@
+// Copyright 2025-2026 ExoSpaceLabs
+// SPDX-License-Identifier: Apache-2.0
+
 #ifndef CCSDS_PACKET_H
 #define CCSDS_PACKET_H
 

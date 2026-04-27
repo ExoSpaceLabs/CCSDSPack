@@ -1,3 +1,6 @@
+# Copyright 2025-2026 ExoSpaceLabs
+# SPDX-License-Identifier: Apache-2.0
+
 # Minimum CMake version
 cmake_minimum_required(VERSION 3.16)
 
