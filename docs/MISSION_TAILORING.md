@@ -67,7 +67,7 @@ A listed selection means that the profile model can express it. It does not mean
 The initial in-code defaults are deliberately conservative and exist for object initialization, not for silently selecting a mission contract:
 
 ```cpp
-CCSDS::v2::MissionProfile profile;
+CCSDS::MissionProfile profile;
 ```
 
 This yields:
