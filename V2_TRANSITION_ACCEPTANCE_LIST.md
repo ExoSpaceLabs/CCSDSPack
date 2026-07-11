@@ -24,7 +24,7 @@ The v2.0.0 release must correct wire-format behaviour, redesign PUS support, int
 
 ---
 
-# Main Issue 1: Define the v2.0.0 Standards and Compliance Baseline
+# Main Issue 1: Define the v2.0.0 Standards and Compliance Baseline (#43)
 
 ## Description
 
@@ -34,14 +34,14 @@ This issue establishes the authoritative compliance scope for implementation, te
 
 ## Acceptance Criteria
 
-- [ ] Exact CCSDS Space Packet Protocol document and issue are identified.
-- [ ] Exact PUS-A reference is identified if PUS-A remains in scope.
-- [ ] ECSS-E-ST-70-41C is identified as the supported PUS-C baseline.
-- [ ] Mandatory and mission-tailored fields are documented.
-- [ ] Unsupported protocol layers and services are explicitly listed.
-- [ ] A compliance traceability document is added to the repository.
+- [x] Exact CCSDS Space Packet Protocol document and issue are identified.
+- [x] Exact PUS-A reference is identified if PUS-A remains in scope.
+- [x] ECSS-E-ST-70-41C is identified as the supported PUS-C baseline.
+- [x] Mandatory and mission-tailored fields are documented.
+- [x] Unsupported protocol layers and services are explicitly listed.
+- [x] A compliance traceability document is added to the repository.
 
-## Sub-Issue 1.1: Create the CCSDS Space Packet compliance matrix
+## Sub-Issue 1.1: Create the CCSDS Space Packet compliance matrix (#44)
 
 ### Description
 
@@ -51,15 +51,15 @@ Each requirement must be marked as implemented, partially implemented, mission-t
 
 ### Acceptance Criteria
 
-- [ ] `docs/CCSDS_COMPLIANCE.md` is added.
-- [ ] Primary-header requirements are mapped.
-- [ ] Packet Data Length requirements are mapped.
-- [ ] Sequence-control requirements are mapped.
-- [ ] Packet boundary and parsing requirements are mapped.
-- [ ] Packet error control assumptions are documented.
-- [ ] Each implemented item references at least one test.
+- [x] `docs/CCSDS_COMPLIANCE.md` is added.
+- [x] Primary-header requirements are mapped.
+- [x] Packet Data Length requirements are mapped.
+- [x] Sequence-control requirements are mapped.
+- [x] Packet boundary and parsing requirements are mapped.
+- [x] Packet error control assumptions are documented.
+- [x] Each implemented item references at least one test.
 
-## Sub-Issue 1.2: Define the supported PUS revisions
+## Sub-Issue 1.2: Define the supported PUS revisions (#45)
 
 ### Description
 
@@ -69,13 +69,13 @@ Clarify that PUS-A and PUS-C refer to revisions of the Packet Utilisation Standa
 
 ### Acceptance Criteria
 
-- [ ] PUS-A scope is explicitly accepted or deferred.
-- [ ] PUS-C is identified as the primary v2 target.
-- [ ] TC and TM headers are documented separately.
-- [ ] The invalid PUS-B concept is explicitly rejected.
-- [ ] Supported PUS revisions are represented by an enum or profile field.
+- [x] PUS-A scope is explicitly accepted or deferred.
+- [x] PUS-C is identified as the primary v2 target.
+- [x] TC and TM headers are documented separately.
+- [x] The invalid PUS-B concept is explicitly rejected.
+- [x] Supported PUS revisions are represented by an enum or profile field.
 
-## Sub-Issue 1.3: Define mission-tailoring requirements
+## Sub-Issue 1.3: Define mission-tailoring requirements (#91)
 
 ### Description
 
@@ -83,12 +83,12 @@ Identify all packet fields and behaviours requiring mission-specific configurati
 
 ### Acceptance Criteria
 
-- [ ] Source-ID width is configurable.
-- [ ] Destination-ID width is configurable.
-- [ ] Packet error control mode is configurable.
-- [ ] Time-field presence is configurable.
-- [ ] Time-code format and length are configurable.
-- [ ] Invalid profile combinations are documented.
+- [x] Source-ID width is configurable.
+- [x] Destination-ID width is configurable.
+- [x] Packet error control mode is configurable.
+- [x] Time-field presence is configurable.
+- [x] Time-code format and length are configurable.
+- [x] Invalid profile combinations are documented.
 
 ---
 
