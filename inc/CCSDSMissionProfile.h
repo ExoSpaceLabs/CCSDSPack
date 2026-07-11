@@ -1,8 +1,8 @@
 // Copyright 2025-2026 ExoSpaceLabs
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef CCSDS_V2_MISSION_PROFILE_H
-#define CCSDS_V2_MISSION_PROFILE_H
+#ifndef CCSDS_MISSION_PROFILE_H
+#define CCSDS_MISSION_PROFILE_H
 
 #include <cstdint>
 
@@ -56,4 +56,4 @@ namespace CCSDS {
 
 } // namespace CCSDS
 
-#endif // CCSDS_V2_MISSION_PROFILE_H
+#endif // CCSDS_MISSION_PROFILE_H

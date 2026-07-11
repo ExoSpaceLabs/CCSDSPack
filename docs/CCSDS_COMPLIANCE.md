@@ -25,7 +25,7 @@ Where this document and an implementation comment disagree, the normative standa
 - There is no standards revision named PUS-B in the selected baseline. Existing `PusB` behavior is non-compliant legacy behavior and shall be removed or renamed as proprietary before v2.0.0.
 - Existing `PusC` behavior is not considered ECSS-E-ST-70-41C compliant merely because of its class name.
 
-The standards-facing representation begins in `inc/CCSDSV2MissionProfile.h` with `PusRevision`, `PacketDirection`, and the mission-profile contract.
+The standards-facing representation begins in `inc/CCSDSMissionProfile.h` with `PusRevision`, `PacketDirection`, and the mission-profile contract.
 
 ## Supported scope
 

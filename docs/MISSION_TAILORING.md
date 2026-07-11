@@ -4,19 +4,19 @@
 
 ECSS-E-ST-70-41C is deliberately mission-tailorable. CCSDSPack v2 therefore does not pretend that one hard-coded secondary-header layout is universally compliant. A mission profile records every selected field width and optional behavior needed to encode and parse packets deterministically.
 
-The initial C++ contract is declared in `inc/CCSDSV2MissionProfile.h`. Phase 3 will add validation and codec integration.
+The initial C++ contract is declared in `inc/CCSDSMissionProfile.h`. Phase 3 will add validation and codec integration.
 
 ## Initial profile fields
 
-| Field | Meaning | Initial representation |
-|---|---|---|
-| PUS revision | Standards revision used by the PUS codec | `PusRevision::C` only for v2.0.0 |
-| Source-ID width | Number of octets used for the source identifier where applicable | `sourceIdOctets` |
-| Destination-ID width | Number of octets used for the destination identifier where applicable | `destinationIdOctets` |
-| Packet error control | Whether a packet has no error-control field or a CRC-16-CCITT field | `packetErrorControl` |
-| TM timestamp presence | Whether the telemetry secondary header carries a timestamp | `telemetryTimestampPresent` |
-| TM time-code family | Selected CCSDS time-code family | `telemetryTimeCode` |
-| TM time-code length | Total encoded timestamp length in octets | `telemetryTimeCodeOctets` |
+| Field | Meaning | Initial representation        |
+|---|---|-------------------------------|
+| PUS revision | Standards revision used by the PUS codec | `PusRevision::C` only for v2+ |
+| Source-ID width | Number of octets used for the source identifier where applicable | `sourceIdOctets`              |
+| Destination-ID width | Number of octets used for the destination identifier where applicable | `destinationIdOctets`         |
+| Packet error control | Whether a packet has no error-control field or a CRC-16-CCITT field | `packetErrorControl`          |
+| TM timestamp presence | Whether the telemetry secondary header carries a timestamp | `telemetryTimestampPresent`   |
+| TM time-code family | Selected CCSDS time-code family | `telemetryTimeCode`           |
+| TM time-code length | Total encoded timestamp length in octets | `telemetryTimeCodeOctets`     |
 
 Widths are expressed in octets. A zero width disables an optional identifier only where the selected packet definition permits absence. The profile is not inferred from packet size.
 
