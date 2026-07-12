@@ -5,6 +5,7 @@
 #include "CCSDSDataField.h"
 #include "CCSDSUtils.h"
 #include <algorithm>
+#include <limits>
 
 //exclude includes when building for MCU
 #ifndef CCSDS_MCU
@@ -14,9 +15,15 @@
 void CCSDS::Packet::update() {
   if (!m_updateStatus && m_enableUpdatePacket) {
     const auto dataField = m_dataField.serialize();
-    const auto dataFiledSize = static_cast<std::uint16_t>(dataField.size());
+    const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
+    constexpr auto maximumPacketDataFieldSize = static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
+
+    if (packetDataFieldSize == 0U || packetDataFieldSize > maximumPacketDataFieldSize) {
+      return;
+    }
+
     const auto dataFieldHeaderFlag(m_dataField.getDataFieldHeaderFlag());
-    m_primaryHeader.setDataLength(dataFiledSize);
+    m_primaryHeader.setDataLength(static_cast<std::uint16_t>(packetDataFieldSize - 1U));
     m_primaryHeader.setDataFieldHeaderFlag(dataFieldHeaderFlag);
     // todo this part needs to be moved out of conditional updating
     if (m_primaryHeader.getSequenceFlags() == UNSEGMENTED) {
@@ -26,7 +33,9 @@ void CCSDS::Packet::update() {
     }
 
     if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
-      m_CRC16 = crc16(dataField, m_CRC16Config.polynomial, m_CRC16Config.initialValue, m_CRC16Config.finalXorValue);
+      auto crcInput = m_primaryHeader.serialize();
+      crcInput.insert(crcInput.end(), dataField.begin(), dataField.end());
+      m_CRC16 = crc16(crcInput, m_CRC16Config.polynomial, m_CRC16Config.initialValue, m_CRC16Config.finalXorValue);
     } else {
       m_CRC16 = 0;
     }
@@ -183,18 +192,25 @@ std::vector<std::uint8_t> CCSDS::Packet::getFullDataFieldBytes() {
 }
 
 std::vector<std::uint8_t> CCSDS::Packet::serialize() {
-  auto header = getPrimaryHeaderBytes();
-  auto dataField = m_dataField.serialize();
-  const auto crc = getCRCVectorBytes();
+  const auto dataField = m_dataField.serialize();
+  const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
+  constexpr auto maximumPacketDataFieldSize = static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
+
+  if (packetDataFieldSize == 0U || packetDataFieldSize > maximumPacketDataFieldSize) {
+    return {};
+  }
+
+  update();
+  const auto header = m_primaryHeader.serialize();
 
   std::vector<std::uint8_t> packet;
-  packet.reserve(header.size() + dataField.size() + crc.size());
+  packet.reserve(header.size() + dataField.size() + getPacketErrorControlSize());
   packet.insert(packet.end(), header.begin(), header.end());
-  if (!getFullDataFieldBytes().empty()) {
-    packet.insert(packet.end(), dataField.begin(), dataField.end());
-  }
-  if (!crc.empty()) {
-    packet.insert(packet.end(), crc.begin(), crc.end());
+  packet.insert(packet.end(), dataField.begin(), dataField.end());
+
+  if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
+    packet.push_back(static_cast<std::uint8_t>((m_CRC16 >> 8) & 0xFFU));
+    packet.push_back(static_cast<std::uint8_t>(m_CRC16 & 0xFFU));
   }
 
   return packet;

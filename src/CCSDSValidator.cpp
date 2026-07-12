@@ -4,8 +4,10 @@
 #include "CCSDSValidator.h"
 #include <CCSDSUtils.h>
 
-void CCSDS::Validator::configure(const bool validatePacketCoherence, bool validateSequenceCount, const bool validateAgainstTemplate) {
+void CCSDS::Validator::configure(const bool validatePacketCoherence, const bool validateSequenceCount,
+                                 const bool validateAgainstTemplate) {
   m_validatePacketCoherence = validatePacketCoherence;
+  m_validateSegmentedCount = validateSequenceCount;
   m_validateAgainstTemplate = validateAgainstTemplate;
 }
 
@@ -18,17 +20,23 @@ bool CCSDS::Validator::validate(const Packet &packet) {
   toValidate.setUpdatePacketEnable(false);
   auto toValidateHeader = toValidate.getPrimaryHeader();
   const auto toValidateHeaderData = toValidateHeader.serialize();
-  // auto coherence checks
   const auto dataFieldBytes = toValidate.getFullDataFieldBytes();
-  const auto dataFieldBytesSize = dataFieldBytes.size();
 
-  // test CRC therefore full data field coherence
   if (m_validatePacketCoherence) {
-    m_report[0] = toValidateHeader.getDataLength() == dataFieldBytesSize;
+    const auto packetDataFieldSize = dataFieldBytes.size() + toValidate.getPacketErrorControlSize();
+    m_report[0] = packetDataFieldSize > 0U
+                  && toValidateHeader.getDataLength() == packetDataFieldSize - 1U;
     result &= m_report[0];
-    const auto calcCRC = crc16(dataFieldBytes);
-    m_report[1] = calcCRC == toValidate.getCRC();
+
+    if (toValidate.getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
+      auto crcInput = toValidateHeaderData;
+      crcInput.insert(crcInput.end(), dataFieldBytes.begin(), dataFieldBytes.end());
+      const auto calculatedCRC = crc16(crcInput, m_CRCConfig.polynomial, m_CRCConfig.initialValue,
+                                       m_CRCConfig.finalXorValue);
+      m_report[1] = calculatedCRC == toValidate.getCRC();
+    }
     result &= m_report[1];
+
     if (toValidateHeader.getSequenceFlags() == UNSEGMENTED) {
       m_report[2] = toValidateHeader.getSequenceCount() == 0;
     } else {
@@ -36,7 +44,7 @@ bool CCSDS::Validator::validate(const Packet &packet) {
       if (m_validateSegmentedCount) {
         if (toValidateHeader.getSequenceFlags() == FIRST_SEGMENT) {
           m_report[3] = toValidateHeader.getSequenceCount() == 1;
-        }else {
+        } else {
           m_report[3] = toValidateHeader.getSequenceCount() == m_sequenceCounter;
         }
         m_sequenceCounter++;
@@ -50,7 +58,8 @@ bool CCSDS::Validator::validate(const Packet &packet) {
     m_templatePacket.setUpdatePacketEnable(false);
     auto templateHeader = m_templatePacket.getPrimaryHeader();
     const auto templateHeaderData = templateHeader.serialize();
-    m_report[4] = templateHeaderData[0] == toValidateHeaderData[0] && templateHeaderData[1] == toValidateHeaderData[1];
+    m_report[4] = templateHeaderData[0] == toValidateHeaderData[0]
+                  && templateHeaderData[1] == toValidateHeaderData[1];
     result &= m_report[4];
     if (templateHeader.getSequenceFlags() == UNSEGMENTED) {
       m_report[5] = toValidateHeader.getSequenceFlags() == UNSEGMENTED;

@@ -2,421 +2,250 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <iostream>
+#include <memory>
 #include "CCSDSManager.h"
 #include "CCSDSUtils.h"
 #include "CCSDSResult.h"
 #include "tests.h"
+#include "PusServices.h"
+
+namespace {
+  CCSDS::Packet makeTemplate(const std::vector<std::uint8_t> &header) {
+    CCSDS::Packet packet;
+    const auto result = packet.setPrimaryHeader(header);
+    if (!result) {
+      std::cerr << "[ Error ]: Code [" << result.error().code() << "]: " << result.error().message() << '\n';
+    }
+    return packet;
+  }
+
+  std::vector<std::uint8_t> serializePackets(const std::vector<CCSDS::Packet> &packets) {
+    std::vector<std::uint8_t> buffer;
+    for (auto packet : packets) {
+      const auto serialized = packet.serialize();
+      buffer.insert(buffer.end(), serialized.begin(), serialized.end());
+    }
+    return buffer;
+  }
+
+  bool hasValidDefaultCRC(const std::vector<std::uint8_t> &packet) {
+    if (packet.size() < 8U) return false;
+    const auto expected = crc16(std::vector<std::uint8_t>(packet.begin(), packet.end() - 2));
+    const auto received = static_cast<std::uint16_t>(packet[packet.size() - 2]) << 8 | packet.back();
+    return expected == received;
+  }
+}
 
 void testGroupManagement(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupManagement: " << description << std::endl;
 
-  tester->unitTest("Manager shall set packet template, returned shall be as expected.", [] {
-    CCSDS::Packet packet{};
-    std::vector<std::uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00};
-    TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
+  tester->unitTest("Manager shall preserve a disabled-update packet template.", []() {
+    auto packet = makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00});
     CCSDS::Manager manager(packet);
-    std::vector<std::uint8_t> templatePacket;
-    TEST_RET(templatePacket, manager.getPacketTemplate());
-    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+    std::vector<std::uint8_t> serialized;
+    TEST_RET(serialized, manager.getPacketTemplate());
+    const std::vector<std::uint8_t> expected{0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00};
+    return serialized == expected;
   });
 
-  {
-    CCSDS::Packet packet{};
-    ASSERT_SUCCESS(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
-    CCSDS::Manager manager(packet);
+  tester->unitTest("Manager shall create one compliant unsegmented packet.", []() {
+    CCSDS::Manager manager(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
+    manager.setDataFieldSize(5);
+    TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05}));
 
-    tester->unitTest("Manager set data, returned packet shall be as expected.", [&manager] {
-      manager.setDataFieldSize(5);
-      TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05}));
-      std::vector<std::uint8_t> ret{};
-      TEST_RET(ret, manager.getPacketBufferAtIndex(0));
-      std::vector<std::uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
-      const std::uint16_t totalNumberOfPackets = manager.getTotalPackets();
+    std::vector<std::uint8_t> packet;
+    TEST_RET(packet, manager.getPacketBufferAtIndex(0));
+    if (manager.getTotalPackets() != 1U || packet.size() != 13U) return false;
+    if (packet[4] != 0x00 || packet[5] != 0x06 || !hasValidDefaultCRC(packet)) return false;
 
-      return std::equal(expected.begin(), expected.end(), ret.begin()) && totalNumberOfPackets == 1;
-    });
-  }
+    std::vector<std::uint8_t> applicationData;
+    TEST_RET(applicationData, manager.getApplicationDataBuffer());
+    return applicationData == std::vector<std::uint8_t>({0x01, 0x02, 0x03, 0x04, 0x05});
+  });
 
-  {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
-    CCSDS::Packet newTestPacket{};
-    ASSERT_SUCCESS(newTestPacket.setPrimaryHeader({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
+  tester->unitTest("Manager shall segment data and preserve sequence metadata.", []() {
     CCSDS::Manager manager;
-    ASSERT_SUCCESS(manager.setPacketTemplate(newTestPacket));
+    TEST_VOID(manager.setPacketTemplate(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00})));
     manager.setAutoValidateEnable(false);
     manager.setDataFieldSize(5);
-    tester->unitTest("Manager shall set large data for multi packets with sequence control.", [&manager] {
-
-      TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07}));
-
-      std::vector<std::vector<std::uint8_t> > ret{};
-      const std::uint16_t totalNumberOfPackets = manager.getTotalPackets();
-      ret.reserve(totalNumberOfPackets);
-      for ( std::int32_t i = 0; i < totalNumberOfPackets; i++) {
-        std::vector<std::uint8_t> pack{};
-        TEST_RET(pack, manager.getPacketBufferAtIndex(i));
-        ret.push_back(pack);
-      }
-
-      std::vector<std::vector<std::uint8_t> > expected{
-        {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-        {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-        {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}
-      };
-      return std::equal(expected.begin(), expected.end(), ret.begin()) && totalNumberOfPackets == 3;
-    });
-
-    tester->unitTest("Manager get application data, shall be the same as set data", [&manager] {
-      std::vector<std::uint8_t> expected{0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
-      std::vector<std::uint8_t> ret{};
-      TEST_RET(ret, manager.getApplicationDataBuffer());
-      return std::equal(expected.begin(), expected.end(), ret.begin());
-    });
-
-    tester->unitTest("Manager get application data at index, shall be the same as set data.", [&manager] {
-      std::vector<std::vector<std::uint8_t> > ret{};
-      std::vector<std::vector<std::uint8_t> > expected{
-        {0x01, 0x02, 0x03, 0x04, 0x05},
-        {0x01, 0x02, 0x03, 0x04, 0x05},
-        {0x06, 0x07}
-      };
-
-      const std::uint16_t totalNumberOfPackets = manager.getTotalPackets();
-      for ( std::int32_t i = 0; i < totalNumberOfPackets; i++) {
-        std::vector<std::uint8_t> data{};
-        TEST_RET(data, manager.getApplicationDataBufferAtIndex(i));
-        ret.push_back(data);
-      }
-      return std::equal(expected.begin(), expected.end(), ret.begin());
-    });
-
-    tester->unitTest("Manager returned vector of Packets shall be as expected.", [&manager] {
-      // Note: Max data field size is set to 5 bytes, and header is already set.
-      std::vector<std::vector<std::uint8_t> > ret{};
-      const std::vector<CCSDS::Packet> localPackets = manager.getPackets();
-      ret.reserve(localPackets.size());
-      for (auto localPacket: localPackets) {
-        std::vector<std::uint8_t> pack{};
-        pack = localPacket.serialize();
-        //TEST_RET(pack, packet.serialize(); // future
-        ret.push_back(pack);
-      }
-
-      std::vector<std::vector<std::uint8_t> > expected{
-        {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-        {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-        {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}
-      };
-
-      return std::equal(expected.begin(), expected.end(), ret.begin()) && localPackets.size() == 3;
-    });
-  }
-
-  tester->unitTest("Manager shall add a single packet.", [] {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
-    CCSDS::Manager manager{};
-    std::vector<std::vector<std::uint8_t> > expected{
-      {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}
+    const std::vector<std::uint8_t> input{
+      0x01, 0x02, 0x03, 0x04, 0x05,
+      0x01, 0x02, 0x03, 0x04, 0x05,
+      0x06, 0x07
     };
-    for (auto& data : expected) {
-      CCSDS::Packet packet{};
-      TEST_VOID(packet.deserialize(data));
-      TEST_VOID(manager.addPacket(packet));
-    }
+    TEST_VOID(manager.setApplicationData(input));
 
-    std::vector<std::vector<std::uint8_t> > ret{};
-    const std::vector<CCSDS::Packet> localPackets = manager.getPackets();
-    ret.reserve(localPackets.size());
-    for (auto localPacket: localPackets) {
-      std::vector<std::uint8_t> pack{};
-      pack = localPacket.serialize();
-      ret.push_back(pack);
-    }
-    return std::equal(expected.begin(), expected.end(), ret.begin()) && localPackets.size() == 3;
+    auto packets = manager.getPackets();
+    if (packets.size() != 3U) return false;
+    const auto h0 = packets[0].getPrimaryHeader();
+    const auto h1 = packets[1].getPrimaryHeader();
+    const auto h2 = packets[2].getPrimaryHeader();
+    if (h0.getSequenceFlags() != CCSDS::FIRST_SEGMENT || h0.getSequenceCount() != 1U) return false;
+    if (h1.getSequenceFlags() != CCSDS::CONTINUING_SEGMENT || h1.getSequenceCount() != 2U) return false;
+    if (h2.getSequenceFlags() != CCSDS::LAST_SEGMENT || h2.getSequenceCount() != 3U) return false;
+    if (h0.getDataLength() != 6U || h1.getDataLength() != 6U || h2.getDataLength() != 3U) return false;
+
+    std::vector<std::uint8_t> reassembled;
+    TEST_RET(reassembled, manager.getApplicationDataBuffer());
+    return reassembled == input;
   });
 
-  tester->unitTest("Manager shall add a single packets from buffer.", [] {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
-    CCSDS::Manager manager{};
-    std::vector<std::uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04};
-    TEST_VOID(manager.addPacketFromBuffer(expected));
+  tester->unitTest("Manager shall load concatenated compliant packets and reject truncation.", []() {
+    CCSDS::Manager producer;
+    TEST_VOID(producer.setPacketTemplate(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00})));
+    producer.setAutoValidateEnable(false);
+    producer.setDataFieldSize(5);
+    const std::vector<std::uint8_t> input{
+      0x01, 0x02, 0x03, 0x04, 0x05,
+      0x01, 0x02, 0x03, 0x04, 0x05,
+      0x06, 0x07
+    };
+    TEST_VOID(producer.setApplicationData(input));
+    const auto buffer = producer.getPacketsBuffer();
 
-    std::vector<std::uint8_t> ret{};
-    TEST_RET(ret, manager.getPacketBufferAtIndex(0));
+    CCSDS::Manager consumer;
+    consumer.setAutoValidateEnable(false);
+    TEST_VOID(consumer.load(buffer));
+    std::vector<std::uint8_t> reassembled;
+    TEST_RET(reassembled, consumer.getApplicationDataBuffer());
+    if (consumer.getTotalPackets() != 3U || reassembled != input || consumer.getPacketsBuffer() != buffer) return false;
 
-    return std::equal(expected.begin(), expected.end(), ret.begin());
+    auto truncated = buffer;
+    truncated.pop_back();
+    CCSDS::Manager invalidConsumer;
+    invalidConsumer.setAutoValidateEnable(false);
+    return !invalidConsumer.load(truncated).has_value();
   });
 
-  tester->unitTest("Manager shall add a series of segmented single packets from buffer.", [] {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
-    CCSDS::Manager manager{};
-    std::vector<std::vector<std::uint8_t> > expected{
-      {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}
-    };
-    for (auto& data : expected) {
-      TEST_VOID(manager.addPacketFromBuffer(data));
-    }
+  tester->unitTest("Manager shall add and load packet objects and buffers.", []() {
+    CCSDS::Packet packet1 = makeTemplate({0xF7, 0xFF, 0x40, 0x01, 0x00, 0x00});
+    CCSDS::Packet packet2 = makeTemplate({0xF7, 0xFF, 0x80, 0x02, 0x00, 0x00});
+    TEST_VOID(packet1.setApplicationData({0x01, 0x02}));
+    TEST_VOID(packet2.setApplicationData({0x03, 0x04}));
+    const auto packet1Bytes = packet1.serialize();
 
-    std::vector<std::vector<std::uint8_t> > ret{};
-    const std::vector<CCSDS::Packet> localPackets = manager.getPackets();
-    ret.reserve(localPackets.size());
-    for (auto localPacket: localPackets) {
-      std::vector<std::uint8_t> pack{};
-      pack = localPacket.serialize();
-      ret.push_back(pack);
-    }
-    return std::equal(expected.begin(), expected.end(), ret.begin()) && localPackets.size() == 3;
-  });
-
-  tester->unitTest("Manager shall load a series of segmented packets.", [] {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
-    CCSDS::Manager manager{};
-    std::vector<std::vector<std::uint8_t> > expected{
-      {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}
-    };
-    std::vector<CCSDS::Packet> packets;
-    for (auto& data : expected) {
-      CCSDS::Packet packet;
-      TEST_VOID(packet.deserialize(data));
-      packets.push_back(packet);
-    }
-    TEST_VOID(manager.load(packets));
-
-    std::vector<std::vector<std::uint8_t> > ret{};
-    const std::vector<CCSDS::Packet> localPackets = manager.getPackets();
-    ret.reserve(localPackets.size());
-    for (auto localPacket: localPackets) {
-      std::vector<std::uint8_t> pack{};
-      pack = localPacket.serialize();
-      ret.push_back(pack);
-    }
-    return std::equal(expected.begin(), expected.end(), ret.begin()) && localPackets.size() == 3;
-  });
-
-  tester->unitTest("Manager shall load a series of segmented packets from buffer.", [] {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
-    CCSDS::Manager manager{};
-    std::vector<std::vector<std::uint8_t>> expected{
-      {0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04},
-      {0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e}
-    };
-    const std::vector<std::uint8_t> buffer{
-          0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-          0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-          0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-        };
-
-    TEST_VOID(manager.load(buffer));
-
-    std::vector<std::vector<std::uint8_t> > ret{};
-    const std::vector<CCSDS::Packet> localPackets = manager.getPackets();
-    ret.reserve(localPackets.size());
-    for (auto localPacket: localPackets) {
-      std::vector<std::uint8_t> pack{};
-      pack = localPacket.serialize();
-      ret.push_back(pack);
-    }
-    return std::equal(expected.begin(), expected.end(), ret.begin()) && localPackets.size() == 3;
-  });
-
-  tester->unitTest("Manager shall return a series of segmented packets to a buffer.", [] {
-    // Note: Max data field size is set to 5 bytes, and header is already set.
-    CCSDS::Manager manager{};
-    const std::vector<std::uint8_t> expected{
-          0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-          0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-          0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-        };
-
-    TEST_VOID(manager.load(expected));
-
-    auto ret = manager.getPacketsBuffer();
-    return std::equal(expected.begin(), expected.end(), ret.begin());
-  });
-
-  {
-    CCSDS::Manager manager{};
-    const std::vector<std::uint8_t> buffer{
-      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-    };
-    ASSERT_SUCCESS(manager.load(buffer));
-
-    tester->unitTest("Manager shall clear the managed packets.", [&manager] {
-      manager.clearPackets();
-      const auto ret = manager.getTotalPackets();
-      const auto packets = manager.getPackets();
-      return ret == 0 && packets.empty();
-    });
-  }
-
-  {
-    CCSDS::Manager manager{};
-    const std::vector<std::uint8_t> buffer{
-      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-    };
-    ASSERT_SUCCESS(manager.load(buffer));
-
-    tester->unitTest("Manager shall clear everything.", [&manager] {
-      manager.clear();
-      manager.setAutoUpdateEnable(false);
-      const auto packets = manager.getPackets();
-      std::vector<std::uint8_t> ret;
-      std::vector<std::uint8_t> expected{0x00, 0x00, 0xc0, 0x00, 0x00 , 0x00, 0xff, 0xff};
-      TEST_RET(ret, manager.getPacketTemplate());
-
-      return packets.empty() && std::equal(expected.begin(), expected.end(), ret.begin());
-    });
-    {
-      CCSDS::Manager manager1{};
-      const std::vector<std::uint8_t> expected{
-        0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-      };
-      ASSERT_SUCCESS(manager1.load(expected));
-
-      tester->unitTest("Manager shall write the packets to a binary file successfully.", [&manager1] {
-        bool ret;
-        TEST_RET(ret, manager1.write("test_resources/myPackets.bin"));
-        return ret;
-      });
-    }
-
-    {
-      CCSDS::Manager manager1{};
-      const std::vector<std::uint8_t> expected{
-        0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-        0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-      };
-      tester->unitTest("Manager shall read packets from a binary file successfully.", [&manager1, &expected] {
-        bool ret;
-        TEST_RET(ret, manager1.read("test_resources/myPackets.bin"));
-        auto retPackets = manager1.getPacketsBuffer();
-        return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
-      });
-    }
-  }
-
-  tester->unitTest("Manager shall load template from binary file, template shall be as expected.", [] {
-    CCSDS::Packet packet{};
-    std::vector<std::uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff};
     CCSDS::Manager manager;
-    TEST_VOID(manager.readTemplate("test_resources/templatePacket.bin"));
-    std::vector<std::uint8_t> templatePacket;
-    TEST_RET(templatePacket, manager.getPacketTemplate());
-    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+    manager.setAutoValidateEnable(false);
+    TEST_VOID(manager.addPacket(packet1));
+    TEST_VOID(manager.addPacketFromBuffer(packet1Bytes));
+    TEST_VOID(manager.load(std::vector<CCSDS::Packet>{packet2}));
+    auto packets = manager.getPackets();
+    return packets.size() == 3U
+           && packets[0].serialize() == packet1Bytes
+           && packets[1].serialize() == packet1Bytes
+           && packets[2].serialize() == packet2.serialize();
   });
 
-  tester->unitTest("Manager shall set packet template, with Pus-B secondary header from buffer.", [] {
+  tester->unitTest("Manager shall insert and consume sync patterns.", []() {
+    CCSDS::Manager producer;
+    TEST_VOID(producer.setPacketTemplate(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00})));
+    producer.setAutoValidateEnable(false);
+    producer.setDataFieldSize(3);
+    producer.setSyncPatternEnable(true);
+    TEST_VOID(producer.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05}));
+    const auto framed = producer.getPacketsBuffer();
+    if (framed.size() < 4U || framed[0] != 0x1A || framed[1] != 0xCF
+        || framed[2] != 0xFC || framed[3] != 0x1D) return false;
 
-    CCSDS::Packet packet;
-    std::vector<std::uint8_t> expected{0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00, 0x00, 0x00};
-    const std::vector<std::uint8_t> secondaryHeader = {0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00};
+    CCSDS::Manager consumer;
+    consumer.setAutoValidateEnable(false);
+    consumer.setSyncPatternEnable(true);
+    TEST_VOID(consumer.load(framed));
+    std::vector<std::uint8_t> data;
+    TEST_RET(data, consumer.getApplicationDataBuffer());
+    return data == std::vector<std::uint8_t>({0x01, 0x02, 0x03, 0x04, 0x05});
+  });
 
-    TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
-    TEST_VOID(packet.setDataFieldHeader(secondaryHeader,"PusB"));
+  tester->unitTest("Manager shall clear packet and template state.", []() {
+    CCSDS::Manager manager(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
+    manager.setAutoValidateEnable(false);
+    TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03}));
+    manager.clearPackets();
+    if (manager.getTotalPackets() != 0U || !manager.getPackets().empty()) return false;
+    TEST_VOID(manager.setApplicationData({0x04, 0x05}));
+    manager.clear();
+    return manager.getPackets().empty() && !manager.setApplicationData({0x06}).has_value();
+  });
+
+  tester->unitTest("Manager shall write and read compliant packet buffers.", []() {
+    CCSDS::Manager producer;
+    TEST_VOID(producer.setPacketTemplate(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00})));
+    producer.setAutoValidateEnable(false);
+    producer.setDataFieldSize(4);
+    TEST_VOID(producer.setApplicationData({0x01, 0x02, 0x03, 0x04, 0x05, 0x06}));
+    const auto expected = producer.getPacketsBuffer();
+    TEST_VOID(producer.write("test_resources/myPackets.bin"));
+
+    CCSDS::Manager consumer;
+    consumer.setAutoValidateEnable(false);
+    TEST_VOID(consumer.read("test_resources/myPackets.bin"));
+    return consumer.getPacketsBuffer() == expected;
+  });
+
+  tester->unitTest("Manager shall read generated binary and configured templates.", []() {
+    CCSDS::Packet packet = makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00});
+    TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
+    const auto expectedBinary = packet.serialize();
+    TEST_VOID(writeBinaryFile(expectedBinary, "test_resources/runtimeTemplate.bin"));
+
+    CCSDS::Manager binaryManager;
+    TEST_VOID(binaryManager.readTemplate("test_resources/runtimeTemplate.bin"));
+    std::vector<std::uint8_t> actualBinary;
+    TEST_RET(actualBinary, binaryManager.getPacketTemplate());
+    if (actualBinary != expectedBinary) return false;
+
+#ifndef CCSDS_MCU
+    CCSDS::Packet configuredPacket;
+    TEST_VOID(configuredPacket.loadFromConfigFile("test_resources/templatePacket.cfg"));
+    CCSDS::Manager configManager;
+    TEST_VOID(configManager.loadTemplateConfigFile("test_resources/templatePacket.cfg"));
+    return configManager.getTemplate().serialize() == configuredPacket.serialize();
+#else
+    return true;
+#endif
+  });
+
+  tester->unitTest("Manager shall preserve secondary headers while segmenting.", []() {
+    CCSDS::Packet packet = makeTemplate({0xCF, 0xF4, 0x40, 0x00, 0x00, 0x00});
+    PusC secondaryHeader;
+    TEST_VOID(secondaryHeader.deserialize({0x02, 0x04, 0x05, 0x06, 0x07, 0x0A, 0x00, 0x00}));
+    packet.setDataFieldHeader(std::make_shared<PusC>(secondaryHeader));
+
     CCSDS::Manager manager(packet);
-    std::vector<uint8_t> templatePacket;
-    TEST_RET(templatePacket, manager.getPacketTemplate());
-    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+    manager.setAutoValidateEnable(false);
+    manager.setDataFieldSize(13);
+    TEST_VOID(manager.setApplicationData({
+      0x01, 0x02, 0x03, 0x04, 0x05,
+      0x01, 0x02, 0x03, 0x04, 0x05,
+      0x06, 0x07
+    }));
+    auto packets = manager.getPackets();
+    if (packets.size() != 3U) return false;
+    return packets[0].getApplicationDataBytes().size() == 5U
+           && packets[1].getApplicationDataBytes().size() == 5U
+           && packets[2].getApplicationDataBytes().size() == 2U
+           && packets[0].getDataFieldHeaderFlag()
+           && packets[1].getDataFieldHeaderFlag()
+           && packets[2].getDataFieldHeaderFlag();
   });
 
-  tester->unitTest("Manager shall set packet template, with Pus-A secondary header from class and data UNSEGMENTED.", [] {
-
-    CCSDS::Packet packet;
-    std::vector<uint8_t> expected{0xFF, 0xFF, 0xc0, 0x00, 0x00, 0x08, 0x2, 0x4, 0x5, 0x06, 0x00, 0x02, 0x07, 0x0a, 0xa7, 0x67};
-    const std::vector<uint8_t> secondaryHeaderData = {0x2, 0x4, 0x5, 0x06, 0x0b, 0xc};
-    const std::vector<uint8_t> dataFieldData = {0x07, 0x0a};
-
-    TEST_VOID(packet.setPrimaryHeader({0xF7, 0xFF, 0xc0, 0x00, 0x00, 0x00}));
-    PusA secondaryHeader;
-    TEST_VOID(secondaryHeader.deserialize(secondaryHeaderData));
-    const auto ptr = std::make_shared<PusA>( secondaryHeader);
-    packet.setDataFieldHeader(ptr);
+  tester->unitTest("Manager shall support CRC-disabled templates.", []() {
+    CCSDS::Packet packet = makeTemplate({0x00, 0x01, 0xC0, 0x00, 0x00, 0x00});
+    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
     CCSDS::Manager manager(packet);
-    TEST_VOID(manager.setApplicationData(dataFieldData));
-    auto packetBuffer = manager.getPacketsBuffer();
-    return std::equal(expected.begin(), expected.end(), packetBuffer.begin());
+    manager.setAutoValidateEnable(false);
+    TEST_VOID(manager.setApplicationData({0xAA, 0x55}));
+
+    std::vector<std::uint8_t> serialized;
+    TEST_RET(serialized, manager.getPacketBufferAtIndex(0));
+    return serialized == std::vector<std::uint8_t>({0x00, 0x01, 0xC0, 0x00, 0x00, 0x01, 0xAA, 0x55});
   });
 
-  tester->unitTest("Manager shall set packet template, with Pus-C secondary header from class and data SEGMENTED.", [] {
-
-    CCSDS::Packet packet;
-    packet.setUpdatePacketEnable(true);
-
-    std::vector<uint8_t> expected{
-      0xCF, 0xF4, 0x40, 0x01, 0x00, 0x0d, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0xb4, 0x71,
-      0xCF, 0xF4, 0x00, 0x02, 0x00, 0x0d, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0xb4, 0x71,
-      0xCF, 0xF4, 0x80, 0x03, 0x00, 0x0a, 0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x02, 0x06, 0x07, 0x70, 0x09
-    };
-      const std::vector<uint8_t> dataFieldData = {0x01, 0x02, 0x03, 0x04, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07};
-      TEST_VOID(packet.setPrimaryHeader({0xCF, 0xF4, 0x40, 0x00, 0x00, 0x00}));
-      PusC secondaryHeader;
-      TEST_VOID(secondaryHeader.deserialize({0x2, 0x4, 0x5, 0x06, 0x07, 0x0a, 0x00, 0x00}));
-      const auto ptr = std::make_shared<PusC>(secondaryHeader);
-      packet.setDataFieldHeader(ptr);
-      CCSDS::Manager manager(packet);
-      manager.setDataFieldSize(13);
-      TEST_VOID(manager.setApplicationData(dataFieldData));
-      auto packetBuffer = manager.getPacketsBuffer();
-      return std::equal(expected.begin(), expected.end(), packetBuffer.begin());
-  });
-
-  {
-    CCSDS::Manager manager1{};
-    const std::vector<uint8_t> expected{
-      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-    };
-    ASSERT_SUCCESS(manager1.load(expected));
-
-    tester->unitTest("Manager shall insert the sync pattern at the start of each packet.", [&manager1] {
-      bool ret;
-      manager1.setSyncPatternEnable(true);
-      TEST_RET(ret, manager1.write("test_resources/myPacketsSync.bin"));
-      return ret;
-    });
-  }
-
-  {
-    CCSDS::Manager manager1{};
-    const std::vector<uint8_t> expected{
-      0xF7, 0xFF, 0x40, 0x01, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x00, 0x02, 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05, 0x93, 0x04,
-      0xF7, 0xFF, 0x80, 0x03, 0x00, 0x02, 0x06, 0x07, 0xc7, 0x4e
-    };
-
-    tester->unitTest("Manager shall read the packets with sync pattern and remove it.", [&manager1, &expected] {
-      bool ret;
-      manager1.setSyncPatternEnable(true);
-      TEST_RET(ret, manager1.read("test_resources/myPacketsSync.bin"));
-      manager1.setSyncPatternEnable(false);
-      auto retPackets = manager1.getPacketsBuffer();
-      return ret && std::equal(expected.begin(), expected.end(), retPackets.begin());
-    });
-  }
-
-  tester->unitTest("Manager shall load template from config file, template shall be as expected.", [] {
-    CCSDS::Packet packet{};
-    std::vector<uint8_t> expected{0x30, 0x7d, 0x40, 0x01, 0x00, 0x00, 0x01, 0x03, 0x08, 0x03, 0x00, 0xbf,0x00, 0xbf, 0x00, 0x00, 0x00, 0x00};
+  tester->unitTest("Manager shall reject data without a template or with an empty payload.", []() {
     CCSDS::Manager manager;
-    TEST_VOID(manager.readTemplate("test_resources/templatePacket.cfg"));
-    std::vector<uint8_t> templatePacket;
-    TEST_RET(templatePacket, manager.getPacketTemplate());
-    return std::equal(expected.begin(), expected.end(), templatePacket.begin());
+    if (manager.setApplicationData({0x01}).has_value()) return false;
+    TEST_VOID(manager.setPacketTemplate(makeTemplate({0x00, 0x01, 0xC0, 0x00, 0x00, 0x00})));
+    return !manager.setApplicationData({}).has_value();
   });
 
   std::cout << std::endl;
