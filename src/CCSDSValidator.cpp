@@ -5,7 +5,7 @@
 #include <CCSDSUtils.h>
 
 void CCSDS::Validator::configure(const bool validatePacketCoherence, const bool validateSequenceCount,
-                                 const bool validateAgainstTemplate) {
+                                  const bool validateAgainstTemplate) {
   m_validatePacketCoherence = validatePacketCoherence;
   m_validateSegmentedCount = validateSequenceCount;
   m_validateAgainstTemplate = validateAgainstTemplate;
@@ -20,6 +20,10 @@ bool CCSDS::Validator::validate(const Packet &packet) {
   toValidate.setUpdatePacketEnable(false);
   auto toValidateHeader = toValidate.getPrimaryHeader();
   const auto toValidateHeaderData = toValidateHeader.serialize();
+  if (toValidateHeaderData.size() != 6U) {
+    m_report.assign(m_reportSize, false);
+    return false;
+  }
   const auto dataFieldBytes = toValidate.getFullDataFieldBytes();
 
   if (m_validatePacketCoherence) {
@@ -58,6 +62,11 @@ bool CCSDS::Validator::validate(const Packet &packet) {
     m_templatePacket.setUpdatePacketEnable(false);
     auto templateHeader = m_templatePacket.getPrimaryHeader();
     const auto templateHeaderData = templateHeader.serialize();
+    if (templateHeaderData.size() != 6U) {
+      m_report[4] = false;
+      m_report[5] = false;
+      return false;
+    }
     m_report[4] = templateHeaderData[0] == toValidateHeaderData[0]
                   && templateHeaderData[1] == toValidateHeaderData[1];
     result &= m_report[4];
