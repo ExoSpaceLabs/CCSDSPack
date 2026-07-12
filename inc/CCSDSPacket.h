@@ -267,11 +267,15 @@ namespace CCSDS {
     void setPacketErrorControlMode(PacketErrorControlMode mode);
 
     /** @brief Returns the configured packet error-control mode. */
-    [[nodiscard]] PacketErrorControlMode getPacketErrorControlMode() const { return m_packetErrorControlMode; }
+    [[nodiscard]] PacketErrorControlMode getPacketErrorControlMode() const {
+      return (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK) != 0U
+               ? PacketErrorControlMode::None
+               : PacketErrorControlMode::CRC16;
+    }
 
     /** @brief Returns the encoded packet error-control field size in bytes. */
     [[nodiscard]] std::uint16_t getPacketErrorControlSize() const {
-      return m_packetErrorControlMode == PacketErrorControlMode::CRC16 ? 2U : 0U;
+      return getPacketErrorControlMode() == PacketErrorControlMode::CRC16 ? 2U : 0U;
     }
 
     /** @brief Deserializes a vector of bytes into a CCSDS packet. */
@@ -437,13 +441,17 @@ namespace CCSDS {
 #endif
 
   private:
+    static constexpr std::uint16_t SEQUENCE_COUNT_MASK = 0x3FFFU;
+    static constexpr std::uint16_t PACKET_ERROR_CONTROL_DISABLED_MASK = 0x8000U;
+
     Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex
     DataField m_dataField{};         ///< variable
     std::uint16_t m_CRC16{};         ///< Cyclic Redundancy check 16 bits
     CRC16Config m_CRC16Config;       ///< structure holding configuration of crc calculation.
-    PacketErrorControlMode m_packetErrorControlMode{PacketErrorControlMode::CRC16}; ///< Optional packet error-control field.
     bool m_updateStatus{false};      ///< When setting data thus value should be set to false.
     bool m_enableUpdatePacket{true}; ///< Enables primary header and secondary header update.
+    // Lower 14 bits store the CCSDS sequence count. Bit 15 stores the v1.2
+    // packet-error-control mode so the Packet object layout remains ABI-stable.
     std::uint16_t m_sequenceCounter{0};
   };
 }
