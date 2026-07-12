@@ -335,11 +335,12 @@ void CCSDS::Packet::setPrimaryHeader(const Header &header) {
   m_updateStatus = false;
 }
 
-void CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
-  m_primaryHeader.setData(data);
+CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
+  FORWARD_RESULT(m_primaryHeader.setData(data));
   m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
                       | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
+  return true;
 }
 
 void CCSDS::Packet::setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header) {

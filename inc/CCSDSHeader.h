@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <vector>
 
+#define IDLE_APID 2047
+
 namespace CCSDS {
   /**
    * @brief Represents the sequence flags used in CCSDS telemetry transfer frames.
@@ -24,6 +26,15 @@ namespace CCSDS {
     FIRST_SEGMENT,      ///< 01 First segment of a new packet.
     LAST_SEGMENT,       ///< 10 Last segment of a multi-frame packet.
     UNSEGMENTED         ///< 11 Complete packet in a single frame.
+  };
+
+  /**
+   * todo
+   */
+  enum EHeaderStatus : std::uint8_t {
+    NORMAL,
+    IDLE,
+    INVALID
   };
 
   /**
@@ -91,6 +102,7 @@ namespace CCSDS {
     [[nodiscard]] std::uint8_t getSequenceFlags()       const { return m_sequenceFlags;       } ///< 2 bits
     [[nodiscard]] std::uint16_t getSequenceCount()      const { return m_sequenceCount;       } ///< 14 bits
     [[nodiscard]] std::uint16_t getDataLength()         const { return m_dataLength;          } ///< 16 bits
+    [[nodiscard]] EHeaderStatus getHeaderStatus()       const { return m_status;              } ///< returns the status of the header.
 
     /**
      * @brief decomposes the Primary header class and returns it as a vector of bytes.
@@ -116,13 +128,13 @@ namespace CCSDS {
                static_cast<std::uint32_t>(m_packetSequenceControl) << 16) | m_dataLength;
     }
 
-    void setVersionNumber      ( const  std::uint8_t &value ) {       m_versionNumber = value & 0x0007; } ///< 3 bits
-    void setType               ( const  std::uint8_t &value ) {                m_type = value & 0x0001; } ///< 1 bits
-    void setDataFieldHeaderFlag( const  std::uint8_t &value ) { m_dataFieldHeaderFlag = value & 0x0001; } ///< 1 bits
-    void setAPID               ( const std::uint16_t &value ) {                m_APID = value & 0x07FF; } ///< 11 bits
-    void setSequenceFlags      ( const  std::uint8_t &value ) {       m_sequenceFlags = value & 0x0003; } ///< 2 bits
-    void setSequenceCount      ( const std::uint16_t &value ) {       m_sequenceCount = value & 0x3FFF; } ///< 14 bits
-    void setDataLength         ( const std::uint16_t &value ) {          m_dataLength = value;          } ///< 16 bits
+    [[nodiscard]] ResultBool setVersionNumber      ( const  std::uint8_t &value ); ///< 3 bits
+    [[nodiscard]] ResultBool setType               ( const  std::uint8_t &value ); ///< 1 bits
+    [[nodiscard]] ResultBool setDataFieldHeaderFlag( const  std::uint8_t &value ); ///< 1 bits
+    [[nodiscard]] ResultBool setAPID               ( const std::uint16_t &value ); ///< 11 bits
+    [[nodiscard]] ResultBool setSequenceFlags      ( const  std::uint8_t &value ); ///< 2 bits
+    [[nodiscard]] ResultBool setSequenceCount      ( const std::uint16_t &value ); ///< 14 bits
+    void       setDataLength         ( const std::uint16_t &value ); ///< 16 bits
 
     /**
      * @brief Sets the header data from a 64-bit integer representation.
@@ -160,7 +172,7 @@ namespace CCSDS {
      * @param data A `PrimaryHeader` structure containing the header data.
      * @return none.
      */
-    void setData(const PrimaryHeader &data);
+    ResultBool setData(const PrimaryHeader &data);
 
   private:
     // version and packet identification 16 bit 4 hex
@@ -179,6 +191,8 @@ namespace CCSDS {
     std::uint16_t m_packetIdentificationAndVersion{};  ///< packet id and version 16 bit 4 hex
     std::uint16_t m_packetSequenceControl{};           ///< packet sequence control 16 bit 4 hex
     std::uint16_t m_dataLength{};                      ///< data packet length 16 bits 4 hex
+
+    EHeaderStatus m_status{NORMAL};                    ///< status of the header
   };
 }
 #endif // CCSDS_HEADER_H

@@ -82,7 +82,7 @@ namespace CCSDS {
      * @param data The `PrimaryHeader` object containing the header data.
      * @return none.
      */
-    void setPrimaryHeader(PrimaryHeader data);
+    ResultBool setPrimaryHeader(PrimaryHeader data);
 
     /**
      * @brief Sets the primary header using the provided 64-bit data.

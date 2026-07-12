@@ -661,20 +661,20 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Create custom secondary header to packet, result shall be as expected.",[] {
-    std::vector<uint8_t> expected{0x28, 0x37, 0x00, 0x00, 0x00, 0x0b, 0x77, 0xfa, 0x0b, 0x00, 0x00,
-    0x0b, 0x05, 0x01, 0x02, 0x03, 0x93, 0x48};
+    std::vector<uint8_t> expected{0x38, 0x37, 0x00, 0x00, 0x00, 0x0b, 0x77, 0xfa, 0x0b, 0x00, 0x00,
+    0x0b, 0x05, 0x01, 0x02, 0x03, 0xb0, 0x42};
 
     const std::vector<uint8_t> data{1,2,3};
 
     CCSDS::Packet packet;
-    packet.setPrimaryHeader(CCSDS::PrimaryHeader{
+    TEST_VOID(packet.setPrimaryHeader(CCSDS::PrimaryHeader{
     1,
-    2,
+    1,
     1,
     55,
     0,
     0,
-    0});
+    0}));
     TEST_VOID(packet.RegisterSecondaryHeader<TestSecondaryHeader>());
     TEST_VOID(packet.setDataFieldHeader({0x77,0xFA,0xB,0x0,0x0,0xB,0x5},"TestSecondaryHeader"));
     TEST_VOID(packet.setApplicationData(data));
