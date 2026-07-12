@@ -203,26 +203,34 @@ CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(const std::vector<std::uin
 
 [[nodiscard]] CCSDS::ResultBool CCSDS::Manager::load(const std::vector<std::uint8_t>& packetsBuffer) {
   RET_IF_ERR_MSG(packetsBuffer.size() < 8, ErrorCode::INVALID_DATA, "invalid packet buffer size");
-  std::uint32_t offset{0};
+  std::size_t offset{0};
   while (offset < packetsBuffer.size()) {
-    std::vector<std::uint8_t> headerData;
     if (m_syncPattEnable) {
+      RET_IF_ERR_MSG(packetsBuffer.size() - offset < 4U, ErrorCode::INVALID_DATA,
+                     "Truncated sync pattern.");
       const std::uint32_t value = (static_cast<std::uint32_t>(packetsBuffer[offset]) << 24) |
-                             (static_cast<std::uint32_t>(packetsBuffer[offset+1]) << 16) |
-                             (static_cast<std::uint32_t>(packetsBuffer[offset+2]) << 8)  |
-                             (static_cast<std::uint32_t>(packetsBuffer[offset+3]));
+                                  (static_cast<std::uint32_t>(packetsBuffer[offset + 1]) << 16) |
+                                  (static_cast<std::uint32_t>(packetsBuffer[offset + 2]) << 8) |
+                                  static_cast<std::uint32_t>(packetsBuffer[offset + 3]);
       RET_IF_ERR_MSG(value != m_syncPattern, ErrorCode::INVALID_DATA, "Sync Pattern mismatch.");
-      offset += 4;
+      offset += 4U;
     }
-    headerData.clear();
-    copy_n(packetsBuffer.begin() + offset, 6, std::back_inserter(headerData));
-    Header header;
-    FORWARD_RESULT( header.deserialize(headerData));
 
-    const std::uint16_t packetSize = header.getDataLength() + 8;
-    std::vector<std::uint8_t>packetData;
-    packetData.clear();
-    copy_n(packetsBuffer.begin() + offset, packetSize, std::back_inserter(packetData));
+    RET_IF_ERR_MSG(packetsBuffer.size() - offset < 6U, ErrorCode::INVALID_DATA,
+                   "Truncated CCSDS primary header.");
+    std::vector<std::uint8_t> headerData;
+    std::copy_n(packetsBuffer.begin() + static_cast<std::ptrdiff_t>(offset), 6U,
+                std::back_inserter(headerData));
+    Header header;
+    FORWARD_RESULT(header.deserialize(headerData));
+
+    const auto packetSize = static_cast<std::size_t>(header.getDataLength()) + 7U;
+    RET_IF_ERR_MSG(packetSize < 7U || packetSize > packetsBuffer.size() - offset,
+                   ErrorCode::INVALID_DATA, "Truncated CCSDS packet.");
+
+    std::vector<std::uint8_t> packetData;
+    std::copy_n(packetsBuffer.begin() + static_cast<std::ptrdiff_t>(offset), packetSize,
+                std::back_inserter(packetData));
     FORWARD_RESULT(addPacketFromBuffer(packetData));
     offset += packetSize;
   }
