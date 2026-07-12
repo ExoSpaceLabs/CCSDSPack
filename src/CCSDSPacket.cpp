@@ -285,7 +285,9 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &he
     FORWARD_RESULT(m_dataField.setApplicationData(dataCopy));
   }
 
-  m_updateStatus = true;
+  // Preserve the v1 lifecycle: dependent fields are recalculated on the next
+  // getter/serialization call unless automatic updates are explicitly disabled.
+  m_updateStatus = false;
   return true;
 }
 
