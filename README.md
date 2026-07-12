@@ -1,13 +1,18 @@
-
 <div style="text-align: center;">
     <img alt="ccsds_pack_logo" src="docs/imgs/Logo.png" width="400" />
 </div>
 
 # CCSDSPack [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
-**CCSDSPack** is a lightweight, high-performance C++ library for handling 
-[CCSDS (Consultative Committee for Space Data Systems)](https://public.ccsds.org/) packets.
-It provides utilities to create, parse, and manage CCSDS-compliant telemetry (TM) and 
-telecommand (TC) packets with a modern C++ design and customizable serialization.
+**CCSDSPack** is a lightweight C++ library for creating, parsing, managing, and validating
+packet formats based on the [CCSDS Space Packet](https://public.ccsds.org/) primary-header structure.
+
+The **v1.x.x** release series provides CCSDS-oriented packet manipulation, configurable secondary
+headers, application-data handling, CRC16 support, segmentation utilities, and command-line tools.
+
+> [!IMPORTANT]
+> CCSDSPack v1.x.x is **not certified as compliant with ECSS Packet Utilisation Standard (PUS)**
+> revisions. The bundled `PusA`, `PusB`, and `PusC` classes are legacy project-specific secondary
+> header formats and must not be interpreted as official ECSS PUS implementations.
 
 
 ## Table of Contents
@@ -28,7 +33,7 @@ The following tables show the current overall build and regression test status o
 
 | Linux | Windows |
 |-------|---------|
- | ![Build Status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=main)| ![Build Status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=main) | 
+| ![Build Status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=main)| ![Build Status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=main) | 
 
 Specific distribution build and regression status are shown below
 
@@ -42,13 +47,13 @@ Specific distribution build and regression status are shown below
 
 ## Features
 
-- Support for both **TM** and **TC** CCSDS packets using integrated PUS standards
+- Support for packet types using the CCSDS Space Packet primary-header layout
 - Custom serialization with support for `std::vector`, `std::shared_ptr`, and user-defined types
-- End-to-end encoding / decoding and validation 
+- End-to-end encoding / decoding and validation
 - Easy to test and integrate
 - Built-in extensibility for secondary headers with clear abstraction
 - User-friendly installation and usage within your code.
-- Example Executables (encoder, decoder and validator) see [Executables](docs/EXECUTABLES.md) 
+- Example Executables (encoder, decoder and validator) see [Executables](docs/EXECUTABLES.md)
 - Optimised for fast execution.
 - Pre-built .deb package downloadable from [Releases](https://github.com/ExoSpaceLabs/CCSDSPack/releases).
 - Pre-built docker image with library installed, see [docker](#docker).
@@ -59,7 +64,7 @@ Specific distribution build and regression status are shown below
 Full API documentation is available and hosted here:  [CCSDSPack Documentation](https://exospacelabs.github.io/CCSDSPack/html/)
 
 
-C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, analysis and more
+C++ library for CCSDS-oriented packet generation, extraction, validation, and analysis.
 
 ![ccsds packet image](docs/imgs/Packet_management.png)
 
@@ -77,62 +82,79 @@ Features Provided by the CCSDS::Manager class(Assuming the Packet identifier dat
 ![ccsds packet image](docs/imgs/ccsdsPacket.png)
 
 - **Primary Header** — Fixed size, always present. Defines APID, packet type, data length, and other control flags.
-- **Secondary Header** — Optional; type depends on the mission and protocol standards used (e.g., PUS-A/B/C).
+- **Secondary Header** — Optional; v1.x.x supports custom and legacy project-specific header formats.
 - **Application Data** — Mission-specific payload bytes.
 - **Error Control Field (optional)** — CRC or checksum for integrity verification.
 
 ---
 
-### PUS Standards in CCSDSPack
+### Legacy Secondary Headers in v1.x.x
 
-The **Packet Utilization Standard (PUS)** defines conventions for structuring the Secondary Header and Application Data in CCSDS packets for ESA missions.  
-CCSDSPack includes **built-in support** for several PUS standards out of the box:
+CCSDSPack v1.x.x includes three built-in secondary-header implementations named `PusA`, `PusB`,
+and `PusC`.
+
+These names are retained for compatibility with the v1 API and configuration files. Their encoded
+layouts are **project-specific** and are not claimed to implement official ECSS PUS-A, PUS-C, or any
+other ECSS Packet Utilisation Standard revision.
+
+#### `PusA`
+
+A fixed-size legacy secondary header containing:
+
+- version,
+- service type,
+- service subtype,
+- source ID,
+- application-data length.
+
+![Legacy PusA secondary header](docs/imgs/pus-a.png)
+
+#### `PusB`
+
+A fixed-size legacy event-oriented secondary header containing:
+
+- version,
+- service type,
+- service subtype,
+- source ID,
+- event ID,
+- application-data length.
+
+![Legacy PusB secondary header](docs/imgs/pus-b.png)
+
+`PusB` is a CCSDSPack-specific format. It does not represent an official ECSS PUS revision or
+standard secondary-header type.
+
+#### `PusC`
+
+A variable-size legacy secondary header containing:
+
+- version,
+- service type,
+- service subtype,
+- source ID,
+- a variable byte sequence used as a time-code field,
+- application-data length.
+
+![Legacy PusC secondary header](docs/imgs/pus-c.png)
+
+The variable time-code field is treated as application-configured bytes and is not validated as a
+specific CCSDS or ECSS time-code format.
+
+#### v2 transition
+
+Standards-compliant CCSDS and ECSS PUS behaviour is planned for CCSDSPack v2.0.0. This includes
+correct packet-length semantics, packet error-control handling, sequence-count behaviour, and
+separate standards-based TC and TM secondary headers.
 
 ---
 
-#### **PUS-A Telecommand (TC)**
-
-A fixed-size secondary header format used in **Telecommand (TC)** packets.
-
-![PUS-A secondary header](docs/imgs/pus-a.png)
-
-- **Purpose:** Command packets sent from ground to spacecraft.
-- **Secondary Header size:** Fixed (typically 4–6 bytes depending on implementation).
-- **Common fields:** Service type, service subtype, source ID.
-- **Advantages:** Simple, low overhead, deterministic parsing.
-
----
-
-#### **PUS-B Telemetry (TM)**
-
-A fixed-size secondary header format used in **Telemetry (TM)** packets.
-
-![PUS-B secondary header](docs/imgs/pus-b.png)
-
-- **Purpose:** Data packets sent from spacecraft to ground.
-- **Secondary Header size:** Fixed (typically 6–8 bytes).
-- **Common fields:** PUS version, service type/subtype, time information, source ID, optional event ID.
-- **Advantages:** Standardized time coding, predictable layout, widely supported in ESA ground systems.
-
----
-
-#### **PUS-C** (Flexible / Variable)
-
-A more flexible and **variable-sized** secondary header format.
-
-![PUS-C secondary header](docs/imgs/pus-c.png)
-
-- **Purpose:** Allows missions to define a custom secondary header layout while still remaining PUS-compliant.
-- **Secondary Header size:** Variable (defined by mission config).
-- **Common use:** Missions requiring extended metadata, non-standard time formats, or extra identification fields.
-- **Advantages:** Flexibility for evolving mission requirements; still compatible with CCSDS framing.
-
----
 ### Other Documents
 Please check out the documentation on [ccsds documentation](https://public.ccsds.org/Publications/default.aspx). Recommended documents are within the Blue and Green
 books.
 
-Also take a look of the following documents:
+The following documents are useful protocol references. Their inclusion does not imply that
+CCSDSPack v1.x.x implements every requirement in these standards:
 
 * [CCSDS 133.0-B-2](https://public.ccsds.org/Pubs/133x0b2e2.pdf) - Space Packet Protocol
 * [CCSDS 133.1-B-3](https://public.ccsds.org/Pubs/133x1b3e1.pdf) - Encapsulation Packet Protocol
@@ -148,10 +170,10 @@ Also take a look of the following documents:
 ### Source
 CMake flags:
 
-The following flags can be provided to cmake when building the project to enable disable build of 
-specific provided features. such as tester, which may or may not be of interest. 
+The following flags can be provided to cmake when building the project to enable or disable build of
+specific provided features. such as tester, which may or may not be of interest.
 
-| Cmake Flag (default value) | Description                                                                  |
+| CMake Flag (default value) | Description                                                                  |
 |----------------------------|------------------------------------------------------------------------------|
 | -DCCSDSPACK_BUILD_MCU=OFF  | build the project as a static library for microcontrollers. *                |
 | -DENABLE_TESTER=ON         | build tester, that performs regression tests of the library.                 | 
@@ -180,7 +202,7 @@ git clone https://github.com/ExoSpaceLabs/CCSDSPack.git
 cd CCSDSPack
 ```
 
-set up cmake and build
+Configure CMake and build
 ```bash
 
 cd build && cmake .. && make
@@ -201,7 +223,7 @@ Note: this might require privileged `sudo` command as per permission restriction
 
 ---
 #### Windows
-tested on Windows-2019 and Windows-latest (see git hub [Actions](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml))
+tested on Windows-2019 and Windows-latest (see GitHub [Actions](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml))
 
 Install dependencies:
 
@@ -224,7 +246,7 @@ The tester can already be executed using the following commands:
 
 cd build/bin && ./CCSDSPack_tester.exe
 ```
-Note: Cmake will deploy test files to bin directory, if the tester is not executed from the
+Note: CMake will deploy test files to bin directory, if the tester is not executed from the
 bin directory some tests will fail.
 
 ---
@@ -240,12 +262,12 @@ sudo dpkg -i ccsdspack-v<version>-<system>-<architecture>.deb
 ```
 
 If the required system is not prebuilt or available on the above list, it can be generated by
-following instructions in [Packages](docs/PACKAGES.md) document. Where detailed information 
+following instructions in [Packages](docs/PACKAGES.md) document. Where detailed information
 is provided for library inclusion in private projects.
 
 ### Docker
 Prebuilt Docker images of CCSDSPack are published on [GHCR](https://github.com/ExoSpaceLabs/CCSDSPack/pkgs/container/ccsdspack).  
-They provide a ready-to-use environment with the library and command-line tools already installed, 
+They provide a ready-to-use environment with the library and command-line tools already installed,
 so you don’t need to compile from source or manage dependencies manually (almost none in this case).
 
 Pull a specific release image or the latest version:
@@ -308,10 +330,10 @@ cmake .. -DCMAKE_PREFIX_PATH=/path/to/install/prefix
 
 ### Encoder:
 
-Encode a specific file into the application data of CCSDS packets and save streamed packets 
+Encode a specific file into the application data of CCSDS packets and save streamed packets
 data to a desired file.
 
-requirements: 
+Requirements:
 * a file to encode
 * configuration file which holds the template packet data and settings
 
@@ -321,11 +343,11 @@ ccsds_encoder -i <file_to_encode> -o <encoded_binaryFile> -c <config_file>
 ```
 ### Decoder:
 
-Decode a previously encoded binary file holding serialized CCSDS packets, extract application 
-data and recreate original file. 
+Decode a previously encoded binary file holding serialized CCSDS packets, extract application
+data and recreate original file.
 
-requirements:
-* an encoded binary file 
+Requirements:
+* an encoded binary file
 * configuration file used to encode the packets holding template packet data and settings
 
 ```bash
@@ -337,7 +359,7 @@ Note: If the decoded file is named with the original file extension it will be u
 
 For more detailed info and other examples (e.g. Validator usage) see [Executables](docs/EXECUTABLES.md).
 
-The configuration file description and usage can be found under [Config file](docs/CONFIG.md). 
+The configuration file description and usage can be found under [Config file](docs/CONFIG.md).
 
 ### C++
 The following examples show how the high level C++ APIs can be used in a project
@@ -373,9 +395,9 @@ int main(){
   return 0;
 }
 ```
-Where the 'inputBytes' are a set of bytes that are to be set as application into the packets. This is performed by 
-first setting a template packet in the manager. Which then will be used as reference for all packets generated. and the 
-application data is then set using the setApplicationData manager member method. This generates CCSDS packets in  the 
+Where the 'inputBytes' are a set of bytes that are to be set as application into the packets. This is performed by
+first setting a template packet in the manager. Which then will be used as reference for all packets generated. and the
+application data is then set using the setApplicationData manager member method. This generates CCSDS packets in  the
 manager. It can be retrieved by using the getPackets method. and further manipulation can be performed if required.
 
 2) Assuming you already have a CCSDS packet stream and want to extract the data from it.
@@ -405,5 +427,4 @@ Assuming we have a vector of CCSDS packets prepared ad hoc. These packets then c
 If required the manager allows the packets to be validated for coherence, or if the template is set against it.
 In the example above the application data is retrieved from all packets into a single stream of data.
 
-for more examples see [Examples](docs/EXAMPLES.md).
-
+For more examples, see [Examples](docs/EXAMPLES.md).

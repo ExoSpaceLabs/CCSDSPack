@@ -92,4 +92,42 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     auto res = pkt.deserialize(shortData);
     return !res; // Should fail
   });
+
+  tester->unitTest("Packet error control defaults to CRC16", []() {
+    CCSDS::Packet packet;
+    if (packet.getPacketErrorControlMode() != CCSDS::PacketErrorControlMode::CRC16) return false;
+    if (packet.getPacketErrorControlSize() != 2) return false;
+
+    TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
+    const auto serialized = packet.serialize();
+    return serialized.size() == 10 && packet.getFullPacketLength() == 10;
+  });
+
+  tester->unitTest("Packet error control can be disabled", []() {
+    CCSDS::Packet packet;
+    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
+
+    const auto serialized = packet.serialize();
+    if (serialized.size() != 8) return false;
+    if (packet.getFullPacketLength() != 8) return false;
+    if (!packet.getCRCVectorBytes().empty()) return false;
+    if (packet.getCRC() != 0) return false;
+
+    CCSDS::Packet decoded;
+    decoded.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    TEST_VOID(decoded.deserialize(serialized));
+    return decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0xAA, 0x55});
+  });
+
+  tester->unitTest("CRC16 mode still strips the received error control field", []() {
+    CCSDS::Packet packet;
+    TEST_VOID(packet.setApplicationData({0x10, 0x20, 0x30}));
+    const auto serialized = packet.serialize();
+
+    CCSDS::Packet decoded;
+    TEST_VOID(decoded.deserialize(serialized));
+    if (decoded.getPacketErrorControlMode() != CCSDS::PacketErrorControlMode::CRC16) return false;
+    return decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x10, 0x20, 0x30});
+  });
 }

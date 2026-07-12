@@ -41,6 +41,16 @@ namespace CCSDS {
     std::uint16_t finalXorValue = 0x0000;
   };
 
+  /**
+   * @brief Selects whether a CCSDS packet includes a packet error-control field.
+   *
+   * CRC16 remains the default to preserve the behaviour of existing v1 callers.
+   */
+  enum class PacketErrorControlMode : std::uint8_t {
+    None = 0,
+    CRC16 = 1
+  };
+
 
   /**
    * @brief Represents a CCSDS (Consultative Committee for Space Data Systems) packet.
@@ -48,13 +58,13 @@ namespace CCSDS {
    * This class provides functionality to construct and manage a CCSDS packet, which
    * includes both the primary header and the data field. It allows setting and getting
    * the primary header, data field headers (PusA, PusB, PusC), and application data.
-   * The packet also includes a CRC-16 checksum for error detection.
+   * The packet also includes an optional CRC-16 checksum for error detection.
    *
    * The class provides methods for managing the packet's data structure, including
    * printing the headers and data field, calculating the CRC-16, and combining the
-   * primary header, data field, and CRC into a complete packet. The header is updated
-   * automatically when necessary, and it provides both raw and vector representations
-   * of the data for further use or transmission.
+   * primary header, data field, and optional CRC into a complete packet. The header is
+   * updated automatically when necessary, and it provides both raw and vector
+   * representations of the data for further use or transmission.
    *
    * The `Packet` class also handles the internal state for CRC calculation and header
    * updates to ensure data consistency.
@@ -249,6 +259,25 @@ namespace CCSDS {
      */
     void setUpdatePacketEnable(bool enable);
 
+    /**
+     * @brief Selects the packet error-control field used during serialization and parsing.
+     *
+     * Existing callers retain CRC16 because it is the default mode.
+     */
+    void setPacketErrorControlMode(PacketErrorControlMode mode);
+
+    /** @brief Returns the configured packet error-control mode. */
+    [[nodiscard]] PacketErrorControlMode getPacketErrorControlMode() const {
+      return (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK) != 0U
+               ? PacketErrorControlMode::None
+               : PacketErrorControlMode::CRC16;
+    }
+
+    /** @brief Returns the encoded packet error-control field size in bytes. */
+    [[nodiscard]] std::uint16_t getPacketErrorControlSize() const {
+      return getPacketErrorControlMode() == PacketErrorControlMode::CRC16 ? 2U : 0U;
+    }
+
     /** @brief Deserializes a vector of bytes into a CCSDS packet. */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data);
 
@@ -281,11 +310,9 @@ namespace CCSDS {
     /**
      * @brief Retrieves the full packet as a vector of bytes.
      *
-     * Combines the primary header, data field, and CRC-16 checksum into
+     * Combines the primary header, data field, and optional CRC-16 checksum into
      * a single vector. Ensures that the header and data field sizes meet
      * minimum requirements.
-     *
-     * @note Header size must be 6 bytes and data field size must be greater than 1 byte.
      *
      * @return A vector containing the full packet in byte form.
      */
@@ -328,6 +355,7 @@ namespace CCSDS {
      *
      * The checksum is split into its most significant byte (MSB) and
      * least significant byte (LSB) and stored in a two-element vector.
+     * An empty vector is returned when packet error control is disabled.
      *
      * @return A vector containing the MSB and LSB of the CRC-16 checksum.
      */
@@ -336,11 +364,11 @@ namespace CCSDS {
     /**
      * @brief Computes and retrieves the CRC-16 checksum of the packet.
      *
-     * If the CRC-16 has not already been calculated, this function computes it
-     * using the full data field of the packet. The result is cached for
-     * future calls to improve performance.
+     * If packet error control is disabled this method returns zero. Otherwise,
+     * if the CRC-16 has not already been calculated, this function computes it
+     * and caches the result for future calls.
      *
-     * @return The 16-bit CRC-16 checksum.
+     * @return The 16-bit CRC-16 checksum or zero when disabled.
      */
     std::uint16_t getCRC();
 
@@ -413,12 +441,17 @@ namespace CCSDS {
 #endif
 
   private:
+    static constexpr std::uint16_t SEQUENCE_COUNT_MASK = 0x3FFFU;
+    static constexpr std::uint16_t PACKET_ERROR_CONTROL_DISABLED_MASK = 0x8000U;
+
     Header m_primaryHeader{};        ///< 6 bytes / 48 bits / 12 hex
     DataField m_dataField{};         ///< variable
-    std::uint16_t m_CRC16{};              ///< Cyclic Redundancy check 16 bits
+    std::uint16_t m_CRC16{};         ///< Cyclic Redundancy check 16 bits
     CRC16Config m_CRC16Config;       ///< structure holding configuration of crc calculation.
     bool m_updateStatus{false};      ///< When setting data thus value should be set to false.
     bool m_enableUpdatePacket{true}; ///< Enables primary header and secondary header update.
+    // Lower 14 bits store the CCSDS sequence count. Bit 15 stores the v1.2
+    // packet-error-control mode so the Packet object layout remains ABI-stable.
     std::uint16_t m_sequenceCounter{0};
   };
 }

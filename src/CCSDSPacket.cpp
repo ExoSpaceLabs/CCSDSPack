@@ -22,9 +22,14 @@ void CCSDS::Packet::update() {
     if (m_primaryHeader.getSequenceFlags() == UNSEGMENTED) {
       m_primaryHeader.setSequenceCount(0);
     } else {
-      m_primaryHeader.setSequenceCount(m_sequenceCounter);
+      m_primaryHeader.setSequenceCount(m_sequenceCounter & SEQUENCE_COUNT_MASK);
     }
-    m_CRC16 = crc16(dataField, m_CRC16Config.polynomial, m_CRC16Config.initialValue, m_CRC16Config.finalXorValue);
+
+    if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
+      m_CRC16 = crc16(dataField, m_CRC16Config.polynomial, m_CRC16Config.initialValue, m_CRC16Config.finalXorValue);
+    } else {
+      m_CRC16 = 0;
+    }
     m_updateStatus = true;
   }
 }
@@ -77,6 +82,19 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   m_primaryHeader.setSequenceFlags(sequenceFlag);
   m_primaryHeader.setSequenceCount(sequenceCount);
 
+  if (cfg.isKey("ccsds_packet_error_control")) {
+    std::string mode;
+    ASSIGN_CP(mode, cfg.get<std::string>("ccsds_packet_error_control"));
+    if (mode == "none" || mode == "None") {
+      setPacketErrorControlMode(PacketErrorControlMode::None);
+    } else if (mode == "crc16" || mode == "CRC16") {
+      setPacketErrorControlMode(PacketErrorControlMode::CRC16);
+    } else {
+      return Error{ErrorCode::CONFIG_FILE_ERROR,
+                   "Config: ccsds_packet_error_control must be 'none' or 'crc16'"};
+    }
+  }
+
   if (cfg.isKey( "data_field_size")) { // optional field
     std::uint16_t dataFieldSize;
     ASSIGN_OR_PRINT(dataFieldSize, cfg.get< int>( "data_field_size"));
@@ -102,6 +120,9 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
 #endif
 
 uint16_t CCSDS::Packet::getCRC() {
+  if (getPacketErrorControlMode() == PacketErrorControlMode::None) {
+    return 0;
+  }
   update();
   return m_CRC16;
 }
@@ -116,6 +137,10 @@ bool CCSDS::Packet::getDataFieldHeaderFlag() {
 }
 
 std::vector<std::uint8_t> CCSDS::Packet::getCRCVectorBytes() {
+  if (getPacketErrorControlMode() == PacketErrorControlMode::None) {
+    return {};
+  }
+
   std::vector<std::uint8_t> crc(2);
   const auto crcVar = getCRC();
   crc[0] = (crcVar >> 8) & 0xFF; // MSB (Most Significant Byte)
@@ -168,14 +193,17 @@ std::vector<std::uint8_t> CCSDS::Packet::serialize() {
   if (!getFullDataFieldBytes().empty()) {
     packet.insert(packet.end(), dataField.begin(), dataField.end());
   }
-  packet.insert(packet.end(), crc.begin(), crc.end());
+  if (!crc.empty()) {
+    packet.insert(packet.end(), crc.begin(), crc.end());
+  }
 
   return packet;
 }
 
 CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &data) {
-  RET_IF_ERR_MSG(data.size() <= 7, ErrorCode::INVALID_HEADER_DATA,
-                 "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
+  const auto minimumPacketSize = static_cast<std::size_t>(6U + getPacketErrorControlSize());
+  RET_IF_ERR_MSG(data.size() < minimumPacketSize, ErrorCode::INVALID_HEADER_DATA,
+                 "Cannot Deserialize Packet, data is shorter than the primary header and configured packet error control");
 
   std::vector<std::uint8_t> dataFieldVector;
   std::copy(data.begin() + 6, data.end(), std::back_inserter(dataFieldVector));
@@ -186,8 +214,9 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &da
 }
 
 CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &data, const std::string &headerType, const std::int32_t headerSize) {
-  RET_IF_ERR_MSG(data.size() <= 8, ErrorCode::INVALID_DATA,
-                 "Cannot Deserialize Packet, Invalid Data provided data size must be at least 8 bytes");
+  const auto minimumPacketSize = static_cast<std::size_t>(6U + getPacketErrorControlSize());
+  RET_IF_ERR_MSG(data.size() < minimumPacketSize, ErrorCode::INVALID_DATA,
+                 "Cannot Deserialize Packet, invalid data provided");
   RET_IF_ERR_MSG(headerType == "BufferHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot Deserialize Packet, BufferHeader is not of defined size");
   RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType),
@@ -200,6 +229,9 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &da
   }else {
     headerDataSizeBytes = secondaryHeader->getSize();
   }
+
+  RET_IF_ERR_MSG(data.size() < 6U + headerDataSizeBytes + getPacketErrorControlSize(), ErrorCode::INVALID_DATA,
+                 "Cannot Deserialize Packet, data is shorter than the configured secondary header and packet error control");
 
   std::vector<std::uint8_t> dataFieldHeaderVector;
   std::copy_n(data.begin() + 6, headerDataSizeBytes, std::back_inserter(dataFieldHeaderVector));
@@ -216,7 +248,7 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &da
 }
 
 CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &data, const std::uint16_t headerDataSizeBytes) {
-  RET_IF_ERR_MSG(data.size() < (8 + headerDataSizeBytes), ErrorCode::INVALID_DATA,
+  RET_IF_ERR_MSG(data.size() < (6U + headerDataSizeBytes + getPacketErrorControlSize()), ErrorCode::INVALID_DATA,
                  "Cannot Deserialize Packet, Invalid Data provided");
 
   std::vector<std::uint8_t> secondaryHeader;
@@ -234,48 +266,63 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &he
   RET_IF_ERR_MSG(headerData.size() != 6, ErrorCode::INVALID_HEADER_DATA,
                  "Cannot Deserialize Packet, Invalid Header Data provided.");
   FORWARD_RESULT(m_primaryHeader.deserialize( headerData ));
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
-
-  RET_IF_ERR_MSG(data.size() < 2, ErrorCode::INVALID_DATA,
-                 "Cannot Deserialize Packet, Invalid Data provided, at least CRC is required.");
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
 
   std::vector<uint8_t> dataCopy;
-  m_CRC16 = (data[data.size() - 2] << 8) + data.back();
+  if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
+    RET_IF_ERR_MSG(data.size() < 2, ErrorCode::INVALID_DATA,
+                   "Cannot Deserialize Packet, at least two packet error-control bytes are required in CRC16 mode.");
+    m_CRC16 = (static_cast<std::uint16_t>(data[data.size() - 2]) << 8) + data.back();
+    if (data.size() > 2) {
+      std::copy(data.begin(), data.end() - 2, std::back_inserter(dataCopy));
+    }
+  } else {
+    m_CRC16 = 0;
+    dataCopy = data;
+  }
 
-  if (data.size() == 2) return true; // returns since no application data is to be written.
+  if (!dataCopy.empty()) {
+    FORWARD_RESULT(m_dataField.setApplicationData(dataCopy));
+  }
 
-  std::copy(data.begin(), data.end() - 2, std::back_inserter(dataCopy));
-  FORWARD_RESULT(m_dataField.setApplicationData(dataCopy));
-
-  return true;;
+  // Preserve the v1 lifecycle: dependent fields are recalculated on the next
+  // getter/serialization call unless automatic updates are explicitly disabled.
+  m_updateStatus = false;
+  return true;
 }
 
 uint16_t CCSDS::Packet::getFullPacketLength() {
-  // where 8 is derived from 6 bytes for Primary header and 2 bytes for CRC16.
-  return 8 + m_dataField.getDataFieldUsedBytesSize();
+  return static_cast<std::uint16_t>(6U + m_dataField.getDataFieldUsedBytesSize() + getPacketErrorControlSize());
 }
 
 CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const std::uint64_t data) {
   FORWARD_RESULT(m_primaryHeader.setData( data ));
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
   return true;
 }
 
 CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const std::vector<uint8_t> &data) {
   FORWARD_RESULT(m_primaryHeader.deserialize( data ));
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
   return true;
 }
 
 void CCSDS::Packet::setPrimaryHeader(const Header &header) {
   m_primaryHeader = header;
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
+  m_updateStatus = false;
 }
 
 void CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
   m_primaryHeader.setData(data);
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
 }
 
@@ -329,7 +376,8 @@ void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags) {
 CCSDS::ResultBool CCSDS::Packet::setSequenceCount(const std::uint16_t count) {
   RET_IF_ERR_MSG(m_primaryHeader.getSequenceFlags() == UNSEGMENTED && count != 0, ErrorCode::INVALID_DATA,
                  "Unable to set non 0 value for UNSEGMENTED packet");
-  m_sequenceCounter = count;
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (count & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
   return true;
 }
@@ -341,4 +389,14 @@ void CCSDS::Packet::setDataFieldSize(const std::uint16_t size) {
 void CCSDS::Packet::setUpdatePacketEnable(const bool enable) {
   m_enableUpdatePacket = enable;
   m_dataField.setDataFieldHeaderAutoUpdateStatus(enable);
+}
+
+void CCSDS::Packet::setPacketErrorControlMode(const PacketErrorControlMode mode) {
+  if (mode == PacketErrorControlMode::None) {
+    m_sequenceCounter |= PACKET_ERROR_CONTROL_DISABLED_MASK;
+    m_CRC16 = 0;
+  } else {
+    m_sequenceCounter &= static_cast<std::uint16_t>(~PACKET_ERROR_CONTROL_DISABLED_MASK);
+  }
+  m_updateStatus = false;
 }
