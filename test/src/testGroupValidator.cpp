@@ -3,290 +3,175 @@
 
 #include <CCSDSValidator.h>
 #include <iostream>
-#include "CCSDSUtils.h"
-#include "CCSDSResult.h"
+#include <vector>
 #include "tests.h"
 
 namespace {
-  const std::vector<std::uint8_t> VALIDATOR_PAYLOAD{
-    0x0B, 0x01, 0x04, 0x05, 0x06, 0x07, 0x0A, 0x00, 0x03, 0x03, 0x04, 0x05
-  };
-
-  std::vector<std::uint8_t> makePacket(const std::uint8_t identificationMSB,
-                                       const std::uint8_t identificationLSB,
-                                       const std::uint8_t sequenceMSB,
-                                       const std::uint8_t sequenceLSB,
-                                       const std::vector<std::uint8_t> &payload = VALIDATOR_PAYLOAD) {
-    const auto packetDataLength = static_cast<std::uint16_t>(payload.size() + 1U);
-    std::vector<std::uint8_t> packet{
-      identificationMSB,
-      identificationLSB,
-      sequenceMSB,
-      sequenceLSB,
-      static_cast<std::uint8_t>((packetDataLength >> 8) & 0xFFU),
-      static_cast<std::uint8_t>(packetDataLength & 0xFFU)
-    };
-    packet.insert(packet.end(), payload.begin(), payload.end());
-    const auto checksum = crc16(packet);
-    packet.push_back(static_cast<std::uint8_t>((checksum >> 8) & 0xFFU));
-    packet.push_back(static_cast<std::uint8_t>(checksum & 0xFFU));
-    return packet;
-  }
-
-  void setDeclaredLengthAndRefreshCRC(std::vector<std::uint8_t> &packet, const std::uint16_t length) {
-    packet[4] = static_cast<std::uint8_t>((length >> 8) & 0xFFU);
-    packet[5] = static_cast<std::uint8_t>(length & 0xFFU);
-    packet.resize(packet.size() - 2U);
-    const auto checksum = crc16(packet);
-    packet.push_back(static_cast<std::uint8_t>((checksum >> 8) & 0xFFU));
-    packet.push_back(static_cast<std::uint8_t>(checksum & 0xFFU));
-  }
-
-  CCSDS::Packet deserializePacket(const std::vector<std::uint8_t> &bytes) {
+  CCSDS::Packet finalizedPacket(const std::uint16_t apid,
+                                const CCSDS::ESequenceFlag flags,
+                                const std::uint16_t count,
+                                const std::vector<std::uint8_t> &data = {1, 2, 3},
+                                const CCSDS::PacketErrorControlMode mode = CCSDS::PacketErrorControlMode::CRC16) {
     CCSDS::Packet packet;
-    packet.setUpdatePacketEnable(false);
-    const auto result = packet.deserialize(bytes);
-    if (!result) {
-      std::cerr << "[ Error ]: Code [" << result.error().code() << "]: " << result.error().message() << '\n';
+    packet.setPacketErrorControlMode(mode);
+    const auto headerResult = packet.setPrimaryHeader(
+      CCSDS::PrimaryHeader{0, 0, 0, apid, flags, count, 0});
+    if (!headerResult) {
+      return {};
     }
+    const auto dataResult = packet.setApplicationData(data);
+    if (!dataResult || packet.serialize().empty()) {
+      return {};
+    }
+    packet.setUpdatePacketEnable(false);
     return packet;
   }
 
-  CCSDS::Packet makeTemplate(const std::vector<std::uint8_t> &header) {
+  CCSDS::Packet rawPacketWithoutCRC(const std::uint16_t apid,
+                                    const CCSDS::ESequenceFlag flags,
+                                    const std::uint16_t count,
+                                    const std::uint16_t dataLength,
+                                    const std::vector<std::uint8_t> &data = {1, 2, 3}) {
     CCSDS::Packet packet;
+    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    packet.setPrimaryHeader(CCSDS::PrimaryHeader{0, 0, 0, apid, flags, count, dataLength});
+    packet.setApplicationData(data);
     packet.setUpdatePacketEnable(false);
-    const auto result = packet.setPrimaryHeader(header);
-    if (!result) {
-      std::cerr << "[ Error ]: Code [" << result.error().code() << "]: " << result.error().message() << '\n';
-    }
     return packet;
+  }
+
+  CCSDS::Validator validatorWithTemplate(const CCSDS::Packet &packet,
+                                          const bool coherence = true,
+                                          const bool sequence = true) {
+    CCSDS::Validator validator;
+    validator.configure(coherence, sequence, true);
+    validator.setTemplatePacket(packet);
+    return validator;
   }
 }
 
 void testGroupValidator(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupValidator: " << description << std::endl;
 
-  tester->unitTest("Validator UNSEGMENTED Packet coherence shall pass.", []() {
+  tester->unitTest("Validator accepts a coherent unsegmented packet.", [] {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0xC0, 0x00)));
+    return validator.validate(finalizedPacket(1, CCSDS::UNSEGMENTED, 0));
   });
 
-  tester->unitTest("Validator UNSEGMENTED Packet coherence shall fail.", []() {
+  tester->unitTest("Validator rejects a non-zero count on the current unsegmented policy.", [] {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
-    auto bytes = makePacket(0xFF, 0xFF, 0xC0, 0x00);
-    bytes.push_back(0x01);
-    bytes.push_back(0x02);
-    return !validator.validate(deserializePacket(bytes));
+    return !validator.validate(rawPacketWithoutCRC(1, CCSDS::UNSEGMENTED, 5, 2));
   });
 
-  tester->unitTest("Validator SEGMENTED Packet coherence shall pass.", []() {
+  tester->unitTest("Validator accepts a coherent first segment.", [] {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0x40, 0x01)));
+    return validator.validate(finalizedPacket(1, CCSDS::FIRST_SEGMENT, 1));
   });
 
-  tester->unitTest("Validator SEGMENTED Packet coherence shall fail.", []() {
+  tester->unitTest("Validator rejects a segmented packet with count zero.", [] {
     CCSDS::Validator validator;
     validator.configure(true, true, false);
-    return !validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0x40, 0x00)));
+    return !validator.validate(rawPacketWithoutCRC(1, CCSDS::FIRST_SEGMENT, 0, 2));
   });
 
-  tester->unitTest("Validator SEGMENTED Packet count coherence shall pass.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, false);
-    return validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0x40, 0x01)));
-  });
-
-  tester->unitTest("Validator SEGMENTED Packet count coherence shall fail.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, false);
-    return !validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0x40, 0x03)));
-  });
-
-  tester->unitTest("Validator UNSEGMENTED Packet against Template shall pass.", []() {
-    CCSDS::Validator validator;
-    validator.configure(false, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    return validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0xC0, 0x00)));
-  });
-
-  tester->unitTest("Validator UNSEGMENTED Packet against Template shall fail.", []() {
-    CCSDS::Validator validator;
-    validator.configure(false, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    return !validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0xC0, 0x00)));
-  });
-
-  tester->unitTest("Validator SEGMENTED Packet against Template shall pass.", []() {
-    CCSDS::Validator validator;
-    validator.configure(false, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
-    return validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0x40, 0x05)));
-  });
-
-  tester->unitTest("Validator SEGMENTED Packet against Template shall fail.", []() {
-    CCSDS::Validator validator;
-    validator.configure(false, true, true);
-    validator.setTemplatePacket(makeTemplate({0xFF, 0xFF, 0x40, 0x00, 0x00, 0x00}));
-    return !validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0xC0, 0x00)));
-  });
-
-  tester->unitTest("Validator UNSEGMENTED Packet coherence & against template shall pass.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    return validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0xC0, 0x00)));
-  });
-
-  tester->unitTest("Validator UNSEGMENTED Packet coherence & against template shall fail.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    return !validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0xC0, 0x05)));
-  });
-
-  tester->unitTest("Validator SEGMENTED Packet coherence & against template shall pass.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
-    return validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0x40, 0x01)));
-  });
-
-  tester->unitTest("Validator SEGMENTED Packet coherence & against template shall fail.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    return !validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0x40, 0x00)));
-  });
-
-  tester->unitTest("Validator SEGMENTED Packets sequence shall pass.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
-    const auto packet1 = deserializePacket(makePacket(0xF7, 0xFF, 0x40, 0x01));
-    const auto packet2 = deserializePacket(makePacket(0xF7, 0xFF, 0x00, 0x02));
+  tester->unitTest("Validator tracks a coherent segmented sequence.", [] {
+    const auto packet1 = finalizedPacket(1, CCSDS::FIRST_SEGMENT, 1);
+    const auto packet2 = finalizedPacket(1, CCSDS::CONTINUING_SEGMENT, 2);
+    auto validator = validatorWithTemplate(packet1);
     return validator.validate(packet1) && validator.validate(packet2);
   });
 
-  tester->unitTest("Validator SEGMENTED Packets sequence shall fail.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
-    const auto packet1 = deserializePacket(makePacket(0xF7, 0xFF, 0x40, 0x01));
-    const auto packet2 = deserializePacket(makePacket(0xF7, 0xFF, 0x00, 0x03));
+  tester->unitTest("Validator rejects a discontinuous segmented sequence.", [] {
+    const auto packet1 = finalizedPacket(1, CCSDS::FIRST_SEGMENT, 1);
+    const auto packet2 = finalizedPacket(1, CCSDS::CONTINUING_SEGMENT, 3);
+    auto validator = validatorWithTemplate(packet1);
     return validator.validate(packet1) && !validator.validate(packet2);
   });
 
-  tester->unitTest("Validator supports packets without packet error control.", []() {
-    CCSDS::Packet packet;
-    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
-    TEST_VOID(packet.setApplicationData({0x01, 0x02, 0x03}));
-    const auto bytes = packet.serialize();
+  tester->unitTest("Validator accepts a packet matching its unsegmented template.", [] {
+    const auto packet = finalizedPacket(0x123, CCSDS::UNSEGMENTED, 0);
+    auto validator = validatorWithTemplate(packet, false, true);
+    return validator.validate(packet);
+  });
 
-    CCSDS::Packet decoded;
-    decoded.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
-    decoded.setUpdatePacketEnable(false);
-    TEST_VOID(decoded.deserialize(bytes));
+  tester->unitTest("Validator rejects a packet with a different template APID.", [] {
+    const auto templatePacket = finalizedPacket(0x123, CCSDS::UNSEGMENTED, 0);
+    const auto packet = finalizedPacket(0x124, CCSDS::UNSEGMENTED, 0);
+    auto validator = validatorWithTemplate(templatePacket, false, true);
+    return !validator.validate(packet);
+  });
 
+  tester->unitTest("Validator rejects segmented state against an unsegmented template.", [] {
+    const auto templatePacket = finalizedPacket(1, CCSDS::UNSEGMENTED, 0);
+    const auto packet = finalizedPacket(1, CCSDS::FIRST_SEGMENT, 1);
+    auto validator = validatorWithTemplate(templatePacket, false, true);
+    return !validator.validate(packet);
+  });
+
+  tester->unitTest("Validator accepts packets without packet error control.", [] {
+    auto packet = finalizedPacket(1, CCSDS::UNSEGMENTED, 0, {1, 2, 3},
+                                  CCSDS::PacketErrorControlMode::None);
     CCSDS::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(decoded);
+    return validator.validate(packet);
   });
 
-  tester->unitTest("Validator report, shall pass.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    const auto packet = deserializePacket(makePacket(0xF7, 0xFF, 0xC0, 0x00));
-    const std::vector<bool> expected{true, true, true, true, true, true};
+  tester->unitTest("Validator report is fully true for a valid packet.", [] {
+    const auto packet = finalizedPacket(1, CCSDS::UNSEGMENTED, 0);
+    auto validator = validatorWithTemplate(packet);
     validator.validate(packet);
-    return validator.getReport() == expected;
+    return validator.getReport() == std::vector<bool>({true, true, true, true, true, true});
   });
 
-  tester->unitTest("Validator report, shall fail on data field length.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    auto bytes = makePacket(0xF7, 0xFF, 0xC0, 0x00);
-    setDeclaredLengthAndRefreshCRC(bytes, 0x000EU);
-    const std::vector<bool> expected{false, true, true, true, true, true};
-    validator.validate(deserializePacket(bytes));
-    return validator.getReport() == expected;
+  tester->unitTest("Validator report isolates a Packet Data Length failure.", [] {
+    auto packet = rawPacketWithoutCRC(1, CCSDS::UNSEGMENTED, 0, 7);
+    auto templatePacket = rawPacketWithoutCRC(1, CCSDS::UNSEGMENTED, 0, 2);
+    auto validator = validatorWithTemplate(templatePacket);
+    validator.validate(packet);
+    return validator.getReport() == std::vector<bool>({false, true, true, true, true, true});
   });
 
-  tester->unitTest("Validator report, shall fail on CRC.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    auto bytes = makePacket(0xF7, 0xFF, 0xC0, 0x00);
-    bytes.back() ^= 0x01U;
-    const std::vector<bool> expected{true, false, true, true, true, true};
-    validator.validate(deserializePacket(bytes));
-    return validator.getReport() == expected;
+  tester->unitTest("Validator report isolates a CRC failure.", [] {
+    auto packet = finalizedPacket(1, CCSDS::UNSEGMENTED, 0, {1, 2, 3});
+    packet.setApplicationData({1, 2, 4});
+    auto templatePacket = finalizedPacket(1, CCSDS::UNSEGMENTED, 0, {1, 2, 3});
+    auto validator = validatorWithTemplate(templatePacket);
+    validator.validate(packet);
+    return validator.getReport() == std::vector<bool>({true, false, true, true, true, true});
   });
 
-  tester->unitTest("Validator report, shall fail on sequence control.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    const std::vector<bool> expected{true, true, false, true, true, true};
-    validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0xC0, 0x05)));
-    return validator.getReport() == expected;
+  tester->unitTest("Validator report isolates sequence-control coherence.", [] {
+    auto packet = rawPacketWithoutCRC(1, CCSDS::UNSEGMENTED, 5, 2);
+    auto templatePacket = rawPacketWithoutCRC(1, CCSDS::UNSEGMENTED, 0, 2);
+    auto validator = validatorWithTemplate(templatePacket);
+    validator.validate(packet);
+    return validator.getReport() == std::vector<bool>({true, true, false, true, true, true});
   });
 
-  tester->unitTest("Validator report, shall fail on sequence control counter.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00}));
-    const std::vector<bool> expected{true, true, true, false, true, true};
-    validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0x40, 0x05)));
-    return validator.getReport() == expected;
+  tester->unitTest("Validator report isolates the first-segment count rule.", [] {
+    auto packet = rawPacketWithoutCRC(1, CCSDS::FIRST_SEGMENT, 5, 2);
+    auto templatePacket = rawPacketWithoutCRC(1, CCSDS::FIRST_SEGMENT, 1, 2);
+    auto validator = validatorWithTemplate(templatePacket);
+    validator.validate(packet);
+    return validator.getReport() == std::vector<bool>({true, true, true, false, true, true});
   });
 
-  tester->unitTest("Validator report, shall fail on Identification and version.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xF7, 0x5F, 0xC0, 0x00, 0x00, 0x00}));
-    const std::vector<bool> expected{true, true, true, true, false, true};
-    validator.validate(deserializePacket(makePacket(0xF7, 0xFF, 0xC0, 0x00)));
-    return validator.getReport() == expected;
+  tester->unitTest("Validator report isolates template identity.", [] {
+    const auto templatePacket = finalizedPacket(1, CCSDS::UNSEGMENTED, 0);
+    const auto packet = finalizedPacket(2, CCSDS::UNSEGMENTED, 0);
+    auto validator = validatorWithTemplate(templatePacket);
+    validator.validate(packet);
+    return validator.getReport() == std::vector<bool>({true, true, true, true, false, true});
   });
 
-  tester->unitTest("Validator report, shall fail on header flag.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xFF, 0xFF, 0x40, 0x00, 0x00, 0x00}));
-    const std::vector<bool> expected{true, true, true, true, true, false};
-    validator.validate(deserializePacket(makePacket(0xFF, 0xFF, 0xC0, 0x00)));
-    return validator.getReport() == expected;
+  tester->unitTest("Validator report isolates template sequence flags.", [] {
+    const auto templatePacket = finalizedPacket(1, CCSDS::UNSEGMENTED, 0);
+    const auto packet = finalizedPacket(1, CCSDS::FIRST_SEGMENT, 1);
+    auto validator = validatorWithTemplate(templatePacket);
+    validator.validate(packet);
+    return validator.getReport() == std::vector<bool>({true, true, true, true, true, false});
   });
-
-  tester->unitTest("Validator report, shall fully fail.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    validator.setTemplatePacket(makeTemplate({0xFF, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    auto bytes = makePacket(0xF7, 0xFF, 0x40, 0x00);
-    bytes[5] = 0x05;
-    bytes.back() ^= 0x01U;
-    const std::vector<bool> expected{false, false, false, false, false, false};
-    validator.validate(deserializePacket(bytes));
-    return validator.getReport() == expected;
-  });
-
-  tester->unitTest("Validator shall clear its variables.", []() {
-    CCSDS::Validator validator;
-    validator.configure(true, true, true);
-    const auto templatePacket = makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00});
-    validator.setTemplatePacket(templatePacket);
-    const auto packet1 = deserializePacket(makePacket(0xF7, 0xFF, 0x40, 0x01));
-    const auto packet2 = deserializePacket(makePacket(0xF7, 0xFF, 0x00, 0x02));
-    if (!validator.validate(packet1) || !validator.validate(packet2)) return false;
-    validator.clear();
-    validator.setTemplatePacket(templatePacket);
-    return validator.validate(packet1) && validator.validate(packet2);
-  });
-
-  std::cout << std::endl;
 }
