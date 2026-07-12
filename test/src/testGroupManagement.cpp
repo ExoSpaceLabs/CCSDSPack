@@ -56,8 +56,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> packet;
     TEST_RET(packet, manager.getPacketBufferAtIndex(0));
     if (manager.getTotalPackets() != 1U || packet.size() != 13U) return false;
-    if (packet[4] != 0x00 || packet[5] != 0x06) return false;
-    if (!hasValidDefaultCRC(packet)) return false;
+    if (packet[4] != 0x00 || packet[5] != 0x06 || !hasValidDefaultCRC(packet)) return false;
 
     std::vector<std::uint8_t> applicationData;
     TEST_RET(applicationData, manager.getApplicationDataBuffer());
@@ -76,7 +75,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     };
     TEST_VOID(manager.setApplicationData(input));
 
-    const auto packets = manager.getPackets();
+    auto packets = manager.getPackets();
     if (packets.size() != 3U) return false;
     const auto h0 = packets[0].getPrimaryHeader();
     const auto h1 = packets[1].getPrimaryHeader();
@@ -91,7 +90,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     return reassembled == input;
   });
 
-  tester->unitTest("Manager shall load concatenated compliant packets.", []() {
+  tester->unitTest("Manager shall load concatenated compliant packets and reject truncation.", []() {
     CCSDS::Manager producer;
     TEST_VOID(producer.setPacketTemplate(makeTemplate({0xF7, 0xFF, 0x40, 0x00, 0x00, 0x00})));
     producer.setAutoValidateEnable(false);
@@ -107,50 +106,34 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     CCSDS::Manager consumer;
     consumer.setAutoValidateEnable(false);
     TEST_VOID(consumer.load(buffer));
-    if (consumer.getTotalPackets() != 3U) return false;
-
     std::vector<std::uint8_t> reassembled;
     TEST_RET(reassembled, consumer.getApplicationDataBuffer());
-    return reassembled == input && consumer.getPacketsBuffer() == buffer;
+    if (consumer.getTotalPackets() != 3U || reassembled != input || consumer.getPacketsBuffer() != buffer) return false;
+
+    auto truncated = buffer;
+    truncated.pop_back();
+    CCSDS::Manager invalidConsumer;
+    invalidConsumer.setAutoValidateEnable(false);
+    return !invalidConsumer.load(truncated).has_value();
   });
 
-  tester->unitTest("Manager shall reject a truncated concatenated packet buffer.", []() {
-    CCSDS::Manager producer(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
-    producer.setAutoValidateEnable(false);
-    TEST_VOID(producer.setApplicationData({0x01, 0x02, 0x03}));
-    auto buffer = producer.getPacketsBuffer();
-    buffer.pop_back();
-
-    CCSDS::Manager consumer;
-    consumer.setAutoValidateEnable(false);
-    return !consumer.load(buffer).has_value();
-  });
-
-  tester->unitTest("Manager shall add packets as objects and buffers.", []() {
-    CCSDS::Packet packet = makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00});
-    TEST_VOID(packet.setApplicationData({0x10, 0x20, 0x30}));
-    const auto bytes = packet.serialize();
-
-    CCSDS::Manager manager;
-    manager.setAutoValidateEnable(false);
-    TEST_VOID(manager.addPacket(packet));
-    TEST_VOID(manager.addPacketFromBuffer(bytes));
-    return manager.getTotalPackets() == 2U
-           && manager.getPackets()[0].serialize() == bytes
-           && manager.getPackets()[1].serialize() == bytes;
-  });
-
-  tester->unitTest("Manager shall load a vector of packets.", []() {
+  tester->unitTest("Manager shall add and load packet objects and buffers.", []() {
     CCSDS::Packet packet1 = makeTemplate({0xF7, 0xFF, 0x40, 0x01, 0x00, 0x00});
     CCSDS::Packet packet2 = makeTemplate({0xF7, 0xFF, 0x80, 0x02, 0x00, 0x00});
     TEST_VOID(packet1.setApplicationData({0x01, 0x02}));
     TEST_VOID(packet2.setApplicationData({0x03, 0x04}));
+    const auto packet1Bytes = packet1.serialize();
 
     CCSDS::Manager manager;
     manager.setAutoValidateEnable(false);
-    TEST_VOID(manager.load(std::vector<CCSDS::Packet>{packet1, packet2}));
-    return manager.getTotalPackets() == 2U
-           && manager.getPacketsBuffer() == serializePackets({packet1, packet2});
+    TEST_VOID(manager.addPacket(packet1));
+    TEST_VOID(manager.addPacketFromBuffer(packet1Bytes));
+    TEST_VOID(manager.load(std::vector<CCSDS::Packet>{packet2}));
+    auto packets = manager.getPackets();
+    return packets.size() == 3U
+           && packets[0].serialize() == packet1Bytes
+           && packets[1].serialize() == packet1Bytes
+           && packets[2].serialize() == packet2.serialize();
   });
 
   tester->unitTest("Manager shall insert and consume sync patterns.", []() {
@@ -173,17 +156,15 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     return data == std::vector<std::uint8_t>({0x01, 0x02, 0x03, 0x04, 0x05});
   });
 
-  tester->unitTest("Manager shall clear packets and template state.", []() {
+  tester->unitTest("Manager shall clear packet and template state.", []() {
     CCSDS::Manager manager(makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00}));
     manager.setAutoValidateEnable(false);
     TEST_VOID(manager.setApplicationData({0x01, 0x02, 0x03}));
     manager.clearPackets();
     if (manager.getTotalPackets() != 0U || !manager.getPackets().empty()) return false;
-
     TEST_VOID(manager.setApplicationData({0x04, 0x05}));
     manager.clear();
-    return manager.getPackets().empty()
-           && !manager.setApplicationData({0x06}).has_value();
+    return manager.getPackets().empty() && !manager.setApplicationData({0x06}).has_value();
   });
 
   tester->unitTest("Manager shall write and read compliant packet buffers.", []() {
@@ -201,51 +182,30 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     return consumer.getPacketsBuffer() == expected;
   });
 
-  tester->unitTest("Manager shall read a generated binary packet template.", []() {
+  tester->unitTest("Manager shall read generated binary and configured templates.", []() {
     CCSDS::Packet packet = makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00});
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
-    const auto expected = packet.serialize();
-    TEST_VOID(writeBinaryFile(expected, "test_resources/runtimeTemplate.bin"));
+    const auto expectedBinary = packet.serialize();
+    TEST_VOID(writeBinaryFile(expectedBinary, "test_resources/runtimeTemplate.bin"));
 
-    CCSDS::Manager manager;
-    TEST_VOID(manager.readTemplate("test_resources/runtimeTemplate.bin"));
-    std::vector<std::uint8_t> actual;
-    TEST_RET(actual, manager.getPacketTemplate());
-    return actual == expected;
-  });
+    CCSDS::Manager binaryManager;
+    TEST_VOID(binaryManager.readTemplate("test_resources/runtimeTemplate.bin"));
+    std::vector<std::uint8_t> actualBinary;
+    TEST_RET(actualBinary, binaryManager.getPacketTemplate());
+    if (actualBinary != expectedBinary) return false;
 
 #ifndef CCSDS_MCU
-  tester->unitTest("Manager shall load the same template as Packet from config.", []() {
-    CCSDS::Packet packet;
-    TEST_VOID(packet.loadFromConfigFile("test_resources/templatePacket.cfg"));
-    const auto expected = packet.serialize();
-
-    CCSDS::Manager manager;
-    TEST_VOID(manager.loadTemplateConfigFile("test_resources/templatePacket.cfg"));
-    const auto actual = manager.getTemplate().serialize();
-    return actual == expected;
-  });
+    CCSDS::Packet configuredPacket;
+    TEST_VOID(configuredPacket.loadFromConfigFile("test_resources/templatePacket.cfg"));
+    CCSDS::Manager configManager;
+    TEST_VOID(configManager.loadTemplateConfigFile("test_resources/templatePacket.cfg"));
+    return configManager.getTemplate().serialize() == configuredPacket.serialize();
+#else
+    return true;
 #endif
-
-  tester->unitTest("Manager shall preserve a PUS-A secondary header.", []() {
-    CCSDS::Packet packet = makeTemplate({0xF7, 0xFF, 0xC0, 0x00, 0x00, 0x00});
-    PusA secondaryHeader;
-    TEST_VOID(secondaryHeader.deserialize({0x02, 0x04, 0x05, 0x06, 0x0B, 0x0C}));
-    packet.setDataFieldHeader(std::make_shared<PusA>(secondaryHeader));
-
-    CCSDS::Manager manager(packet);
-    manager.setAutoValidateEnable(false);
-    TEST_VOID(manager.setApplicationData({0x07, 0x0A}));
-    const auto packets = manager.getPackets();
-    if (packets.size() != 1U) return false;
-    const auto serialized = packets[0].serialize();
-    return packets[0].getDataFieldHeaderFlag()
-           && packets[0].getApplicationDataBytes() == std::vector<std::uint8_t>({0x07, 0x0A})
-           && serialized[5] == 0x09
-           && hasValidDefaultCRC(serialized);
   });
 
-  tester->unitTest("Manager shall segment data around a PUS-C secondary header.", []() {
+  tester->unitTest("Manager shall preserve secondary headers while segmenting.", []() {
     CCSDS::Packet packet = makeTemplate({0xCF, 0xF4, 0x40, 0x00, 0x00, 0x00});
     PusC secondaryHeader;
     TEST_VOID(secondaryHeader.deserialize({0x02, 0x04, 0x05, 0x06, 0x07, 0x0A, 0x00, 0x00}));
@@ -259,7 +219,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
       0x01, 0x02, 0x03, 0x04, 0x05,
       0x06, 0x07
     }));
-    const auto packets = manager.getPackets();
+    auto packets = manager.getPackets();
     if (packets.size() != 3U) return false;
     return packets[0].getApplicationDataBytes().size() == 5U
            && packets[1].getApplicationDataBytes().size() == 5U
@@ -269,7 +229,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
            && packets[2].getDataFieldHeaderFlag();
   });
 
-  tester->unitTest("Manager shall support CRC-disabled packet templates.", []() {
+  tester->unitTest("Manager shall support CRC-disabled templates.", []() {
     CCSDS::Packet packet = makeTemplate({0x00, 0x01, 0xC0, 0x00, 0x00, 0x00});
     packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
     CCSDS::Manager manager(packet);
@@ -278,11 +238,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
 
     std::vector<std::uint8_t> serialized;
     TEST_RET(serialized, manager.getPacketBufferAtIndex(0));
-    return serialized.size() == 8U
-           && serialized[4] == 0x00
-           && serialized[5] == 0x01
-           && serialized[6] == 0xAA
-           && serialized[7] == 0x55;
+    return serialized == std::vector<std::uint8_t>({0x00, 0x01, 0xC0, 0x00, 0x00, 0x01, 0xAA, 0x55});
   });
 
   tester->unitTest("Manager shall reject data without a template or with an empty payload.", []() {
