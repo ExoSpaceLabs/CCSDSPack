@@ -22,10 +22,10 @@ void CCSDS::Packet::update() {
     if (m_primaryHeader.getSequenceFlags() == UNSEGMENTED) {
       m_primaryHeader.setSequenceCount(0);
     } else {
-      m_primaryHeader.setSequenceCount(m_sequenceCounter);
+      m_primaryHeader.setSequenceCount(m_sequenceCounter & SEQUENCE_COUNT_MASK);
     }
 
-    if (m_packetErrorControlMode == PacketErrorControlMode::CRC16) {
+    if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
       m_CRC16 = crc16(dataField, m_CRC16Config.polynomial, m_CRC16Config.initialValue, m_CRC16Config.finalXorValue);
     } else {
       m_CRC16 = 0;
@@ -120,7 +120,7 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
 #endif
 
 uint16_t CCSDS::Packet::getCRC() {
-  if (m_packetErrorControlMode == PacketErrorControlMode::None) {
+  if (getPacketErrorControlMode() == PacketErrorControlMode::None) {
     return 0;
   }
   update();
@@ -137,7 +137,7 @@ bool CCSDS::Packet::getDataFieldHeaderFlag() {
 }
 
 std::vector<std::uint8_t> CCSDS::Packet::getCRCVectorBytes() {
-  if (m_packetErrorControlMode == PacketErrorControlMode::None) {
+  if (getPacketErrorControlMode() == PacketErrorControlMode::None) {
     return {};
   }
 
@@ -266,10 +266,11 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &he
   RET_IF_ERR_MSG(headerData.size() != 6, ErrorCode::INVALID_HEADER_DATA,
                  "Cannot Deserialize Packet, Invalid Header Data provided.");
   FORWARD_RESULT(m_primaryHeader.deserialize( headerData ));
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
 
   std::vector<uint8_t> dataCopy;
-  if (m_packetErrorControlMode == PacketErrorControlMode::CRC16) {
+  if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
     RET_IF_ERR_MSG(data.size() < 2, ErrorCode::INVALID_DATA,
                    "Cannot Deserialize Packet, at least two packet error-control bytes are required in CRC16 mode.");
     m_CRC16 = (static_cast<std::uint16_t>(data[data.size() - 2]) << 8) + data.back();
@@ -297,25 +298,31 @@ uint16_t CCSDS::Packet::getFullPacketLength() {
 
 CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const std::uint64_t data) {
   FORWARD_RESULT(m_primaryHeader.setData( data ));
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
   return true;
 }
 
 CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const std::vector<uint8_t> &data) {
   FORWARD_RESULT(m_primaryHeader.deserialize( data ));
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
   return true;
 }
 
 void CCSDS::Packet::setPrimaryHeader(const Header &header) {
   m_primaryHeader = header;
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
+  m_updateStatus = false;
 }
 
 void CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
   m_primaryHeader.setData(data);
-  m_sequenceCounter = m_primaryHeader.getSequenceCount();
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
 }
 
@@ -369,7 +376,8 @@ void CCSDS::Packet::setSequenceFlags(const ESequenceFlag flags) {
 CCSDS::ResultBool CCSDS::Packet::setSequenceCount(const std::uint16_t count) {
   RET_IF_ERR_MSG(m_primaryHeader.getSequenceFlags() == UNSEGMENTED && count != 0, ErrorCode::INVALID_DATA,
                  "Unable to set non 0 value for UNSEGMENTED packet");
-  m_sequenceCounter = count;
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (count & SEQUENCE_COUNT_MASK);
   m_updateStatus = false;
   return true;
 }
@@ -384,9 +392,11 @@ void CCSDS::Packet::setUpdatePacketEnable(const bool enable) {
 }
 
 void CCSDS::Packet::setPacketErrorControlMode(const PacketErrorControlMode mode) {
-  m_packetErrorControlMode = mode;
   if (mode == PacketErrorControlMode::None) {
+    m_sequenceCounter |= PACKET_ERROR_CONTROL_DISABLED_MASK;
     m_CRC16 = 0;
+  } else {
+    m_sequenceCounter &= static_cast<std::uint16_t>(~PACKET_ERROR_CONTROL_DISABLED_MASK);
   }
   m_updateStatus = false;
 }
