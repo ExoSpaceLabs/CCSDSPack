@@ -11,19 +11,39 @@
 namespace CCSDS {
   inline constexpr std::uint16_t IDLE_APID = 0x07FFU;
 
+  /**
+   * @brief Represents the sequence flags used in CCSDS telemetry transfer frames.
+   *
+   * This enum defines the possible sequence flag values that indicate the type
+   * and position of a data segment in a telemetry frame:
+   * - CONTINUING_SEGMENT: An intermediate segment of a packet.
+   * - FIRST_SEGMENT: The first segment of a new packet.
+   * - LAST_SEGMENT: The last segment of a packet that spans multiple frames.
+   * - UNSEGMENTED: A complete unsegmented packet contained in a single frame.
+   */
   enum ESequenceFlag : std::uint8_t {
-    CONTINUING_SEGMENT,
-    FIRST_SEGMENT,
-    LAST_SEGMENT,
-    UNSEGMENTED
+    CONTINUING_SEGMENT, ///< 00 Intermediate segment of a packet.
+    FIRST_SEGMENT,      ///< 01 First segment of a new packet.
+    LAST_SEGMENT,       ///< 10 Last segment of a packet.
+    UNSEGMENTED         ///< 11 Complete unsegmented packet.
   };
 
+  /**
+   * @brief Describes whether the current primary header is normal, idle, or invalid.
+   *
+   * `INVALID` is used as a fail-safe when a checked mutation fails and its
+   * returned error is ignored. An invalid header cannot be serialized.
+   */
   enum EHeaderStatus : std::uint8_t {
     NORMAL,
     IDLE,
     INVALID
   };
 
+  /**
+   * @struct PrimaryHeader
+   * @brief Represents the fields of a CCSDS primary header.
+   */
   struct PrimaryHeader {
     std::uint8_t versionNumber{};
     std::uint8_t type{};
@@ -49,6 +69,10 @@ namespace CCSDS {
         dataLength(dataLength_value) {}
   };
 
+  /**
+   * @class Header
+   * @brief Manages the decomposition and manipulation of CCSDS primary headers.
+   */
   class Header {
   public:
     Header() = default;
@@ -62,9 +86,17 @@ namespace CCSDS {
     [[nodiscard]] std::uint16_t getDataLength()         const { return m_dataLength;          }
     [[nodiscard]] EHeaderStatus getHeaderStatus()       const { return m_status;              }
 
+    /**
+     * @brief Serializes the current primary header.
+     * @return Six header bytes, or an empty vector when the header is invalid.
+     */
     std::vector<std::uint8_t> serialize();
     [[nodiscard]] std::vector<std::uint8_t> serialize() const;
 
+    /**
+     * @brief Returns the packed 48-bit primary header in a 64-bit value.
+     * @return The packed header, or zero when the header is invalid.
+     */
     std::uint64_t getFullHeader();
     [[nodiscard]] std::uint64_t getFullHeader() const;
 
