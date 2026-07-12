@@ -122,6 +122,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(
       CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 7, 0}));
+    TEST_VOID(packet.RegisterSecondaryHeader<UpdatingSecondaryHeader>());
     packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>());
     TEST_VOID(packet.setApplicationData({0xAA}));
 
@@ -152,6 +153,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(
       CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 9, 0}));
+    TEST_VOID(packet.RegisterSecondaryHeader<UpdatingSecondaryHeader>());
     packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>());
     TEST_VOID(packet.setApplicationData({0xAA}));
 

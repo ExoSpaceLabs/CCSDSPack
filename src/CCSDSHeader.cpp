@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "CCSDSHeader.h"
-#include "CCSDSUtils.h"
 
 void CCSDS::Header::refreshStatus() {
   m_status = m_APID == IDLE_APID ? IDLE : NORMAL;
@@ -107,24 +106,50 @@ CCSDS::ResultBool CCSDS::Header::setData(const std::uint64_t &data) {
 }
 
 std::vector<std::uint8_t> CCSDS::Header::serialize() {
+  return static_cast<const Header &>(*this).serialize();
+}
+
+std::vector<std::uint8_t> CCSDS::Header::serialize() const {
   if (m_status == INVALID) {
     return {};
   }
 
-  m_packetSequenceControl = (static_cast<std::uint16_t>(m_sequenceFlags) << 14) | m_sequenceCount;
-  m_packetIdentificationAndVersion = (static_cast<std::uint16_t>(m_versionNumber) << 13)
-                                     | (static_cast<std::uint16_t>(m_type) << 12)
-                                     | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11)
-                                     | m_APID;
+  const auto packetSequenceControl = static_cast<std::uint16_t>(
+    (static_cast<std::uint16_t>(m_sequenceFlags) << 14U) | m_sequenceCount);
+  const auto packetIdentificationAndVersion = static_cast<std::uint16_t>(
+    (static_cast<std::uint16_t>(m_versionNumber) << 13U)
+    | (static_cast<std::uint16_t>(m_type) << 12U)
+    | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11U)
+    | m_APID);
 
   return {
-    static_cast<std::uint8_t>(m_packetIdentificationAndVersion >> 8),
-    static_cast<std::uint8_t>(m_packetIdentificationAndVersion & 0xFFU),
-    static_cast<std::uint8_t>(m_packetSequenceControl >> 8),
-    static_cast<std::uint8_t>(m_packetSequenceControl & 0xFFU),
-    static_cast<std::uint8_t>(m_dataLength >> 8),
+    static_cast<std::uint8_t>(packetIdentificationAndVersion >> 8U),
+    static_cast<std::uint8_t>(packetIdentificationAndVersion & 0xFFU),
+    static_cast<std::uint8_t>(packetSequenceControl >> 8U),
+    static_cast<std::uint8_t>(packetSequenceControl & 0xFFU),
+    static_cast<std::uint8_t>(m_dataLength >> 8U),
     static_cast<std::uint8_t>(m_dataLength & 0xFFU),
   };
+}
+
+std::uint64_t CCSDS::Header::getFullHeader() {
+  return static_cast<const Header &>(*this).getFullHeader();
+}
+
+std::uint64_t CCSDS::Header::getFullHeader() const {
+  if (m_status == INVALID) {
+    return 0U;
+  }
+  const auto packetSequenceControl = static_cast<std::uint16_t>(
+    (static_cast<std::uint16_t>(m_sequenceFlags) << 14U) | m_sequenceCount);
+  const auto packetIdentificationAndVersion = static_cast<std::uint16_t>(
+    (static_cast<std::uint16_t>(m_versionNumber) << 13U)
+    | (static_cast<std::uint16_t>(m_type) << 12U)
+    | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11U)
+    | m_APID);
+  return (static_cast<std::uint64_t>(packetIdentificationAndVersion) << 32U)
+         | (static_cast<std::uint32_t>(packetSequenceControl) << 16U)
+         | m_dataLength;
 }
 
 CCSDS::ResultBool CCSDS::Header::setData(const PrimaryHeader &data) {
@@ -160,11 +185,13 @@ CCSDS::ResultBool CCSDS::Header::setData(const PrimaryHeader &data) {
   m_sequenceFlags = data.sequenceFlags;
   m_sequenceCount = data.sequenceCount;
   m_dataLength = data.dataLength;
-  m_packetSequenceControl = (static_cast<std::uint16_t>(m_sequenceFlags) << 14) | m_sequenceCount;
-  m_packetIdentificationAndVersion = (static_cast<std::uint16_t>(m_versionNumber) << 13)
-                                     | (static_cast<std::uint16_t>(m_type) << 12)
-                                     | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11)
-                                     | m_APID;
+  m_packetSequenceControl = static_cast<std::uint16_t>(
+    (static_cast<std::uint16_t>(m_sequenceFlags) << 14U) | m_sequenceCount);
+  m_packetIdentificationAndVersion = static_cast<std::uint16_t>(
+    (static_cast<std::uint16_t>(m_versionNumber) << 13U)
+    | (static_cast<std::uint16_t>(m_type) << 12U)
+    | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11U)
+    | m_APID);
   refreshStatus();
   return true;
 }
