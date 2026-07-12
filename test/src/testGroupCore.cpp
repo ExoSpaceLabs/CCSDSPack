@@ -35,6 +35,29 @@ namespace {
   private:
     std::vector<std::uint8_t> m_data{};
   };
+
+  class UpdatingSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
+  public:
+    UpdatingSecondaryHeader() : m_data{0x10} {}
+    [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<std::uint8_t> &data) override {
+      m_data = data;
+      return true;
+    }
+    [[nodiscard]] std::uint16_t getSize() const override {
+      return static_cast<std::uint16_t>(m_data.size());
+    }
+    [[nodiscard]] std::string getType() const override { return "UpdatingSecondaryHeader"; }
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return m_data; }
+    void update(CCSDS::DataField *) override {
+      if (!m_data.empty()) {
+        ++m_data[0];
+      }
+    }
+    CCSDS::ResultBool loadFromConfig(const Config &) override { return true; }
+
+  private:
+    std::vector<std::uint8_t> m_data{};
+  };
 }
 
 void testGroupCore(TestManager *tester, const std::string &description) {
@@ -50,7 +73,6 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
     const CCSDS::PrimaryHeader header{0, 1, 1, 0x123, CCSDS::FIRST_SEGMENT, 7, 4};
     TEST_VOID(packet.setPrimaryHeader(header));
-    packet.setUpdatePacketEnable(false);
     const auto &stored = packet.getPrimaryHeader();
     return stored.getVersionNumber() == 0
            && stored.getType() == 1
@@ -61,9 +83,11 @@ void testGroupCore(TestManager *tester, const std::string &description) {
            && stored.getDataLength() == 4;
   });
 
-  tester->unitTest("Application data set from a vector produces the expected CRC.", [] {
+  tester->unitTest("CRC is finalized only by explicit update or serialization.", [] {
     CCSDS::Packet packet;
     TEST_VOID(packet.setApplicationData({1, 2, 3, 4, 5}));
+    if (packet.getCRC() != 0U) return false;
+    packet.update();
     return packet.getApplicationDataBytes() == std::vector<std::uint8_t>({1, 2, 3, 4, 5})
            && packet.getDataFieldHeaderBytes().empty()
            && packet.getCRC() == 0x3B8D;
@@ -76,13 +100,15 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     return packet.getApplicationDataBytes() == std::vector<std::uint8_t>({1, 2, 3, 4, 5});
   });
 
-  tester->unitTest("Buffer secondary header and application data serialize in order.", [] {
+  tester->unitTest("Buffer secondary header inspection preserves current bytes.", [] {
     CCSDS::Packet packet;
     TEST_VOID(packet.setDataFieldHeader({1, 2}));
     TEST_VOID(packet.setApplicationData({3, 4, 5}));
     const auto dataField = packet.getFullDataFieldBytes();
-    return dataField == std::vector<std::uint8_t>({1, 2, 3, 4, 5})
-           && packet.getCRC() == 0x9903;
+    if (dataField != std::vector<std::uint8_t>({1, 2, 3, 4, 5})) return false;
+    if (packet.getCRC() != 0U) return false;
+    packet.update();
+    return packet.getCRC() == 0x9903;
   });
 
   tester->unitTest("Custom secondary-header types remain registerable.", [] {
@@ -90,6 +116,73 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.RegisterSecondaryHeader<TestSecondaryHeader>());
     TEST_VOID(packet.setDataFieldHeader({0xAA, 0xBB, 0xCC}, "TestSecondaryHeader"));
     return packet.getDataFieldHeaderBytes() == std::vector<std::uint8_t>({0xAA, 0xBB, 0xCC});
+  });
+
+  tester->unitTest("Packet getters do not finalize dirty state.", [] {
+    CCSDS::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(
+      CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 7, 0}));
+    packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>());
+    TEST_VOID(packet.setApplicationData({0xAA}));
+
+    const CCSDS::Packet &view = packet;
+    const auto headerBefore = view.getPrimaryHeaderBytes();
+    const auto secondaryBefore = view.getDataFieldHeaderBytes();
+    const auto crcBefore = view.getCRC();
+
+    (void)view.getPrimaryHeader64bit();
+    (void)view.getFullPacketLength();
+    (void)view.getDataFieldHeaderFlag();
+    (void)view.getDataField();
+    (void)view.getPrimaryHeader();
+    (void)view.getApplicationDataBytes();
+    (void)view.getFullDataFieldBytes();
+    (void)view.getCRCVectorBytes();
+
+    return view.getPrimaryHeaderBytes() == headerBefore
+           && view.getDataFieldHeaderBytes() == secondaryBefore
+           && view.getCRC() == crcBefore
+           && view.getPrimaryHeader().getSequenceCount() == 7U
+           && view.getPrimaryHeader().getDataLength() == 0U
+           && secondaryBefore == std::vector<std::uint8_t>({0x10})
+           && crcBefore == 0U;
+  });
+
+  tester->unitTest("Serialization remains the explicit finalization path.", [] {
+    CCSDS::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(
+      CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 9, 0}));
+    packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>());
+    TEST_VOID(packet.setApplicationData({0xAA}));
+
+    const auto encoded = packet.serialize();
+    return !encoded.empty()
+           && packet.getPrimaryHeader().getSequenceCount() == 9U
+           && packet.getPrimaryHeader().getDataLength() == 3U
+           && packet.getDataFieldHeaderBytes() == std::vector<std::uint8_t>({0x11})
+           && packet.getCRC() != 0U;
+  });
+
+  tester->unitTest("Parsed packet inspection preserves received sequence and CRC.", [] {
+    CCSDS::Packet source;
+    TEST_VOID(source.setPrimaryHeader(
+      CCSDS::PrimaryHeader{0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 123, 0}));
+    TEST_VOID(source.setApplicationData({0xDE, 0xAD}));
+    const auto encoded = source.serialize();
+
+    CCSDS::Packet decoded;
+    TEST_VOID(decoded.deserialize(encoded));
+    const CCSDS::Packet &view = decoded;
+    const auto headerBefore = view.getPrimaryHeaderBytes();
+    const auto crcBefore = view.getCRC();
+    (void)view.getApplicationDataBytes();
+    (void)view.getFullDataFieldBytes();
+    (void)view.getDataFieldHeaderBytes();
+
+    return view.getPrimaryHeaderBytes() == headerBefore
+           && view.getPrimaryHeader().getSequenceCount() == 123U
+           && view.getCRC() == crcBefore
+           && crcBefore != 0U;
   });
 
   tester->unitTest("PUS-A packet uses a valid generated CRC during round-trip.", [] {
