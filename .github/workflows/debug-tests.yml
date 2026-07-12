@@ -1,9 +1,9 @@
 name: Debug Tests
 
 on:
-  push:
+  pull_request:
     branches:
-      - fix/v1.2-packet-length-crc
+      - develop
   workflow_dispatch:
 
 jobs:
