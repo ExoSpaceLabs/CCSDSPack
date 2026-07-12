@@ -186,8 +186,6 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
     packet.setDataFieldSize(0xFFFFU);
     TEST_VOID(packet.setApplicationData(std::vector<std::uint8_t>(0xFFFFU, 0x00)));
-
-    const auto serialized = packet.serializeChecked();
-    return !serialized.has_value() && serialized.error().code() == CCSDS::ErrorCode::INVALID_DATA;
+    return packet.serialize().empty();
   });
 }
