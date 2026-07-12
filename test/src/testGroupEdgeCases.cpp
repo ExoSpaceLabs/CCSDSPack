@@ -58,7 +58,6 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     auto buffer = pkt.serialize();
 
     CCSDS::Packet pktDec;
-    // PusC size is 6 (fixed) + timeCode.size() = 11
     TEST_VOID(pktDec.deserialize(buffer, "PusC", 11));
 
     auto decSecondary = std::dynamic_pointer_cast<PusC>(pktDec.getDataField().getSecondaryHeader());
@@ -88,9 +87,9 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Deserialization of too short data", []() {
     CCSDS::Packet pkt;
-    std::vector<uint8_t> shortData = {0x00, 0x01, 0x02, 0x03, 0x04}; // Only 5 bytes
+    std::vector<uint8_t> shortData = {0x00, 0x01, 0x02, 0x03, 0x04};
     auto res = pkt.deserialize(shortData);
-    return !res; // Should fail
+    return !res;
   });
 
   tester->unitTest("Packet error control defaults to CRC16", []() {
@@ -180,6 +179,18 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     };
 
     return packet.serialize() == expected;
+  });
+
+  tester->unitTest("Maximum Packet Data Length value is encoded", []() {
+    CCSDS::Packet packet;
+    packet.setDataFieldSize(0xFFFEU);
+    TEST_VOID(packet.setApplicationData(std::vector<std::uint8_t>(0xFFFEU, 0x00)));
+
+    const auto serialized = packet.serialize();
+    return serialized.size() == 0x10006U
+           && serialized[4] == 0xFF
+           && serialized[5] == 0xFF
+           && packet.getPrimaryHeader().getDataLength() == 0xFFFFU;
   });
 
   tester->unitTest("Packet Data Length overflow is rejected", []() {
