@@ -124,8 +124,11 @@ int main() {
   if (const auto result = decoded.RegisterSecondaryHeader<CustomSecondaryHeader>(); !result) {
     return failResult("register decoder secondary header", result.error());
   }
+  // A project-specific variable-length secondary header has no wire-level size
+  // field of its own. The external consumer therefore supplies the explicit
+  // byte boundary through the public fixed-size overload.
   const auto consumed = decoded.deserializeBounded(
-    packetsData, "CustomSecondaryHeader", static_cast<std::int32_t>(secondaryHeader.size()));
+    packetsData, static_cast<std::uint16_t>(secondaryHeader.size()));
   if (!consumed) {
     return failResult("bounded decode", consumed.error());
   }
