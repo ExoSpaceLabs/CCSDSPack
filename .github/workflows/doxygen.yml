@@ -20,7 +20,7 @@ jobs:
       - name: Generate Doxygen documentation
         run: |
           doxygen Doxyfile
-          test -f html/index.html
+          test -f html/html/index.html
 
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
