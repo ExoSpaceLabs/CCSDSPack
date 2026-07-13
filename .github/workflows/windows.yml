@@ -51,6 +51,13 @@ jobs:
           cd build\bin
           .\CCSDSPack_tester.exe
 
+      - name: Run CLI integration tests
+        shell: pwsh
+        run: |
+          python test/cli_integration.py `
+            --bin-dir "$PWD/build/bin" `
+            --resources "$PWD/test/test_resources"
+
       - name: Install shared library package
         shell: pwsh
         run: |
