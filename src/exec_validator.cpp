@@ -1,263 +1,342 @@
 // Copyright 2025-2026 ExoSpaceLabs
 // SPDX-License-Identifier: Apache-2.0
 
+/** @file exec_validator.cpp @brief Command-line validator for CCSDS Space Packet streams. */
 
-/**
- * This is the source file that holds the execution logic of ccsds_encoder binary file.
- */
-
-#include <unordered_map>
-#include <string>
-#include <vector>
-#include <iostream>
 #include <chrono>
-#include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <sstream>
+#include <string>
+#include <unordered_map>
+#include <vector>
 #include "CCSDSPack.h"
 #include "exec_utils.h"
-#include "../test/inc/TestManager.h"
 
-
+namespace {
 void printHelp() {
-  // ascii art generated on https://www.asciiart.eu/text-to-ascii-art
-  // with ANSI SHADOW Font, with 80 and Block frame
-  std::cout << std::endl <<
-  "▐▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▌\n"
-  "▐         ██████╗ ██████╗███████╗██████╗ ███████╗                          ▌\n"
-  "▐        ██╔════╝██╔════╝██╔════╝██╔══██╗██╔════╝                          ▌\n"
-  "▐        ██║     ██║     ███████╗██║  ██║███████╗                          ▌\n"
-  "▐        ██║     ██║     ╚════██║██║  ██║╚════██║   █▀█░█▀█░█▀▀░█░█░       ▌\n"
-  "▐        ╚██████╗╚██████╗███████║██████╔╝███████║   █▀▀░█▀█░█░░░█▀▄░       ▌\n"
-  "▐         ╚═════╝ ╚═════╝╚══════╝╚═════╝ ╚══════╝   ▀░░░▀░▀░▀▀▀░▀░▀░       ▌\n"
-  "▐  ██╗   ██╗ █████╗ ██╗     ██╗██████╗  █████╗ ████████╗ ██████╗ ██████╗   ▌\n"
-  "▐  ██║   ██║██╔══██╗██║     ██║██╔══██╗██╔══██╗╚══██╔══╝██╔═══██╗██╔══██╗  ▌\n"
-  "▐  ██║   ██║███████║██║     ██║██║  ██║███████║   ██║   ██║   ██║██████╔╝  ▌\n"
-  "▐  ╚██╗ ██╔╝██╔══██║██║     ██║██║  ██║██╔══██║   ██║   ██║   ██║██╔══██╗  ▌\n"
-  "▐   ╚████╔╝ ██║  ██║███████╗██║██████╔╝██║  ██║   ██║   ╚██████╔╝██║  ██║  ▌\n"
-  "▐    ╚═══╝  ╚═╝  ╚═╝╚══════╝╚═╝╚═════╝ ╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝  ▌\n"
-  "▐▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▌\n"
-  << std::endl;
-  std::cout << "Usage: ccsds_validator [OPTIONS] - take a binary file holding CCSDS packets and validates it." << std::endl;
-  std::cout << "Mandatory parameters:" << std::endl;
-  std::cout << " -i or --input <filename>  : input file to be encoded" << std::endl;;
-  std::cout << std::endl;
-  std::cout << "Optionals:" << std::endl;
-  std::cout << " -c or --config <filename> : Configuration file" << std::endl;
-  std::cout << " -h or --help              : Show this help and message" << std::endl;
-  std::cout << " -v or --verbose           : Show packet specific report" << std::endl;
-  std::cout << " -p or --print-packets     : Show generated packets information" << std::endl;
-  std::cout << std::endl;
-  std::cout << "Note : If config file is provided, the loaded packets are validated against the the template packet." << std::endl;
-  std::cout << std::endl;
-  std::cout << "For further information please visit: https://github.com/ExoSpaceLabs/CCSDSPack" << std::endl;
+  std::cout
+    << "Usage: ccsds_validator [OPTIONS]\n"
+    << "Validate one or more adjacent CCSDS Space Packets.\n\n"
+    << "Mandatory parameters:\n"
+    << "  -i, --input <filename>                 Input packet-stream file\n\n"
+    << "Optional parameters:\n"
+    << "  -c, --config <filename>                Template/framing configuration\n"
+    << "  -e, --packet-error-control <mode>      crc16 or none; overrides config\n"
+    << "                                           (default: config, otherwise crc16)\n"
+    << "  -v, --verbose                         Print every check for every packet\n"
+    << "  -p, --print-packets                   Print packets that pass parse-time checks\n"
+    << "  -h, --help                            Show this help message\n\n"
+    << "Validation reports Packet Data Length, CRC16, CCSDS version, APID, packet\n"
+    << "type, secondary-header flag, sequence flags, and sequence-count continuity\n"
+    << "as separate checks. A config is required for APID/type/header-flag comparison.\n";
 }
 
-/**
- * @brief Returns a report of performed validation checks in a string format.
- *
- * - Packet Coherence:
- *     - index [0]: Data Field Length Header declared equals actual data field length
- *     - index [1]: CRC15 value declared equals calculated CRC16 of the data field
- *     - index [2]: Sequence Control flags and count coherence
- *     - index [3]: Sequence Control count coherence (incremental start from 1)
- * - Compare Against Template:
- *     - index [4]: Identification and Version in packet matches template
- *     - index [5]: Template Sequence Control match
- *
- * @return A vector of boolean results for each performed check.
- */
-std::string printReport(const std::vector<bool>& report, bool& result, const bool validateAgainstTemplate) {
-
-  std::string packetReport = "  [REPORT] Data Field Length and Primary Header       : ";
-  packetReport += (report[0]) ? GREEN  + "Passed\n" +  RESET : RED +  "failed\n" + RESET;
-  packetReport += "  [REPORT] CRC15 value coherence                      : " ;
-  packetReport += (report[1]) ? GREEN  + "Passed\n" +  RESET : RED +  "failed\n" + RESET;
-  packetReport += "  [REPORT] Sequence Control flags and count coherence : " ;
-  packetReport += (report[2]) ? GREEN  + "Passed\n" +  RESET : RED +  "failed\n" + RESET;
-  packetReport += "  [REPORT] Sequence Control count coherence           : " ;
-  packetReport += (report[3]) ? GREEN  + "Passed\n" +  RESET : RED +  "failed\n" + RESET;
-
-  result = report[0] && report[1] && report[2] && report[3];
-  if (validateAgainstTemplate){
-    packetReport += "  [REPORT] Identification and Version                 : " ;
-    packetReport += (report[4]) ? GREEN  + "Passed\n" +  RESET : RED +  "failed\n" + RESET;
-    packetReport += "  [REPORT] Template Sequence Control                  : " ;
-    packetReport += (report[5]) ? GREEN  + "Passed\n" +  RESET : RED +  "failed\n" + RESET;
-    result = result && report[4] && report[5];
-  }
-  return packetReport;
+int printError(const CCSDS::Error &error) {
+  std::cerr << "[ Error " << static_cast<unsigned>(error.code()) << " ]: "
+            << error.message() << std::endl;
+  return static_cast<int>(error.code());
 }
 
-void stripAnsiCodes(std::string& input) {
-  std::string output;
-  output.reserve(input.size());  // Avoids reallocations
+struct ValidatorSettings {
+  CCSDS::PacketErrorControlMode mode{CCSDS::PacketErrorControlMode::CRC16};
+  bool syncPatternEnable{};
+  std::uint32_t syncPattern{0x1ACFFC1DU};
+  bool hasTemplate{};
+  CCSDS::Packet templatePacket{};
+};
 
-  for (size_t i = 0; i < input.size(); ) {
-    if (input[i] == '\033' && i + 1 < input.size() && input[i + 1] == '[') {
-      // Skip ANSI escape sequence
-      i += 2;
-      while (i < input.size() && (input[i] < '@' || input[i] > '~')) {
-        ++i;
-      }
-      if (i < input.size()) ++i; // skip final 'm' or other final char
-    } else {
-      output += input[i++];
+CCSDS::Result<ValidatorSettings>
+loadValidatorSettings(const std::unordered_map<std::string, std::string> &args) {
+  ValidatorSettings settings;
+  const auto configIt = args.find("config");
+  if (configIt != args.end()) {
+    RET_IF_ERR_MSG(!fileExists(configIt->second),
+                   static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+                   "Config file does not exist: " + configIt->second);
+
+    Config cfg;
+    FORWARD_RESULT(cfg.load(configIt->second));
+    FORWARD_RESULT(settings.templatePacket.loadFromConfig(cfg));
+    settings.mode = settings.templatePacket.getPacketErrorControlMode();
+    settings.hasTemplate = true;
+
+    if (cfg.isKey("sync_pattern_enable")) {
+      ASSIGN_CP(settings.syncPatternEnable, cfg.get<bool>("sync_pattern_enable"));
+    }
+    if (settings.syncPatternEnable && cfg.isKey("sync_pattern")) {
+      int encoded{};
+      ASSIGN_CP(encoded, cfg.get<int>("sync_pattern"));
+      settings.syncPattern = static_cast<std::uint32_t>(encoded);
     }
   }
 
-  input = std::move(output);
+  if (const auto modeIt = args.find("packet-error-control"); modeIt != args.end()) {
+    ASSIGN_CP(settings.mode, parsePacketErrorControlMode(modeIt->second));
+    if (settings.hasTemplate) settings.templatePacket.setPacketErrorControlMode(settings.mode);
+  }
+  return settings;
 }
 
-int main(const int argc, char* argv[]) {
-  std::string appName = "ccsds_validator";
+struct SequenceState {
+  bool initialized{};
+  bool segmentOpen{};
+  std::uint16_t expectedCount{};
+};
 
-  std::unordered_map<std::string, std::string> allowed;
-  allowed.insert({"h", "help"});
-  allowed.insert({"v", "verbose"});
-  allowed.insert({"i", "input"});
-  allowed.insert({"c", "config"});
-  allowed.insert({"p", "print-packets"});
+struct PacketChecks {
+  bool length{true};
+  bool crc{true};
+  bool version{true};
+  bool apid{true};
+  bool packetType{true};
+  bool secondaryHeaderFlag{true};
+  bool sequenceFlags{true};
+  bool sequenceCount{true};
+  bool apidChecked{};
+  bool identifierChecked{};
+};
 
+const char *statusText(const bool passed, const bool checked = true) {
+  if (!checked) return "NOT CHECKED";
+  return passed ? "PASSED" : "FAILED";
+}
+
+void emitCheck(const std::string &name,
+               const bool passed,
+               const bool checked,
+               const bool verbose,
+               std::ostringstream &report) {
+  std::ostringstream line;
+  line << "  [REPORT] " << std::left << std::setw(31) << name
+       << " : " << statusText(passed, checked) << '\n';
+  report << line.str();
+  if (verbose || (checked && !passed)) std::cout << line.str();
+}
+
+bool updateSequenceState(const CCSDS::Header &header,
+                         SequenceState &state,
+                         PacketChecks &checks) {
+  const auto flags = static_cast<CCSDS::ESequenceFlag>(header.getSequenceFlags());
+  switch (flags) {
+    case CCSDS::UNSEGMENTED:
+    case CCSDS::FIRST_SEGMENT:
+      checks.sequenceFlags = !state.segmentOpen;
+      break;
+    case CCSDS::CONTINUING_SEGMENT:
+    case CCSDS::LAST_SEGMENT:
+      checks.sequenceFlags = state.segmentOpen;
+      break;
+    default:
+      checks.sequenceFlags = false;
+      break;
+  }
+
+  checks.sequenceCount = !state.initialized
+                         || header.getSequenceCount() == state.expectedCount;
+  if (checks.sequenceFlags && checks.sequenceCount) {
+    state.initialized = true;
+    state.expectedCount = static_cast<std::uint16_t>(
+      (header.getSequenceCount() + 1U) & 0x3FFFU);
+    state.segmentOpen = flags == CCSDS::FIRST_SEGMENT
+                        || flags == CCSDS::CONTINUING_SEGMENT;
+    return true;
+  }
+  return false;
+}
+
+PacketChecks validatePacketBytes(const std::vector<std::uint8_t> &packetBytes,
+                                 const CCSDS::Header &header,
+                                 const ValidatorSettings &settings,
+                                 SequenceState &sequenceState) {
+  PacketChecks checks;
+  const std::size_t declaredSize =
+    6U + static_cast<std::size_t>(header.getDataLength()) + 1U;
+  checks.length = packetBytes.size() == declaredSize;
+  checks.version = header.getVersionNumber() == 0U;
+
+  if (settings.mode == CCSDS::PacketErrorControlMode::CRC16) {
+    checks.crc = packetBytes.size() >= 8U;
+    if (checks.crc) {
+      const std::uint16_t received = static_cast<std::uint16_t>(
+        (static_cast<std::uint16_t>(packetBytes[packetBytes.size() - 2U]) << 8U)
+        | packetBytes.back());
+      const std::vector<std::uint8_t> crcInput(packetBytes.begin(), packetBytes.end() - 2);
+      checks.crc = ::crc16(crcInput) == received;
+    }
+  }
+
+  if (settings.hasTemplate) {
+    const auto &templateHeader = settings.templatePacket.getPrimaryHeader();
+    checks.apidChecked = true;
+    checks.identifierChecked = true;
+    checks.apid = header.getAPID() == templateHeader.getAPID();
+    checks.packetType = header.getType() == templateHeader.getType();
+    checks.secondaryHeaderFlag =
+      header.getDataFieldHeaderFlag() == templateHeader.getDataFieldHeaderFlag();
+  }
+
+  updateSequenceState(header, sequenceState, checks);
+  return checks;
+}
+
+bool allChecksPass(const PacketChecks &checks) {
+  return checks.length && checks.crc && checks.version
+         && (!checks.apidChecked || checks.apid)
+         && (!checks.identifierChecked || checks.packetType)
+         && (!checks.identifierChecked || checks.secondaryHeaderFlag)
+         && checks.sequenceFlags && checks.sequenceCount;
+}
+}
+
+int main(const int argc, char *argv[]) {
+  const std::string appName = "ccsds_validator";
+  std::unordered_map<std::string, std::string> allowed{
+    {"h", "help"}, {"v", "verbose"}, {"i", "input"},
+    {"c", "config"}, {"p", "print-packets"},
+    {"e", "packet-error-control"}
+  };
   const std::set<std::string> booleanArgs{"verbose", "help", "print-packets"};
-
-  std::unordered_map<std::string, std::string> args;
-  args.insert({"verbose", "false"});
-  args.insert({"print", "false"});
-  args.insert({"print-packets", "false"});
+  std::unordered_map<std::string, std::string> args{
+    {"verbose", "false"}, {"help", "false"}, {"print-packets", "false"}
+  };
 
   const auto start = std::chrono::high_resolution_clock::now();
-  if (const auto res = parseArguments(argc, argv, allowed, args, booleanArgs); !res.has_value()) {
-    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
-    return res.error().code();
+  if (const auto result = parseArguments(argc, argv, allowed, args, booleanArgs); !result) {
+    return printError(result.error());
   }
-   // std::cout << "Parsed args:\n";
-   //for (const auto& [k, v] : args) {
-   //  std::cout << "  " << k << ": " << v << '\n';
-   //}
   if (args["help"] == "true") {
     printHelp();
     return 0;
   }
-  bool verbose{args["verbose"] == "true"};
 
-  if (args.find("input") == args.end()) {
-    std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Input file must be specified" << std::endl;
+  const auto inputIt = args.find("input");
+  if (inputIt == args.end() || inputIt->second.empty()) {
     printHelp();
-    return ARG_PARSE_ERROR;
+    return printError(CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+                                   "Input file must be specified"});
+  }
+  if (!fileExists(inputIt->second)) {
+    return printError(CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+                                   "Input file does not exist: " + inputIt->second});
   }
 
-  if (!fileExists(args["input"])) {
-    std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Input \"" << args["input"] << "\" does not exist" << std::endl;
-    return ARG_PARSE_ERROR;
-  }
-  const std::string input{args["input"]};
-
-  CCSDS::Manager manager;
-  CCSDS::Validator validator;
-  std::vector<uint8_t> inputBytes;
-  bool isConfigProvided{false};
-
-  manager.setAutoValidateEnable(false);
-  manager.setDataFieldSize(64*1023 ); // 1M Bytes * packet
-  manager.setAutoUpdateEnable(false);
-  customConsole(appName,"reading data from " + input);
-  if (const auto res = readBinaryFile(input); !res.has_value()) {
-    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
-    return res.error().code();
-  }else {
-    inputBytes = res.value();
+  ValidatorSettings settings;
+  {
+    const auto result = loadValidatorSettings(args);
+    if (!result) return printError(result.error());
+    settings = result.value();
   }
 
-  customConsole(appName, "deserializing CCSDS packets from file");
-  if (const auto res = manager.load(inputBytes); !res.has_value()) {
-    std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
-    return res.error().code();
+  std::vector<std::uint8_t> inputBytes;
+  {
+    const auto result = readBinaryFile(inputIt->second);
+    if (!result) return printError(result.error());
+    inputBytes = result.value();
   }
 
-  // config argument specified
-  if (args.find("config") != args.end()) {
-    isConfigProvided = true;
-    if (!fileExists(args["config"])) {
-      std::cerr << "[ Error " << ARG_PARSE_ERROR << " ]: " << "Config \"" << args["config"] << "\" does not exist" << std::endl;
-      return ARG_PARSE_ERROR;
+  PacketStreamLayout layout;
+  {
+    const auto result = inspectPacketStream(inputBytes, settings.syncPatternEnable,
+                                            settings.syncPattern, true);
+    if (!result) {
+      std::cout << "  [REPORT] Packet Data Length              : FAILED\n";
+      std::cerr << "  " << result.error().message() << std::endl;
+      customConsole(appName, "Packets validation [FAILED]");
+      return PACKET_VALIDATION_FAILED;
     }
-    const std::string configFile{args["config"]};
-
-    // prepare template packet
-    customConsole(appName,"reading CCSDS configuration file: " + configFile);
-    Config cfg;
-
-    {
-      if (auto res = cfg.load(configFile); !res.has_value()) {
-        std::cerr << "[ Error " << res.error().code() << " ]: "<<  res.error().message() << std::endl ;
-        return res.error().code();
-      }
-    }
-    CCSDS::Packet templatePacket;
-    templatePacket.loadFromConfig(cfg);
-    validator.setTemplatePacket(templatePacket);
-    validator.configure(true,true,true);
-  }// end if config provided
-
-  validator.configure(true,true,false);
-
-  if (verbose) customConsole(appName,"printing data to screen:");
-
-  std::vector<std::vector<bool>> reports;
-  std::string reportsStream;
-  bool overallResult{true};
-  std::int32_t packetIndex{1};
-  std::vector<int> failedPackets;
-  const bool printPackets{args["print-packets"] == "true"};
-
-  for (auto &packet : manager.getPackets()) {
-    if (verbose) std::cout << "[ CCSDS VALIDATOR ] Printing Packet [ " << packetIndex << " ]: " << std::endl;
-    reportsStream += "[ CCSDS VALIDATOR ] Packet report for id: [ " + std::to_string(packetIndex) + " ]\n";
-    if (printPackets) printPacket(packet);
-    validator.validate(packet);
-    auto report = validator.getReport();
-    reports.emplace_back(report);
-    bool currentResult{false};
-    std::string appendReport = printReport(report,currentResult, isConfigProvided);
-    overallResult = overallResult && currentResult;
-    reportsStream += appendReport;
-    if (verbose) std::cout << appendReport << std::endl;
-    if (verbose) std::cout << "[ CCSDS VALIDATOR ] Packet Result [ ";
-    if (verbose && currentResult) std::cout << GREEN;
-    else if (verbose) {
-      std::cout << RED;
-    }
-    if (verbose && currentResult) std::cout <<  "PASSED" ;
-    else if (verbose) {
-      std::cout << "FAILED";
-    }
-    if (verbose) std::cout << RESET << " ]" << std::endl;
-    if (!currentResult) failedPackets.push_back(packetIndex);
-    packetIndex++;
+    layout = result.value();
   }
 
-  if (!failedPackets.empty() && verbose) {
-    std::string failedPacketsStream;
-    failedPacketsStream = "[ CCSDS VALIDATOR ] Packets failed validation: [ ";
-    for (const auto& packetID : failedPackets) {
-      failedPacketsStream += std::to_string(packetID) + " ";
-    }
-    failedPacketsStream += "]\n" ;
-    std::cout << failedPacketsStream << std::endl;
-    reportsStream += failedPacketsStream;
-  }
-  std::string resultString = (overallResult) ? GREEN + "PASSED" + RESET : RED + "FAILED" + RESET;
-  reportsStream += "[ CCSDS VALIDATOR ] Packets validation [" + resultString + "]";
-  customConsole(appName,"Packets validation [" + resultString + "]");
-
-
-  const auto end = std::chrono::high_resolution_clock::now();
-  const auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  customConsole(appName,"execution time: " + std::to_string(duration.count()) + " [us]");
-  if (!overallResult) {
-    customConsole(appName,"[ Exit code 18 ]");
+  if (layout.packets.empty()) {
+    std::cout << "  [REPORT] Packet Data Length              : FAILED\n";
+    std::cerr << "  Input does not contain a complete CCSDS packet" << std::endl;
+    customConsole(appName, "Packets validation [FAILED]");
     return PACKET_VALIDATION_FAILED;
   }
-  customConsole(appName,"[ Exit code 0 ]");
+
+  const bool verbose = args["verbose"] == "true";
+  const bool printPacketsEnabled = args["print-packets"] == "true";
+  SequenceState sequenceState;
+  bool overallResult{true};
+  std::vector<std::size_t> failedPackets;
+  std::ostringstream completeReport;
+
+  for (std::size_t index = 0; index < layout.packets.size(); ++index) {
+    const auto &slice = layout.packets[index];
+    const std::vector<std::uint8_t> packetBytes(
+      inputBytes.begin() + static_cast<std::ptrdiff_t>(slice.offset),
+      inputBytes.begin() + static_cast<std::ptrdiff_t>(slice.offset + slice.size));
+    const std::vector<std::uint8_t> headerBytes(packetBytes.begin(), packetBytes.begin() + 6);
+
+    CCSDS::Header header;
+    const auto headerResult = header.deserialize(headerBytes);
+    if (!headerResult) {
+      std::cout << "[ CCSDS VALIDATOR ] Packet " << index + 1U << '\n';
+      std::cout << "  [REPORT] CCSDS primary header            : FAILED\n";
+      failedPackets.push_back(index + 1U);
+      overallResult = false;
+      continue;
+    }
+
+    PacketChecks checks = validatePacketBytes(packetBytes, header, settings, sequenceState);
+    std::ostringstream packetReport;
+    packetReport << "[ CCSDS VALIDATOR ] Packet " << index + 1U << '\n';
+    if (verbose) std::cout << packetReport.str();
+    emitCheck("Packet Data Length", checks.length, true, verbose, packetReport);
+    emitCheck("CRC16", checks.crc,
+              settings.mode == CCSDS::PacketErrorControlMode::CRC16,
+              verbose, packetReport);
+    emitCheck("CCSDS version", checks.version, true, verbose, packetReport);
+    emitCheck("APID", checks.apid, checks.apidChecked, verbose, packetReport);
+    emitCheck("Packet type", checks.packetType, checks.identifierChecked, verbose, packetReport);
+    emitCheck("Secondary-header flag", checks.secondaryHeaderFlag,
+              checks.identifierChecked, verbose, packetReport);
+    emitCheck("Sequence flags", checks.sequenceFlags, true, verbose, packetReport);
+    emitCheck("Sequence count", checks.sequenceCount, true, verbose, packetReport);
+
+    const bool packetPassed = allChecksPass(checks);
+    overallResult = overallResult && packetPassed;
+    if (!packetPassed) failedPackets.push_back(index + 1U);
+    completeReport << packetReport.str();
+
+    if (printPacketsEnabled && checks.length && checks.crc && checks.version) {
+      CCSDS::Packet packet;
+      packet.setPacketErrorControlMode(settings.mode);
+      if (const auto parseResult = packet.deserializeBounded(packetBytes); parseResult) {
+        printPacket(packet);
+      }
+    }
+  }
+
+  const std::size_t trailingBytes = inputBytes.size() - layout.consumedBytes;
+  if (trailingBytes != 0U) {
+    overallResult = false;
+    std::cout << "  [REPORT] Packet Data Length              : FAILED\n";
+    std::cerr << "  " << trailingBytes
+              << " trailing byte(s) do not form a complete packet" << std::endl;
+  }
+
+  if (!failedPackets.empty()) {
+    std::cerr << "[ CCSDS VALIDATOR ] Failed packet(s):";
+    for (const auto packet : failedPackets) std::cerr << ' ' << packet;
+    std::cerr << std::endl;
+  }
+
+  customConsole(appName,
+                std::string("packet error control: ")
+                  + packetErrorControlModeName(settings.mode));
+  customConsole(appName,
+                std::string("Packets validation [")
+                  + (overallResult ? "PASSED" : "FAILED") + "]");
+
+  const auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+    std::chrono::high_resolution_clock::now() - start);
+  customConsole(appName, "execution time: " + std::to_string(duration.count()) + " [us]");
+  if (!overallResult) {
+    customConsole(appName, "[ Exit code 18 ]");
+    return PACKET_VALIDATION_FAILED;
+  }
+  customConsole(appName, "[ Exit code 0 ]");
   return 0;
 }
