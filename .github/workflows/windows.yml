@@ -50,3 +50,16 @@ jobs:
           Write-Host "Running CCSDSPack_tester.exe from build\bin\"
           cd build\bin
           .\CCSDSPack_tester.exe
+
+      - name: Validate installed shared-library consumer
+        shell: pwsh
+        run: |
+          $installPrefix = Join-Path $PWD "build/install"
+          cmake --install build --prefix $installPrefix
+          cmake -S test/package_tester/shared_lib `
+            -B build/package_tester/shared_lib `
+            -G "MinGW Makefiles" `
+            "-DCMAKE_PREFIX_PATH=$installPrefix"
+          cmake --build build/package_tester/shared_lib --
+          $env:PATH = "$(Join-Path $installPrefix 'bin');$env:PATH"
+          ctest --test-dir build/package_tester/shared_lib --output-on-failure

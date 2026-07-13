@@ -2,22 +2,18 @@
 # SPDX-License-Identifier: Apache-2.0
 
 cmake_minimum_required(VERSION 3.13)
-project(ccsdspack_hello LANGUAGES CXX)
+project(ccsdspack_installed_consumer LANGUAGES CXX)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Find the package installed by your .deb (usually under /usr) or your custom prefix.
-# If it's under a non-standard prefix, pass -DCMAKE_PREFIX_PATH=<prefix> when configuring.
+# This project must resolve CCSDSPack exclusively through its installed CMake
+# package. CI passes CMAKE_PREFIX_PATH to the installation under test.
 find_package(CCSDSPack CONFIG REQUIRED)
 
 add_executable(hello_ccsds src/main.cpp)
 target_link_libraries(hello_ccsds PRIVATE ccsdspack::CCSDSPack)
 
-# (Optional) On Linux, make the installed lib discoverable when running from the build tree.
-# If you installed to /usr this isn't needed; if you installed to /usr/local, you may prefer:
-if(UNIX AND NOT APPLE)
-    set_target_properties(hello_ccsds PROPERTIES
-            BUILD_RPATH "$ORIGIN"
-            INSTALL_RPATH "$ORIGIN"
-    )
-endif()
+enable_testing()
+add_test(NAME installed_shared_library_consumer COMMAND hello_ccsds)

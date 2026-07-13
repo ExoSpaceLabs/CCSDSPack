@@ -42,7 +42,18 @@ jobs:
 
       - name: Run tests (native)
         run: |
-          cd bin && ./CCSDSPack_tester     
+          cd bin && ./CCSDSPack_tester
+
+      - name: Validate installed shared-library consumer
+        run: |
+          cmake --install build --prefix "$PWD/build/install"
+          cmake -S test/package_tester/shared_lib \
+            -B build/package_tester/shared_lib \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/install"
+          cmake --build build/package_tester/shared_lib -- -j
+          LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
+            ctest --test-dir build/package_tester/shared_lib --output-on-failure
         
       - name: Install cross and packaging deps (22.04 only)
         if: matrix.os == 'ubuntu-22.04'
