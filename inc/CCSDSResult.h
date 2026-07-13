@@ -1,6 +1,10 @@
 // Copyright 2025-2026 ExoSpaceLabs
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * @file CCSDSResult.h
+ * @brief Defines non-throwing result/error types and propagation helpers used by CCSDSPack.
+ */
 #ifndef CCSDS_RESULT_H
 #define CCSDS_RESULT_H
 
@@ -8,146 +12,146 @@
 #include <vector>
 #include <cstdint>
 
-//exclude includes when building for MCU
 #ifndef CCSDS_MCU
   #include <iostream>
 #else
   #include <string>
-#endif //CCSDS_MCU
+#endif
 
 namespace CCSDS {
   /**
    * @enum ErrorCode
-   * @brief Defines various error codes used in CCSDS packet handling.
+   * @brief Stable categories returned by checked CCSDSPack operations.
+   *
+   * The accompanying Error::message() provides operation-specific detail. Callers
+   * should normally branch on the category and include the message in diagnostics.
    */
   enum ErrorCode : std::uint8_t {
-    NONE = 0,                           ///< No error
-    UNKNOWN_ERROR = 1,                  ///< Unknown error
-    NO_DATA = 2,                        ///< No data available
-    INVALID_DATA = 3,                   ///< Data is invalid
-    INVALID_HEADER_DATA = 4,            ///< Header data is invalid
-    INVALID_SECONDARY_HEADER_DATA = 5,  ///< Secondary header data is invalid
-    INVALID_APPLICATION_DATA = 6,       ///< Application data is invalid
-    NULL_POINTER = 7,                   ///< Null pointer encountered
-    INVALID_CHECKSUM = 8,               ///< Checksum validation failed
-    VALIDATION_FAILURE = 9,             ///< Validation Failure
-    TEMPLATE_SET_FAILURE = 10,          ///< Failed to set Template Packet
-    FILE_READ_ERROR = 11,               ///< Reading from file failure
-    FILE_WRITE_ERROR = 12,              ///< Writing to file failure
-    CONFIG_FILE_ERROR = 13              ///< Configuration file error
+    NONE = 0,                           ///< No error.
+    UNKNOWN_ERROR = 1,                  ///< Unclassified failure.
+    NO_DATA = 2,                        ///< Required data or stored packets are absent.
+    INVALID_DATA = 3,                   ///< Generic malformed data or invalid boundary.
+    INVALID_HEADER_DATA = 4,            ///< Invalid CCSDS primary-header field or bytes.
+    INVALID_SECONDARY_HEADER_DATA = 5,  ///< Invalid secondary-header type, size, or content.
+    INVALID_APPLICATION_DATA = 6,       ///< Invalid or oversized application data.
+    NULL_POINTER = 7,                   ///< A required input pointer was null.
+    INVALID_CHECKSUM = 8,               ///< Packet CRC validation failed.
+    VALIDATION_FAILURE = 9,             ///< Validator rejected a packet.
+    TEMPLATE_SET_FAILURE = 10,          ///< Manager template could not be installed.
+    FILE_READ_ERROR = 11,               ///< Input file could not be read.
+    FILE_WRITE_ERROR = 12,              ///< Output file could not be written.
+    CONFIG_FILE_ERROR = 13              ///< Configuration file/key/type/value is invalid.
   };
 
   /**
-   * @brief Represents an error with both an error code and a message.
-   *
-   * This class is used to provide additional error context by combining
-   * an `ErrorCode` with a detailed message, allowing differentiation
-   * between multiple errors of the same type.
+   * @class Error
+   * @brief Immutable error category and diagnostic message returned by Result.
    */
   class Error {
   public:
     /**
-     * @brief Constructs an error with a given error code and message.
-     * @param code The error code representing the type of error.
-     * @param message A detailed description of the error.
+     * @brief Constructs an error.
+     * @param code Stable error category.
+     * @param message Human-readable operation-specific diagnostic.
      */
     Error(const ErrorCode code, std::string message)
-      : m_code(code), m_message(std::move(message)) {
-    }
+      : m_code(code), m_message(std::move(message)) {}
 
-    /**
-     * @brief Retrieves the error code.
-     * @return The associated `ErrorCode`.
-     */
+    /** @brief Returns the stable error category. */
     [[nodiscard]] ErrorCode code() const { return m_code; }
 
-    /**
-     * @brief Retrieves the error message.
-     * @return The detailed error description.
-     */
+    /** @brief Returns the diagnostic message owned by this Error. */
     [[nodiscard]] const std::string &message() const { return m_message; }
 
   private:
-    ErrorCode m_code; ///< The error type.
-    std::string m_message; ///< A detailed message describing the error.
+    ErrorCode m_code;       ///< Stable error category.
+    std::string m_message;  ///< Human-readable diagnostic.
   };
 
   /**
    * @class Result
-   * @brief Encapsulates a result that can hold either a value or an Error.
+   * @brief Holds either one successful value of type T or one Error.
+   * @tparam T Success value type.
    *
-   * This class simplifies error handling by allowing functions to return either a
-   * valid result or an Error, reducing the need for exception handling.
+   * Result is the library's exception-free error channel and is suitable for host
+   * and MCU builds. Test it with has_value() or explicit bool conversion before
+   * calling value() or error(); requesting the inactive variant throws
+   * std::bad_variant_access on hosted implementations.
    *
-   * @tparam T The type of value to be stored in the result.
+   * @code{.cpp}
+   * const auto result = packet.deserializeBounded(bytes);
+   * if (!result) {
+   *   log(result.error().message());
+   *   return;
+   * }
+   * const std::size_t consumed = result.value();
+   * @endcode
    */
   template<typename T>
   class Result {
-    std::variant<T, Error> data; ///< Holds either a valid value or an Error.
+    std::variant<T, Error> data; ///< Active success value or error.
 
   public:
     /**
-     * @brief Constructor for success case.
-     * @param value The successful result value.
+     * @brief Constructs a successful result.
+     * @param value Value moved into the result.
      */
-    Result(T value) : data(std::move(value)) {
-    }
+    Result(T value) : data(std::move(value)) {}
 
     /**
-     * @brief Constructor for failure case.
-     * @param error The Error.
+     * @brief Constructs a failed result.
+     * @param error Error copied into the result.
      */
-    Result(Error error) : data(error) {
-    }
+    Result(Error error) : data(error) {}
 
-    /**
-     * @brief Checks if the result contains a valid value.
-     * @return True if a valid value is present, false otherwise.
-     */
+    /** @brief Returns true when the success value is active. */
     [[nodiscard]] bool has_value() const {
       return std::holds_alternative<T>(data);
     }
 
     /**
-     * @brief Retrieves the stored value.
-     * @return A reference to the stored value.
-     * @note Ensure `has_value()` returns true before calling this.
+     * @brief Returns mutable access to the success value.
+     * @pre has_value() is true.
      */
     T &value() { return std::get<T>(data); }
+
+    /**
+     * @brief Returns read-only access to the success value.
+     * @pre has_value() is true.
+     */
     const T &value() const { return std::get<T>(data); }
 
     /**
-     * @brief Retrieves the stored error.
-     * @return The error.
+     * @brief Returns a copy of the stored error.
+     * @pre has_value() is false.
      */
-    [[nodiscard]] Error error() const {
-      return std::get<Error>(data);
-    }
+    [[nodiscard]] Error error() const { return std::get<Error>(data); }
 
-    /**
-     * @brief Implicit conversion to `bool`, allowing usage like `if (result)`.
-     * @return True if the result contains a value, false otherwise.
-     */
+    /** @brief Explicitly converts to true for success and false for error. */
     explicit operator bool() const { return has_value(); }
   };
 
-  // Convenient type aliases for common result types
+  /** @brief Common result type for operations whose success payload is boolean. */
   using ResultBool = Result<bool>;
+  /** @brief Common result type for operations returning a byte buffer. */
   using ResultBuffer = Result<std::vector<std::uint8_t> >;
 }
 
-/* ERROR MANAGEMENT MACROS */
-
 /**
- * @def RETURN_IF_ERROR(condition, errorCode)
- * @brief Macro to return an error code if a condition is met.
+ * @def RETURN_IF_ERROR
+ * @brief Returns errorCode from the current function when condition is true.
+ * @param condition Failure predicate evaluated once.
+ * @param errorCode Value returned on failure.
  */
 #define RETURN_IF_ERROR(condition, errorCode)            \
 do { if (condition) return errorCode; } while (0)
 
 /**
- * @def RET_IF_ERR_MSG(condition, errorCode, message)
- * @brief Macro to return an error with an error message if a condition is met.
+ * @def RET_IF_ERR_MSG
+ * @brief Returns CCSDS::Error when condition is true.
+ * @param condition Failure predicate evaluated once.
+ * @param errorCode CCSDS::ErrorCode category.
+ * @param message Diagnostic expression used to construct the Error.
  */
 #define RET_IF_ERR_MSG(condition, errorCode, message)    \
 do {                                                     \
@@ -157,8 +161,10 @@ do {                                                     \
 } while (0)
 
 /**
- * @def ASSIGN_MV(var, result)
- * @brief Macro to assign a result value to a variable or return an error by moving.
+ * @def ASSIGN_MV
+ * @brief Propagates a failed Result or moves its success value into var.
+ * @param var Assignment destination.
+ * @param result Result expression evaluated once.
  */
 #define ASSIGN_MV(var, result)                 \
 do {                                           \
@@ -168,8 +174,10 @@ do {                                           \
 } while (0)
 
 /**
- * @def ASSIGN_CP(var, result)
- * @brief Macro to assign a result value to a variable or return an error by copy.
+ * @def ASSIGN_CP
+ * @brief Propagates a failed Result or copies its success value into var.
+ * @param var Assignment destination.
+ * @param result Result expression evaluated once.
  */
 #define ASSIGN_CP(var, result)                 \
 do {                                           \
@@ -178,10 +186,12 @@ if (!_res) return _res.error();                \
 var = _res.value();                            \
 } while (0)
 
-
 /**
- * @def ASSIGN_OR_PRINT(var, result)
- * @brief Macro to assign a result value or print an error message.
+ * @def ASSIGN_OR_PRINT
+ * @brief Prints a failed Result or moves its success value into var.
+ * @param var Assignment destination.
+ * @param result Result expression evaluated once.
+ * @note Intended for construction paths that cannot return Result, such as DataField setup.
  */
 #define ASSIGN_OR_PRINT(var, result)           \
 do {                                           \
@@ -194,8 +204,9 @@ do {                                           \
 } while (0)
 
 /**
- * @def ASSERT_SUCCESS(result)
- * @brief Macro to return immediately if the result contains an error (for void functions).
+ * @def ASSERT_SUCCESS
+ * @brief Returns from a void function when result contains an error.
+ * @param result Result expression evaluated once.
  */
 #define ASSERT_SUCCESS(result)                 \
 do {                                           \
@@ -204,8 +215,9 @@ do {                                           \
 } while (0)
 
 /**
- * @def FORWARD_RESULT(result)
- * @brief Macro to return a result as-is (for functions returning Result<T>).
+ * @def FORWARD_RESULT
+ * @brief Returns a failed Result unchanged from the current Result-returning function.
+ * @param result Result expression evaluated once.
  */
 #define FORWARD_RESULT(result)                 \
 do {                                           \
