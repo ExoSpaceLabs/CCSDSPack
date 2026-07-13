@@ -44,6 +44,12 @@ jobs:
         run: |
           cd bin && ./CCSDSPack_tester
 
+      - name: Run CLI integration tests
+        run: |
+          python3 test/cli_integration.py \
+            --bin-dir "$PWD/bin" \
+            --resources "$PWD/test/test_resources"
+
       - name: Install shared library package
         run: |
           cmake --install build --prefix "$PWD/build/install"
