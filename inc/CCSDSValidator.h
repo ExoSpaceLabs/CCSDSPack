@@ -12,7 +12,8 @@ namespace CCSDS {
   /**
    * @brief Handles validation of CCSDS packets.
    *
-   * The Validator class checks packet coherence and compares packets against a template.
+   * The Validator class checks packet coherence, sequence-stream coherence,
+   * and comparison against a packet template.
    */
   class Validator {
   public:
@@ -26,8 +27,7 @@ namespace CCSDS {
      * @brief Constructs a Validator with a template packet.
      * @param templatePacket The packet template to use for validation.
      */
-    explicit Validator(const Packet &templatePacket) : m_templatePacket(templatePacket) {
-    };
+    explicit Validator(const Packet &templatePacket) : m_templatePacket(templatePacket) {}
 
     /**
      * @brief Sets the template packet for validation.
@@ -37,11 +37,13 @@ namespace CCSDS {
 
     /**
      * @brief Configures validation options.
-     * @param validatePacketCoherence Enables/disables packet coherence validation.
-     * @param validateSequenceCount
-     * @param validateAgainstTemplate Enables/disables comparison against the template.
+     * @param validatePacketCoherence Enables packet length, CRC, and flag-coherence validation.
+     * @param validateSequenceCount Enables sequence-count continuity validation.
+     * @param validateAgainstTemplate Enables comparison against the template.
      */
-    void configure(bool validatePacketCoherence, bool validateSequenceCount, bool validateAgainstTemplate);
+    void configure(bool validatePacketCoherence,
+                   bool validateSequenceCount,
+                   bool validateAgainstTemplate);
 
     /**
      * @brief Validates a given packet.
@@ -53,33 +55,43 @@ namespace CCSDS {
     /**
      * @brief Returns a report of performed validation checks.
      *
-     * - Packet Coherence:
-     *     - index [0]: Data Field Length Header declared equals actual data field length
-     *     - index [1]: CRC15 value declared equals calculated CRC16 of the data field
-     *     - index [2]: Sequence Control flags and count coherence
-     *     - index [3]: Sequence Control count coherence (incremental start from 1)
-     * - Compare Against Template:
-     *     - index [4]: Identification and Version in packet matches template
-     *     - index [5]: Template Sequence Control match
-     *
-     * @return A vector of boolean results for each performed check.
+     * - Packet coherence:
+     *     - index [0]: Packet Data Length matches the packet data field.
+     *     - index [1]: Received CRC16 matches the calculated CRC16.
+     *     - index [2]: Sequence flags are coherent with segmentation state.
+     *     - index [3]: Sequence count matches the expected next count.
+     * - Compare against template:
+     *     - index [4]: Complete Packet Identification matches the template.
+     *     - index [5]: Segmented/unsegmented class matches the template.
      */
     [[nodiscard]] std::vector<bool> getReport() const { return m_report; }
 
-    /**
-     * @brief Clears the validator, resets counter
-     *
-     */
+    /** @brief Clears the validator and resets sequence-stream state. */
     void clear();
 
   private:
+    static constexpr std::uint16_t SEQUENCE_COUNT_MASK{0x3FFFU};
+    static constexpr std::uint16_t SEGMENT_OPEN_MASK{0x4000U};
+    static constexpr std::uint16_t SEQUENCE_INITIALIZED_MASK{0x8000U};
+
+    [[nodiscard]] bool sequenceInitialized() const {
+      return (m_sequenceCounter & SEQUENCE_INITIALIZED_MASK) != 0U;
+    }
+    [[nodiscard]] bool segmentOpen() const {
+      return (m_sequenceCounter & SEGMENT_OPEN_MASK) != 0U;
+    }
+    [[nodiscard]] std::uint16_t expectedSequenceCount() const {
+      return m_sequenceCounter & SEQUENCE_COUNT_MASK;
+    }
+    void acceptSequence(const Header &header);
+
     Packet m_templatePacket;               ///< Template packet used for validation.
-    bool m_validatePacketCoherence{true};  ///< Whether to validate packet length and CRC (default is true).
-    bool m_validateAgainstTemplate{false}; ///< Whether to validate against the template packet (default is false).
-    bool m_validateSegmentedCount{true};  ///< Whether to validate the count of segmented packets.
-    std::uint16_t m_sequenceCounter{1};         ///< Counter for segmented Packets
-    std::vector<bool> m_report{};          ///< List of boolean results representing performed checks.
-    size_t m_reportSize{6};                ///< Expected size of the validation report.
+    bool m_validatePacketCoherence{true};  ///< Whether to validate packet length, CRC, and sequence flags.
+    bool m_validateAgainstTemplate{false}; ///< Whether to validate against the template packet.
+    bool m_validateSegmentedCount{true};   ///< Whether to validate sequence-count continuity.
+    std::uint16_t m_sequenceCounter{0};    ///< Expected count and segmentation state packed in one word.
+    std::vector<bool> m_report{};          ///< Results of the performed validation checks.
+    std::size_t m_reportSize{6};           ///< Expected report size.
     CRC16Config m_CRCConfig;
   };
 } // namespace CCSDS

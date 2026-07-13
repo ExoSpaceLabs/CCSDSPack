@@ -87,24 +87,39 @@ namespace CCSDS {
                                                          std::uint16_t headerDataSizeBytes);
 
     std::uint64_t getPrimaryHeader64bit();
+    [[nodiscard]] std::uint64_t getPrimaryHeader64bit() const;
     std::uint16_t getFullPacketLength();
+    [[nodiscard]] std::uint16_t getFullPacketLength() const;
     std::vector<std::uint8_t> serialize();
     std::vector<std::uint8_t> getPrimaryHeaderBytes();
+    [[nodiscard]] std::vector<std::uint8_t> getPrimaryHeaderBytes() const;
     std::vector<std::uint8_t> getDataFieldHeaderBytes();
+    [[nodiscard]] std::vector<std::uint8_t> getDataFieldHeaderBytes() const;
     std::vector<std::uint8_t> getApplicationDataBytes();
+    [[nodiscard]] std::vector<std::uint8_t> getApplicationDataBytes() const;
     std::vector<std::uint8_t> getFullDataFieldBytes();
+    [[nodiscard]] std::vector<std::uint8_t> getFullDataFieldBytes() const;
     std::vector<std::uint8_t> getCRCVectorBytes();
+    [[nodiscard]] std::vector<std::uint8_t> getCRCVectorBytes() const;
     std::uint16_t getCRC();
-    std::uint16_t getDataFieldMaximumSize() const;
+    [[nodiscard]] std::uint16_t getCRC() const;
+    [[nodiscard]] std::uint16_t getDataFieldMaximumSize() const;
     bool getDataFieldHeaderFlag();
+    [[nodiscard]] bool getDataFieldHeaderFlag() const;
     DataField &getDataField();
+    [[nodiscard]] const DataField &getDataField() const;
     Header &getPrimaryHeader();
+    [[nodiscard]] const Header &getPrimaryHeader() const;
 
-    void setCrcConfig(const CRC16Config crcConfig) { m_CRC16Config = crcConfig; }
+    void setCrcConfig(const CRC16Config crcConfig) {
+      m_CRC16Config = crcConfig;
+      m_updateStatus = false;
+    }
     void setCrcConfig(const std::uint16_t polynomial,
                       const std::uint16_t initialValue,
                       const std::uint16_t finalXorValue) {
       m_CRC16Config = {polynomial, initialValue, finalXorValue};
+      m_updateStatus = false;
     }
 
     void update();

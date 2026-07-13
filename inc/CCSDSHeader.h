@@ -91,24 +91,14 @@ namespace CCSDS {
      * @return Six header bytes, or an empty vector when the header is invalid.
      */
     std::vector<std::uint8_t> serialize();
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const;
 
     /**
      * @brief Returns the packed 48-bit primary header in a 64-bit value.
      * @return The packed header, or zero when the header is invalid.
      */
-    std::uint64_t getFullHeader() {
-      if (m_status == INVALID) {
-        return 0;
-      }
-      m_packetSequenceControl = (static_cast<std::uint16_t>(m_sequenceFlags) << 14) | m_sequenceCount;
-      m_packetIdentificationAndVersion = (static_cast<std::uint16_t>(m_versionNumber) << 13)
-                                         | (static_cast<std::uint16_t>(m_type) << 12)
-                                         | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11)
-                                         | m_APID;
-      return (static_cast<std::uint64_t>(m_packetIdentificationAndVersion) << 32)
-             | (static_cast<std::uint32_t>(m_packetSequenceControl) << 16)
-             | m_dataLength;
-    }
+    std::uint64_t getFullHeader();
+    [[nodiscard]] std::uint64_t getFullHeader() const;
 
     [[nodiscard]] ResultBool setVersionNumber(const std::uint8_t &value);
     [[nodiscard]] ResultBool setType(const std::uint8_t &value);

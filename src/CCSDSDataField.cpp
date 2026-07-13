@@ -7,7 +7,7 @@
 
 std::vector<std::uint8_t> CCSDS::DataField::serialize() {
   update();
-  const auto dataFieldHeader = getDataFieldHeaderBytes();
+  const auto dataFieldHeader = static_cast<const DataField &>(*this).getDataFieldHeaderBytes();
   std::vector<std::uint8_t> fullData{};
   fullData.reserve(dataFieldHeader.size() + m_applicationData.size());
   fullData.insert(fullData.end(), dataFieldHeader.begin(), dataFieldHeader.end());
@@ -16,6 +16,10 @@ std::vector<std::uint8_t> CCSDS::DataField::serialize() {
 }
 
 std::vector<std::uint8_t> CCSDS::DataField::getApplicationData() {
+  return static_cast<const DataField &>(*this).getApplicationData();
+}
+
+std::vector<std::uint8_t> CCSDS::DataField::getApplicationData() const {
   return m_applicationData;
 }
 
@@ -39,7 +43,10 @@ std::uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() const {
 }
 
 std::shared_ptr<CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHeader() {
-  update();
+  return m_secondaryHeader;
+}
+
+std::shared_ptr<const CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHeader() const {
   return m_secondaryHeader;
 }
 
@@ -179,6 +186,9 @@ void CCSDS::DataField::setDataPacketSize(const std::uint16_t &value) {
 }
 
 std::vector<std::uint8_t> CCSDS::DataField::getDataFieldHeaderBytes() {
-  update();
+  return static_cast<const DataField &>(*this).getDataFieldHeaderBytes();
+}
+
+std::vector<std::uint8_t> CCSDS::DataField::getDataFieldHeaderBytes() const {
   return m_secondaryHeader ? m_secondaryHeader->serialize() : std::vector<std::uint8_t>{};
 }

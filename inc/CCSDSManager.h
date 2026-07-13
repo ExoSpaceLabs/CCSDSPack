@@ -20,258 +20,180 @@ namespace CCSDS {
    */
   class Manager {
   public:
-    /**
-     * @brief Default constructor.
-     */
+    /** @brief Default constructor. */
     Manager() = default;
 
     /**
      * @brief Constructs a Manager with a given packet template.
-     *
      * @param packet The packet template to be used as a reference.
      */
-    explicit Manager(Packet packet) : m_templatePacket(std::move(packet)) {
+    explicit Manager(Packet packet) {
+      packet.update();
+      m_templatePacket = std::move(packet);
       m_templateIsSet = true;
+      m_sequenceCount = m_templatePacket.getPrimaryHeader().getSequenceCount() & SEQUENCE_COUNT_MASK;
       m_templatePacket.setUpdatePacketEnable(false);
       m_validator.setTemplatePacket(m_templatePacket);
       m_validator.configure(true, true, true);
-
     }
 
     /**
-     * set sync pattern that should indicate the start of a CCSDS packet. insertion
-     * is disabled by default. use setSyncPatternEnable to enable.
-     *
-     * @param syncPattern std::uint32_t (default 0x1ACFFC1D)
+     * Set the sync pattern that indicates the start of a CCSDS packet.
+     * Insertion is disabled by default; use setSyncPatternEnable to enable it.
      */
     void setSyncPattern(std::uint32_t syncPattern);
 
-    /**
-     * returns the currently set sync pattern.
-     *
-     * @return std::uint32_t
-     */
-    std::uint32_t getSyncPattern() const;
+    /** @return The currently configured sync pattern. */
+    [[nodiscard]] std::uint32_t getSyncPattern() const;
 
-    /**
-     * enable sync pattern utilization both in serialization, deserialization, read and write.
-     *
-     * @param enable bool (default false)
-     */
+    /** @brief Enables sync-pattern insertion and parsing. */
     void setSyncPatternEnable(bool enable);
 
-    /**
-     * returns the current settings of the sync pattern enable
-     *
-     * @return bool
-     */
-    bool getSyncPatternEnable() const;
+    /** @return Whether sync-pattern handling is enabled. */
+    [[nodiscard]] bool getSyncPatternEnable() const;
 
     /**
      * @brief Sets a new packet template.
-     *
      * @param packet The new packet template to use.
      */
     [[nodiscard]] ResultBool setPacketTemplate(Packet packet);
 
-    /**
-    * @brief Loads a template packet from a configuration file.
-    *
-    * @param configPath  path to the configuration file.
-    */
+    /** @brief Loads a template packet from a configuration file. */
     [[nodiscard]] ResultBool loadTemplateConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
-    /**
-    * @brief Loads a template packet from a configuration object.
-    *
-    * @param cfg  Configuration obj to load template from.
-    */
+    /** @brief Loads a template packet from a configuration object. */
     [[nodiscard]] ResultBool loadTemplateConfig(const Config &cfg);
 #endif
 
-    /**
-     * @brief Sets the size of the data field.
-     *
-     * @param size The new data field size in bytes.
-     */
-    void setDataFieldSize( std::uint16_t size );
+    /** @brief Sets the size of the data field. */
+    void setDataFieldSize(std::uint16_t size);
+
+    /** @return The configured data-field size, including a secondary header. */
+    [[nodiscard]] std::uint16_t getDataFieldSize() const;
 
     /**
-     * @brief retrieves the set data field size (this includes the secondary header if present)
-     *
-     * @return std::uint16_t the size of data length in bytes.
-     */
-    std::uint16_t getDataFieldSize() const;
-
-    /**
-     * @brief Sets the application data for the packet.
-     *
-     * @param data The application data as a vector of bytes.
+     * @brief Segments and assigns application data using the packet template.
      * @return ResultBool indicating success or failure.
      */
-    ResultBool setApplicationData( const std::vector<std::uint8_t> &data );
+    [[nodiscard]] ResultBool setApplicationData(const std::vector<std::uint8_t> &data);
+
+    /** @brief Enables or disables automatic packet finalization. */
+    void setAutoUpdateEnable(bool enable);
+
+    /** @brief Enables or disables automatic packet validation. */
+    void setAutoValidateEnable(bool enable);
 
     /**
-     * @brief Enables or disables automatic updates for packets.
+     * @brief Enables or disables automatic sequence-count advancement.
      *
-     * @param enable Set to true to enable automatic updates, false to disable.
+     * Automatic mode assigns the current count to each generated packet and
+     * advances modulo 16384. Manual mode reuses the configured count.
      */
-    void setAutoUpdateEnable( bool enable );
+    void setAutoSequenceCountEnable(bool enable);
 
-    /**
-     * @brief Enables or disables automatic validation of packets.
-     *
-     * @param enable Set to true to enable automatic validation, false to disable.
-     */
-    void setAutoValidateEnable( bool enable );
+    /** @return Whether automatic sequence-count advancement is enabled. */
+    [[nodiscard]] bool getAutoSequenceCountEnable() const {
+      return (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) == 0U;
+    }
 
-    /**
-     * @brief Retrieves the packet template in serialized form.
-     *
-     * @return A ResultBuffer containing the serialized packet template.
-     */
+    /** @brief Sets the Manager stream sequence count in the range 0..16383. */
+    [[nodiscard]] ResultBool setSequenceCount(std::uint16_t count);
+
+    /** @return The current 14-bit Manager stream sequence count. */
+    [[nodiscard]] std::uint16_t getSequenceCount() const {
+      return m_sequenceCount & SEQUENCE_COUNT_MASK;
+    }
+
+    /** @brief Retrieves the packet template in serialized form. */
     ResultBuffer getPacketTemplate();
 
-    /**
-     * @brief Retrieves a packet at the specified index.
-     *
-     * @param index The index of the packet to retrieve.
-     * @return A ResultBuffer containing the requested packet.
-     */
-    ResultBuffer getPacketBufferAtIndex( std::uint16_t index );
+    /** @brief Retrieves a serialized packet at the specified index. */
+    ResultBuffer getPacketBufferAtIndex(std::uint16_t index);
 
+    /** @brief Retrieves all stored packets as one sequential byte buffer. */
+    [[nodiscard]] std::vector<std::uint8_t> getPacketsBuffer() const;
 
-    /**
-     * @brief Retrieves a buffer containing all the stored packets sequentially.
-     *
-     * @return A vector of bytes containing the packets data.
-     */
-    std::vector<std::uint8_t> getPacketsBuffer() const;
-
-    /**
-     * @brief Retrieves the application data from the packets.
-     *
-     * @return A ResultBuffer containing the application data.
-     */
+    /** @brief Retrieves reassembled application data from the packets. */
     [[nodiscard]] ResultBuffer getApplicationDataBuffer();
 
-    /**
-     * @brief Retrieves the application data from a packet at the given index.
-     *
-     * @param index The index of the packet.
-     * @return A ResultBuffer containing the application data of the selected packet.
-     */
-    ResultBuffer getApplicationDataBufferAtIndex( std::uint16_t index );
+    /** @brief Retrieves application data from one packet. */
+    ResultBuffer getApplicationDataBufferAtIndex(std::uint16_t index);
 
-    /**
-     * @brief Retrieves the total number of packets managed.
-     *
-     * @return The total number of stored packets.
-     */
+    /** @return The total number of stored packets. */
     [[nodiscard]] std::uint16_t getTotalPackets() const;
 
-    /**
-     * @brief Checks if automatic updates are enabled.
-     *
-     * @return True if auto-update is enabled, false otherwise.
-     */
+    /** @return True when automatic packet updates are enabled. */
     [[nodiscard]] bool getAutoUpdateEnable() const { return m_updateEnable; }
 
-    /**
-     * @brief Retrieves the packet template.
-     *
-     * @return The stored packet template.
-     */
-    Packet getTemplate() { return m_templatePacket; };
+    /** @return A copy of the stored packet template. */
+    Packet getTemplate() { return m_templatePacket; }
+    [[nodiscard]] Packet getTemplate() const { return m_templatePacket; }
 
-    /**
-     * @brief Retrieves all stored packets.
-     *
-     * @return A vector containing all managed packets.
-     */
+    /** @return A copy of all stored packets. */
     std::vector<Packet> getPackets();
+    [[nodiscard]] std::vector<Packet> getPackets() const;
 
     /**
-     * @brief Adds a new packet to the list.
-     *
-     * @param packet The new packet to be added.
+     * @brief Adds a packet when its complete Packet Identification matches the
+     * Manager-bound stream identifier.
      */
     [[nodiscard]] ResultBool addPacket(Packet packet);
 
-    /**
-     * @brief Adds a new packet to the list.
-     *
-     * @param packetBuffer The new packet to be added in the form of a buffer.
-     */
-    [[nodiscard]] ResultBool addPacketFromBuffer(const std::vector<std::uint8_t>& packetBuffer);
+    /** @brief Parses and adds one packet from a byte buffer. */
+    [[nodiscard]] ResultBool addPacketFromBuffer(const std::vector<std::uint8_t> &packetBuffer);
 
-    /**
-     * @brief Load a vector of packets.
-     *
-     * @param packets The packets
-     */
-    [[nodiscard]] ResultBool load(const std::vector<Packet>& packets);
+    /** @brief Transactionally loads a collection of packets. */
+    [[nodiscard]] ResultBool load(const std::vector<Packet> &packets);
 
-    /**
-     * @brief Load a packet or a series of packets from a buffer
-     *
-     * @param packetsBuffer The buffer holding packet data.
-     */
-    [[nodiscard]] ResultBool load(const std::vector<std::uint8_t>& packetsBuffer);
+    /** @brief Transactionally loads one or more concatenated packets. */
+    [[nodiscard]] ResultBool load(const std::vector<std::uint8_t> &packetsBuffer);
 
-    /**
-     * @brief Load a packet or a series of packets from a binary file
-     *
-     * @param binaryFile path to the file holding packet data.
-     */
-    [[nodiscard]] ResultBool read(const std::string& binaryFile);
+    /** @brief Loads packets from a binary file. */
+    [[nodiscard]] ResultBool read(const std::string &binaryFile);
 
-    /**
-     * @brief Write a packet or a series of packets to a binary file
-     *
-     * @param binaryFile destination file path for packets data.
-     */
-    [[nodiscard]] ResultBool write(const std::string& binaryFile) const;
+    /** @brief Writes stored packets to a binary file. */
+    [[nodiscard]] ResultBool write(const std::string &binaryFile) const;
 
-    /**
-     * @brief Load a template packet from a binary or configuration file
-     *
-     * @param filename path to the file holding template.
-     */
-    [[nodiscard]] ResultBool readTemplate(const std::string& filename);
+    /** @brief Loads a template packet from a binary or configuration file. */
+    [[nodiscard]] ResultBool readTemplate(const std::string &filename);
 
-    /**
-     * @brief Clears the manager, removes all packets and template.
-     */
+    /** @brief Clears packets, template, identifier binding, and sequence state. */
     void clear();
 
-    /**
-     * @brief Clears the packets and sets the counter to 0.
-     */
+    /** @brief Clears stored packets and resets the sequence counter to zero. */
     void clearPackets();
 
     /**
-     * @brief Returns a reverence to the manager's Validator
-     *
-     * @note changing settings of this instance will affect the manager
+     * @brief Returns a reference to the Manager's Validator.
+     * @note Changing this instance affects Manager validation.
      */
-    Validator& getValidatorReference() { return m_validator; }
+    Validator &getValidatorReference() { return m_validator; }
 
     /**
-     * @brief Returns a reference to the packets vector
-     *
-     * @note changing the data will affect the packets stored in the manager.
+     * @brief Returns a reference to the packets vector.
+     * @note Direct mutation can bypass Manager invariants.
      */
-    std::vector<Packet>& getPacketsReference() { return m_packets; }
+    std::vector<Packet> &getPacketsReference() { return m_packets; }
 
   private:
-    Packet m_templatePacket{};         ///< The template packet used for generating new packets.
-    bool m_templateIsSet  { false };   ///< Boolean to indicate if Template has been set or not.
-    bool m_updateEnable   {  true };   ///< bool indicating whether automatic updates are enabled (default: true).
-    bool m_validateEnable {  true };   ///< bool indicating whether automatic validation is enabled (default: true).
-    bool m_syncPattEnable { false };   ///< bool indicating whether automatic sync pattern insertion is enabled (default: false).
+    static constexpr std::uint16_t SEQUENCE_COUNT_MASK{0x3FFFU};
+    static constexpr std::uint16_t AUTO_SEQUENCE_DISABLED_MASK{0x8000U};
+
+    [[nodiscard]] static std::uint16_t packetIdentifier(const Packet &packet);
+    [[nodiscard]] bool hasIdentifierBinding() const;
+    [[nodiscard]] std::uint16_t boundPacketIdentifier() const;
+    [[nodiscard]] ResultBool validatePacketIdentifier(const Packet &packet) const;
+    [[nodiscard]] PacketErrorControlMode boundPacketErrorControlMode() const;
+    void advanceSequenceCount();
+    void syncSequenceCountFromPacket(const Packet &packet);
+
+    Packet m_templatePacket{};         ///< Template used for generating new packets.
+    bool m_templateIsSet{false};       ///< Whether a template has been configured.
+    bool m_updateEnable{true};         ///< Whether automatic packet finalization is enabled.
+    bool m_validateEnable{true};       ///< Whether automatic validation is enabled.
+    bool m_syncPattEnable{false};      ///< Whether sync-pattern handling is enabled.
     std::vector<Packet> m_packets;     ///< Collection of stored packets.
-    std::uint16_t m_sequenceCount{ 0 };
+    std::uint16_t m_sequenceCount{0};  ///< Count in low 14 bits; manual-mode flag in bit 15.
 
     Validator m_validator{};
     std::uint32_t m_syncPattern{0x1ACFFC1D};

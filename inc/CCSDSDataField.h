@@ -54,20 +54,27 @@ namespace CCSDS {
     void setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
 
     SecondaryHeaderFactory &getDataFieldHeaderFactory() { return m_secondaryHeaderFactory; }
+    [[nodiscard]] const SecondaryHeaderFactory &getDataFieldHeaderFactory() const {
+      return m_secondaryHeaderFactory;
+    }
     SecondaryHeaderAbstract &getDataFieldHeader() { return *m_secondaryHeader; }
+    [[nodiscard]] const SecondaryHeaderAbstract &getDataFieldHeader() const { return *m_secondaryHeader; }
     void setDataPacketSize(const std::uint16_t &value);
     void setDataFieldHeaderAutoUpdateStatus(const bool enable) { m_enableDataFieldUpdate = enable; }
 
-    std::uint16_t getDataFieldAbsoluteBytesSize() const;
-    std::uint16_t getApplicationDataBytesSize() const;
-    std::uint16_t getDataFieldUsedBytesSize() const;
-    std::uint16_t getDataFieldAvailableBytesSize() const;
+    [[nodiscard]] std::uint16_t getDataFieldAbsoluteBytesSize() const;
+    [[nodiscard]] std::uint16_t getApplicationDataBytesSize() const;
+    [[nodiscard]] std::uint16_t getDataFieldUsedBytesSize() const;
+    [[nodiscard]] std::uint16_t getDataFieldAvailableBytesSize() const;
     std::vector<std::uint8_t> getDataFieldHeaderBytes();
+    [[nodiscard]] std::vector<std::uint8_t> getDataFieldHeaderBytes() const;
     std::vector<std::uint8_t> serialize();
     std::vector<std::uint8_t> getApplicationData();
+    [[nodiscard]] std::vector<std::uint8_t> getApplicationData() const;
     [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const { return m_enableDataFieldUpdate; }
     [[nodiscard]] bool getDataFieldHeaderFlag() const { return m_secondaryHeader != nullptr; }
-    [[nodiscard]] std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
+    std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
+    [[nodiscard]] std::shared_ptr<const SecondaryHeaderAbstract> getSecondaryHeader() const;
     void update();
 
   private:
