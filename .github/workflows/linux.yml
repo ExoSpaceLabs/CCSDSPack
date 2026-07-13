@@ -44,14 +44,23 @@ jobs:
         run: |
           cd bin && ./CCSDSPack_tester
 
-      - name: Validate installed shared-library consumer
+      - name: Install shared library package
         run: |
           cmake --install build --prefix "$PWD/build/install"
+
+      - name: Configure installed shared-library consumer
+        run: |
           cmake -S test/package_tester/shared_lib \
             -B build/package_tester/shared_lib \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_PREFIX_PATH="$PWD/build/install"
+
+      - name: Build installed shared-library consumer
+        run: |
           cmake --build build/package_tester/shared_lib -- -j
+
+      - name: Run installed shared-library consumer
+        run: |
           LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
             ctest --test-dir build/package_tester/shared_lib --output-on-failure
         

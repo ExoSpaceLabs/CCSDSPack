@@ -51,15 +51,29 @@ jobs:
           cd build\bin
           .\CCSDSPack_tester.exe
 
-      - name: Validate installed shared-library consumer
+      - name: Install shared library package
         shell: pwsh
         run: |
           $installPrefix = Join-Path $PWD "build/install"
           cmake --install build --prefix $installPrefix
+
+      - name: Configure installed shared-library consumer
+        shell: pwsh
+        run: |
+          $installPrefix = Join-Path $PWD "build/install"
           cmake -S test/package_tester/shared_lib `
             -B build/package_tester/shared_lib `
             -G "MinGW Makefiles" `
             "-DCMAKE_PREFIX_PATH=$installPrefix"
+
+      - name: Build installed shared-library consumer
+        shell: pwsh
+        run: |
           cmake --build build/package_tester/shared_lib --
+
+      - name: Run installed shared-library consumer
+        shell: pwsh
+        run: |
+          $installPrefix = Join-Path $PWD "build/install"
           $env:PATH = "$(Join-Path $installPrefix 'bin');$env:PATH"
           ctest --test-dir build/package_tester/shared_lib --output-on-failure
