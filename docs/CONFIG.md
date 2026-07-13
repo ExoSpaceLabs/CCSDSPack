@@ -96,12 +96,15 @@ the generation of new packets. This allows dynamic update of the packet without 
 General Settings fields:
 
 
-| Parameter                 | Data Type | Required |
-|---------------------------|-----------|----------|
-| `data_field_size`         | int       | Yes      |
-| `sync_pattern_enable`     | bool      | Yes      |
-| `sync_pattern`            | int       | No       |
-| `validation_enable`       | bool      | Yes      |
+| Parameter                    | Data Type | Required                         |
+|------------------------------|-----------|----------------------------------|
+| `data_field_size`            | int       | Yes                              |
+| `sync_pattern_enable`        | bool      | Yes                              |
+| `sync_pattern`               | int       | No                               |
+| `validation_enable`          | bool      | Yes for the decoder              |
+| `ccsds_packet_error_control` | string    | No, defaults to `CRC16`          |
+
+`ccsds_packet_error_control` accepts `crc16`/`CRC16` or `none`/`None`. The encoder, decoder, and validator also expose an additive `--packet-error-control` CLI override. See [CLI.md](CLI.md).
 
 Packet Main header fields:
 
