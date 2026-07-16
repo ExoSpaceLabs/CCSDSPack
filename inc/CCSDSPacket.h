@@ -60,10 +60,12 @@ namespace CCSDS {
    *
    * Packet provides checked primary-header assignment, optional typed or raw
    * secondary headers, application data, bounded parsing, an optional CRC16
-   * mission-profile trailer, and explicit finalization. It implements the Space
-   * Packet PDU profile rather than the complete CCSDS Packet Service, Octet String
-   * Service, protocol procedures, or PICS.
+   * mission-profile trailer, and explicit finalization. The object represents
+   * exactly one packet. Use Manager when generating, parsing, or validating a
+   * stream of packets that share one complete Packet Identification value.
    *
+   * The class implements the Space Packet PDU profile rather than the complete
+   * abstract Packet Service, Octet String Service, protocol procedures, or PICS.
    * Packet Version Number is fixed to encoded value zero. APID 2047 identifies an
    * Idle Packet and cannot be combined with a secondary header. CCSDSPack uses
    * Packet Sequence Count semantics for both telemetry and telecommand packets;
@@ -99,7 +101,7 @@ namespace CCSDS {
     /**
      * @brief Replaces all primary-header fields from a field structure.
      * @param data Field values to validate and assign atomically.
-     * @return Success, or INVALID_HEADER_DATA when the Space Packet profile is violated.
+     * @return Success, or INVALID_HEADER_DATA when a field violates the Space Packet profile.
      * @note The supplied Packet Data Length may later be replaced by update().
      */
     ResultBool setPrimaryHeader(PrimaryHeader data);
@@ -136,6 +138,9 @@ namespace CCSDS {
      * @brief Registers a custom secondary-header type for subsequent typed parsing.
      * @tparam T Default-constructible class derived from SecondaryHeaderAbstract.
      * @return Success, or a registration error.
+     *
+     * The registered object's getType() value is the lookup key used by typed
+     * setDataFieldHeader() and deserializeBounded() overloads.
      */
     template <typename T>
     ResultBool RegisterSecondaryHeader() {
@@ -143,28 +148,84 @@ namespace CCSDS {
       return true;
     }
 
+    /**
+     * @brief Creates a registered secondary-header type from serialized bytes.
+     * @param data Bytes belonging only to the secondary header.
+     * @param headerType Value returned by the registered type's getType().
+     * @return Success, or INVALID_SECONDARY_HEADER_DATA.
+     */
     [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data,
                                                 const std::string &headerType);
+
+    /**
+     * @brief Creates a registered secondary-header type from a byte span.
+     * @param pData Pointer to the first secondary-header byte.
+     * @param sizeData Number of bytes in the secondary header.
+     * @param headerType Registered type name.
+     * @return Success, or an error for a null pointer, size mismatch, or unknown type.
+     */
     [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
                                                 std::size_t sizeData,
                                                 const std::string &headerType);
+
+    /**
+     * @brief Stores an opaque raw secondary header using BufferHeader.
+     * @param data Secondary-header bytes.
+     * @return Success, or INVALID_SECONDARY_HEADER_DATA when the data exceeds capacity.
+     */
     [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data);
+
+    /**
+     * @brief Stores an opaque raw secondary header from a byte span.
+     * @param pData Pointer to the first secondary-header byte.
+     * @param sizeData Number of bytes to copy.
+     * @return Success, or an error for a null pointer, empty span, or insufficient capacity.
+     */
     [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
                                                 std::size_t sizeData);
 
-    /** @brief Replaces the packet application data. */
+    /**
+     * @brief Replaces the packet application data.
+     * @param data Application-data bytes; an empty vector clears the field.
+     * @return Success, or INVALID_APPLICATION_DATA when the configured capacity is exceeded.
+     */
     [[nodiscard]] ResultBool setApplicationData(const std::vector<std::uint8_t> &data);
-    /** @brief Replaces application data from a byte span. */
+
+    /**
+     * @brief Replaces application data from a byte span.
+     * @param pData Pointer to the first application-data byte.
+     * @param sizeData Number of bytes to copy; this overload requires at least one byte.
+     * @return Success, or an error for a null pointer, empty span, or insufficient capacity.
+     */
     [[nodiscard]] ResultBool setApplicationData(const std::uint8_t *pData,
                                                 std::size_t sizeData);
 
-    /** @brief Sets the two-bit segmentation flag in the primary header. */
+    /**
+     * @brief Sets the two-bit segmentation flag in the primary header.
+     * @param flags CONTINUING_SEGMENT, FIRST_SEGMENT, LAST_SEGMENT, or UNSEGMENTED.
+     */
     void setSequenceFlags(ESequenceFlag flags);
-    /** @brief Sets the 14-bit Packet Sequence Count used by the CCSDSPack profile. */
+
+    /**
+     * @brief Sets the 14-bit Packet Sequence Count used by the CCSDSPack profile.
+     * @param count Value in the inclusive range 0..16383.
+     * @return Success, or INVALID_HEADER_DATA for an out-of-range count.
+     * @note CCSDSPack does not implement telecommand Packet Name semantics.
+     */
     [[nodiscard]] ResultBool setSequenceCount(std::uint16_t count);
-    /** @brief Sets maximum secondary-header plus application-data capacity. */
+
+    /**
+     * @brief Sets the maximum combined secondary-header and application-data capacity.
+     * @param size Maximum packet data-field content bytes before the optional CRC trailer.
+     * @note Existing content is not truncated when the capacity is reduced.
+     */
     void setDataFieldSize(std::uint16_t size);
-    /** @brief Enables or disables automatic dependent-field finalization. */
+
+    /**
+     * @brief Enables or disables automatic dependent-field finalization.
+     * @param enable True to let update()/serialize() refresh secondary-header state,
+     * Packet Data Length, sequence count, and CRC; false to preserve stored values.
+     */
     void setUpdatePacketEnable(bool enable);
 
     /**
@@ -174,6 +235,7 @@ namespace CCSDS {
      */
     void setPacketErrorControlMode(PacketErrorControlMode mode);
 
+    /** @brief Returns the configured CCSDSPack trailer mode. */
     [[nodiscard]] PacketErrorControlMode getPacketErrorControlMode() const {
       return (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK) != 0U
                ? PacketErrorControlMode::None
@@ -185,19 +247,67 @@ namespace CCSDS {
       return getPacketErrorControlMode() == PacketErrorControlMode::CRC16 ? 2U : 0U;
     }
 
+    /**
+     * @brief Parses one packet using the currently configured trailer mode.
+     * @param data Buffer beginning with a CCSDS primary header.
+     * @return Success, or a deterministic header, length, data, or checksum error.
+     * @note Trailing bytes are ignored. Use deserializeBounded() to learn the boundary.
+     */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data);
+
+    /**
+     * @brief Parses one packet and decodes a registered secondary-header type.
+     * @param data Buffer beginning with a CCSDS packet.
+     * @param headerType Registered secondary-header type name.
+     * @param headerSize Explicit PusC header size when positive; otherwise the type's getSize().
+     * @return Success, or a parsing/secondary-header error.
+     */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data,
                                          const std::string &headerType,
                                          std::int32_t headerSize = -1);
+
+    /**
+     * @brief Parses one packet using an explicit opaque secondary-header byte count.
+     * @param data Buffer beginning with a CCSDS packet.
+     * @param headerDataSizeBytes Number of packet-data-field bytes assigned to BufferHeader.
+     * @return Success, or a parsing error when the declared boundary is invalid.
+     */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data,
                                          std::uint16_t headerDataSizeBytes);
+
+    /**
+     * @brief Parses an already separated primary header and packet data field.
+     * @param headerData Exactly six primary-header bytes.
+     * @param data Packet data-field bytes including the configured CRC trailer bytes.
+     * @return Success, or a header, length, or checksum error.
+     */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &headerData,
                                          const std::vector<std::uint8_t> &data);
 
+    /**
+     * @brief Parses exactly one packet and returns its declared serialized size.
+     * @param data Buffer beginning with a packet; additional bytes may follow.
+     * @return Consumed byte count on success, or a deterministic parsing error.
+     */
     [[nodiscard]] Result<std::size_t> deserializeBounded(const std::vector<std::uint8_t> &data);
+
+    /**
+     * @brief Bounded parse with a registered secondary-header type.
+     * @param data Buffer beginning with a packet.
+     * @param headerType Registered secondary-header type name.
+     * @param headerSize Explicit PusC header size when positive; otherwise the type's getSize().
+     * @return Consumed byte count on success, or a parsing/secondary-header error.
+     */
     [[nodiscard]] Result<std::size_t> deserializeBounded(const std::vector<std::uint8_t> &data,
                                                          const std::string &headerType,
                                                          std::int32_t headerSize = -1);
+
+    /**
+     * @brief Bounded parse using an explicit opaque secondary-header byte count.
+     * @param data Buffer beginning with a packet.
+     * @param headerDataSizeBytes Number of data-field bytes belonging to the secondary header.
+     * @return Consumed byte count on success, or a boundary/parsing error.
+     */
     [[nodiscard]] Result<std::size_t> deserializeBounded(const std::vector<std::uint8_t> &data,
                                                          std::uint16_t headerDataSizeBytes);
 
@@ -231,32 +341,75 @@ namespace CCSDS {
      */
     std::vector<std::uint8_t> serialize();
 
+    /** @brief Returns the currently stored six primary-header bytes without finalizing. */
     std::vector<std::uint8_t> getPrimaryHeaderBytes();
+    /** @brief Const overload of getPrimaryHeaderBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getPrimaryHeaderBytes() const;
+
+    /** @brief Returns the currently stored secondary-header bytes without finalizing. */
     std::vector<std::uint8_t> getDataFieldHeaderBytes();
+    /** @brief Const overload of getDataFieldHeaderBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getDataFieldHeaderBytes() const;
+
+    /** @brief Returns a copy of the current application-data bytes without finalizing. */
     std::vector<std::uint8_t> getApplicationDataBytes();
+    /** @brief Const overload of getApplicationDataBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getApplicationDataBytes() const;
+
+    /** @brief Returns secondary-header bytes followed by application data, excluding CRC trailer bytes. */
     std::vector<std::uint8_t> getFullDataFieldBytes();
+    /** @brief Const overload of getFullDataFieldBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getFullDataFieldBytes() const;
+
+    /** @brief Returns the currently stored CRC trailer as two big-endian bytes, or empty in None mode. */
     std::vector<std::uint8_t> getCRCVectorBytes();
+    /** @brief Const overload of getCRCVectorBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getCRCVectorBytes() const;
+
+    /** @brief Returns the currently stored CRC value, or zero when disabled or invalid. */
     std::uint16_t getCRC();
+    /** @brief Const overload of getCRC(). */
     [[nodiscard]] std::uint16_t getCRC() const;
+
+    /** @brief Returns remaining configured packet data-field capacity. */
     [[nodiscard]] std::uint16_t getDataFieldMaximumSize() const;
+
+    /** @brief Returns whether a secondary header is currently installed. */
     bool getDataFieldHeaderFlag();
+    /** @brief Const overload of getDataFieldHeaderFlag(). */
     [[nodiscard]] bool getDataFieldHeaderFlag() const;
 
+    /**
+     * @brief Returns mutable access to the owned DataField.
+     * @warning Direct mutation can bypass Packet setter bookkeeping; prefer Packet setters.
+     */
     DataField &getDataField();
+    /** @brief Returns read-only access to the owned DataField. */
     [[nodiscard]] const DataField &getDataField() const;
+
+    /**
+     * @brief Returns mutable access to the owned primary Header.
+     * @warning Direct mutation can bypass Packet sequence-cache bookkeeping; prefer Packet setters.
+     */
     Header &getPrimaryHeader();
+    /** @brief Returns read-only access to the owned primary Header. */
     [[nodiscard]] const Header &getPrimaryHeader() const;
 
+    /**
+     * @brief Replaces all CRC16 parameters and marks the packet dirty.
+     * @param crcConfig Polynomial, initial value, and final XOR configuration.
+     */
     void setCrcConfig(const CRC16Config crcConfig) {
       m_CRC16Config = crcConfig;
       m_updateStatus = false;
     }
 
+    /**
+     * @brief Replaces the CRC16 parameters and marks the packet dirty.
+     * @param polynomial CRC generator polynomial.
+     * @param initialValue Initial CRC register value.
+     * @param finalXorValue Value XORed with the final CRC.
+     */
     void setCrcConfig(const std::uint16_t polynomial,
                       const std::uint16_t initialValue,
                       const std::uint16_t finalXorValue) {
@@ -273,8 +426,18 @@ namespace CCSDS {
      */
     void update();
 
+    /**
+     * @brief Loads packet construction settings from a configuration file.
+     * @param configPath Path to a CCSDSPack key:type=value configuration file.
+     * @return Success, or CONFIG_FILE_ERROR/field-specific validation errors.
+     */
     ResultBool loadFromConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
+    /**
+     * @brief Loads packet construction settings from an already parsed Config.
+     * @param cfg Configuration object containing the required CCSDS header keys.
+     * @return Success, or a configuration/field validation error.
+     */
     ResultBool loadFromConfig(const Config &cfg);
 #endif
 
