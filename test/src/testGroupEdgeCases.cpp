@@ -26,6 +26,9 @@ namespace {
          << "ccsds_data_field_header_flag:bool=false\n"
          << "ccsds_APID:int=" << apid << "\n"
          << "ccsds_segmented:bool=false\n";
+    if (apid == static_cast<int>(CCSDS::IDLE_APID)) {
+      file << "application_data:bytes=[0x00]\n";
+    }
     return static_cast<bool>(file);
   }
 
