@@ -20,8 +20,10 @@
 #include <cstdio>
 #include <cstring>
 
-// Referenced by stm32h7xx_it.c. Keep external linkage.
-UART_HandleTypeDef UartHandle{};
+// Referenced from stm32h7xx_it.c, so the symbol must use C linkage.
+extern "C" {
+  UART_HandleTypeDef UartHandle{};
+}
 
 namespace {
   constexpr std::uint32_t UART_TIMEOUT = HAL_MAX_DELAY;
