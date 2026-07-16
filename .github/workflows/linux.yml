@@ -41,8 +41,21 @@ jobs:
           ls -l bin/
 
       - name: Run tests (native)
+        shell: bash
         run: |
-          cd bin && ./CCSDSPack_tester
+          set +e
+          cd bin
+          ./CCSDSPack_tester 2>&1 | tee CCSDSPack_tester.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
+
+      - name: Upload native test failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-log-${{ matrix.os }}-${{ github.sha }}
+          path: bin/CCSDSPack_tester.log
+          if-no-files-found: error
 
       - name: Run CLI integration tests
         run: |
@@ -80,21 +93,35 @@ jobs:
 
       - name: Cleanup and generate packages (22.04 only)
         if: matrix.os == 'ubuntu-22.04'
+        shell: bash
         run: |
-          mkdir -p build packages
-          # 1) Native x86_64 .deb
-          rm -rf bin/* build/*
-          ./package.sh -p DEB
+          set +e
+          {
+            mkdir -p build packages
+            # 1) Native x86_64 .deb
+            rm -rf bin/* build/*
+            ./package.sh -p DEB
 
-          # 2) Bare-metal Cortex-M7 TGZ
-          rm -rf bin/* build/*
-          ./package.sh -t cmake/toolchains/arm-none-eabi.cmake -p MCU -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+            # 2) Bare-metal Cortex-M7 TGZ
+            rm -rf bin/* build/*
+            ./package.sh -t cmake/toolchains/arm-none-eabi.cmake -p MCU -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 
-          # 3) aarch64 .deb
-          rm -rf bin/* build/*
-          ./package.sh -t cmake/toolchains/aarch64-linux-gnu.cmake -p DEB
+            # 3) aarch64 .deb
+            rm -rf bin/* build/*
+            ./package.sh -t cmake/toolchains/aarch64-linux-gnu.cmake -p DEB
 
-          ls -la packages
+            ls -la packages
+          } 2>&1 | tee packaging.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
+
+      - name: Upload packaging failure log
+        if: matrix.os == 'ubuntu-22.04' && failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-packaging-log-${{ github.sha }}
+          path: packaging.log
+          if-no-files-found: error
 
       #- name: Upload package artifact
       #  if: matrix.os == 'ubuntu-22.04'

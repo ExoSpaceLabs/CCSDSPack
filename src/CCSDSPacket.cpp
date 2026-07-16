@@ -19,6 +19,16 @@ namespace {
     std::uint16_t receivedCRC{};
   };
 
+  bool packetProfileAllowsSerialization(const CCSDS::Header &header,
+                                        const CCSDS::DataField &dataField) {
+    if (header.getVersionNumber() != 0U) return false;
+    if (header.getAPID() != CCSDS::IDLE_APID) return true;
+
+    return header.getDataFieldHeaderFlag() == 0U
+           && !dataField.getDataFieldHeaderFlag()
+           && dataField.getApplicationDataBytesSize() > 0U;
+  }
+
   CCSDS::Result<std::size_t> declaredPacketSize(const std::vector<std::uint8_t> &data) {
     if (data.size() < 6U) {
       return CCSDS::Error{CCSDS::ErrorCode::INVALID_HEADER_DATA,
@@ -90,6 +100,17 @@ namespace {
       parsed.dataField = packetData;
     }
 
+    if (parsed.header.getAPID() == CCSDS::IDLE_APID) {
+      if (parsed.header.getDataFieldHeaderFlag() != 0U) {
+        return CCSDS::Error{CCSDS::ErrorCode::INVALID_HEADER_DATA,
+                            "Cannot deserialize Idle Packet: secondary-header flag must be zero."};
+      }
+      if (parsed.dataField.empty()) {
+        return CCSDS::Error{CCSDS::ErrorCode::INVALID_DATA,
+                            "Cannot deserialize Idle Packet: mission-defined idle user data is required."};
+      }
+    }
+
     return parsed;
   }
 }
@@ -97,6 +118,7 @@ namespace {
 void CCSDS::Packet::update() {
   if (m_updateStatus || !m_enableUpdatePacket) return;
   if (m_primaryHeader.getHeaderStatus() == INVALID) return;
+  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField)) return;
 
   const auto dataField = m_dataField.serialize();
   const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
@@ -154,8 +176,8 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   ASSIGN_CP(APID, cfg.get<int>("ccsds_APID"));
   ASSIGN_CP(segmented, cfg.get<bool>("ccsds_segmented"));
 
-  RET_IF_ERR_MSG(versionNumber < 0 || versionNumber > 7, ErrorCode::CONFIG_FILE_ERROR,
-                 "Config: ccsds_version_number must be between 0 and 7");
+  RET_IF_ERR_MSG(versionNumber != 0, ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: ccsds_version_number must be 0 for CCSDS 133.0-B-2 Space Packets");
   RET_IF_ERR_MSG(APID < 0 || APID > static_cast<int>(IDLE_APID), ErrorCode::CONFIG_FILE_ERROR,
                  "Config: ccsds_APID must be between 0 and 2047");
 
@@ -210,6 +232,11 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
     ASSIGN_CP(applicationData, cfg.get<std::vector<std::uint8_t>>("application_data"));
     FORWARD_RESULT(m_dataField.setApplicationData(applicationData));
   }
+
+  RET_IF_ERR_MSG(m_primaryHeader.getAPID() == IDLE_APID
+                 && !packetProfileAllowsSerialization(m_primaryHeader, m_dataField),
+                 ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Idle Packets require no secondary header and non-empty idle user data");
 
   return true;
 }
@@ -298,6 +325,7 @@ std::vector<std::uint8_t> CCSDS::Packet::getFullDataFieldBytes() const {
 
 std::vector<std::uint8_t> CCSDS::Packet::serialize() {
   if (m_primaryHeader.getHeaderStatus() == INVALID) return {};
+  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField)) return {};
 
   const auto currentDataField = getFullDataFieldBytes();
   const auto currentPacketDataFieldSize = currentDataField.size() + getPacketErrorControlSize();
@@ -308,6 +336,7 @@ std::vector<std::uint8_t> CCSDS::Packet::serialize() {
   }
 
   update();
+  if (!m_updateStatus && m_enableUpdatePacket) return {};
   const auto header = static_cast<const Header &>(m_primaryHeader).serialize();
   if (header.size() != 6U) return {};
   const auto dataField = getFullDataFieldBytes();
@@ -471,8 +500,8 @@ std::uint16_t CCSDS::Packet::getFullPacketLength() {
 }
 
 std::uint16_t CCSDS::Packet::getFullPacketLength() const {
-  return static_cast<std::uint16_t>(6U + m_dataField.getDataFieldUsedBytesSize()
-                                    + getPacketErrorControlSize());
+  return static_cast<std::uint16_t>(
+    std::min<std::size_t>(getSerializedSize(), std::numeric_limits<std::uint16_t>::max()));
 }
 
 CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const std::uint64_t data) {

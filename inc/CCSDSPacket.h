@@ -3,12 +3,13 @@
 
 /**
  * @file CCSDSPacket.h
- * @brief Defines the high-level CCSDS Space Packet container and packet error-control configuration.
+ * @brief Defines the CCSDS 133.0-B-2 EC2 Space Packet PDU container and mission-profile CRC trailer.
  *
- * A Packet owns one primary header, one packet data field, and an optional packet
- * error-control field. Inspection APIs are non-mutating. Call update() or
- * serialize() when dependent fields such as Packet Data Length, sequence count,
- * secondary-header contents, or CRC16 must be finalized.
+ * A Packet owns one primary header and one Packet Data Field. CCSDSPack may reserve
+ * the final two Packet Data Field octets for a mission-profile CRC16 trailer. The
+ * trailer is not a third CCSDS Space Packet structural field. Inspection APIs are
+ * non-mutating. Call update() or serialize() when dependent fields such as Packet
+ * Data Length, sequence count, secondary-header contents, or CRC16 must be finalized.
  */
 #ifndef CCSDS_PACKET_H
 #define CCSDS_PACKET_H
@@ -25,11 +26,16 @@
 namespace CCSDS {
   /**
    * @struct CRC16Config
-   * @brief Parameters used by the packet CRC-16 calculation and validation paths.
+   * @brief Parameters for the optional CCSDSPack mission-profile CRC16 trailer.
    *
    * The defaults implement CRC-16/CCITT-FALSE: polynomial 0x1021, initial value
-   * 0xFFFF, and no final XOR. The CRC covers the serialized six-byte primary
-   * header followed by the complete packet data field, excluding the CRC bytes.
+   * 0xFFFF, and no final XOR. When enabled, CCSDSPack reserves the final two
+   * octets of the CCSDS Packet Data Field for the trailer. The CRC covers the
+   * serialized six-byte primary header followed by all preceding Packet Data
+   * Field octets, excluding the two CRC octets themselves.
+   *
+   * @note CCSDS 133.0-B-2 does not define this CRC trailer. It is a documented
+   * CCSDSPack mission-profile convention carried inside the Packet Data Field.
    */
   struct CRC16Config {
     std::uint16_t polynomial = 0x1021;   ///< CRC generator polynomial.
@@ -39,32 +45,42 @@ namespace CCSDS {
 
   /**
    * @enum PacketErrorControlMode
-   * @brief Selects whether a packet carries a two-byte CRC16 error-control field.
+   * @brief Selects whether the Packet Data Field ends with the CCSDSPack CRC16 trailer.
    *
    * Parsing never infers the mode from trailing bytes. Configure the receiving
    * Packet before deserialization when the stream does not use the default CRC16
-   * mode.
+   * profile. The trailer octets are included in the CCSDS Packet Data Length.
    */
   enum class PacketErrorControlMode : std::uint8_t {
-    None = 0, ///< No packet error-control bytes are serialized or validated.
-    CRC16 = 1 ///< Append and validate a two-byte CRC16 field. This is the default.
+    None = 0, ///< No mission-profile CRC trailer is serialized or validated.
+    CRC16 = 1 ///< Reserve and validate a two-byte CRC16 trailer. This is the v1 default.
   };
 
   /**
    * @class Packet
-   * @brief Owns, serializes, and parses one CCSDS Space Packet.
+   * @brief Owns, serializes, and parses one CCSDS 133.0-B-2 EC2 Space Packet PDU.
    *
    * Packet provides checked primary-header assignment, optional typed or raw
-   * secondary headers, application data, bounded parsing, CRC16 handling, and
-   * explicit finalization. The object represents exactly one packet. Use Manager
-   * when generating, parsing, or validating a stream of packets that share one
-   * complete Packet Identification value.
+   * secondary headers, application data, bounded parsing, an optional CCSDSPack
+   * CRC16 trailer, and explicit finalization. It implements the Space Packet PDU
+   * profile, not the complete abstract Packet Service, Octet String Service, or
+   * protocol implementation conformance statement defined by CCSDS 133.0-B-2.
+   * The object represents exactly one packet. Use Manager when generating,
+   * parsing, or validating a stream of packets that share one complete Packet
+   * Identification value.
    *
    * @par Finalization
    * Setters mark the packet dirty. Getters only inspect the currently stored
    * state and never call update(). update() recalculates dependent fields without
    * producing bytes. serialize() calls update() and returns the finalized wire
-   * representation.
+   * representation. Packet finalization accepts only encoded Packet Version
+   * Number 000, as required by CCSDS 133.0-B-2.
+   *
+   * @par Idle packets
+   * APID 0x7FF is reserved for Idle Packets. A serializable Idle Packet must use
+   * Secondary Header Flag zero, contain no secondary-header object, and carry at
+   * least one octet of mission-defined idle user data. CCSDSPack does not validate
+   * the mission-specific idle fill pattern.
    *
    * @par Parsing boundaries
    * deserializeBounded() reads exactly the length declared by the primary header
@@ -84,14 +100,15 @@ namespace CCSDS {
    */
   class Packet {
   public:
-    /** @brief Constructs an empty packet using CRC16 packet error control. */
+    /** @brief Constructs an empty packet using the CCSDSPack CRC16 profile. */
     Packet() = default;
 
     /**
      * @brief Replaces all primary-header fields from a field structure.
      * @param data Field values to validate and assign atomically.
-     * @return Success, or INVALID_HEADER_DATA when any field exceeds its CCSDS width.
-     * @note The supplied Packet Data Length may later be replaced by update().
+     * @return Success, or INVALID_HEADER_DATA when any field exceeds its bit width.
+     * @note The supplied Packet Data Length may later be replaced by update(). A
+     * non-zero Packet Version Number remains inspectable but prevents Packet serialization.
      */
     ResultBool setPrimaryHeader(PrimaryHeader data);
 
@@ -99,6 +116,7 @@ namespace CCSDS {
      * @brief Replaces the primary header from the low 48 bits of a packed value.
      * @param data Packed CCSDS primary-header value.
      * @return Success, or an error when the encoded fields are invalid.
+     * @note Packet serialization accepts only encoded Packet Version Number zero.
      */
     [[nodiscard]] ResultBool setPrimaryHeader(std::uint64_t data);
 
@@ -106,20 +124,21 @@ namespace CCSDS {
      * @brief Replaces the primary header from exactly six serialized bytes.
      * @param data Big-endian CCSDS primary-header bytes.
      * @return Success, or INVALID_HEADER_DATA for an invalid byte count or fields.
+     * @note Packet serialization accepts only encoded Packet Version Number zero.
      */
     [[nodiscard]] ResultBool setPrimaryHeader(const std::vector<std::uint8_t> &data);
 
     /**
      * @brief Copies an already constructed Header into this packet.
      * @param header Header instance to copy.
-     * @note An invalid copied header prevents serialization until corrected.
+     * @note An invalid or non-zero-version copied header prevents Packet serialization.
      */
     void setPrimaryHeader(const Header &header);
 
     /**
      * @brief Installs a secondary-header object and synchronizes the primary-header flag.
      * @param header Shared secondary-header instance, or nullptr to remove it.
-     * @note The Packet shares ownership of the supplied object.
+     * @note The Packet shares ownership of the supplied object. Idle Packets may not serialize with one.
      */
     void setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header);
 
@@ -196,15 +215,17 @@ namespace CCSDS {
     void setSequenceFlags(ESequenceFlag flags);
 
     /**
-     * @brief Sets the 14-bit packet sequence count.
+     * @brief Sets the 14-bit Packet Sequence Count used by the CCSDSPack profile.
      * @param count Value in the inclusive range 0..16383.
      * @return Success, or INVALID_HEADER_DATA for an out-of-range count.
+     * @note CCSDSPack uses Packet Sequence Count semantics for both telemetry and
+     * telecommand packets; the optional telecommand Packet Name interpretation is not implemented.
      */
     [[nodiscard]] ResultBool setSequenceCount(std::uint16_t count);
 
     /**
      * @brief Sets the maximum combined secondary-header and application-data capacity.
-     * @param size Maximum packet data-field content bytes before optional PEC bytes.
+     * @param size Maximum Packet Data Field content bytes before the optional CRC trailer.
      * @note Existing content is not truncated when the capacity is reduced.
      */
     void setDataFieldSize(std::uint16_t size);
@@ -217,26 +238,27 @@ namespace CCSDS {
     void setUpdatePacketEnable(bool enable);
 
     /**
-     * @brief Selects packet error-control behavior for serialization and parsing.
+     * @brief Selects the CCSDSPack mission-profile CRC trailer behavior.
      * @param mode None or CRC16.
-     * @note Configure this before deserializing a CRC-free packet.
+     * @note Configure this before deserializing a CRC-free packet. CRC trailer
+     * octets are part of the CCSDS Packet Data Field and Packet Data Length.
      */
     void setPacketErrorControlMode(PacketErrorControlMode mode);
 
-    /** @brief Returns the configured packet error-control mode. */
+    /** @brief Returns the configured mission-profile CRC trailer mode. */
     [[nodiscard]] PacketErrorControlMode getPacketErrorControlMode() const {
       return (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK) != 0U
                ? PacketErrorControlMode::None
                : PacketErrorControlMode::CRC16;
     }
 
-    /** @brief Returns the serialized PEC size: two bytes for CRC16, otherwise zero. */
+    /** @brief Returns the reserved trailer size: two bytes for CRC16, otherwise zero. */
     [[nodiscard]] std::uint16_t getPacketErrorControlSize() const {
       return getPacketErrorControlMode() == PacketErrorControlMode::CRC16 ? 2U : 0U;
     }
 
     /**
-     * @brief Parses one packet using the currently configured PEC mode.
+     * @brief Parses one packet using the currently configured CRC profile.
      * @param data Buffer beginning with a CCSDS primary header.
      * @return Success, or a deterministic header, length, data, or checksum error.
      * @note Trailing bytes are ignored. Use deserializeBounded() to learn the boundary.
@@ -257,16 +279,16 @@ namespace CCSDS {
     /**
      * @brief Parses one packet using an explicit opaque secondary-header byte count.
      * @param data Buffer beginning with a CCSDS packet.
-     * @param headerDataSizeBytes Number of packet-data-field bytes assigned to BufferHeader.
+     * @param headerDataSizeBytes Number of Packet Data Field bytes assigned to BufferHeader.
      * @return Success, or a parsing error when the declared boundary is invalid.
      */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data,
                                          std::uint16_t headerDataSizeBytes);
 
     /**
-     * @brief Parses an already separated primary header and packet data field.
+     * @brief Parses an already separated primary header and Packet Data Field.
      * @param headerData Exactly six primary-header bytes.
-     * @param data Packet data-field bytes including the configured PEC bytes.
+     * @param data Packet Data Field bytes including the configured CRC trailer.
      * @return Success, or a header, length, or checksum error.
      */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &headerData,
@@ -305,16 +327,28 @@ namespace CCSDS {
     [[nodiscard]] std::uint64_t getPrimaryHeader64bit() const;
 
     /**
-     * @brief Returns the current logical packet size without finalizing the packet.
-     * @return Six header bytes plus stored data-field bytes and configured PEC size.
+     * @brief Returns the current packet size through the legacy 16-bit API.
+     * @return Exact size through 65535 bytes, otherwise UINT16_MAX instead of wrapping.
+     * @note Use getSerializedSize() for the complete CCSDS range up to 65542 bytes.
      */
     std::uint16_t getFullPacketLength();
     /** @brief Const overload of getFullPacketLength(). */
     [[nodiscard]] std::uint16_t getFullPacketLength() const;
 
     /**
-     * @brief Finalizes and serializes the packet.
-     * @return Complete wire bytes, or an empty vector when the header, size, or update state is invalid.
+     * @brief Returns the exact current serialized size without finalizing the packet.
+     * @return Six primary-header bytes plus stored data-field content and configured CRC trailer size.
+     * @note The maximum CCSDS Space Packet size is 65542 bytes.
+     */
+    [[nodiscard]] std::size_t getSerializedSize() const {
+      return 6U + static_cast<std::size_t>(m_dataField.getDataFieldUsedBytesSize())
+             + static_cast<std::size_t>(getPacketErrorControlSize());
+    }
+
+    /**
+     * @brief Finalizes and serializes the packet under the v1.2 PDU profile.
+     * @return Complete wire bytes, or an empty vector when the header, version,
+     * Idle Packet structure, size, or update state is invalid.
      */
     std::vector<std::uint8_t> serialize();
 
@@ -333,32 +367,36 @@ namespace CCSDS {
     /** @brief Const overload of getApplicationDataBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getApplicationDataBytes() const;
 
-    /** @brief Returns secondary-header bytes followed by application data, excluding PEC bytes. */
+    /**
+     * @brief Returns the internal secondary-header plus application-data bytes.
+     * @note The optional CRC trailer is omitted here even though it occupies the
+     * final octets of the wire-level CCSDS Packet Data Field.
+     */
     std::vector<std::uint8_t> getFullDataFieldBytes();
     /** @brief Const overload of getFullDataFieldBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getFullDataFieldBytes() const;
 
-    /** @brief Returns the currently stored CRC as two big-endian bytes, or an empty vector in None mode. */
+    /** @brief Returns the stored CRC trailer as two big-endian bytes, or empty in None mode. */
     std::vector<std::uint8_t> getCRCVectorBytes();
     /** @brief Const overload of getCRCVectorBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getCRCVectorBytes() const;
 
-    /** @brief Returns the currently stored CRC value, or zero when PEC is disabled or the header is invalid. */
+    /** @brief Returns the stored CRC trailer value, or zero when disabled or the header is invalid. */
     std::uint16_t getCRC();
     /** @brief Const overload of getCRC(). */
     [[nodiscard]] std::uint16_t getCRC() const;
 
-    /** @brief Returns remaining configured packet data-field capacity. */
+    /** @brief Returns remaining configured internal data-field capacity before the CRC trailer. */
     [[nodiscard]] std::uint16_t getDataFieldMaximumSize() const;
 
-    /** @brief Returns whether a secondary header is currently installed. */
+    /** @brief Returns whether the primary header currently asserts a secondary header. */
     bool getDataFieldHeaderFlag();
     /** @brief Const overload of getDataFieldHeaderFlag(). */
     [[nodiscard]] bool getDataFieldHeaderFlag() const;
 
     /**
      * @brief Returns mutable access to the owned DataField.
-     * @warning Direct mutation can bypass Packet setter bookkeeping; prefer Packet setters.
+     * @warning Direct mutation can bypass Packet setter bookkeeping and profile checks; prefer Packet setters.
      */
     DataField &getDataField();
     /** @brief Returns read-only access to the owned DataField. */
@@ -397,9 +435,10 @@ namespace CCSDS {
     /**
      * @brief Finalizes dependent packet state without returning serialized bytes.
      *
-     * When updates are enabled, this refreshes the secondary header, encodes
-     * Packet Data Length as packet-data-field octets minus one, writes the cached
-     * sequence count, and recalculates CRC16 over the finalized header and data.
+     * When updates are enabled and the packet satisfies the v1.2 profile, this
+     * refreshes the secondary header, encodes Packet Data Length as Packet Data
+     * Field octets minus one, writes the cached sequence count, and recalculates
+     * the optional CRC16 trailer over the finalized header and preceding data.
      */
     void update();
 
@@ -407,6 +446,7 @@ namespace CCSDS {
      * @brief Loads packet construction settings from a configuration file.
      * @param configPath Path to a CCSDSPack key:type=value configuration file.
      * @return Success, or CONFIG_FILE_ERROR/field-specific validation errors.
+     * @note ccsds_version_number must be zero for this Space Packet profile.
      */
     ResultBool loadFromConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
@@ -414,6 +454,7 @@ namespace CCSDS {
      * @brief Loads packet construction settings from an already parsed Config.
      * @param cfg Configuration object containing the required CCSDS header keys.
      * @return Success, or a configuration/field validation error.
+     * @note ccsds_version_number must be zero for this Space Packet profile.
      */
     ResultBool loadFromConfig(const Config &cfg);
 #endif

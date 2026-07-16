@@ -48,8 +48,17 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Running CCSDSPack_tester.exe from build\bin\"
-          cd build\bin
-          .\CCSDSPack_tester.exe
+          Set-Location build\bin
+          .\CCSDSPack_tester.exe 2>&1 | Tee-Object -FilePath CCSDSPack_tester.log
+          exit $LASTEXITCODE
+
+      - name: Upload test failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-test-log-${{ github.sha }}
+          path: build/bin/CCSDSPack_tester.log
+          if-no-files-found: error
 
       - name: Run CLI integration tests
         shell: pwsh
