@@ -19,7 +19,7 @@ Options:
   -h, --help               Show this help message
 
 Examples:
-  To build deb package using system architecture (e.g. x85_64):
+  To build deb package using system architecture (e.g. x86_64):
   ./package.sh -p DEB
 
   Cross-Compile deb package for aarch64 (e.g. Raspberry Pi):
@@ -104,6 +104,41 @@ fi
 
 # Build
 cmake --build . --config Release -- -j
+
+# Compile and relocatably link the same HAL-independent consumer core used by
+# the STM32 hardware test. This does not replace the final board link or run; it
+# catches stale public API calls, missing CCSDS_MCU configuration, compile-flag
+# mismatches, archive naming errors, missing library symbols, and consumer/library
+# ABI drift in CI.
+if [[ "${package_type^^}" == "MCU" ]]; then
+  effective_mcu_flags="${mcu_flags:--fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard}"
+  read -r -a mcu_flag_array <<< "${effective_mcu_flags}"
+
+  arm-none-eabi-g++ \
+    -std=gnu++17 \
+    -DCCSDS_MCU \
+    -Os \
+    -ffunction-sections \
+    -fdata-sections \
+    "${mcu_flag_array[@]}" \
+    -I../inc \
+    -I../test/package_tester/stm32h7xx/CM7/Inc \
+    -c ../test/package_tester/stm32h7xx/CM7/Src/ccsdspack_mcu_compile_probe.cpp \
+    -o ccsdspack_mcu_compile_probe.o
+
+  mcu_archive="$(find ../lib . -name libccsdspack.a -type f -print -quit)"
+  if [[ -z "${mcu_archive}" ]]; then
+    echo "MCU archive libccsdspack.a was not produced" >&2
+    exit 3
+  fi
+
+  arm-none-eabi-g++ \
+    -r \
+    "${mcu_flag_array[@]}" \
+    ccsdspack_mcu_compile_probe.o \
+    "${mcu_archive}" \
+    -o ccsdspack_mcu_link_probe.o
+fi
 
 # Package
 if [[ "${package_type^^}" == "MCU" ]]; then

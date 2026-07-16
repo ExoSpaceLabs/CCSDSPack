@@ -1,150 +1,185 @@
-/**
-  @page UART_WakeUpFromStopUsingFIFO  wake up from STOP mode using UART FIFO level example
-  
-  @verbatim
-  ******************************************************************************
-  * @file    UART/UART_WakeUpFromStopUsingFIFO/readme.txt 
-  * @author  MCD Application Team
-  * @brief   Description of the wake up from STOP mode using UART FIFO level example.
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  @endverbatim
+CCSDSPack v1.2.0 STM32H745 CM7 hardware validation
+====================================================
 
-@par Example Description
+Purpose
+-------
 
-This example shows how to use UART HAL API to wake up the MCU from STOP mode
-using the UART FIFO level.
+This project validates the CCSDSPack bare-metal static archive on a real
+NUCLEO-H745ZI-Q. It is derived from an STMicroelectronics STM32CubeH7 example,
+but the old UART wake-from-STOP demonstration is no longer part of the test.
+The validation starts automatically after reset.
 
-This CCSDS library test has been extendeed from the Examples/UART example project
-provided by STMicroelectronics git repository link beloew:
-https://github.com/STMicroelectronics/STM32CubeH7
+The HAL-independent validation core is located at:
 
-Follow instructions install STM32CubeIDE and Programmer. 
-NOTE: Make sure all paths are as expected. CCSDSPack is expected to be under middleware.
-The library is built with expected flags.
-Example: Build static library with the following command:
+  CM7/Inc/ccsdspack_mcu_test.h
 
-./package.sh -t cmake/toolchains/arm-none-eabi.cmake -p MCU -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+The generic arm-none-eabi package build compiles the same core through:
 
-Extract the generated package under Middleware/3rdParty
+  CM7/Src/ccsdspack_mcu_compile_probe.cpp
 
-Fix paths and build stm32 project. Program the device and test.
+That compile-only check catches stale API calls and MCU preprocessor errors.
+Only execution on the STM32 validates startup, final linking, C++ runtime,
+heap behavior, UART reporting, and operation on silicon.
 
-connect to device using ST-Link via
+Target
+------
 
-picocom -b 9600 -d 7 -p o -f n /dev/ttyACM0
+- Board: NUCLEO-H745ZI-Q
+- Device: STM32H745ZITx
+- Core under test: Cortex-M7
+- CPU flags: cortex-m7, Thumb, FPv5-D16, hard-float ABI
+- Language: C++17
+- Exceptions: disabled
+- RTTI: disabled
 
-Once this has been achieved any button can be hit to start CCSDS pack auto tester.
+Build the MCU package
+---------------------
 
-Producer notes continued:
+From the CCSDSPack repository root:
 
-Board: NUCLEO-H745ZI-Q
-Tx Pin: PD.8
-Rx Pin: PD.9
-   _________________________
-  |           ______________|                       _______________
-  |          |USART         |                      | HyperTerminal |
-  |          |              |                      |               |
-  |          |           TX |______________________|RX             |
-  |          |              |                      |               |
-  |          |              |     ST-Link Cable    |               |
-  |          |              |                      |               |
-  |          |           RX |______________________|TX             |
-  |          |              |                      |               |
-  |          |______________|                      |_______________|
-  |                         |
-  |                         |
-  |                         |
-  |                         |
-  |_STM32_Board_____________|
+  ./package.sh \
+    -t cmake/toolchains/arm-none-eabi.cmake \
+    -p MCU \
+    -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 
-LED1 is ON when MCU is not in STOP mode.
-LED3 is ON when there is an error occurrence.
+The archive contains the installed public headers and `libccsdspack.a`.
+The application and library must use the same CPU, FPU, float-ABI, exception,
+RTTI, and `CCSDS_MCU` settings.
 
-The UART is configured as follows:
-    - BaudRate = 9600 baud  
-    - Word Length = 8 Bits (7 data bit + 1 parity bit)
-    - One Stop Bit
-    - Odd parity
-    - Hardware flow control disabled (RTS and CTS signals)
-    - Reception and transmission are enabled in the time
+STM32CubeIDE configuration
+--------------------------
 
-@note USARTx/UARTx instance used and associated resources can be updated in "main.h"
-      file depending hardware configuration used.
+Extract or copy the package into a stable directory. A convenient project-local
+layout is:
 
-@note When the parity is enabled, the computed parity is inserted at the MSB
-      position of the transmitted data.
+  test/package_tester/stm32h7xx/
+    Middlewares/Third_Party/CCSDSPack/
+      include/CCSDSPack.h
+      lib/libccsdspack.a
 
-@note Care must be taken when using HAL_Delay(), this function provides accurate delay (in milliseconds)
-      based on variable incremented in SysTick ISR. This implies that if HAL_Delay() is called from
-      a peripheral ISR process, then the SysTick interrupt must have higher priority (numerically lower)
-      than the peripheral interrupt. Otherwise the caller ISR process will be blocked.
-      To change the SysTick interrupt priority you have to use HAL_NVIC_SetPriority() function.
-      
-@note The application needs to ensure that the SysTick time base is always set to 1 millisecond
-      to have correct HAL operation.
+For both Debug and Release CM7 configurations, verify these settings in
+STM32CubeIDE. Do not rely on paths generated on another workstation.
 
-@Note If the  application is using the DTCM/ITCM memories (@0x20000000/ 0x0000000: not cacheable and only accessible
-      by the Cortex M7 and the �MDMA), no need for cache maintenance when the Cortex M7 and the MDMA access these RAMs.
-����� If the application needs to use DMA(or other masters) based access or requires more RAM, then �the user has to:
-����������� � - Use a non TCM SRAM. (example : D1 AXI-SRAM @ 0x24000000)
-����������� � - Add a cache maintenance mechanism to ensure the cache coherence between CPU and other masters(DMAs,DMA2D,LTDC,MDMA).
-�������       - The addresses and the size of cacheable buffers (shared between CPU and other masters)
-                must be	properly�defined to be aligned to L1-CACHE line size (32 bytes). 
-�
-@Note It is recommended to enable the cache and maintain its coherence.
-      Depending on the use case it is also possible to configure the cache attributes using the MPU.
-������Please refer to the AN4838 "Managing memory protection unit (MPU) in STM32 MCUs"
-������Please refer to the AN4839 "Level 1 cache on STM32F7 Series"
+C++ compiler:
 
-@par Keywords
+- Preprocessor symbol: `CCSDS_MCU`
+- Include path from the CM7 build directory:
 
-Connectivity, UART, Baud rate, RS-232, Full-duplex, Parity, Stop bit, Transmission, Reception, FIFO, Threshold, Interruption, STOP, Low power, Wakeup, HyperTerminal
+    ../../../Middlewares/Third_Party/CCSDSPack/include
 
-@par Directory contents 
+- Language standard: GNU C++17 or C++17
+- Other flags:
 
-  - UART/UART_WakeUpFromStopUsingFIFO/Inc/stm32h7xx_hal_conf.h    HAL configuration file
-  - UART/UART_WakeUpFromStopUsingFIFO/Inc/stm32h7xx_it.h          Interrupt handlers header file
-  - UART/UART_WakeUpFromStopUsingFIFO/Inc/main.h                  Header for main.c module
-  - UART/UART_WakeUpFromStopUsingFIFO/Src/stm32h7xx_it.c          Interrupt handlers
-  - UART/UART_WakeUpFromStopUsingFIFO/Src/main.c                  Main program
-  - UART/UART_WakeUpFromStopUsingFIFO/Src/stm32h7xx_hal_msp.c     HAL MSP module
-  - UART/UART_WakeUpFromStopUsingFIFO/Src/system_stm32h7xx.c      STM32H7xx system source file
+    -fno-exceptions -fno-rtti -fno-use-cxa-atexit
 
+C++ linker:
 
-@par Hardware and Software environment
+- Library search path from the CM7 build directory:
 
-  - This example runs on STM32H745xx devices.
-    
-  - This example has been tested with NUCLEO-H745ZI-Q board and can be
-    easily tailored to any other supported device and development board.
+    ../../../Middlewares/Third_Party/CCSDSPack/lib
 
-  - NUCLEO-H745ZI-Q Set-up
-      Connect a USB cable between the ST-Link usb connector CN1
-	  and PC todisplay data on the HyperTerminal.
+- Library name:
 
-  - Hyperterminal configuration:
-    - Data Length = 7 Bits
-    - One Stop Bit
-    - Odd parity
-    - BaudRate = 9600 baud
-    - Flow control: None
+    ccsdspack
 
-@par How to use it ? 
+This corresponds to `libccsdspack.a`. The obsolete library name
+`ccsdspack_mcu` is not produced by the current CMake build.
 
-In order to make the program work, you must do the following :
- - Open your preferred toolchain
- - Rebuild all files and load your image into target memory
- - Run the example
+Important: older committed/generated STM32CubeIDE metadata may contain absolute
+`/home/dev/...` paths. Replace them with the project-local paths above before
+building. Generated Debug/Release makefiles and compile_commands files should
+not be treated as portable configuration.
 
+Memory model
+------------
 
- */
+CCSDSPack's API is exception-free, but it is not allocation-free. The library
+and this validation use `std::vector`, `std::string`, `std::shared_ptr`, and the
+secondary-header factory. A working newlib heap and sufficient RAM are required.
+
+The supplied linker script reserves a minimum stack area and permits `_sbrk()`
+to grow the heap from `_end` toward the reserved stack boundary. Review heap and
+stack usage for the final mission application; a successful smoke test is not a
+worst-case memory proof.
+
+Build, flash, and observe
+-------------------------
+
+1. Import/open the dual-core STM32CubeIDE project.
+2. Build the CM7 image with the configuration above.
+3. Flash the board using ST-Link/STM32CubeProgrammer.
+4. Connect to the ST-Link virtual COM port:
+
+     picocom -b 115200 -d 8 -p n -f n /dev/ttyACM0
+
+5. Reset the board.
+
+Expected successful output:
+
+  CCSDSPack STM32H745 CM7 hardware validation
+  Running packet generation, parsing, CRC, Manager, Validator, PVN, and Idle tests...
+  CCSDSPACK_MCU_TEST:PASS
+  Reset the board to run the validation again.
+
+LED behavior:
+
+- LED1: test is running
+- LED2: validation passed
+- LED3: validation or HAL initialization failed
+
+A packet-test failure is printed as:
+
+  CCSDSPACK_MCU_TEST:FAIL:<code>
+
+A board/HAL initialization failure is printed as:
+
+  CCSDSPACK_MCU_TEST:HAL_FAILURE
+
+Failure codes
+-------------
+
+  1  set primary header
+  2  register custom secondary header
+  3  set custom secondary header bytes
+  4  set Manager template
+  5  Manager sequence configuration
+  6  generate application-data packet
+  7  generated wire vector mismatch
+  8  Manager sequence-count advancement
+  9  bounded decode
+  10 consumed-byte count
+  11 decoded logical fields or CRC
+  12 Validator rejected valid packet
+  13 CRC-free primary header
+  14 CRC-free application data
+  15 CRC-free wire vector
+  16 CRC-free bounded decode
+  17 non-zero PVN test setup
+  18 non-zero PVN application data
+  19 non-zero PVN was serialized
+  20 invalid Idle Packet setup
+  21 invalid Idle secondary-header setup
+  22 invalid Idle application data
+  23 invalid Idle Packet was serialized
+  24 valid Idle Packet setup
+  25 valid Idle application data
+  26 valid Idle Packet serialization
+
+What the test covers
+--------------------
+
+- Cortex-M7 consumer compilation with `CCSDS_MCU`
+- custom variable-length secondary-header registration
+- Manager template and automatic sequence-count advancement
+- exact independent CRC16 packet vector
+- bounded parsing and consumed-byte reporting
+- decoded primary-header, secondary-header, application-data, and CRC fields
+- Validator template/coherence checks
+- CRC-disabled packet generation and parsing
+- rejection of non-zero Packet Version Number serialization
+- Idle Packet restrictions and valid Idle Packet generation
+- C++ container/shared-ownership allocation on the configured target runtime
+
+The test does not prove timing bounds, fragmentation behavior over long mission
+operation, worst-case memory use, interrupt safety, thread safety, radiation
+tolerance, or suitability of the project's linker layout for another STM32.
