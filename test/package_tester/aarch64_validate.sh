@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  sudo -E ./test/package_tester/aarch64_validate.sh <ccsdspack-arm64.deb>
+  ./test/package_tester/aarch64_validate.sh <ccsdspack-arm64.deb>
 
 Run this script from a CCSDSPack source checkout on an aarch64/arm64 Linux
 system, such as a 64-bit Raspberry Pi OS installation. It installs the package,
@@ -27,14 +27,16 @@ case "$(uname -m)" in
     ;;
 esac
 
-if [[ ${EUID} -ne 0 ]]; then
-  echo "ERROR: run with sudo -E so the DEB can be installed." >&2
-  exit 4
-fi
+for tool in sudo dpkg dpkg-deb cmake python3 ctest g++ realpath; do
+  command -v "${tool}" >/dev/null || {
+    echo "ERROR: required command not found: ${tool}" >&2
+    exit 4
+  }
+done
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/../.." && pwd)"
-package_path="$(realpath "$1")"
+package_path="$(realpath -m "$1")"
 
 if [[ ! -f "${package_path}" ]]; then
   echo "ERROR: package not found: ${package_path}" >&2
@@ -55,7 +57,7 @@ fi
 
 package_name="$(dpkg-deb -f "${package_path}" Package)"
 echo "Installing ${package_name} ${package_version} (${package_arch})"
-dpkg -i "${package_path}"
+sudo dpkg -i "${package_path}"
 
 mapfile -t installed_files < <(dpkg -L "${package_name}")
 
@@ -79,11 +81,19 @@ encoder="$(find_installed '/ccsds_encoder$')" || {
   echo "ERROR: installed ccsds_encoder not found" >&2
   exit 9
 }
-cmake_config="$(find_installed '/cmake/CCSDSPack/CCSDSPackConfig.cmake$')" || {
-  echo "ERROR: installed CCSDSPackConfig.cmake not found" >&2
+decoder="$(find_installed '/ccsds_decoder$')" || {
+  echo "ERROR: installed ccsds_decoder not found" >&2
   exit 10
 }
-library_file="$(find_installed '/libccsdspack\.so(\.1(\.2\.0)?)?$')" || true"
+validator="$(find_installed '/ccsds_validator$')" || {
+  echo "ERROR: installed ccsds_validator not found" >&2
+  exit 11
+}
+cmake_config="$(find_installed '/cmake/CCSDSPack/CCSDSPackConfig.cmake$')" || {
+  echo "ERROR: installed CCSDSPackConfig.cmake not found" >&2
+  exit 12
+}
+library_file="$(find_installed '/libccsdspack\.so(\.1(\.2\.0)?)?$' || true)"
 
 bin_dir="$(dirname "${tester}")"
 cmake_dir="$(dirname "${cmake_config}")"
@@ -91,17 +101,12 @@ if [[ -n "${library_file}" ]]; then
   export LD_LIBRARY_PATH="$(dirname "${library_file}"):${LD_LIBRARY_PATH:-}"
 fi
 
-for tool in cmake python3 ctest; do
-  command -v "${tool}" >/dev/null || {
-    echo "ERROR: required command not found: ${tool}" >&2
-    exit 11
-  }
+for executable in "${tester}" "${encoder}" "${decoder}" "${validator}"; do
+  if [[ ! -x "${executable}" ]]; then
+    echo "ERROR: installed executable is not runnable: ${executable}" >&2
+    exit 13
+  fi
 done
-
-if [[ ! -x "${tester}" || ! -x "${encoder}" ]]; then
-  echo "ERROR: installed executables are not runnable" >&2
-  exit 12
-fi
 
 echo "Running installed native regression tester"
 (
