@@ -102,7 +102,7 @@ jobs:
             rm -rf bin/* build/*
             ./package.sh -p DEB
 
-            # 2) Bare-metal Cortex-M7 TGZ
+            # 2) Bare-metal Cortex-M7 TGZ plus compile-only consumer probe
             rm -rf bin/* build/*
             ./package.sh -t cmake/toolchains/arm-none-eabi.cmake -p MCU -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 
@@ -123,13 +123,17 @@ jobs:
           path: packaging.log
           if-no-files-found: error
 
-      #- name: Upload package artifact
-      #  if: matrix.os == 'ubuntu-22.04'
-      #  uses: actions/upload-artifact@v4
-      #  with:
-      #    name: ccsdspack-deb-${{ github.sha }}
-      #    path: packages/*.deb
-      #    if-no-files-found: error
+      - name: Upload hardware validation packages
+        if: matrix.os == 'ubuntu-22.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccsdspack-v1.2.0-hardware-${{ github.sha }}
+          path: |
+            packages/*.deb
+            packages/*.tar.gz
+          if-no-files-found: error
+          retention-days: 14
+
       # --------------------------
       # Release publishing (only on tags, only from ubuntu-22.04)
       # --------------------------
