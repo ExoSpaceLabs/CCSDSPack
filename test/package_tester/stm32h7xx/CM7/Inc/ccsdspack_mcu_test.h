@@ -7,7 +7,7 @@
 // The prebuilt MCU archive is compiled with CCSDS_MCU. Consumers of the static
 // archive must see the same public-header interface in every translation unit.
 #ifndef CCSDS_MCU
-#define CCSDS_MCU 1
+#error "Define CCSDS_MCU when compiling the STM32 validation application"
 #endif
 
 #include "CCSDSPack.h"
