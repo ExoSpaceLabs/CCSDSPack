@@ -4,6 +4,7 @@
 #include <CCSDSPack.h>
 #include <cstdio>
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
 #include "tests.h"
@@ -75,6 +76,28 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
       0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
     }));
     return packet.serialize().empty();
+  });
+
+  tester->unitTest("Received Idle Packet rejects secondary-header flag", []() {
+    const std::vector<std::uint8_t> bytes{
+      0x0F, 0xFF, 0xC0, 0x00, 0x00, 0x00, 0x00
+    };
+    CCSDS::Packet packet;
+    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    return !packet.deserialize(bytes);
+  });
+
+  tester->unitTest("Received Idle Packet requires idle user data", []() {
+    const std::vector<std::uint8_t> header{
+      0x07, 0xFF, 0xC0, 0x00, 0x00, 0x01
+    };
+    const auto checksum = CCSDS::crc16(header);
+    std::vector<std::uint8_t> bytes = header;
+    bytes.push_back(static_cast<std::uint8_t>(checksum >> 8U));
+    bytes.push_back(static_cast<std::uint8_t>(checksum & 0xFFU));
+
+    CCSDS::Packet packet;
+    return !packet.deserialize(bytes);
   });
 
   tester->unitTest("Valid Idle Packet serializes without a secondary header", []() {
