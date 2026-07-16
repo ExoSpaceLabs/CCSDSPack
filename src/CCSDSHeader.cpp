@@ -92,7 +92,18 @@ CCSDS::ResultBool CCSDS::Header::deserialize(const std::vector<std::uint8_t> &da
   for (std::uint8_t i = 0; i < 6; ++i) {
     headerData |= static_cast<std::uint64_t>(data[i]) << (40 - i * 8);
   }
-  FORWARD_RESULT(setData(headerData));
+
+  m_dataLength = static_cast<std::uint16_t>(headerData & 0xFFFFU);
+  m_packetSequenceControl = static_cast<std::uint16_t>((headerData >> 16) & 0xFFFFU);
+  m_packetIdentificationAndVersion = static_cast<std::uint16_t>((headerData >> 32) & 0xFFFFU);
+  m_versionNumber = static_cast<std::uint8_t>(m_packetIdentificationAndVersion >> 13);
+  m_type = static_cast<std::uint8_t>((m_packetIdentificationAndVersion >> 12) & 0x01U);
+  m_dataFieldHeaderFlag =
+    static_cast<std::uint8_t>((m_packetIdentificationAndVersion >> 11) & 0x01U);
+  m_APID = static_cast<std::uint16_t>(m_packetIdentificationAndVersion & 0x07FFU);
+  m_sequenceFlags = static_cast<std::uint8_t>(m_packetSequenceControl >> 14);
+  m_sequenceCount = static_cast<std::uint16_t>(m_packetSequenceControl & 0x3FFFU);
+  refreshStatus();
   return true;
 }
 
