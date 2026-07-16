@@ -49,12 +49,14 @@ jobs:
           status=${PIPESTATUS[0]}
           exit "$status"
 
-      - name: Upload native test failure log
+      - name: Upload native test failure diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: linux-test-log-${{ matrix.os }}-${{ github.sha }}
-          path: bin/CCSDSPack_tester.log
+          path: |
+            bin/CCSDSPack_tester.log
+            test/src/testGroupEdgeCases.cpp
           if-no-files-found: error
 
       - name: Run CLI integration tests
