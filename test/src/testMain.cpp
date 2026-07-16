@@ -14,6 +14,7 @@ int main() {
   testGroupManagement(&tester, "Management of CCSDS packet tests.");
   testGroupEdgeCases(&tester, "Edge cases and detailed PUS checks.");
   testGroupParsing(&tester, "Bounded parsing, CRC validation, and header validation tests.");
+  testGroupConformance(&tester, "CCSDS 133.0-B-2 EC2 Space Packet PDU profile tests.");
 
   return tester.Result();
 }
