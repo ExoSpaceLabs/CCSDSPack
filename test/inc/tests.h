@@ -11,5 +11,6 @@ void testGroupValidator(TestManager *tester, const std::string &description);
 void testGroupManagement(TestManager *tester, const std::string &description);
 void testGroupEdgeCases(TestManager *tester, const std::string &description);
 void testGroupParsing(TestManager *tester, const std::string &description);
+void testGroupConformance(TestManager *tester, const std::string &description);
 
 #endif // TESTS_H
