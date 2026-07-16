@@ -9,8 +9,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # This project must resolve CCSDSPack exclusively through its installed CMake
-# package. CI passes CMAKE_PREFIX_PATH to the installation under test.
-find_package(CCSDSPack CONFIG REQUIRED)
+# package. CI passes CMAKE_PREFIX_PATH to the installation under test. Requiring
+# the exact release version turns the external consumer into a package-metadata
+# gate on both Linux and Windows.
+find_package(CCSDSPack 1.2.0 EXACT CONFIG REQUIRED)
 
 add_executable(hello_ccsds src/main.cpp)
 target_link_libraries(hello_ccsds PRIVATE ccsdspack::CCSDSPack)
