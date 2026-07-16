@@ -37,10 +37,12 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
       return false;
     }
 
-    const std::vector<std::uint8_t> remainder(stream.begin() + static_cast<std::ptrdiff_t>(consumed), stream.end());
+    const std::vector<std::uint8_t> remainder(
+      stream.begin() + static_cast<std::ptrdiff_t>(consumed), stream.end());
     CCSDS::Packet decodedSecond;
     TEST_VOID(decodedSecond.deserialize(remainder));
-    return decodedSecond.getApplicationDataBytes() == std::vector<std::uint8_t>({0x30, 0x40, 0x50});
+    return decodedSecond.getApplicationDataBytes()
+           == std::vector<std::uint8_t>({0x30, 0x40, 0x50});
   });
 
   tester->unitTest("Existing deserialize parses the first declared packet and ignores trailing bytes.", [] {
@@ -123,17 +125,16 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Unsupported packet versions are rejected during packet parsing.", [] {
-    CCSDS::Packet source;
-    TEST_VOID(source.setPrimaryHeader(CCSDS::PrimaryHeader{1, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0}));
-    TEST_VOID(source.setApplicationData({0x01}));
-    const auto input = source.serialize();
+    const std::vector<std::uint8_t> input{
+      0x20, 0x01, 0xC0, 0x00, 0x00, 0x00, 0x00
+    };
 
     CCSDS::Packet decoded;
     const auto result = decoded.deserializeBounded(input);
     return hasErrorCode(result, CCSDS::INVALID_HEADER_DATA);
   });
 
-  tester->unitTest("Every primary-header field rejects its first out-of-range value.", [] {
+  tester->unitTest("Every primary-header field rejects its first invalid profile value.", [] {
     CCSDS::Header version;
     CCSDS::Header type;
     CCSDS::Header dataFieldFlag;
@@ -141,7 +142,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
     CCSDS::Header sequenceFlags;
     CCSDS::Header sequenceCount;
 
-    const auto versionResult = version.setVersionNumber(8);
+    const auto versionResult = version.setVersionNumber(1);
     const auto typeResult = type.setType(2);
     const auto dataFieldResult = dataFieldFlag.setDataFieldHeaderFlag(2);
     const auto apidResult = apid.setAPID(2048);
@@ -164,8 +165,12 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
 
   tester->unitTest("PrimaryHeader assignment is atomic when validation fails.", [] {
     CCSDS::Header header;
-    TEST_VOID(header.setData(CCSDS::PrimaryHeader{0, 1, 0, 0x123, CCSDS::FIRST_SEGMENT, 7, 9}));
-    const auto result = header.setData(CCSDS::PrimaryHeader{0, 1, 0, 0x123, 4, 7, 9});
+    TEST_VOID(header.setData(CCSDS::PrimaryHeader{
+      0, 1, 0, 0x123, CCSDS::FIRST_SEGMENT, 7, 9
+    }));
+    const auto result = header.setData(CCSDS::PrimaryHeader{
+      0, 1, 0, 0x123, 4, 7, 9
+    });
     return hasErrorCode(result, CCSDS::INVALID_HEADER_DATA)
            && header.getType() == 1
            && header.getAPID() == 0x123
