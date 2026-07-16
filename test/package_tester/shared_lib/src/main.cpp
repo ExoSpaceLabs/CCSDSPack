@@ -150,12 +150,13 @@ int main() {
     return fail("decoded fields", "decoded packet does not match the v1.2 logical fields");
   }
 
-  // Exercise legacy observation APIs from an external translation unit.
+  // Exercise legacy and additive observation APIs from an external translation unit.
   if (decoded.getPrimaryHeader64bit() == 0U
       || decoded.getFullPacketLength() != expectedPacket.size()
+      || decoded.getSerializedSize() != expectedPacket.size()
       || !decoded.getDataFieldHeaderFlag()
       || decoded.getCRCVectorBytes() != std::vector<std::uint8_t>({0xB7, 0x45})) {
-    return fail("legacy packet API", "legacy getters returned unexpected values");
+    return fail("packet API", "legacy or additive getters returned unexpected values");
   }
   (void)decoded.getDataField();
   (void)decoded.getPrimaryHeader();
@@ -201,6 +202,49 @@ int main() {
          != std::vector<std::uint8_t>({0xAA, 0x55})
       || decodedCrcDisabled.getCRC() != 0U) {
     return fail("CRC-disabled decode", "CRC-free packet did not round-trip");
+  }
+
+  CCSDS::Packet invalidVersion;
+  if (const auto result = invalidVersion.setPrimaryHeader(CCSDS::PrimaryHeader{
+        1, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0
+      }); !result) {
+    return failResult("non-zero PVN setup", result.error());
+  }
+  if (const auto result = invalidVersion.setApplicationData({0x01}); !result) {
+    return failResult("non-zero PVN data", result.error());
+  }
+  if (!invalidVersion.serialize().empty()) {
+    return fail("Packet Version Number", "non-zero PVN was serialized as a Space Packet");
+  }
+
+  CCSDS::Packet invalidIdle;
+  if (const auto result = invalidIdle.setPrimaryHeader(CCSDS::PrimaryHeader{
+        0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
+      }); !result) {
+    return failResult("Idle Packet setup", result.error());
+  }
+  if (const auto result = invalidIdle.setDataFieldHeader({0x01}); !result) {
+    return failResult("Idle Packet secondary header", result.error());
+  }
+  if (const auto result = invalidIdle.setApplicationData({0x00}); !result) {
+    return failResult("Idle Packet data", result.error());
+  }
+  if (!invalidIdle.serialize().empty()) {
+    return fail("Idle Packet", "Idle Packet with a secondary header was serialized");
+  }
+
+  CCSDS::Packet validIdle;
+  if (const auto result = validIdle.setPrimaryHeader(CCSDS::PrimaryHeader{
+        0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
+      }); !result) {
+    return failResult("valid Idle Packet setup", result.error());
+  }
+  if (const auto result = validIdle.setApplicationData({0x00}); !result) {
+    return failResult("valid Idle Packet data", result.error());
+  }
+  const auto validIdleBytes = validIdle.serialize();
+  if (validIdleBytes.empty() || validIdle.getSerializedSize() != validIdleBytes.size()) {
+    return fail("valid Idle Packet", "conformant Idle Packet did not serialize");
   }
 
   std::cout << "CCSDSPack installed shared-library consumer passed.\n";
