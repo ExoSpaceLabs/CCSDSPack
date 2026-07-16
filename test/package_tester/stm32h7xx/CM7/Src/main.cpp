@@ -20,10 +20,12 @@
 #include <cstdio>
 #include <cstring>
 
+// Referenced by stm32h7xx_it.c. Keep external linkage.
+UART_HandleTypeDef UartHandle{};
+
 namespace {
   constexpr std::uint32_t UART_TIMEOUT = HAL_MAX_DELAY;
 
-  UART_HandleTypeDef UartHandle{};
   bool uartReady{false};
   bool ledsReady{false};
 
