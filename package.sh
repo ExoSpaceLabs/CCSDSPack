@@ -105,9 +105,11 @@ fi
 # Build
 cmake --build . --config Release -- -j
 
-# Compile the same HAL-independent consumer core used by the STM32 hardware test.
-# This does not replace execution on the board; it catches stale public API calls,
-# missing CCSDS_MCU guards, and Cortex-M7 compile-flag mismatches in CI.
+# Compile and relocatably link the same HAL-independent consumer core used by
+# the STM32 hardware test. This does not replace the final board link or run; it
+# catches stale public API calls, missing CCSDS_MCU configuration, compile-flag
+# mismatches, archive naming errors, missing library symbols, and consumer/library
+# ABI drift in CI.
 if [[ "${package_type^^}" == "MCU" ]]; then
   effective_mcu_flags="${mcu_flags:--fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard}"
   read -r -a mcu_flag_array <<< "${effective_mcu_flags}"
@@ -123,6 +125,19 @@ if [[ "${package_type^^}" == "MCU" ]]; then
     -I../test/package_tester/stm32h7xx/CM7/Inc \
     -c ../test/package_tester/stm32h7xx/CM7/Src/ccsdspack_mcu_compile_probe.cpp \
     -o ccsdspack_mcu_compile_probe.o
+
+  mcu_archive="$(find ../lib . -name libccsdspack.a -type f -print -quit)"
+  if [[ -z "${mcu_archive}" ]]; then
+    echo "MCU archive libccsdspack.a was not produced" >&2
+    exit 3
+  fi
+
+  arm-none-eabi-g++ \
+    -r \
+    "${mcu_flag_array[@]}" \
+    ccsdspack_mcu_compile_probe.o \
+    "${mcu_archive}" \
+    -o ccsdspack_mcu_link_probe.o
 fi
 
 # Package
