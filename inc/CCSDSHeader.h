@@ -49,12 +49,13 @@ namespace CCSDS {
    * @struct PrimaryHeader
    * @brief Plain field representation of the six-byte CCSDS Space Packet primary header.
    *
-   * Field widths are validated only when the structure is assigned to Header or Packet.
-   * Packet Data Length stores the CCSDS encoded value N-1, where N is the total
-   * packet-data-field size including optional packet error-control bytes.
+   * Field widths and the CCSDS 133.0-B-2 Space Packet profile are validated when
+   * the structure is assigned to Header or Packet. Packet Data Length stores the
+   * CCSDS encoded value N-1, where N is the total packet-data-field size including
+   * optional mission-profile trailer bytes.
    */
   struct PrimaryHeader {
-    std::uint8_t versionNumber{};       ///< 3-bit protocol version; v1.2 parsing supports value 0.
+    std::uint8_t versionNumber{};       ///< Must be encoded value 0 for a CCSDS Space Packet.
     std::uint8_t type{};                ///< 1-bit packet type.
     std::uint8_t dataFieldHeaderFlag{}; ///< 1-bit secondary-header presence flag.
     std::uint16_t APID{};               ///< 11-bit Application Process Identifier.
@@ -64,7 +65,7 @@ namespace CCSDS {
 
     /**
      * @brief Constructs a field structure from explicit values.
-     * @param versionNumber_value Protocol version.
+     * @param versionNumber_value Protocol version; CCSDS Space Packets require 0.
      * @param type_value Packet type.
      * @param dataFieldHeaderFlag_value Secondary-header flag.
      * @param APID_value Application Process Identifier.
@@ -90,28 +91,22 @@ namespace CCSDS {
 
   /**
    * @class Header
-   * @brief Validated in-memory representation of a CCSDS Space Packet primary header.
+   * @brief Validated representation of a CCSDS 133.0-B-2 Space Packet primary header.
    *
    * Header stores the seven logical fields of the fixed six-byte primary header and
    * provides checked field setters, packed assignment, byte deserialization, and
    * big-endian serialization. Checked updates are atomic: failed assignments do not
-   * partially replace the previous logical field set, but they mark the object INVALID
-   * so ignored errors cannot silently produce truncated wire values.
+   * partially replace the previous logical field set, but they mark the object INVALID.
    *
-   * @code{.cpp}
-   * CCSDS::Header header;
-   * header.setAPID(0x123);
-   * header.setSequenceFlags(CCSDS::UNSEGMENTED);
-   * header.setSequenceCount(42);
-   * const auto bytes = header.serialize();
-   * @endcode
+   * The Space Packet profile enforces Packet Version Number 0. APID 2047 is reserved
+   * for Idle Packets and therefore requires the Secondary Header Flag to be zero.
    */
   class Header {
   public:
     /** @brief Constructs a normal version-0 header with APID 0 and UNSEGMENTED flags. */
     Header() = default;
 
-    /** @brief Returns the stored 3-bit protocol version. */
+    /** @brief Returns the stored protocol version, which is 0 for a valid Space Packet. */
     [[nodiscard]] std::uint8_t getVersionNumber() const { return m_versionNumber; }
     /** @brief Returns the stored 1-bit packet type. */
     [[nodiscard]] std::uint8_t getType() const { return m_type; }
@@ -146,9 +141,9 @@ namespace CCSDS {
     [[nodiscard]] std::uint64_t getFullHeader() const;
 
     /**
-     * @brief Sets the 3-bit protocol version.
-     * @param value Value in the inclusive range 0..7.
-     * @return Success, or INVALID_HEADER_DATA for a wider value.
+     * @brief Sets the CCSDS Space Packet Version Number.
+     * @param value Encoded value 0.
+     * @return Success, or INVALID_HEADER_DATA for any non-zero value.
      */
     [[nodiscard]] ResultBool setVersionNumber(const std::uint8_t &value);
 
@@ -162,20 +157,20 @@ namespace CCSDS {
     /**
      * @brief Sets the 1-bit secondary-header presence flag.
      * @param value Value 0 or 1.
-     * @return Success, or INVALID_HEADER_DATA for any other value.
+     * @return Success, or INVALID_HEADER_DATA for a wider value or for value 1 on an Idle Packet.
      */
     [[nodiscard]] ResultBool setDataFieldHeaderFlag(const std::uint8_t &value);
 
     /**
      * @brief Sets the 11-bit Application Process Identifier.
      * @param value Value in the inclusive range 0..2047.
-     * @return Success, or INVALID_HEADER_DATA for a wider value.
-     * @note Value 2047 changes getHeaderStatus() to IDLE.
+     * @return Success, or INVALID_HEADER_DATA for a wider value or an invalid Idle combination.
+     * @note Value 2047 changes getHeaderStatus() to IDLE and requires no secondary header.
      */
     [[nodiscard]] ResultBool setAPID(const std::uint16_t &value);
 
     /**
-     * @brief Sets the 2-bit sequence-flags field.
+     * @brief Sets the two-bit sequence-flags field.
      * @param value ESequenceFlag-compatible value in the range 0..3.
      * @return Success, or INVALID_HEADER_DATA for a wider value.
      */
@@ -198,21 +193,21 @@ namespace CCSDS {
     /**
      * @brief Atomically assigns all fields from a packed 48-bit value.
      * @param data Packed header in the low 48 bits.
-     * @return Success, or INVALID_HEADER_DATA when decoded fields are rejected.
+     * @return Success, or INVALID_HEADER_DATA when the Space Packet profile is violated.
      */
     [[nodiscard]] ResultBool setData(const std::uint64_t &data);
 
     /**
      * @brief Atomically parses exactly six serialized primary-header bytes.
      * @param data Big-endian header bytes.
-     * @return Success, or INVALID_HEADER_DATA for a wrong size or invalid field.
+     * @return Success, or INVALID_HEADER_DATA for a wrong size or invalid Space Packet field.
      */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data);
 
     /**
      * @brief Atomically assigns all logical fields from PrimaryHeader.
      * @param data Field structure to validate.
-     * @return Success, or INVALID_HEADER_DATA for the first invalid-width field.
+     * @return Success, or INVALID_HEADER_DATA for the first invalid profile field.
      */
     [[nodiscard]] ResultBool setData(const PrimaryHeader &data);
 
