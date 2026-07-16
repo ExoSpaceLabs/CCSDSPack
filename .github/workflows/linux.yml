@@ -137,6 +137,7 @@ jobs:
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
+          body_path: docs/releases/v1.2.0.md
           files: packages/ccsdspack*
 
       - name: Log in to GHCR
