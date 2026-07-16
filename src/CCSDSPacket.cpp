@@ -100,6 +100,17 @@ namespace {
       parsed.dataField = packetData;
     }
 
+    if (parsed.header.getAPID() == CCSDS::IDLE_APID) {
+      if (parsed.header.getDataFieldHeaderFlag() != 0U) {
+        return CCSDS::Error{CCSDS::ErrorCode::INVALID_HEADER_DATA,
+                            "Cannot deserialize Idle Packet: secondary-header flag must be zero."};
+      }
+      if (parsed.dataField.empty()) {
+        return CCSDS::Error{CCSDS::ErrorCode::INVALID_DATA,
+                            "Cannot deserialize Idle Packet: mission-defined idle user data is required."};
+      }
+    }
+
     return parsed;
   }
 }
