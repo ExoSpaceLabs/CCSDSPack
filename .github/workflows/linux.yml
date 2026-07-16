@@ -41,8 +41,21 @@ jobs:
           ls -l bin/
 
       - name: Run tests (native)
+        shell: bash
         run: |
-          cd bin && ./CCSDSPack_tester
+          set +e
+          cd bin
+          ./CCSDSPack_tester 2>&1 | tee CCSDSPack_tester.log
+          status=${PIPESTATUS[0]}
+          exit "$status"
+
+      - name: Upload native test failure log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-test-log-${{ matrix.os }}-${{ github.sha }}
+          path: bin/CCSDSPack_tester.log
+          if-no-files-found: error
 
       - name: Run CLI integration tests
         run: |
