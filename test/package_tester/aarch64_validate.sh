@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  ./test/package_tester/aarch64_validate.sh <ccsdspack-arm64.deb>
+  bash test/package_tester/aarch64_validate.sh <ccsdspack-arm64.deb>
 
 Run this script from a CCSDSPack source checkout on an aarch64/arm64 Linux
 system, such as a 64-bit Raspberry Pi OS installation. It installs the package,
