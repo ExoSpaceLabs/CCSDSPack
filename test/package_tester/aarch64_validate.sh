@@ -10,6 +10,8 @@ Run this script from a CCSDSPack source checkout on an aarch64/arm64 Linux
 system, such as a 64-bit Raspberry Pi OS installation. It installs the package,
 runs the installed regression tester and CLI integration suite, then builds and
 runs an external CMake consumer against the installed package metadata.
+
+Run the script as a normal user. It invokes sudo only for package installation.
 EOF
 }
 
@@ -27,12 +29,16 @@ case "$(uname -m)" in
     ;;
 esac
 
-for tool in sudo dpkg dpkg-deb cmake python3 ctest g++ realpath; do
+for tool in sudo dpkg dpkg-deb cmake python3 ctest g++ realpath mktemp; do
   command -v "${tool}" >/dev/null || {
     echo "ERROR: required command not found: ${tool}" >&2
     exit 4
   }
 done
+
+if [[ ${EUID} -eq 0 ]]; then
+  echo "WARNING: run this script as a normal user; it invokes sudo only for dpkg." >&2
+fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "${script_dir}/../.." && pwd)"
@@ -108,9 +114,12 @@ for executable in "${tester}" "${encoder}" "${decoder}" "${validator}"; do
   fi
 done
 
+validation_work_dir="$(mktemp -d "${TMPDIR:-/tmp}/ccsdspack-aarch64-validation.XXXXXX")"
+trap 'rm -rf "${validation_work_dir}"' EXIT
+
 echo "Running installed native regression tester"
 (
-  cd "${bin_dir}"
+  cd "${validation_work_dir}"
   "${tester}"
 )
 
