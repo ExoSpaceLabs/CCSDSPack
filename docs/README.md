@@ -26,6 +26,7 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 ## Integration and delivery
 
 - [Packages](PACKAGES.md): native packages and CMake package consumption.
+- [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md): Raspberry Pi arm64 evidence, reproduction procedure, and STM32 validation status.
 - [Cross-build guide](CROSSBUILD.md): aarch64 Linux and bare-metal Cortex-M builds.
 - [Legacy cross-compilation notes](CROSSCOMPILE.md): older environment-specific guidance retained for reference.
 - [Container image](../docker/README.md): Docker build and runtime usage.
