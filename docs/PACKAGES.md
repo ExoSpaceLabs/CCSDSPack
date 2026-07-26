@@ -31,6 +31,8 @@ rpmbuild --version
 
 ## Installing a DEB
 
+System package installation requires root permissions:
+
 ```bash
 sudo dpkg -i packages/ccsdspack-v<version>-Linux-<architecture>.deb
 ```
@@ -47,6 +49,20 @@ Remove it with:
 ```bash
 sudo dpkg --remove ccsdspack
 ```
+
+## Installed test fixtures
+
+Packages that include `CCSDSPack_tester` also install a sibling `test_resources` directory under the executable installation directory. The tester uses relative `test_resources/...` paths for committed fixtures and temporary file-I/O round trips.
+
+These resources belong only to the regression tester. They are not a dependency of:
+
+- `libccsdspack`;
+- `ccsds_encoder`;
+- `ccsds_decoder`;
+- `ccsds_validator`;
+- applications linking `ccsdspack::CCSDSPack`.
+
+Applications must not treat the installed test resources as public runtime data or API assets.
 
 ## CMake package consumption
 
@@ -74,7 +90,7 @@ bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
   2>&1 | tee ~/ccsdspack-aarch64-validation.log
 ```
 
-Run the script as a normal user. It invokes `sudo` internally only for `dpkg -i` and executes file-writing regression tests from a writable temporary directory.
+Launch the script as a normal user. It invokes `sudo dpkg -i` because package installation requires root permissions. It then copies the installed test-only fixtures into a writable temporary directory, preserves their expected relative layout, and runs the tester unprivileged without writing into `/bin`.
 
 The required final marker is:
 
