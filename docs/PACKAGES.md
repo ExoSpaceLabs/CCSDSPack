@@ -19,7 +19,7 @@ Supported options:
 
 Successful packages are written under `packages/`.
 
-Do not build with `sudo`. Root privileges are only required when installing or removing a system package. Building as root creates root-owned repository files and contributes nothing except future irritation.
+Do not build with `sudo`. Root privileges are only required when installing or removing a system package. Building as root can leave root-owned files in the repository checkout.
 
 ### RPM prerequisite
 
