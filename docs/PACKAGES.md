@@ -1,64 +1,95 @@
 # Packages
 
-[../](README.md) - CCSDSPack Documentation
+[Documentation index](README.md) | [Cross-build guide](CROSSBUILD.md) | [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md)
 
-## Linux
-A sample bash script has been prepared to generate .deb package using cpack.
+## Linux packages
 
-The script can be launched using the following command, note for generation
-super/user privileges might be required. In that case use `sudo` command 
-before running `bash`.
+`package.sh` configures the project, builds it, and invokes CPack. Run the build as a normal user:
 
 ```bash
-
-bash package.sh
+./package.sh -p DEB
 ```
-Parameters can be passed to the package.sh script:
-- `-p` or `--package-type` : to specify type of package to build `[DEB, RPM, TGZ, MCU]`, default `DEB`.
-- `-t` or `--toolchain` : optionally to specify toolchain file for cross builds, default is none i.e. use system.
-- `-m` or `--mcu-flags` : optionally and if MCU type is used, custom flags can be provided. 
-- `--help` : prints the help menu and examples.
 
-***NOTE:*** For cross-build prerequisites and setup, see the consolidated [Cross-Build Guide](CROSSBUILD.md).
+Supported options:
 
-If successful, the generated package will be placed under the `packages` directory.
+- `-p` or `--package-type`: package type, one of `DEB`, `RPM`, `TGZ`, or `MCU`; default is `DEB`.
+- `-t` or `--toolchain`: optional CMake toolchain file for cross-builds.
+- `-m` or `--mcu-flags`: additional MCU compiler flags when producing an `MCU` package.
+- `--help`: show command usage and examples.
 
-to build RPM packages, please make sure that rpm is installed.
+Successful packages are written under `packages/`.
+
+Do not build with `sudo`. Root privileges are only required when installing or removing a system package. Building as root creates root-owned repository files and contributes nothing except future irritation.
+
+### RPM prerequisite
 
 ```bash
-
 sudo apt-get update
 sudo apt-get install -y rpm
-# sanity check
 rpmbuild --version
-
 ```
 
-On debian system, the generated package can be installed using the following command:
+## Installing a DEB
+
 ```bash
-
-dpkg -i ccsdspack-v{version}-{system}-{architecture}.deb
+sudo dpkg -i packages/ccsdspack-v<version>-Linux-<architecture>.deb
 ```
 
-and uninstalled using `dpkg`
+Inspect the installed package:
+
 ```bash
-
-dpkg --remove ccsdspack
+dpkg -s ccsdspack
+dpkg -L ccsdspack
 ```
-Once installed, cmake `find_package()` can be used to find the library and link it as follows:
+
+Remove it with:
+
+```bash
+sudo dpkg --remove ccsdspack
+```
+
+## CMake package consumption
+
+After installation, use the exported CMake package:
+
 ```cmake
-
 find_package(CCSDSPack CONFIG REQUIRED)
 target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
 ```
 
-### Cross-build
-For cross-compilation to aarch64/arm64 (Linux) and for MCU targets, please refer to the consolidated guide:
+A release consumer can require the exact version:
 
-- [Cross-Build Guide (aarch64 Linux and Bare-metal MCU)](CROSSBUILD.md)
+```cmake
+find_package(CCSDSPack 1.2.0 EXACT CONFIG REQUIRED)
+```
 
-It contains per-Ubuntu release prerequisites (22.04 vs 20.04), toolchain setup, and `package.sh` examples.
+## Raspberry Pi arm64 validation
 
-### Bare-metal
-For bare-metal cross-compilation and static library, see the [Cross-Build Guide](CROSSBUILD.md).
+On a native 64-bit Raspberry Pi system, run the complete installed-package validation from a checkout matching the package candidate:
 
+```bash
+ARM64_DEB="$(find ./packages -type f -name '*arm64*.deb' -print -quit)"
+
+bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
+  2>&1 | tee ~/ccsdspack-aarch64-validation.log
+```
+
+Run the script as a normal user. It invokes `sudo` internally only for `dpkg -i` and executes file-writing regression tests from a writable temporary directory.
+
+The required final marker is:
+
+```text
+CCSDSPACK_AARCH64_TEST:PASS
+```
+
+The recorded v1.2 Raspberry Pi 5 result and complete reproduction procedure are in [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md).
+
+## Cross-builds and bare metal
+
+For aarch64 Linux cross-compilation and bare-metal Cortex-M packaging, see the [Cross-build guide](CROSSBUILD.md). It documents toolchain prerequisites and `package.sh` examples.
+
+The STM32H745 reference harness and STM32H755-native integration guidance are under:
+
+```text
+test/package_tester/stm32h7xx/
+```
