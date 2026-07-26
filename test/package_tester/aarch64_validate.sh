@@ -130,7 +130,7 @@ trap 'rm -rf "${validation_work_dir}"' EXIT
 # CCSDSPack_tester expects test-only fixtures under ./test_resources and also
 # creates temporary files there. Copy the installed fixtures into a writable
 # work directory so the tester remains unprivileged and /bin stays untouched.
-cp -a "${test_resources}" "${validation_work_dir}/test_resources"
+cp -R "${test_resources}" "${validation_work_dir}/test_resources"
 
 echo "Running installed native regression tester"
 (
