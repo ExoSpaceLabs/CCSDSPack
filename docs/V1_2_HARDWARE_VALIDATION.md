@@ -54,13 +54,17 @@ The complete native validation passed:
 
 The test covers native package installation, dynamic-library loading, packet regression and conformance behaviour, installed command-line tools, CMake package metadata, exact-version resolution, external compilation, linking, and execution on Raspberry Pi arm64.
 
-### Privilege note
+### Installed test resources and privileges
 
-The recorded full validation was launched with `sudo bash` because the original script changed its working directory to the installed executable directory, `/bin`. Test 14 and other file-I/O checks create relative temporary files, so an ordinary user could not write there and four tests failed.
+The package installs `CCSDSPack_tester` together with a sibling `test_resources` directory under the executable installation directory. These files are regression-test fixtures only. They are not required by `libccsdspack`, the encoder, decoder, validator, or applications that link CCSDSPack.
 
-This was a validation-script working-directory defect, not a CCSDSPack runtime or package defect. Running as root does not change packet serialization, parsing, CRC, CLI integration, CMake discovery, or external-consumer results, so the recorded PASS remains valid.
+The tester intentionally uses relative paths such as `test_resources/core_packet.bin` and `test_resources/myPackets.bin`. It reads committed fixtures from that directory and creates temporary round-trip files there during the file-I/O tests.
 
-The script has been corrected to execute `CCSDSPack_tester` from a writable temporary directory. Future validation runs must launch the script as a normal user; the script invokes `sudo` only for `dpkg -i`.
+The recorded validation was launched with `sudo bash` because the original script ran the installed tester from `/bin`. The installed `/bin/test_resources` directory is root-owned, so an ordinary user could read the fixtures but could not create the temporary test files. Four tests consequently failed without elevation.
+
+This was a validation-harness working-directory and permissions issue, not a CCSDSPack library or package failure. The root-run PASS remains valid because elevation did not change packet serialization, parsing, CRC behaviour, CLI integration, CMake discovery, or external-consumer execution.
+
+The validation script now copies the installed `test_resources` fixtures into a writable temporary work directory while preserving the expected relative layout, runs `CCSDSPack_tester` there as the invoking user, and removes the copy afterward. Package installation still requires root permissions; the script invokes `sudo dpkg -i` for that operation only.
 
 ## Reproducing the Raspberry Pi validation
 
@@ -115,14 +119,14 @@ Version: 1.2.0
 Architecture: arm64
 ```
 
-### 4. Run the complete validation as a normal user
+### 4. Run the complete validation
 
 ```bash
 bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
   2>&1 | tee ~/ccsdspack-aarch64-validation.log
 ```
 
-Do not prefix the command with `sudo`. The script uses `sudo` only to install the package.
+Launch the script as a normal user. It requests elevation for `dpkg -i`, because system package installation requires root permissions, then runs all validation tests unprivileged from writable locations.
 
 The required final line is:
 
