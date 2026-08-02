@@ -5,5 +5,5 @@
 
 USER_OBJS :=
 
-LIBS := -lccsdspack_mcu
+LIBS := -lccsdspack
 

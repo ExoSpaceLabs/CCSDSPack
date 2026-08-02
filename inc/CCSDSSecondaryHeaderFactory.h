@@ -1,6 +1,10 @@
 // Copyright 2025-2026 ExoSpaceLabs
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * @file CCSDSSecondaryHeaderFactory.h
+ * @brief Defines the per-DataField registry used to look up secondary-header implementations.
+ */
 #ifndef CCSDS_SECONDARY_HEADER_FACTORY_H
 #define CCSDS_SECONDARY_HEADER_FACTORY_H
 
@@ -8,36 +12,40 @@
 #include <unordered_map>
 #include <functional>
 #include <string>
-#include "CCSDSSecondaryHeaderAbstract.h"  // Base class header
+#include "CCSDSSecondaryHeaderAbstract.h"
 
 namespace CCSDS {
 
 /**
  * @class SecondaryHeaderFactory
- * @brief A singleton factory class responsible for registering and creating instances of `SecondaryHeaderAbstract` objects.
+ * @brief Registers secondary-header prototypes by type name and returns their shared instances.
  *
- * This factory allows clients to register new types of headers, check if a header type is registered, and create instances of registered header types.
+ * Each DataField owns one factory. registerType() stores the supplied shared pointer
+ * under header->getType(). create() returns that same stored shared pointer; it does
+ * not clone or default-construct a fresh object. Consequently, callers that need
+ * independent mutable header instances should register separate objects in separate
+ * DataField/Packet instances or explicitly supply their own shared object.
+ *
+ * Re-registering an existing type replaces the previous stored pointer. The class is
+ * not synchronized for concurrent registration or lookup.
  */
 class SecondaryHeaderFactory {
 public:
-  /**
-   * @brief Default constructor for the factory.
-   */
+  /** @brief Constructs an empty registry. */
   SecondaryHeaderFactory() = default;
 
   /**
    * @typedef CreatorFunc
-   * @brief Type alias for a function that creates an instance of `SecondaryHeaderAbstract`.
+   * @brief Legacy alias for a function returning a shared secondary-header object.
+   * @note The current registry stores shared objects directly rather than CreatorFunc values.
    */
   using CreatorFunc = std::function<std::shared_ptr<SecondaryHeaderAbstract>()>;
 
   /**
-   * @brief Registers a new header type with its creation function.
-   *
-   * This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.
-   *
-   * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
-     * @return ResultBool.
+   * @brief Registers or replaces a secondary-header object by its getType() key.
+   * @param header Shared object to store.
+   * @return Success, or INVALID_HEADER_DATA when header is nullptr.
+   * @note Ownership is shared with the caller; later mutations are visible through the registry.
    */
   ResultBool registerType(std::shared_ptr<SecondaryHeaderAbstract> header) {
     RET_IF_ERR_MSG(!header, INVALID_HEADER_DATA, "Cannot register, invalid Header provided.");
@@ -46,41 +54,32 @@ public:
   }
 
   /**
-   * @brief Creates an instance of a registered header type.
-   *
-   * This function searches for the header type by its string identifier and returns a new instance of the registered header.
-   *
-   * @param type A string representing the header type to create.
-   * @return A shared pointer to a `SecondaryHeaderAbstract` object, or `nullptr` if the type is not registered.
+   * @brief Looks up a registered secondary-header object.
+   * @param type Exact string returned by SecondaryHeaderAbstract::getType().
+   * @return The stored shared pointer, or nullptr when the type is unknown.
+   * @warning The returned object is the registry's stored instance, not a clone.
    */
   std::shared_ptr<SecondaryHeaderAbstract> create(const std::string& type) {
     if (const auto it = m_creators.find(type); it != m_creators.end()) {
-      return it->second; // Call the stored creation function
+      return it->second;
     }
-    return nullptr; // Return nullptr if type not found
+    return nullptr;
   }
 
   /**
-   * @brief Checks if a header type is registered.
-   *
-   * This function checks if a given header type is already registered with the factory.
-   *
-   * @param type A string representing the header type to check.
-   * @return `true` if the type is registered, `false` otherwise.
+   * @brief Tests whether a type key is present in the registry.
+   * @param type Exact secondary-header type name.
+   * @return True when a shared object is registered under the key.
    */
   bool typeIsRegistered(const std::string& type) {
     if (const auto it = m_creators.find(type); it != m_creators.end()) {
-      return true; // return true if found
+      return true;
     }
-    return false; // Return false if type not found
+    return false;
   }
 
 private:
-  /**
-   * @brief A map of header types to their corresponding `SecondaryHeaderAbstract` objects.
-   *
-   * This private member stores the registered header types along with their corresponding shared pointers.
-   */
+  /** @brief Registered type names mapped to shared mutable header objects. */
   std::unordered_map<std::string, std::shared_ptr<SecondaryHeaderAbstract> > m_creators;
 };
 
