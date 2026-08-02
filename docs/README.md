@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack documentation
 
-[Main README](../README.md) | [v1.2 compliance statement](../COMPLIANCE.md)
+[Main README](../README.md) | [v1.2 compliance statement](../COMPLIANCE.md) | [CCSDS compliance matrix](../CCSDS_COMPLIANCE.md)
 
 CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and managing CCSDS Space Packet PDUs. Start with the examples, then use the profile and API reference for protocol details.
 
@@ -19,6 +19,7 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 ## Compliance and behaviour
 
 - [Concise v1.2 compliance statement](../COMPLIANCE.md): the supported release claim and its explicit boundary.
+- [CCSDS Space Packet compliance matrix](../CCSDS_COMPLIANCE.md): clause-level traceability, PICS scope classification, implementation references, and evidence.
 - [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](CCSDS_133_0_B_2_PROFILE.md): detailed protocol scope, packet rules, limitations, and evidence.
 - [v1.2 current behaviour](V1_2_CURRENT_BEHAVIOUR.md): implementation behaviour and compatibility notes.
 - [Packet processing flow](FLOW.md): packet and Manager lifecycle from construction through parsing.
@@ -26,7 +27,8 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 ## Integration and delivery
 
 - [Packages](PACKAGES.md): native packages and CMake package consumption.
-- [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md): Raspberry Pi arm64 evidence, reproduction procedure, and STM32 validation status.
+- [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md): accepted Raspberry Pi arm64 and STM32H755 CM7 evidence.
+- [STM32H755 validation procedure](V1_2_STM32_VALIDATION_STEPS.md): exact build, flash, UART, and acceptance steps used for the MCU release gate.
 - [Cross-build guide](CROSSBUILD.md): aarch64 Linux and bare-metal Cortex-M builds.
 - [Legacy cross-compilation notes](CROSSCOMPILE.md): older environment-specific guidance retained for reference.
 - [Container image](../docker/README.md): Docker build and runtime usage.

@@ -57,13 +57,22 @@ The v1 public source API remains available. Corrected wire behaviour in v1.2 can
 
 ## Evidence and detailed specification
 
-The detailed normative scope, packet rules, limitations, and evidence are documented in:
+The detailed normative scope, packet rules, limitations, traceability, and evidence are documented in:
 
+- [CCSDS Space Packet compliance matrix](CCSDS_COMPLIANCE.md);
 - [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md);
 - [CCSDSPack v1.2 current behaviour](docs/V1_2_CURRENT_BEHAVIOUR.md);
+- [v1.2 hardware validation](docs/V1_2_HARDWARE_VALIDATION.md);
 - [configuration reference](docs/CONFIG.md);
 - [examples](docs/EXAMPLES.md);
 - independent vectors and regression tests under `test/`;
 - Linux and Windows CI, installed-package consumer tests, and CLI integration tests.
 
-This concise statement is the release-facing claim boundary. The detailed profile remains the authoritative technical description for v1.2 packet behaviour.
+Release-candidate hardware execution completed successfully on:
+
+- Raspberry Pi 5 native arm64 Linux, ending in `CCSDSPACK_AARCH64_TEST:PASS`;
+- NUCLEO-H755ZI-Q Cortex-M7, ending in `CCSDSPACK_MCU_TEST:PASS`.
+
+These hardware results demonstrate execution on the tested targets and do not expand the compliance claim beyond the documented Space Packet PDU profile.
+
+This concise statement is the release-facing claim boundary. The compliance matrix and detailed profile are the authoritative technical traceability for v1.2 packet behaviour.
