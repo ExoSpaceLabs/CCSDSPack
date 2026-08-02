@@ -5,11 +5,13 @@ on:
     branches:
       - main
       - develop
+      - v2.0.0-dev
     tags:    [ 'v*.*.*' ]   # build on tags too (for releases)
   pull_request:
     branches:
       - main
       - develop
+      - v2.0.0-dev
 
 jobs:
   build-and-test:
