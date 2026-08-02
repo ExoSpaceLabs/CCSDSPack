@@ -11,6 +11,8 @@ CCSDSPack v1.2 implements a **CCSDS 133.0-B-2, Issue 2, including Editorial Chan
 
 The claim applies to the supported packet construction, serialization, bounded parsing, validation, segmentation, sequence-count, and single-stream management behaviour described in the repository documentation.
 
+The authoritative clause-level traceability and evidence record is [CCSDS_COMPLIANCE.md](CCSDS_COMPLIANCE.md).
+
 ## Covered scope
 
 The v1.2 profile covers:
@@ -38,6 +40,8 @@ CCSDSPack v1.2 does **not** claim implementation of:
 - transfer frames, virtual channels, CFDP, COP-1, or transport bindings;
 - an official ECSS Packet Utilisation Standard implementation.
 
+This boundary does not represent a defect at the library layer. CCSDSPack is a Space Packet PDU construction, parsing, validation, and management library rather than a complete end-to-end subnetwork protocol entity. The unsupported abstract services and transfer functions belong to a larger flight or ground system when they are required by that system.
+
 The bundled `PusA`, `PusB`, and `PusC` classes are retained as legacy project-specific secondary-header formats. Their names are not an ECSS PUS compliance claim.
 
 ## CCSDSPack mission-profile features
@@ -55,15 +59,27 @@ A configurable synchronization pattern may be used around packet streams by `CCS
 
 The v1 public source API remains available. Corrected wire behaviour in v1.2 can change packet bytes or reject packets accepted by earlier releases. Pre-v1.2 stored or transmitted packets should be regenerated or migrated explicitly.
 
+## Validation status
+
+The v1.2.0 release candidate has completed:
+
+- Linux and Windows native regression, conformance, CLI, installation, and external-consumer validation;
+- native Raspberry Pi 5 arm64 validation with `CCSDSPACK_AARCH64_TEST:PASS`;
+- STM32 Cortex-M7 build, link, flash, startup, and deterministic runtime validation with `CCSDSPACK_MCU_TEST:PASS` reported twice.
+
+Hardware execution complements the protocol evidence. It does not expand the conformity claim beyond the supported Space Packet PDU profile.
+
 ## Evidence and detailed specification
 
-The detailed normative scope, packet rules, limitations, and evidence are documented in:
+The normative scope, packet rules, limitations, and evidence are documented in:
 
+- [CCSDS v1.2 compliance matrix](CCSDS_COMPLIANCE.md);
 - [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md);
 - [CCSDSPack v1.2 current behaviour](docs/V1_2_CURRENT_BEHAVIOUR.md);
+- [v1.2 hardware validation](docs/V1_2_HARDWARE_VALIDATION.md);
 - [configuration reference](docs/CONFIG.md);
 - [examples](docs/EXAMPLES.md);
 - independent vectors and regression tests under `test/`;
 - Linux and Windows CI, installed-package consumer tests, and CLI integration tests.
 
-This concise statement is the release-facing claim boundary. The detailed profile remains the authoritative technical description for v1.2 packet behaviour.
+This concise statement is the release-facing claim boundary. The clause-level matrix is the authoritative compliance traceability document for v1.2.0.
