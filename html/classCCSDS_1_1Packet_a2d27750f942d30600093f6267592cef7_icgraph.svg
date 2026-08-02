@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Sets the sequence count for the packet.">
+<g id="a_Node000001"><a xlink:title="Sets the 14&#45;bit Packet Sequence Count used by the CCSDSPack profile.">
 <polygon fill="#999999" stroke="#666666" points="465,-30 310,-30 310,0 465,0 465,-30"/>
 <text text-anchor="start" x="318" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::setSequence</text>
 <text text-anchor="middle" x="387.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Count</text>
@@ -31,7 +31,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#abb8e2225df8018c04ad76c874cadee69" target="_top" xlink:title="Sets the application data for the packet.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#abb8e2225df8018c04ad76c874cadee69" target="_top" xlink:title="Generates one or more packets from application data.">
 <polygon fill="white" stroke="#666666" points="274,-24.5 77,-24.5 77,-5.5 274,-5.5 274,-24.5"/>
 <text text-anchor="middle" x="175.5" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::setApplicationData</text>
 </a>

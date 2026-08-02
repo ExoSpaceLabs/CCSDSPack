@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Returns a reference to the packets vector.">
+<g id="a_Node000001"><a xlink:title="Returns mutable access to the internal packet collection.">
 <polygon fill="#999999" stroke="#666666" points="346,-30 189,-30 189,0 346,0 346,-30"/>
 <text text-anchor="start" x="197" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::getPackets</text>
 <text text-anchor="middle" x="267.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Reference</text>
@@ -31,7 +31,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#ad200055b4cb44dddba0ced16faee7d69" target="_top" xlink:title="Prints to console a series of CCSDS Packets contained in the manager.">
+<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#ad200055b4cb44dddba0ced16faee7d69" target="_top" xlink:title="Prints all packets currently stored in a Manager.">
 <polygon fill="white" stroke="#666666" points="153,-24.5 77,-24.5 77,-5.5 153,-5.5 153,-24.5"/>
 <text text-anchor="middle" x="115" y="-12.5" font-family="Helvetica,sans-Serif" font-size="10.00">printPackets</text>
 </a>

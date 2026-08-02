@@ -1,5 +1,5 @@
 <map id="Config::parseLine" name="Config::parseLine">
-<area shape="rect" id="Node000001" title="Parse a single line from config." alt="" coords="5,5,140,31"/>
-<area shape="rect" id="Node000002" href="$classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" title="Get value by key and type." alt="" coords="188,5,280,31"/>
+<area shape="rect" id="Node000001" title="Splits one configuration line into key, type, and raw value fields." alt="" coords="5,5,140,31"/>
+<area shape="rect" id="Node000002" href="$classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" title="Retrieves a value by exact key and requested type." alt="" coords="188,5,280,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,15,174,15,174,21,140,21"/>
 </map>

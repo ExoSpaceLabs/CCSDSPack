@@ -101,46 +101,46 @@ Macros</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a097094565596dc2e631f96f52a402cb4" id="r_a097094565596dc2e631f96f52a402cb4"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a097094565596dc2e631f96f52a402cb4">crc16</a> (const std::vector&lt; std::uint8_t &gt; &amp;data, const std::uint16_t polynomial, const std::uint16_t initialValue, const std::uint16_t finalXorValue)</td></tr>
-<tr class="memdesc:a097094565596dc2e631f96f52a402cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the CRC-16 checksum for a given data vector with configurable parameters.  <br /></td></tr>
+<tr class="memdesc:a097094565596dc2e631f96f52a402cb4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes an MSB-first 16-bit CRC over the supplied bytes.  <br /></td></tr>
 <tr class="separator:a097094565596dc2e631f96f52a402cb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b974227bd1064e006f517e8423a0545" id="r_a3b974227bd1064e006f517e8423a0545"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a3b974227bd1064e006f517e8423a0545">stringEndsWith</a> (const std::string &amp;str, const std::string &amp;suffix)</td></tr>
-<tr class="memdesc:a3b974227bd1064e006f517e8423a0545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests if str ends with suffix.  <br /></td></tr>
+<tr class="memdesc:a3b974227bd1064e006f517e8423a0545"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether a string ends with an exact suffix.  <br /></td></tr>
 <tr class="separator:a3b974227bd1064e006f517e8423a0545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b5f08449f95e60ce977dbe45b21c321" id="r_a5b5f08449f95e60ce977dbe45b21c321"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a> (const std::uint32_t value, const std::int32_t bits)</td></tr>
-<tr class="memdesc:a5b5f08449f95e60ce977dbe45b21c321"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts a given value to its binary representation as a string, with spaces every 4 bits.  <br /></td></tr>
+<tr class="memdesc:a5b5f08449f95e60ce977dbe45b21c321"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the low-order bits of an integer as a binary string.  <br /></td></tr>
 <tr class="separator:a5b5f08449f95e60ce977dbe45b21c321"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a747efd8ca2488636101433b9a3e8f1b1" id="r_a747efd8ca2488636101433b9a3e8f1b1"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a> (const std::int32_t num)</td></tr>
-<tr class="memdesc:a747efd8ca2488636101433b9a3e8f1b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a string of spaces for formatting binary outputs.  <br /></td></tr>
+<tr class="memdesc:a747efd8ca2488636101433b9a3e8f1b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns spacing used by the diagnostic bit-field formatter.  <br /></td></tr>
 <tr class="separator:a747efd8ca2488636101433b9a3e8f1b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa9bf20021d73232b0769aa261e5b6e5f" id="r_aa9bf20021d73232b0769aa261e5b6e5f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a> (const std::vector&lt; std::uint8_t &gt; &amp;buffer, const std::int32_t limitBytes)</td></tr>
-<tr class="memdesc:aa9bf20021d73232b0769aa261e5b6e5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console the HEX data from the bytes vector.  <br /></td></tr>
+<tr class="memdesc:aa9bf20021d73232b0769aa261e5b6e5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints bytes in hexadecimal form to standard output.  <br /></td></tr>
 <tr class="separator:aa9bf20021d73232b0769aa261e5b6e5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6e927daa91ea42db4bb94bfc51425b96" id="r_a6e927daa91ea42db4bb94bfc51425b96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a> (<a class="el" href="classCCSDS_1_1DataField.html">CCSDS::DataField</a> dataField)</td></tr>
-<tr class="memdesc:a6e927daa91ea42db4bb94bfc51425b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the data field details, including the secondary header and application data.  <br /></td></tr>
+<tr class="memdesc:a6e927daa91ea42db4bb94bfc51425b96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a DataField summary.  <br /></td></tr>
 <tr class="separator:a6e927daa91ea42db4bb94bfc51425b96"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a993788a78365e86ff065ba8bedff543a" id="r_a993788a78365e86ff065ba8bedff543a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a> (<a class="el" href="classCCSDS_1_1Header.html">CCSDS::Header</a> &amp;header)</td></tr>
-<tr class="memdesc:a993788a78365e86ff065ba8bedff543a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the header fields and their binary or hexadecimal representations.  <br /></td></tr>
+<tr class="memdesc:a993788a78365e86ff065ba8bedff543a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a primary-header summary.  <br /></td></tr>
 <tr class="separator:a993788a78365e86ff065ba8bedff543a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c45ef84a35555519e34164e000dada5" id="r_a3c45ef84a35555519e34164e000dada5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a> (<a class="el" href="classCCSDS_1_1Packet.html">CCSDS::Packet</a> &amp;packet)</td></tr>
-<tr class="memdesc:a3c45ef84a35555519e34164e000dada5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console the primary header of a provided <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> packet.  <br /></td></tr>
+<tr class="memdesc:a3c45ef84a35555519e34164e000dada5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the primary header owned by a packet.  <br /></td></tr>
 <tr class="separator:a3c45ef84a35555519e34164e000dada5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aed99c8e7576ac25c49f6b913b46d1b76" id="r_aed99c8e7576ac25c49f6b913b46d1b76"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a> (<a class="el" href="classCCSDS_1_1Packet.html">CCSDS::Packet</a> &amp;packet)</td></tr>
-<tr class="memdesc:aed99c8e7576ac25c49f6b913b46d1b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the data field and the CRC-16 checksum of the packet.  <br /></td></tr>
+<tr class="memdesc:aed99c8e7576ac25c49f6b913b46d1b76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the secondary-header and application-data portions of a packet.  <br /></td></tr>
 <tr class="separator:aed99c8e7576ac25c49f6b913b46d1b76"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e40e3867139b28c1b2fa0465c3afd7e" id="r_a2e40e3867139b28c1b2fa0465c3afd7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a> (<a class="el" href="classCCSDS_1_1Packet.html">CCSDS::Packet</a> &amp;packet)</td></tr>
-<tr class="memdesc:a2e40e3867139b28c1b2fa0465c3afd7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console a <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> Packets, breaking it down to Primary header and Data field.  <br /></td></tr>
+<tr class="memdesc:a2e40e3867139b28c1b2fa0465c3afd7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a human-readable summary of one packet to standard output.  <br /></td></tr>
 <tr class="separator:a2e40e3867139b28c1b2fa0465c3afd7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad200055b4cb44dddba0ced16faee7d69" id="r_ad200055b4cb44dddba0ced16faee7d69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#ad200055b4cb44dddba0ced16faee7d69">printPackets</a> (<a class="el" href="classCCSDS_1_1Manager.html">CCSDS::Manager</a> &amp;manager)</td></tr>
-<tr class="memdesc:ad200055b4cb44dddba0ced16faee7d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints to console a series of <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> Packets contained in the manager.  <br /></td></tr>
+<tr class="memdesc:ad200055b4cb44dddba0ced16faee7d69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints all packets currently stored in a Manager.  <br /></td></tr>
 <tr class="separator:ad200055b4cb44dddba0ced16faee7d69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aacff77e4c89f07aa9969373450552caa" id="r_aacff77e4c89f07aa9969373450552caa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#aacff77e4c89f07aa9969373450552caa">writeBinaryFile</a> (const std::vector&lt; std::uint8_t &gt; &amp;data, const std::string &amp;filename)</td></tr>
-<tr class="memdesc:aacff77e4c89f07aa9969373450552caa"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function takes in a buffer of data and a file name.  <br /></td></tr>
+<tr class="memdesc:aacff77e4c89f07aa9969373450552caa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes bytes to a binary file, replacing any existing content.  <br /></td></tr>
 <tr class="separator:aacff77e4c89f07aa9969373450552caa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7c53ed59dcb970211aa0217eb095cc4d" id="r_a7c53ed59dcb970211aa0217eb095cc4d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a> (const std::string &amp;filename)</td></tr>
-<tr class="memdesc:a7c53ed59dcb970211aa0217eb095cc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a specified binary file and return its contents as a buffer.  <br /></td></tr>
+<tr class="memdesc:a7c53ed59dcb970211aa0217eb095cc4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads an entire binary file into memory.  <br /></td></tr>
 <tr class="separator:a7c53ed59dcb970211aa0217eb095cc4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a132eda413acdf67b79532c3b7f340e5c" id="r_a132eda413acdf67b79532c3b7f340e5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSUtils_8cpp.html#a132eda413acdf67b79532c3b7f340e5c">fileExists</a> (const std::string &amp;fileName)</td></tr>
-<tr class="memdesc:a132eda413acdf67b79532c3b7f340e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">filesystem check fore file existence prepared for both windows and linux.  <br /></td></tr>
+<tr class="memdesc:a132eda413acdf67b79532c3b7f340e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether a file can be opened for reading.  <br /></td></tr>
 <tr class="separator:a132eda413acdf67b79532c3b7f340e5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
@@ -199,17 +199,18 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Computes the CRC-16 checksum for a given data vector with configurable parameters. </p>
+<p>Computes an MSB-first 16-bit CRC over the supplied bytes. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>A vector of bytes to compute the checksum for. </td></tr>
-    <tr><td class="paramname">polynomial</td><td>The polynomial used for the CRC calculation (default: <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> CRC-16 polynomial 0x1021). </td></tr>
-    <tr><td class="paramname">initialValue</td><td>The initial value of the CRC register (default: 0xFFFF). </td></tr>
-    <tr><td class="paramname">finalXorValue</td><td>The final XOR value applied to the CRC result (default: 0x0000). </td></tr>
+    <tr><td class="paramname">data</td><td>Bytes processed in order. </td></tr>
+    <tr><td class="paramname">polynomial</td><td>Generator polynomial; defaults to 0x1021. </td></tr>
+    <tr><td class="paramname">initialValue</td><td>Initial register value; defaults to 0xFFFF. </td></tr>
+    <tr><td class="paramname">finalXorValue</td><td>Value XORed with the final register; defaults to zero. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The computed 16-bit CRC value. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Calculated 16-bit CRC.</dd></dl>
+<p>The default parameters implement CRC-16/CCITT-FALSE. Packet uses this function over finalized primary-header and packet-data-field bytes, excluding the CRC itself. </p>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00020">20</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   22</span>                                   {</div>
@@ -233,7 +234,7 @@ Functions</h2></td></tr>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_a097094565596dc2e631f96f52a402cb4_icgraph.svg" width="412" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_a097094565596dc2e631f96f52a402cb4_icgraph.svg" width="662" height="115"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -254,14 +255,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>filesystem check fore file existence prepared for both windows and linux. </p>
+<p>Tests whether a file can be opened for reading. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">fileName</td><td>std::string </td></tr>
+    <tr><td class="paramname">fileName</td><td>Path to test. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>bool </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True when the file exists and is accessible. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00240">240</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  240</span>                                           {</div>
@@ -271,7 +272,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  244</span>  }</div>
 <div class="line"><span class="lineno">  245</span>  <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><span class="lineno">  246</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a7c53ed59dcb970211aa0217eb095cc4d"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBuffer readBinaryFile(const std::string &amp;filename)</div><div class="ttdoc">Read a specified binary file and return its contents as a buffer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00222">CCSDSUtils.cpp:222</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a7c53ed59dcb970211aa0217eb095cc4d"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d">readBinaryFile</a></div><div class="ttdeci">CCSDS::ResultBuffer readBinaryFile(const std::string &amp;filename)</div><div class="ttdoc">Reads an entire binary file into memory.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00222">CCSDSUtils.cpp:222</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -311,15 +312,15 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Converts a given value to its binary representation as a string, with spaces every 4 bits. </p>
+<p>Formats the low-order bits of an integer as a binary string. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">value</td><td>The 32-bit integer value to convert. </td></tr>
-    <tr><td class="paramname">bits</td><td>The number of significant bits to include in the binary string. </td></tr>
+    <tr><td class="paramname">value</td><td>Value to format. </td></tr>
+    <tr><td class="paramname">bits</td><td>Number of low-order bits to include. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A string representing the binary value with spaces every 4 bits. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Binary string without a <code>0b</code> prefix. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00046">46</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   46</span>                                                                          {</div>
@@ -361,14 +362,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Generates a string of spaces for formatting binary outputs. </p>
+<p>Returns spacing used by the diagnostic bit-field formatter. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">num</td><td>The number of spaces required. </td></tr>
+    <tr><td class="paramname">num</td><td>Number of spaces. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A string of spaces of length <code>num</code>. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>String containing num spaces, or an empty string for non-positive input. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00062">62</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   62</span>                                              {</div>
@@ -414,11 +415,11 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Prints to console the HEX data from the bytes vector. </p>
+<p>Prints bytes in hexadecimal form to standard output. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">buffer</td><td></td></tr>
-    <tr><td class="paramname">limitBytes</td><td></td></tr>
+    <tr><td class="paramname">buffer</td><td>Bytes to print. </td></tr>
+    <tr><td class="paramname">limitBytes</td><td>Maximum bytes displayed; defaults to 20. </td></tr>
   </table>
   </dd>
 </dl>
@@ -465,9 +466,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Prints the data field details, including the secondary header and application data. </p>
-<p>Outputs information about the presence of a secondary header and the content of both the secondary header and the application data in hexadecimal format.</p>
-<dl class="section return"><dt>Returns</dt><dd>none. </dd></dl>
+<p>Prints a DataField summary. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dataField</td><td>DataField copied for diagnostic output. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00090">90</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   90</span>                                         {</div>
@@ -491,15 +496,15 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  108</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a>(applicationData);</div>
 <div class="line"><span class="lineno">  109</span>  std::cout &lt;&lt; std::endl;</div>
 <div class="line"><span class="lineno">  110</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a747efd8ca2488636101433b9a3e8f1b1"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a></div><div class="ttdeci">std::string getBitsSpaces(const std::int32_t num)</div><div class="ttdoc">Generates a string of spaces for formatting binary outputs.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00062">CCSDSUtils.cpp:62</a></div></div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_aa9bf20021d73232b0769aa261e5b6e5f"><div class="ttname"><a href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a></div><div class="ttdeci">void printBufferData(const std::vector&lt; std::uint8_t &gt; &amp;buffer, const std::int32_t limitBytes)</div><div class="ttdoc">Prints to console the HEX data from the bytes vector.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00072">CCSDSUtils.cpp:72</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_a78c2894fc2650e0dc9ec892d58dfde7a"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">CCSDS::DataField::getDataFieldHeaderFlag</a></div><div class="ttdeci">bool getDataFieldHeaderFlag() const</div><div class="ttdoc">retrieves true if a known secondary header has been set</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00276">CCSDSDataField.h:276</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_ac414a4c6ffe4d3cce1c225833e550a1f"><div class="ttname"><a href="classCCSDS_1_1DataField.html#ac414a4c6ffe4d3cce1c225833e550a1f">CCSDS::DataField::getDataFieldHeaderBytes</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; getDataFieldHeaderBytes()</div><div class="ttdoc">Retrieves the secondary header data as a vector of bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00176">CCSDSDataField.cpp:176</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_af446e62e6a263dbd5ef993101fa0b3c4"><div class="ttname"><a href="classCCSDS_1_1DataField.html#af446e62e6a263dbd5ef993101fa0b3c4">CCSDS::DataField::getApplicationData</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; getApplicationData()</div><div class="ttdoc">Retrieves the application data from the data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00020">CCSDSDataField.cpp:20</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a747efd8ca2488636101433b9a3e8f1b1"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a747efd8ca2488636101433b9a3e8f1b1">getBitsSpaces</a></div><div class="ttdeci">std::string getBitsSpaces(const std::int32_t num)</div><div class="ttdoc">Returns spacing used by the diagnostic bit-field formatter.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00062">CCSDSUtils.cpp:62</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_aa9bf20021d73232b0769aa261e5b6e5f"><div class="ttname"><a href="CCSDSUtils_8cpp.html#aa9bf20021d73232b0769aa261e5b6e5f">printBufferData</a></div><div class="ttdeci">void printBufferData(const std::vector&lt; std::uint8_t &gt; &amp;buffer, const std::int32_t limitBytes)</div><div class="ttdoc">Prints bytes in hexadecimal form to standard output.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00072">CCSDSUtils.cpp:72</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a78c2894fc2650e0dc9ec892d58dfde7a"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a78c2894fc2650e0dc9ec892d58dfde7a">CCSDS::DataField::getDataFieldHeaderFlag</a></div><div class="ttdeci">bool getDataFieldHeaderFlag() const</div><div class="ttdoc">Returns true when a secondary-header object is installed.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00202">CCSDSDataField.h:202</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_ac414a4c6ffe4d3cce1c225833e550a1f"><div class="ttname"><a href="classCCSDS_1_1DataField.html#ac414a4c6ffe4d3cce1c225833e550a1f">CCSDS::DataField::getDataFieldHeaderBytes</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; getDataFieldHeaderBytes()</div><div class="ttdoc">Returns currently stored secondary-header bytes without finalizing.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00188">CCSDSDataField.cpp:188</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_af446e62e6a263dbd5ef993101fa0b3c4"><div class="ttname"><a href="classCCSDS_1_1DataField.html#af446e62e6a263dbd5ef993101fa0b3c4">CCSDS::DataField::getApplicationData</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; getApplicationData()</div><div class="ttdoc">Returns a copy of application data without finalizing.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00018">CCSDSDataField.cpp:18</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_a6e927daa91ea42db4bb94bfc51425b96_cgraph.svg" width="411" height="264"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_a6e927daa91ea42db4bb94bfc51425b96_cgraph.svg" width="411" height="312"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -525,26 +530,30 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Prints the data field and the CRC-16 checksum of the packet. </p>
-<p>Outputs the content of the data field and the CRC-16 checksum in hexadecimal format to the standard output.</p>
-<dl class="section return"><dt>Returns</dt><dd>none. </dd></dl>
+<p>Prints the secondary-header and application-data portions of a packet. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">packet</td><td>Packet to inspect. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00173">173</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  173</span>                                         {</div>
 <div class="line"><span class="lineno">  174</span>  <span class="keyword">auto</span> dataField = packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#ae788c8d3ae1fcec2c18787c9491cdca3">getDataField</a>();</div>
 <div class="line"><span class="lineno">  175</span> </div>
 <div class="line"><span class="lineno">  176</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a>(dataField);</div>
-<div class="line"><span class="lineno">  177</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDSPack ] CRC-16                   [Hex] : [ &quot;</span> &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span> &lt;&lt; std::hex &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">getCRC</a>() &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
-<div class="line"><span class="lineno">  178</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">getCRC</a>() &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  177</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDSPack ] CRC-16                   [Hex] : [ &quot;</span> &lt;&lt; <span class="stringliteral">&quot;0x&quot;</span> &lt;&lt; std::hex &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#ab1d037ab5a0111a8aee8edea5d8e7c22">getCRC</a>() &lt;&lt; <span class="stringliteral">&quot; ]&quot;</span>;</div>
+<div class="line"><span class="lineno">  178</span>  std::cout &lt;&lt; <span class="stringliteral">&quot; - [Dec] : &quot;</span>&lt;&lt; std::dec &lt;&lt; packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#ab1d037ab5a0111a8aee8edea5d8e7c22">getCRC</a>() &lt;&lt; std::endl;</div>
 <div class="line"><span class="lineno">  179</span> </div>
 <div class="line"><span class="lineno">  180</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a6e927daa91ea42db4bb94bfc51425b96"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a></div><div class="ttdeci">void printData(CCSDS::DataField dataField)</div><div class="ttdoc">Prints the data field details, including the secondary header and application data.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00090">CCSDSUtils.cpp:90</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Packet_html_a6b0791e2a62a2db48b12a5ee6b762a7b"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a6b0791e2a62a2db48b12a5ee6b762a7b">CCSDS::Packet::getCRC</a></div><div class="ttdeci">std::uint16_t getCRC()</div><div class="ttdoc">Computes and retrieves the CRC-16 checksum of the packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00104">CCSDSPacket.cpp:104</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Packet_html_ae788c8d3ae1fcec2c18787c9491cdca3"><div class="ttname"><a href="classCCSDS_1_1Packet.html#ae788c8d3ae1fcec2c18787c9491cdca3">CCSDS::Packet::getDataField</a></div><div class="ttdeci">DataField &amp; getDataField()</div><div class="ttdoc">returns the CCSDS packet's DataField.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00126">CCSDSPacket.cpp:126</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a6e927daa91ea42db4bb94bfc51425b96"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a6e927daa91ea42db4bb94bfc51425b96">printData</a></div><div class="ttdeci">void printData(CCSDS::DataField dataField)</div><div class="ttdoc">Prints a DataField summary.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00090">CCSDSUtils.cpp:90</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_ab1d037ab5a0111a8aee8edea5d8e7c22"><div class="ttname"><a href="classCCSDS_1_1Packet.html#ab1d037ab5a0111a8aee8edea5d8e7c22">CCSDS::Packet::getCRC</a></div><div class="ttdeci">std::uint16_t getCRC()</div><div class="ttdoc">Returns the stored CRC trailer value, or zero when disabled or the header is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00245">CCSDSPacket.cpp:245</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_ae788c8d3ae1fcec2c18787c9491cdca3"><div class="ttname"><a href="classCCSDS_1_1Packet.html#ae788c8d3ae1fcec2c18787c9491cdca3">CCSDS::Packet::getDataField</a></div><div class="ttdeci">DataField &amp; getDataField()</div><div class="ttdoc">Returns mutable access to the owned DataField.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00278">CCSDSPacket.cpp:278</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_aed99c8e7576ac25c49f6b913b46d1b76_cgraph.svg" width="100%" height="498"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_aed99c8e7576ac25c49f6b913b46d1b76_cgraph.svg" width="100%" height="534"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -570,9 +579,13 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Prints the header fields and their binary or hexadecimal representations. </p>
-<p>Outputs all relevant header fields, including the full primary header, version number, type, data field header flag, APID, sequence flags, sequence count, and data length. Each field is displayed with appropriate formatting and spacing.</p>
-<dl class="section return"><dt>Returns</dt><dd>none. </dd></dl>
+<p>Prints a primary-header summary. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">header</td><td>Header to inspect. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00112">112</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  112</span>                                      {</div>
@@ -627,19 +640,19 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  161</span> </div>
 <div class="line"><span class="lineno">  162</span>  std::cout &lt;&lt; std::endl;</div>
 <div class="line"><span class="lineno">  163</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a5b5f08449f95e60ce977dbe45b21c321"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a></div><div class="ttdeci">std::string getBinaryString(const std::uint32_t value, const std::int32_t bits)</div><div class="ttdoc">Converts a given value to its binary representation as a string, with spaces every 4 bits.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00046">CCSDSUtils.cpp:46</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a5cc2c58961e2088dee19d65effccfba5"><div class="ttname"><a href="classCCSDS_1_1Header.html#a5cc2c58961e2088dee19d65effccfba5">CCSDS::Header::getAPID</a></div><div class="ttdeci">std::uint16_t getAPID() const</div><div class="ttdoc">11 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00090">CCSDSHeader.h:90</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a7a3302acb3fccf699f6917feeed9a1b1"><div class="ttname"><a href="classCCSDS_1_1Header.html#a7a3302acb3fccf699f6917feeed9a1b1">CCSDS::Header::getFullHeader</a></div><div class="ttdeci">std::uint64_t getFullHeader()</div><div class="ttdoc">Computes and retrieves the full header as a 64-bit value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00111">CCSDSHeader.h:111</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a86aa79246f47cd0e724b1a5427a87895"><div class="ttname"><a href="classCCSDS_1_1Header.html#a86aa79246f47cd0e724b1a5427a87895">CCSDS::Header::getType</a></div><div class="ttdeci">std::uint8_t getType() const</div><div class="ttdoc">1 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00088">CCSDSHeader.h:88</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a8f92d94e9ebdac82669058c75188e770"><div class="ttname"><a href="classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770">CCSDS::Header::getSequenceFlags</a></div><div class="ttdeci">std::uint8_t getSequenceFlags() const</div><div class="ttdoc">2 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00091">CCSDSHeader.h:91</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a9cf2da06f3bdb16fd02bcade045a2e68"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68">CCSDS::Header::getSequenceCount</a></div><div class="ttdeci">std::uint16_t getSequenceCount() const</div><div class="ttdoc">14 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00092">CCSDSHeader.h:92</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_a9e4cb3397871c6d3ea4e18d26592750a"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9e4cb3397871c6d3ea4e18d26592750a">CCSDS::Header::getVersionNumber</a></div><div class="ttdeci">std::uint8_t getVersionNumber() const</div><div class="ttdoc">3 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00087">CCSDSHeader.h:87</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_acf533901cf3bf0e1d5bc3e4fe2ff876b"><div class="ttname"><a href="classCCSDS_1_1Header.html#acf533901cf3bf0e1d5bc3e4fe2ff876b">CCSDS::Header::getDataFieldHeaderFlag</a></div><div class="ttdeci">std::uint8_t getDataFieldHeaderFlag() const</div><div class="ttdoc">1 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00089">CCSDSHeader.h:89</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_af2033219620664beb7212c054874da73"><div class="ttname"><a href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73">CCSDS::Header::getDataLength</a></div><div class="ttdeci">std::uint16_t getDataLength() const</div><div class="ttdoc">16 bits</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00093">CCSDSHeader.h:93</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a5b5f08449f95e60ce977dbe45b21c321"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a5b5f08449f95e60ce977dbe45b21c321">getBinaryString</a></div><div class="ttdeci">std::string getBinaryString(const std::uint32_t value, const std::int32_t bits)</div><div class="ttdoc">Formats the low-order bits of an integer as a binary string.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00046">CCSDSUtils.cpp:46</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a5cc2c58961e2088dee19d65effccfba5"><div class="ttname"><a href="classCCSDS_1_1Header.html#a5cc2c58961e2088dee19d65effccfba5">CCSDS::Header::getAPID</a></div><div class="ttdeci">std::uint16_t getAPID() const</div><div class="ttdoc">Returns the stored 11-bit Application Process Identifier.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00121">CCSDSHeader.h:121</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a7a3302acb3fccf699f6917feeed9a1b1"><div class="ttname"><a href="classCCSDS_1_1Header.html#a7a3302acb3fccf699f6917feeed9a1b1">CCSDS::Header::getFullHeader</a></div><div class="ttdeci">std::uint64_t getFullHeader()</div><div class="ttdoc">Packs the six-byte header into the low 48 bits of a 64-bit integer.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00135">CCSDSHeader.cpp:135</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a86aa79246f47cd0e724b1a5427a87895"><div class="ttname"><a href="classCCSDS_1_1Header.html#a86aa79246f47cd0e724b1a5427a87895">CCSDS::Header::getType</a></div><div class="ttdeci">std::uint8_t getType() const</div><div class="ttdoc">Returns the stored 1-bit packet type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00117">CCSDSHeader.h:117</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a8f92d94e9ebdac82669058c75188e770"><div class="ttname"><a href="classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770">CCSDS::Header::getSequenceFlags</a></div><div class="ttdeci">std::uint8_t getSequenceFlags() const</div><div class="ttdoc">Returns the stored 2-bit sequence-flags value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00123">CCSDSHeader.h:123</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a9cf2da06f3bdb16fd02bcade045a2e68"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68">CCSDS::Header::getSequenceCount</a></div><div class="ttdeci">std::uint16_t getSequenceCount() const</div><div class="ttdoc">Returns the stored 14-bit sequence count.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00125">CCSDSHeader.h:125</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_a9e4cb3397871c6d3ea4e18d26592750a"><div class="ttname"><a href="classCCSDS_1_1Header.html#a9e4cb3397871c6d3ea4e18d26592750a">CCSDS::Header::getVersionNumber</a></div><div class="ttdeci">std::uint8_t getVersionNumber() const</div><div class="ttdoc">Returns the stored 3-bit protocol version.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00115">CCSDSHeader.h:115</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_acf533901cf3bf0e1d5bc3e4fe2ff876b"><div class="ttname"><a href="classCCSDS_1_1Header.html#acf533901cf3bf0e1d5bc3e4fe2ff876b">CCSDS::Header::getDataFieldHeaderFlag</a></div><div class="ttdeci">std::uint8_t getDataFieldHeaderFlag() const</div><div class="ttdoc">Returns the stored 1-bit secondary-header presence flag.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00119">CCSDSHeader.h:119</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_af2033219620664beb7212c054874da73"><div class="ttname"><a href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73">CCSDS::Header::getDataLength</a></div><div class="ttdeci">std::uint16_t getDataLength() const</div><div class="ttdoc">Returns the encoded Packet Data Length value N-1.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00127">CCSDSHeader.h:127</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_a993788a78365e86ff065ba8bedff543a_cgraph.svg" width="383" height="543"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="CCSDSUtils_8cpp_a993788a78365e86ff065ba8bedff543a_cgraph.svg" width="383" height="567"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
@@ -665,10 +678,10 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Prints to console a <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> Packets, breaking it down to Primary header and Data field. </p>
+<p>Prints a human-readable summary of one packet to standard output. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">packet</td><td></td></tr>
+    <tr><td class="paramname">packet</td><td>Packet to inspect; current stored state is printed. </td></tr>
   </table>
   </dd>
 </dl>
@@ -678,8 +691,8 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  183</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a>(packet);</div>
 <div class="line"><span class="lineno">  184</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a>(packet);</div>
 <div class="line"><span class="lineno">  185</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a3c45ef84a35555519e34164e000dada5"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a></div><div class="ttdeci">CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints to console the primary header of a provided CCSDS packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00166">CCSDSUtils.cpp:166</a></div></div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_aed99c8e7576ac25c49f6b913b46d1b76"><div class="ttname"><a href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a></div><div class="ttdeci">void printDataField(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints the data field and the CRC-16 checksum of the packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00173">CCSDSUtils.cpp:173</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a3c45ef84a35555519e34164e000dada5"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a3c45ef84a35555519e34164e000dada5">printPrimaryHeader</a></div><div class="ttdeci">CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints the primary header owned by a packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00166">CCSDSUtils.cpp:166</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_aed99c8e7576ac25c49f6b913b46d1b76"><div class="ttname"><a href="CCSDSUtils_8cpp.html#aed99c8e7576ac25c49f6b913b46d1b76">printDataField</a></div><div class="ttdeci">void printDataField(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints the secondary-header and application-data portions of a packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00173">CCSDSUtils.cpp:173</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -709,19 +722,19 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Prints to console a series of <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> Packets contained in the manager. </p>
+<p>Prints all packets currently stored in a Manager. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">manager</td><td></td></tr>
+    <tr><td class="paramname">manager</td><td>Manager to inspect. </td></tr>
   </table>
   </dd>
 </dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00187">187</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  187</span>                                         {</div>
-<div class="line"><span class="lineno">  188</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Number of Packets    : &quot;</span> &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">getTotalPackets</a>() &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  188</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Number of Packets    : &quot;</span> &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a14e2e42d9e4238fdf40550d66e54f3de">getTotalPackets</a>() &lt;&lt; std::endl;</div>
 <div class="line"><span class="lineno">  189</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Sync Pattern Enabled : &quot;</span> &lt;&lt; (manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#ab57dc694191ba220e81f7b7d833504e7">getSyncPatternEnable</a>() ? <span class="stringliteral">&quot;True&quot;</span> : <span class="stringliteral">&quot;False&quot;</span>) &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">  190</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Sync Pattern         : 0x&quot;</span> &lt;&lt; std::hex &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">getSyncPattern</a>() &lt;&lt; std::dec &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  190</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Sync Pattern         : 0x&quot;</span> &lt;&lt; std::hex &lt;&lt; manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a5642e6d094817969d05ed6ae23554423">getSyncPattern</a>() &lt;&lt; std::dec &lt;&lt; std::endl;</div>
 <div class="line"><span class="lineno">  191</span> </div>
 <div class="line"><span class="lineno">  192</span>  <span class="keyword">auto</span> templatePacket = manager.<a class="code hl_function" href="classCCSDS_1_1Manager.html#a6a35b16dd386f9519552d43a079263c2">getTemplate</a>();</div>
 <div class="line"><span class="lineno">  193</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[ CCSDS Manager ] Template             : &quot;</span> &lt;&lt; std::endl ;</div>
@@ -738,11 +751,11 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  204</span>    idx++;</div>
 <div class="line"><span class="lineno">  205</span>  }</div>
 <div class="line"><span class="lineno">  206</span>}</div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a2e40e3867139b28c1b2fa0465c3afd7e"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a></div><div class="ttdeci">void printPacket(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints to console a CCSDS Packets, breaking it down to Primary header and Data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00182">CCSDSUtils.cpp:182</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a540afafc78a4450dd6d2a2113d5a3640"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a540afafc78a4450dd6d2a2113d5a3640">CCSDS::Manager::getSyncPattern</a></div><div class="ttdeci">std::uint32_t getSyncPattern() const</div><div class="ttdoc">returns the currently set sync pattern.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00012">CCSDSManager.cpp:12</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a67eb2b2ef2b45dcd25cdd80fa4057bbf"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a67eb2b2ef2b45dcd25cdd80fa4057bbf">CCSDS::Manager::getTotalPackets</a></div><div class="ttdeci">std::uint16_t getTotalPackets() const</div><div class="ttdoc">Retrieves the total number of packets managed.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00167">CCSDSManager.cpp:167</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_a6a35b16dd386f9519552d43a079263c2"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a6a35b16dd386f9519552d43a079263c2">CCSDS::Manager::getTemplate</a></div><div class="ttdeci">Packet getTemplate()</div><div class="ttdoc">Retrieves the packet template.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00185">CCSDSManager.h:185</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Manager_html_ab57dc694191ba220e81f7b7d833504e7"><div class="ttname"><a href="classCCSDS_1_1Manager.html#ab57dc694191ba220e81f7b7d833504e7">CCSDS::Manager::getSyncPatternEnable</a></div><div class="ttdeci">bool getSyncPatternEnable() const</div><div class="ttdoc">returns the current settings of the sync pattern enable</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00016">CCSDSManager.cpp:16</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a2e40e3867139b28c1b2fa0465c3afd7e"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e">printPacket</a></div><div class="ttdeci">void printPacket(CCSDS::Packet &amp;packet)</div><div class="ttdoc">Prints a human-readable summary of one packet to standard output.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00182">CCSDSUtils.cpp:182</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_a14e2e42d9e4238fdf40550d66e54f3de"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a14e2e42d9e4238fdf40550d66e54f3de">CCSDS::Manager::getTotalPackets</a></div><div class="ttdeci">std::uint16_t getTotalPackets() const</div><div class="ttdoc">Returns the number of currently stored packets.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00267">CCSDSManager.cpp:267</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_a5642e6d094817969d05ed6ae23554423"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a5642e6d094817969d05ed6ae23554423">CCSDS::Manager::getSyncPattern</a></div><div class="ttdeci">std::uint32_t getSyncPattern() const</div><div class="ttdoc">Returns the currently configured synchronization marker.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00013">CCSDSManager.cpp:13</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_a6a35b16dd386f9519552d43a079263c2"><div class="ttname"><a href="classCCSDS_1_1Manager.html#a6a35b16dd386f9519552d43a079263c2">CCSDS::Manager::getTemplate</a></div><div class="ttdeci">Packet getTemplate()</div><div class="ttdoc">Returns a copy of the stored packet template.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00209">CCSDSManager.h:209</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Manager_html_ab57dc694191ba220e81f7b7d833504e7"><div class="ttname"><a href="classCCSDS_1_1Manager.html#ab57dc694191ba220e81f7b7d833504e7">CCSDS::Manager::getSyncPatternEnable</a></div><div class="ttdeci">bool getSyncPatternEnable() const</div><div class="ttdoc">Returns whether synchronization-marker handling is enabled.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00021">CCSDSManager.cpp:21</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -772,14 +785,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Prints to console the primary header of a provided <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> packet. </p>
+<p>Prints the primary header owned by a packet. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">packet</td><td></td></tr>
+    <tr><td class="paramname">packet</td><td>Packet to inspect. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>ResultBool </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or an error when the header cannot be represented. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00166">166</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  166</span>                                                        {</div>
@@ -788,10 +801,10 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  169</span>  <a class="code hl_function" href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a>(header);</div>
 <div class="line"><span class="lineno">  170</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">  171</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Macro to return a result as-is (for functions returning Result&lt;T&gt;).</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00210">CCSDSResult.h:210</a></div></div>
-<div class="ttc" id="aCCSDSUtils_8cpp_html_a993788a78365e86ff065ba8bedff543a"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a></div><div class="ttdeci">void printHeader(CCSDS::Header &amp;header)</div><div class="ttdoc">Prints the header fields and their binary or hexadecimal representations.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00112">CCSDSUtils.cpp:112</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html"><div class="ttname"><a href="classCCSDS_1_1Header.html">CCSDS::Header</a></div><div class="ttdoc">Manages the decomposition and manipulation of CCSDS primary headers.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00083">CCSDSHeader.h:83</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Header_html_ab9bf408f60a412980700518122b5e3de"><div class="ttname"><a href="classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de">CCSDS::Header::deserialize</a></div><div class="ttdeci">ResultBool deserialize(const std::vector&lt; std::uint8_t &gt; &amp;data)</div><div class="ttdoc">Sets the header data from a 64-bit integer representation.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00007">CCSDSHeader.cpp:7</a></div></div>
+<div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Returns a failed Result unchanged from the current Result-returning function.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00222">CCSDSResult.h:222</a></div></div>
+<div class="ttc" id="aCCSDSUtils_8cpp_html_a993788a78365e86ff065ba8bedff543a"><div class="ttname"><a href="CCSDSUtils_8cpp.html#a993788a78365e86ff065ba8bedff543a">printHeader</a></div><div class="ttdeci">void printHeader(CCSDS::Header &amp;header)</div><div class="ttdoc">Prints a primary-header summary.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00112">CCSDSUtils.cpp:112</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html"><div class="ttname"><a href="classCCSDS_1_1Header.html">CCSDS::Header</a></div><div class="ttdoc">Validated in-memory representation of a CCSDS Space Packet primary header.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00109">CCSDSHeader.h:109</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_ab9bf408f60a412980700518122b5e3de"><div class="ttname"><a href="classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de">CCSDS::Header::deserialize</a></div><div class="ttdeci">ResultBool deserialize(const std::vector&lt; std::uint8_t &gt; &amp;data)</div><div class="ttdoc">Atomically parses exactly six serialized primary-header bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00074">CCSDSHeader.cpp:74</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -821,14 +834,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Read a specified binary file and return its contents as a buffer. </p>
+<p>Reads an entire binary file into memory. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">filename</td><td></td></tr>
+    <tr><td class="paramname">filename</td><td>Input path. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Result vector of std::uint8 or Error </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>File bytes, or FILE_READ_ERROR. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00222">222</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  222</span>                                                            {</div>
@@ -848,8 +861,8 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  236</span>  <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(!in,<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37">CCSDS::ErrorCode::FILE_READ_ERROR</a>, <span class="stringliteral">&quot;Failed to read the entire file&quot;</span>);</div>
 <div class="line"><span class="lineno">  237</span>  <span class="keywordflow">return</span> data;</div>
 <div class="line"><span class="lineno">  238</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00152">CCSDSResult.h:152</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37">CCSDS::FILE_READ_ERROR</a></div><div class="ttdeci">@ FILE_READ_ERROR</div><div class="ttdoc">Reading from file failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00035">CCSDSResult.h:35</a></div></div>
+<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Returns CCSDS::Error when condition is true.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00156">CCSDSResult.h:156</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37">CCSDS::FILE_READ_ERROR</a></div><div class="ttdeci">@ FILE_READ_ERROR</div><div class="ttdoc">Input file could not be read.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00041">CCSDSResult.h:41</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -884,16 +897,15 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Tests if str ends with suffix. </p>
-<p>equivalent to endsWith(str) in c++20</p>
+<p>Tests whether a string ends with an exact suffix. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">str</td><td>string </td></tr>
-    <tr><td class="paramname">suffix</td><td>string </td></tr>
+    <tr><td class="paramname">str</td><td>Input string. </td></tr>
+    <tr><td class="paramname">suffix</td><td>Suffix to compare. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>boolean </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True when suffix occurs at the end of str. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00041">41</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   41</span>                                                                   {</div>
@@ -934,16 +946,15 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>This function takes in a buffer of data and a file name. </p>
-<p>and writes the data in binary form to the file.</p>
+<p>Writes bytes to a binary file, replacing any existing content. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">data</td><td>vector of std::uint8_t </td></tr>
-    <tr><td class="paramname">filename</td><td>string </td></tr>
+    <tr><td class="paramname">data</td><td>Bytes to write. </td></tr>
+    <tr><td class="paramname">filename</td><td>Output path. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Result boolean true if successful or error </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or FILE_WRITE_ERROR. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00208">208</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  208</span>                                                                                              {</div>
@@ -959,7 +970,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  218</span> </div>
 <div class="line"><span class="lineno">  219</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">  220</span>}</div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7">CCSDS::FILE_WRITE_ERROR</a></div><div class="ttdeci">@ FILE_WRITE_ERROR</div><div class="ttdoc">Writing to file failure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00036">CCSDSResult.h:36</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7">CCSDS::FILE_WRITE_ERROR</a></div><div class="ttdeci">@ FILE_WRITE_ERROR</div><div class="ttdoc">Output file could not be written.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00042">CCSDSResult.h:42</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">

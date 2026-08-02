@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Defines the extension interface and raw&#45;buffer implementation for packet secondary headers.">
 <polygon fill="#999999" stroke="#666666" points="218,-195 65,-195 65,-165 218,-165 218,-195"/>
 <text text-anchor="start" x="73" y="-183" font-family="Helvetica,sans-Serif" font-size="10.00">inc/CCSDSSecondaryHeader</text>
 <text text-anchor="middle" x="141.5" y="-172" font-family="Helvetica,sans-Serif" font-size="10.00">Abstract.h</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSResult_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="CCSDSResult_8h.html" target="_top" xlink:title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack.">
 <polygon fill="white" stroke="#666666" points="141,-74 52,-74 52,-55 141,-55 141,-74"/>
 <text text-anchor="middle" x="96.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDSResult.h</text>
 </a>
@@ -75,7 +75,7 @@
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
-<g id="a_Node000007"><a xlink:href="CCSDSConfig_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000007"><a xlink:href="CCSDSConfig_8h.html" target="_top" xlink:title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files.">
 <polygon fill="white" stroke="#666666" points="241,-129 152,-129 152,-110 241,-110 241,-129"/>
 <text text-anchor="middle" x="196.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDSConfig.h</text>
 </a>

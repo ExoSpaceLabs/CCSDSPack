@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Represents a fixed secondary header used as a data buffer.">
+<g id="a_Node000001"><a xlink:title="Opaque secondary header that stores bytes without interpreting them.">
 <polygon fill="#999999" stroke="#666666" points="151,-19 31,-19 31,0 151,0 151,-19"/>
 <text text-anchor="middle" x="91" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::BufferHeader</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1SecondaryHeaderAbstract.html" target="_top" xlink:title="Abstract base class for a (Packet Utilization Standard) header.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1SecondaryHeaderAbstract.html" target="_top" xlink:title="Interface implemented by optional packet data&#45;field secondary headers.">
 <polygon fill="white" stroke="#666666" points="182,-74 0,-74 0,-55 182,-55 182,-74"/>
 <text text-anchor="middle" x="91" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::SecondaryHeaderAbstract</text>
 </a>

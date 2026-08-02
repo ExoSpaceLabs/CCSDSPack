@@ -1,0 +1,30 @@
+<map id="CCSDS::Manager::setPacketTemplate" name="CCSDS::Manager::setPacketTemplate">
+<area shape="rect" id="Node000001" title="Finalizes and installs a packet template, binding the Manager identifier." alt="" coords="5,88,207,128"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#aa2664f6d778ae334021288535a2ed49b" title="Returns NORMAL, IDLE, or INVALID for the current header state." alt="" coords="512,5,709,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,85,254,73,498,36,499,42,255,79,195,91"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#ad667850d2d8b9447a043baeaa686cc9a" title="Returns mutable access to the owned primary Header." alt="" coords="255,88,451,128"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,105,241,105,241,111,207,111"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Finalizes dependent packet state without returning serialized bytes." alt="" coords="268,178,437,203"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="167,125,302,171,300,176,166,131"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="388,176,419,160,449,138,464,117,471,97,479,76,497,55,505,50,508,54,500,59,484,79,476,98,469,120,453,142,422,164,390,180"/>
+<area shape="rect" id="Node000005" href="$CCSDSUtils_8cpp.html#a097094565596dc2e631f96f52a402cb4" title="Computes an MSB&#45;first 16&#45;bit CRC over the supplied bytes." alt="" coords="582,70,639,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="377,176,449,138,498,112,568,90,570,95,500,117,452,142,379,180"/>
+<area shape="rect" id="Node000006" href="$classCCSDS_1_1Packet.html#a1864e47a2388bf4d05c0840223ffc50c" title="Returns the configured mission&#45;profile CRC trailer mode." alt="" coords="775,120,962,160"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="401,175,498,156,635,143,762,138,762,143,636,148,499,161,402,181"/>
+<area shape="rect" id="Node000007" href="$classCCSDS_1_1Packet.html#abadc44c1c0fa6ad89434176a31e0722c" title="Returns the reserved trailer size: two bytes for CRC16, otherwise zero." alt="" coords="517,171,704,211"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="438,188,504,188,504,193,438,193"/>
+<area shape="rect" id="Node000008" href="$classCCSDS_1_1DataField.html#a3fb3afd39a91c9dd20cd96348f77319b" title="Finalizes the secondary header and serializes the complete data&#45;field content." alt="" coords="511,235,710,261"/>
+<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="411,201,540,230,539,235,410,206"/>
+<area shape="rect" id="Node000011" href="$classCCSDS_1_1Packet.html#a9b726b5e2592c8dab6005e8a1a24d821" title="Finalizes and serializes the packet under the v1.2 PDU profile." alt="" coords="521,285,700,310"/>
+<area shape="poly" id="edge13_Node000004_Node000011" title=" " alt="" coords="374,201,429,236,500,271,523,278,521,284,498,276,426,241,371,206"/>
+<area shape="rect" id="Node000012" href="$classCCSDS_1_1Header.html#a13f68943d42c8409a84b7c36f0883633" title="Sets the encoded 16&#45;bit Packet Data Length field." alt="" coords="499,334,723,359"/>
+<area shape="poly" id="edge14_Node000004_Node000012" title=" " alt="" coords="366,202,419,260,457,293,500,320,515,327,513,332,497,325,454,297,415,264,362,205"/>
+<area shape="rect" id="Node000013" href="$classCCSDS_1_1Header.html#aea46665525728a25125b64df0e95479c" title="Sets the 14&#45;bit packet sequence count." alt="" coords="505,384,717,424"/>
+<area shape="poly" id="edge15_Node000004_Node000013" title=" " alt="" coords="363,202,382,236,412,281,452,329,500,370,510,376,507,380,497,374,449,333,408,284,378,239,358,205"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="704,170,762,158,763,163,705,175"/>
+<area shape="rect" id="Node000009" href="$classCCSDS_1_1DataField.html#ac414a4c6ffe4d3cce1c225833e550a1f" title="Returns currently stored secondary&#45;header bytes without finalizing." alt="" coords="771,221,967,261"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="710,243,757,242,757,247,710,248"/>
+<area shape="rect" id="Node000010" href="$classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4" title="Refreshes the installed secondary header once when it is dirty and updates are enabled." alt="" coords="774,286,963,311"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="677,258,790,281,789,286,676,263"/>
+<area shape="poly" id="edge11_Node000009_Node000009" title=" " alt="" coords="821,222,818,212,826,202,843,197,869,195,898,198,915,205,912,210,897,203,869,200,844,202,829,207,823,213,826,220"/>
+</map>

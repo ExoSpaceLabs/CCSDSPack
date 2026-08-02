@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Represents a PUS Type C (Time Code) header.">
+<g id="a_Node000001"><a xlink:title="Legacy variable&#45;length time&#45;code secondary header.">
 <polygon fill="#999999" stroke="#666666" points="111.5,-19 70.5,-19 70.5,0 111.5,0 111.5,-19"/>
 <text text-anchor="middle" x="91" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">PusC</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1SecondaryHeaderAbstract.html" target="_top" xlink:title="Abstract base class for a (Packet Utilization Standard) header.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1SecondaryHeaderAbstract.html" target="_top" xlink:title="Interface implemented by optional packet data&#45;field secondary headers.">
 <polygon fill="white" stroke="#666666" points="182,-74 0,-74 0,-55 182,-55 182,-74"/>
 <text text-anchor="middle" x="91" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::SecondaryHeaderAbstract</text>
 </a>

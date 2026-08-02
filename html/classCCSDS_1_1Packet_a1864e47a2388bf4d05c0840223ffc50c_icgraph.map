@@ -1,0 +1,20 @@
+<map id="CCSDS::Packet::getPacketErrorControlMode" name="CCSDS::Packet::getPacketErrorControlMode">
+<area shape="rect" id="Node000001" title="Returns the configured mission&#45;profile CRC trailer mode." alt="" coords="876,45,1063,85"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#abadc44c1c0fa6ad89434176a31e0722c" title="Returns the reserved trailer size: two bytes for CRC16, otherwise zero." alt="" coords="641,73,828,113"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="863,80,829,84,828,79,862,75"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Finalizes dependent packet state without returning serialized bytes." alt="" coords="391,128,560,153"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="920,93,876,112,829,127,759,139,687,146,560,148,560,143,687,141,758,134,827,122,875,107,918,88"/>
+<area shape="rect" id="Node000007" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,49,60,75"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="866,45,828,38,696,19,593,10,490,9,358,17,188,37,61,59,60,54,187,32,357,11,490,4,593,5,697,14,828,33,867,39"/>
+<area shape="rect" id="Node000008" href="$classCCSDS_1_1Validator.html#af6e8699c7d3d0719934106ca2d58fb95" title="Validates one packet and advances sequence state after coherent input." alt="" coords="379,27,572,52"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="862,62,572,47,572,42,862,57"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#aacf9cbe1c8056a7f73a392e435c3ba3a" title="Returns the exact current serialized size without finalizing the packet." alt="" coords="357,79,593,104"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="628,95,594,95,594,89,628,89"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="628,115,545,131,544,125,627,110"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="627,73,537,55,538,49,628,68"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs and binds a Manager to a packet template." alt="" coords="111,71,307,96"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="402,128,268,99,269,93,403,122"/>
+<area shape="rect" id="Node000006" href="$classCCSDS_1_1Manager.html#a12705ae8e0c680ec128a3d0d55b738b6" title="Finalizes and installs a packet template, binding the Manager identifier." alt="" coords="108,121,309,161"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="377,143,310,143,310,138,377,138"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="127,118,107,110,51,77,54,72,109,105,129,114"/>
+</map>

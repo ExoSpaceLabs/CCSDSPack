@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Read a specified binary file and return its contents as a buffer.">
+<g id="a_Node000001"><a xlink:title="Reads an entire binary file into memory.">
 <polygon fill="#999999" stroke="#666666" points="371,-75 284,-75 284,-56 371,-56 371,-75"/>
 <text text-anchor="middle" x="327.5" y="-63" font-family="Helvetica,sans-Serif" font-size="10.00">readBinaryFile</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#a132eda413acdf67b79532c3b7f340e5c" target="_top" xlink:title="filesystem check fore file existence prepared for both windows and linux.">
+<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#a132eda413acdf67b79532c3b7f340e5c" target="_top" xlink:title="Tests whether a file can be opened for reading.">
 <polygon fill="white" stroke="#666666" points="193,-132 132,-132 132,-113 193,-113 193,-132"/>
 <text text-anchor="middle" x="162.5" y="-120" font-family="Helvetica,sans-Serif" font-size="10.00">fileExists</text>
 </a>
@@ -66,7 +66,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classCCSDS_1_1Manager.html#a8be98b4fb7b61439308dfadfea9496f9" target="_top" xlink:title="Load a packet or a series of packets from a binary file.">
+<g id="a_Node000004"><a xlink:href="classCCSDS_1_1Manager.html#a8be98b4fb7b61439308dfadfea9496f9" target="_top" xlink:title="Reads a binary file and transactionally loads its packet stream.">
 <polygon fill="white" stroke="#666666" points="225.5,-56 99.5,-56 99.5,-37 225.5,-37 225.5,-56"/>
 <text text-anchor="middle" x="162.5" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::read</text>
 </a>
@@ -84,7 +84,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Load a template packet from a binary or configuration file.">
+<g id="a_Node000005"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Loads and installs a template from a .bin or .cfg file.">
 <polygon fill="white" stroke="#666666" points="248,-19 77,-19 77,0 248,0 248,-19"/>
 <text text-anchor="middle" x="162.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::readTemplate</text>
 </a>

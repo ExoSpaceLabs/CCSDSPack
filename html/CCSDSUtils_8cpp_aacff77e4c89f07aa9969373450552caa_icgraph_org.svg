@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="This function takes in a buffer of data and a file name.">
+<g id="a_Node000001"><a xlink:title="Writes bytes to a binary file, replacing any existing content.">
 <polygon fill="#999999" stroke="#666666" points="255,-37 165,-37 165,-18 255,-18 255,-37"/>
 <text text-anchor="middle" x="210" y="-25" font-family="Helvetica,sans-Serif" font-size="10.00">writeBinaryFile</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#ad80b2eb281ec093e68bcf349c75183c5" target="_top" xlink:title="Write a packet or a series of packets to a binary file.">
+<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#ad80b2eb281ec093e68bcf349c75183c5" target="_top" xlink:title="Serializes stored packets and writes them to a binary file.">
 <polygon fill="white" stroke="#666666" points="129,-19 0,-19 0,0 129,0 129,-19"/>
 <text text-anchor="middle" x="64.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::write</text>
 </a>

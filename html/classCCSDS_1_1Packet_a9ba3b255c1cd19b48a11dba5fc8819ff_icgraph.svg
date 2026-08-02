@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Loads a packet from a configuration file, including secondary header if present.">
+<g id="a_Node000001"><a xlink:title="Loads packet construction settings from a configuration file.">
 <polygon fill="#999999" stroke="#666666" points="394,-40 207,-40 207,-21 394,-21 394,-40"/>
 <text text-anchor="middle" x="300.5" y="-28" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::loadFromConfigFile</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#a063eeb88f124db9af02bd033e95733b1" target="_top" xlink:title="Loads a template packet from a configuration file.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#a063eeb88f124db9af02bd033e95733b1" target="_top" xlink:title="Loads and installs a template from a CCSDSPack configuration file.">
 <polygon fill="white" stroke="#666666" points="170.5,-67.5 0.5,-67.5 0.5,-37.5 170.5,-37.5 170.5,-67.5"/>
 <text text-anchor="start" x="8.5" y="-55.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::loadTemplate</text>
 <text text-anchor="middle" x="85.5" y="-44.5" font-family="Helvetica,sans-Serif" font-size="10.00">ConfigFile</text>
@@ -49,7 +49,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Load a template packet from a binary or configuration file.">
+<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Loads and installs a template from a .bin or .cfg file.">
 <polygon fill="white" stroke="#666666" points="171,-19 0,-19 0,0 171,0 171,-19"/>
 <text text-anchor="middle" x="85.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::readTemplate</text>
 </a>

@@ -1,12 +1,12 @@
 <map id="inc/CCSDSSecondaryHeaderAbstract.h" name="inc/CCSDSSecondaryHeaderAbstract.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="92,5,296,45"/>
-<area shape="rect" id="Node000002" href="$CCSDSResult_8h.html" title=" " alt="" coords="75,167,193,192"/>
+<area shape="rect" id="Node000001" title="Defines the extension interface and raw&#45;buffer implementation for packet secondary headers." alt="" coords="92,5,296,45"/>
+<area shape="rect" id="Node000002" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="75,167,193,192"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,47,146,155,141,153,184,45"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,240,68,265"/>
 <area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="163,48,133,69,100,96,69,130,44,168,37,197,36,226,31,226,31,196,40,166,64,126,96,93,130,65,160,43"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="346,240,413,265"/>
 <area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="294,43,347,60,401,85,451,120,472,141,490,165,494,178,494,190,480,210,455,226,427,239,425,234,453,222,476,206,489,188,489,178,485,168,468,145,447,124,399,90,346,65,293,48"/>
-<area shape="rect" id="Node000007" href="$CCSDSConfig_8h.html" title=" " alt="" coords="208,93,327,119"/>
+<area shape="rect" id="Node000007" href="$CCSDSConfig_8h.html" title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files." alt="" coords="208,93,327,119"/>
 <area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="214,44,249,81,245,85,210,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="199,240,267,265"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="151,190,207,230,204,234,148,194"/>

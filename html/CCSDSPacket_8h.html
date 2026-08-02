@@ -76,11 +76,19 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a>  </div>
+<a href="#namespaces">Namespaces</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle"><div class="title">CCSDSPacket.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Defines the <a class="el" href="namespaceCCSDS.html">CCSDS</a> 133.0-B-2 EC2 Space Packet PDU container and mission-profile CRC trailer.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;<a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
+<code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;memory&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>&quot;</code><br />
@@ -100,19 +108,31 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structCCSDS_1_1CRC16Config.html">CCSDS::CRC16Config</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configuration structure for CRC16 calculation parameters.  <a href="structCCSDS_1_1CRC16Config.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters for the optional CCSDSPack mission-profile CRC16 trailer.  <a href="structCCSDS_1_1CRC16Config.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Packet.html">CCSDS::Packet</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents a <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> (Consultative Committee for Space Data Systems) packet.  <a href="classCCSDS_1_1Packet.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Owns, serializes, and parses one <a class="el" href="namespaceCCSDS.html">CCSDS</a> 133.0-B-2 EC2 Space <a class="el" href="classCCSDS_1_1Packet.html" title="Owns, serializes, and parses one CCSDS 133.0-B-2 EC2 Space Packet PDU.">Packet</a> PDU.  <a href="classCCSDS_1_1Packet.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceCCSDS" id="r_namespaceCCSDS"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCCSDS.html">CCSDS</a></td></tr>
-<tr class="memdesc:namespaceCCSDS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains definitions and classes for handling <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> headers. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a63d54f55e3e8d8de716efe983b8de695" id="r_a63d54f55e3e8d8de716efe983b8de695"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695">CCSDS::PacketErrorControlMode</a> : std::uint8_t { <a class="el" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695a6adf97f83acf6453d4a6a4b1070f3754">CCSDS::None</a> = 0
+, <a class="el" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695a8d5f4880a8a5ff2da50dc8e80c10ef60">CCSDS::CRC16</a> = 1
+ }</td></tr>
+<tr class="memdesc:a63d54f55e3e8d8de716efe983b8de695"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selects whether the Packet Data Field ends with the CCSDSPack CRC16 trailer.  <a href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695">More...</a><br /></td></tr>
+<tr class="separator:a63d54f55e3e8d8de716efe983b8de695"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Defines the <a class="el" href="namespaceCCSDS.html">CCSDS</a> 133.0-B-2 EC2 Space Packet PDU container and mission-profile CRC trailer. </p>
+<p>A Packet owns one primary header and one Packet Data Field. CCSDSPack may reserve the final two Packet Data Field octets for a mission-profile CRC16 trailer. The trailer is not a third <a class="el" href="namespaceCCSDS.html">CCSDS</a> Space Packet structural field. Inspection APIs are non-mutating. Call update() or serialize() when dependent fields such as Packet Data Length, sequence count, secondary-header contents, or CRC16 must be finalized. </p>
+
+<p class="definition">Definition in file <a class="el" href="CCSDSPacket_8h_source.html">CCSDSPacket.h</a>.</p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8

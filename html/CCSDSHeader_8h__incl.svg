@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Defines CCSDS Space Packet primary&#45;header fields, validation, and serialization.">
 <polygon fill="#999999" stroke="#666666" points="202.5,-129 92.5,-129 92.5,-110 202.5,-110 202.5,-129"/>
 <text text-anchor="middle" x="147.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">inc/CCSDSHeader.h</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSResult_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="CCSDSResult_8h.html" target="_top" xlink:title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack.">
 <polygon fill="white" stroke="#666666" points="192,-74 103,-74 103,-55 192,-55 192,-74"/>
 <text text-anchor="middle" x="147.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDSResult.h</text>
 </a>

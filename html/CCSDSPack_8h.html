@@ -77,6 +77,9 @@ $(function() {
   <div class="headertitle"><div class="title">CCSDSPack.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Convenience umbrella header for the complete public CCSDSPack API.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="CCSDSDataField_8h_source.html">CCSDSDataField.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="CCSDSManager_8h_source.html">CCSDSManager.h</a>&quot;</code><br />
@@ -100,7 +103,31 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 </div>
 <p><a href="CCSDSPack_8h_source.html">Go to the source code of this file.</a></p>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Convenience umbrella header for the complete public CCSDSPack API. </p>
+<p>Include this header when an application uses several library components. More constrained builds may include individual headers instead. <a class="el" href="classConfig.html" title="Parses and stores typed values from the CCSDSPack configuration format.">Config</a> support is excluded automatically when CCSDS_MCU is defined.</p>
+<dl class="section user"><dt>Typical workflow</dt><dd></dd></dl>
+<ul>
+<li>Use <a class="el" href="classCCSDS_1_1Packet.html" title="Owns, serializes, and parses one CCSDS 133.0-B-2 EC2 Space Packet PDU.">CCSDS::Packet</a> for one Space Packet.</li>
+<li>Use <a class="el" href="classCCSDS_1_1Manager.html" title="Generates, stores, parses, and validates one CCSDS packet-identifier stream.">CCSDS::Manager</a> for one packet-identifier stream and sequence counter.</li>
+<li>Use <a class="el" href="classCCSDS_1_1Validator.html" title="Validates packet structure and one sequence-count stream.">CCSDS::Validator</a> for explicit coherence/template checks.</li>
+<li>Derive from <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html" title="Interface implemented by optional packet data-field secondary headers.">CCSDS::SecondaryHeaderAbstract</a> for mission-specific headers.</li>
+</ul>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="CCSDSPack_8h.html">CCSDSPack.h</a>&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_class" href="classCCSDS_1_1Packet.html">CCSDS::Packet</a> packet;</div>
+<div class="line">packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#ae09dfe70d8a9971aaf565af51c6b13ee">setPrimaryHeader</a>({0, 0, 0, 1, <a class="code hl_enumvalue" href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">CCSDS::UNSEGMENTED</a>, 0, 0});</div>
+<div class="line">packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#aa2c650db1c72b36817f9df154de993d9">setApplicationData</a>({0x01, 0x02});</div>
+<div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> bytes = packet.<a class="code hl_function" href="classCCSDS_1_1Packet.html#a9b726b5e2592c8dab6005e8a1a24d821">serialize</a>();</div>
+<div class="ttc" id="aCCSDSPack_8h_html"><div class="ttname"><a href="CCSDSPack_8h.html">CCSDSPack.h</a></div><div class="ttdoc">Convenience umbrella header for the complete public CCSDSPack API.</div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html"><div class="ttname"><a href="classCCSDS_1_1Packet.html">CCSDS::Packet</a></div><div class="ttdoc">Owns, serializes, and parses one CCSDS 133.0-B-2 EC2 Space Packet PDU.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8h_source.html#l00101">CCSDSPacket.h:101</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_a9b726b5e2592c8dab6005e8a1a24d821"><div class="ttname"><a href="classCCSDS_1_1Packet.html#a9b726b5e2592c8dab6005e8a1a24d821">CCSDS::Packet::serialize</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; serialize()</div><div class="ttdoc">Finalizes and serializes the packet under the v1.2 PDU profile.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00326">CCSDSPacket.cpp:326</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_aa2c650db1c72b36817f9df154de993d9"><div class="ttname"><a href="classCCSDS_1_1Packet.html#aa2c650db1c72b36817f9df154de993d9">CCSDS::Packet::setApplicationData</a></div><div class="ttdeci">ResultBool setApplicationData(const std::vector&lt; std::uint8_t &gt; &amp;data)</div><div class="ttdoc">Replaces the packet application data.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00577">CCSDSPacket.cpp:577</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Packet_html_ae09dfe70d8a9971aaf565af51c6b13ee"><div class="ttname"><a href="classCCSDS_1_1Packet.html#ae09dfe70d8a9971aaf565af51c6b13ee">CCSDS::Packet::setPrimaryHeader</a></div><div class="ttdeci">ResultBool setPrimaryHeader(PrimaryHeader data)</div><div class="ttdoc">Replaces all primary-header fields from a field structure.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00530">CCSDSPacket.cpp:530</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634"><div class="ttname"><a href="namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aac2d8eb488f6ca9a63f367614f9065634">CCSDS::UNSEGMENTED</a></div><div class="ttdeci">@ UNSEGMENTED</div><div class="ttdoc">Binary 11: a complete, unsegmented packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00032">CCSDSHeader.h:31</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definition in file <a class="el" href="CCSDSPack_8h_source.html">CCSDSPack.h</a>.</p>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8

@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Loads a packet from a configuration object, including secondary header if present.">
+<g id="a_Node000001"><a xlink:title="Loads packet construction settings from an already parsed Config.">
 <polygon fill="#999999" stroke="#666666" points="170,-38 0,-38 0,-19 170,-19 170,-38"/>
 <text text-anchor="middle" x="85" y="-26" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::loadFromConfig</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Get value by key and type.">
+<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Retrieves a value by exact key and requested type.">
 <polygon fill="white" stroke="#666666" points="391,-38 322,-38 322,-19 391,-19 391,-38"/>
 <text text-anchor="middle" x="356.5" y="-26" font-family="Helvetica,sans-Serif" font-size="10.00">Config::get</text>
 </a>
@@ -48,7 +48,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classConfig.html#a093d1897ebdb889d382706a73b02d249" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="classConfig.html#a093d1897ebdb889d382706a73b02d249" target="_top" xlink:title="Tests whether a key exists, regardless of its stored type.">
 <polygon fill="white" stroke="#666666" points="286,-19 206,-19 206,0 286,0 286,-19"/>
 <text text-anchor="middle" x="246" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::isKey</text>
 </a>

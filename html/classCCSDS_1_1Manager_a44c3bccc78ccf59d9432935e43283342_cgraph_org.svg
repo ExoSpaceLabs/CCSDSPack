@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Load a template packet from a binary or configuration file.">
+<g id="a_Node000001"><a xlink:title="Loads and installs a template from a .bin or .cfg file.">
 <polygon fill="#999999" stroke="#666666" points="171,-105 0,-105 0,-86 171,-86 171,-105"/>
 <text text-anchor="middle" x="85.5" y="-93" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::readTemplate</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#ac771c4d20e282fe43bc6938b30cc69ef" target="_top" xlink:title="Deserializes a vector of bytes into a CCSDS packet.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#ac771c4d20e282fe43bc6938b30cc69ef" target="_top" xlink:title="Parses one packet using the currently configured CRC profile.">
 <polygon fill="white" stroke="#666666" points="373.5,-179 227.5,-179 227.5,-160 373.5,-160 373.5,-179"/>
 <text text-anchor="middle" x="300.5" y="-167" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::deserialize</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Packet.html#a9ba3b255c1cd19b48a11dba5fc8819ff" target="_top" xlink:title="Loads a packet from a configuration file, including secondary header if present.">
+<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Packet.html#a9ba3b255c1cd19b48a11dba5fc8819ff" target="_top" xlink:title="Loads packet construction settings from a configuration file.">
 <polygon fill="white" stroke="#666666" points="394,-142 207,-142 207,-123 394,-123 394,-142"/>
 <text text-anchor="middle" x="300.5" y="-130" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::loadFromConfigFile</text>
 </a>
@@ -56,7 +56,7 @@
 <!-- Node8 -->
 <g id="Node000008" class="node">
 <title>Node8</title>
-<g id="a_Node000008"><a xlink:href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d" target="_top" xlink:title="Read a specified binary file and return its contents as a buffer.">
+<g id="a_Node000008"><a xlink:href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d" target="_top" xlink:title="Reads an entire binary file into memory.">
 <polygon fill="white" stroke="#666666" points="344,-105 257,-105 257,-86 344,-86 344,-105"/>
 <text text-anchor="middle" x="300.5" y="-93" font-family="Helvetica,sans-Serif" font-size="10.00">readBinaryFile</text>
 </a>
@@ -74,7 +74,7 @@
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
-<g id="a_Node000009"><a xlink:href="classCCSDS_1_1Packet.html#a29f623c1b7b29e37a2a71c556169b1c1" target="_top" xlink:title="needs to be called as soon as possible, probably also from constructor.">
+<g id="a_Node000009"><a xlink:href="classCCSDS_1_1Packet.html#a29f623c1b7b29e37a2a71c556169b1c1" target="_top" xlink:title="Enables or disables automatic dependent&#45;field finalization.">
 <polygon fill="white" stroke="#666666" points="372,-67.5 229,-67.5 229,-37.5 372,-37.5 372,-67.5"/>
 <text text-anchor="start" x="237" y="-55.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::setUpdate</text>
 <text text-anchor="middle" x="300.5" y="-44.5" font-family="Helvetica,sans-Serif" font-size="10.00">PacketEnable</text>
@@ -93,7 +93,7 @@
 <!-- Node10 -->
 <g id="Node000010" class="node">
 <title>Node10</title>
-<g id="a_Node000010"><a xlink:href="CCSDSUtils_8cpp.html#a3b974227bd1064e006f517e8423a0545" target="_top" xlink:title="Tests if str ends with suffix.">
+<g id="a_Node000010"><a xlink:href="CCSDSUtils_8cpp.html#a3b974227bd1064e006f517e8423a0545" target="_top" xlink:title="Tests whether a string ends with an exact suffix.">
 <polygon fill="white" stroke="#666666" points="345.5,-19 255.5,-19 255.5,0 345.5,0 345.5,-19"/>
 <text text-anchor="middle" x="300.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stringEndsWith</text>
 </a>
@@ -111,7 +111,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classConfig.html#a666e6d9c5510736d8ef85564abe834dd" target="_top" xlink:title="Load config file.">
+<g id="a_Node000004"><a xlink:href="classConfig.html#a666e6d9c5510736d8ef85564abe834dd" target="_top" xlink:title="Loads and replaces configuration values from a file.">
 <polygon fill="white" stroke="#666666" points="504,-142 430,-142 430,-123 504,-123 504,-142"/>
 <text text-anchor="middle" x="467" y="-130" font-family="Helvetica,sans-Serif" font-size="10.00">Config::load</text>
 </a>
@@ -129,7 +129,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Get value by key and type.">
+<g id="a_Node000005"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Retrieves a value by exact key and requested type.">
 <polygon fill="white" stroke="#666666" points="753,-142 684,-142 684,-123 753,-123 753,-142"/>
 <text text-anchor="middle" x="718.5" y="-130" font-family="Helvetica,sans-Serif" font-size="10.00">Config::get</text>
 </a>
@@ -147,7 +147,7 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="classConfig.html#a0c3a6f1dbed78a72da53833b419491d9" target="_top" xlink:title="Parse string &quot;[1,2,3]&quot; into vector&lt;uint8_t&gt;">
+<g id="a_Node000006"><a xlink:href="classConfig.html#a0c3a6f1dbed78a72da53833b419491d9" target="_top" xlink:title="Parses a bracketed comma&#45;separated byte vector.">
 <polygon fill="white" stroke="#666666" points="648,-142 540,-142 540,-123 648,-123 648,-142"/>
 <text text-anchor="middle" x="594" y="-130" font-family="Helvetica,sans-Serif" font-size="10.00">Config::parseBytes</text>
 </a>
@@ -165,7 +165,7 @@
 <!-- Node7 -->
 <g id="Node000007" class="node">
 <title>Node7</title>
-<g id="a_Node000007"><a xlink:href="classConfig.html#ae9010d142dcb6a29be942eb3b1513dda" target="_top" xlink:title="Parse a single line from config.">
+<g id="a_Node000007"><a xlink:href="classConfig.html#ae9010d142dcb6a29be942eb3b1513dda" target="_top" xlink:title="Splits one configuration line into key, type, and raw value fields.">
 <polygon fill="white" stroke="#666666" points="644.5,-105 543.5,-105 543.5,-86 644.5,-86 644.5,-105"/>
 <text text-anchor="middle" x="594" y="-93" font-family="Helvetica,sans-Serif" font-size="10.00">Config::parseLine</text>
 </a>

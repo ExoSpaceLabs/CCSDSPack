@@ -1,0 +1,9 @@
+<map id="inspectPacketStream" name="inspectPacketStream">
+<area shape="rect" id="Node000001" title="Scans adjacent packets using each encoded Packet Data Length boundary." alt="" coords="5,55,164,80"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de" title="Atomically parses exactly six serialized primary&#45;header bytes." alt="" coords="225,5,425,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,52,248,31,249,36,148,57"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456" title="Returns a copy of the stored error." alt="" coords="247,55,402,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,65,233,65,233,70,164,70"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73" title="Returns the encoded Packet Data Length value N&#45;1." alt="" coords="212,104,437,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,77,249,99,248,104,147,83"/>
+</map>

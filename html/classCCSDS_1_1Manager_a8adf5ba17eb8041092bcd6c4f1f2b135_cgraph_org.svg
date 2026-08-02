@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Loads a template packet from a configuration object.">
+<g id="a_Node000001"><a xlink:title="Loads and installs a template from an already parsed Config object.">
 <polygon fill="#999999" stroke="#666666" points="170,-43.5 0,-43.5 0,-13.5 170,-13.5 170,-43.5"/>
 <text text-anchor="start" x="8" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::loadTemplate</text>
 <text text-anchor="middle" x="85" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">Config</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#a69d4cb8111cfec9f231568cfc262e97e" target="_top" xlink:title="Loads a packet from a configuration object, including secondary header if present.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#a69d4cb8111cfec9f231568cfc262e97e" target="_top" xlink:title="Loads packet construction settings from an already parsed Config.">
 <polygon fill="white" stroke="#666666" points="376,-38 206,-38 206,-19 376,-19 376,-38"/>
 <text text-anchor="middle" x="291" y="-26" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::loadFromConfig</text>
 </a>
@@ -39,7 +39,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Get value by key and type.">
+<g id="a_Node000003"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Retrieves a value by exact key and requested type.">
 <polygon fill="white" stroke="#666666" points="597,-38 528,-38 528,-19 597,-19 597,-38"/>
 <text text-anchor="middle" x="562.5" y="-26" font-family="Helvetica,sans-Serif" font-size="10.00">Config::get</text>
 </a>
@@ -57,7 +57,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classConfig.html#a093d1897ebdb889d382706a73b02d249" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="classConfig.html#a093d1897ebdb889d382706a73b02d249" target="_top" xlink:title="Tests whether a key exists, regardless of its stored type.">
 <polygon fill="white" stroke="#666666" points="492,-19 412,-19 412,0 492,0 492,-19"/>
 <text text-anchor="middle" x="452" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::isKey</text>
 </a>

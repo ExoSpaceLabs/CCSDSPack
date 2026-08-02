@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Retrieves the application data from the packets.">
+<g id="a_Node000001"><a xlink:title="Reassembles application data from all stored packets in order.">
 <polygon fill="#999999" stroke="#666666" points="252,-30 77,-30 77,0 252,0 252,-30"/>
 <text text-anchor="start" x="85" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::getApplication</text>
 <text text-anchor="middle" x="164.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">DataBuffer</text>

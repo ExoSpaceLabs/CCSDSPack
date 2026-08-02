@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Load config file.">
+<g id="a_Node000001"><a xlink:title="Loads and replaces configuration values from a file.">
 <polygon fill="#999999" stroke="#666666" points="74,-56 0,-56 0,-37 74,-37 74,-56"/>
 <text text-anchor="middle" x="37" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">Config::load</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Get value by key and type.">
+<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Retrieves a value by exact key and requested type.">
 <polygon fill="white" stroke="#666666" points="323,-56 254,-56 254,-37 323,-37 323,-56"/>
 <text text-anchor="middle" x="288.5" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">Config::get</text>
 </a>
@@ -48,7 +48,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classConfig.html#a0c3a6f1dbed78a72da53833b419491d9" target="_top" xlink:title="Parse string &quot;[1,2,3]&quot; into vector&lt;uint8_t&gt;">
+<g id="a_Node000003"><a xlink:href="classConfig.html#a0c3a6f1dbed78a72da53833b419491d9" target="_top" xlink:title="Parses a bracketed comma&#45;separated byte vector.">
 <polygon fill="white" stroke="#666666" points="218,-56 110,-56 110,-37 218,-37 218,-56"/>
 <text text-anchor="middle" x="164" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">Config::parseBytes</text>
 </a>
@@ -66,7 +66,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classConfig.html#ae9010d142dcb6a29be942eb3b1513dda" target="_top" xlink:title="Parse a single line from config.">
+<g id="a_Node000004"><a xlink:href="classConfig.html#ae9010d142dcb6a29be942eb3b1513dda" target="_top" xlink:title="Splits one configuration line into key, type, and raw value fields.">
 <polygon fill="white" stroke="#666666" points="214.5,-19 113.5,-19 113.5,0 214.5,0 214.5,-19"/>
 <text text-anchor="middle" x="164" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::parseLine</text>
 </a>

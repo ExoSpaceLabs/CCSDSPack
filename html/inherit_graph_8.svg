@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="classCCSDS_1_1SecondaryHeaderAbstract.html" target="_top" xlink:title="Abstract base class for a (Packet Utilization Standard) header.">
+<g id="a_Node000000"><a xlink:href="classCCSDS_1_1SecondaryHeaderAbstract.html" target="_top" xlink:title="Interface implemented by optional packet data&#45;field secondary headers.">
 <polygon fill="white" stroke="#666666" points="182,-74 0,-74 0,-55 182,-55 182,-74"/>
 <text text-anchor="middle" x="91" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::SecondaryHeaderAbstract</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:href="classCCSDS_1_1BufferHeader.html" target="_top" xlink:title="Represents a fixed secondary header used as a data buffer.">
+<g id="a_Node000001"><a xlink:href="classCCSDS_1_1BufferHeader.html" target="_top" xlink:title="Opaque secondary header that stores bytes without interpreting them.">
 <polygon fill="white" stroke="#666666" points="338,-130 218,-130 218,-111 338,-111 338,-130"/>
 <text text-anchor="middle" x="278" y="-118" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::BufferHeader</text>
 </a>
@@ -38,7 +38,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classPusA.html" target="_top" xlink:title="Represents a PUS Type A (Telemetry) header.">
+<g id="a_Node000002"><a xlink:href="classPusA.html" target="_top" xlink:title="Legacy fixed&#45;size six&#45;byte telemetry&#45;oriented secondary header.">
 <polygon fill="white" stroke="#666666" points="298.5,-93 257.5,-93 257.5,-74 298.5,-74 298.5,-93"/>
 <text text-anchor="middle" x="278" y="-81" font-family="Helvetica,sans-Serif" font-size="10.00">PusA</text>
 </a>
@@ -56,7 +56,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classPusB.html" target="_top" xlink:title="Represents a PUS Type B (Event Reporting) header.">
+<g id="a_Node000003"><a xlink:href="classPusB.html" target="_top" xlink:title="Legacy fixed&#45;size eight&#45;byte event&#45;oriented secondary header.">
 <polygon fill="white" stroke="#666666" points="298.5,-56 257.5,-56 257.5,-37 298.5,-37 298.5,-56"/>
 <text text-anchor="middle" x="278" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">PusB</text>
 </a>
@@ -74,7 +74,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classPusC.html" target="_top" xlink:title="Represents a PUS Type C (Time Code) header.">
+<g id="a_Node000004"><a xlink:href="classPusC.html" target="_top" xlink:title="Legacy variable&#45;length time&#45;code secondary header.">
 <polygon fill="white" stroke="#666666" points="298.5,-19 257.5,-19 257.5,0 298.5,0 298.5,-19"/>
 <text text-anchor="middle" x="278" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">PusC</text>
 </a>

@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Registers a new header type with its creation function.">
+<g id="a_Node000001"><a xlink:title="Registers a custom secondary&#45;header type.">
 <polygon fill="#999999" stroke="#666666" points="370,-30 221,-30 221,0 370,0 370,-30"/>
 <text text-anchor="start" x="229" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::DataField::Register</text>
 <text text-anchor="middle" x="295.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">SecondaryHeader</text>
@@ -31,7 +31,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#ad08e87b95b8201e6c2fa373934bcf780" target="_top" xlink:title="Registers a new header type with the data field secondary header creation function.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#ad08e87b95b8201e6c2fa373934bcf780" target="_top" xlink:title="Registers a custom secondary&#45;header type for subsequent typed parsing.">
 <polygon fill="white" stroke="#666666" points="185,-30 0,-30 0,0 185,0 185,-30"/>
 <text text-anchor="start" x="8" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::RegisterSecondary</text>
 <text text-anchor="middle" x="92.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Header</text>

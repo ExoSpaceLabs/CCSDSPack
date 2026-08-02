@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Parses the input arguments with defined values returns an unordered map with given keys and input val...">
+<g id="a_Node000001"><a xlink:title="Parses supported short and long command&#45;line options.">
 <polygon fill="#999999" stroke="#666666" points="174,-19 77,-19 77,0 174,0 174,-19"/>
 <text text-anchor="middle" x="125.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">parseArguments</text>
 </a>

@@ -82,7 +82,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Abstract base class for a (<a class="el" href="classCCSDS_1_1Packet.html" title="Represents a CCSDS (Consultative Committee for Space Data Systems) packet.">Packet</a> Utilization Standard) header.  
+<p>Interface implemented by optional packet data-field secondary headers.  
  <a href="classCCSDS_1_1SecondaryHeaderAbstract.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>&gt;</code></p>
@@ -95,37 +95,55 @@ Inheritance diagram for CCSDS::SecondaryHeaderAbstract:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a0bb132a381880133c97f096f92bce570" id="r_a0bb132a381880133c97f096f92bce570"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0bb132a381880133c97f096f92bce570">~SecondaryHeaderAbstract</a> ()=default</td></tr>
+<tr class="memdesc:a0bb132a381880133c97f096f92bce570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables safe destruction through a base-class pointer.  <br /></td></tr>
 <tr class="separator:a0bb132a381880133c97f096f92bce570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae01e4e99f5b31eee493d9316d166d03f" id="r_ae01e4e99f5b31eee493d9316d166d03f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#ae01e4e99f5b31eee493d9316d166d03f">deserialize</a> (const std::vector&lt; std::uint8_t &gt; &amp;data)=0</td></tr>
-<tr class="memdesc:ae01e4e99f5b31eee493d9316d166d03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a buffer if data (vector std::uint8) and creates the header  <br /></td></tr>
+<tr class="memdesc:ae01e4e99f5b31eee493d9316d166d03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the header state from serialized secondary-header bytes.  <br /></td></tr>
 <tr class="separator:ae01e4e99f5b31eee493d9316d166d03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a180a60a3148dd126694b3bbd204cb4ac" id="r_a180a60a3148dd126694b3bbd204cb4ac"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a180a60a3148dd126694b3bbd204cb4ac">update</a> (<a class="el" href="classCCSDS_1_1DataField.html">DataField</a> *dataField)=0</td></tr>
-<tr class="memdesc:a180a60a3148dd126694b3bbd204cb4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how the packet secondary header is updated using the data field as reference.  <br /></td></tr>
+<tr class="memdesc:a180a60a3148dd126694b3bbd204cb4ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes derived header fields from the owning <a class="el" href="classCCSDS_1_1DataField.html" title="Owns the optional secondary header and application-data bytes of one packet.">DataField</a>.  <br /></td></tr>
 <tr class="separator:a180a60a3148dd126694b3bbd204cb4ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88c3669b3f857d3bda25e2e188a91504" id="r_a88c3669b3f857d3bda25e2e188a91504"><td class="memItemLeft" align="right" valign="top">virtual std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504">getSize</a> () const =0</td></tr>
-<tr class="memdesc:a88c3669b3f857d3bda25e2e188a91504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the header in bytes.  <br /></td></tr>
+<tr class="memdesc:a88c3669b3f857d3bda25e2e188a91504"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current serialized header size.  <br /></td></tr>
 <tr class="separator:a88c3669b3f857d3bda25e2e188a91504"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05158ad557357e4bda4d6d0069e72bad" id="r_a05158ad557357e4bda4d6d0069e72bad"><td class="memItemLeft" align="right" valign="top">virtual std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a05158ad557357e4bda4d6d0069e72bad">serialize</a> () const =0</td></tr>
-<tr class="memdesc:a05158ad557357e4bda4d6d0069e72bad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the serialized representation of the header.  <br /></td></tr>
+<tr class="memdesc:a05158ad557357e4bda4d6d0069e72bad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes only this secondary header.  <br /></td></tr>
 <tr class="separator:a05158ad557357e4bda4d6d0069e72bad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0663ddc6e890448e29d0c440b57ba5ec" id="r_a0663ddc6e890448e29d0c440b57ba5ec"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0663ddc6e890448e29d0c440b57ba5ec">getType</a> () const =0</td></tr>
-<tr class="memdesc:a0663ddc6e890448e29d0c440b57ba5ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of the packet.  <br /></td></tr>
+<tr class="memdesc:a0663ddc6e890448e29d0c440b57ba5ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stable type name used by <a class="el" href="classCCSDS_1_1SecondaryHeaderFactory.html" title="Registers secondary-header prototypes by type name and returns their shared instances.">SecondaryHeaderFactory</a>.  <br /></td></tr>
 <tr class="separator:a0663ddc6e890448e29d0c440b57ba5ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1da5b04ff201d9071abd38288ac20db3" id="r_a1da5b04ff201d9071abd38288ac20db3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1da5b04ff201d9071abd38288ac20db3">loadFromConfig</a> (const <a class="el" href="classConfig.html">Config</a> &amp;config)=0</td></tr>
+<tr class="memdesc:a1da5b04ff201d9071abd38288ac20db3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads type-specific fields from <a class="el" href="classConfig.html" title="Parses and stores typed values from the CCSDSPack configuration format.">Config</a>.  <br /></td></tr>
 <tr class="separator:a1da5b04ff201d9071abd38288ac20db3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a500d02f23e54e103b1839132a7bdff80" id="r_a500d02f23e54e103b1839132a7bdff80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a500d02f23e54e103b1839132a7bdff80">setVariableLength</a> (const bool bEnable)</td></tr>
+<tr class="memdesc:a500d02f23e54e103b1839132a7bdff80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declares whether the header accepts variable serialized lengths.  <br /></td></tr>
 <tr class="separator:a500d02f23e54e103b1839132a7bdff80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a81a42af8cef2a4f70cc251619b783e15" id="r_a81a42af8cef2a4f70cc251619b783e15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> {false}</td></tr>
+<tr class="memdesc:a81a42af8cef2a4f70cc251619b783e15"><td class="mdescLeft">&#160;</td><td class="mdescRight">True when the implementation accepts lengths not equal to default <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504" title="Returns the current serialized header size.">getSize()</a>.  <br /></td></tr>
 <tr class="separator:a81a42af8cef2a4f70cc251619b783e15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Abstract base class for a (<a class="el" href="classCCSDS_1_1Packet.html" title="Represents a CCSDS (Consultative Committee for Space Data Systems) packet.">Packet</a> Utilization Standard) header. </p>
-<p>Defines the common interface for all header types. </p>
-
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00023">23</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="textblock"><p>Interface implemented by optional packet data-field secondary headers. </p>
+<p>A secondary-header implementation owns only its own bytes and metadata. <a class="el" href="classCCSDS_1_1Packet.html" title="Owns, serializes, and parses one CCSDS 133.0-B-2 EC2 Space Packet PDU.">Packet</a> and <a class="el" href="classCCSDS_1_1DataField.html" title="Owns the optional secondary header and application-data bytes of one packet.">DataField</a> manage placement, primary-header flag synchronization, capacity, and application data. <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0663ddc6e890448e29d0c440b57ba5ec" title="Returns the stable type name used by SecondaryHeaderFactory.">getType()</a> must return a stable registry key.</p>
+<p><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a180a60a3148dd126694b3bbd204cb4ac" title="Refreshes derived header fields from the owning DataField.">update()</a> is an explicit finalization callback. It is invoked by <a class="el" href="classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4" title="Refreshes the installed secondary header once when it is dirty and updates are enabled.">DataField::update()</a> or <a class="el" href="classCCSDS_1_1DataField.html#a3fb3afd39a91c9dd20cd96348f77319b" title="Finalizes the secondary header and serializes the complete data-field content.">DataField::serialize()</a> when automatic updates are enabled; ordinary getters do not call it. Implementations may use the owning <a class="el" href="classCCSDS_1_1DataField.html" title="Owns the optional secondary header and application-data bytes of one packet.">DataField</a> to derive fields such as application-data length.</p>
+<dl class="section user"><dt>Variable-length headers</dt><dd>Set variableLength to true when <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#ae01e4e99f5b31eee493d9316d166d03f" title="Replaces the header state from serialized secondary-header bytes.">deserialize()</a> accepts sizes that cannot be known from a default-constructed instance. Callers must then provide an explicit header boundary when parsing ambiguous packet data fields.</dd></dl>
+<div class="fragment"><div class="line"><span class="keyword">class </span>MissionHeader final : <span class="keyword">public</span> <a class="code hl_class" href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a> {</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">  MissionHeader() { variableLength = <span class="keyword">true</span>; }</div>
+<div class="line">  <a class="code hl_class" href="classCCSDS_1_1Result.html">CCSDS::ResultBool</a> deserialize(<span class="keyword">const</span> std::vector&lt;std::uint8_t&gt;&amp; bytes) <span class="keyword">override</span>;</div>
+<div class="line">  <span class="keywordtype">void</span> update(<a class="code hl_class" href="classCCSDS_1_1DataField.html">CCSDS::DataField</a>* field) <span class="keyword">override</span>;</div>
+<div class="line">  std::uint16_t getSize() <span class="keyword">const override</span>;</div>
+<div class="line">  std::vector&lt;std::uint8_t&gt; serialize() <span class="keyword">const override</span>;</div>
+<div class="line">  std::string getType()<span class="keyword"> const override </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;MissionHeader&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html"><div class="ttname"><a href="classCCSDS_1_1DataField.html">CCSDS::DataField</a></div><div class="ttdoc">Owns the optional secondary header and application-data bytes of one packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8h_source.html#l00039">CCSDSDataField.h:39</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Result_html"><div class="ttname"><a href="classCCSDS_1_1Result.html">CCSDS::Result</a></div><div class="ttdoc">Holds either one successful value of type T or one Error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00091">CCSDSResult.h:91</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderAbstract_html"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a></div><div class="ttdoc">Interface implemented by optional packet data-field secondary headers.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00052">CCSDSSecondaryHeaderAbstract.h:52</a></div></div>
+</div><!-- fragment --> 
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00052">52</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a0bb132a381880133c97f096f92bce570" name="a0bb132a381880133c97f096f92bce570"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0bb132a381880133c97f096f92bce570">&#9670;&#160;</a></span>~SecondaryHeaderAbstract()</h2>
@@ -149,6 +167,8 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Enables safe destruction through a base-class pointer. </p>
 
 </div>
 </div>
@@ -177,8 +197,15 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>takes a buffer if data (vector std::uint8) and creates the header </p>
-<dl class="section return"><dt>Returns</dt><dd>Boolean true on success or <a class="el" href="classCCSDS_1_1Error.html" title="Represents an error with both an error code and a message.">Error</a>. </dd></dl>
+<p>Replaces the header state from serialized secondary-header bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Bytes belonging only to this secondary header. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_SECONDARY_HEADER_DATA/type-specific error. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>Implementations should reject invalid sizes and avoid partial mutation on failure. </dd></dl>
 
 <p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#aa5fb3f4f04a61e07359e743a53e9b6be">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#aba786bb33db72e147b88bd540b23eea2">PusA</a>, <a class="el" href="classPusB.html#a4ce700fa9dc902a5244b5937408d7a42">PusB</a>, and <a class="el" href="classPusC.html#a2bd2b7df85ffcd4099e295aaa9471adf">PusC</a>.</p>
 
@@ -207,8 +234,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the size of the header in bytes. </p>
-<dl class="section return"><dt>Returns</dt><dd>The size of the header in bytes. </dd></dl>
+<p>Returns the current serialized header size. </p>
+<dl class="section return"><dt>Returns</dt><dd>Number of bytes produced by <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a05158ad557357e4bda4d6d0069e72bad" title="Serializes only this secondary header.">serialize()</a>. </dd></dl>
 
 <p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#a495161b70d7fbb63f32b1820e622bbce">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a3e323d9c185198360c8a4d9d7564eb97">PusA</a>, <a class="el" href="classPusB.html#ada32f9d3ed28d8f5cc212350331896e6">PusB</a>, and <a class="el" href="classPusC.html#a17809e38c372573ccfdc2068e4de179b">PusC</a>.</p>
 
@@ -237,8 +264,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the name of the packet. </p>
-<dl class="section return"><dt>Returns</dt><dd>A vector containing the header bytes. (does not include data field) </dd></dl>
+<p>Returns the stable type name used by <a class="el" href="classCCSDS_1_1SecondaryHeaderFactory.html" title="Registers secondary-header prototypes by type name and returns their shared instances.">SecondaryHeaderFactory</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>Non-empty registry key unique within a <a class="el" href="classCCSDS_1_1DataField.html" title="Owns the optional secondary header and application-data bytes of one packet.">DataField</a> factory. </dd></dl>
 
 <p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#abe579573b7257ce8c5e9f25d0d19d476">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#affdcaf5333ec8b3013b13cec7de8d037">PusA</a>, <a class="el" href="classPusB.html#a94982f9bfef9a8480a971872df60c9bd">PusB</a>, and <a class="el" href="classPusC.html#a99687aec591862951b34c0fc07a23dfd">PusC</a>.</p>
 
@@ -268,6 +295,15 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Loads type-specific fields from <a class="el" href="classConfig.html" title="Parses and stores typed values from the CCSDSPack configuration format.">Config</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">config</td><td>Parsed configuration object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or a configuration/type-specific validation error. </dd></dl>
+
 <p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#abf8a042338097293a3e5f118ab130644">CCSDS::BufferHeader</a>.</p>
 
 </div>
@@ -295,8 +331,8 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the serialized representation of the header. </p>
-<dl class="section return"><dt>Returns</dt><dd>A vector containing the header bytes. (does not include data field) </dd></dl>
+<p>Serializes only this secondary header. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classCCSDS_1_1Header.html" title="Validated in-memory representation of a CCSDS Space Packet primary header.">Header</a> bytes, excluding primary header, application data, and packet error control. </dd></dl>
 
 <p>Implemented in <a class="el" href="classCCSDS_1_1BufferHeader.html#aadda0ec1a8a3670fdad02b86327523d7">CCSDS::BufferHeader</a>, <a class="el" href="classPusA.html#a54ce2e0e9efae2feeb05a1def30553e6">PusA</a>, <a class="el" href="classPusB.html#a648839fec3f93b01f42609d1d2876c84">PusB</a>, and <a class="el" href="classPusC.html#a4e30362151bf29f4b4c3f62c19f3ab10">PusC</a>.</p>
 
@@ -326,9 +362,17 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00064">64</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   64</span>{ <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> =  bEnable;}</div>
-<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderAbstract_html_a81a42af8cef2a4f70cc251619b783e15"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">CCSDS::SecondaryHeaderAbstract::variableLength</a></div><div class="ttdeci">bool variableLength</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00065">CCSDSSecondaryHeaderAbstract.h:65</a></div></div>
+<p>Declares whether the header accepts variable serialized lengths. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">bEnable</td><td>True for variable-length parsing. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00103">103</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  103</span>{ <a class="code hl_variable" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> = bEnable; }</div>
+<div class="ttc" id="aclassCCSDS_1_1SecondaryHeaderAbstract_html_a81a42af8cef2a4f70cc251619b783e15"><div class="ttname"><a href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">CCSDS::SecondaryHeaderAbstract::variableLength</a></div><div class="ttdeci">bool variableLength</div><div class="ttdoc">True when the implementation accepts lengths not equal to default getSize().</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00109">CCSDSSecondaryHeaderAbstract.h:109</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -356,14 +400,14 @@ Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Defines how the packet secondary header is updated using the data field as reference. </p>
-<p>This method is called every time a data get is performed from the packet, that is if update is enabled and method successfully registered.</p>
+<p>Refreshes derived header fields from the owning <a class="el" href="classCCSDS_1_1DataField.html" title="Owns the optional secondary header and application-data bytes of one packet.">DataField</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dataField</td><td></td></tr>
+    <tr><td class="paramname">dataField</td><td>Non-owning pointer to the containing data field. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section note"><dt>Note</dt><dd>Implementations must not retain the pointer after the call. </dd></dl>
 
 <p>Implemented in <a class="el" href="classPusA.html#a6d27498e8b9c91b2e5f9ca8c861d108f">PusA</a>, <a class="el" href="classPusB.html#acb20a9fe63de9986cb0c414e8b322a18">PusB</a>, <a class="el" href="classPusC.html#ac745199ef5306afd3376ce726070341c">PusC</a>, and <a class="el" href="classCCSDS_1_1BufferHeader.html#a6cfdb793f62972c65b3a93a1726eaec6">CCSDS::BufferHeader</a>.</p>
 
@@ -382,8 +426,11 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00065">65</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>{<span class="keyword">false</span>};</div>
+<p>True when the implementation accepts lengths not equal to default <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504" title="Returns the current serialized header size.">getSize()</a>. </p>
+<p>Public for compatibility; prefer <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a500d02f23e54e103b1839132a7bdff80" title="Declares whether the header accepts variable serialized lengths.">setVariableLength()</a> when changing it. </p>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00109">109</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  109</span>{<span class="keyword">false</span>};</div>
 </div><!-- fragment -->
 </div>
 </div>

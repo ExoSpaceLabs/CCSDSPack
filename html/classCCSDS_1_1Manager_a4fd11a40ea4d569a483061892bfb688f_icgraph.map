@@ -1,0 +1,9 @@
+<map id="CCSDS::Manager::addPacket" name="CCSDS::Manager::addPacket">
+<area shape="rect" id="Node000001" title="Adds one packet after enforcing the Manager&#39;s complete Packet Identification." alt="" coords="323,31,528,56"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a476ce8ef6b5a5c9aae31df69d81770a6" title="Transactionally loads a packet collection." alt="" coords="108,5,275,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="309,33,275,30,275,24,309,28"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a762d4d0408c548379cc3da09ba7d2052" title="Transactionally parses and loads concatenated packet bytes." alt="" coords="108,55,275,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="309,58,275,61,275,56,309,53"/>
+<area shape="rect" id="Node000003" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,5,60,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,21,60,21,60,15,94,15"/>
+</map>

@@ -75,18 +75,24 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">exec_utils.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;set&gt;</code><br />
-<code>#include &quot;<a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;cstddef&gt;</code><br />
+<code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;set&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &lt;unordered_map&gt;</code><br />
+<code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;<a class="el" href="CCSDSPacket_8h_source.html">CCSDSPacket.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for exec_utils.h:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8h__incl.svg" width="386" height="183"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="exec__utils_8h__incl.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -96,6 +102,15 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="exec__utils_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPacketStreamSlice.html">PacketStreamSlice</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Byte range occupied by one <a class="el" href="namespaceCCSDS.html">CCSDS</a> packet inside a larger stream.  <a href="structPacketStreamSlice.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structPacketStreamLayout.html">PacketStreamLayout</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result of scanning adjacent <a class="el" href="namespaceCCSDS.html">CCSDS</a> packets by their encoded Packet Data Length.  <a href="structPacketStreamLayout.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:abf0fbd73680f4d6117ec1fcdccf5787a" id="r_abf0fbd73680f4d6117ec1fcdccf5787a"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787a">ErrorCodeExec</a> : std::uint8_t { <br />
@@ -112,10 +127,19 @@ Enumerations</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ab7c2b867530c6e37b267cd1a9e6d495b" id="r_ab7c2b867530c6e37b267cd1a9e6d495b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#ab7c2b867530c6e37b267cd1a9e6d495b">parseArguments</a> (int argc, char *argv[], std::unordered_map&lt; std::string, std::string &gt; &amp;allowedMap, std::unordered_map&lt; std::string, std::string &gt; &amp;outArgs, const std::set&lt; std::string &gt; &amp;booleanArgs)</td></tr>
-<tr class="memdesc:ab7c2b867530c6e37b267cd1a9e6d495b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses the input arguments with defined values returns an unordered map with given keys and input values.  <br /></td></tr>
+<tr class="memdesc:ab7c2b867530c6e37b267cd1a9e6d495b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses supported short and long command-line options.  <br /></td></tr>
 <tr class="separator:ab7c2b867530c6e37b267cd1a9e6d495b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d09ba28375063e633b2ff411aa854b8" id="r_a0d09ba28375063e633b2ff411aa854b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCCSDS_1_1Result.html">CCSDS::Result</a>&lt; <a class="el" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695">CCSDS::PacketErrorControlMode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#a0d09ba28375063e633b2ff411aa854b8">parsePacketErrorControlMode</a> (const std::string &amp;value)</td></tr>
+<tr class="memdesc:a0d09ba28375063e633b2ff411aa854b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a CLI packet-error-control mode.  <br /></td></tr>
+<tr class="separator:a0d09ba28375063e633b2ff411aa854b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accc2d6d22f0165f3a40a6a7d35b75d6b" id="r_accc2d6d22f0165f3a40a6a7d35b75d6b"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#accc2d6d22f0165f3a40a6a7d35b75d6b">packetErrorControlModeName</a> (<a class="el" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695">CCSDS::PacketErrorControlMode</a> mode)</td></tr>
+<tr class="memdesc:accc2d6d22f0165f3a40a6a7d35b75d6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stable CLI spelling for a packet-error-control mode.  <br /></td></tr>
+<tr class="separator:accc2d6d22f0165f3a40a6a7d35b75d6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fc393744c72d8301bde4120afc640ae" id="r_a8fc393744c72d8301bde4120afc640ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classCCSDS_1_1Result.html">CCSDS::Result</a>&lt; <a class="el" href="structPacketStreamLayout.html">PacketStreamLayout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#a8fc393744c72d8301bde4120afc640ae">inspectPacketStream</a> (const std::vector&lt; std::uint8_t &gt; &amp;data, bool syncPatternEnable, std::uint32_t syncPattern, bool allowTrailingBytes)</td></tr>
+<tr class="memdesc:a8fc393744c72d8301bde4120afc640ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scans adjacent packets using each encoded Packet Data Length boundary.  <br /></td></tr>
+<tr class="separator:a8fc393744c72d8301bde4120afc640ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a314da15e7fc8f48e094a1a5ddabab89c" id="r_a314da15e7fc8f48e094a1a5ddabab89c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#a314da15e7fc8f48e094a1a5ddabab89c">customConsole</a> (const std::string &amp;appName, const std::string &amp;message, const std::string &amp;logLevel=&quot;INFO&quot;)</td></tr>
-<tr class="memdesc:a314da15e7fc8f48e094a1a5ddabab89c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints log to console adding various information about.  <br /></td></tr>
+<tr class="memdesc:a314da15e7fc8f48e094a1a5ddabab89c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a timestamped executable log message.  <br /></td></tr>
 <tr class="separator:a314da15e7fc8f48e094a1a5ddabab89c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
@@ -131,27 +155,31 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5" name="abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5"></a>ARG_PARSE_ERROR&#160;</td><td class="fielddoc"><p>Error Parsing argument. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5" name="abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5"></a>ARG_PARSE_ERROR&#160;</td><td class="fielddoc"><p>Error parsing a command-line argument. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3" name="abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3"></a>CONFIG_MISSING_PARAMETER&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8" name="abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8"></a>INVALID_INPUT_DATA&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4" name="abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4"></a>OTHER&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1" name="abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1"></a>PACKET_VALIDATION_FAILED&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3" name="abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3"></a>CONFIG_MISSING_PARAMETER&#160;</td><td class="fielddoc"><p>Required CLI configuration value is absent. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8" name="abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8"></a>INVALID_INPUT_DATA&#160;</td><td class="fielddoc"><p>Input does not contain a usable packet or payload. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4" name="abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4"></a>OTHER&#160;</td><td class="fielddoc"><p>Unclassified executable failure. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1" name="abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1"></a>PACKET_VALIDATION_FAILED&#160;</td><td class="fielddoc"><p>At least one packet validation check failed. </p>
+</td></tr>
 </table>
 
-<p class="definition">Definition at line <a class="el" href="exec__utils_8h_source.html#l00010">10</a> of file <a class="el" href="exec__utils_8h_source.html">exec_utils.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   10</span>                   : std::uint8_t {</div>
-<div class="line"><span class="lineno">   11</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a> = 14,                           </div>
-<div class="line"><span class="lineno">   12</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3">CONFIG_MISSING_PARAMETER</a> = 15,</div>
-<div class="line"><span class="lineno">   13</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8">INVALID_INPUT_DATA</a> = 16,</div>
-<div class="line"><span class="lineno">   14</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4">OTHER</a> = 17,</div>
-<div class="line"><span class="lineno">   15</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1">PACKET_VALIDATION_FAILED</a> = 18</div>
-<div class="line"><span class="lineno">   16</span>};</div>
-<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3">CONFIG_MISSING_PARAMETER</a></div><div class="ttdeci">@ CONFIG_MISSING_PARAMETER</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00012">exec_utils.h:12</a></div></div>
-<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1">PACKET_VALIDATION_FAILED</a></div><div class="ttdeci">@ PACKET_VALIDATION_FAILED</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00016">exec_utils.h:15</a></div></div>
-<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a></div><div class="ttdeci">@ ARG_PARSE_ERROR</div><div class="ttdoc">Error Parsing argument.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00011">exec_utils.h:11</a></div></div>
-<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8">INVALID_INPUT_DATA</a></div><div class="ttdeci">@ INVALID_INPUT_DATA</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00013">exec_utils.h:13</a></div></div>
-<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4">OTHER</a></div><div class="ttdeci">@ OTHER</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00014">exec_utils.h:14</a></div></div>
+<p class="definition">Definition at line <a class="el" href="exec__utils_8h_source.html#l00016">16</a> of file <a class="el" href="exec__utils_8h_source.html">exec_utils.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   16</span>                   : std::uint8_t {</div>
+<div class="line"><span class="lineno">   17</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a> = 14,             </div>
+<div class="line"><span class="lineno">   18</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3">CONFIG_MISSING_PARAMETER</a> = 15,    </div>
+<div class="line"><span class="lineno">   19</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8">INVALID_INPUT_DATA</a> = 16,          </div>
+<div class="line"><span class="lineno">   20</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4">OTHER</a> = 17,                       </div>
+<div class="line"><span class="lineno">   21</span>  <a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1">PACKET_VALIDATION_FAILED</a> = 18     </div>
+<div class="line"><span class="lineno">   22</span>};</div>
+<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aa64773e00796c166a229dfa3878340bf3">CONFIG_MISSING_PARAMETER</a></div><div class="ttdeci">@ CONFIG_MISSING_PARAMETER</div><div class="ttdoc">Required CLI configuration value is absent.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00018">exec_utils.h:18</a></div></div>
+<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaac9545162afed711bf0d00ebe10750a1">PACKET_VALIDATION_FAILED</a></div><div class="ttdeci">@ PACKET_VALIDATION_FAILED</div><div class="ttdoc">At least one packet validation check failed.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00022">exec_utils.h:21</a></div></div>
+<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a></div><div class="ttdeci">@ ARG_PARSE_ERROR</div><div class="ttdoc">Error parsing a command-line argument.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00017">exec_utils.h:17</a></div></div>
+<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8">INVALID_INPUT_DATA</a></div><div class="ttdeci">@ INVALID_INPUT_DATA</div><div class="ttdoc">Input does not contain a usable packet or payload.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00019">exec_utils.h:19</a></div></div>
+<div class="ttc" id="aexec__utils_8h_html_abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4"><div class="ttname"><a href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aadbf1dee1b8cd7ea3c82661943c7b74f4">OTHER</a></div><div class="ttdeci">@ OTHER</div><div class="ttdoc">Unclassified executable failure.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00020">exec_utils.h:20</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -188,42 +216,219 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Prints log to console adding various information about. </p>
+<p>Prints a timestamped executable log message. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">appName</td><td></td></tr>
-    <tr><td class="paramname">message</td><td></td></tr>
-    <tr><td class="paramname">logLevel</td><td></td></tr>
+    <tr><td class="paramname">appName</td><td>Executable name. </td></tr>
+    <tr><td class="paramname">message</td><td>Message text. </td></tr>
+    <tr><td class="paramname">logLevel</td><td>Displayed severity label. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="exec__utils_8cpp_source.html#l00054">54</a> of file <a class="el" href="exec__utils_8cpp_source.html">exec_utils.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   54</span>                                                                                                   {</div>
-<div class="line"><span class="lineno">   55</span>  <span class="comment">// Get current timestamp with high precision</span></div>
-<div class="line"><span class="lineno">   56</span>  <span class="keyword">const</span> <span class="keyword">auto</span> now = std::chrono::high_resolution_clock::now();</div>
-<div class="line"><span class="lineno">   57</span>  <span class="keyword">const</span> <span class="keyword">auto</span> duration = now.time_since_epoch();</div>
-<div class="line"><span class="lineno">   58</span>  <span class="keyword">const</span> <span class="keyword">auto</span> microseconds = std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(duration);</div>
-<div class="line"><span class="lineno">   59</span> </div>
-<div class="line"><span class="lineno">   60</span>  <span class="comment">// Get the current system time for date and time portion</span></div>
-<div class="line"><span class="lineno">   61</span>  <span class="keyword">const</span> std::time_t currentTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());</div>
-<div class="line"><span class="lineno">   62</span>  <span class="keyword">const</span> std::tm* tm = std::localtime(&amp;currentTime);</div>
-<div class="line"><span class="lineno">   63</span> </div>
-<div class="line"><span class="lineno">   64</span>  <span class="comment">// Format timestamp (YYYY-MM-DD HH:MM:SS)</span></div>
-<div class="line"><span class="lineno">   65</span>  std::ostringstream timestampStream;</div>
-<div class="line"><span class="lineno">   66</span>  timestampStream &lt;&lt; std::put_time(tm, <span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S&quot;</span>);</div>
-<div class="line"><span class="lineno">   67</span> </div>
-<div class="line"><span class="lineno">   68</span>  <span class="comment">// Output log with timestamp, application name, log level, and microseconds</span></div>
-<div class="line"><span class="lineno">   69</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; timestampStream.str() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span></div>
-<div class="line"><span class="lineno">   70</span>            &lt;&lt; std::setw(6) &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; microseconds.count() % 1000000 <span class="comment">// last 6 digits (microseconds)</span></div>
-<div class="line"><span class="lineno">   71</span>            &lt;&lt; <span class="stringliteral">&quot;] [&quot;</span> &lt;&lt; appName &lt;&lt; <span class="stringliteral">&quot;] &quot;</span></div>
-<div class="line"><span class="lineno">   72</span>            &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; logLevel &lt;&lt; <span class="stringliteral">&quot;] : &quot;</span></div>
-<div class="line"><span class="lineno">   73</span>            &lt;&lt; message &lt;&lt; std::endl;</div>
-<div class="line"><span class="lineno">   74</span>}</div>
+<p class="definition">Definition at line <a class="el" href="exec__utils_8cpp_source.html#l00162">162</a> of file <a class="el" href="exec__utils_8cpp_source.html">exec_utils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  163</span>                                              {</div>
+<div class="line"><span class="lineno">  164</span>  <span class="keyword">const</span> <span class="keyword">auto</span> now = std::chrono::high_resolution_clock::now();</div>
+<div class="line"><span class="lineno">  165</span>  <span class="keyword">const</span> <span class="keyword">auto</span> duration = now.time_since_epoch();</div>
+<div class="line"><span class="lineno">  166</span>  <span class="keyword">const</span> <span class="keyword">auto</span> microseconds = std::chrono::duration_cast&lt;std::chrono::microseconds&gt;(duration);</div>
+<div class="line"><span class="lineno">  167</span>  <span class="keyword">const</span> std::time_t currentTime =</div>
+<div class="line"><span class="lineno">  168</span>    std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());</div>
+<div class="line"><span class="lineno">  169</span>  <span class="keyword">const</span> std::tm *tm = std::localtime(&amp;currentTime);</div>
+<div class="line"><span class="lineno">  170</span> </div>
+<div class="line"><span class="lineno">  171</span>  std::ostringstream timestampStream;</div>
+<div class="line"><span class="lineno">  172</span>  timestampStream &lt;&lt; std::put_time(tm, <span class="stringliteral">&quot;%Y-%m-%d %H:%M:%S&quot;</span>);</div>
+<div class="line"><span class="lineno">  173</span>  std::cout &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; timestampStream.str() &lt;&lt; <span class="stringliteral">&quot;.&quot;</span></div>
+<div class="line"><span class="lineno">  174</span>            &lt;&lt; std::setw(6) &lt;&lt; std::setfill(<span class="charliteral">&#39;0&#39;</span>) &lt;&lt; microseconds.count() % 1000000</div>
+<div class="line"><span class="lineno">  175</span>            &lt;&lt; <span class="stringliteral">&quot;] [&quot;</span> &lt;&lt; appName &lt;&lt; <span class="stringliteral">&quot;] [&quot;</span> &lt;&lt; logLevel &lt;&lt; <span class="stringliteral">&quot;] : &quot;</span></div>
+<div class="line"><span class="lineno">  176</span>            &lt;&lt; message &lt;&lt; std::endl;</div>
+<div class="line"><span class="lineno">  177</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8h_a314da15e7fc8f48e094a1a5ddabab89c_icgraph.svg" width="236" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a8fc393744c72d8301bde4120afc640ae" name="a8fc393744c72d8301bde4120afc640ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8fc393744c72d8301bde4120afc640ae">&#9670;&#160;</a></span>inspectPacketStream()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCCSDS_1_1Result.html">CCSDS::Result</a>&lt; <a class="el" href="structPacketStreamLayout.html">PacketStreamLayout</a> &gt; inspectPacketStream </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; std::uint8_t &gt; &amp;&#160;</td>
+          <td class="paramname"><em>data</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>syncPatternEnable</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::uint32_t&#160;</td>
+          <td class="paramname"><em>syncPattern</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>allowTrailingBytes</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Scans adjacent packets using each encoded Packet Data Length boundary. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Input stream. </td></tr>
+    <tr><td class="paramname">syncPatternEnable</td><td>Whether every packet is prefixed by a four-byte sync marker. </td></tr>
+    <tr><td class="paramname">syncPattern</td><td>Expected big-endian sync marker. </td></tr>
+    <tr><td class="paramname">allowTrailingBytes</td><td>When true, a non-packet suffix after at least one packet is left unconsumed. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Packet ranges and consumed prefix, or a deterministic framing/length error. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="exec__utils_8cpp_source.html#l00080">80</a> of file <a class="el" href="exec__utils_8cpp_source.html">exec_utils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   83</span>                                                   {</div>
+<div class="line"><span class="lineno">   84</span>  <a class="code hl_struct" href="structPacketStreamLayout.html">PacketStreamLayout</a> layout;</div>
+<div class="line"><span class="lineno">   85</span>  std::size_t offset{0U};</div>
+<div class="line"><span class="lineno">   86</span> </div>
+<div class="line"><span class="lineno">   87</span>  <span class="keyword">const</span> <span class="keyword">auto</span> leaveTrailing = [&amp;](<span class="keyword">const</span> std::size_t frameOffset) {</div>
+<div class="line"><span class="lineno">   88</span>    <span class="keywordflow">return</span> allowTrailingBytes &amp;&amp; !layout.<a class="code hl_variable" href="structPacketStreamLayout.html#ad79029a97c77ebdd6401c40fd5464f1f">packets</a>.empty() &amp;&amp; frameOffset &lt; data.size();</div>
+<div class="line"><span class="lineno">   89</span>  };</div>
+<div class="line"><span class="lineno">   90</span> </div>
+<div class="line"><span class="lineno">   91</span>  <span class="keywordflow">while</span> (offset &lt; data.size()) {</div>
+<div class="line"><span class="lineno">   92</span>    <span class="keyword">const</span> std::size_t frameOffset = offset;</div>
+<div class="line"><span class="lineno">   93</span> </div>
+<div class="line"><span class="lineno">   94</span>    <span class="keywordflow">if</span> (syncPatternEnable) {</div>
+<div class="line"><span class="lineno">   95</span>      <span class="keywordflow">if</span> (data.size() - offset &lt; 4U) {</div>
+<div class="line"><span class="lineno">   96</span>        <span class="keywordflow">if</span> (leaveTrailing(frameOffset)) <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">   97</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::ErrorCode::INVALID_DATA</a>,</div>
+<div class="line"><span class="lineno">   98</span>                            <span class="stringliteral">&quot;Truncated packet synchronization marker at byte &quot;</span></div>
+<div class="line"><span class="lineno">   99</span>                              + std::to_string(frameOffset)};</div>
+<div class="line"><span class="lineno">  100</span>      }</div>
+<div class="line"><span class="lineno">  101</span> </div>
+<div class="line"><span class="lineno">  102</span>      <span class="keyword">const</span> std::uint32_t encoded =</div>
+<div class="line"><span class="lineno">  103</span>        (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(data[offset]) &lt;&lt; 24U)</div>
+<div class="line"><span class="lineno">  104</span>        | (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(data[offset + 1U]) &lt;&lt; 16U)</div>
+<div class="line"><span class="lineno">  105</span>        | (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(data[offset + 2U]) &lt;&lt; 8U)</div>
+<div class="line"><span class="lineno">  106</span>        | <span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(data[offset + 3U]);</div>
+<div class="line"><span class="lineno">  107</span>      <span class="keywordflow">if</span> (encoded != syncPattern) {</div>
+<div class="line"><span class="lineno">  108</span>        <span class="keywordflow">if</span> (leaveTrailing(frameOffset)) <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  109</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::ErrorCode::INVALID_DATA</a>,</div>
+<div class="line"><span class="lineno">  110</span>                            <span class="stringliteral">&quot;Packet synchronization marker mismatch at byte &quot;</span></div>
+<div class="line"><span class="lineno">  111</span>                              + std::to_string(frameOffset)};</div>
+<div class="line"><span class="lineno">  112</span>      }</div>
+<div class="line"><span class="lineno">  113</span>      offset += 4U;</div>
+<div class="line"><span class="lineno">  114</span>    }</div>
+<div class="line"><span class="lineno">  115</span> </div>
+<div class="line"><span class="lineno">  116</span>    <span class="keywordflow">if</span> (data.size() - offset &lt; 6U) {</div>
+<div class="line"><span class="lineno">  117</span>      <span class="keywordflow">if</span> (leaveTrailing(frameOffset)) {</div>
+<div class="line"><span class="lineno">  118</span>        offset = frameOffset;</div>
+<div class="line"><span class="lineno">  119</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  120</span>      }</div>
+<div class="line"><span class="lineno">  121</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">CCSDS::ErrorCode::INVALID_HEADER_DATA</a>,</div>
+<div class="line"><span class="lineno">  122</span>                          <span class="stringliteral">&quot;Truncated CCSDS primary header at byte &quot;</span></div>
+<div class="line"><span class="lineno">  123</span>                            + std::to_string(offset)};</div>
+<div class="line"><span class="lineno">  124</span>    }</div>
+<div class="line"><span class="lineno">  125</span> </div>
+<div class="line"><span class="lineno">  126</span>    <span class="keyword">const</span> std::vector&lt;std::uint8_t&gt; headerBytes(</div>
+<div class="line"><span class="lineno">  127</span>      data.begin() + <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(offset),</div>
+<div class="line"><span class="lineno">  128</span>      data.begin() + <span class="keyword">static_cast&lt;</span>std::ptrdiff_t<span class="keyword">&gt;</span>(offset + 6U));</div>
+<div class="line"><span class="lineno">  129</span>    <a class="code hl_class" href="classCCSDS_1_1Header.html">CCSDS::Header</a> header;</div>
+<div class="line"><span class="lineno">  130</span>    <span class="keyword">const</span> <span class="keyword">auto</span> headerResult = header.<a class="code hl_function" href="classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de">deserialize</a>(headerBytes);</div>
+<div class="line"><span class="lineno">  131</span>    <span class="keywordflow">if</span> (!headerResult) {</div>
+<div class="line"><span class="lineno">  132</span>      <span class="keywordflow">if</span> (leaveTrailing(frameOffset)) {</div>
+<div class="line"><span class="lineno">  133</span>        offset = frameOffset;</div>
+<div class="line"><span class="lineno">  134</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  135</span>      }</div>
+<div class="line"><span class="lineno">  136</span>      <span class="keywordflow">return</span> headerResult.<a class="code hl_function" href="classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456">error</a>();</div>
+<div class="line"><span class="lineno">  137</span>    }</div>
+<div class="line"><span class="lineno">  138</span> </div>
+<div class="line"><span class="lineno">  139</span>    <span class="keyword">const</span> std::size_t packetSize =</div>
+<div class="line"><span class="lineno">  140</span>      6U + <span class="keyword">static_cast&lt;</span>std::size_t<span class="keyword">&gt;</span>(header.<a class="code hl_function" href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73">getDataLength</a>()) + 1U;</div>
+<div class="line"><span class="lineno">  141</span>    <span class="keywordflow">if</span> (data.size() - offset &lt; packetSize) {</div>
+<div class="line"><span class="lineno">  142</span>      <span class="keywordflow">if</span> (leaveTrailing(frameOffset)) {</div>
+<div class="line"><span class="lineno">  143</span>        offset = frameOffset;</div>
+<div class="line"><span class="lineno">  144</span>        <span class="keywordflow">break</span>;</div>
+<div class="line"><span class="lineno">  145</span>      }</div>
+<div class="line"><span class="lineno">  146</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::ErrorCode::INVALID_DATA</a>,</div>
+<div class="line"><span class="lineno">  147</span>                          <span class="stringliteral">&quot;Packet Data Length declares &quot;</span></div>
+<div class="line"><span class="lineno">  148</span>                            + std::to_string(packetSize)</div>
+<div class="line"><span class="lineno">  149</span>                            + <span class="stringliteral">&quot; bytes at offset &quot;</span> + std::to_string(offset)</div>
+<div class="line"><span class="lineno">  150</span>                            + <span class="stringliteral">&quot;, but only &quot;</span> + std::to_string(data.size() - offset)</div>
+<div class="line"><span class="lineno">  151</span>                            + <span class="stringliteral">&quot; bytes remain&quot;</span>};</div>
+<div class="line"><span class="lineno">  152</span>    }</div>
+<div class="line"><span class="lineno">  153</span> </div>
+<div class="line"><span class="lineno">  154</span>    layout.<a class="code hl_variable" href="structPacketStreamLayout.html#ad79029a97c77ebdd6401c40fd5464f1f">packets</a>.push_back({offset, packetSize});</div>
+<div class="line"><span class="lineno">  155</span>    offset += packetSize;</div>
+<div class="line"><span class="lineno">  156</span>    layout.<a class="code hl_variable" href="structPacketStreamLayout.html#af4b9a8abbaa46a4fbb10eb9b753078b0">consumedBytes</a> = offset;</div>
+<div class="line"><span class="lineno">  157</span>  }</div>
+<div class="line"><span class="lineno">  158</span> </div>
+<div class="line"><span class="lineno">  159</span>  <span class="keywordflow">return</span> layout;</div>
+<div class="line"><span class="lineno">  160</span>}</div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Immutable error category and diagnostic message returned by Result.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00050">CCSDSResult.h:50</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html"><div class="ttname"><a href="classCCSDS_1_1Header.html">CCSDS::Header</a></div><div class="ttdoc">Validated in-memory representation of a CCSDS Space Packet primary header.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00109">CCSDSHeader.h:109</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_ab9bf408f60a412980700518122b5e3de"><div class="ttname"><a href="classCCSDS_1_1Header.html#ab9bf408f60a412980700518122b5e3de">CCSDS::Header::deserialize</a></div><div class="ttdeci">ResultBool deserialize(const std::vector&lt; std::uint8_t &gt; &amp;data)</div><div class="ttdoc">Atomically parses exactly six serialized primary-header bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00074">CCSDSHeader.cpp:74</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Header_html_af2033219620664beb7212c054874da73"><div class="ttname"><a href="classCCSDS_1_1Header.html#af2033219620664beb7212c054874da73">CCSDS::Header::getDataLength</a></div><div class="ttdeci">std::uint16_t getDataLength() const</div><div class="ttdoc">Returns the encoded Packet Data Length value N-1.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00127">CCSDSHeader.h:127</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Result_html_a86d5488fa1a716043b07c8828cb5f456"><div class="ttname"><a href="classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456">CCSDS::Result::error</a></div><div class="ttdeci">Error error() const</div><div class="ttdoc">Returns a copy of the stored error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00128">CCSDSResult.h:128</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::INVALID_DATA</a></div><div class="ttdeci">@ INVALID_DATA</div><div class="ttdoc">Generic malformed data or invalid boundary.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00033">CCSDSResult.h:33</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f">CCSDS::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdoc">Invalid CCSDS primary-header field or bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00034">CCSDSResult.h:34</a></div></div>
+<div class="ttc" id="astructPacketStreamLayout_html"><div class="ttname"><a href="structPacketStreamLayout.html">PacketStreamLayout</a></div><div class="ttdoc">Result of scanning adjacent CCSDS packets by their encoded Packet Data Length.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00031">exec_utils.h:31</a></div></div>
+<div class="ttc" id="astructPacketStreamLayout_html_ad79029a97c77ebdd6401c40fd5464f1f"><div class="ttname"><a href="structPacketStreamLayout.html#ad79029a97c77ebdd6401c40fd5464f1f">PacketStreamLayout::packets</a></div><div class="ttdeci">std::vector&lt; PacketStreamSlice &gt; packets</div><div class="ttdoc">Complete packets found in order.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00032">exec_utils.h:32</a></div></div>
+<div class="ttc" id="astructPacketStreamLayout_html_af4b9a8abbaa46a4fbb10eb9b753078b0"><div class="ttname"><a href="structPacketStreamLayout.html#af4b9a8abbaa46a4fbb10eb9b753078b0">PacketStreamLayout::consumedBytes</a></div><div class="ttdeci">std::size_t consumedBytes</div><div class="ttdoc">Prefix occupied by packets and optional sync markers.</div><div class="ttdef"><b>Definition</b> <a href="exec__utils_8h_source.html#l00033">exec_utils.h:33</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8h_a8fc393744c72d8301bde4120afc640ae_cgraph.svg" width="443" height="135"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8h_a8fc393744c72d8301bde4120afc640ae_icgraph.svg" width="272" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="accc2d6d22f0165f3a40a6a7d35b75d6b" name="accc2d6d22f0165f3a40a6a7d35b75d6b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accc2d6d22f0165f3a40a6a7d35b75d6b">&#9670;&#160;</a></span>packetErrorControlModeName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * packetErrorControlModeName </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695">CCSDS::PacketErrorControlMode</a>&#160;</td>
+          <td class="paramname"><em>mode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the stable CLI spelling for a packet-error-control mode. </p>
+
+<p class="definition">Definition at line <a class="el" href="exec__utils_8cpp_source.html#l00075">75</a> of file <a class="el" href="exec__utils_8cpp_source.html">exec_utils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                                               {</div>
+<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">return</span> mode == <a class="code hl_enumvalue" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695a8d5f4880a8a5ff2da50dc8e80c10ef60">CCSDS::PacketErrorControlMode::CRC16</a> ? <span class="stringliteral">&quot;crc16&quot;</span> : <span class="stringliteral">&quot;none&quot;</span>;</div>
+<div class="line"><span class="lineno">   77</span>}</div>
+<div class="ttc" id="anamespaceCCSDS_html_a63d54f55e3e8d8de716efe983b8de695a8d5f4880a8a5ff2da50dc8e80c10ef60"><div class="ttname"><a href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695a8d5f4880a8a5ff2da50dc8e80c10ef60">CCSDS::PacketErrorControlMode::CRC16</a></div><div class="ttdeci">@ CRC16</div><div class="ttdoc">Reserve and validate a two-byte CRC16 trailer. This is the v1 default.</div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8h_accc2d6d22f0165f3a40a6a7d35b75d6b_icgraph.svg" width="332" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -272,23 +477,70 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Parses the input arguments with defined values returns an unordered map with given keys and input values. </p>
-<p>boolean Args do not require values associated with them.</p>
+<p>Parses supported short and long command-line options. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">argc</td><td></td></tr>
-    <tr><td class="paramname">argv</td><td></td></tr>
-    <tr><td class="paramname">allowedMap</td><td></td></tr>
-    <tr><td class="paramname">outArgs</td><td></td></tr>
-    <tr><td class="paramname">booleanArgs</td><td></td></tr>
+    <tr><td class="paramname">argc</td><td>Argument count supplied to <a class="el" href="exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e">main()</a>. </td></tr>
+    <tr><td class="paramname">argv</td><td>Argument vector supplied to <a class="el" href="exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e">main()</a>. </td></tr>
+    <tr><td class="paramname">allowedMap</td><td>Mapping from short option names to long option names. </td></tr>
+    <tr><td class="paramname">outArgs</td><td>Parsed long-name/value map. </td></tr>
+    <tr><td class="paramname">booleanArgs</td><td>Long option names which do not consume a value. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or ARG_PARSE_ERROR for unknown options or missing values. </dd></dl>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8h_ab7c2b867530c6e37b267cd1a9e6d495b_icgraph.svg" width="243" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a0d09ba28375063e633b2ff411aa854b8" name="a0d09ba28375063e633b2ff411aa854b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d09ba28375063e633b2ff411aa854b8">&#9670;&#160;</a></span>parsePacketErrorControlMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classCCSDS_1_1Result.html">CCSDS::Result</a>&lt; <a class="el" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695">CCSDS::PacketErrorControlMode</a> &gt; parsePacketErrorControlMode </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Parses a CLI packet-error-control mode. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">value</td><td>Case-insensitive <code>crc16</code> or <code>none</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Parsed mode, or ARG_PARSE_ERROR for an unsupported value. </dd></dl>
+
+<p class="definition">Definition at line <a class="el" href="exec__utils_8cpp_source.html#l00062">62</a> of file <a class="el" href="exec__utils_8cpp_source.html">exec_utils.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>                                                    {</div>
+<div class="line"><span class="lineno">   63</span>  std::string normalized = value;</div>
+<div class="line"><span class="lineno">   64</span>  std::transform(normalized.begin(), normalized.end(), normalized.begin(),</div>
+<div class="line"><span class="lineno">   65</span>                 [](<span class="keyword">const</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span> c) {</div>
+<div class="line"><span class="lineno">   66</span>                   return static_cast&lt;char&gt;(std::tolower(c));</div>
+<div class="line"><span class="lineno">   67</span>                 });</div>
+<div class="line"><span class="lineno">   68</span> </div>
+<div class="line"><span class="lineno">   69</span>  <span class="keywordflow">if</span> (normalized == <span class="stringliteral">&quot;crc16&quot;</span>) <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695a8d5f4880a8a5ff2da50dc8e80c10ef60">CCSDS::PacketErrorControlMode::CRC16</a>;</div>
+<div class="line"><span class="lineno">   70</span>  <span class="keywordflow">if</span> (normalized == <span class="stringliteral">&quot;none&quot;</span>) <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695a6adf97f83acf6453d4a6a4b1070f3754">CCSDS::PacketErrorControlMode::None</a>;</div>
+<div class="line"><span class="lineno">   71</span>  <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{<span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">CCSDS::ErrorCode</a><span class="keyword">&gt;</span>(<a class="code hl_enumvalue" href="exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaad2a331458dbcb4d3cd9e9e1108354f5">ARG_PARSE_ERROR</a>),</div>
+<div class="line"><span class="lineno">   72</span>                      <span class="stringliteral">&quot;Packet error control must be &#39;crc16&#39; or &#39;none&#39;&quot;</span>};</div>
+<div class="line"><span class="lineno">   73</span>}</div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">CCSDS::ErrorCode</a></div><div class="ttdeci">ErrorCode</div><div class="ttdoc">Stable categories returned by checked CCSDSPack operations.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00029">CCSDSResult.h:29</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a63d54f55e3e8d8de716efe983b8de695a6adf97f83acf6453d4a6a4b1070f3754"><div class="ttname"><a href="namespaceCCSDS.html#a63d54f55e3e8d8de716efe983b8de695a6adf97f83acf6453d4a6a4b1070f3754">CCSDS::PacketErrorControlMode::None</a></div><div class="ttdeci">@ None</div><div class="ttdoc">No mission-profile CRC trailer is serialized or validated.</div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="exec__utils_8h_a0d09ba28375063e633b2ff411aa854b8_icgraph.svg" width="328" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

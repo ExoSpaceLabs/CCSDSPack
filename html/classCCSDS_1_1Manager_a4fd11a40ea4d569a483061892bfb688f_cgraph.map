@@ -1,5 +1,9 @@
 <map id="CCSDS::Manager::addPacket" name="CCSDS::Manager::addPacket">
-<area shape="rect" id="Node000001" title="Adds a new packet to the list." alt="" coords="5,13,211,38"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a29f623c1b7b29e37a2a71c556169b1c1" title="needs to be called as soon as possible, probably also from constructor." alt="" coords="259,5,449,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,23,245,23,245,28,211,28"/>
+<area shape="rect" id="Node000001" title="Adds one packet after enforcing the Manager&#39;s complete Packet Identification." alt="" coords="5,77,211,102"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#aa2664f6d778ae334021288535a2ed49b" title="Returns NORMAL, IDLE, or INVALID for the current header state." alt="" coords="259,5,456,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,74,265,46,266,51,159,79"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#ad667850d2d8b9447a043baeaa686cc9a" title="Returns mutable access to the owned primary Header." alt="" coords="259,69,455,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,87,245,87,245,92,211,92"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Packet.html#a29f623c1b7b29e37a2a71c556169b1c1" title="Enables or disables automatic dependent&#45;field finalization." alt="" coords="262,133,453,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,100,266,127,265,132,158,105"/>
 </map>

@@ -80,7 +80,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Parses and stores config values from custom file format.  
+<p>Parses and stores typed values from the CCSDSPack configuration format.  
  <a href="classConfig.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>&gt;</code></p>
@@ -88,38 +88,43 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a0366bb07234eb62a3ed9a5b5bd2ff94f" id="r_a0366bb07234eb62a3ed9a5b5bd2ff94f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">using</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a0366bb07234eb62a3ed9a5b5bd2ff94f">ConfigValue</a> = std::variant&lt; std::string, <a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">int</a>, <a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">float</a>, <a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">bool</a>, std::vector&lt; <a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">uint8_t</a> &gt; &gt;</td></tr>
+<tr class="memdesc:a0366bb07234eb62a3ed9a5b5bd2ff94f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Variant containing every value type supported by the parser.  <br /></td></tr>
 <tr class="separator:a0366bb07234eb62a3ed9a5b5bd2ff94f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a666e6d9c5510736d8ef85564abe834dd" id="r_a666e6d9c5510736d8ef85564abe834dd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a666e6d9c5510736d8ef85564abe834dd">load</a> (<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">const</a> std::string &amp;<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">filename</a>)</td></tr>
-<tr class="memdesc:a666e6d9c5510736d8ef85564abe834dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load config file.  <br /></td></tr>
+<tr class="memdesc:a666e6d9c5510736d8ef85564abe834dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads and replaces configuration values from a file.  <br /></td></tr>
 <tr class="separator:a666e6d9c5510736d8ef85564abe834dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0eb207d3a0c9b3039000301c612aadb" id="r_ac0eb207d3a0c9b3039000301c612aadb"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:ac0eb207d3a0c9b3039000301c612aadb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCCSDS_1_1Result.html">CCSDS::Result</a>&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">get</a> (const std::string &amp;key) const</td></tr>
-<tr class="memdesc:ac0eb207d3a0c9b3039000301c612aadb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get value by key and type.  <br /></td></tr>
+<tr class="memdesc:ac0eb207d3a0c9b3039000301c612aadb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a value by exact key and requested type.  <br /></td></tr>
 <tr class="separator:ac0eb207d3a0c9b3039000301c612aadb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a093d1897ebdb889d382706a73b02d249" id="r_a093d1897ebdb889d382706a73b02d249"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">bool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a093d1897ebdb889d382706a73b02d249">isKey</a> (<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">const</a> std::string &amp;<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>) <a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">const</a></td></tr>
+<tr class="memdesc:a093d1897ebdb889d382706a73b02d249"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether a key exists, regardless of its stored type.  <br /></td></tr>
 <tr class="separator:a093d1897ebdb889d382706a73b02d249"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
 <tr class="memitem:ae9010d142dcb6a29be942eb3b1513dda" id="r_ae9010d142dcb6a29be942eb3b1513dda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">static</a> std::tuple&lt; std::string, std::string, std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#ae9010d142dcb6a29be942eb3b1513dda">parseLine</a> (<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">const</a> std::string &amp;<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">line</a>)</td></tr>
-<tr class="memdesc:ae9010d142dcb6a29be942eb3b1513dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse a single line from config.  <br /></td></tr>
+<tr class="memdesc:ae9010d142dcb6a29be942eb3b1513dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Splits one configuration line into key, type, and raw value fields.  <br /></td></tr>
 <tr class="separator:ae9010d142dcb6a29be942eb3b1513dda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c3a6f1dbed78a72da53833b419491d9" id="r_a0c3a6f1dbed78a72da53833b419491d9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">static</a> <a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a0c3a6f1dbed78a72da53833b419491d9">parseBytes</a> (<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">const</a> std::string &amp;<a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">valueStr</a>)</td></tr>
-<tr class="memdesc:a0c3a6f1dbed78a72da53833b419491d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse string "[1,2,3]" into vector&lt;uint8_t&gt;  <br /></td></tr>
+<tr class="memdesc:a0c3a6f1dbed78a72da53833b419491d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parses a bracketed comma-separated byte vector.  <br /></td></tr>
 <tr class="separator:a0c3a6f1dbed78a72da53833b419491d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a43c9426a47883203dbedd711b09d304c" id="r_a43c9426a47883203dbedd711b09d304c"><td class="memItemLeft" align="right" valign="top">std::unordered_map&lt; std::string, <a class="el" href="classConfig.html#a0366bb07234eb62a3ed9a5b5bd2ff94f">ConfigValue</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classConfig.html#a43c9426a47883203dbedd711b09d304c">values</a></td></tr>
+<tr class="memdesc:a43c9426a47883203dbedd711b09d304c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parsed values indexed by key.  <br /></td></tr>
 <tr class="separator:a43c9426a47883203dbedd711b09d304c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Parses and stores config values from custom file format. </p>
+<div class="textblock"><p>Parses and stores typed values from the CCSDSPack configuration format. </p>
+<p>Each non-empty configuration line uses the form <code>key:type=value</code>. Supported types are string, int, float, bool, and byte vectors. Packet and Manager configuration loaders retrieve values through <a class="el" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" title="Retrieves a value by exact key and requested type.">get&lt;T&gt;()</a> and return CONFIG_FILE_ERROR when required keys or ranges are invalid.</p>
+<p><a class="el" href="classConfig.html" title="Parses and stores typed values from the CCSDSPack configuration format.">Config</a> is excluded from CCSDS_MCU builds because it depends on hosted file and string-processing facilities. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00014">14</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00029">29</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
 <a id="a0366bb07234eb62a3ed9a5b5bd2ff94f" name="a0366bb07234eb62a3ed9a5b5bd2ff94f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0366bb07234eb62a3ed9a5b5bd2ff94f">&#9670;&#160;</a></span>ConfigValue</h2>
@@ -133,7 +138,9 @@ Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00016">16</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
+<p>Variant containing every value type supported by the parser. </p>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00032">32</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
 
 </div>
 </div>
@@ -164,24 +171,39 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Get value by key and type. </p>
+<p>Retrieves a value by exact key and requested type. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>One of ConfigValue's supported alternatives. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>Configuration key. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The copied value, NO_DATA when the key is absent, or INVALID_DATA for a type mismatch. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00023">23</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   23</span>                                                 {</div>
-<div class="line"><span class="lineno">   24</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">it</a> = <a class="code hl_variable" href="classConfig.html#a43c9426a47883203dbedd711b09d304c">values</a>.find(<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>);</div>
-<div class="line"><span class="lineno">   25</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">it</a> == <a class="code hl_variable" href="classConfig.html#a43c9426a47883203dbedd711b09d304c">values</a>.end(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">CCSDS::ErrorCode::NO_DATA</a>,<span class="stringliteral">&quot;Config: No data found for key: &quot;</span> + <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>);</div>
-<div class="line"><span class="lineno">   26</span> </div>
-<div class="line"><span class="lineno">   27</span>    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span>* <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">p</a> = std::get_if&lt;T&gt;(&amp;<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">it</a>-&gt;second)) {</div>
-<div class="line"><span class="lineno">   28</span>      <span class="keywordflow">return</span> *<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">p</a>;</div>
-<div class="line"><span class="lineno">   29</span>    }</div>
-<div class="line"><span class="lineno">   30</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{ <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::ErrorCode::INVALID_DATA</a>, <span class="stringliteral">&quot;Config: Wrong type for key: &quot;</span> + <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>};</div>
-<div class="line"><span class="lineno">   31</span>  }</div>
-<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00152">CCSDSResult.h:152</a></div></div>
-<div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Represents an error with both an error code and a message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00047">CCSDSResult.h:47</a></div></div>
-<div class="ttc" id="aclassConfig_html_a43c9426a47883203dbedd711b09d304c"><div class="ttname"><a href="classConfig.html#a43c9426a47883203dbedd711b09d304c">Config::values</a></div><div class="ttdeci">std::unordered_map&lt; std::string, ConfigValue &gt; values</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00036">CCSDSConfig.h:36</a></div></div>
-<div class="ttc" id="aclassConfig_html_ac0eb207d3a0c9b3039000301c612aadb"><div class="ttname"><a href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">Config::get</a></div><div class="ttdeci">CCSDS::Result&lt; T &gt; get(const std::string &amp;key) const</div><div class="ttdoc">Get value by key and type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00023">CCSDSConfig.h:23</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">CCSDS::NO_DATA</a></div><div class="ttdeci">@ NO_DATA</div><div class="ttdoc">No data available.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00026">CCSDSResult.h:26</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::INVALID_DATA</a></div><div class="ttdeci">@ INVALID_DATA</div><div class="ttdoc">Data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00027">CCSDSResult.h:27</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00048">48</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   48</span>                                                 {</div>
+<div class="line"><span class="lineno">   49</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">it</a> = <a class="code hl_variable" href="classConfig.html#a43c9426a47883203dbedd711b09d304c">values</a>.find(<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>);</div>
+<div class="line"><span class="lineno">   50</span>    <a class="code hl_define" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">it</a> == <a class="code hl_variable" href="classConfig.html#a43c9426a47883203dbedd711b09d304c">values</a>.end(), <a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">CCSDS::ErrorCode::NO_DATA</a>,</div>
+<div class="line"><span class="lineno">   51</span>                   <span class="stringliteral">&quot;Config: No data found for key: &quot;</span> + <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>);</div>
+<div class="line"><span class="lineno">   52</span> </div>
+<div class="line"><span class="lineno">   53</span>    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span>* <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">p</a> = std::get_if&lt;T&gt;(&amp;<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">it</a>-&gt;second)) {</div>
+<div class="line"><span class="lineno">   54</span>      <span class="keywordflow">return</span> *<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">p</a>;</div>
+<div class="line"><span class="lineno">   55</span>    }</div>
+<div class="line"><span class="lineno">   56</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{<a class="code hl_enumvalue" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::ErrorCode::INVALID_DATA</a>,</div>
+<div class="line"><span class="lineno">   57</span>                        <span class="stringliteral">&quot;Config: Wrong type for key: &quot;</span> + <a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>};</div>
+<div class="line"><span class="lineno">   58</span>  }</div>
+<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Returns CCSDS::Error when condition is true.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00156">CCSDSResult.h:156</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Immutable error category and diagnostic message returned by Result.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00050">CCSDSResult.h:50</a></div></div>
+<div class="ttc" id="aclassConfig_html_a43c9426a47883203dbedd711b09d304c"><div class="ttname"><a href="classConfig.html#a43c9426a47883203dbedd711b09d304c">Config::values</a></div><div class="ttdeci">std::unordered_map&lt; std::string, ConfigValue &gt; values</div><div class="ttdoc">Parsed values indexed by key.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00068">CCSDSConfig.h:68</a></div></div>
+<div class="ttc" id="aclassConfig_html_ac0eb207d3a0c9b3039000301c612aadb"><div class="ttname"><a href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">Config::get</a></div><div class="ttdeci">CCSDS::Result&lt; T &gt; get(const std::string &amp;key) const</div><div class="ttdoc">Retrieves a value by exact key and requested type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00048">CCSDSConfig.h:48</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a04d9531f456074e3ae599a8d7d6a416d">CCSDS::NO_DATA</a></div><div class="ttdeci">@ NO_DATA</div><div class="ttdoc">Required data or stored packets are absent.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00032">CCSDSResult.h:32</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31">CCSDS::INVALID_DATA</a></div><div class="ttdeci">@ INVALID_DATA</div><div class="ttdoc">Generic malformed data or invalid boundary.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00033">CCSDSResult.h:33</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -206,6 +228,15 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
+<p>Tests whether a key exists, regardless of its stored type. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">key</td><td>Configuration key. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True when the key is present. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="CCSDSConfig_8cpp_source.html#l00051">51</a> of file <a class="el" href="CCSDSConfig_8cpp_source.html">CCSDSConfig.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   51</span>                                             {</div>
 <div class="line"><span class="lineno">   52</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classConfig.html#a43c9426a47883203dbedd711b09d304c">values</a>.find(<a class="code hl_function" href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">key</a>) != <a class="code hl_variable" href="classConfig.html#a43c9426a47883203dbedd711b09d304c">values</a>.end()) {</div>
@@ -221,7 +252,7 @@ Here is the call graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classConfig_a093d1897ebdb889d382706a73b02d249_icgraph.svg" width="100%" height="525"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classConfig_a093d1897ebdb889d382706a73b02d249_icgraph.svg" width="667" height="250"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -242,7 +273,14 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p>Load config file. </p>
+<p>Loads and replaces configuration values from a file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>Path to a text configuration file. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or FILE_READ_ERROR/CONFIG_FILE_ERROR for malformed input. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSConfig_8cpp_source.html#l00015">15</a> of file <a class="el" href="CCSDSConfig_8cpp_source.html">CCSDSConfig.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   15</span>                                                      {</div>
@@ -280,11 +318,11 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">   47</span> </div>
 <div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   49</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_ac05d018e9e1b63588289c6b033246e4b"><div class="ttname"><a href="CCSDSResult_8h.html#ac05d018e9e1b63588289c6b033246e4b">ASSIGN_CP</a></div><div class="ttdeci">#define ASSIGN_CP(var, result)</div><div class="ttdoc">Macro to assign a result value to a variable or return an error by copy.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00174">CCSDSResult.h:174</a></div></div>
-<div class="ttc" id="aclassConfig_html_a0366bb07234eb62a3ed9a5b5bd2ff94f"><div class="ttname"><a href="classConfig.html#a0366bb07234eb62a3ed9a5b5bd2ff94f">Config::ConfigValue</a></div><div class="ttdeci">std::variant&lt; std::string, int, float, bool, std::vector&lt; uint8_t &gt; &gt; ConfigValue</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00016">CCSDSConfig.h:16</a></div></div>
-<div class="ttc" id="aclassConfig_html_a0c3a6f1dbed78a72da53833b419491d9"><div class="ttname"><a href="classConfig.html#a0c3a6f1dbed78a72da53833b419491d9">Config::parseBytes</a></div><div class="ttdeci">static CCSDS::ResultBuffer parseBytes(const std::string &amp;valueStr)</div><div class="ttdoc">Parse string &quot;[1,2,3]&quot; into vector&lt;uint8_t&gt;</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00075">CCSDSConfig.cpp:75</a></div></div>
-<div class="ttc" id="aclassConfig_html_ae9010d142dcb6a29be942eb3b1513dda"><div class="ttname"><a href="classConfig.html#ae9010d142dcb6a29be942eb3b1513dda">Config::parseLine</a></div><div class="ttdeci">static std::tuple&lt; std::string, std::string, std::string &gt; parseLine(const std::string &amp;line)</div><div class="ttdoc">Parse a single line from config.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00058">CCSDSConfig.cpp:58</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::CONFIG_FILE_ERROR</a></div><div class="ttdeci">@ CONFIG_FILE_ERROR</div><div class="ttdoc">Configuration file error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00038">CCSDSResult.h:37</a></div></div>
+<div class="ttc" id="aCCSDSResult_8h_html_ac05d018e9e1b63588289c6b033246e4b"><div class="ttname"><a href="CCSDSResult_8h.html#ac05d018e9e1b63588289c6b033246e4b">ASSIGN_CP</a></div><div class="ttdeci">#define ASSIGN_CP(var, result)</div><div class="ttdoc">Propagates a failed Result or copies its success value into var.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00182">CCSDSResult.h:182</a></div></div>
+<div class="ttc" id="aclassConfig_html_a0366bb07234eb62a3ed9a5b5bd2ff94f"><div class="ttname"><a href="classConfig.html#a0366bb07234eb62a3ed9a5b5bd2ff94f">Config::ConfigValue</a></div><div class="ttdeci">std::variant&lt; std::string, int, float, bool, std::vector&lt; uint8_t &gt; &gt; ConfigValue</div><div class="ttdoc">Variant containing every value type supported by the parser.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00032">CCSDSConfig.h:32</a></div></div>
+<div class="ttc" id="aclassConfig_html_a0c3a6f1dbed78a72da53833b419491d9"><div class="ttname"><a href="classConfig.html#a0c3a6f1dbed78a72da53833b419491d9">Config::parseBytes</a></div><div class="ttdeci">static CCSDS::ResultBuffer parseBytes(const std::string &amp;valueStr)</div><div class="ttdoc">Parses a bracketed comma-separated byte vector.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00075">CCSDSConfig.cpp:75</a></div></div>
+<div class="ttc" id="aclassConfig_html_ae9010d142dcb6a29be942eb3b1513dda"><div class="ttname"><a href="classConfig.html#ae9010d142dcb6a29be942eb3b1513dda">Config::parseLine</a></div><div class="ttdeci">static std::tuple&lt; std::string, std::string, std::string &gt; parseLine(const std::string &amp;line)</div><div class="ttdoc">Splits one configuration line into key, type, and raw value fields.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00058">CCSDSConfig.cpp:58</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::CONFIG_FILE_ERROR</a></div><div class="ttdeci">@ CONFIG_FILE_ERROR</div><div class="ttdoc">Configuration file/key/type/value is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00044">CCSDSResult.h:43</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -322,7 +360,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Parse string "[1,2,3]" into vector&lt;uint8_t&gt; </p>
+<p>Parses a bracketed comma-separated byte vector. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">valueStr</td><td>Text such as <code>[1, 2, 255]</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Parsed bytes, or CONFIG_FILE_ERROR for invalid syntax/range. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSConfig_8cpp_source.html#l00075">75</a> of file <a class="el" href="CCSDSConfig_8cpp_source.html">CCSDSConfig.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   75</span>                                                              {</div>
@@ -416,7 +461,14 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Parse a single line from config. </p>
+<p>Splits one configuration line into key, type, and raw value fields. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">line</td><td>Input line. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Tuple containing key, type token, and unparsed value text. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSConfig_8cpp_source.html#l00058">58</a> of file <a class="el" href="CCSDSConfig_8cpp_source.html">CCSDSConfig.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   58</span>                                                                                 {</div>
@@ -469,7 +521,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00036">36</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
+<p>Parsed values indexed by key. </p>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSConfig_8h_source.html#l00068">68</a> of file <a class="el" href="CCSDSConfig_8h_source.html">CCSDSConfig.h</a>.</p>
 
 </div>
 </div>

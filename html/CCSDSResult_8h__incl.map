@@ -1,5 +1,5 @@
 <map id="inc/CCSDSResult.h" name="inc/CCSDSResult.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="101,5,244,31"/>
+<area shape="rect" id="Node000001" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="101,5,244,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,73,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,33,74,74,72,70,150,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="97,79,160,104"/>

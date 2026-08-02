@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="enable sync pattern utilization both in serialization, deserialization, read and write.">
+<g id="a_Node000001"><a xlink:title="Enables or disables synchronization&#45;marker insertion and parsing.">
 <polygon fill="#999999" stroke="#666666" points="254,-30 77,-30 77,0 254,0 254,-30"/>
 <text text-anchor="start" x="85" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::setSyncPattern</text>
 <text text-anchor="middle" x="165.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Enable</text>

@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="classCCSDS_1_1Header.html" target="_top" xlink:title="Manages the decomposition and manipulation of CCSDS primary headers.">
+<g id="a_Node000000"><a xlink:href="classCCSDS_1_1Header.html" target="_top" xlink:title="Validated in&#45;memory representation of a CCSDS Space Packet primary header.">
 <polygon fill="white" stroke="#666666" points="91,-19 0,-19 0,0 91,0 91,-19"/>
 <text text-anchor="middle" x="45.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header</text>
 </a>

@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Sets the application data for the packet.">
+<g id="a_Node000001"><a xlink:title="Replaces the packet application data.">
 <polygon fill="#999999" stroke="#666666" points="496,-19 310,-19 310,0 496,0 496,-19"/>
 <text text-anchor="middle" x="403" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::setApplicationData</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#abb8e2225df8018c04ad76c874cadee69" target="_top" xlink:title="Sets the application data for the packet.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#abb8e2225df8018c04ad76c874cadee69" target="_top" xlink:title="Generates one or more packets from application data.">
 <polygon fill="white" stroke="#666666" points="274,-19 77,-19 77,0 274,0 274,-19"/>
 <text text-anchor="middle" x="175.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::setApplicationData</text>
 </a>

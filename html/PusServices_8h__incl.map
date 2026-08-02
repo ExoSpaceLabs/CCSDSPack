@@ -1,12 +1,12 @@
 <map id="inc/PusServices.h" name="inc/PusServices.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="309,5,444,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSSecondaryHeaderAbstract_8h.html" title=" " alt="" coords="133,152,380,177"/>
+<area shape="rect" id="Node000001" title="Defines legacy project&#45;specific secondary&#45;header formats retained for v1 compatibility." alt="" coords="309,5,444,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSSecondaryHeaderAbstract_8h.html" title="Defines the extension interface and raw&#45;buffer implementation for packet secondary headers." alt="" coords="133,152,380,177"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="369,33,277,143,273,140,365,29"/>
-<area shape="rect" id="Node000003" href="$CCSDSResult_8h.html" title=" " alt="" coords="77,299,196,324"/>
+<area shape="rect" id="Node000003" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="77,299,196,324"/>
 <area shape="poly" id="edge21_Node000001_Node000003" title=" " alt="" coords="321,33,271,49,216,73,164,107,142,129,124,153,113,186,112,222,119,256,129,285,124,287,114,258,107,223,108,185,120,151,138,125,161,103,213,68,269,44,319,28"/>
-<area shape="rect" id="Node000008" href="$CCSDSConfig_8h.html" title=" " alt="" coords="327,225,445,251"/>
+<area shape="rect" id="Node000008" href="$CCSDSConfig_8h.html" title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files." alt="" coords="327,225,445,251"/>
 <area shape="poly" id="edge22_Node000001_Node000008" title=" " alt="" coords="382,30,392,93,395,135,395,177,392,212,387,212,390,177,390,135,386,93,376,31"/>
-<area shape="rect" id="Node000011" href="$CCSDSSecondaryHeaderFactory_8h.html" title=" " alt="" coords="455,79,693,104"/>
+<area shape="rect" id="Node000011" href="$CCSDSSecondaryHeaderFactory_8h.html" title="Defines the per&#45;DataField registry used to look up secondary&#45;header implementations." alt="" coords="455,79,693,104"/>
 <area shape="poly" id="edge15_Node000001_Node000011" title=" " alt="" coords="409,28,530,71,528,76,407,33"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="249,179,157,290,153,286,245,176"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="203,372,265,397"/>

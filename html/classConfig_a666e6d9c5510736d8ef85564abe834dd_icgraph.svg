@@ -57,7 +57,7 @@ var sectionId = 'dynsection-4';
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Load config file.">
+<g id="a_Node000001"><a xlink:title="Loads and replaces configuration values from a file.">
 <polygon fill="#999999" stroke="#666666" points="504,-37 430,-37 430,-18 504,-18 504,-37"/>
 <text text-anchor="middle" x="467" y="-25" font-family="Helvetica,sans-Serif" font-size="10.00">Config::load</text>
 </a>
@@ -66,7 +66,7 @@ var sectionId = 'dynsection-4';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#a9ba3b255c1cd19b48a11dba5fc8819ff" target="_top" xlink:title="Loads a packet from a configuration file, including secondary header if present.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html#a9ba3b255c1cd19b48a11dba5fc8819ff" target="_top" xlink:title="Loads packet construction settings from a configuration file.">
 <polygon fill="white" stroke="#666666" points="394,-56 207,-56 207,-37 394,-37 394,-56"/>
 <text text-anchor="middle" x="300.5" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::loadFromConfigFile</text>
 </a>
@@ -102,7 +102,7 @@ var sectionId = 'dynsection-4';
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#a063eeb88f124db9af02bd033e95733b1" target="_top" xlink:title="Loads a template packet from a configuration file.">
+<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#a063eeb88f124db9af02bd033e95733b1" target="_top" xlink:title="Loads and installs a template from a CCSDSPack configuration file.">
 <polygon fill="white" stroke="#666666" points="170.5,-83.5 0.5,-83.5 0.5,-53.5 170.5,-53.5 170.5,-83.5"/>
 <text text-anchor="start" x="8.5" y="-71.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::loadTemplate</text>
 <text text-anchor="middle" x="85.5" y="-60.5" font-family="Helvetica,sans-Serif" font-size="10.00">ConfigFile</text>
@@ -121,7 +121,7 @@ var sectionId = 'dynsection-4';
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Load a template packet from a binary or configuration file.">
+<g id="a_Node000004"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Loads and installs a template from a .bin or .cfg file.">
 <polygon fill="white" stroke="#666666" points="171,-35 0,-35 0,-16 171,-16 171,-35"/>
 <text text-anchor="middle" x="85.5" y="-23" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::readTemplate</text>
 </a>

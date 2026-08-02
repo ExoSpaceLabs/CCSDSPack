@@ -1,0 +1,7 @@
+<map id="CCSDS::Manager::syncSequenceCountFromPacket" name="CCSDS::Manager::syncSequenceCountFromPacket">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,37,237,77"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#ad667850d2d8b9447a043baeaa686cc9a" title="Returns mutable access to the owned primary Header." alt="" coords="294,5,490,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="237,41,280,36,281,41,238,46"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68" title="Returns the stored 14&#45;bit sequence count." alt="" coords="285,69,499,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="238,68,272,72,271,78,237,74"/>
+</map>

@@ -46,7 +46,7 @@
   </g>
 </defs>
 <script type="application/ecmascript">
-var viewWidth = 1088;
+var viewWidth = 948;
 var viewHeight = 192;
 var sectionId = 'dynsection-1';
 </script>
@@ -57,7 +57,7 @@ var sectionId = 'dynsection-1';
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Defines the single&#45;stream CCSDS packet Manager.">
 <polygon fill="#999999" stroke="#666666" points="389,-184 271,-184 271,-165 389,-165 389,-184"/>
 <text text-anchor="middle" x="330" y="-172" font-family="Helvetica,sans-Serif" font-size="10.00">inc/CCSDSManager.h</text>
 </a>
@@ -66,7 +66,7 @@ var sectionId = 'dynsection-1';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSPack_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="CCSDSPack_8h.html" target="_top" xlink:title="Convenience umbrella header for the complete public CCSDSPack API.">
 <polygon fill="white" stroke="#666666" points="247,-74 149,-74 149,-55 247,-55 247,-74"/>
 <text text-anchor="middle" x="198" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">inc/CCSDSPack.h</text>
 </a>
@@ -84,9 +84,9 @@ var sectionId = 'dynsection-1';
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="CCSDSUtils_8h.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="587,-129 489,-129 489,-110 587,-110 587,-129"/>
-<text text-anchor="middle" x="538" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">inc/CCSDSUtils.h</text>
+<g id="a_Node000006"><a xlink:href="CCSDSUtils_8h.html" target="_top" xlink:title="Declares CRC, diagnostic formatting, and binary file helper functions.">
+<polygon fill="white" stroke="#666666" points="527,-129 429,-129 429,-110 527,-110 527,-129"/>
+<text text-anchor="middle" x="478" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">inc/CCSDSUtils.h</text>
 </a>
 </g>
 </g>
@@ -94,24 +94,24 @@ var sectionId = 'dynsection-1';
 <g id="edge5_Node000001_Node000006" class="edge">
 <title>Node1&#45;&gt;Node6</title>
 <g id="a_edge5_Node000001_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M373.41,-162.44C412.35,-152.52 468.69,-138.16 504.32,-129.08"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="372.24,-159.12 363.42,-164.98 373.97,-165.91 372.24,-159.12"/>
+<path fill="none" stroke="#63b8ff" d="M363.37,-161.55C390.85,-151.71 429.17,-137.98 453.79,-129.17"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="362.01,-158.32 353.78,-164.98 364.37,-164.91 362.01,-158.32"/>
 </a>
 </g>
 </g>
-<!-- Node8 -->
-<g id="Node000008" class="node">
-<title>Node8</title>
-<g id="a_Node000008"><a xlink:href="CCSDSManager_8cpp.html" target="_top" xlink:title=" ">
+<!-- Node7 -->
+<g id="Node000007" class="node">
+<title>Node7</title>
+<g id="a_Node000007"><a xlink:href="CCSDSManager_8cpp.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="394.5,-74 265.5,-74 265.5,-55 394.5,-55 394.5,-74"/>
 <text text-anchor="middle" x="330" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSManager.cpp</text>
 </a>
 </g>
 </g>
-<!-- Node1&#45;&gt;Node8 -->
-<g id="edge13_Node000001_Node000008" class="edge">
-<title>Node1&#45;&gt;Node8</title>
-<g id="a_edge13_Node000001_Node000008"><a xlink:title=" ">
+<!-- Node1&#45;&gt;Node7 -->
+<g id="edge12_Node000001_Node000007" class="edge">
+<title>Node1&#45;&gt;Node7</title>
+<g id="a_edge12_Node000001_Node000007"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M330,-154.48C330,-130.84 330,-91.5 330,-74.16"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="326.5,-154.66 330,-164.66 333.5,-154.66 326.5,-154.66"/>
 </a>
@@ -120,7 +120,7 @@ var sectionId = 'dynsection-1';
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="exec__decoder_8cpp.html" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="exec__decoder_8cpp.html" target="_top" xlink:title="Command&#45;line decoder for CCSDS Space Packet streams.">
 <polygon fill="white" stroke="#666666" points="120,-19 0,-19 0,0 120,0 120,-19"/>
 <text text-anchor="middle" x="60" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">src/exec_decoder.cpp</text>
 </a>
@@ -138,7 +138,7 @@ var sectionId = 'dynsection-1';
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="exec__encoder_8cpp.html" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="exec__encoder_8cpp.html" target="_top" xlink:title="Command&#45;line encoder for CCSDS Space Packet streams.">
 <polygon fill="white" stroke="#666666" points="258,-19 138,-19 138,0 258,0 258,-19"/>
 <text text-anchor="middle" x="198" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">src/exec_encoder.cpp</text>
 </a>
@@ -156,7 +156,7 @@ var sectionId = 'dynsection-1';
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="exec__validator_8cpp.html" target="_top" xlink:title=" ">
+<g id="a_Node000005"><a xlink:href="exec__validator_8cpp.html" target="_top" xlink:title="Command&#45;line validator for CCSDS Space Packet streams.">
 <polygon fill="white" stroke="#666666" points="401.5,-19 276.5,-19 276.5,0 401.5,0 401.5,-19"/>
 <text text-anchor="middle" x="339" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">src/exec_validator.cpp</text>
 </a>
@@ -175,17 +175,8 @@ var sectionId = 'dynsection-1';
 <g id="edge6_Node000006_Node000002" class="edge">
 <title>Node6&#45;&gt;Node2</title>
 <g id="a_edge6_Node000006_Node000002"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M478.73,-109.26C413.05,-99.02 308.32,-82.7 247.06,-73.15"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="478.5,-112.77 488.92,-110.85 479.58,-105.85 478.5,-112.77"/>
-</a>
-</g>
-</g>
-<!-- Node7 -->
-<g id="Node000007" class="node">
-<title>Node7</title>
-<g id="a_Node000007"><a xlink:href="CCSDSHeader_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="1080,-74 958,-74 958,-55 1080,-55 1080,-74"/>
-<text text-anchor="middle" x="1019" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSHeader.cpp</text>
+<path fill="none" stroke="#63b8ff" d="M422.87,-108.07C370.38,-98.13 292.32,-83.35 243.34,-74.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="422.54,-111.56 433.01,-109.98 423.84,-104.69 422.54,-111.56"/>
 </a>
 </g>
 </g>
@@ -193,8 +184,17 @@ var sectionId = 'dynsection-1';
 <g id="edge7_Node000006_Node000007" class="edge">
 <title>Node6&#45;&gt;Node7</title>
 <g id="a_edge7_Node000006_Node000007"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M597.41,-112.31C677.35,-103.93 823.95,-88.36 949,-74 951.92,-73.66 954.91,-73.32 957.92,-72.96"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="596.63,-108.87 587.05,-113.4 597.36,-115.84 596.63,-108.87"/>
+<path fill="none" stroke="#63b8ff" d="M444.63,-106.55C417.15,-96.71 378.83,-82.98 354.21,-74.17"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="443.63,-109.91 454.22,-109.98 445.99,-103.32 443.63,-109.91"/>
+</a>
+</g>
+</g>
+<!-- Node8 -->
+<g id="Node000008" class="node">
+<title>Node8</title>
+<g id="a_Node000008"><a xlink:href="CCSDSPacket_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="811.5,-74 692.5,-74 692.5,-55 811.5,-55 811.5,-74"/>
+<text text-anchor="middle" x="752" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSPacket.cpp</text>
 </a>
 </g>
 </g>
@@ -202,17 +202,17 @@ var sectionId = 'dynsection-1';
 <g id="edge8_Node000006_Node000008" class="edge">
 <title>Node6&#45;&gt;Node8</title>
 <g id="a_edge8_Node000006_Node000008"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M494.59,-107.44C455.65,-97.52 399.31,-83.16 363.68,-74.08"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="494.03,-110.91 504.58,-109.98 495.76,-104.12 494.03,-110.91"/>
+<path fill="none" stroke="#63b8ff" d="M531.95,-108.07C583.31,-98.13 659.7,-83.35 707.63,-74.08"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="531.18,-104.65 522.02,-109.98 532.51,-111.52 531.18,-104.65"/>
 </a>
 </g>
 </g>
 <!-- Node9 -->
 <g id="Node000009" class="node">
 <title>Node9</title>
-<g id="a_Node000009"><a xlink:href="CCSDSPacket_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="531.5,-74 412.5,-74 412.5,-55 531.5,-55 531.5,-74"/>
-<text text-anchor="middle" x="472" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSPacket.cpp</text>
+<g id="a_Node000009"><a xlink:href="CCSDSUtils_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="940,-74 830,-74 830,-55 940,-55 940,-74"/>
+<text text-anchor="middle" x="885" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSUtils.cpp</text>
 </a>
 </g>
 </g>
@@ -220,17 +220,17 @@ var sectionId = 'dynsection-1';
 <g id="edge9_Node000006_Node000009" class="edge">
 <title>Node6&#45;&gt;Node9</title>
 <g id="a_edge9_Node000006_Node000009"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M519.45,-103.6C507.62,-94.11 492.71,-82.13 482.8,-74.17"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="517.41,-106.45 527.4,-109.98 521.79,-100.99 517.41,-106.45"/>
+<path fill="none" stroke="#63b8ff" d="M537.29,-110.86C605.67,-102.04 721.47,-87.07 821,-74 823.89,-73.62 826.85,-73.23 829.84,-72.84"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="536.61,-107.42 527.14,-112.17 537.5,-114.36 536.61,-107.42"/>
 </a>
 </g>
 </g>
 <!-- Node10 -->
 <g id="Node000010" class="node">
 <title>Node10</title>
-<g id="a_Node000010"><a xlink:href="CCSDSUtils_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="660,-74 550,-74 550,-55 660,-55 660,-74"/>
-<text text-anchor="middle" x="605" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSUtils.cpp</text>
+<g id="a_Node000010"><a xlink:href="CCSDSValidator_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="543,-74 413,-74 413,-55 543,-55 543,-74"/>
+<text text-anchor="middle" x="478" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSValidator.cpp</text>
 </a>
 </g>
 </g>
@@ -238,17 +238,17 @@ var sectionId = 'dynsection-1';
 <g id="edge10_Node000006_Node000010" class="edge">
 <title>Node6&#45;&gt;Node10</title>
 <g id="a_edge10_Node000006_Node000010"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M556.83,-103.6C568.84,-94.11 583.97,-82.13 594.04,-74.17"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="554.44,-101.04 548.76,-109.98 558.78,-106.53 554.44,-101.04"/>
+<path fill="none" stroke="#63b8ff" d="M478,-99.66C478,-90.93 478,-80.99 478,-74.09"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="474.5,-99.75 478,-109.75 481.5,-99.75 474.5,-99.75"/>
 </a>
 </g>
 </g>
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="CCSDSValidator_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="808,-74 678,-74 678,-55 808,-55 808,-74"/>
-<text text-anchor="middle" x="743" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/CCSDSValidator.cpp</text>
+<g id="a_Node000011"><a xlink:href="PusServices_8cpp.html" target="_top" xlink:title=" ">
+<polygon fill="white" stroke="#666666" points="674.5,-74 561.5,-74 561.5,-55 674.5,-55 674.5,-74"/>
+<text text-anchor="middle" x="618" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/PusServices.cpp</text>
 </a>
 </g>
 </g>
@@ -256,26 +256,8 @@ var sectionId = 'dynsection-1';
 <g id="edge11_Node000006_Node000011" class="edge">
 <title>Node6&#45;&gt;Node11</title>
 <g id="a_edge11_Node000006_Node000011"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M580.79,-107.44C619.17,-97.52 674.69,-83.16 709.81,-74.08"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="579.74,-104.09 570.94,-109.98 581.49,-110.87 579.74,-104.09"/>
-</a>
-</g>
-</g>
-<!-- Node12 -->
-<g id="Node000012" class="node">
-<title>Node12</title>
-<g id="a_Node000012"><a xlink:href="PusServices_8cpp.html" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="939.5,-74 826.5,-74 826.5,-55 939.5,-55 939.5,-74"/>
-<text text-anchor="middle" x="883" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">src/PusServices.cpp</text>
-</a>
-</g>
-</g>
-<!-- Node6&#45;&gt;Node12 -->
-<g id="edge12_Node000006_Node000012" class="edge">
-<title>Node6&#45;&gt;Node12</title>
-<g id="a_edge12_Node000006_Node000012"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M597.09,-109.42C661.7,-99.5 764.41,-83.72 827.54,-74.02"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="596.42,-105.98 587.06,-110.96 597.48,-112.9 596.42,-105.98"/>
+<path fill="none" stroke="#63b8ff" d="M509.91,-106.42C535.88,-96.59 571.92,-82.95 595.1,-74.17"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="508.61,-103.17 500.49,-109.98 511.08,-109.72 508.61,-103.17"/>
 </a>
 </g>
 </g>

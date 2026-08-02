@@ -1,5 +1,11 @@
 <map id="CCSDS::DataField::serialize" name="CCSDS::DataField::serialize">
-<area shape="rect" id="Node000001" title="Retrieves the full data field by combining the data field header and application data." alt="" coords="223,5,421,31"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Updates Primary headers data field size." alt="" coords="5,5,175,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,21,175,21,175,15,209,15"/>
+<area shape="rect" id="Node000001" title="Finalizes the secondary header and serializes the complete data&#45;field content." alt="" coords="575,35,773,60"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Finalizes dependent packet state without returning serialized bytes." alt="" coords="357,35,527,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="561,50,527,50,527,45,561,45"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs and binds a Manager to a packet template." alt="" coords="111,5,307,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="343,38,306,33,307,28,344,32"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a12705ae8e0c680ec128a3d0d55b738b6" title="Finalizes and installs a packet template, binding the Manager identifier." alt="" coords="108,55,309,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="344,62,310,66,309,61,343,57"/>
+<area shape="rect" id="Node000005" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,63,60,88"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="94,78,60,78,60,73,94,73"/>
 </map>

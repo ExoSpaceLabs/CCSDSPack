@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Parse a single line from config.">
+<g id="a_Node000001"><a xlink:title="Splits one configuration line into key, type, and raw value fields.">
 <polygon fill="#999999" stroke="#666666" points="101,-19 0,-19 0,0 101,0 101,-19"/>
 <text text-anchor="middle" x="50.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::parseLine</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Get value by key and type.">
+<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Retrieves a value by exact key and requested type.">
 <polygon fill="white" stroke="#666666" points="206,-19 137,-19 137,0 206,0 206,-19"/>
 <text text-anchor="middle" x="171.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::get</text>
 </a>

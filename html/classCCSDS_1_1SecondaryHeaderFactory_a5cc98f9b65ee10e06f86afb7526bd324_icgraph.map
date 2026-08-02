@@ -1,0 +1,5 @@
+<map id="CCSDS::SecondaryHeaderFactory::create" name="CCSDS::SecondaryHeaderFactory::create">
+<area shape="rect" id="Node000001" title="Looks up a registered secondary&#45;header object." alt="" coords="248,5,484,45"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a1984e0c66d6e507fc1a34bdd2d8f3b6f" title="Bounded parse with a registered secondary&#45;header type." alt="" coords="5,5,200,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,28,200,28,200,23,234,23"/>
+</map>

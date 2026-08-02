@@ -82,7 +82,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a fixed secondary header used as a data buffer.  
+<p>Opaque secondary header that stores bytes without interpreting them.  
  <a href="classCCSDS_1_1BufferHeader.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>&gt;</code></p>
@@ -100,59 +100,61 @@ Collaboration diagram for CCSDS::BufferHeader:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac5f100532d8e8f1f32cfc729958de74e" id="r_ac5f100532d8e8f1f32cfc729958de74e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#ac5f100532d8e8f1f32cfc729958de74e">BufferHeader</a> ()=default</td></tr>
+<tr class="memdesc:ac5f100532d8e8f1f32cfc729958de74e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an empty raw secondary header.  <br /></td></tr>
 <tr class="separator:ac5f100532d8e8f1f32cfc729958de74e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc7e6f4741beb8ed2a8424856abbf708" id="r_abc7e6f4741beb8ed2a8424856abbf708"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#abc7e6f4741beb8ed2a8424856abbf708">BufferHeader</a> (const std::vector&lt; std::uint8_t &gt; &amp;data)</td></tr>
-<tr class="memdesc:abc7e6f4741beb8ed2a8424856abbf708"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a DataOnlyHeader object with all fields explicitly set.  <br /></td></tr>
+<tr class="memdesc:abc7e6f4741beb8ed2a8424856abbf708"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a raw secondary header from bytes.  <br /></td></tr>
 <tr class="separator:abc7e6f4741beb8ed2a8424856abbf708"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5fb3f4f04a61e07359e743a53e9b6be" id="r_aa5fb3f4f04a61e07359e743a53e9b6be"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#aa5fb3f4f04a61e07359e743a53e9b6be">deserialize</a> (const std::vector&lt; std::uint8_t &gt; &amp;data) override</td></tr>
-<tr class="memdesc:aa5fb3f4f04a61e07359e743a53e9b6be"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a buffer if data (vector std::uint8) and creates the header  <br /></td></tr>
+<tr class="memdesc:aa5fb3f4f04a61e07359e743a53e9b6be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces the stored raw bytes.  <br /></td></tr>
 <tr class="separator:aa5fb3f4f04a61e07359e743a53e9b6be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a495161b70d7fbb63f32b1820e622bbce" id="r_a495161b70d7fbb63f32b1820e622bbce"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#a495161b70d7fbb63f32b1820e622bbce">getSize</a> () const override</td></tr>
-<tr class="memdesc:a495161b70d7fbb63f32b1820e622bbce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the header in bytes.  <br /></td></tr>
+<tr class="memdesc:a495161b70d7fbb63f32b1820e622bbce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the number of stored raw bytes.  <br /></td></tr>
 <tr class="separator:a495161b70d7fbb63f32b1820e622bbce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe579573b7257ce8c5e9f25d0d19d476" id="r_abe579573b7257ce8c5e9f25d0d19d476"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#abe579573b7257ce8c5e9f25d0d19d476">getType</a> () const override</td></tr>
-<tr class="memdesc:abe579573b7257ce8c5e9f25d0d19d476"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of the packet.  <br /></td></tr>
+<tr class="memdesc:abe579573b7257ce8c5e9f25d0d19d476"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the factory key "DataOnlyHeader".  <br /></td></tr>
 <tr class="separator:abe579573b7257ce8c5e9f25d0d19d476"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadda0ec1a8a3670fdad02b86327523d7" id="r_aadda0ec1a8a3670fdad02b86327523d7"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#aadda0ec1a8a3670fdad02b86327523d7">serialize</a> () const override</td></tr>
-<tr class="memdesc:aadda0ec1a8a3670fdad02b86327523d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the serialized representation of the header.  <br /></td></tr>
+<tr class="memdesc:aadda0ec1a8a3670fdad02b86327523d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a copy of the stored raw bytes.  <br /></td></tr>
 <tr class="separator:aadda0ec1a8a3670fdad02b86327523d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cfdb793f62972c65b3a93a1726eaec6" id="r_a6cfdb793f62972c65b3a93a1726eaec6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#a6cfdb793f62972c65b3a93a1726eaec6">update</a> (<a class="el" href="classCCSDS_1_1DataField.html">DataField</a> *dataField) override</td></tr>
-<tr class="memdesc:a6cfdb793f62972c65b3a93a1726eaec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how the packet secondary header is updated using the data field as reference.  <br /></td></tr>
+<tr class="memdesc:a6cfdb793f62972c65b3a93a1726eaec6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes the internal compatibility length from the current byte count.  <br /></td></tr>
 <tr class="separator:a6cfdb793f62972c65b3a93a1726eaec6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abf8a042338097293a3e5f118ab130644" id="r_abf8a042338097293a3e5f118ab130644"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#abf8a042338097293a3e5f118ab130644">loadFromConfig</a> (const <a class="el" href="classConfig.html">Config</a> &amp;config) override</td></tr>
+<tr class="memdesc:abf8a042338097293a3e5f118ab130644"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accepts configuration without modifying raw bytes.  <br /></td></tr>
 <tr class="separator:abf8a042338097293a3e5f118ab130644"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCCSDS_1_1SecondaryHeaderAbstract')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a></td></tr>
 <tr class="memitem:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a0bb132a381880133c97f096f92bce570"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0bb132a381880133c97f096f92bce570">~SecondaryHeaderAbstract</a> ()=default</td></tr>
+<tr class="memdesc:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables safe destruction through a base-class pointer.  <br /></td></tr>
 <tr class="separator:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a500d02f23e54e103b1839132a7bdff80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a500d02f23e54e103b1839132a7bdff80">setVariableLength</a> (const bool bEnable)</td></tr>
+<tr class="memdesc:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declares whether the header accepts variable serialized lengths.  <br /></td></tr>
 <tr class="separator:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:a17a75c520fffdf332ee7acf7dbfd1a16" id="r_a17a75c520fffdf332ee7acf7dbfd1a16"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a></td></tr>
+<tr class="memdesc:a17a75c520fffdf332ee7acf7dbfd1a16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opaque serialized header bytes.  <br /></td></tr>
 <tr class="separator:a17a75c520fffdf332ee7acf7dbfd1a16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa26b1f91a42ffcc244f9317b279c6215" id="r_aa26b1f91a42ffcc244f9317b279c6215"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#aa26b1f91a42ffcc244f9317b279c6215">m_dataLength</a> = 0</td></tr>
+<tr class="memdesc:aa26b1f91a42ffcc244f9317b279c6215"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compatibility field refreshed by <a class="el" href="classCCSDS_1_1BufferHeader.html#a6cfdb793f62972c65b3a93a1726eaec6" title="Refreshes the internal compatibility length from the current byte count.">update()</a>.  <br /></td></tr>
 <tr class="separator:aa26b1f91a42ffcc244f9317b279c6215"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18780e39bd6a197bb4515328df5150e0" id="r_a18780e39bd6a197bb4515328df5150e0"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1BufferHeader.html#a18780e39bd6a197bb4515328df5150e0">m_type</a> = &quot;DataOnlyHeader&quot;</td></tr>
+<tr class="memdesc:a18780e39bd6a197bb4515328df5150e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory registration key.  <br /></td></tr>
 <tr class="separator:a18780e39bd6a197bb4515328df5150e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a></td></tr>
 <tr class="memitem:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a81a42af8cef2a4f70cc251619b783e15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> {false}</td></tr>
+<tr class="memdesc:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td class="mdescLeft">&#160;</td><td class="mdescRight">True when the implementation accepts lengths not equal to default <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504" title="Returns the current serialized header size.">getSize()</a>.  <br /></td></tr>
 <tr class="separator:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Represents a fixed secondary header used as a data buffer. </p>
-<p>This class holds the raw data for the secondary header. It provides methods to serialize and deserialize the header data as a vector of bytes. The <code>DataOnlyHeader</code> is not associated with any specific PUS type.</p>
-<p>Field Summary:</p><ul>
-<li>m_data : A buffer holding the header data.</li>
-<li>m-Size : The length of the data.</li>
-<li>m_dataLength : unused / can be set and retrieved, completely standalone from data.</li>
-</ul>
-<dl class="section note"><dt>Note</dt><dd>The <code>getSize</code> method returns the size of the data buffer, while <code>getDataLength</code> returns the length of the data as set. The <code>m_dataLength</code> field is not tied to any other data structure or context. </dd></dl>
+<div class="textblock"><p>Opaque secondary header that stores bytes without interpreting them. </p>
+<p><a class="el" href="classCCSDS_1_1BufferHeader.html" title="Opaque secondary header that stores bytes without interpreting them.">BufferHeader</a> is used by setDataFieldHeader(bytes) and explicit-size parsing overloads. It is suitable when a project needs a secondary-header boundary but no typed decoder. Its registered type name is "DataOnlyHeader". </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00082">82</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00120">120</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="ac5f100532d8e8f1f32cfc729958de74e" name="ac5f100532d8e8f1f32cfc729958de74e"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac5f100532d8e8f1f32cfc729958de74e">&#9670;&#160;</a></span>BufferHeader() <span class="overload">[1/2]</span></h2>
@@ -176,6 +178,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Constructs an empty raw secondary header. </p>
 
 </div>
 </div>
@@ -203,12 +207,17 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructs a DataOnlyHeader object with all fields explicitly set. </p>
+<p>Constructs a raw secondary header from bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Bytes copied into the header. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00089">89</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   89</span>                                                             : <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>(data) {</div>
-<div class="line"><span class="lineno">   90</span>    };</div>
-<div class="ttc" id="aclassCCSDS_1_1BufferHeader_html_a17a75c520fffdf332ee7acf7dbfd1a16"><div class="ttname"><a href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">CCSDS::BufferHeader::m_data</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; m_data</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00104">CCSDSSecondaryHeaderAbstract.h:104</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00129">129</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  129</span>: <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>(data) {}</div>
+<div class="ttc" id="aclassCCSDS_1_1BufferHeader_html_a17a75c520fffdf332ee7acf7dbfd1a16"><div class="ttname"><a href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">CCSDS::BufferHeader::m_data</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; m_data</div><div class="ttdoc">Opaque serialized header bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00169">CCSDSSecondaryHeaderAbstract.h:169</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -237,13 +246,22 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>takes a buffer if data (vector std::uint8) and creates the header </p>
-<dl class="section return"><dt>Returns</dt><dd>Boolean true on success or <a class="el" href="classCCSDS_1_1Error.html" title="Represents an error with both an error code and a message.">Error</a>. </dd></dl>
+<p>Replaces the stored raw bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Bytes to copy. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success. </dd></dl>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#ae01e4e99f5b31eee493d9316d166d03f">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00092">92</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   92</span>{<a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a> = data; <span class="keywordflow">return</span> <span class="keyword">true</span>;};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00136">136</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  136</span>                                                                                     {</div>
+<div class="line"><span class="lineno">  137</span>      <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a> = data;</div>
+<div class="line"><span class="lineno">  138</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  139</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -270,13 +288,14 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the size of the header in bytes. </p>
-<dl class="section return"><dt>Returns</dt><dd>The size of the header in bytes. </dd></dl>
+<p>Returns the number of stored raw bytes. </p>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00094">94</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   94</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>.size(); }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00142">142</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  142</span>                                                       {</div>
+<div class="line"><span class="lineno">  143</span>      <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>.size());</div>
+<div class="line"><span class="lineno">  144</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -303,14 +322,13 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the name of the packet. </p>
-<dl class="section return"><dt>Returns</dt><dd>A vector containing the header bytes. (does not include data field) </dd></dl>
+<p>Returns the factory key "DataOnlyHeader". </p>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0663ddc6e890448e29d0c440b57ba5ec">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00095">95</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   95</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a18780e39bd6a197bb4515328df5150e0">m_type</a>; }</div>
-<div class="ttc" id="aclassCCSDS_1_1BufferHeader_html_a18780e39bd6a197bb4515328df5150e0"><div class="ttname"><a href="classCCSDS_1_1BufferHeader.html#a18780e39bd6a197bb4515328df5150e0">CCSDS::BufferHeader::m_type</a></div><div class="ttdeci">const std::string m_type</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00106">CCSDSSecondaryHeaderAbstract.h:106</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00147">147</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  147</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a18780e39bd6a197bb4515328df5150e0">m_type</a>; }</div>
+<div class="ttc" id="aclassCCSDS_1_1BufferHeader_html_a18780e39bd6a197bb4515328df5150e0"><div class="ttname"><a href="classCCSDS_1_1BufferHeader.html#a18780e39bd6a197bb4515328df5150e0">CCSDS::BufferHeader::m_type</a></div><div class="ttdeci">const std::string m_type</div><div class="ttdoc">Factory registration key.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00171">CCSDSSecondaryHeaderAbstract.h:171</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -338,10 +356,15 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Accepts configuration without modifying raw bytes. </p>
+
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1da5b04ff201d9071abd38288ac20db3">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00100">100</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  100</span>{<span class="keywordflow">return</span> <span class="keyword">true</span>;};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00162">162</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  162</span>                                                             {</div>
+<div class="line"><span class="lineno">  163</span>      (void)config;</div>
+<div class="line"><span class="lineno">  164</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  165</span>    }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -368,13 +391,12 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the serialized representation of the header. </p>
-<dl class="section return"><dt>Returns</dt><dd>A vector containing the header bytes. (does not include data field) </dd></dl>
+<p>Returns a copy of the stored raw bytes. </p>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a05158ad557357e4bda4d6d0069e72bad">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00097">97</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   97</span>{<span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>;};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00150">150</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  150</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -402,20 +424,22 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Defines how the packet secondary header is updated using the data field as reference. </p>
-<p>This method is called every time a data get is performed from the packet, that is if update is enabled and method successfully registered.</p>
+<p>Refreshes the internal compatibility length from the current byte count. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dataField</td><td></td></tr>
+    <tr><td class="paramname">dataField</td><td>Unused. </td></tr>
   </table>
   </dd>
 </dl>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a180a60a3148dd126694b3bbd204cb4ac">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00098">98</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   98</span>{<a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#aa26b1f91a42ffcc244f9317b279c6215">m_dataLength</a> = <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>.size();}</div>
-<div class="ttc" id="aclassCCSDS_1_1BufferHeader_html_aa26b1f91a42ffcc244f9317b279c6215"><div class="ttname"><a href="classCCSDS_1_1BufferHeader.html#aa26b1f91a42ffcc244f9317b279c6215">CCSDS::BufferHeader::m_dataLength</a></div><div class="ttdeci">std::uint16_t m_dataLength</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00105">CCSDSSecondaryHeaderAbstract.h:105</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00156">156</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  156</span>                                               {</div>
+<div class="line"><span class="lineno">  157</span>      (void)dataField;</div>
+<div class="line"><span class="lineno">  158</span>      <a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#aa26b1f91a42ffcc244f9317b279c6215">m_dataLength</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classCCSDS_1_1BufferHeader.html#a17a75c520fffdf332ee7acf7dbfd1a16">m_data</a>.size());</div>
+<div class="line"><span class="lineno">  159</span>    }</div>
+<div class="ttc" id="aclassCCSDS_1_1BufferHeader_html_aa26b1f91a42ffcc244f9317b279c6215"><div class="ttname"><a href="classCCSDS_1_1BufferHeader.html#aa26b1f91a42ffcc244f9317b279c6215">CCSDS::BufferHeader::m_dataLength</a></div><div class="ttdeci">std::uint16_t m_dataLength</div><div class="ttdoc">Compatibility field refreshed by update().</div><div class="ttdef"><b>Definition</b> <a href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00170">CCSDSSecondaryHeaderAbstract.h:170</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -440,7 +464,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00104">104</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<p>Opaque serialized header bytes. </p>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00169">169</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
 
 </div>
 </div>
@@ -464,7 +490,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00105">105</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<p>Compatibility field refreshed by <a class="el" href="classCCSDS_1_1BufferHeader.html#a6cfdb793f62972c65b3a93a1726eaec6" title="Refreshes the internal compatibility length from the current byte count.">update()</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00170">170</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
 
 </div>
 </div>
@@ -488,7 +516,9 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00106">106</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
+<p>Factory registration key. </p>
+
+<p class="definition">Definition at line <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html#l00171">171</a> of file <a class="el" href="CCSDSSecondaryHeaderAbstract_8h_source.html">CCSDSSecondaryHeaderAbstract.h</a>.</p>
 
 </div>
 </div>

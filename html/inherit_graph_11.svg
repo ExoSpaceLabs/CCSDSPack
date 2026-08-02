@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="classConfig.html" target="_top" xlink:title="Parses and stores config values from custom file format.">
+<g id="a_Node000000"><a xlink:href="classConfig.html" target="_top" xlink:title="Parses and stores typed values from the CCSDSPack configuration format.">
 <polygon fill="white" stroke="#666666" points="47,-19 0,-19 0,0 47,0 47,-19"/>
 <text text-anchor="middle" x="23.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config</text>
 </a>

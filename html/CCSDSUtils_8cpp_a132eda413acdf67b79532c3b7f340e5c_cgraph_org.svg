@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="filesystem check fore file existence prepared for both windows and linux.">
+<g id="a_Node000001"><a xlink:title="Tests whether a file can be opened for reading.">
 <polygon fill="#999999" stroke="#666666" points="61,-19 0,-19 0,0 61,0 61,-19"/>
 <text text-anchor="middle" x="30.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">fileExists</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d" target="_top" xlink:title="Read a specified binary file and return its contents as a buffer.">
+<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#a7c53ed59dcb970211aa0217eb095cc4d" target="_top" xlink:title="Reads an entire binary file into memory.">
 <polygon fill="white" stroke="#666666" points="184,-19 97,-19 97,0 184,0 184,-19"/>
 <text text-anchor="middle" x="140.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">readBinaryFile</text>
 </a>

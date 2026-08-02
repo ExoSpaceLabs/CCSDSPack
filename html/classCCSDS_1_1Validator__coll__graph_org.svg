@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Handles validation of CCSDS packets.">
+<g id="a_Node000001"><a xlink:title="Validates packet structure and one sequence&#45;count stream.">
 <polygon fill="#999999" stroke="#666666" points="320,-19 221,-19 221,0 320,0 320,-19"/>
 <text text-anchor="middle" x="270.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Validator</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html" target="_top" xlink:title="Represents a CCSDS (Consultative Committee for Space Data Systems) packet.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Packet.html" target="_top" xlink:title="Owns, serializes, and parses one CCSDS 133.0&#45;B&#45;2 EC2 Space Packet PDU.">
 <polygon fill="white" stroke="#666666" points="241,-85 154,-85 154,-66 241,-66 241,-85"/>
 <text text-anchor="middle" x="197.5" y="-73" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet</text>
 </a>
@@ -39,7 +39,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Header.html" target="_top" xlink:title="Manages the decomposition and manipulation of CCSDS primary headers.">
+<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Header.html" target="_top" xlink:title="Validated in&#45;memory representation of a CCSDS Space Packet primary header.">
 <polygon fill="white" stroke="#666666" points="91,-151 0,-151 0,-132 91,-132 91,-151"/>
 <text text-anchor="middle" x="45.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Header</text>
 </a>
@@ -58,7 +58,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classCCSDS_1_1DataField.html" target="_top" xlink:title="Represents the data field of a CCSDS packet.">
+<g id="a_Node000004"><a xlink:href="classCCSDS_1_1DataField.html" target="_top" xlink:title="Owns the optional secondary header and application&#45;data bytes of one packet.">
 <polygon fill="white" stroke="#666666" points="211.5,-151 109.5,-151 109.5,-132 211.5,-132 211.5,-151"/>
 <text text-anchor="middle" x="160.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::DataField</text>
 </a>
@@ -77,7 +77,7 @@
 <!-- Node5 -->
 <g id="Node000005" class="node">
 <title>Node5</title>
-<g id="a_Node000005"><a xlink:href="classCCSDS_1_1SecondaryHeaderFactory.html" target="_top" xlink:title="A singleton factory class responsible for registering and creating instances of SecondaryHeaderAbstra...">
+<g id="a_Node000005"><a xlink:href="classCCSDS_1_1SecondaryHeaderFactory.html" target="_top" xlink:title="Registers secondary&#45;header prototypes by type name and returns their shared instances.">
 <polygon fill="white" stroke="#666666" points="249,-217 72,-217 72,-198 249,-198 249,-217"/>
 <text text-anchor="middle" x="160.5" y="-205" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::SecondaryHeaderFactory</text>
 </a>
@@ -96,7 +96,7 @@
 <!-- Node6 -->
 <g id="Node000006" class="node">
 <title>Node6</title>
-<g id="a_Node000006"><a xlink:href="structCCSDS_1_1CRC16Config.html" target="_top" xlink:title="Configuration structure for CRC16 calculation parameters.">
+<g id="a_Node000006"><a xlink:href="structCCSDS_1_1CRC16Config.html" target="_top" xlink:title="Parameters for the optional CCSDSPack mission&#45;profile CRC16 trailer.">
 <polygon fill="white" stroke="#666666" points="376,-151 257,-151 257,-132 376,-132 376,-151"/>
 <text text-anchor="middle" x="316.5" y="-139" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::CRC16Config</text>
 </a>

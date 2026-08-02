@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Sets the data field header using a configuration file as reference.">
+<g id="a_Node000001"><a xlink:title="Creates and loads a registered secondary header from Config.">
 <polygon fill="#999999" stroke="#666666" points="146,-43.5 0,-43.5 0,-13.5 146,-13.5 146,-43.5"/>
 <text text-anchor="start" x="8" y="-31.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::DataField::setData</text>
 <text text-anchor="middle" x="73" y="-20.5" font-family="Helvetica,sans-Serif" font-size="10.00">FieldHeader</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Get value by key and type.">
+<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Retrieves a value by exact key and requested type.">
 <polygon fill="white" stroke="#666666" points="367,-38 298,-38 298,-19 367,-19 367,-38"/>
 <text text-anchor="middle" x="332.5" y="-26" font-family="Helvetica,sans-Serif" font-size="10.00">Config::get</text>
 </a>
@@ -39,7 +39,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classConfig.html#a093d1897ebdb889d382706a73b02d249" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="classConfig.html#a093d1897ebdb889d382706a73b02d249" target="_top" xlink:title="Tests whether a key exists, regardless of its stored type.">
 <polygon fill="white" stroke="#666666" points="262,-19 182,-19 182,0 262,0 262,-19"/>
 <text text-anchor="middle" x="222" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::isKey</text>
 </a>

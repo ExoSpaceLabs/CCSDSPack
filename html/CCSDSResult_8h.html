@@ -83,6 +83,9 @@ $(function() {
   <div class="headertitle"><div class="title">CCSDSResult.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Defines non-throwing result/error types and propagation helpers used by CCSDSPack.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;variant&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
@@ -103,47 +106,48 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Error.html">CCSDS::Error</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents an error with both an error code and a message.  <a href="classCCSDS_1_1Error.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Immutable error category and diagnostic message returned by <a class="el" href="classCCSDS_1_1Result.html" title="Holds either one successful value of type T or one Error.">Result</a>.  <a href="classCCSDS_1_1Error.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1Result.html">CCSDS::Result&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encapsulates a result that can hold either a value or an <a class="el" href="classCCSDS_1_1Error.html" title="Represents an error with both an error code and a message.">Error</a>.  <a href="classCCSDS_1_1Result.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds either one successful value of type T or one <a class="el" href="classCCSDS_1_1Error.html" title="Immutable error category and diagnostic message returned by Result.">Error</a>.  <a href="classCCSDS_1_1Result.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceCCSDS" id="r_namespaceCCSDS"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCCSDS.html">CCSDS</a></td></tr>
-<tr class="memdesc:namespaceCCSDS"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains definitions and classes for handling <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> headers. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a6c3fdc510c8b81e1e5799cbfe40897e6" id="r_a6c3fdc510c8b81e1e5799cbfe40897e6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSResult_8h.html#a6c3fdc510c8b81e1e5799cbfe40897e6">RETURN_IF_ERROR</a>(condition,  errorCode)&#160;&#160;&#160;do { if (condition) return errorCode; } while (0)</td></tr>
-<tr class="memdesc:a6c3fdc510c8b81e1e5799cbfe40897e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to return an error code if a condition is met.  <br /></td></tr>
+<tr class="memdesc:a6c3fdc510c8b81e1e5799cbfe40897e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns errorCode from the current function when condition is true.  <br /></td></tr>
 <tr class="separator:a6c3fdc510c8b81e1e5799cbfe40897e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dbef8b65051930c2ac6f12be962ee9e" id="r_a2dbef8b65051930c2ac6f12be962ee9e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a>(condition,  errorCode,  message)</td></tr>
-<tr class="memdesc:a2dbef8b65051930c2ac6f12be962ee9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to return an error with an error message if a condition is met.  <br /></td></tr>
+<tr class="memdesc:a2dbef8b65051930c2ac6f12be962ee9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns <a class="el" href="classCCSDS_1_1Error.html" title="Immutable error category and diagnostic message returned by Result.">CCSDS::Error</a> when condition is true.  <br /></td></tr>
 <tr class="separator:a2dbef8b65051930c2ac6f12be962ee9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71690321b9fcdd733b7a50ad1263f772" id="r_a71690321b9fcdd733b7a50ad1263f772"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSResult_8h.html#a71690321b9fcdd733b7a50ad1263f772">ASSIGN_MV</a>(var,  result)</td></tr>
-<tr class="memdesc:a71690321b9fcdd733b7a50ad1263f772"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to assign a result value to a variable or return an error by moving.  <br /></td></tr>
+<tr class="memdesc:a71690321b9fcdd733b7a50ad1263f772"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagates a failed Result or moves its success value into var.  <br /></td></tr>
 <tr class="separator:a71690321b9fcdd733b7a50ad1263f772"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac05d018e9e1b63588289c6b033246e4b" id="r_ac05d018e9e1b63588289c6b033246e4b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSResult_8h.html#ac05d018e9e1b63588289c6b033246e4b">ASSIGN_CP</a>(var,  result)</td></tr>
-<tr class="memdesc:ac05d018e9e1b63588289c6b033246e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to assign a result value to a variable or return an error by copy.  <br /></td></tr>
+<tr class="memdesc:ac05d018e9e1b63588289c6b033246e4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Propagates a failed Result or copies its success value into var.  <br /></td></tr>
 <tr class="separator:ac05d018e9e1b63588289c6b033246e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a2ada71c57f4ed0e9ad518cd3b6a4ee" id="r_a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a>(var,  result)</td></tr>
-<tr class="memdesc:a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to assign a result value or print an error message.  <br /></td></tr>
+<tr class="memdesc:a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints a failed Result or moves its success value into var.  <br /></td></tr>
 <tr class="separator:a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8baa7ae334e4ab2a33b6bf5d22776d3c" id="r_a8baa7ae334e4ab2a33b6bf5d22776d3c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSResult_8h.html#a8baa7ae334e4ab2a33b6bf5d22776d3c">ASSERT_SUCCESS</a>(result)</td></tr>
-<tr class="memdesc:a8baa7ae334e4ab2a33b6bf5d22776d3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to return immediately if the result contains an error (for void functions).  <br /></td></tr>
+<tr class="memdesc:a8baa7ae334e4ab2a33b6bf5d22776d3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns from a void function when result contains an error.  <br /></td></tr>
 <tr class="separator:a8baa7ae334e4ab2a33b6bf5d22776d3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abd6d95012d1c65577f532086f613234f" id="r_abd6d95012d1c65577f532086f613234f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(result)</td></tr>
-<tr class="memdesc:abd6d95012d1c65577f532086f613234f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to return a result as-is (for functions returning Result&lt;T&gt;).  <br /></td></tr>
+<tr class="memdesc:abd6d95012d1c65577f532086f613234f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a failed Result unchanged from the current Result-returning function.  <br /></td></tr>
 <tr class="separator:abd6d95012d1c65577f532086f613234f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:aafab5aae5faa725466d3291c716fdf5d" id="r_aafab5aae5faa725466d3291c716fdf5d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a> = <a class="el" href="classCCSDS_1_1Result.html">Result</a>&lt; bool &gt;</td></tr>
+<tr class="memdesc:aafab5aae5faa725466d3291c716fdf5d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common result type for operations whose success payload is boolean.  <br /></td></tr>
 <tr class="separator:aafab5aae5faa725466d3291c716fdf5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d93a055ba8dd9fd8fa306b8bb654485" id="r_a4d93a055ba8dd9fd8fa306b8bb654485"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485">CCSDS::ResultBuffer</a> = <a class="el" href="classCCSDS_1_1Result.html">Result</a>&lt; std::vector&lt; std::uint8_t &gt; &gt;</td></tr>
+<tr class="memdesc:a4d93a055ba8dd9fd8fa306b8bb654485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common result type for operations returning a byte buffer.  <br /></td></tr>
 <tr class="separator:a4d93a055ba8dd9fd8fa306b8bb654485"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
@@ -168,10 +172,14 @@ Enumerations</h2></td></tr>
 , <a class="el" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::CONFIG_FILE_ERROR</a> = 13
 <br />
  }</td></tr>
-<tr class="memdesc:a13c33e7e0e38e05f2bc27d21a07ffd57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines various error codes used in <a class="el" href="namespaceCCSDS.html" title="Contains definitions and classes for handling CCSDS headers.">CCSDS</a> packet handling.  <a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">More...</a><br /></td></tr>
+<tr class="memdesc:a13c33e7e0e38e05f2bc27d21a07ffd57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stable categories returned by checked CCSDSPack operations.  <a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57">More...</a><br /></td></tr>
 <tr class="separator:a13c33e7e0e38e05f2bc27d21a07ffd57"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Defines non-throwing result/error types and propagation helpers used by CCSDSPack. </p>
+
+<p class="definition">Definition in file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+</div><h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a8baa7ae334e4ab2a33b6bf5d22776d3c" name="a8baa7ae334e4ab2a33b6bf5d22776d3c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8baa7ae334e4ab2a33b6bf5d22776d3c">&#9670;&#160;</a></span>ASSERT_SUCCESS</h2>
 
@@ -192,13 +200,19 @@ Enumerations</h2></td></tr>
 <div class="line">    if (!_res.has_value()) return;             \</div>
 <div class="line">} while (0)</div>
 </div><!-- fragment -->
-<p>Macro to return immediately if the result contains an error (for void functions). </p>
+<p>Returns from a void function when result contains an error. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">result</td><td>Result expression evaluated once. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00200">200</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  201</span>   {                                           \</div>
-<div class="line"><span class="lineno">  202</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  203</span>    if (!_res.has_value()) return;             \</div>
-<div class="line"><span class="lineno">  204</span>} while (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00211">211</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  212</span>   {                                           \</div>
+<div class="line"><span class="lineno">  213</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  214</span>    if (!_res.has_value()) return;             \</div>
+<div class="line"><span class="lineno">  215</span>} while (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -233,14 +247,21 @@ Enumerations</h2></td></tr>
 <div class="line">var = _res.value();                            \</div>
 <div class="line">} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
-<p>Macro to assign a result value to a variable or return an error by copy. </p>
+<p>Propagates a failed Result or copies its success value into var. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var</td><td>Assignment destination. </td></tr>
+    <tr><td class="paramname">result</td><td>Result expression evaluated once. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00174">174</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  175</span>   {                                           \</div>
-<div class="line"><span class="lineno">  176</span><span class="keyword">auto</span>&amp;&amp; _res = (result);                        \</div>
-<div class="line"><span class="lineno">  177</span>if (!_res) <span class="keywordflow">return</span> _res.error();                \</div>
-<div class="line"><span class="lineno">  178</span>var = _res.value();                            \</div>
-<div class="line"><span class="lineno">  179</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00182">182</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  183</span>   {                                           \</div>
+<div class="line"><span class="lineno">  184</span><span class="keyword">auto</span>&amp;&amp; _res = (result);                        \</div>
+<div class="line"><span class="lineno">  185</span>if (!_res) <span class="keywordflow">return</span> _res.error();                \</div>
+<div class="line"><span class="lineno">  186</span>var = _res.value();                            \</div>
+<div class="line"><span class="lineno">  187</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -275,14 +296,21 @@ Enumerations</h2></td></tr>
 <div class="line">    var = std::move(_res.value());             \</div>
 <div class="line">} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
-<p>Macro to assign a result value to a variable or return an error by moving. </p>
+<p>Propagates a failed Result or moves its success value into var. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var</td><td>Assignment destination. </td></tr>
+    <tr><td class="paramname">result</td><td>Result expression evaluated once. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00163">163</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  164</span>   {                                           \</div>
-<div class="line"><span class="lineno">  165</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  166</span>    if (!_res) <span class="keywordflow">return</span> _res.error();            \</div>
-<div class="line"><span class="lineno">  167</span>    var = std::move(_res.value());             \</div>
-<div class="line"><span class="lineno">  168</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00169">169</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  170</span>   {                                           \</div>
+<div class="line"><span class="lineno">  171</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  172</span>    if (!_res) <span class="keywordflow">return</span> _res.error();            \</div>
+<div class="line"><span class="lineno">  173</span>    var = std::move(_res.value());             \</div>
+<div class="line"><span class="lineno">  174</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -320,17 +348,25 @@ Enumerations</h2></td></tr>
 <div class="line">    }                                          \</div>
 <div class="line">} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
-<p>Macro to assign a result value or print an error message. </p>
+<p>Prints a failed Result or moves its success value into var. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">var</td><td>Assignment destination. </td></tr>
+    <tr><td class="paramname">result</td><td>Result expression evaluated once. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Intended for construction paths that cannot return Result, such as DataField setup. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00186">186</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  187</span>   {                                           \</div>
-<div class="line"><span class="lineno">  188</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  189</span>    if (!_res) {                               \</div>
-<div class="line"><span class="lineno">  190</span>        printf(<span class="stringliteral">&quot;[ Error ]: Code [%u]: %s\n&quot;</span>, <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(_res.error().code()), _res.error().message().c_str());; \</div>
-<div class="line"><span class="lineno">  191</span>    } <span class="keywordflow">else</span> {                                   \</div>
-<div class="line"><span class="lineno">  192</span>        var = std::move(_res.value());         \</div>
-<div class="line"><span class="lineno">  193</span>    }                                          \</div>
-<div class="line"><span class="lineno">  194</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00196">196</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  197</span>   {                                           \</div>
+<div class="line"><span class="lineno">  198</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  199</span>    if (!_res) {                               \</div>
+<div class="line"><span class="lineno">  200</span>        printf(<span class="stringliteral">&quot;[ Error ]: Code [%u]: %s\n&quot;</span>, <span class="keyword">static_cast&lt;</span><span class="keywordtype">unsigned</span><span class="keyword">&gt;</span>(_res.error().code()), _res.error().message().c_str());; \</div>
+<div class="line"><span class="lineno">  201</span>    } <span class="keywordflow">else</span> {                                   \</div>
+<div class="line"><span class="lineno">  202</span>        var = std::move(_res.value());         \</div>
+<div class="line"><span class="lineno">  203</span>    }                                          \</div>
+<div class="line"><span class="lineno">  204</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -354,13 +390,19 @@ Enumerations</h2></td></tr>
 <div class="line">    if (!_res.has_value()) return _res;        \</div>
 <div class="line">} while (0)</div>
 </div><!-- fragment -->
-<p>Macro to return a result as-is (for functions returning Result&lt;T&gt;). </p>
+<p>Returns a failed Result unchanged from the current Result-returning function. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">result</td><td>Result expression evaluated once. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00210">210</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  211</span>   {                                           \</div>
-<div class="line"><span class="lineno">  212</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
-<div class="line"><span class="lineno">  213</span>    if (!_res.has_value()) return _res;        \</div>
-<div class="line"><span class="lineno">  214</span>} while (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00222">222</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  223</span>   {                                           \</div>
+<div class="line"><span class="lineno">  224</span>    <span class="keyword">auto</span>&amp;&amp; _res = (result);                    \</div>
+<div class="line"><span class="lineno">  225</span>    if (!_res.has_value()) return _res;        \</div>
+<div class="line"><span class="lineno">  226</span>} while (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -400,16 +442,24 @@ Enumerations</h2></td></tr>
 <div class="line">        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{errorCode,message};          \</div>
 <div class="line">    }                                                    \</div>
 <div class="line">} <span class="keywordflow">while</span> (0)</div>
-<div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Represents an error with both an error code and a message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00047">CCSDSResult.h:47</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1Error_html"><div class="ttname"><a href="classCCSDS_1_1Error.html">CCSDS::Error</a></div><div class="ttdoc">Immutable error category and diagnostic message returned by Result.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00050">CCSDSResult.h:50</a></div></div>
 </div><!-- fragment -->
-<p>Macro to return an error with an error message if a condition is met. </p>
+<p>Returns <a class="el" href="classCCSDS_1_1Error.html" title="Immutable error category and diagnostic message returned by Result.">CCSDS::Error</a> when condition is true. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">condition</td><td>Failure predicate evaluated once. </td></tr>
+    <tr><td class="paramname">errorCode</td><td><a class="el" href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57" title="Stable categories returned by checked CCSDSPack operations.">CCSDS::ErrorCode</a> category. </td></tr>
+    <tr><td class="paramname">message</td><td>Diagnostic expression used to construct the Error. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00152">152</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  153</span>   {                                                     \</div>
-<div class="line"><span class="lineno">  154</span>    if (condition) {                                     \</div>
-<div class="line"><span class="lineno">  155</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{errorCode,message};          \</div>
-<div class="line"><span class="lineno">  156</span>    }                                                    \</div>
-<div class="line"><span class="lineno">  157</span>} <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00156">156</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  157</span>   {                                                     \</div>
+<div class="line"><span class="lineno">  158</span>    if (condition) {                                     \</div>
+<div class="line"><span class="lineno">  159</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="classCCSDS_1_1Error.html">CCSDS::Error</a>{errorCode,message};          \</div>
+<div class="line"><span class="lineno">  160</span>    }                                                    \</div>
+<div class="line"><span class="lineno">  161</span>} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -439,10 +489,17 @@ Enumerations</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Macro to return an error code if a condition is met. </p>
+<p>Returns errorCode from the current function when condition is true. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">condition</td><td>Failure predicate evaluated once. </td></tr>
+    <tr><td class="paramname">errorCode</td><td>Value returned on failure. </td></tr>
+  </table>
+  </dd>
+</dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00145">145</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  146</span>   { <span class="keywordflow">if</span> (condition) <span class="keywordflow">return</span> errorCode; } <span class="keywordflow">while</span> (0)</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSResult_8h_source.html#l00146">146</a> of file <a class="el" href="CCSDSResult_8h_source.html">CCSDSResult.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  147</span>   { <span class="keywordflow">if</span> (condition) <span class="keywordflow">return</span> errorCode; } <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>

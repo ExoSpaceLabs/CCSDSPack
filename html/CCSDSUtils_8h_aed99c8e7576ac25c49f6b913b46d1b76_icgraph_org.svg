@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Prints the data field and the CRC&#45;16 checksum of the packet.">
+<g id="a_Node000001"><a xlink:title="Prints the secondary&#45;header and application&#45;data portions of a packet.">
 <polygon fill="#999999" stroke="#666666" points="382,-37 296,-37 296,-18 382,-18 382,-37"/>
 <text text-anchor="middle" x="339" y="-25" font-family="Helvetica,sans-Serif" font-size="10.00">printDataField</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e" target="_top" xlink:title="Prints to console a CCSDS Packets, breaking it down to Primary header and Data field.">
+<g id="a_Node000002"><a xlink:href="CCSDSUtils_8cpp.html#a2e40e3867139b28c1b2fa0465c3afd7e" target="_top" xlink:title="Prints a human&#45;readable summary of one packet to standard output.">
 <polygon fill="white" stroke="#666666" points="260,-37 189,-37 189,-18 260,-18 260,-37"/>
 <text text-anchor="middle" x="224.5" y="-25" font-family="Helvetica,sans-Serif" font-size="10.00">printPacket</text>
 </a>
@@ -56,7 +56,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="CCSDSUtils_8cpp.html#ad200055b4cb44dddba0ced16faee7d69" target="_top" xlink:title="Prints to console a series of CCSDS Packets contained in the manager.">
+<g id="a_Node000004"><a xlink:href="CCSDSUtils_8cpp.html#ad200055b4cb44dddba0ced16faee7d69" target="_top" xlink:title="Prints all packets currently stored in a Manager.">
 <polygon fill="white" stroke="#666666" points="153,-19 77,-19 77,0 153,0 153,-19"/>
 <text text-anchor="middle" x="115" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">printPackets</text>
 </a>

@@ -1,0 +1,4 @@
+<map id="CCSDS::DataField::getApplicationData" name="CCSDS::DataField::getApplicationData">
+<area shape="rect" id="Node000001" title="Returns a copy of application data without finalizing." alt="" coords="5,29,275,55"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="97,31,87,21,92,11,110,5,140,3,179,7,189,12,193,18,188,20,186,16,177,12,140,8,111,10,95,15,92,20,100,27"/>
+</map>

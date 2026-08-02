@@ -78,7 +78,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Represents a PUS Type A (Telemetry) header.  
+<p>Legacy fixed-size six-byte telemetry-oriented secondary header.  
  <a href="classPusA.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="PusServices_8h_source.html">PusServices.h</a>&gt;</code></p>
@@ -96,80 +96,92 @@ Collaboration diagram for PusA:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abfc56dc88cd03a66a5176f1bb217aa0b" id="r_abfc56dc88cd03a66a5176f1bb217aa0b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#abfc56dc88cd03a66a5176f1bb217aa0b">PusA</a> ()=default</td></tr>
+<tr class="memdesc:abfc56dc88cd03a66a5176f1bb217aa0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a zero-initialized six-byte <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> header.  <br /></td></tr>
 <tr class="separator:abfc56dc88cd03a66a5176f1bb217aa0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adaa6bc65d19e83b674bc026d6aca8032" id="r_adaa6bc65d19e83b674bc026d6aca8032"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#adaa6bc65d19e83b674bc026d6aca8032">PusA</a> (const std::uint8_t version, const std::uint8_t serviceType, const std::uint8_t serviceSubtype, const std::uint8_t sourceID, const std::uint32_t dataLength)</td></tr>
-<tr class="memdesc:adaa6bc65d19e83b674bc026d6aca8032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classPusA.html" title="Represents a PUS Type A (Telemetry) header.">PusA</a> object with all fields explicitly set.  <br /></td></tr>
+<tr class="memdesc:adaa6bc65d19e83b674bc026d6aca8032"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> header from explicit field values.  <br /></td></tr>
 <tr class="separator:adaa6bc65d19e83b674bc026d6aca8032"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad0e0ee63e15a350cb0b285f71fc5b6ed" id="r_ad0e0ee63e15a350cb0b285f71fc5b6ed"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#ad0e0ee63e15a350cb0b285f71fc5b6ed">getVersion</a> () const</td></tr>
+<tr class="memdesc:ad0e0ee63e15a350cb0b285f71fc5b6ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stored three-bit project header version.  <br /></td></tr>
 <tr class="separator:ad0e0ee63e15a350cb0b285f71fc5b6ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab30226274f95783108161bf7a3340d37" id="r_ab30226274f95783108161bf7a3340d37"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#ab30226274f95783108161bf7a3340d37">getServiceType</a> () const</td></tr>
+<tr class="memdesc:ab30226274f95783108161bf7a3340d37"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stored service type.  <br /></td></tr>
 <tr class="separator:ab30226274f95783108161bf7a3340d37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac45f8e373d01ca0c905199ab6d4e6a6" id="r_aac45f8e373d01ca0c905199ab6d4e6a6"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#aac45f8e373d01ca0c905199ab6d4e6a6">getServiceSubtype</a> () const</td></tr>
+<tr class="memdesc:aac45f8e373d01ca0c905199ab6d4e6a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stored service subtype.  <br /></td></tr>
 <tr class="separator:aac45f8e373d01ca0c905199ab6d4e6a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad0a08899f760915d7126815d1451d52" id="r_aad0a08899f760915d7126815d1451d52"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#aad0a08899f760915d7126815d1451d52">getSourceID</a> () const</td></tr>
+<tr class="memdesc:aad0a08899f760915d7126815d1451d52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stored source identifier.  <br /></td></tr>
 <tr class="separator:aad0a08899f760915d7126815d1451d52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98274b9bbac90660e24138655588e18d" id="r_a98274b9bbac90660e24138655588e18d"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a98274b9bbac90660e24138655588e18d">getDataLength</a> () const</td></tr>
+<tr class="memdesc:a98274b9bbac90660e24138655588e18d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stored application-data length.  <br /></td></tr>
 <tr class="separator:a98274b9bbac90660e24138655588e18d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e323d9c185198360c8a4d9d7564eb97" id="r_a3e323d9c185198360c8a4d9d7564eb97"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a3e323d9c185198360c8a4d9d7564eb97">getSize</a> () const override</td></tr>
-<tr class="memdesc:a3e323d9c185198360c8a4d9d7564eb97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the size of the header in bytes.  <br /></td></tr>
+<tr class="memdesc:a3e323d9c185198360c8a4d9d7564eb97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the fixed serialized size of six bytes.  <br /></td></tr>
 <tr class="separator:a3e323d9c185198360c8a4d9d7564eb97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affdcaf5333ec8b3013b13cec7de8d037" id="r_affdcaf5333ec8b3013b13cec7de8d037"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#affdcaf5333ec8b3013b13cec7de8d037">getType</a> () const override</td></tr>
-<tr class="memdesc:affdcaf5333ec8b3013b13cec7de8d037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the name of the packet.  <br /></td></tr>
+<tr class="memdesc:affdcaf5333ec8b3013b13cec7de8d037"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the secondary-header factory key "PusA".  <br /></td></tr>
 <tr class="separator:affdcaf5333ec8b3013b13cec7de8d037"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54ce2e0e9efae2feeb05a1def30553e6" id="r_a54ce2e0e9efae2feeb05a1def30553e6"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a54ce2e0e9efae2feeb05a1def30553e6">serialize</a> () const override</td></tr>
-<tr class="memdesc:a54ce2e0e9efae2feeb05a1def30553e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the serialized representation of the header.  <br /></td></tr>
+<tr class="memdesc:a54ce2e0e9efae2feeb05a1def30553e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serializes the six-byte project-specific header.  <br /></td></tr>
 <tr class="separator:a54ce2e0e9efae2feeb05a1def30553e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba786bb33db72e147b88bd540b23eea2" id="r_aba786bb33db72e147b88bd540b23eea2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#aba786bb33db72e147b88bd540b23eea2">deserialize</a> (const std::vector&lt; std::uint8_t &gt; &amp;data) override</td></tr>
-<tr class="memdesc:aba786bb33db72e147b88bd540b23eea2"><td class="mdescLeft">&#160;</td><td class="mdescRight">takes a buffer if data (vector std::uint8) and creates the header  <br /></td></tr>
+<tr class="memdesc:aba786bb33db72e147b88bd540b23eea2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replaces fields from exactly one serialized <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> header.  <br /></td></tr>
 <tr class="separator:aba786bb33db72e147b88bd540b23eea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d27498e8b9c91b2e5f9ca8c861d108f" id="r_a6d27498e8b9c91b2e5f9ca8c861d108f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a6d27498e8b9c91b2e5f9ca8c861d108f">update</a> (<a class="el" href="classCCSDS_1_1DataField.html">CCSDS::DataField</a> *dataField) override</td></tr>
-<tr class="memdesc:a6d27498e8b9c91b2e5f9ca8c861d108f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how the packet secondary header is updated using the data field as reference.  <br /></td></tr>
+<tr class="memdesc:a6d27498e8b9c91b2e5f9ca8c861d108f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Refreshes data length from the owning DataField application-data size.  <br /></td></tr>
 <tr class="separator:a6d27498e8b9c91b2e5f9ca8c861d108f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9eccdecae6c7893fd19bb78a524fb07a" id="r_a9eccdecae6c7893fd19bb78a524fb07a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">CCSDS::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a9eccdecae6c7893fd19bb78a524fb07a">loadFromConfig</a> (const <a class="el" href="classConfig.html">::Config</a> &amp;cfg) override</td></tr>
+<tr class="memdesc:a9eccdecae6c7893fd19bb78a524fb07a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads project-specific <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> fields from <a class="el" href="classConfig.html" title="Parses and stores typed values from the CCSDSPack configuration format.">Config</a>.  <br /></td></tr>
 <tr class="separator:a9eccdecae6c7893fd19bb78a524fb07a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classCCSDS_1_1SecondaryHeaderAbstract')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a></td></tr>
 <tr class="memitem:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a0bb132a381880133c97f096f92bce570"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0bb132a381880133c97f096f92bce570">~SecondaryHeaderAbstract</a> ()=default</td></tr>
+<tr class="memdesc:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables safe destruction through a base-class pointer.  <br /></td></tr>
 <tr class="separator:a0bb132a381880133c97f096f92bce570 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1da5b04ff201d9071abd38288ac20db3 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a1da5b04ff201d9071abd38288ac20db3"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d">ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a1da5b04ff201d9071abd38288ac20db3">loadFromConfig</a> (const <a class="el" href="classConfig.html">Config</a> &amp;config)=0</td></tr>
+<tr class="memdesc:a1da5b04ff201d9071abd38288ac20db3 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads type-specific fields from <a class="el" href="classConfig.html" title="Parses and stores typed values from the CCSDSPack configuration format.">Config</a>.  <br /></td></tr>
 <tr class="separator:a1da5b04ff201d9071abd38288ac20db3 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a500d02f23e54e103b1839132a7bdff80"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a500d02f23e54e103b1839132a7bdff80">setVariableLength</a> (const bool bEnable)</td></tr>
+<tr class="memdesc:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declares whether the header accepts variable serialized lengths.  <br /></td></tr>
 <tr class="separator:a500d02f23e54e103b1839132a7bdff80 inherit pub_methods_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
 <tr class="memitem:aab8a2b8472f36009f31d68cebd1c73cf" id="r_aab8a2b8472f36009f31d68cebd1c73cf"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#aab8a2b8472f36009f31d68cebd1c73cf">m_version</a> {}</td></tr>
+<tr class="memdesc:aab8a2b8472f36009f31d68cebd1c73cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-bit project header version.  <br /></td></tr>
 <tr class="separator:aab8a2b8472f36009f31d68cebd1c73cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a021597652473d5fc9a88785b0db41240" id="r_a021597652473d5fc9a88785b0db41240"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a021597652473d5fc9a88785b0db41240">m_serviceType</a> {}</td></tr>
+<tr class="memdesc:a021597652473d5fc9a88785b0db41240"><td class="mdescLeft">&#160;</td><td class="mdescRight">Service type.  <br /></td></tr>
 <tr class="separator:a021597652473d5fc9a88785b0db41240"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a281ec1e493416dd573e3532d7ee39c64" id="r_a281ec1e493416dd573e3532d7ee39c64"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a281ec1e493416dd573e3532d7ee39c64">m_serviceSubType</a> {}</td></tr>
+<tr class="memdesc:a281ec1e493416dd573e3532d7ee39c64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Service subtype.  <br /></td></tr>
 <tr class="separator:a281ec1e493416dd573e3532d7ee39c64"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2de957c2be0f25e01c4e5d54b98d2160" id="r_a2de957c2be0f25e01c4e5d54b98d2160"><td class="memItemLeft" align="right" valign="top">std::uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a2de957c2be0f25e01c4e5d54b98d2160">m_sourceID</a> {}</td></tr>
+<tr class="memdesc:a2de957c2be0f25e01c4e5d54b98d2160"><td class="mdescLeft">&#160;</td><td class="mdescRight">Source identifier.  <br /></td></tr>
 <tr class="separator:a2de957c2be0f25e01c4e5d54b98d2160"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7e882e0470ee969a2fd1488fee747c8" id="r_ae7e882e0470ee969a2fd1488fee747c8"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a> {}</td></tr>
+<tr class="memdesc:ae7e882e0470ee969a2fd1488fee747c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Application-data length maintained by <a class="el" href="classPusA.html#a6d27498e8b9c91b2e5f9ca8c861d108f" title="Refreshes data length from the owning DataField application-data size.">update()</a>.  <br /></td></tr>
 <tr class="separator:ae7e882e0470ee969a2fd1488fee747c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c659e8dbfddf9ac7d52f41fb0ba4b43" id="r_a3c659e8dbfddf9ac7d52f41fb0ba4b43"><td class="memItemLeft" align="right" valign="top">const std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a3c659e8dbfddf9ac7d52f41fb0ba4b43">m_type</a> = &quot;PusA&quot;</td></tr>
+<tr class="memdesc:a3c659e8dbfddf9ac7d52f41fb0ba4b43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory registration key.  <br /></td></tr>
 <tr class="separator:a3c659e8dbfddf9ac7d52f41fb0ba4b43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a8b088fd616debd9da8d7f768b12dea" id="r_a7a8b088fd616debd9da8d7f768b12dea"><td class="memItemLeft" align="right" valign="top">const std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPusA.html#a7a8b088fd616debd9da8d7f768b12dea">m_size</a> = 6</td></tr>
+<tr class="memdesc:a7a8b088fd616debd9da8d7f768b12dea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serialized size in bytes.  <br /></td></tr>
 <tr class="separator:a7a8b088fd616debd9da8d7f768b12dea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td colspan="2" onclick="javascript:toggleInherit('pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract')"><img src="closed.png" alt="-"/>&#160;Public Attributes inherited from <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html">CCSDS::SecondaryHeaderAbstract</a></td></tr>
 <tr class="memitem:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract" id="r_a81a42af8cef2a4f70cc251619b783e15"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a81a42af8cef2a4f70cc251619b783e15">variableLength</a> {false}</td></tr>
+<tr class="memdesc:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td class="mdescLeft">&#160;</td><td class="mdescRight">True when the implementation accepts lengths not equal to default <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504" title="Returns the current serialized header size.">getSize()</a>.  <br /></td></tr>
 <tr class="separator:a81a42af8cef2a4f70cc251619b783e15 inherit pub_attribs_classCCSDS_1_1SecondaryHeaderAbstract"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Represents a PUS Type A (Telemetry) header. </p>
-<p>Contains fields used for telemetry data.</p>
-<p>Field Summary:</p><ul>
-<li>Version: 3 bits, PUS standard version.</li>
-<li>Service Type: 8 bits, type of service (e.g., 0x01 for telemetry).</li>
-<li>Service Subtype: 8 bits, subtype of the service.</li>
-<li>Source ID: 8 bits, source identifier (e.g., satellite ID).</li>
-<li>Data Length: 16 bits, length of the telemetry data in bytes. </li>
-</ul>
+<div class="textblock"><p>Legacy fixed-size six-byte telemetry-oriented secondary header. </p>
+<p>The serialized form contains project-specific version, service type, service subtype, source ID, and application-data length fields. <a class="el" href="classPusA.html#a6d27498e8b9c91b2e5f9ca8c861d108f" title="Refreshes data length from the owning DataField application-data size.">update()</a> derives the stored data length from the owning <a class="el" href="classCCSDS_1_1DataField.html" title="Owns the optional secondary header and application-data bytes of one packet.">CCSDS::DataField</a> when automatic updates are enabled.</p>
+<dl class="section warning"><dt>Warning</dt><dd>This compatibility type is not an ECSS PUS conformance declaration. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00027">27</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00034">34</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="abfc56dc88cd03a66a5176f1bb217aa0b" name="abfc56dc88cd03a66a5176f1bb217aa0b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#abfc56dc88cd03a66a5176f1bb217aa0b">&#9670;&#160;</a></span>PusA() <span class="overload">[1/2]</span></h2>
@@ -193,6 +205,8 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Constructs a zero-initialized six-byte <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> header. </p>
 
 </div>
 </div>
@@ -248,29 +262,29 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Constructs a <a class="el" href="classPusA.html" title="Represents a PUS Type A (Telemetry) header.">PusA</a> object with all fields explicitly set. </p>
+<p>Constructs a <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> header from explicit field values. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">version</td><td>PUS version (3 bits). </td></tr>
-    <tr><td class="paramname">serviceType</td><td>Service type (8 bits). </td></tr>
-    <tr><td class="paramname">serviceSubtype</td><td>Service subtype (8 bits). </td></tr>
-    <tr><td class="paramname">sourceID</td><td>Source identifier (8 bits). </td></tr>
-    <tr><td class="paramname">dataLength</td><td>Length of the telemetry data (16 bits). </td></tr>
+    <tr><td class="paramname">version</td><td>Three-bit project header version; high bits are masked. </td></tr>
+    <tr><td class="paramname">serviceType</td><td>Eight-bit service type. </td></tr>
+    <tr><td class="paramname">serviceSubtype</td><td>Eight-bit service subtype. </td></tr>
+    <tr><td class="paramname">sourceID</td><td>Eight-bit source identifier. </td></tr>
+    <tr><td class="paramname">dataLength</td><td>Initial application-data length; <a class="el" href="classPusA.html#a6d27498e8b9c91b2e5f9ca8c861d108f" title="Refreshes data length from the owning DataField application-data size.">update()</a> may replace it. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00039">39</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   40</span>                                                                           : <a class="code hl_variable" href="classPusA.html#aab8a2b8472f36009f31d68cebd1c73cf">m_version</a>(version &amp; 0x7),</div>
-<div class="line"><span class="lineno">   41</span>                                                                       <a class="code hl_variable" href="classPusA.html#a021597652473d5fc9a88785b0db41240">m_serviceType</a>(serviceType),</div>
-<div class="line"><span class="lineno">   42</span>                                                                       <a class="code hl_variable" href="classPusA.html#a281ec1e493416dd573e3532d7ee39c64">m_serviceSubType</a>(serviceSubtype),</div>
-<div class="line"><span class="lineno">   43</span>                                                                       <a class="code hl_variable" href="classPusA.html#a2de957c2be0f25e01c4e5d54b98d2160">m_sourceID</a>(sourceID), <a class="code hl_variable" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a>(dataLength) {</div>
-<div class="line"><span class="lineno">   44</span>    }</div>
-<div class="ttc" id="aclassPusA_html_a021597652473d5fc9a88785b0db41240"><div class="ttname"><a href="classPusA.html#a021597652473d5fc9a88785b0db41240">PusA::m_serviceType</a></div><div class="ttdeci">std::uint8_t m_serviceType</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00065">PusServices.h:65</a></div></div>
-<div class="ttc" id="aclassPusA_html_a281ec1e493416dd573e3532d7ee39c64"><div class="ttname"><a href="classPusA.html#a281ec1e493416dd573e3532d7ee39c64">PusA::m_serviceSubType</a></div><div class="ttdeci">std::uint8_t m_serviceSubType</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00066">PusServices.h:66</a></div></div>
-<div class="ttc" id="aclassPusA_html_a2de957c2be0f25e01c4e5d54b98d2160"><div class="ttname"><a href="classPusA.html#a2de957c2be0f25e01c4e5d54b98d2160">PusA::m_sourceID</a></div><div class="ttdeci">std::uint8_t m_sourceID</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00067">PusServices.h:67</a></div></div>
-<div class="ttc" id="aclassPusA_html_aab8a2b8472f36009f31d68cebd1c73cf"><div class="ttname"><a href="classPusA.html#aab8a2b8472f36009f31d68cebd1c73cf">PusA::m_version</a></div><div class="ttdeci">std::uint8_t m_version</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00064">PusServices.h:64</a></div></div>
-<div class="ttc" id="aclassPusA_html_ae7e882e0470ee969a2fd1488fee747c8"><div class="ttname"><a href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">PusA::m_dataLength</a></div><div class="ttdeci">std::uint16_t m_dataLength</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00068">PusServices.h:68</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00047">47</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   50</span>    : <a class="code hl_variable" href="classPusA.html#aab8a2b8472f36009f31d68cebd1c73cf">m_version</a>(version &amp; 0x7),</div>
+<div class="line"><span class="lineno">   51</span>      <a class="code hl_variable" href="classPusA.html#a021597652473d5fc9a88785b0db41240">m_serviceType</a>(serviceType),</div>
+<div class="line"><span class="lineno">   52</span>      <a class="code hl_variable" href="classPusA.html#a281ec1e493416dd573e3532d7ee39c64">m_serviceSubType</a>(serviceSubtype),</div>
+<div class="line"><span class="lineno">   53</span>      <a class="code hl_variable" href="classPusA.html#a2de957c2be0f25e01c4e5d54b98d2160">m_sourceID</a>(sourceID),</div>
+<div class="line"><span class="lineno">   54</span>      <a class="code hl_variable" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a>(dataLength) {}</div>
+<div class="ttc" id="aclassPusA_html_a021597652473d5fc9a88785b0db41240"><div class="ttname"><a href="classPusA.html#a021597652473d5fc9a88785b0db41240">PusA::m_serviceType</a></div><div class="ttdeci">std::uint8_t m_serviceType</div><div class="ttdoc">Service type.</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00098">PusServices.h:98</a></div></div>
+<div class="ttc" id="aclassPusA_html_a281ec1e493416dd573e3532d7ee39c64"><div class="ttname"><a href="classPusA.html#a281ec1e493416dd573e3532d7ee39c64">PusA::m_serviceSubType</a></div><div class="ttdeci">std::uint8_t m_serviceSubType</div><div class="ttdoc">Service subtype.</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00099">PusServices.h:99</a></div></div>
+<div class="ttc" id="aclassPusA_html_a2de957c2be0f25e01c4e5d54b98d2160"><div class="ttname"><a href="classPusA.html#a2de957c2be0f25e01c4e5d54b98d2160">PusA::m_sourceID</a></div><div class="ttdeci">std::uint8_t m_sourceID</div><div class="ttdoc">Source identifier.</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00100">PusServices.h:100</a></div></div>
+<div class="ttc" id="aclassPusA_html_aab8a2b8472f36009f31d68cebd1c73cf"><div class="ttname"><a href="classPusA.html#aab8a2b8472f36009f31d68cebd1c73cf">PusA::m_version</a></div><div class="ttdeci">std::uint8_t m_version</div><div class="ttdoc">Three-bit project header version.</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00097">PusServices.h:97</a></div></div>
+<div class="ttc" id="aclassPusA_html_ae7e882e0470ee969a2fd1488fee747c8"><div class="ttname"><a href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">PusA::m_dataLength</a></div><div class="ttdeci">std::uint16_t m_dataLength</div><div class="ttdoc">Application-data length maintained by update().</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00101">PusServices.h:101</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -299,8 +313,14 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>takes a buffer if data (vector std::uint8) and creates the header </p>
-<dl class="section return"><dt>Returns</dt><dd>Boolean true on success or Error. </dd></dl>
+<p>Replaces fields from exactly one serialized <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> header. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>Header bytes. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_SECONDARY_HEADER_DATA for invalid input. </dd></dl>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#ae01e4e99f5b31eee493d9316d166d03f">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
@@ -316,9 +336,9 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">   17</span>  <a class="code hl_variable" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a> = data[4] &lt;&lt; 8 | data[5];</div>
 <div class="line"><span class="lineno">   18</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">   19</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Macro to return an error with an error message if a condition is met.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00152">CCSDSResult.h:152</a></div></div>
-<div class="ttc" id="aclassPusA_html_a7a8b088fd616debd9da8d7f768b12dea"><div class="ttname"><a href="classPusA.html#a7a8b088fd616debd9da8d7f768b12dea">PusA::m_size</a></div><div class="ttdeci">const std::uint16_t m_size</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00071">PusServices.h:71</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57ae184b937a1380440837ec5aef1e0df4f"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57ae184b937a1380440837ec5aef1e0df4f">CCSDS::INVALID_SECONDARY_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_SECONDARY_HEADER_DATA</div><div class="ttdoc">Secondary header data is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00029">CCSDSResult.h:29</a></div></div>
+<div class="ttc" id="aCCSDSResult_8h_html_a2dbef8b65051930c2ac6f12be962ee9e"><div class="ttname"><a href="CCSDSResult_8h.html#a2dbef8b65051930c2ac6f12be962ee9e">RET_IF_ERR_MSG</a></div><div class="ttdeci">#define RET_IF_ERR_MSG(condition, errorCode, message)</div><div class="ttdoc">Returns CCSDS::Error when condition is true.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00156">CCSDSResult.h:156</a></div></div>
+<div class="ttc" id="aclassPusA_html_a7a8b088fd616debd9da8d7f768b12dea"><div class="ttname"><a href="classPusA.html#a7a8b088fd616debd9da8d7f768b12dea">PusA::m_size</a></div><div class="ttdeci">const std::uint16_t m_size</div><div class="ttdoc">Serialized size in bytes.</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00104">PusServices.h:104</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57ae184b937a1380440837ec5aef1e0df4f"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57ae184b937a1380440837ec5aef1e0df4f">CCSDS::INVALID_SECONDARY_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_SECONDARY_HEADER_DATA</div><div class="ttdoc">Invalid secondary-header type, size, or content.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00035">CCSDSResult.h:35</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -345,8 +365,10 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00050">50</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a>;       }</div>
+<p>Returns the stored application-data length. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00065">65</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   65</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -373,8 +395,10 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00048">48</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   48</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a281ec1e493416dd573e3532d7ee39c64">m_serviceSubType</a>;   }</div>
+<p>Returns the stored service subtype. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00061">61</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a281ec1e493416dd573e3532d7ee39c64">m_serviceSubType</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -401,8 +425,10 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00047">47</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   47</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a021597652473d5fc9a88785b0db41240">m_serviceType</a>;      }</div>
+<p>Returns the stored service type. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00059">59</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   59</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a021597652473d5fc9a88785b0db41240">m_serviceType</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -429,13 +455,12 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Gets the size of the header in bytes. </p>
-<dl class="section return"><dt>Returns</dt><dd>The size of the header in bytes. </dd></dl>
+<p>Returns the fixed serialized size of six bytes. </p>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a88c3669b3f857d3bda25e2e188a91504">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00051">51</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   51</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a7a8b088fd616debd9da8d7f768b12dea">m_size</a>;             }</div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00067">67</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a7a8b088fd616debd9da8d7f768b12dea">m_size</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -462,8 +487,10 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00049">49</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   49</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a2de957c2be0f25e01c4e5d54b98d2160">m_sourceID</a>;         }</div>
+<p>Returns the stored source identifier. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00063">63</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a2de957c2be0f25e01c4e5d54b98d2160">m_sourceID</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -490,14 +517,13 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the name of the packet. </p>
-<dl class="section return"><dt>Returns</dt><dd>A vector containing the header bytes. (does not include data field) </dd></dl>
+<p>Returns the secondary-header factory key "PusA". </p>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a0663ddc6e890448e29d0c440b57ba5ec">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00052">52</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   52</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a3c659e8dbfddf9ac7d52f41fb0ba4b43">m_type</a>;          }</div>
-<div class="ttc" id="aclassPusA_html_a3c659e8dbfddf9ac7d52f41fb0ba4b43"><div class="ttname"><a href="classPusA.html#a3c659e8dbfddf9ac7d52f41fb0ba4b43">PusA::m_type</a></div><div class="ttdeci">const std::string m_type</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00070">PusServices.h:70</a></div></div>
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00069">69</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   69</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#a3c659e8dbfddf9ac7d52f41fb0ba4b43">m_type</a>; }</div>
+<div class="ttc" id="aclassPusA_html_a3c659e8dbfddf9ac7d52f41fb0ba4b43"><div class="ttname"><a href="classPusA.html#a3c659e8dbfddf9ac7d52f41fb0ba4b43">PusA::m_type</a></div><div class="ttdeci">const std::string m_type</div><div class="ttdoc">Factory registration key.</div><div class="ttdef"><b>Definition</b> <a href="PusServices_8h_source.html#l00103">PusServices.h:103</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -524,8 +550,10 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00046">46</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   46</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#aab8a2b8472f36009f31d68cebd1c73cf">m_version</a>;          }</div>
+<p>Returns the stored three-bit project header version. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00057">57</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   57</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classPusA.html#aab8a2b8472f36009f31d68cebd1c73cf">m_version</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -553,6 +581,15 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Loads project-specific <a class="el" href="classPusA.html" title="Legacy fixed-size six-byte telemetry-oriented secondary header.">PusA</a> fields from <a class="el" href="classConfig.html" title="Parses and stores typed values from the CCSDSPack configuration format.">Config</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cfg</td><td>Parsed configuration. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or a configuration/type/range error. </dd></dl>
+
 <p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00109">109</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">  109</span>                                                      {</div>
 <div class="line"><span class="lineno">  110</span>  std::uint8_t version = 0;</div>
@@ -577,10 +614,10 @@ Additional Inherited Members</h2></td></tr>
 <div class="line"><span class="lineno">  129</span> </div>
 <div class="line"><span class="lineno">  130</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line"><span class="lineno">  131</span>}</div>
-<div class="ttc" id="aCCSDSResult_8h_html_a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><div class="ttname"><a href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a></div><div class="ttdeci">#define ASSIGN_OR_PRINT(var, result)</div><div class="ttdoc">Macro to assign a result value or print an error message.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00186">CCSDSResult.h:186</a></div></div>
-<div class="ttc" id="aclassConfig_html_a093d1897ebdb889d382706a73b02d249"><div class="ttname"><a href="classConfig.html#a093d1897ebdb889d382706a73b02d249">Config::isKey</a></div><div class="ttdeci">bool isKey(const std::string &amp;key) const</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00051">CCSDSConfig.cpp:51</a></div></div>
-<div class="ttc" id="aclassConfig_html_ac0eb207d3a0c9b3039000301c612aadb"><div class="ttname"><a href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">Config::get</a></div><div class="ttdeci">CCSDS::Result&lt; T &gt; get(const std::string &amp;key) const</div><div class="ttdoc">Get value by key and type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00023">CCSDSConfig.h:23</a></div></div>
-<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::CONFIG_FILE_ERROR</a></div><div class="ttdeci">@ CONFIG_FILE_ERROR</div><div class="ttdoc">Configuration file error.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00038">CCSDSResult.h:37</a></div></div>
+<div class="ttc" id="aCCSDSResult_8h_html_a7a2ada71c57f4ed0e9ad518cd3b6a4ee"><div class="ttname"><a href="CCSDSResult_8h.html#a7a2ada71c57f4ed0e9ad518cd3b6a4ee">ASSIGN_OR_PRINT</a></div><div class="ttdeci">#define ASSIGN_OR_PRINT(var, result)</div><div class="ttdoc">Prints a failed Result or moves its success value into var.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00196">CCSDSResult.h:196</a></div></div>
+<div class="ttc" id="aclassConfig_html_a093d1897ebdb889d382706a73b02d249"><div class="ttname"><a href="classConfig.html#a093d1897ebdb889d382706a73b02d249">Config::isKey</a></div><div class="ttdeci">bool isKey(const std::string &amp;key) const</div><div class="ttdoc">Tests whether a key exists, regardless of its stored type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8cpp_source.html#l00051">CCSDSConfig.cpp:51</a></div></div>
+<div class="ttc" id="aclassConfig_html_ac0eb207d3a0c9b3039000301c612aadb"><div class="ttname"><a href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb">Config::get</a></div><div class="ttdeci">CCSDS::Result&lt; T &gt; get(const std::string &amp;key) const</div><div class="ttdoc">Retrieves a value by exact key and requested type.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSConfig_8h_source.html#l00048">CCSDSConfig.h:48</a></div></div>
+<div class="ttc" id="anamespaceCCSDS_html_a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8"><div class="ttname"><a href="namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a6a8e8b0a4415a0034b009d274fe1b6a8">CCSDS::CONFIG_FILE_ERROR</a></div><div class="ttdeci">@ CONFIG_FILE_ERROR</div><div class="ttdoc">Configuration file/key/type/value is invalid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00044">CCSDSResult.h:43</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -612,8 +649,7 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the serialized representation of the header. </p>
-<dl class="section return"><dt>Returns</dt><dd>A vector containing the header bytes. (does not include data field) </dd></dl>
+<p>Serializes the six-byte project-specific header. </p>
 
 <p>Implements <a class="el" href="classCCSDS_1_1SecondaryHeaderAbstract.html#a05158ad557357e4bda4d6d0069e72bad">CCSDS::SecondaryHeaderAbstract</a>.</p>
 
@@ -657,11 +693,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p>Defines how the packet secondary header is updated using the data field as reference. </p>
-<p>This method is called every time a data get is performed from the packet, that is if update is enabled and method successfully registered.</p>
+<p>Refreshes data length from the owning DataField application-data size. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dataField</td><td></td></tr>
+    <tr><td class="paramname">dataField</td><td>Non-owning pointer valid only for the duration of the call. </td></tr>
   </table>
   </dd>
 </dl>
@@ -670,9 +705,9 @@ Here is the call graph for this function:</div>
 
 <p class="definition">Definition at line <a class="el" href="PusServices_8cpp_source.html#l00034">34</a> of file <a class="el" href="PusServices_8cpp_source.html">PusServices.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   34</span>                                           {</div>
-<div class="line"><span class="lineno">   35</span>  <a class="code hl_variable" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a> = dataField-&gt;<a class="code hl_function" href="classCCSDS_1_1DataField.html#ae93a03f1003390cf74cfe190e30e221b">getApplicationDataBytesSize</a>();</div>
+<div class="line"><span class="lineno">   35</span>  <a class="code hl_variable" href="classPusA.html#ae7e882e0470ee969a2fd1488fee747c8">m_dataLength</a> = dataField-&gt;<a class="code hl_function" href="classCCSDS_1_1DataField.html#a7ff3cf1576b475c5e5d33b16eb6c3dda">getApplicationDataBytesSize</a>();</div>
 <div class="line"><span class="lineno">   36</span>}</div>
-<div class="ttc" id="aclassCCSDS_1_1DataField_html_ae93a03f1003390cf74cfe190e30e221b"><div class="ttname"><a href="classCCSDS_1_1DataField.html#ae93a03f1003390cf74cfe190e30e221b">CCSDS::DataField::getApplicationDataBytesSize</a></div><div class="ttdeci">std::uint16_t getApplicationDataBytesSize() const</div><div class="ttdoc">Retrieves the size of the application data stored in the data field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00032">CCSDSDataField.cpp:32</a></div></div>
+<div class="ttc" id="aclassCCSDS_1_1DataField_html_a7ff3cf1576b475c5e5d33b16eb6c3dda"><div class="ttname"><a href="classCCSDS_1_1DataField.html#a7ff3cf1576b475c5e5d33b16eb6c3dda">CCSDS::DataField::getApplicationDataBytesSize</a></div><div class="ttdeci">std::uint16_t getApplicationDataBytesSize() const</div><div class="ttdoc">Returns the number of stored application-data bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSDataField_8cpp_source.html#l00034">CCSDSDataField.cpp:34</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -702,8 +737,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00068">68</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   68</span>{};        <span class="comment">// Data Length           16        Length of the telemetry data in bytes</span></div>
+<p>Application-data length maintained by <a class="el" href="classPusA.html#a6d27498e8b9c91b2e5f9ca8c861d108f" title="Refreshes data length from the owning DataField application-data size.">update()</a>. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00101">101</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  101</span>{};    </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -727,8 +764,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00066">66</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   66</span>{};     <span class="comment">// Service Subtype      8           Subtype of the service (e.g., specific telemetry type)</span></div>
+<p>Service subtype. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00099">99</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   99</span>{}; </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -752,8 +791,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00065">65</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   65</span>{};        <span class="comment">// Service Type          8           Type of service (e.g., 0x01 for telemetry)</span></div>
+<p>Service type. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00098">98</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   98</span>{};    </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -777,7 +818,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00071">71</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<p>Serialized size in bytes. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00104">104</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
 
 </div>
 </div>
@@ -801,8 +844,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00067">67</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   67</span>{};           <span class="comment">// Source ID            8         ID of the source (e.g., satellite or sensor)</span></div>
+<p>Source identifier. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00100">100</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  100</span>{};       </div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -826,7 +871,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00070">70</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<p>Factory registration key. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00103">103</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
 
 </div>
 </div>
@@ -850,8 +897,10 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00064">64</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   64</span>{};            <span class="comment">// Version               3           Version of the PUS standard</span></div>
+<p>Three-bit project header version. </p>
+
+<p class="definition">Definition at line <a class="el" href="PusServices_8h_source.html#l00097">97</a> of file <a class="el" href="PusServices_8h_source.html">PusServices.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   97</span>{};        </div>
 </div><!-- fragment -->
 </div>
 </div>

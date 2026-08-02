@@ -11,7 +11,7 @@
 <!-- Node0 -->
 <g id="Node000000" class="node">
 <title>Node0</title>
-<g id="a_Node000000"><a xlink:href="classCCSDS_1_1Result.html" target="_top" xlink:title="Encapsulates a result that can hold either a value or an Error.">
+<g id="a_Node000000"><a xlink:href="classCCSDS_1_1Result.html" target="_top" xlink:title="Holds either one successful value of type T or one Error.">
 <polygon fill="white" stroke="#666666" points="115,-19 0,-19 0,0 115,0 115,-19"/>
 <text text-anchor="middle" x="57.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Result&lt; T &gt;</text>
 </a>

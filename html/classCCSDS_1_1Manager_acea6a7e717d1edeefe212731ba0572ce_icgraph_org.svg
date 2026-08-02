@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Enables or disables automatic validation of packets.">
+<g id="a_Node000001"><a xlink:title="Enables or disables Manager validation before selected read/serialization operations.">
 <polygon fill="#999999" stroke="#666666" points="259,-30 77,-30 77,0 259,0 259,-30"/>
 <text text-anchor="start" x="85" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::setAutoValidate</text>
 <text text-anchor="middle" x="168" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Enable</text>

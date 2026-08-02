@@ -1,0 +1,11 @@
+<map id="CCSDS::Header::setSequenceCount" name="CCSDS::Header::setSequenceCount">
+<area shape="rect" id="Node000001" title="Sets the 14&#45;bit packet sequence count." alt="" coords="575,27,787,67"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Finalizes dependent packet state without returning serialized bytes." alt="" coords="357,35,527,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="561,50,527,50,527,45,561,45"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs and binds a Manager to a packet template." alt="" coords="111,5,307,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="343,38,306,33,307,28,344,32"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Manager.html#a12705ae8e0c680ec128a3d0d55b738b6" title="Finalizes and installs a packet template, binding the Manager identifier." alt="" coords="108,55,309,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="344,62,310,66,309,61,343,57"/>
+<area shape="rect" id="Node000005" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,63,60,88"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="94,78,60,78,60,73,94,73"/>
+</map>

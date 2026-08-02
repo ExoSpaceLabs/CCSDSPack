@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Retrieves all stored packets.">
+<g id="a_Node000001"><a xlink:title="Returns a copy of all stored packets.">
 <polygon fill="#999999" stroke="#666666" points="234,-19 77,-19 77,0 234,0 234,-19"/>
 <text text-anchor="middle" x="155.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::getPackets</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="exec__validator_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="41,-19 0,-19 0,0 41,0 41,-19"/>
 <text text-anchor="middle" x="20.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">main</text>
 </a>

@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Parse string &quot;[1,2,3]&quot; into vector&lt;uint8_t&gt;">
+<g id="a_Node000001"><a xlink:title="Parses a bracketed comma&#45;separated byte vector.">
 <polygon fill="#999999" stroke="#666666" points="108,-19 0,-19 0,0 108,0 108,-19"/>
 <text text-anchor="middle" x="54" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::parseBytes</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Get value by key and type.">
+<g id="a_Node000002"><a xlink:href="classConfig.html#ac0eb207d3a0c9b3039000301c612aadb" target="_top" xlink:title="Retrieves a value by exact key and requested type.">
 <polygon fill="white" stroke="#666666" points="213,-19 144,-19 144,0 213,0 213,-19"/>
 <text text-anchor="middle" x="178.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Config::get</text>
 </a>

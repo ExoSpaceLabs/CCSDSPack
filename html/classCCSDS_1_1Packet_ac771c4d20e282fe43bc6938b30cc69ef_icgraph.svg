@@ -21,7 +21,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Deserializes a vector of bytes into a CCSDS packet.">
+<g id="a_Node000001"><a xlink:title="Parses one packet using the currently configured CRC profile.">
 <polygon fill="#999999" stroke="#666666" points="353,-40 207,-40 207,-21 353,-21 353,-40"/>
 <text text-anchor="middle" x="280" y="-28" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Packet::deserialize</text>
 </a>
@@ -30,7 +30,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#aa15ff66d78688766157c560ff31384f0" target="_top" xlink:title="Adds a new packet to the list.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#aa15ff66d78688766157c560ff31384f0" target="_top" xlink:title="Parses and adds exactly one packet from a buffer.">
 <polygon fill="white" stroke="#666666" points="162.5,-67.5 8.5,-67.5 8.5,-37.5 162.5,-37.5 162.5,-67.5"/>
 <text text-anchor="start" x="16.5" y="-55.5" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::addPacket</text>
 <text text-anchor="middle" x="85.5" y="-44.5" font-family="Helvetica,sans-Serif" font-size="10.00">FromBuffer</text>
@@ -49,7 +49,7 @@
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Load a template packet from a binary or configuration file.">
+<g id="a_Node000003"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Loads and installs a template from a .bin or .cfg file.">
 <polygon fill="white" stroke="#666666" points="171,-19 0,-19 0,0 171,0 171,-19"/>
 <text text-anchor="middle" x="85.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::readTemplate</text>
 </a>

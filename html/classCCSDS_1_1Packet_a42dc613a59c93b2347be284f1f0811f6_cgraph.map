@@ -1,0 +1,7 @@
+<map id="CCSDS::Packet::deserialize" name="CCSDS::Packet::deserialize">
+<area shape="rect" id="Node000001" title="Parses an already separated primary header and Packet Data Field." alt="" coords="5,31,200,56"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1DataField.html#aa806dda4fcb568b046934322f6675efc" title=" " alt="" coords="269,5,495,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,32,255,27,255,32,201,37"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1DataField.html#af6feea2d603ef37d5bb73bf727077546" title="Replaces application data from a vector." alt="" coords="248,55,516,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="201,49,234,52,234,57,200,54"/>
+</map>

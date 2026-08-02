@@ -1,12 +1,12 @@
 <map id="inc/CCSDSConfig.h" name="inc/CCSDSConfig.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="81,5,223,31"/>
+<area shape="rect" id="Node000001" title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files." alt="" coords="81,5,223,31"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,79,64,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,33,67,74,64,69,132,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="52,152,119,177"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,32,99,141,94,138,144,30"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="143,152,206,177"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="156,31,173,138,168,139,151,32"/>
-<area shape="rect" id="Node000005" href="$CCSDSResult_8h.html" title=" " alt="" coords="190,79,309,104"/>
+<area shape="rect" id="Node000005" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="190,79,309,104"/>
 <area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="169,29,224,68,221,72,166,33"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="333,79,457,104"/>
 <area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="192,28,343,72,342,77,190,33"/>

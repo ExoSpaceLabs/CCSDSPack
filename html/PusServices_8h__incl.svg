@@ -57,7 +57,7 @@ var sectionId = 'dynsection-0';
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Defines legacy project&#45;specific secondary&#45;header formats retained for v1 compatibility.">
 <polygon fill="#999999" stroke="#666666" points="329,-294 228,-294 228,-275 329,-275 329,-294"/>
 <text text-anchor="middle" x="278.5" y="-282" font-family="Helvetica,sans-Serif" font-size="10.00">inc/PusServices.h</text>
 </a>
@@ -66,7 +66,7 @@ var sectionId = 'dynsection-0';
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="CCSDSSecondaryHeaderAbstract_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="CCSDSSecondaryHeaderAbstract_8h.html" target="_top" xlink:title="Defines the extension interface and raw&#45;buffer implementation for packet secondary headers.">
 <polygon fill="white" stroke="#666666" points="281,-184 96,-184 96,-165 281,-165 281,-184"/>
 <text text-anchor="middle" x="188.5" y="-172" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDSSecondaryHeaderAbstract.h</text>
 </a>
@@ -84,7 +84,7 @@ var sectionId = 'dynsection-0';
 <!-- Node3 -->
 <g id="Node000003" class="node">
 <title>Node3</title>
-<g id="a_Node000003"><a xlink:href="CCSDSResult_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000003"><a xlink:href="CCSDSResult_8h.html" target="_top" xlink:title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack.">
 <polygon fill="white" stroke="#666666" points="143,-74 54,-74 54,-55 143,-55 143,-74"/>
 <text text-anchor="middle" x="98.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDSResult.h</text>
 </a>
@@ -102,7 +102,7 @@ var sectionId = 'dynsection-0';
 <!-- Node8 -->
 <g id="Node000008" class="node">
 <title>Node8</title>
-<g id="a_Node000008"><a xlink:href="CCSDSConfig_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000008"><a xlink:href="CCSDSConfig_8h.html" target="_top" xlink:title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files.">
 <polygon fill="white" stroke="#666666" points="330,-129 241,-129 241,-110 330,-110 330,-129"/>
 <text text-anchor="middle" x="285.5" y="-117" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDSConfig.h</text>
 </a>
@@ -120,7 +120,7 @@ var sectionId = 'dynsection-0';
 <!-- Node11 -->
 <g id="Node000011" class="node">
 <title>Node11</title>
-<g id="a_Node000011"><a xlink:href="CCSDSSecondaryHeaderFactory_8h.html" target="_top" xlink:title=" ">
+<g id="a_Node000011"><a xlink:href="CCSDSSecondaryHeaderFactory_8h.html" target="_top" xlink:title="Defines the per&#45;DataField registry used to look up secondary&#45;header implementations.">
 <polygon fill="white" stroke="#666666" points="516,-239 337,-239 337,-220 516,-220 516,-239"/>
 <text text-anchor="middle" x="426.5" y="-227" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDSSecondaryHeaderFactory.h</text>
 </a>

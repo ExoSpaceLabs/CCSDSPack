@@ -1,7 +1,8 @@
 <map id="CCSDS::DataField::serialize" name="CCSDS::DataField::serialize">
-<area shape="rect" id="Node000001" title="Retrieves the full data field by combining the data field header and application data." alt="" coords="5,42,204,67"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1DataField.html#ac414a4c6ffe4d3cce1c225833e550a1f" title="Retrieves the secondary header data as a vector of bytes." alt="" coords="252,5,448,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,40,238,36,239,41,204,45"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4" title="Updates the data field header based on the current application data size." alt="" coords="255,70,445,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="204,63,242,68,241,73,204,69"/>
+<area shape="rect" id="Node000001" title="Finalizes the secondary header and serializes the complete data&#45;field content." alt="" coords="5,66,204,91"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1DataField.html#ac414a4c6ffe4d3cce1c225833e550a1f" title="Returns currently stored secondary&#45;header bytes without finalizing." alt="" coords="252,29,448,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,64,238,60,239,65,204,69"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1DataField.html#abb4b5de3d4ee71281ead402cdf5055d4" title="Refreshes the installed secondary header once when it is dirty and updates are enabled." alt="" coords="255,94,445,119"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="204,87,242,92,241,97,204,93"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="304,30,302,20,309,10,325,5,350,3,379,6,394,13,392,18,377,11,350,8,326,10,312,15,307,21,309,28"/>
 </map>

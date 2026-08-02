@@ -1,5 +1,7 @@
 <map id="CCSDS::Manager::addPacketFromBuffer" name="CCSDS::Manager::addPacketFromBuffer">
-<area shape="rect" id="Node000001" title="Adds a new packet to the list." alt="" coords="5,5,211,45"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#ac771c4d20e282fe43bc6938b30cc69ef" title="Deserializes a vector of bytes into a CCSDS packet." alt="" coords="259,13,453,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,23,245,23,245,28,211,28"/>
+<area shape="rect" id="Node000001" title="Parses and adds exactly one packet from a buffer." alt="" coords="5,27,211,67"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#ac771c4d20e282fe43bc6938b30cc69ef" title="Parses one packet using the currently configured CRC profile." alt="" coords="259,5,453,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,33,245,28,245,34,211,38"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#ad9bbead276c157df04318be39cae7570" title="Selects the CCSDSPack mission&#45;profile CRC trailer behavior." alt="" coords="263,55,449,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,56,249,61,249,66,211,62"/>
 </map>

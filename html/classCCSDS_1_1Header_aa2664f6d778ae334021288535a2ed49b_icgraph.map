@@ -1,0 +1,19 @@
+<map id="CCSDS::Header::getHeaderStatus" name="CCSDS::Header::getHeaderStatus">
+<area shape="rect" id="Node000001" title="Returns NORMAL, IDLE, or INVALID for the current header state." alt="" coords="611,102,808,142"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a4fd11a40ea4d569a483061892bfb688f" title="Adds one packet after enforcing the Manager&#39;s complete Packet Identification." alt="" coords="357,55,563,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="604,102,518,83,519,77,605,96"/>
+<area shape="rect" id="Node000006" href="$classCCSDS_1_1Manager.html#a12705ae8e0c680ec128a3d0d55b738b6" title="Finalizes and installs a packet template, binding the Manager identifier." alt="" coords="108,105,309,145"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="597,125,310,127,310,121,597,120"/>
+<area shape="rect" id="Node000007" href="$classCCSDS_1_1Packet.html#a25c84fd13d0176cd575d70103bc4af64" title="Finalizes dependent packet state without returning serialized bytes." alt="" coords="375,160,545,185"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="598,147,524,163,522,157,597,142"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Manager.html#a476ce8ef6b5a5c9aae31df69d81770a6" title="Transactionally loads a packet collection." alt="" coords="125,5,292,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="381,55,274,33,275,28,382,49"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1Manager.html#a762d4d0408c548379cc3da09ba7d2052" title="Transactionally parses and loads concatenated packet bytes." alt="" coords="125,55,292,80"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="343,70,292,70,292,65,343,65"/>
+<area shape="rect" id="Node000004" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,59,60,84"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="136,37,109,45,61,62,59,57,107,39,135,32"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="129,103,60,82,61,77,130,98"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="379,160,309,147,310,141,380,155"/>
+<area shape="rect" id="Node000008" href="$classCCSDS_1_1Manager.html#aa47668beaea3b5b4f0ca9c85b374e966" title="Constructs and binds a Manager to a packet template." alt="" coords="111,169,307,195"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="362,179,307,181,307,176,362,174"/>
+</map>

@@ -1,6 +1,6 @@
 <map id="inc/CCSDSHeader.h" name="inc/CCSDSHeader.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="129,5,275,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSResult_8h.html" title=" " alt="" coords="143,79,261,104"/>
+<area shape="rect" id="Node000001" title="Defines CCSDS Space Packet primary&#45;header fields, validation, and serialization." alt="" coords="129,5,275,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="143,79,261,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,31,205,65,199,65,199,31"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,152,68,177"/>
 <area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="190,33,133,81,61,145,58,141,130,77,186,29"/>

@@ -1,7 +1,21 @@
 <map id="CCSDS::Validator::validate" name="CCSDS::Validator::validate">
-<area shape="rect" id="Node000001" title="Validates a given packet." alt="" coords="5,35,199,60"/>
-<area shape="rect" id="Node000002" href="$CCSDSUtils_8cpp.html#a097094565596dc2e631f96f52a402cb4" title="Computes the CRC&#45;16 checksum for a given data vector with configurable parameters." alt="" coords="313,5,371,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,33,299,20,300,26,199,38"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#a29f623c1b7b29e37a2a71c556169b1c1" title="needs to be called as soon as possible, probably also from constructor." alt="" coords="247,55,437,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,56,233,60,233,65,199,61"/>
+<area shape="rect" id="Node000001" title="Validates one packet and advances sequence state after coherent input." alt="" coords="5,217,199,243"/>
+<area shape="rect" id="Node000002" href="$CCSDSUtils_8cpp.html#a097094565596dc2e631f96f52a402cb4" title="Computes an MSB&#45;first 16&#45;bit CRC over the supplied bytes." alt="" coords="317,5,375,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,216,125,180,155,133,196,82,219,59,245,40,274,26,303,19,304,24,275,31,248,44,223,64,200,86,160,136,130,183,112,218"/>
+<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#ab1d037ab5a0111a8aee8edea5d8e7c22" title="Returns the stored CRC trailer value, or zero when disabled or the header is invalid." alt="" coords="260,79,432,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,215,168,166,205,138,245,114,265,106,267,111,248,119,208,143,171,170,118,219"/>
+<area shape="rect" id="Node000004" href="$classCCSDS_1_1Packet.html#a98f62d3d26df0c6607c822710b1febdc" title="Returns the internal secondary&#45;header plus application&#45;data bytes." alt="" coords="247,153,445,193"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="156,215,247,193,248,198,158,220"/>
+<area shape="rect" id="Node000005" href="$classCCSDS_1_1Packet.html#a1864e47a2388bf4d05c0840223ffc50c" title="Returns the configured mission&#45;profile CRC trailer mode." alt="" coords="493,239,680,279"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="199,233,479,250,479,256,199,238"/>
+<area shape="rect" id="Node000006" href="$classCCSDS_1_1Packet.html#abadc44c1c0fa6ad89434176a31e0722c" title="Returns the reserved trailer size: two bytes for CRC16, otherwise zero." alt="" coords="253,267,439,307"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="158,240,248,262,247,267,156,245"/>
+<area shape="rect" id="Node000007" href="$classCCSDS_1_1Packet.html#ad667850d2d8b9447a043baeaa686cc9a" title="Returns mutable access to the owned primary Header." alt="" coords="248,331,444,371"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="122,241,177,277,248,317,264,324,262,329,245,322,174,282,119,245"/>
+<area shape="rect" id="Node000008" href="$classCCSDS_1_1Header.html#a07ea3d44dfd970461ed8bdd23bd03308" title="Serializes the current primary header in CCSDS network&#45;byte order." alt="" coords="254,420,438,445"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="115,241,168,306,206,345,248,381,302,412,299,417,245,386,202,349,164,309,111,245"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="307,80,299,70,303,60,319,54,346,52,380,56,393,65,389,70,378,61,346,57,320,59,307,64,304,70,311,77"/>
+<area shape="poly" id="edge5_Node000004_Node000004" title=" " alt="" coords="301,153,299,143,306,134,322,128,346,126,374,129,389,136,387,141,372,134,346,131,323,133,309,138,304,144,306,152"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="439,274,479,269,480,274,440,279"/>
+<area shape="poly" id="edge11_Node000008_Node000008" title=" " alt="" coords="307,422,299,412,303,402,319,396,346,393,380,397,393,407,389,411,378,402,346,399,320,401,307,406,304,411,311,418"/>
 </map>

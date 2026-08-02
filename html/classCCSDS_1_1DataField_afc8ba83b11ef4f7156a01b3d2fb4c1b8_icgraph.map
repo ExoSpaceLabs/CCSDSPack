@@ -1,0 +1,5 @@
+<map id="CCSDS::DataField::getDataFieldUsedBytesSize" name="CCSDS::DataField::getDataFieldUsedBytesSize">
+<area shape="rect" id="Node000001" title="Returns stored secondary&#45;header plus application&#45;data bytes." alt="" coords="289,5,485,45"/>
+<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#aacf9cbe1c8056a7f73a392e435c3ba3a" title="Returns the exact current serialized size without finalizing the packet." alt="" coords="5,13,241,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="275,28,241,28,241,23,275,23"/>
+</map>

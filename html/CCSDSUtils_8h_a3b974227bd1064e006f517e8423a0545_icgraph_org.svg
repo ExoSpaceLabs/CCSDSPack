@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Tests if str ends with suffix.">
+<g id="a_Node000001"><a xlink:title="Tests whether a string ends with an exact suffix.">
 <polygon fill="#999999" stroke="#666666" points="297,-19 207,-19 207,0 297,0 297,-19"/>
 <text text-anchor="middle" x="252" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">stringEndsWith</text>
 </a>
@@ -20,7 +20,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Load a template packet from a binary or configuration file.">
+<g id="a_Node000002"><a xlink:href="classCCSDS_1_1Manager.html#a44c3bccc78ccf59d9432935e43283342" target="_top" xlink:title="Loads and installs a template from a .bin or .cfg file.">
 <polygon fill="white" stroke="#666666" points="171,-19 0,-19 0,0 171,0 171,-19"/>
 <text text-anchor="middle" x="85.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::readTemplate</text>
 </a>

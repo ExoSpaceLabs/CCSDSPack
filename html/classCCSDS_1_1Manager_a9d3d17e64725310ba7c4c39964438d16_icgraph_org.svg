@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title="Retrieves a buffer containing all the stored packets sequentially.">
+<g id="a_Node000001"><a xlink:title="Serializes all stored packets into one sequential byte buffer.">
 <polygon fill="#999999" stroke="#666666" points="234,-30 77,-30 77,0 234,0 234,-30"/>
 <text text-anchor="start" x="85" y="-18" font-family="Helvetica,sans-Serif" font-size="10.00">CCSDS::Manager::getPackets</text>
 <text text-anchor="middle" x="155.5" y="-7" font-family="Helvetica,sans-Serif" font-size="10.00">Buffer</text>
