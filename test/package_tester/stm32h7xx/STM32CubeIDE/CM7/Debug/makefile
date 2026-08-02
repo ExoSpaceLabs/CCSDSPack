@@ -87,7 +87,7 @@ main-build: UART_WakeUpFromStopUsingFIFO_CM7.elf secondary-outputs
 
 # Tool invocations
 UART_WakeUpFromStopUsingFIFO_CM7.elf UART_WakeUpFromStopUsingFIFO_CM7.map: $(OBJS) $(USER_OBJS) /home/dev/Works/CCSDSPack/test/package_tester/stm32h7xx/STM32CubeIDE/CM7/STM32H745ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "UART_WakeUpFromStopUsingFIFO_CM7.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/home/dev/Works/CCSDSPack/test/package_tester/stm32h7xx/STM32CubeIDE/CM7/STM32H745ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="UART_WakeUpFromStopUsingFIFO_CM7.map" -Wl,--gc-sections -static -L/home/dev/Middlewares/Third_Party/CCSDSPack/ --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+	arm-none-eabi-g++ -o "UART_WakeUpFromStopUsingFIFO_CM7.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/home/dev/Works/CCSDSPack/test/package_tester/stm32h7xx/STM32CubeIDE/CM7/STM32H745ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="UART_WakeUpFromStopUsingFIFO_CM7.map" -Wl,--gc-sections -static -L/home/dev/Middlewares/Third_Party/CCSDSPack/lib --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
