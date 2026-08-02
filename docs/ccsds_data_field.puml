@@ -1,8 +1,8 @@
 @startuml
 title CCSDS::DataField UML Diagram
-package [CCSDS] as C_0007081182557856067311 {
-enum "ErrorCode" as C_0009397388538647267500
-enum C_0009397388538647267500 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L29{ErrorCode}]] {
+package [CCSDS] as C_0001131232607871793969 {
+enum "ErrorCode" as C_0009441289820825074537
+enum C_0009441289820825074537 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L29{ErrorCode}]] {
 NONE
 UNKNOWN_ERROR
 NO_DATA
@@ -18,16 +18,16 @@ FILE_READ_ERROR
 FILE_WRITE_ERROR
 CONFIG_FILE_ERROR
 }
-class "Error" as C_0016667887324179082906
-class C_0016667887324179082906 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L50{Error}]] {
+class "Error" as C_0009567851690976834738
+class C_0009567851690976834738 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L50{Error}]] {
 +Error(const ErrorC...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L57{Error}]]]
 ..
 +code() const : ErrorCode [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L61{code}]]]
 +message() const : const std::string & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L64{message}]]]
 __
 }
-class "Result<T>" as C_0008471204632575367201
-class C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L91{Result}]] {
+class "Result<T>" as C_0004081418331934384486
+class C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L91{Result}]] {
 +Result(T value) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L99{Result}]]]
 +Result(Error error) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L105{Result}]]]
 ..
@@ -38,16 +38,16 @@ class C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +value() const : const T & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L122{value}]]]
 __
 }
-class "Result<bool>" as C_0008762487699986143535
-class C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{Result}]] {
+class "Result<bool>" as C_0014174674997599217076
+class C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{Result}]] {
 __
 }
-class "Result<std::vector<uint8_t>>" as C_0003681749600908501807
-class C_0003681749600908501807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L82{Result}]] {
+class "Result<std::vector<uint8_t>>" as C_0004629493886474321807
+class C_0004629493886474321807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L82{Result}]] {
 __
 }
-abstract "SecondaryHeaderAbstract" as C_0015357895956836170771
-abstract C_0015357895956836170771 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L52{SecondaryHeaderAbstract}]] {
+abstract "SecondaryHeaderAbstract" as C_0017173607616216397172
+abstract C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L52{SecondaryHeaderAbstract}]] {
 +~SecondaryHeaderAbstract() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L55{~SecondaryHeaderAbstract}]]]
 ..
 {abstract} +deserialize(const std::v...) = 0 : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L63{deserialize}]]]
@@ -60,8 +60,8 @@ abstract C_0015357895956836170771 [[https://github.com/ExoSpaceLabs/CCSDSPack/bl
 __
 +variableLength : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L109{variableLength}]]]
 }
-class "BufferHeader" as C_0002331772882390791170
-class C_0002331772882390791170 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L120{BufferHeader}]] {
+class "BufferHeader" as C_0016881712599388925194
+class C_0016881712599388925194 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L120{BufferHeader}]] {
 +BufferHeader() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L123{BufferHeader}]]]
 +BufferHeader(const std::v...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L129{BufferHeader}]]]
 ..
@@ -73,8 +73,8 @@ class C_0002331772882390791170 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +update(DataField * ...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L156{update}]]]
 __
 }
-class "SecondaryHeaderFactory" as C_0000143976543200677522
-class C_0000143976543200677522 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L32{SecondaryHeaderFactory}]] {
+class "SecondaryHeaderFactory" as C_0005588309261265651757
+class C_0005588309261265651757 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L32{SecondaryHeaderFactory}]] {
 +SecondaryHeaderFactory() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L35{SecondaryHeaderFactory}]]]
 ..
 +create(const std::s...) : std::shared_ptr<SecondaryHeaderAbstract> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L62{create}]]]
@@ -82,8 +82,8 @@ class C_0000143976543200677522 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +typeIsRegistered(const std::s...) : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L74{typeIsRegistered}]]]
 __
 }
-class "DataField" as C_0006701855109527716313
-class C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L39{DataField}]] {
+class "DataField" as C_0009576894308489276275
+class C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L39{DataField}]] {
 +DataField() : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L46{DataField}]]]
 +~DataField() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L58{~DataField}]]]
 ..
@@ -118,8 +118,77 @@ class C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +update() : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L213{update}]]]
 __
 }
-class "Packet" as C_0001106029959005870872
-class C_0001106029959005870872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L101{Packet}]] {
+enum "ESequenceFlag" as C_0002097049991889074748
+enum C_0002097049991889074748 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L27{ESequenceFlag}]] {
+CONTINUING_SEGMENT
+FIRST_SEGMENT
+LAST_SEGMENT
+UNSEGMENTED
+}
+enum "EHeaderStatus" as C_0015875931497764560698
+enum C_0015875931497764560698 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L42{EHeaderStatus}]] {
+NORMAL
+IDLE
+INVALID
+}
+class "PrimaryHeader" as C_0005167639859745434657
+class C_0005167639859745434657 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L56{PrimaryHeader}]] {
++PrimaryHeader(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L75{PrimaryHeader}]]]
+__
++APID : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L60{APID}]]]
++dataFieldHeaderFlag : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L59{dataFieldHeaderFlag}]]]
++dataLength : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L63{dataLength}]]]
++sequenceCount : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L62{sequenceCount}]]]
++sequenceFlags : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L61{sequenceFlags}]]]
++type : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L58{type}]]]
++versionNumber : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L57{versionNumber}]]]
+}
+class "Header" as C_0004705280547409404765
+class C_0004705280547409404765 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L109{Header}]] {
++Header() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L112{Header}]]]
+..
++deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L210{deserialize}]]]
++getAPID() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L121{getAPID}]]]
++getDataFieldHeaderFlag() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L119{getDataFieldHeaderFlag}]]]
++getDataLength() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L127{getDataLength}]]]
++getFullHeader() const : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L146{getFullHeader}]]]
++getFullHeader() : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L144{getFullHeader}]]]
++getHeaderStatus() const : EHeaderStatus [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L129{getHeaderStatus}]]]
++getSequenceCount() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L125{getSequenceCount}]]]
++getSequenceFlags() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L123{getSequenceFlags}]]]
++getType() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L117{getType}]]]
++getVersionNumber() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L115{getVersionNumber}]]]
++serialize() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L138{serialize}]]]
++serialize() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L136{serialize}]]]
++setAPID(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L175{setAPID}]]]
++setData(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L203{setData}]]]
++setData(const Primar...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L217{setData}]]]
++setDataFieldHeaderFlag(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L167{setDataFieldHeaderFlag}]]]
++setDataLength(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L196{setDataLength}]]]
++setSequenceCount(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L189{setSequenceCount}]]]
++setSequenceFlags(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L182{setSequenceFlags}]]]
++setType(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L160{setType}]]]
++setVersionNumber(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L153{setVersionNumber}]]]
+__
+}
+class "CRC16Config" as C_0005838138750192050804
+class C_0005838138750192050804 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L40{CRC16Config}]] {
+__
++finalXorValue : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L43{finalXorValue}]]]
++initialValue : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L42{initialValue}]]]
++polynomial : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L41{polynomial}]]]
+}
+enum "PacketErrorControlMode" as C_0001243513306714304585
+enum C_0001243513306714304585 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L54{PacketErrorControlMode}]] {
+None
+CRC16
+}
+class "Result<std::size_t>" as C_0006681659169358588769
+class C_0006681659169358588769 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L302{Result}]] {
+__
+}
+class "Packet" as C_0009809857242509377472
+class C_0009809857242509377472 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L101{Packet}]] {
 +Packet() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L104{Packet}]]]
 ..
 +RegisterSecondaryHeader<T>() : ResultBool
@@ -180,77 +249,8 @@ class C_0001106029959005870872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +update() : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L443{update}]]]
 __
 }
-enum "ESequenceFlag" as C_0009395536347375124815
-enum C_0009395536347375124815 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L27{ESequenceFlag}]] {
-CONTINUING_SEGMENT
-FIRST_SEGMENT
-LAST_SEGMENT
-UNSEGMENTED
-}
-enum "EHeaderStatus" as C_0011673188171996207529
-enum C_0011673188171996207529 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L42{EHeaderStatus}]] {
-NORMAL
-IDLE
-INVALID
-}
-class "PrimaryHeader" as C_0011016081288581091098
-class C_0011016081288581091098 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L56{PrimaryHeader}]] {
-+PrimaryHeader(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L75{PrimaryHeader}]]]
-__
-+APID : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L60{APID}]]]
-+dataFieldHeaderFlag : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L59{dataFieldHeaderFlag}]]]
-+dataLength : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L63{dataLength}]]]
-+sequenceCount : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L62{sequenceCount}]]]
-+sequenceFlags : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L61{sequenceFlags}]]]
-+type : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L58{type}]]]
-+versionNumber : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L57{versionNumber}]]]
-}
-class "Header" as C_0000066884519575390086
-class C_0000066884519575390086 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L109{Header}]] {
-+Header() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L112{Header}]]]
-..
-+deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L210{deserialize}]]]
-+getAPID() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L121{getAPID}]]]
-+getDataFieldHeaderFlag() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L119{getDataFieldHeaderFlag}]]]
-+getDataLength() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L127{getDataLength}]]]
-+getFullHeader() const : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L146{getFullHeader}]]]
-+getFullHeader() : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L144{getFullHeader}]]]
-+getHeaderStatus() const : EHeaderStatus [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L129{getHeaderStatus}]]]
-+getSequenceCount() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L125{getSequenceCount}]]]
-+getSequenceFlags() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L123{getSequenceFlags}]]]
-+getType() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L117{getType}]]]
-+getVersionNumber() const : std::uint8_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L115{getVersionNumber}]]]
-+serialize() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L138{serialize}]]]
-+serialize() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L136{serialize}]]]
-+setAPID(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L175{setAPID}]]]
-+setData(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L203{setData}]]]
-+setData(const Primar...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L217{setData}]]]
-+setDataFieldHeaderFlag(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L167{setDataFieldHeaderFlag}]]]
-+setDataLength(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L196{setDataLength}]]]
-+setSequenceCount(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L189{setSequenceCount}]]]
-+setSequenceFlags(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L182{setSequenceFlags}]]]
-+setType(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L160{setType}]]]
-+setVersionNumber(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L153{setVersionNumber}]]]
-__
-}
-class "CRC16Config" as C_0003994627686254228849
-class C_0003994627686254228849 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L40{CRC16Config}]] {
-__
-+finalXorValue : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L43{finalXorValue}]]]
-+initialValue : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L42{initialValue}]]]
-+polynomial : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L41{polynomial}]]]
-}
-enum "PacketErrorControlMode" as C_0013605065755269523444
-enum C_0013605065755269523444 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L54{PacketErrorControlMode}]] {
-None
-CRC16
-}
-class "Result<std::size_t>" as C_0004221379495469136872
-class C_0004221379495469136872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L302{Result}]] {
-__
-}
-class "Validator" as C_0015262608491158149275
-class C_0015262608491158149275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L28{Validator}]] {
+class "Validator" as C_0015641474125909340471
+class C_0015641474125909340471 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L28{Validator}]] {
 +Validator() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L31{Validator}]]]
 +Validator(const Packet...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L41{Validator}]]]
 +~Validator() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L34{~Validator}]]]
@@ -262,8 +262,8 @@ class C_0015262608491158149275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +validate(const Packet...) : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L68{validate}]]]
 __
 }
-class "Manager" as C_0014627802343853026005
-class C_0014627802343853026005 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L46{Manager}]] {
+class "Manager" as C_0012258095910604845950
+class C_0012258095910604845950 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L46{Manager}]] {
 +Manager() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L49{Manager}]]]
 +Manager(Packet packet) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L59{Manager}]]]
 ..
@@ -308,15 +308,15 @@ class C_0014627802343853026005 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 __
 }
 }
-class "Config" as C_0008289891971916880997
-class C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L29{Config}]] {
+class "Config" as C_0003888813716297410290
+class C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L29{Config}]] {
 +get<T>(const std::s...) const : CCSDS::Result<T>
 +isKey(const std::s...) const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L65{isKey}]]]
 +load(const std::s...) : CCSDS::ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{load}]]]
 __
 }
-class "PusA" as C_0001404029779718103303
-class C_0001404029779718103303 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L34{PusA}]] {
+class "PusA" as C_0016673335666709911194
+class C_0016673335666709911194 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L34{PusA}]] {
 +PusA() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L37{PusA}]]]
 +PusA(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L47{PusA}]]]
 ..
@@ -333,8 +333,8 @@ class C_0001404029779718103303 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +update(CCSDS::DataF...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L85{update}]]]
 __
 }
-class "PusB" as C_0014410093318812969362
-class C_0014410093318812969362 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L116{PusB}]] {
+class "PusB" as C_0003827689557511017887
+class C_0003827689557511017887 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L116{PusB}]] {
 +PusB() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L119{PusB}]]]
 +PusB(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L130{PusB}]]]
 ..
@@ -352,8 +352,8 @@ class C_0014410093318812969362 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +update(CCSDS::DataF...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L171{update}]]]
 __
 }
-class "PusC" as C_0004565611741543840631
-class C_0004565611741543840631 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L205{PusC}]] {
+class "PusC" as C_0000703146648332042154
+class C_0000703146648332042154 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L205{PusC}]] {
 +PusC() : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L208{PusC}]]]
 +PusC(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L219{PusC}]]]
 ..
@@ -371,74 +371,74 @@ class C_0004565611741543840631 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +update(CCSDS::DataF...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L265{update}]]]
 __
 }
-C_0016667887324179082906 o-- C_0009397388538647267500 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L67{m_code}]] : -m_code
-C_0008471204632575367201 o-- C_0016667887324179082906 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L92{data}]] : -data
-C_0008762487699986143535 ..|> C_0008471204632575367201
-C_0003681749600908501807 ..|> C_0008471204632575367201
-C_0015357895956836170771 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L63{}]]
-C_0015357895956836170771 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L63{}]]
-C_0015357895956836170771 ..> C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L70{}]]
-C_0015357895956836170771 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L96{}]]
-C_0002331772882390791170 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L136{}]]
-C_0002331772882390791170 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L136{}]]
-C_0002331772882390791170 ..> C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L156{}]]
-C_0002331772882390791170 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L162{}]]
-C_0015357895956836170771 <|-- C_0002331772882390791170
-C_0000143976543200677522 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L50{}]]
-C_0000143976543200677522 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L50{}]]
-C_0000143976543200677522 o-- C_0015357895956836170771 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L83{m_creators}]] : -m_creators
-C_0006701855109527716313 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L77{}]]
-C_0006701855109527716313 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L77{}]]
-C_0006701855109527716313 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L129{}]]
-C_0006701855109527716313 --> C_0015357895956836170771 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L219{m_secondaryHeader}]] : -m_secondaryHeader
-C_0006701855109527716313 o-- C_0000143976543200677522 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L220{m_secondaryHeaderFactory}]] : -m_secondaryHeaderFactory
-C_0006701855109527716313 <.. C_0001106029959005870872 : +<<friend>>
-C_0001106029959005870872 ..> C_0011016081288581091098 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L113{}]]
-C_0001106029959005870872 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L113{}]]
-C_0001106029959005870872 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L113{}]]
-C_0001106029959005870872 ..> C_0015357895956836170771 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L143{}]]
-C_0001106029959005870872 ..> C_0009395536347375124815 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L215{}]]
-C_0001106029959005870872 ..> C_0013605065755269523444 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L246{}]]
-C_0001106029959005870872 ..> C_0004221379495469136872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L302{}]]
-C_0001106029959005870872 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L459{}]]
-C_0001106029959005870872 o-- C_0000066884519575390086 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L466{m_primaryHeader}]] : -m_primaryHeader
-C_0001106029959005870872 o-- C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L467{m_dataField}]] : -m_dataField
-C_0001106029959005870872 o-- C_0003994627686254228849 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L469{m_CRC16Config}]] : -m_CRC16Config
-C_0000066884519575390086 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L153{}]]
-C_0000066884519575390086 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L153{}]]
-C_0000066884519575390086 ..> C_0011016081288581091098 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L217{}]]
-C_0000066884519575390086 o-- C_0011673188171996207529 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L231{m_status}]] : -m_status
-C_0004221379495469136872 ..|> C_0008471204632575367201
-C_0015262608491158149275 ..> C_0000066884519575390086 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L104{}]]
-C_0015262608491158149275 o-- C_0001106029959005870872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L106{m_templatePacket}]] : -m_templatePacket
-C_0015262608491158149275 o-- C_0003994627686254228849 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L113{m_CRCConfig}]] : -m_CRCConfig
-C_0014627802343853026005 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L94{}]]
-C_0014627802343853026005 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L94{}]]
-C_0014627802343853026005 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L108{}]]
-C_0014627802343853026005 ..> C_0003681749600908501807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L173{}]]
-C_0014627802343853026005 ..> C_0013605065755269523444 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L305{}]]
-C_0014627802343853026005 o-- C_0001106029959005870872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L309{m_templatePacket}]] : -m_templatePacket
-C_0014627802343853026005 o-- C_0001106029959005870872 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L314{m_packets}]] : -m_packets
-C_0014627802343853026005 o-- C_0015262608491158149275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L317{m_validator}]] : -m_validator
-C_0008289891971916880997 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{}]]
-C_0008289891971916880997 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{}]]
-C_0008289891971916880997 ..> C_0003681749600908501807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L82{}]]
-C_0001404029779718103303 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L79{}]]
-C_0001404029779718103303 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L79{}]]
-C_0001404029779718103303 ..> C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L85{}]]
-C_0001404029779718103303 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L93{}]]
-C_0015357895956836170771 <|-- C_0001404029779718103303
-C_0014410093318812969362 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L165{}]]
-C_0014410093318812969362 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L165{}]]
-C_0014410093318812969362 ..> C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L171{}]]
-C_0014410093318812969362 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L179{}]]
-C_0015357895956836170771 <|-- C_0014410093318812969362
-C_0004565611741543840631 ..> C_0008762487699986143535 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L259{}]]
-C_0004565611741543840631 ..> C_0008471204632575367201 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L259{}]]
-C_0004565611741543840631 ..> C_0006701855109527716313 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L265{}]]
-C_0004565611741543840631 ..> C_0008289891971916880997 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L273{}]]
-C_0015357895956836170771 <|-- C_0004565611741543840631
+C_0009567851690976834738 o-- C_0009441289820825074537 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L67{m_code}]] : -m_code
+C_0004081418331934384486 o-- C_0009567851690976834738 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSResult.h#L92{data}]] : -data
+C_0014174674997599217076 ..|> C_0004081418331934384486
+C_0004629493886474321807 ..|> C_0004081418331934384486
+C_0017173607616216397172 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L63{}]]
+C_0017173607616216397172 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L63{}]]
+C_0017173607616216397172 ..> C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L70{}]]
+C_0017173607616216397172 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L96{}]]
+C_0016881712599388925194 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L136{}]]
+C_0016881712599388925194 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L136{}]]
+C_0016881712599388925194 ..> C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L156{}]]
+C_0016881712599388925194 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderAbstract.h#L162{}]]
+C_0017173607616216397172 <|-- C_0016881712599388925194
+C_0005588309261265651757 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L50{}]]
+C_0005588309261265651757 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L50{}]]
+C_0005588309261265651757 o-- C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSSecondaryHeaderFactory.h#L83{m_creators}]] : -m_creators
+C_0009576894308489276275 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L77{}]]
+C_0009576894308489276275 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L77{}]]
+C_0009576894308489276275 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L129{}]]
+C_0009576894308489276275 --> C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L219{m_secondaryHeader}]] : -m_secondaryHeader
+C_0009576894308489276275 o-- C_0005588309261265651757 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L220{m_secondaryHeaderFactory}]] : -m_secondaryHeaderFactory
+C_0009576894308489276275 <.. C_0009809857242509377472 : +<<friend>>
+C_0004705280547409404765 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L153{}]]
+C_0004705280547409404765 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L153{}]]
+C_0004705280547409404765 ..> C_0005167639859745434657 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L217{}]]
+C_0004705280547409404765 o-- C_0015875931497764560698 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSHeader.h#L231{m_status}]] : -m_status
+C_0006681659169358588769 ..|> C_0004081418331934384486
+C_0009809857242509377472 ..> C_0005167639859745434657 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L113{}]]
+C_0009809857242509377472 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L113{}]]
+C_0009809857242509377472 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L113{}]]
+C_0009809857242509377472 ..> C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L143{}]]
+C_0009809857242509377472 ..> C_0002097049991889074748 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L215{}]]
+C_0009809857242509377472 ..> C_0001243513306714304585 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L246{}]]
+C_0009809857242509377472 ..> C_0006681659169358588769 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L302{}]]
+C_0009809857242509377472 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L459{}]]
+C_0009809857242509377472 o-- C_0004705280547409404765 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L466{m_primaryHeader}]] : -m_primaryHeader
+C_0009809857242509377472 o-- C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L467{m_dataField}]] : -m_dataField
+C_0009809857242509377472 o-- C_0005838138750192050804 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L469{m_CRC16Config}]] : -m_CRC16Config
+C_0015641474125909340471 ..> C_0004705280547409404765 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L104{}]]
+C_0015641474125909340471 o-- C_0009809857242509377472 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L106{m_templatePacket}]] : -m_templatePacket
+C_0015641474125909340471 o-- C_0005838138750192050804 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L113{m_CRCConfig}]] : -m_CRCConfig
+C_0012258095910604845950 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L94{}]]
+C_0012258095910604845950 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L94{}]]
+C_0012258095910604845950 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L108{}]]
+C_0012258095910604845950 ..> C_0004629493886474321807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L173{}]]
+C_0012258095910604845950 ..> C_0001243513306714304585 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L305{}]]
+C_0012258095910604845950 o-- C_0009809857242509377472 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L309{m_templatePacket}]] : -m_templatePacket
+C_0012258095910604845950 o-- C_0009809857242509377472 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L314{m_packets}]] : -m_packets
+C_0012258095910604845950 o-- C_0015641474125909340471 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L317{m_validator}]] : -m_validator
+C_0003888813716297410290 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{}]]
+C_0003888813716297410290 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L39{}]]
+C_0003888813716297410290 ..> C_0004629493886474321807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSConfig.h#L82{}]]
+C_0016673335666709911194 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L79{}]]
+C_0016673335666709911194 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L79{}]]
+C_0016673335666709911194 ..> C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L85{}]]
+C_0016673335666709911194 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L93{}]]
+C_0017173607616216397172 <|-- C_0016673335666709911194
+C_0003827689557511017887 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L165{}]]
+C_0003827689557511017887 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L165{}]]
+C_0003827689557511017887 ..> C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L171{}]]
+C_0003827689557511017887 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L179{}]]
+C_0017173607616216397172 <|-- C_0003827689557511017887
+C_0000703146648332042154 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L259{}]]
+C_0000703146648332042154 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L259{}]]
+C_0000703146648332042154 ..> C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L265{}]]
+C_0000703146648332042154 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/PusServices.h#L273{}]]
+C_0017173607616216397172 <|-- C_0000703146648332042154
 
-'Generated with clang-uml, version 0.6.3-5-g3650837
+'Generated with clang-uml, version 0.6.3-59-gdfa2271
 'LLVM version Ubuntu clang version 17.0.6 (9ubuntu1)
 @enduml
