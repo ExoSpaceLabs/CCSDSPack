@@ -68,7 +68,7 @@ The detailed normative scope, packet rules, limitations, traceability, and evide
 - independent vectors and regression tests under `test/`;
 - Linux and Windows CI, installed-package consumer tests, and CLI integration tests.
 
-Release-candidate hardware execution completed successfully on:
+Release hardware validation completed successfully on:
 
 - Raspberry Pi 5 native arm64 Linux, ending in `CCSDSPACK_AARCH64_TEST:PASS`;
 - NUCLEO-H755ZI-Q Cortex-M7, ending in `CCSDSPACK_MCU_TEST:PASS`.
