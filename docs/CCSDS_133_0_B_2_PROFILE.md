@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDS 133.0-B-2 EC2 Space Packet PDU profile
 
-[Main README](../README.md)
+[Main README](../README.md) | [Compliance statement](../COMPLIANCE.md) | [Clause-level matrix](../CCSDS_COMPLIANCE.md)
 
 ## Normative baseline
 
@@ -32,6 +32,8 @@ It does **not** claim implementation of the complete CCSDS Space Packet Protocol
 - all managed parameters;
 - a completed Protocol Implementation Conformance Statement (PICS);
 - transfer frames, Attached Synchronization Markers, CFDP, or other CCSDS protocol layers.
+
+This boundary is intentional and appropriate for a packet PDU library. Complete abstract services, lower-layer transfer, routing, and system-wide managed behavior belong to a larger flight or ground protocol entity when that system requires them.
 
 `CCSDS::Manager` may prepend a configurable synchronization pattern around packet streams. That pattern is a CCSDSPack container convenience and is not part of a CCSDS Space Packet.
 
@@ -206,4 +208,10 @@ The profile is exercised by:
 - malformed length, CRC, version, identifier, and sequence tests;
 - dedicated Idle Packet and PDU-profile tests;
 - the installed shared-library consumer under `test/package_tester/shared_lib`;
-- Linux and Windows CI builds and execution.
+- Linux and Windows CI builds and execution;
+- native Raspberry Pi 5 arm64 execution with `CCSDSPACK_AARCH64_TEST:PASS`;
+- STM32 Cortex-M7 build, link, flash, startup, and execution with `CCSDSPACK_MCU_TEST:PASS` reported twice.
+
+The clause-to-code-to-test mapping is recorded in [CCSDS_COMPLIANCE.md](../CCSDS_COMPLIANCE.md). Hardware details and reproduction procedures are recorded in [V1_2_HARDWARE_VALIDATION.md](V1_2_HARDWARE_VALIDATION.md) and [V1_2_STM32_VALIDATION_STEPS.md](V1_2_STM32_VALIDATION_STEPS.md).
+
+All supported Space Packet PDU implementation and hardware-validation gates are complete. This evidence does not expand the claim to a complete protocol entity or qualify every platform, compiler, memory layout, mission profile, or operating condition.
