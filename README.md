@@ -4,7 +4,7 @@ SPDX-License-Identifier: Apache-2.0
 -->
 
 <div style="text-align: center;">
-    <img alt="ccsds_pack_logo" src="docs/imgs/Logo.png" width="400" />
+    <img alt="CCSDSPack logo" src="docs/imgs/Logo.png" width="400" />
 </div>
 
 # CCSDSPack [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
@@ -14,7 +14,7 @@ SPDX-License-Identifier: Apache-2.0
 The v1.2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Change 2 (September 2024)** through a documented Space Packet PDU profile.
 
 > [!IMPORTANT]
-> The v1.2 conformity claim is limited to the **Space Packet PDU profile**. CCSDSPack does not implement the complete abstract Packet Service, Octet String Service, all protocol procedures, or a Protocol Implementation Conformance Statement.
+> The v1.2 implementation scope is limited to the documented **Space Packet PDU profile**. CCSDSPack does not implement the complete abstract Packet Service, Octet String Service, all protocol procedures, or a Protocol Implementation Conformance Statement.
 
 > [!IMPORTANT]
 > The bundled `PusA`, `PusB`, and `PusC` classes are legacy project-specific secondary-header formats. They are not official ECSS Packet Utilisation Standard implementations.
@@ -23,7 +23,7 @@ The v1.2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Ch
 
 | Linux | Windows |
 |---|---|
-| ![Linux](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=main) | ![Windows](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=main) |
+| ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=main) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=main) |
 
 | Platform | CI |
 |---|---|
@@ -32,39 +32,34 @@ The v1.2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Ch
 | Ubuntu latest | ![Ubuntu latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest) |
 | Windows latest | ![Windows latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest) |
 
-## Protocol profile
+## v1.2 Space Packet PDU profile
 
-A serialized Space Packet contains:
+The v1.x implementation serializes packets using a six-octet CCSDS primary header followed by the Packet Data Field.
 
-```text
-6-octet Packet Primary Header
-+ Packet Data Field
-```
+The Packet Data Field contains optional secondary-header bytes, mission application data, and, when enabled, the optional CCSDSPack CRC16 trailer.
 
-The Packet Data Field contains optional secondary-header bytes followed by mission application data. When the CCSDSPack CRC16 profile is enabled, its final two octets are reserved for the CRC trailer:
+### CCSDSPack v1.2 packet layout
 
-```text
-Packet Data Field = optional secondary header
-                  + application data
-                  + optional CCSDSPack CRC16 trailer
-```
+The following diagram represents the wire layout produced by the v1.2 implementation.
 
-The CRC trailer is a **CCSDSPack mission-profile convention inside the Packet Data Field**. CCSDS 133.0-B-2 does not define it as a third Space Packet structural field.
+![CCSDSPack v1.2 Space Packet layout](docs/imgs/ccsdsPacket.drawio.png)
 
-Detailed scope, limitations, and migration behavior are documented in [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md).
+When the optional CCSDSPack CRC16 profile is enabled, the final two Packet Data Field octets are reserved for the CRC trailer. CCSDS 133.0-B-2 does not define this trailer as a third top-level Space Packet structural field.
+
+Detailed scope, limitations, and migration behavior are documented in the [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md).
 
 ### Primary-header rules
 
-CCSDSPack v1.2 enforces the following Packet-level rules:
+CCSDSPack v1.2 enforces the following packet-level rules:
 
 - Packet Version Number is `000`;
 - telemetry and telecommand Packet Types are supported;
 - the complete 11-bit APID range is supported;
 - APID `0x7FF` is reserved for Idle Packets;
-- Idle Packets have no secondary header and contain mission-defined idle user data;
+- within the CCSDSPack v1.2 profile, Idle Packets omit the secondary header and carry mission-defined idle data;
 - Packet Data Length is the number of octets after the primary header minus one;
 - Sequence Flags use the CCSDS first, continuation, last, and unsegmented values;
-- Packet Sequence Count advances modulo 16384 in automatic Manager mode.
+- Packet Sequence Count advances modulo 16384 in automatic `CCSDS::Manager` mode.
 
 CCSDSPack uses Packet Sequence Count semantics for both telemetry and telecommand packets. The optional telecommand Packet Name interpretation is not implemented.
 
@@ -72,13 +67,17 @@ CCSDSPack uses Packet Sequence Count semantics for both telemetry and telecomman
 
 The Packet Data Field can contain 1 through 65,536 octets, giving a total serialized packet size of 7 through 65,542 octets.
 
+Profiles requiring a two-octet CRC trailer have a practical minimum serialized packet size of 8 octets.
+
 Use:
 
 ```cpp
 std::size_t packetSize = packet.getSerializedSize();
 ```
 
-for the complete range. The legacy `getFullPacketLength()` API returns `std::uint16_t` and saturates at `UINT16_MAX` rather than wrapping.
+for the complete range.
+
+The legacy `getFullPacketLength()` API returns `std::uint16_t` and saturates at `UINT16_MAX` rather than wrapping.
 
 ### Packet error control
 
@@ -87,7 +86,15 @@ for the complete range. The legacy `getFullPacketLength()` API returns `std::uin
 - `PacketErrorControlMode::CRC16`, the existing v1 default;
 - `PacketErrorControlMode::None`.
 
-In CRC16 mode, CCSDSPack reserves the final two Packet Data Field octets for CRC-16/CCITT-FALSE and includes those octets in Packet Data Length. The receiver must configure the expected mode before parsing.
+In CRC16 mode, CCSDSPack reserves the final two Packet Data Field octets for CRC-16/CCITT-FALSE and includes those octets in Packet Data Length.
+
+The receiver must configure the expected mode before parsing.
+
+### Library architecture
+
+The following diagram shows the main v1.x relationships between the user application, `CCSDS::Manager`, `CCSDS::Packet`, primary-header handling, Packet Data Field handling, secondary-header creation, serialization, validation, CRC16, and utility functions.
+
+![CCSDSPack v1 library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
 
 ## Features
 
@@ -97,7 +104,7 @@ In CRC16 mode, CCSDSPack reserves the final two Packet Data Field octets for CRC
 - optional project-specific CRC16 trailer;
 - complete 11-bit APID handling and Idle Packet validation;
 - modulo-16384 sequence counting and segmentation utilities;
-- one complete Packet Identification binding per Manager;
+- one configured Packet Identification value per `CCSDS::Manager` instance;
 - custom and opaque secondary-header support;
 - exception-free `Result` and `Error` handling;
 - Linux and Windows builds;
@@ -119,7 +126,7 @@ In CRC16 mode, CCSDSPack reserves the final two Packet Data Field octets for CRC
 
 ## Build from source
 
-Requirements:
+### Requirements
 
 - CMake 3.16 or newer;
 - a C++17 compiler;
@@ -184,11 +191,13 @@ cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/install/prefix
 
 ```cpp
 #include <CCSDSPack.h>
+
 #include <cstdint>
 #include <vector>
 
 int main() {
   CCSDS::Packet packetTemplate;
+
   const auto headerResult = packetTemplate.setPrimaryHeader(CCSDS::PrimaryHeader{
     0,                       // Packet Version Number 000
     0,                       // telemetry packet
@@ -198,17 +207,26 @@ int main() {
     0,
     0                        // calculated during serialization
   });
-  if (!headerResult) return headerResult.error().code();
+
+  if (!headerResult) {
+    return headerResult.error().code();
+  }
 
   packetTemplate.setDataFieldSize(1024);
 
   CCSDS::Manager manager;
+
   const auto templateResult = manager.setPacketTemplate(packetTemplate);
-  if (!templateResult) return templateResult.error().code();
+  if (!templateResult) {
+    return templateResult.error().code();
+  }
 
   const std::vector<std::uint8_t> inputBytes{0x10, 0x20, 0x30};
+
   const auto dataResult = manager.setApplicationData(inputBytes);
-  if (!dataResult) return dataResult.error().code();
+  if (!dataResult) {
+    return dataResult.error().code();
+  }
 
   const auto wire = manager.getPacketsBuffer();
   return wire.empty() ? 1 : 0;
@@ -224,7 +242,9 @@ The build can provide:
 - `ccsds_validator`;
 - `CCSDSPack_tester`.
 
-The encoder, decoder, and validator support `crc16` and `none` packet-error-control profiles. See [CLI reference](docs/CLI.md) for exact options, concatenated decoding, trailing-byte handling, validation categories, and exit codes.
+The encoder, decoder, and validator support `crc16` and `none` packet-error-control profiles.
+
+See the [CLI reference](docs/CLI.md) for exact options, concatenated decoding, trailing-byte handling, validation categories, and exit codes.
 
 ## Packages and container
 
@@ -236,7 +256,9 @@ Container images are published at:
 docker pull ghcr.io/exospacelabs/ccsdspack:<version>
 ```
 
-The image contains the library and command-line executables. Run the installed tester with:
+The image contains the library and command-line executables.
+
+Run the installed tester with:
 
 ```bash
 docker run --rm ghcr.io/exospacelabs/ccsdspack:<version> /usr/bin/CCSDSPack_tester
@@ -244,21 +266,35 @@ docker run --rm ghcr.io/exospacelabs/ccsdspack:<version> /usr/bin/CCSDSPack_test
 
 ## Legacy secondary headers
 
-The v1 API retains `PusA`, `PusB`, and `PusC` for compatibility with existing projects and configuration files. Their layouts are project-specific ancillary-data formats.
+The v1 API retains `PusA`, `PusB`, and `PusC` for compatibility with existing projects and configuration files.
+
+Their layouts are project-specific ancillary-data formats:
 
 - `PusA` and `PusB` are fixed-size legacy formats;
 - `PusC` contains a variable application-configured byte sequence described as a time-code field;
 - none of these classes is claimed to implement an official ECSS PUS revision;
 - `PusC` bytes are not automatically validated as a CCSDS time-code format.
 
-Standards-oriented ECSS PUS support remains v2.0.0 scope.
+Standards-oriented ECSS PUS support remains in the v2.0.0 scope.
 
 ## Compatibility with pre-v1.2 packets
 
-The v1 public source API remains available, but corrected wire semantics may differ from packets produced by earlier releases. Changes include Packet Data Length, CRC coverage, parsing boundaries, sequence behavior, Packet Identification enforcement, version validation, and Idle Packet validation.
+Although the public source API remains in the v1 series, v1.2 is not wire-compatible with packets produced using the incorrect length, CRC, sequence, Packet Identification, version, or Idle Packet semantics of earlier releases.
+
+Changes include:
+
+- Packet Data Length;
+- CRC coverage;
+- parsing boundaries;
+- sequence behavior;
+- Packet Identification enforcement;
+- Packet Version Number validation;
+- Idle Packet validation.
 
 Stored or transmitted packets generated by older releases should be regenerated or migrated explicitly before adopting the v1.2 profile.
 
 ## License
 
-CCSDSPack is licensed under the Apache License 2.0. See [LICENSE](LICENSE) and [Notice.md](Notice.md).
+CCSDSPack is licensed under the Apache License 2.0.
+
+See [LICENSE](LICENSE) and [Notice.md](Notice.md).
