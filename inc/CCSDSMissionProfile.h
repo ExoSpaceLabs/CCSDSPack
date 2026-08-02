@@ -5,11 +5,12 @@
 #define CCSDS_MISSION_PROFILE_H
 
 #include <cstdint>
+#include "CCSDSPacket.h"
 
 namespace CCSDS {
 
   /**
-   * @brief PUS revisions accepted by the CCSDSPack v2+ compliance profile.
+   * @brief PUS revisions accepted by the CCSDSPack v2 standards-facing profile.
    *
    * ECSS-E-ST-70-41C encodes its PUS version number as 2. PUS-A is
    * intentionally not represented because it is deferred from v2.0.0.
@@ -24,13 +25,7 @@ namespace CCSDS {
     Telecommand = 1
   };
 
-  /** @brief Packet error-control modes exposed by the profile. */
-  enum class PacketErrorControlMode : std::uint8_t {
-    None = 0,
-    Crc16Ccitt = 1
-  };
-
-  /** @brief CCSDS time-code families supported by a mission profile. */
+  /** @brief CCSDS time-code families expressible by a mission profile. */
   enum class TimeCodeFormat : std::uint8_t {
     None = 0,
     Cuc = 1,
@@ -39,16 +34,23 @@ namespace CCSDS {
   };
 
   /**
-   * @brief Initial mission-tailoring contract for standards-facing v2+ APIs.
+   * @brief Initial mission-tailoring contract for standards-facing v2 APIs.
    *
-   * Width values are expressed in octets. Zero disables an optional field.
-   * Profile validation and codec integration are implemented in Phase 3.
+   * A default-constructed profile represents a generic CCSDS Space Packet and
+   * does not silently enable PUS. Set pusEnabled and direction explicitly when
+   * selecting an ECSS-E-ST-70-41C TC or TM profile.
+   *
+   * Width values are expressed in octets. Zero disables an optional field only
+   * where the selected packet definition permits absence. Full profile validation
+   * and codec integration are delivered by issues #66 and #67.
    */
   struct MissionProfile {
+    bool pusEnabled{false};
     PusRevision pusRevision{PusRevision::C};
-    std::uint8_t sourceIdOctets{1};
-    std::uint8_t destinationIdOctets{1};
-    PacketErrorControlMode packetErrorControl{PacketErrorControlMode::Crc16Ccitt};
+    PacketDirection direction{PacketDirection::Telemetry};
+    std::uint8_t sourceIdOctets{0};
+    std::uint8_t destinationIdOctets{0};
+    PacketErrorControlMode packetErrorControl{PacketErrorControlMode::CRC16};
     bool telemetryTimestampPresent{false};
     TimeCodeFormat telemetryTimeCode{TimeCodeFormat::None};
     std::uint8_t telemetryTimeCodeOctets{0};

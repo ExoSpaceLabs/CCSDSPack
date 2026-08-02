@@ -1,389 +1,311 @@
 # CCSDSPack v2.0.0 Transition Roadmap
 
-## Project
+## Objective
 
-**CCSDSPack 2.0.0 Compliance Assurance**
+Deliver a standards-oriented CCSDSPack v2.0.0 by building proper ECSS-E-ST-70-41C PUS-C support on the released v1.2.0 CCSDS Space Packet foundation.
 
-## Roadmap Objective
+The v1.2.0 release already corrected and validated the generic packet layer. The v2 critical path therefore begins with branch synchronization and mission-profile architecture, not with repeating completed Packet Data Length, CRC, APID, parser, sequence, CLI, or package work.
 
-Deliver a standards-oriented v2.0.0 release by correcting the current C++ implementation before considering a future C-core migration.
+## Current baseline
 
-The roadmap prioritizes wire compatibility, deterministic parsing, PUS-C correctness, explicit mission tailoring, and independent conformance evidence.
-
----
-
-# Phase 0: Scope and Standards Baseline
-
-## Goal
-
-Establish the exact compliance target before modifying wire behaviour.
-
-## Included Issues
-
-- Define the v2.0.0 standards and compliance baseline.
-- Create the CCSDS compliance matrix.
-- Define supported PUS revisions.
-- Define mission-tailoring requirements.
-
-## Exit Criteria
-
-- Exact standard revisions are selected.
-- PUS-C is confirmed as the primary v2 target.
-- PUS-A is either accepted or formally deferred.
-- Unsupported layers are documented.
-- Compliance claims have a traceable baseline.
-
-## Deliverables
-
-- `docs/CCSDS_COMPLIANCE.md`
-- Initial PUS revision decision
-- Initial mission-tailoring specification
+- `main` contains the released and validated v1.2.0 implementation.
+- `v2.0.0-dev` contains the completed Phase 0 standards and tailoring artifacts.
+- Issue #108 synchronizes both histories through `feature/sync-v1.2-baseline` and a PR into `v2.0.0-dev`.
+- Issue #109 tracks removal of the legacy project-specific `PusA` and `PusC` classes.
+- PUS-A implementation is deferred from v2.0.0.
 
 ---
 
-# Phase 1: CCSDS Wire-Format Corrections
+# Stage 0: Synchronize and rebaseline
 
 ## Goal
 
-Correct the core CCSDS packet bytes before redesigning higher-level PUS abstractions.
+Create one mergeable v2 development history containing the released v1.2.0 implementation and the accepted v2 Phase 0 documents.
 
-## Included Issues
+## Work
 
-1. Correct Packet Data Length encoding.
-2. Enforce packet boundaries during deserialization.
-3. Make packet error control optional.
-4. Correct CRC calculation coverage.
-5. Validate CRC during parsing.
-6. Correct Packet Sequence Count behaviour.
-7. Maintain independent sequence counters per APID.
-8. Correct APID type and range validation.
-9. Replace silent field masking with explicit validation.
+- Merge `main` and the existing `v2.0.0-dev` history through #108.
+- Preserve the compliance matrix, mission-tailoring specification, roadmap, acceptance list, and mission-profile header.
+- Keep Linux, Windows, and Doxygen workflows active for `v2.0.0-dev`.
+- Resolve public-type collisions.
+- Reclassify completed generic CCSDS tasks as inherited.
+- Correct stale issue descriptions and defer PUS-A tasks.
 
-## Exit Criteria
+## Exit criteria
 
-- Generic CCSDS packet encoding matches independent vectors.
-- Parsing consumes exactly one packet.
-- CRC and non-CRC packets are supported.
-- Unsegmented packets may use non-zero sequence counts.
-- APID values are not truncated.
-- Invalid values return errors instead of being silently masked.
-
-## Recommended PR Sequence
-
-1. Primary-header validation and APID fixes.
-2. Packet Data Length correction.
-3. Packet-boundary parsing.
-4. Optional packet error control.
-5. CRC coverage and verification.
-6. Sequence-count and APID counter behaviour.
+- The synchronization PR is mergeable and passes branch CI.
+- `v2.0.0-dev` contains every v1.2.0 source, test, tool, package, and hardware-validation asset.
+- Phase 0 artifacts remain present.
+- Remaining work is accurately represented by issues and acceptance criteria.
 
 ---
 
-# Phase 2: PUS Model Redesign
+# Stage 1: Mission-profile foundation
 
 ## Goal
 
-Replace the current PUS-A/B/C class model with explicit PUS revision and packet direction.
+Create a deterministic public profile model usable by generic CCSDS packets and PUS-C packets.
 
-## Included Issues
+## Issues
 
-1. Introduce explicit PUS revision and packet direction types.
-2. Separate PUS TC and TM abstractions.
-3. Remove the invalid PusB secondary header.
-4. Decide the migration path for the current PusB wire format.
+- #65 Introduce Mission Profiles and Deterministic Packet Finalization
+- #66 Add a mission profile model
+- #67 Add mission profile validation
 
-## Exit Criteria
+## Work
 
-- PUS revision and TC/TM direction are independent concepts.
-- Standards-facing APIs no longer expose `PusB`.
-- A TC header cannot be attached to a TM packet.
-- A TM header cannot be attached to a TC packet.
-- Legacy PusB behaviour is either removed or clearly renamed as proprietary.
+- Separate generic packet profile choices from PUS-specific choices.
+- Reuse one packet-error-control enum across packet and profile APIs.
+- Require explicit PUS revision and direction for PUS packets.
+- Define supported identifier widths.
+- Select the initial supported CCSDS time representation and encode its parameters explicitly.
+- Return specific profile-validation errors.
+- Derive secondary-header sizes from validated profiles.
 
-## Recommended PR Sequence
+## Exit criteria
 
-1. Add PUS revision and direction types.
-2. Introduce TC/TM base abstractions.
-3. Update factory selection.
-4. Remove or rename PusB.
+- Generic packets do not implicitly become PUS packets.
+- Invalid profiles cannot be serialized or strictly parsed.
+- Every profile constraint has positive and negative tests.
 
 ---
 
-# Phase 3: Mission Profiles and PUS-C Implementation
+# Stage 2: Typed secondary-header architecture
 
 ## Goal
 
-Implement standards-oriented PUS-C TC and TM headers using explicit mission tailoring.
+Replace ambiguous string-selected PUS types with direction-safe, freshly instantiated codecs.
 
-## Included Issues
+## Issues
 
-1. Add a mission profile model.
-2. Add mission profile validation.
-3. Refactor secondary-header factory selection.
-4. Implement PUS-C TC secondary header.
-5. Implement PUS-C TM secondary header.
-6. Implement CCSDS time-field support for PUS-C TM.
+- #57 Introduce explicit PUS revision and packet direction types
+- #58 Separate PUS TC and TM secondary-header abstractions
+- #68 Refactor secondary-header factory selection
 
-## Exit Criteria
+## Work
 
-- Source-ID and destination-ID widths are profile-driven.
-- Packet error control is profile-driven.
-- PUS-C TC acknowledgement flags are supported.
-- PUS-C TM time-reference status and message-type counter are supported.
-- Optional timestamps use an explicitly configured CCSDS time format.
-- PUS-C vectors pass independently verified tests.
+- Create separate TC and TM types.
+- Prevent attaching a TC header to a TM packet and vice versa.
+- Replace ambiguous `PusA`, `PusB`, and `PusC` string selection in standards-facing paths.
+- Make factory lookup return a fresh mutable object rather than a shared prototype.
+- Preserve custom and opaque secondary-header extension points.
 
-## Recommended PR Sequence
+## Exit criteria
 
-1. Mission profile structure.
-2. Mission profile validation.
-3. Typed factory selection.
-4. PUS-C TC implementation.
-5. PUS-C TM implementation without timestamp.
-6. CCSDS time-field implementation.
-7. PUS-C TM timestamp integration.
+- PUS revision and packet direction are independent strong types.
+- Wrong-direction construction and parsing fail before serialization succeeds.
+- Custom headers remain usable without pretending to be PUS.
 
 ---
 
-# Phase 4: Deterministic Packet Lifecycle
+# Stage 3: PUS-C codecs and CCSDS time
 
 ## Goal
 
-Remove hidden mutation and make packet preparation explicit.
+Implement the actual reason for the breaking release: compliant PUS-C TC and TM secondary headers.
 
-## Included Issues
+## Issues
 
-1. Introduce explicit packet finalization.
-2. Remove hidden mutation from getters.
-3. Update packet serialization to use finalized state.
-4. Preserve parsed packet values during inspection.
+- #59 Implement the PUS-C TC secondary header
+- #61 Implement CCSDS time-field support for PUS-C TM
+- #60 Implement the PUS-C TM secondary header
 
-## Exit Criteria
+## Recommended order
 
-- Read-only getters are non-mutating.
+1. PUS-C TC without changing the generic packet core.
+2. Initial CCSDS time-code implementation with independent vectors.
+3. PUS-C TM without timestamp.
+4. PUS-C TM timestamp integration.
+
+## Exit criteria
+
+- TC acknowledgement, service, subtype, source-ID, and reserved-bit semantics match ECSS-E-ST-70-41C.
+- TM time-reference, service, subtype, message counter, destination-ID, and optional timestamp semantics match the selected profile.
+- No legacy custom application-data-length field remains.
+- Independent TC and TM byte vectors pass.
+
+---
+
+# Stage 4: Packet finalization, Manager, and validation integration
+
+## Goal
+
+Thread the validated profile through packet creation, parsing, management, and validation.
+
+## Issues
+
+- #69 Introduce explicit packet finalization
+- #72 Extend the packet validator
+- #80 Migrate CCSDS Manager to compliant sequence and packet handling
+
+## Work
+
+- Add an error-returning finalization path.
+- Validate direction, secondary-header type, profile, Packet Data Length, and packet error control together.
+- Preserve the accepted one-Manager/one-Packet-Identification/one-counter architecture.
+- Use multiple Manager instances for multiple APIDs.
+- Replace the fixed boolean validator report with structured failure information suitable for PUS and profile errors.
+
+## Exit criteria
+
+- Finalization failures are inspectable and deterministic.
 - Parsed packets remain unchanged during inspection.
-- Packet Data Length and CRC are generated during explicit finalization.
-- Finalization reports validation errors before serialization.
-
-## Recommended PR Sequence
-
-1. Add explicit finalization API.
-2. Move current `update()` responsibilities into finalization.
-3. Make getters `const` where possible.
-4. Remove implicit updates from accessors.
+- Manager generation and parsing use the selected profile.
+- Validator covers generic CCSDS and supported PUS-C requirements.
 
 ---
 
-# Phase 5: Validation and Conformance Evidence
+# Stage 5: Remove the legacy PUS model
 
 ## Goal
 
-Demonstrate standards compliance independently from internal round-trip behaviour.
+Ensure v2 exposes only valid standards concepts.
 
-## Included Issues
+## Issues
 
-1. Extend the packet validator.
-2. Add independent CCSDS golden vectors.
-3. Add independent PUS-C golden vectors.
-4. Add negative packet validation vectors.
-5. Add sanitizer and fuzz testing.
-6. Add PUS-A golden vectors only if PUS-A remains in scope.
+- #64 Remove the invalid PusB secondary header
+- #109 Remove legacy PusA and PusC secondary-header classes
 
-## Exit Criteria
+## Work
 
-- CCSDS and PUS-C output matches independent byte vectors.
-- Packet Data Length and CRC are independently verified.
-- Invalid packets fail for specific reasons.
-- Sanitizer jobs pass.
-- Fuzz smoke tests run in CI.
+- Delete legacy `PusA`, `PusB`, and `PusC` runtime/public classes.
+- Delete `PusServices.h` and `PusServices.cpp` after migration.
+- Remove automatic DataField registration and umbrella exports.
+- Reject legacy configuration with migration errors.
+- Remove current examples, tests, and diagrams that depend on legacy formats.
+- Keep v1.2 release documents as versioned historical evidence.
 
-## Recommended PR Sequence
+## Exit criteria
 
-1. CCSDS golden vectors.
-2. CRC vectors.
-3. PUS-C TC/TM vectors.
-4. Validator expansion.
-5. Negative vectors.
-6. Sanitizer and fuzz CI.
+- No current public header or runtime source exposes the legacy PUS model.
+- Repository searches find legacy names only in versioned history or migration documentation.
 
 ---
 
-# Phase 6: Public API, Tool, and Documentation Migration
+# Stage 6: Independent evidence and robustness
 
 ## Goal
 
-Migrate user-facing components to the compliant v2 model.
+Prove PUS-C behaviour independently and harden parsers against malformed input.
 
-## Included Issues
+## Issues
 
-1. Migrate packet configuration files.
-2. Migrate `CCSDS::Manager`.
-3. Migrate encoder CLI.
-4. Migrate decoder CLI.
-5. Migrate validator CLI.
-6. Update examples and diagrams.
-7. Add the v1-to-v2 migration guide.
-8. Update README and compliance claims.
-9. Update CI and package validation.
+- #71 Strengthen Validation and Conformance Testing
+- #74 Add independent PUS-C golden vectors
+- #76 Add negative packet validation vectors
+- #77 Add sanitizer and fuzz testing
 
-## Exit Criteria
+## Inherited evidence
 
-- Configuration requires explicit PUS revision, direction, profile, and CRC mode.
-- CLI tools generate and parse compliant packets.
-- Existing incorrect configuration fails with a clear migration error.
-- README claims match actual support.
-- Installed package consumer tests pass.
+- Generic CCSDS vectors from #73.
+- Generic negative and regression coverage from #92.
+- Linux, Windows, CLI, installed-consumer, arm64, and MCU evidence from v1.2.0.
 
-## Recommended PR Sequence
+## New work
 
-1. Configuration migration.
-2. Manager migration.
-3. Encoder migration.
-4. Decoder migration.
-5. Validator migration.
-6. Examples and diagrams.
-7. Documentation and migration guide.
-8. Packaging and installed-consumer tests.
+- Independent PUS-C TC vectors covering acknowledgement combinations and identifier widths.
+- Independent PUS-C TM vectors with and without timestamp.
+- Wrong-direction, reserved-bit, malformed-time, and invalid-profile vectors.
+- ASan and UBSan jobs.
+- Bounded fuzz targets for primary header, packet, and PUS parsing.
+
+## Exit criteria
+
+- Independent vectors match encoded bytes and decoded fields.
+- Every malformed vector fails for the expected reason.
+- Sanitizer and bounded fuzz smoke jobs pass in CI.
 
 ---
 
-# Phase 7: Optional PUS-A Delivery
+# Stage 7: Public API, configuration, tools, and documentation migration
 
 ## Goal
 
-Implement PUS-A only if there is a concrete interoperability requirement.
+Make every user-facing path use the v2 profile and PUS-C model.
 
-## Included Issues
+## Issues
 
-1. Implement PUS-A TC secondary header.
-2. Implement PUS-A TM secondary header.
-3. Add PUS-A golden vectors.
-4. Add PUS-A examples and profile documentation.
+- #78 Migrate Public APIs, Tools, Documentation, and Release Packaging
+- #79 configuration
+- #81 encoder
+- #82 decoder
+- #83 validator
+- #84 examples and diagrams
+- #85 migration guide
+- #86 README and compliance claims
+- #87 CI and package validation
 
-## Decision Gate
+## Work
 
-PUS-A should remain outside the mandatory v2.0.0 path unless one of the following exists:
+- Define a v2 configuration schema for generic CCSDS, PUS-C TC, and PUS-C TM.
+- Make old PUS configuration fail with a useful migration error.
+- Extend encoder, decoder, and validator without discarding the correct v1.2 stream and CRC foundations.
+- Move validator CLI protocol checks into the library validator.
+- Compile representative examples in CI.
+- Update current diagrams and documentation.
+- Add `docs/MIGRATION_V1_TO_V2.md` with before/after API and configuration examples.
+- Use version-neutral release workflow inputs until the v2 release notes exist.
 
-- a target mission using PUS-A,
-- a required ground-segment interface,
-- an existing packet archive requiring PUS-A decoding,
-- a committed compatibility requirement.
+## Exit criteria
 
-## Exit Criteria
-
-- PUS-A support is either complete and tested or explicitly deferred to v2.1.0.
-- No partial PUS-A implementation is advertised as compliant.
+- Installed consumers can use the complete v2 public API.
+- CLI outputs match independent PUS-C vectors.
+- README and compliance claims match actual support and limitations.
+- Linux, Windows, Doxygen, package, arm64, and MCU paths pass.
 
 ---
 
-# Phase 8: Release Preparation
+# Stage 8: Release preparation
 
 ## Goal
 
-Prepare and release CCSDSPack v2.0.0 only after compliance gates pass.
+Publish v2.0.0 only after all compliance and migration gates pass.
 
-## Included Issues
+## Issue
 
-1. Set project version to `2.0.0`.
-2. Update shared-library versioning.
-3. Complete release notes.
-4. Complete compliance matrix.
-5. Confirm deferred scope.
-6. Build release packages.
-7. Tag `v2.0.0`.
+- #88 Prepare the v2.0.0 release
 
-## Release Gates
+## Work
 
-- Generic CCSDS golden vectors pass.
-- PUS-C TC and TM golden vectors pass.
-- Packet Data Length vectors pass.
-- CRC and non-CRC packet vectors pass.
-- Negative parser and validator tests pass.
-- Linux and Windows builds pass.
-- MCU cross-build passes.
-- Sanitizer jobs pass.
-- CLI integration tests pass.
-- Installed package consumer tests pass.
-- README and compliance matrix are complete.
-- No standards-facing `PusB` API remains.
+- Set project version and shared-library SOVERSION to 2.
+- Complete release notes and compliance traceability.
+- Verify all deferred scope, especially PUS-A.
+- Generate and test release packages and container images.
+- Repeat arm64 and MCU validation with PUS-C vectors.
+- Merge `v2.0.0-dev` into `develop`, then `develop` into `main`.
+- Tag `v2.0.0` from the approved `main` commit.
+
+## Release gates
+
+- Generic CCSDS regression and independent vectors pass.
+- PUS-C TC and TM independent vectors pass.
+- Mission-profile and negative vectors pass.
+- Linux, Windows, Doxygen, sanitizer, fuzz, CLI, installed-consumer, package, arm64, and MCU gates pass.
+- Current public/runtime code exposes no legacy PUS class.
+- README, migration guide, compliance matrix, and release notes are synchronized.
 
 ---
 
-# Suggested Project Columns
+# Deferred work after v2.0.0
 
-Use the following project workflow:
+PUS-A issues #62, #63, and #75 are not part of the mandatory v2.0.0 path. They should be closed as not planned for this release and recreated or reopened only when a concrete interoperability requirement exists.
 
-1. **Backlog**
-2. **Standards Review**
-3. **Ready for Implementation**
-4. **In Progress**
-5. **In Review**
-6. **Conformance Verification**
-7. **Blocked**
-8. **Done**
+Potential later work:
 
----
+- proper PUS-A support;
+- additional CCSDS time families;
+- additional PUS service-specific payload helpers;
+- more interoperability vectors;
+- future allocation-free C core and stable C ABI without changing the verified v2 wire model.
 
-# Suggested Labels
+# Critical path
 
-- `v2.0.0`
-- `compliance`
-- `ccsds`
-- `pus-c`
-- `pus-a`
-- `breaking-change`
-- `wire-format`
-- `parser`
-- `validation`
-- `testing`
-- `documentation`
-- `cli`
-- `configuration`
-- `blocked-by-standard-review`
-
----
-
-# Critical Path
-
-The critical path for v2.0.0 is:
-
-1. Standards baseline
-2. Packet Data Length correction
-3. Packet-boundary parsing
-4. Optional packet error control
-5. CRC correction and validation
-6. Header and APID validation
-7. PUS revision and TC/TM redesign
-8. Mission profile implementation
-9. PUS-C TC implementation
-10. PUS-C TM implementation
-11. Explicit packet finalization
-12. Conformance vectors
-13. Tool and configuration migration
-14. Release validation
-
-PUS-A is not on the critical path unless explicitly promoted into v2.0.0 scope.
-
----
-
-# Future Roadmap After v2.0.0
-
-The following work should be considered after the compliant C++ wire model is stable:
-
-## v2.1.x
-
-- PUS-A support if deferred
-- Additional CCSDS time formats
-- Additional PUS service-specific payload helpers
-- Improved segmented packet validation
-- More interoperability vectors
-
-## v3.0.0 Candidate
-
-- Introduce an allocation-free C core
-- Preserve the v2 wire model and test vectors
-- Implement the C++ API as a wrapper over the C core
-- Add a stable C ABI
-- Retain identical packet output between C and C++ APIs
-
-This sequencing prevents the language rewrite from obscuring protocol defects and gives the future C core a stable, independently verified behavioural target.
+1. #108 synchronize v1.2.0 into `v2.0.0-dev`.
+2. #66 and #67 complete the profile model and validation.
+3. #57, #58, and #68 establish typed TC/TM factory architecture.
+4. #59, #61, and #60 implement PUS-C TC, time, and TM.
+5. #69, #72, and #80 integrate finalization, validation, and Manager.
+6. #64 and #109 remove legacy PUS classes.
+7. #74, #76, and #77 complete conformance and robustness evidence.
+8. #79 through #87 migrate user-facing paths and CI.
+9. #88 completes the release.

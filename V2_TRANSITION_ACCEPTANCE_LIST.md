@@ -1,762 +1,302 @@
 # CCSDSPack v2.0.0 Transition Acceptance List
 
-## Project
+## Purpose
 
-**CCSDSPack 2.0.0 Compliance Assurance**
+This document is the working acceptance baseline for CCSDSPack v2.0.0.
 
-## Objective
+The implementation baseline is the released `v1.2.0` state on `main`, synchronized into `v2.0.0-dev` through issue #108. Generic CCSDS Space Packet work completed and validated in v1.2.0 is inherited by v2.0.0 and is not repeated merely because an older transition checklist predated that release.
 
-Make the existing C++ implementation compliant with the selected CCSDS Space Packet and ECSS PUS standards while preserving the current overall library architecture.
+Status markers:
 
-The v2.0.0 release must correct wire-format behaviour, redesign PUS support, introduce explicit mission tailoring, strengthen validation, and provide independent conformance evidence.
+- **Complete**: implemented and supported by merged evidence.
+- **Inherited**: completed in v1.2.0 and carried into v2.0.0.
+- **Pending**: required for v2.0.0.
+- **Deferred**: explicitly outside the mandatory v2.0.0 scope.
 
-## Out of Scope for v2.0.0
+## Release scope
 
-- C core rewrite
-- Stable C ABI
-- C++ wrapper over a C implementation
-- CCSDS transfer frames
-- COP-1
-- CFDP
-- SpaceWire transport
-- Full implementation of every PUS service
-- Automatic reassembly of arbitrarily interleaved segmented streams
+CCSDSPack v2.0.0 targets:
 
----
+- CCSDS 133.0-B-2 Issue 2, including Editorial Change 2, Space Packet PDU behaviour;
+- ECSS-E-ST-70-41C PUS-C telecommand and telemetry secondary headers;
+- explicit mission tailoring;
+- deterministic packet finalization and strict profile validation;
+- removal of the legacy project-specific `PusA`, `PusB`, and `PusC` public model;
+- independent PUS-C conformance vectors and robustness testing.
 
-# Main Issue 1: Define the v2.0.0 Standards and Compliance Baseline (#43)
+The following remain outside v2.0.0:
 
-## Description
-
-Define the exact CCSDS and ECSS standards targeted by CCSDSPack v2.0.0.
-
-This issue establishes the authoritative compliance scope for implementation, testing, documentation, and release claims. Requirements must be classified as mandatory, optional, mission-tailored, unsupported, or deferred.
-
-## Acceptance Criteria
-
-- [x] Exact CCSDS Space Packet Protocol document and issue are identified.
-- [x] Exact PUS-A reference is identified if PUS-A remains in scope.
-- [x] ECSS-E-ST-70-41C is identified as the supported PUS-C baseline.
-- [x] Mandatory and mission-tailored fields are documented.
-- [x] Unsupported protocol layers and services are explicitly listed.
-- [x] A compliance traceability document is added to the repository.
-
-## Sub-Issue 1.1: Create the CCSDS Space Packet compliance matrix (#44)
-
-### Description
-
-Create a clause-by-clause matrix mapping CCSDS Space Packet Protocol requirements to the CCSDSPack implementation.
-
-Each requirement must be marked as implemented, partially implemented, mission-tailored, unsupported, or not applicable. Supported requirements should reference source code and tests.
-
-### Acceptance Criteria
-
-- [x] `docs/CCSDS_COMPLIANCE.md` is added.
-- [x] Primary-header requirements are mapped.
-- [x] Packet Data Length requirements are mapped.
-- [x] Sequence-control requirements are mapped.
-- [x] Packet boundary and parsing requirements are mapped.
-- [x] Packet error control assumptions are documented.
-- [x] Each implemented item references at least one test.
-
-## Sub-Issue 1.2: Define the supported PUS revisions (#45)
-
-### Description
-
-Document how CCSDSPack represents PUS-A and PUS-C.
-
-Clarify that PUS-A and PUS-C refer to revisions of the Packet Utilisation Standard and are not generic secondary-header categories. Define whether PUS-A is included in v2.0.0 or deferred.
-
-### Acceptance Criteria
-
-- [x] PUS-A scope is explicitly accepted or deferred.
-- [x] PUS-C is identified as the primary v2 target.
-- [x] TC and TM headers are documented separately.
-- [x] The invalid PUS-B concept is explicitly rejected.
-- [x] Supported PUS revisions are represented by an enum or profile field.
-
-## Sub-Issue 1.3: Define mission-tailoring requirements (#91)
-
-### Description
-
-Identify all packet fields and behaviours requiring mission-specific configuration.
-
-### Acceptance Criteria
-
-- [x] Source-ID width is configurable.
-- [x] Destination-ID width is configurable.
-- [x] Packet error control mode is configurable.
-- [x] Time-field presence is configurable.
-- [x] Time-code format and length are configurable.
-- [x] Invalid profile combinations are documented.
+- PUS-A compliance;
+- complete implementation of every PUS service;
+- CCSDS transfer frames, COP-1, CFDP, or transport bindings;
+- a C core or stable C ABI;
+- automatic reassembly of arbitrarily interleaved segmented streams.
 
 ---
 
-# Main Issue 2: Correct CCSDS Space Packet Wire Compliance
+# Phase 0: Standards and tailoring baseline
 
-## Description
+**Status: Complete**
 
-Correct CCSDS Space Packet serialization, deserialization, validation, packet-length handling, CRC behaviour, APID handling, and sequence-control semantics.
+Tracked by #43, #44, #45, and #91.
 
-## Acceptance Criteria
-
-- [ ] Packet Data Length is encoded correctly.
-- [ ] Packet boundaries are enforced during parsing.
-- [ ] Packet error control is optional.
-- [ ] CRC coverage is correct.
-- [ ] Sequence counts follow CCSDS semantics.
-- [ ] APIDs and header fields are validated without silent truncation.
-- [ ] Standards-compliant golden vectors pass.
-
-## Sub-Issue 2.1: Correct Packet Data Length encoding
-
-### Description
-
-Update serialization so Packet Data Length contains the number of octets in the packet data field minus one.
-
-The packet data field includes the secondary header, application data, and packet error control field when enabled.
-
-### Acceptance Criteria
-
-- [ ] Packet Data Length equals actual bytes following the primary header minus one.
-- [ ] CRC bytes are included when packet error control is enabled.
-- [ ] Maximum representable packet size is validated.
-- [ ] Integer overflow is prevented.
-- [ ] Independent byte-vector tests verify the encoded field.
-
-## Sub-Issue 2.2: Enforce packet boundaries during deserialization
-
-### Description
-
-Decode the primary header first and use Packet Data Length to determine the exact packet boundary.
-
-### Acceptance Criteria
-
-- [ ] Expected packet size is calculated as `6 + Packet Data Length + 1`.
-- [ ] Truncated packets return a specific error.
-- [ ] Concatenated packets can be parsed one at a time.
-- [ ] Trailing bytes are not consumed as part of the packet.
-- [ ] Parsing reports the number of bytes consumed.
-- [ ] No out-of-bounds reads are possible.
-
-## Sub-Issue 2.3: Make packet error control optional
-
-### Description
-
-Remove the assumption that all packets contain a two-byte CRC and introduce an explicit packet error control mode.
-
-### Acceptance Criteria
-
-- [ ] `None` and `CRC16` modes are supported.
-- [ ] Serialization does not append CRC when disabled.
-- [ ] Deserialization does not infer CRC from remaining bytes.
-- [ ] Packet-size calculation reflects the configured mode.
-- [ ] Configuration files expose packet error control explicitly.
-
-## Sub-Issue 2.4: Correct CRC calculation coverage
-
-### Description
-
-Calculate CRC over the complete packet content preceding the CRC field: primary header, secondary header, and application data.
-
-### Acceptance Criteria
-
-- [ ] CRC coverage starts at the first primary-header byte.
-- [ ] CRC coverage ends immediately before the CRC field.
-- [ ] CRC output matches independent reference vectors.
-- [ ] CRC parameters remain configurable where supported.
-- [ ] CRC serialization is big-endian.
-
-## Sub-Issue 2.5: Validate CRC during packet parsing
-
-### Description
-
-Extract the received CRC, calculate the expected CRC, and compare the two when packet error control is enabled.
-
-### Acceptance Criteria
-
-- [ ] Valid CRC packets pass.
-- [ ] Corrupted packets return a dedicated CRC mismatch error.
-- [ ] CRC-free packets skip CRC validation.
-- [ ] Validation does not modify packet contents.
-- [ ] One-bit corruption tests are included.
-
-## Sub-Issue 2.6: Correct Packet Sequence Count behaviour
-
-### Description
-
-Remove the behaviour that forces unsegmented packets to sequence count zero.
-
-### Acceptance Criteria
-
-- [ ] Unsegmented packets support non-zero sequence counts.
-- [ ] Sequence counts increment modulo 16384.
-- [ ] Sequence count rollover is tested.
-- [ ] Parsed packets preserve the received sequence count.
-- [ ] Automatic counter updates are explicitly configurable.
-
-## Sub-Issue 2.7: Maintain independent sequence counters per APID
-
-### Description
-
-Update the higher-level manager to maintain independent sequence counters per APID while keeping the low-level packet codec stateless.
-
-### Acceptance Criteria
-
-- [ ] Different APIDs use independent counters.
-- [ ] Counter state is not stored globally in the packet codec.
-- [ ] Counter rollover is handled correctly.
-- [ ] Manual sequence-count mode remains supported.
-- [ ] Counter behaviour is documented.
-
-## Sub-Issue 2.8: Correct APID type and range validation
-
-### Description
-
-Fix API and configuration paths that store APID using an eight-bit value.
-
-### Acceptance Criteria
-
-- [ ] APID is stored using at least `std::uint16_t`.
-- [ ] Values from 0 to 2046 are supported as normal APIDs.
-- [ ] APID 2047 is handled explicitly as the idle APID.
-- [ ] Values above 2047 return an error.
-- [ ] Configuration loading does not truncate APIDs.
-
-## Sub-Issue 2.9: Replace silent field masking with explicit validation
-
-### Description
-
-Replace public setter and constructor masking with checked assignment so invalid input cannot silently become a different valid value.
-
-### Acceptance Criteria
-
-- [ ] Invalid APIDs return an error.
-- [ ] Invalid sequence counts return an error.
-- [ ] Invalid sequence flags return an error.
-- [ ] Invalid packet versions return an error.
-- [ ] Invalid packet types return an error.
-- [ ] Internal decoding assigns fields only after validation.
+- [x] CCSDS 133.0-B-2 Issue 2 plus Editorial Change 2 is the Space Packet baseline.
+- [x] ECSS-E-ST-70-41C is the sole PUS revision targeted by v2.0.0.
+- [x] PUS-A is deferred.
+- [x] The invalid PUS-B revision concept is rejected.
+- [x] TC and TM directions are represented independently from PUS revision.
+- [x] Mission-tailored identifier widths, packet error control, and telemetry time fields are documented.
+- [x] `docs/CCSDS_COMPLIANCE.md` and `docs/MISSION_TAILORING.md` exist.
+- [x] `inc/CCSDSMissionProfile.h` provides the initial public contract.
 
 ---
 
-# Main Issue 3: Redesign PUS Secondary Header Support
+# Phase 1: Synchronize the v1.2.0 implementation baseline
 
-## Description
+**Status: In progress through #108**
 
-Replace the current PUS-A, PUS-B, and PUS-C model with standards-oriented TC and TM secondary-header implementations.
+- [x] Create `feature/sync-v1.2-baseline` from the released `main` state.
+- [x] Preserve the completed Phase 0 v2 documents and public profile contract.
+- [x] Resolve the duplicate `PacketErrorControlMode` declaration by reusing the v1.2 packet type.
+- [x] Rebaseline this acceptance list and the transition roadmap.
+- [ ] Merge the synchronization PR into `v2.0.0-dev`.
+- [ ] Confirm Linux, Windows, Doxygen, CLI, installed-consumer, packaging, and MCU cross-build workflows on the synchronized branch.
 
-PUS revision and packet direction must be represented independently.
+---
 
-## Acceptance Criteria
+# Phase 2: Generic CCSDS Space Packet foundation
 
-- [ ] TC and TM headers are separate concrete types.
-- [ ] PUS revision is explicitly represented.
-- [ ] The invalid PUS-B model is removed.
-- [ ] PUS-C TC and TM headers match the selected standard.
-- [ ] PUS-A support is correctly implemented or explicitly deferred.
-- [ ] PUS-specific fields are not mixed with custom application fields.
+**Status: Inherited from v1.2.0**
 
-## Sub-Issue 3.1: Introduce explicit PUS revision and packet direction types
+The following work is complete in the released baseline through #46 and its completed work items, including #47, #48, #49, #50, #51, #52, #53, #54, #55, #70, #73, #92, #93, #94, and #95.
 
-### Description
+## Packet encoding and parsing
 
-Add strong types for PUS revision and packet direction, replacing string-only identification.
+- [x] Packet Data Length is encoded as Packet Data Field octets minus one.
+- [x] CRC octets are included in Packet Data Length when enabled.
+- [x] Complete packet-size boundaries are validated without integer wraparound.
+- [x] Parsing validates the six-octet primary header before allocating packet data.
+- [x] Parsing consumes exactly one declared packet.
+- [x] Truncated packet bodies fail deterministically.
+- [x] Concatenated packets can be parsed one at a time.
+- [x] Trailing bytes remain unconsumed and consumed-byte count is reported.
+- [x] Failed parsing does not partially mutate the destination packet.
 
-### Acceptance Criteria
+## Packet error control
 
-- [ ] A `PusRevision` type exists.
-- [ ] Packet direction is explicit.
-- [ ] TC and TM secondary headers cannot be confused.
-- [ ] Factory selection uses structured identifiers rather than free-form strings.
-- [ ] Unsupported combinations return an error.
+- [x] `None` and `CRC16` modes are supported.
+- [x] CRC presence is explicitly configured and never inferred from trailing bytes.
+- [x] CRC covers primary header, secondary header, and application data, excluding the CRC itself.
+- [x] CRC is serialized big-endian and validated during parsing.
+- [x] CRC corruption returns a dedicated checksum error.
 
-## Sub-Issue 3.2: Separate PUS TC and TM secondary-header abstractions
+## Header and sequence semantics
 
-### Description
+- [x] APID uses an 11-bit-capable type and accepts normal APIDs 0 through 2046.
+- [x] APID 2047 is handled as the Idle Packet APID.
+- [x] Values above 2047 are rejected rather than masked.
+- [x] Invalid packet version, packet type, header flag, sequence flag, and sequence count values are rejected.
+- [x] Unsegmented packets preserve non-zero sequence counts.
+- [x] Automatic sequence counts advance modulo 16384.
+- [x] Manual sequence-count mode is supported.
+- [x] Read-only getters do not recalculate length, CRC, sequence count, or secondary-header state.
 
-Replace the generic PUS secondary-header abstraction with direction-specific types.
+## Manager model
 
-### Acceptance Criteria
+- [x] One `CCSDS::Manager` represents one complete Packet Identification stream.
+- [x] One Manager owns one independent sequence counter for that stream.
+- [x] Applications handling multiple APIDs use multiple Manager instances or direct Packet objects.
+- [x] Mixed Packet Identification values are rejected transactionally.
 
-- [ ] TC and TM headers expose different required fields.
-- [ ] A TC header cannot be attached to a TM packet.
-- [ ] A TM header cannot be attached to a TC packet.
-- [ ] Serialization validates packet-type compatibility.
-- [ ] Parsing requires the expected header direction.
+The old requirement for one Manager to maintain an internal counter map for several APIDs is removed. It conflicts with the accepted single-stream Manager architecture and is not required to provide independent counters between APIDs.
 
-## Sub-Issue 3.3: Implement the PUS-C TC secondary header
+## Generic evidence
 
-### Description
+- [x] Independent generic CCSDS golden vectors exist.
+- [x] Generic malformed-packet and regression tests exist.
+- [x] Linux and Windows tests run the vectors.
+- [x] Installed CMake consumer tests exist.
+- [x] CLI integration tests exist.
+- [x] Native arm64 package validation and Cortex-M7 deterministic validation are recorded for v1.2.0.
 
-Implement the PUS-C telecommand secondary header according to ECSS-E-ST-70-41C and the selected mission profile.
+---
 
-### Acceptance Criteria
+# Phase 3: Mission-profile and typed secondary-header architecture
 
-- [ ] First-octet bit layout is correct.
+**Status: Pending**
+
+Tracked by #57, #58, #65, #66, #67, #68, and #69.
+
+## Mission profile
+
+- [ ] A generic CCSDS packet profile can exist without enabling PUS.
+- [ ] PUS-C requires explicit revision and direction selection.
+- [ ] Source-ID and destination-ID widths are validated.
+- [ ] Packet error control uses the common packet-layer enum.
+- [ ] Supported telemetry time configuration is deterministic.
+- [ ] Unsupported combinations return specific profile errors.
+- [ ] Header sizes are derived from the validated profile.
+- [ ] Profile validation is non-mutating and fully unit tested.
+
+## Typed PUS architecture
+
+- [ ] TC and TM are distinct concrete types.
+- [ ] A TC secondary header cannot be attached to a TM packet.
+- [ ] A TM secondary header cannot be attached to a TC packet.
+- [ ] Factory selection uses structured identifiers rather than ambiguous strings.
+- [ ] Factory creation returns a fresh mutable header instance.
+- [ ] Custom and opaque secondary headers remain extensible.
+
+## Packet lifecycle
+
+- [ ] `finalize()` or an equivalent error-returning operation exists.
+- [ ] Finalization validates profile and packet consistency.
+- [ ] Finalization updates dependent secondary-header fields.
+- [ ] Finalization calculates Packet Data Length and packet error control.
+- [ ] Serialization exposes finalization failures instead of only returning an empty buffer.
+- [x] Getters remain non-mutating, inherited from #70.
+
+---
+
+# Phase 4: Standards-oriented PUS-C implementation
+
+**Status: Pending**
+
+Tracked by #59, #60, and #61.
+
+## PUS-C telecommand
+
+- [ ] First-octet layout and reserved bit are correct.
 - [ ] All acknowledgement flags are independently represented.
-- [ ] Service type and subtype are encoded correctly.
+- [ ] Service type and subtype are encoded and decoded correctly.
 - [ ] Source-ID width is profile-driven.
-- [ ] Reserved bits are validated.
-- [ ] No custom application-data length field is present.
-- [ ] Independent reference vectors pass.
+- [ ] No custom application-data-length field exists.
+- [ ] Direction mismatch and reserved-bit failures are rejected.
 
-## Sub-Issue 3.4: Implement the PUS-C TM secondary header
+## CCSDS time support
 
-### Description
+- [ ] The initial supported time-code family is explicitly selected.
+- [ ] Coarse and fine lengths are represented separately where required.
+- [ ] Epoch and P-field policy are documented.
+- [ ] Encoded time size is deterministic.
+- [ ] Invalid time configurations return specific errors.
 
-Implement the PUS-C telemetry secondary header according to ECSS-E-ST-70-41C and the selected mission profile.
+## PUS-C telemetry
 
-### Acceptance Criteria
-
-- [ ] First-octet bit layout is correct.
+- [ ] First-octet layout and reserved bit are correct.
 - [ ] Time-reference status is represented.
-- [ ] Message-type counter is supported.
+- [ ] Message-type counter is represented.
 - [ ] Destination-ID width is profile-driven.
 - [ ] Optional timestamp is profile-driven.
-- [ ] Reserved bits are validated.
-- [ ] No custom application-data length field is present.
-- [ ] Independent reference vectors pass.
-
-## Sub-Issue 3.5: Implement CCSDS time-field support for PUS-C TM
-
-### Description
-
-Replace the arbitrary time-code byte vector with an explicitly configured CCSDS time representation.
-
-### Acceptance Criteria
-
-- [ ] Time format is selected through the mission profile.
-- [ ] Coarse-time length is configurable.
-- [ ] Fine-time length is configurable.
-- [ ] Epoch handling is documented.
-- [ ] Encoded time size is deterministic.
-- [ ] Invalid time configurations return an error.
-- [ ] Encode and decode reference vectors are included.
-
-## Sub-Issue 3.6: Implement the PUS-A TC secondary header
-
-### Description
-
-Implement the PUS-A telecommand secondary header according to the selected historical PUS-A reference.
-
-### Acceptance Criteria
-
-- [ ] TC-specific PUS-A fields are implemented.
-- [ ] Field layout maps to documented PUS-A clauses.
-- [ ] Mission-tailored fields are profile-driven.
-- [ ] The current custom data-length field is removed.
-- [ ] Independent reference vectors pass.
-
-## Sub-Issue 3.7: Implement the PUS-A TM secondary header
-
-### Description
-
-Implement the PUS-A telemetry secondary header according to the selected historical PUS-A reference.
-
-### Acceptance Criteria
-
-- [ ] TM-specific PUS-A fields are implemented.
-- [ ] TC and TM layouts are distinct.
-- [ ] Field layout maps to documented PUS-A clauses.
-- [ ] Mission-tailored fields are profile-driven.
-- [ ] Independent reference vectors pass.
-
-## Sub-Issue 3.8: Remove the invalid PusB secondary header
-
-### Description
-
-Remove `PusB` from standards-facing APIs, documentation, configuration, tests, examples, and factory registration.
-
-### Acceptance Criteria
-
-- [ ] `PusB` class is removed.
-- [ ] PUS-B configuration is removed.
-- [ ] PUS-B diagrams and examples are removed.
-- [ ] PUS-B factory registration is removed.
-- [ ] Repository documentation no longer describes PUS-B as a standard.
-- [ ] A source search for standards-facing `PusB` references returns no result.
-
-## Sub-Issue 3.9: Decide the migration path for the existing PusB wire format
-
-### Description
-
-Determine whether the current custom PusB format is deleted or retained under an explicitly proprietary name.
-
-### Acceptance Criteria
-
-- [ ] A decision is documented.
-- [ ] If retained, the type is clearly marked proprietary.
-- [ ] The type is excluded from compliance claims.
-- [ ] Migration instructions are provided.
-- [ ] Event identifiers are documented as service-specific application data where applicable.
+- [ ] No custom application-data-length field exists.
+- [ ] Direction mismatch, malformed timestamp, and reserved-bit failures are rejected.
 
 ---
 
-# Main Issue 4: Introduce Mission Profiles and Deterministic Packet Finalization
+# Phase 5: Remove the legacy PUS model
 
-## Description
+**Status: Pending**
 
-Introduce a mission-profile model for tailored fields and replace hidden packet mutation with explicit packet finalization.
+Tracked by #64 and #109.
 
-## Acceptance Criteria
+- [ ] Remove legacy `PusB` completely; do not retain it as a standards-facing type.
+- [ ] Remove legacy project-specific `PusA` and `PusC` classes.
+- [ ] Remove `PusServices.h` and `PusServices.cpp` after all legacy types are retired.
+- [ ] Remove automatic DataField registration of legacy PUS classes.
+- [ ] Remove legacy PUS classes from `CCSDSPack.h`.
+- [ ] Reject legacy configuration with a migration error.
+- [ ] Remove legacy PUS use from current tests, examples, and diagrams.
+- [ ] Preserve v1.2 historical documents as explicitly versioned evidence.
+- [ ] Document replacements in `docs/MIGRATION_V1_TO_V2.md`.
 
-- [ ] Mission-tailored values are stored in one validated profile.
-- [ ] Generic CCSDS packets work without a PUS profile.
-- [ ] PUS parsing requires an appropriate profile.
-- [ ] Getters no longer modify packet state.
-- [ ] Packet finalization is explicit and deterministic.
+## Deferred PUS-A work
 
-## Sub-Issue 4.1: Add a mission profile model
-
-### Description
-
-Add a profile structure containing packet-format choices required for serialization and parsing.
-
-### Acceptance Criteria
-
-- [ ] Profile structure is publicly documented.
-- [ ] A default generic CCSDS profile exists.
-- [ ] PUS profiles require explicit revision selection.
-- [ ] Invalid combinations return a profile validation error.
-- [ ] Header sizes are derived from the profile.
-
-## Sub-Issue 4.2: Add mission profile validation
-
-### Description
-
-Implement validation for incompatible or unsupported profile combinations.
-
-### Acceptance Criteria
-
-- [ ] Invalid profiles cannot be used for serialization.
-- [ ] Invalid profiles cannot be used for strict parsing.
-- [ ] Validation returns specific error messages.
-- [ ] All profile constraints have unit tests.
-- [ ] Profile validation does not modify the profile.
-
-## Sub-Issue 4.3: Refactor secondary-header factory selection
-
-### Description
-
-Replace free-form string selection with structured selection based on PUS revision, packet direction, secondary-header type, and mission profile.
-
-### Acceptance Criteria
-
-- [ ] Factory keys are strongly typed.
-- [ ] Invalid revision and direction combinations fail.
-- [ ] Custom secondary headers remain extensible.
-- [ ] PUS headers cannot be selected solely using an ambiguous string.
-- [ ] Existing configuration is migrated.
-
-## Sub-Issue 4.4: Introduce explicit packet finalization
-
-### Description
-
-Add an explicit operation that prepares a packet for serialization.
-
-Finalization must validate consistency, update dependent fields, calculate Packet Data Length, and calculate CRC when enabled.
-
-### Acceptance Criteria
-
-- [ ] `finalize()` or equivalent exists.
-- [ ] Finalization returns validation errors.
-- [ ] Getters do not trigger finalization.
-- [ ] Parsed packets are not automatically modified.
-- [ ] Serialization behaviour is documented as requiring or invoking finalization.
-
-## Sub-Issue 4.5: Remove hidden mutation from getters
-
-### Description
-
-Refactor getters so they do not silently alter packet state.
-
-### Acceptance Criteria
-
-- [ ] Read-only getters are `const` where appropriate.
-- [ ] Calling a getter does not change sequence count.
-- [ ] Calling a getter does not recalculate length.
-- [ ] Calling a getter does not recalculate CRC.
-- [ ] Parsed packet contents remain unchanged during inspection.
+Issues #62, #63, and #75 are deferred from v2.0.0 and should be closed as not planned for this release. Proper PUS-A may be reconsidered after v2.0.0 only when an interoperability requirement exists.
 
 ---
 
-# Main Issue 5: Strengthen Validation and Conformance Testing
+# Phase 6: Validation and conformance evidence
 
-## Description
+**Status: Partially inherited; PUS work pending**
 
-Add strict protocol validation and independent conformance evidence.
+Tracked by #71, #72, #73, #74, #76, and #77.
 
-## Acceptance Criteria
-
-- [ ] Validation covers all supported CCSDS and PUS fields.
-- [ ] Independent golden vectors exist.
-- [ ] Negative vectors cover malformed packets.
-- [ ] CRC corruption is detected.
-- [ ] Sanitizer and fuzz test jobs pass.
-- [ ] Compliance documentation references tests.
-
-## Sub-Issue 5.1: Extend the packet validator
-
-### Description
-
-Update the validator to check all supported v2 protocol requirements.
-
-### Acceptance Criteria
-
-- [ ] Validation returns specific failure reasons.
-- [ ] Validation does not modify the packet.
-- [ ] Strict validation mode is available.
-- [ ] Unsupported packet profiles return a clear error.
-- [ ] Each validation path has a test.
-
-## Sub-Issue 5.2: Add independent CCSDS golden vectors
-
-### Description
-
-Add fixed byte vectors for valid CCSDS Space Packets calculated independently from CCSDSPack.
-
-### Acceptance Criteria
-
-- [ ] Encode output matches expected bytes exactly.
-- [ ] Decode output matches expected logical fields.
-- [ ] Packet Data Length is independently verified.
-- [ ] CRC is independently verified.
-- [ ] Tests run on Linux and Windows.
-
-## Sub-Issue 5.3: Add independent PUS-C golden vectors
-
-### Description
-
-Add fixed reference vectors for PUS-C telecommand and telemetry packets.
-
-### Acceptance Criteria
-
-- [ ] Header bytes match independent references.
-- [ ] Field extraction matches expected values.
-- [ ] Reserved bits are verified.
-- [ ] Identifier widths are verified.
-- [ ] Time-field bytes are verified.
-
-## Sub-Issue 5.4: Add PUS-A golden vectors
-
-### Description
-
-Add fixed reference vectors for PUS-A TC and TM packets if PUS-A remains in v2 scope.
-
-### Acceptance Criteria
-
-- [ ] PUS-A TC vectors pass.
-- [ ] PUS-A TM vectors pass.
-- [ ] PUS-A and PUS-C packets are distinguishable.
-- [ ] PUS-A vectors reference the selected standard and profile.
-- [ ] Tests are omitted only if PUS-A is formally deferred.
-
-## Sub-Issue 5.5: Add negative packet validation vectors
-
-### Description
-
-Add malformed packet vectors covering parser and protocol failures.
-
-### Acceptance Criteria
-
-- [ ] Every malformed vector fails for the expected reason.
-- [ ] No malformed input causes an over-read.
-- [ ] No malformed input triggers excessive allocation.
-- [ ] Validation failures are deterministic.
-- [ ] Tests cover direct parsing and validator APIs.
-
-## Sub-Issue 5.6: Add sanitizer and fuzz testing
-
-### Description
-
-Add automated robustness testing for packet and secondary-header parsers.
-
-### Acceptance Criteria
-
-- [ ] AddressSanitizer job passes.
-- [ ] UndefinedBehaviorSanitizer job passes.
-- [ ] A fuzz target exists for primary-header parsing.
-- [ ] A fuzz target exists for packet parsing.
-- [ ] A fuzz target exists for PUS secondary-header parsing.
-- [ ] CI runs a bounded fuzz smoke test.
+- [x] Generic CCSDS independent vectors exist through #73.
+- [x] Generic parser, CRC, boundary, APID, sequence, and non-mutation regressions exist through #92.
+- [ ] Validator reports structured profile and PUS-specific failures.
+- [ ] Independent PUS-C TC vectors exist.
+- [ ] Independent PUS-C TM vectors exist with and without timestamp.
+- [ ] Identifier-width and reserved-bit vectors exist.
+- [ ] Wrong-direction, invalid-profile, and malformed-time negative vectors exist.
+- [ ] AddressSanitizer and UndefinedBehaviorSanitizer jobs pass.
+- [ ] Primary-header, packet, and PUS parser fuzz targets exist.
+- [ ] CI runs bounded fuzz smoke tests.
 
 ---
 
-# Main Issue 6: Migrate Public APIs, Tools, Documentation, and Release Packaging
+# Phase 7: Public API, configuration, tools, and documentation
 
-## Description
+**Status: Generic v1.2 capability inherited; v2 profile migration pending**
 
-Migrate the user-facing library components to the compliant v2 protocol model.
+Tracked by #78 through #87.
 
-## Acceptance Criteria
+## Configuration and APIs
 
-- [ ] Public APIs no longer expose invalid PUS concepts.
-- [ ] CLI tools use compliant packet encoding and decoding.
-- [ ] Existing incorrect configurations fail clearly.
-- [ ] Documentation contains accurate compliance claims.
-- [ ] v2 release notes identify wire and API incompatibilities.
-- [ ] Packages and CI validate installed consumers.
+- [ ] New configuration explicitly selects generic or PUS profile.
+- [ ] PUS revision and packet direction are explicit.
+- [ ] Identifier widths and time settings are explicit.
+- [ ] Legacy `secondary_header_type=PusA|PusB|PusC` values fail clearly.
+- [ ] Public headers expose no invalid PUS concept.
+- [ ] Installed consumer compiles generic, PUS-C TC, and PUS-C TM examples.
 
-## Sub-Issue 6.1: Migrate packet configuration files
+## Manager and command-line tools
 
-### Description
+- [x] Generic Manager sequence and segmentation behaviour is inherited from v1.2.0.
+- [x] Generic encoder Packet Data Length and packet-error-control behaviour is inherited from #93.
+- [x] Generic decoder bounded-stream behaviour is inherited from #93.
+- [x] Generic validator and CLI exit behaviour is inherited from #93.
+- [ ] Manager generation and parsing use the validated mission profile.
+- [ ] Encoder accepts v2 profile configuration and matches PUS-C vectors.
+- [ ] Decoder reports PUS revision, direction, and fields.
+- [ ] Validator reports profile and PUS failures through the library validator.
 
-Replace the existing secondary-header configuration model with explicit PUS revision, packet direction, mission profile, packet error control, identifier widths, and time format.
+## Documentation and packaging
 
-### Acceptance Criteria
+- [ ] Current README describes PUS-C scope and PUS-A deferral.
+- [ ] Current examples and diagrams contain no legacy PUS model.
+- [ ] `docs/MIGRATION_V1_TO_V2.md` covers every removed or replaced API.
+- [ ] Linux, Windows, Doxygen, CLI, installed-consumer, package, arm64, and MCU jobs pass for v2.
+- [ ] Release workflow uses v2 release notes and version-neutral artifact naming.
 
-- [ ] New v2 configuration format is documented.
-- [ ] PUS-B configuration is removed.
-- [ ] Invalid old configuration returns a migration error.
-- [ ] Example configurations exist for generic CCSDS, PUS-C TC, and PUS-C TM.
-- [ ] PUS-A examples exist if PUS-A is supported.
+---
 
-## Sub-Issue 6.2: Migrate CCSDS Manager to compliant sequence and packet handling
+# Phase 8: Release preparation
 
-### Description
+**Status: Pending**
 
-Update `CCSDS::Manager` to use the corrected packet model.
-
-### Acceptance Criteria
-
-- [ ] Manager maintains sequence counters per APID.
-- [ ] Manager does not force unsegmented sequence counts to zero.
-- [ ] Manager uses explicit packet finalization.
-- [ ] Segmentation behaviour is documented.
-- [ ] Packet generation uses the mission profile.
-
-## Sub-Issue 6.3: Migrate the encoder CLI
-
-### Description
-
-Update the encoder executable to generate compliant generic CCSDS and PUS packets.
-
-### Acceptance Criteria
-
-- [ ] Encoder accepts the v2 profile configuration.
-- [ ] Packet Data Length is correct.
-- [ ] CRC mode is configurable.
-- [ ] PUS revision and direction are explicit.
-- [ ] Output matches golden-vector expectations.
-
-## Sub-Issue 6.4: Migrate the decoder CLI
-
-### Description
-
-Update the decoder executable to parse packet boundaries using encoded Packet Data Length.
-
-### Acceptance Criteria
-
-- [ ] Multiple concatenated packets are decoded individually.
-- [ ] Truncated input is reported clearly.
-- [ ] CRC validation results are displayed.
-- [ ] PUS revision and direction are profile-driven.
-- [ ] Decoder does not silently consume trailing bytes.
-
-## Sub-Issue 6.5: Migrate the validator CLI
-
-### Description
-
-Update the validator executable to expose the complete v2 validation result.
-
-### Acceptance Criteria
-
-- [ ] Length failures are reported.
-- [ ] CRC failures are reported.
-- [ ] Header/profile mismatches are reported.
-- [ ] PUS field failures are reported.
-- [ ] Exit codes distinguish valid packets, validation failures, and tool errors.
-
-## Sub-Issue 6.6: Update API examples and diagrams
-
-### Description
-
-Replace examples and diagrams describing the current custom PUS-A/B/C model.
-
-### Acceptance Criteria
-
-- [ ] Generic CCSDS packet example is updated.
-- [ ] PUS-C TC example is added.
-- [ ] PUS-C TM example is added.
-- [ ] PUS-B diagrams are removed.
-- [ ] Packet field diagrams match actual serialized layouts.
-- [ ] Examples compile in CI.
-
-## Sub-Issue 6.7: Add the v1-to-v2 migration guide
-
-### Description
-
-Document API, configuration, and wire-format changes required when moving from v1 to v2.
-
-### Acceptance Criteria
-
-- [ ] `docs/MIGRATION_V1_TO_V2.md` is added.
-- [ ] Each breaking change includes a before-and-after example.
-- [ ] Legacy packet incompatibility is clearly stated.
-- [ ] Removed APIs list their replacement.
-- [ ] Configuration migration examples are included.
-
-## Sub-Issue 6.8: Update README and compliance claims
-
-### Description
-
-Rewrite the README to accurately state supported standards and limitations.
-
-### Acceptance Criteria
-
-- [ ] Exact supported standards are named.
-- [ ] CCSDS Space Packet support is distinguished from transfer frames.
-- [ ] PUS-C support scope is described.
-- [ ] PUS-A support scope is described or marked deferred.
-- [ ] PUS-B is not described as a standard.
-- [ ] Unsupported protocol layers are listed.
-- [ ] Compliance claims link to the compliance matrix.
-
-## Sub-Issue 6.9: Update CI and package validation for v2
-
-### Description
-
-Update build and test pipelines for v2 API and protocol changes.
-
-### Acceptance Criteria
-
-- [ ] Linux builds pass.
-- [ ] Windows builds pass.
-- [ ] MCU cross-build passes.
-- [ ] Installed package consumer tests pass.
-- [ ] Sanitizer jobs pass.
-- [ ] Golden-vector tests run in CI.
-- [ ] CLI integration tests run in CI.
-
-## Sub-Issue 6.10: Prepare the v2.0.0 release
-
-### Description
-
-Prepare version metadata, release notes, packaging, and final compliance evidence.
-
-### Acceptance Criteria
+Tracked by #88.
 
 - [ ] Project version is `2.0.0`.
-- [ ] Shared-library versioning reflects the breaking release.
-- [ ] Release notes enumerate all breaking changes.
-- [ ] Compliance matrix is complete.
-- [ ] All milestone issues are closed or explicitly deferred.
-- [ ] Release packages contain updated headers, documentation, and tools.
-- [ ] Tag `v2.0.0` is created only after all release gates pass.
+- [ ] Shared-library SOVERSION reflects the breaking release.
+- [ ] Release notes enumerate API, configuration, and wire-contract changes from v1.2.0.
+- [ ] Compliance matrix reflects the final implementation and evidence.
+- [ ] Every milestone issue is complete or explicitly deferred.
+- [ ] Linux, Windows, sanitizer, fuzz, CLI, installed-consumer, package, arm64, and MCU gates pass.
+- [ ] `v2.0.0-dev` is merged into `develop`.
+- [ ] `develop` is merged into `main`.
+- [ ] Tag `v2.0.0` is created from the approved `main` commit only.
 
 ---
 
-# Release Gate
+# Release gate
 
 CCSDSPack v2.0.0 may be released only when:
 
-- [ ] All mandatory issues in this document are complete.
-- [ ] Deferred issues are explicitly documented and removed from release claims.
-- [ ] Generic CCSDS Space Packet golden vectors pass.
-- [ ] PUS-C TC and TM golden vectors pass.
-- [ ] CRC and packet-length vectors pass.
-- [ ] Negative parser and validator tests pass.
-- [ ] Linux, Windows, sanitizer, and MCU jobs pass.
-- [ ] README and compliance documentation reflect actual implementation status.
-- [ ] The release does not expose `PusB` as an official protocol concept.
+- [ ] the v1.2.0 baseline synchronization is complete;
+- [ ] proper PUS-C TC and TM codecs pass independent vectors;
+- [ ] the mission profile and finalization paths are validated and deterministic;
+- [ ] legacy `PusA`, `PusB`, and `PusC` classes are absent from current public/runtime code;
+- [ ] generic and PUS negative vectors pass;
+- [ ] Linux, Windows, sanitizer, fuzz, CLI, installed-consumer, package, arm64, and MCU gates pass;
+- [ ] README, migration guidance, compliance claims, and release notes match the actual implementation;
+- [ ] deferred PUS-A work is excluded from the release claim.

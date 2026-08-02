@@ -1,155 +1,48 @@
+<!--
+Copyright 2025-2026 ExoSpaceLabs
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Executables
 
-[../](README.md) - CCSDSPack Documentation
+[Documentation index](README.md) | [Canonical CLI reference](CLI.md)
 
-# Table of Contents
+CCSDSPack provides these host-side executables:
 
-- [Common Conventions](#common-conventions)
-- [Encoder](#encoder)
-- [Decoder](#decoder)
-- [Validator](#validator)
-- [Tester](#tester)
-- [Tips](#tips)
-- [See Also](#see-also)
+- `ccsds_encoder`: converts application bytes into one or more adjacent Space Packets;
+- `ccsds_decoder`: parses adjacent Space Packets and reassembles application bytes;
+- `ccsds_validator`: reports packet, identifier, CRC-profile, and sequence-stream failures;
+- `CCSDSPack_tester`: runs the native regression and conformance test suite.
 
+The authoritative option, packet-error-control, trailing-byte, validation, and exit-code documentation is maintained in [CLI.md](CLI.md). This page remains as a stable compatibility entry point for older links.
 
-# Overview
-
-CCSDSPack ships three small CLI tools built on top of the library:
-
-- **`ccsds_encoder`** — encode a file into CCSDS packets and write them to a binary container.
-- **`ccsds_decoder`** — read a binary container of CCSDS packets and reconstruct the original file.
-- **`ccsds_validator`** — validate a packet container (and optionally check coherence against a template).
-
-> **Build toggles (CMake)**:  
-> `-DENABLE_ENCODER=ON -DENABLE_DECODER=ON -DENABLE_VALIDATOR=ON`
-
-All three tools support a simple **configuration file** that carries the packet template and settings.  
-The config parser supports `string|int|float|bool|bytes` types. For `int`, hex (e.g., `0x1F`) is supported; byte arrays can be defined as `[1, 2, 0xFF]`.
-
----
-
-## Common Conventions
-
-- **Exit codes**: `0` on success; non-zero on error (mirrors the library’s error-first contract).
-- **Config file** (`-c/--config`): recommended to use the same config for encode/decode/validate for consistency.
-- **Binary container format**: encoder/decoder/validator use the Manager’s built-in read/write helpers for consistent round-tripping.
-
----
-
-## Encoder
-
-Encode application-data bytes into one or more CCSDS packets and save the serialized packet stream as a binary file.
-
-Usage:
-```bash
-
-./ccsds_encoder -i <file_to_encode> -o <packets.bin> -c <config.txt>
-```
-
-Options
-
-| Flag                 | Description                                                |
-|----------------------|------------------------------------------------------------|
-| `-i, --input <path>`  | Path of the file to encode.                               |
-| `-o, --output <path>` | Output file containing serialized CCSDS packets (binary). |
-| `-c, --config <path>` | Configuration file with packet template/settings.         |
-| `-h, --help`              | Show help and exit.                                   |
-| `-v, --verbose`           | Show generated packets information               |
-
-Example: Encode a firmware blob into CCSDS packets.
-```bash
-
-ccsds_encoder -i ./fw.bin -o ./fw_packets.bin -c ./template.cfg
-```
-
-## Decoder
-Decode a previously encoded binary container of CCSDS packets back into the original data.
-
-Usage:
-```bash
-
-ccsds_decoder -i <packets.bin> -o <output_file> -c <config.txt>
-```
-Options:
-
-| Flag                 | Description                                                 |
-|----------------------|-------------------------------------------------------------|
-| `-i, --input <path>`  | Input binary container with serialized CCSDS packets.       |
-| `-o, --output <path>` | Path to write the recovered application data.               |
-| `-c, --config <path>` | Configuration file (ideally the same used during encoding). |
-| `-h, --help`              | Show help and exit.                                         |
-| `-v, --verbose`           | Show decoded packets information.                           |
-
----
-
-Example: Decode the container back to bytes.
-```bash
-
-ccsds_decoder -i ./fw_packets.bin -o ./fw_out.bin -c ./template.cfg
-```
-## Validator
-Validate a binary packet container (checks integrity/coherence, optionally against a template).
-
-Usage:
-```bash
-
-ccsds_validator -i <packets.bin> -c <config.txt> [<flags>...]
-```
-Options:
-
-| Flag                     | Description                                                                 |
-|--------------------------|-----------------------------------------------------------------------------|
-| `-i, --input <filename>`  | **Mandatory**: input file holding CCSDS packets to be validated.           |
-| `-c, --config <filename>` | Configuration file; if provided, packets are validated against this template packet. |
-| `-h, --help`              | Show help and exit.                                                        |
-| `-v, --verbose`           | Show packet-specific validation report.                                    |
-| `-p, --print-packets`     | Show information for each loaded packet.                                |
-
-### Validate a packet file using your mission template
-```bash
-
-ccsds_validator -i ./fw_packets.bin -c ./template.cfg
-```
-
-## Tester
-The CCSDSPack test suite will be built along with the library.
-
-The test suite is designed for regression testing. It verifies:
-* Packet encoding/decoding: Ensures that application data is correctly segmented into CCSDS
-  packets and reassembled without corruption.
-
-* Binary I/O: Confirms that Manager can write packets to a binary container and read them back
-  to an identical in-memory representation.
-
-* Configuration file parsing: Checks that packet templates and settings are loaded correctly from
-  config files.
-
-* Validator integration: Tests packet integrity checks, both with and without a template config.
-
-* Error handling: Exercises error paths (invalid config, truncated packets, wrong APID, etc.) to 
-  ensure consistent res.has_value() / res.error() behavior.
-
-Running the tests
-After building with BUILD_TESTER=ON:
+## Build controls
 
 ```bash
-
-./ccsdspack_tester
+cmake -S . -B build \
+  -DENABLE_ENCODER=ON \
+  -DENABLE_DECODER=ON \
+  -DENABLE_VALIDATOR=ON \
+  -DENABLE_TESTER=ON
+cmake --build build
 ```
 
-A non-zero exit code indicates a regression or failed check.
-The tests are safe to run repeatedly and can be integrated into CI pipelines to automatically catch any behavior changes.
+The executable location depends on the selected generator and platform. The default project layout places native binaries under the configured build output's `bin` directory.
 
-# Tips
-Keep input/output paths distinct to avoid accidental overwrites.
+## Typical flow
 
-Always use the same -c config during encode → validate → decode to prevent mismatches.
+```bash
+ccsds_encoder -i payload.bin -o packets.bin -c template.cfg
+ccsds_validator -i packets.bin -c template.cfg --verbose
+ccsds_decoder -i packets.bin -o recovered.bin -c template.cfg
+```
 
-In automated pipelines or CI, run the validator before decoding to catch malformed or corrupt files early.
+The encoder and decoder require a template configuration. The validator can operate without one, but a template enables Packet Identification checks. All tools must use the same `crc16` or `none` packet-error-control profile as the packet stream.
 
-See Also
+Run the installed or built test executable with:
 
-[Main-README](../README.md) – main overview, build instructions, and examples.
+```bash
+CCSDSPack_tester
+```
 
-[API docs](https://exospacelabs.github.io/CCSDSPack/html/) – detailed reference published via GitHub Pages.
+A non-zero process status indicates a failed command or test.

@@ -15,7 +15,8 @@ set(TEST_RESOURCE_DIR "${CMAKE_SOURCE_DIR}/test/test_resources")
 file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 
 
-# Collect all test test_resources from the test/test_resources directory
+# Collect the regression-test fixtures used only by CCSDSPack_tester.
+# They are not runtime data or dependencies of libccsdspack or the CLI tools.
 file(GLOB TEST_RESOURCES "${TEST_RESOURCE_DIR}/*")
 
 file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
@@ -55,6 +56,8 @@ install(TARGETS ${TESTER_EXEC}
         INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-# Install test_resources to the bin directory
+# Install tester-only fixtures next to CCSDSPack_tester because the current
+# regression suite resolves them through relative test_resources/... paths.
+# Consumers of CCSDSPack do not depend on this directory.
 install(DIRECTORY ${TEST_RESOURCE_DIR}
         DESTINATION "${CMAKE_INSTALL_BINDIR}")

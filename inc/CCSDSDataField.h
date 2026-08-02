@@ -1,32 +1,48 @@
 // Copyright 2025-2026 ExoSpaceLabs
 // SPDX-License-Identifier: Apache-2.0
 
+/**
+ * @file CCSDSDataField.h
+ * @brief Defines storage and secondary-header handling for a CCSDS packet data field.
+ */
 #ifndef CCSDS_DATA_FIELD_H
 #define CCSDS_DATA_FIELD_H
 
 #include <CCSDSResult.h>
-#include <vector>
+#include <cstddef>
+#include <cstdint>
+#include <cstdio>
 #include <memory>
+#include <string>
+#include <vector>
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "CCSDSSecondaryHeaderFactory.h"
 #include "PusServices.h"
 
 namespace CCSDS {
   /**
-   * @brief Represents the data field of a CCSDS packet.
+   * @class DataField
+   * @brief Owns the optional secondary header and application-data bytes of one packet.
    *
-   * This class encapsulates the structure and operations for handling the data field
-   * of a CCSDS (Consultative Committee for Space Data Systems) packet. It allows for
-   * setting and retrieving application data, data field headers, and calculating
-   * the full data field. Additionally, it provides methods for managing the data field's
-   * size and printing its content.
+   * DataField stores packet data-field content only. It does not include the six-byte
+   * primary header or optional packet error-control bytes. Capacity is shared between
+   * secondary-header and application-data bytes.
    *
-   * The data field consists of headers and application data, and the class supports
-   * different header types (PusA, PusB, PusC). It also allows setting and getting
-   * the data packet size, as well as managing the data field header flag.
+   * Built-in secondary-header registrations include BufferHeader and the legacy,
+   * project-specific PusA/PusB/PusC formats. Custom types can be registered through
+   * RegisterSecondaryHeader().
+   *
+   * Inspection APIs do not call update(). serialize() is the explicit finalization
+   * path: it optionally invokes the installed secondary header's update() method and
+   * then concatenates secondary-header and application-data bytes.
    */
   class DataField {
   public:
+    /**
+     * @brief Constructs an empty data field and registers built-in secondary-header types.
+     *
+     * Registration failures are printed because the constructor cannot return ResultBool.
+     */
     DataField() {
       bool noError = true;
       ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<BufferHeader>()));
@@ -34,275 +50,179 @@ namespace CCSDS {
       ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusB>()));
       ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusC>()));
       if (!noError) {
-        printf("[CCSDS DataField] Unable to Create Data field, secondary header registration failed.");
+        std::printf("[CCSDS DataField] Unable to create data field: secondary-header registration failed.");
       }
-    };
+    }
 
+    /** @brief Destroys the data field and releases shared secondary-header ownership. */
     ~DataField() = default;
 
     /**
-    * @brief Registers a new header type with its creation function.
-    *
-    * This function adds a new header type to the factory by associating the header's type string with a shared pointer to the header.
-    *
-    * @param header A shared pointer to a `SecondaryHeaderAbstract` object to register.
-     * @return ResultBool.
-    */
+     * @brief Registers a custom secondary-header type.
+     * @tparam T Default-constructible class derived from SecondaryHeaderAbstract.
+     * @return Success, or the factory registration error.
+     * @note T::getType() is used as the lookup key.
+     */
     template <typename T>
     ResultBool RegisterSecondaryHeader() {
-
-      FORWARD_RESULT(  m_secondaryHeaderFactory.registerType(std::make_shared<T>()));
-
+      FORWARD_RESULT(m_secondaryHeaderFactory.registerType(std::make_shared<T>()));
       return true;
     }
 
     /**
-     * @brief Sets the application data using a vector of bytes.
-     *
-     * Replaces the current application data with the given vector and updates the header.
-     *
-     * @param applicationData A vector containing the application data bytes.
-    *
-     * @note  The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data
-     * exceeds available size.
-     * @return ResultBool.
+     * @brief Replaces application data from a vector.
+     * @param applicationData Bytes to copy; an empty vector clears the data.
+     * @return Success, or INVALID_APPLICATION_DATA when capacity is exceeded.
      */
     [[nodiscard]] ResultBool setApplicationData(const std::vector<std::uint8_t> &applicationData);
 
     /**
-     * @brief Sets the application data for the data field.
-     *
-     * Validates and assigns the given application data to the data field.
-     * Ensures the data size is within acceptable limits and does not exceed
-     *
-     * @param pData A pointer to the application data.
-     * @param sizeData The size of the application data in bytes.
-    *
-     * @note The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
-     * @return ResultBool.
+     * @brief Replaces application data from a byte span.
+     * @param pData Pointer to the first byte.
+     * @param sizeData Number of bytes to copy; must be non-zero.
+     * @return Success, or a null-pointer, empty-span, or capacity error.
      */
-    [[nodiscard]] ResultBool setApplicationData(const std::uint8_t *pData, const size_t &sizeData);
+    [[nodiscard]] ResultBool setApplicationData(const std::uint8_t *pData,
+                                                const std::size_t &sizeData);
 
     /**
-     * @brief Sets the secondary header data for the data field.
-     *
-     * Validates and assigns the given secondary header data to the data field.
-     * Ensures the data size is within acceptable limits and does not exceed
-     * the remaining packet size after accounting for the header.
-     *
-     * @param pData A pointer to the application data.
-     * @param sizeData The size of the application data in bytes.
-    *
-     * @note The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
-     * @return ResultBool.
+     * @brief Stores an opaque raw secondary header from a byte span.
+     * @param pData Pointer to the first secondary-header byte.
+     * @param sizeData Number of bytes to copy; must be non-zero.
+     * @return Success, or a null-pointer, empty-span, or capacity error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData, const size_t &sizeData);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
+                                                const std::size_t &sizeData);
 
     /**
-     * @brief Sets the secondary header for the data field using a PUS Type.
-     *
-     * Validates and assigns the given header data to the secondary header field.
-     * Ensures the header size is within acceptable limits and does not exceed
-     * the remaining packet size after accounting for the application data.
-     *
-     * @param pData A pointer to the header data.
-     * @param sizeData The size of the header data in bytes.
-     * @param pType enum of type PUSType to select
-    *
-     * @note If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method.
-     * The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
-     * @return ResultBool.
+     * @brief Deserializes a registered secondary-header type from a byte span.
+     * @param pData Pointer to the first secondary-header byte.
+     * @param sizeData Number of bytes belonging to the secondary header.
+     * @param pType Registered getType() string.
+     * @return Success, or a null-pointer, unknown-type, size, or deserialization error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData, const size_t &sizeData,
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
+                                                const std::size_t &sizeData,
                                                 const std::string &pType);
 
     /**
-     * @brief Sets the data field header for the CCSDS DataField with a specific PUS type.
-     *
-     * This method configures the data field header based on the provided data and
-     * the specified Packet Utilization Standard (PUS) type. It validates the header
-     * size to ensure it does not exceed the maximum allowed packet size and creates
-     * the appropriate header object based on the PUS type.
-     *
-     * @param data A vector containing the data for the data field header.
-     * @param pType The PUS type (PUS_A, PUS_B, PUS_C, or OTHER) indicating the header format.
-     *
-     * @note If the PUS type is OTHER, the data is passed to the overloaded setDataFieldHeader method.
-     * The method will log an error to standard error and ErrorCode is returned by ResultBool if provided data is invalid.
+     * @brief Deserializes a registered secondary-header type from bytes.
+     * @param data Bytes belonging only to the secondary header.
+     * @param pType Registered getType() string.
+     * @return Success, or an unknown-type, size, capacity, or deserialization error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data, const std::string &pType);
+    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data,
+                                                const std::string &pType);
 
     /**
-     * @brief Sets the data field header for the CCSDS DataField.
-     *
-     * This method updates the data field header with the provided vector of bytes.
-     * If the existing data field header is not empty, it clears the current contents
-     * and logs a warning to indicate that the header has been overwritten.
-     *
-     * @param dataFieldHeader A vector containing the new data field header.
-     *
-     * @note The m_dataFieldHeaderType is set to OTHER after the header is updated. If the current data field header
-     * is not empty, it will be cleared. The method will log an error to standard error and ErrorCode is returned
-     * by ResultBool if provided data is invalid.
-     * @return ResultBool
+     * @brief Stores opaque secondary-header bytes using BufferHeader.
+     * @param dataFieldHeader Header bytes to copy.
+     * @return Success, or INVALID_SECONDARY_HEADER_DATA when capacity is exceeded.
      */
     [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &dataFieldHeader);
-
-
 #ifndef CCSDS_MCU
     /**
-     * @brief Sets the data field header using a configuration file as reference.
-     *
-     * @note The config file must contain all required parameter for the interested secondary header, including
-     * the secondary_header_type string indicating which registered secondary header to be parsed.
-     *
-     * @param cfg configuration file parser object.
-     * @return ResultBool
+     * @brief Creates and loads a registered secondary header from Config.
+     * @param cfg Configuration containing secondary_header_type and type-specific fields.
+     * @return Success, or a configuration/registration/header error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const Config& cfg);
+    [[nodiscard]] ResultBool setDataFieldHeader(const Config &cfg);
 #endif
+
     /**
-     * @brief Sets the secondary header for the data field using a PUS-A header.
-     *
-     * @param header A SecondaryHeaderAbstract derived object containing the header data.
-     * @return None.
+     * @brief Installs a secondary-header object directly.
+     * @param header Shared instance, or nullptr to remove the secondary header.
+     * @note The DataField shares ownership and marks the header dirty for future update().
      */
     void setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
 
-    /**
-     * @brief returns the secondary header factory
-     *
-     * @return SecondaryHeaderFactory& .
-     */
-    SecondaryHeaderFactory& getDataFieldHeaderFactory() {return m_secondaryHeaderFactory;}
-
-    /**
-     * @brief returns the secondary header
-     * A SecondaryHeaderAbstract derived object containing the header data.
-     *
-     * @return std::shared_ptr<SecondaryHeaderAbstract>& .
-     */
-    SecondaryHeaderAbstract &getDataFieldHeader() {return *m_secondaryHeader;}
-
-    /**
-     * @brief Sets the maximum data packet size for the CCSDS DataField.
-     *
-     * This method updates the maximum allowed size for the data packet.
-     * The data packet size is used to validate that the combined size of
-     * the header and application data does not exceed this limit.
-     *
-     * @param value The maximum size of the data packet, in bytes.
-     */
-    void setDataPacketSize(const std::uint16_t &value);
-
-    /** @brief Sets The auto update variable, if disabled the data size in the header field will not be updated.
-     *
-     * @param enable
-     */
-    void setDataFieldHeaderAutoUpdateStatus(const bool enable) { m_enableDataFieldUpdate = enable; }
-
-    /**
-    * @brief Retrieves the absolute size of the data field in bytes.
-    *
-    * This method returns the total allocated size for the data field, including both the header
-    * and application data.
-    *
-    * @return The absolute size of the data field in bytes.
-    */
-    std::uint16_t getDataFieldAbsoluteBytesSize() const;
-
-    /**
-     * @brief Retrieves the size of the application data stored in the data field.
-     *
-     * @return The size of the application data in bytes
-     */
-    std::uint16_t getApplicationDataBytesSize() const;
-
-    /**
-     * @brief Retrieves the used size of the data field in bytes.
-     *
-     * This method returns the amount of space currently occupied by valid data within the data field.
-     *
-     * @return The used size of the data field in bytes.
-     */
-    std::uint16_t getDataFieldUsedBytesSize() const;
-
-    /**
-    * @brief Retrieves the available size of the data field in bytes.
-    *
-    * This method calculates and returns the remaining free space within the data field that can be utilized.
-    *
-    * @return The available size of the data field in bytes.
-    */
-    std::uint16_t getDataFieldAvailableBytesSize() const;
-
-    /**
-     * @brief Retrieves the secondary header data as a vector of bytes.
-     *
-     * If the header type is not OTHER or NA, retrieves the data from the
-     * corresponding PUS header object.
-     *
-     * @return A vector containing the header data bytes.
-     */
-    std::vector<std::uint8_t> getDataFieldHeaderBytes();
-
-    /**
-     * @brief Retrieves the full data field by combining the data field header and application data.
-     *
-     * Combines the secondary header (if present) and application data into a single vector.
-     * Ensures that the total size does not exceed the maximum allowed data packet size.
-     *
-     * @return A vector containing the full data field (header + application data).
-     */
-    std::vector<std::uint8_t> serialize();
-
-    /**
-     * @brief Retrieves the application data from the data field.
-     *
-     * This method returns a vector containing the raw application data stored in the data field.
-     *
-     * @return A vector containing the application data bytes.
-     */
-    std::vector<std::uint8_t> getApplicationData();
-
-    /** @brief returns true if auto update has been enabled for the secondary header */
-    [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const { return m_enableDataFieldUpdate; }
-
-    /**
-     * @brief retrieves true if a known secondary header has been set
-     *
-     * @return boolean
-     */
-    [[nodiscard]] bool getDataFieldHeaderFlag() const {
-      return  m_secondaryHeader != nullptr;
+    /** @brief Returns mutable access to the per-DataField secondary-header registry. */
+    SecondaryHeaderFactory &getDataFieldHeaderFactory() { return m_secondaryHeaderFactory; }
+    /** @brief Returns read-only access to the per-DataField secondary-header registry. */
+    [[nodiscard]] const SecondaryHeaderFactory &getDataFieldHeaderFactory() const {
+      return m_secondaryHeaderFactory;
     }
 
     /**
-     * @brief retrieves the known PUS type
-     *
-     * @return std::shared_ptr<SecondaryHeaderAbstract>
+     * @brief Returns a reference to the installed secondary header.
+     * @warning Dereferencing is undefined when no header is installed; check getDataFieldHeaderFlag() first.
      */
-    [[nodiscard]] std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
+    SecondaryHeaderAbstract &getDataFieldHeader() { return *m_secondaryHeader; }
+    /**
+     * @brief Returns a read-only reference to the installed secondary header.
+     * @warning Dereferencing is undefined when no header is installed; check getDataFieldHeaderFlag() first.
+     */
+    [[nodiscard]] const SecondaryHeaderAbstract &getDataFieldHeader() const { return *m_secondaryHeader; }
 
     /**
-     * @brief Updates the data field header based on the current application data size.
-     *
-     * Updates the length field in the secondary header to match the size of the
-     * application data. Ensures the header reflects the most recent data state.
-     *
-     * @return None.
+     * @brief Sets total capacity shared by secondary-header and application-data bytes.
+     * @param value Capacity in bytes.
+     * @note Existing content is not truncated when capacity is reduced.
+     */
+    void setDataPacketSize(const std::uint16_t &value);
+
+    /**
+     * @brief Enables or disables calls to SecondaryHeaderAbstract::update().
+     * @param enable True to let DataField::update()/serialize() refresh the header.
+     */
+    void setDataFieldHeaderAutoUpdateStatus(const bool enable) { m_enableDataFieldUpdate = enable; }
+
+    /** @brief Returns configured total packet data-field content capacity. */
+    [[nodiscard]] std::uint16_t getDataFieldAbsoluteBytesSize() const;
+
+    /** @brief Returns the number of stored application-data bytes. */
+    [[nodiscard]] std::uint16_t getApplicationDataBytesSize() const;
+
+    /** @brief Returns stored secondary-header plus application-data bytes. */
+    [[nodiscard]] std::uint16_t getDataFieldUsedBytesSize() const;
+
+    /** @brief Returns remaining capacity after current secondary-header and application data. */
+    [[nodiscard]] std::uint16_t getDataFieldAvailableBytesSize() const;
+
+    /** @brief Returns currently stored secondary-header bytes without finalizing. */
+    std::vector<std::uint8_t> getDataFieldHeaderBytes();
+    /** @brief Const overload of getDataFieldHeaderBytes(). */
+    [[nodiscard]] std::vector<std::uint8_t> getDataFieldHeaderBytes() const;
+
+    /**
+     * @brief Finalizes the secondary header and serializes the complete data-field content.
+     * @return Secondary-header bytes followed by application-data bytes.
+     */
+    std::vector<std::uint8_t> serialize();
+
+    /** @brief Returns a copy of application data without finalizing. */
+    std::vector<std::uint8_t> getApplicationData();
+    /** @brief Const overload of getApplicationData(). */
+    [[nodiscard]] std::vector<std::uint8_t> getApplicationData() const;
+
+    /** @brief Returns whether automatic secondary-header update is enabled. */
+    [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const { return m_enableDataFieldUpdate; }
+
+    /** @brief Returns true when a secondary-header object is installed. */
+    [[nodiscard]] bool getDataFieldHeaderFlag() const { return m_secondaryHeader != nullptr; }
+
+    /** @brief Returns shared mutable ownership of the installed secondary header, or nullptr. */
+    std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
+    /** @brief Returns shared read-only ownership of the installed secondary header, or nullptr. */
+    [[nodiscard]] std::shared_ptr<const SecondaryHeaderAbstract> getSecondaryHeader() const;
+
+    /**
+     * @brief Refreshes the installed secondary header once when it is dirty and updates are enabled.
+     * @note Getter calls do not invoke this method.
      */
     void update();
 
   private:
-    std::shared_ptr<SecondaryHeaderAbstract> m_secondaryHeader{};  ///< Shared pointer to the secondary header class
-    SecondaryHeaderFactory m_secondaryHeaderFactory;               ///< secondary header dispatcher factory
-    std::vector<std::uint8_t> m_applicationData{};                      ///< Application data buffer
-    std::string m_dataFieldHeaderType{};                           ///< Data field Header type
-    std::uint16_t m_dataPacketSize{2024};                               ///< Data field maximum size in bytes
-    bool m_dataFieldHeaderUpdated{false};                          ///< Boolean for secondary header updated status
-    bool m_enableDataFieldUpdate{true};                            ///< Boolean for secondary header update enable
+    friend class Packet;
+    void clearContent();
 
+    std::shared_ptr<SecondaryHeaderAbstract> m_secondaryHeader{}; ///< Installed optional secondary header.
+    SecondaryHeaderFactory m_secondaryHeaderFactory;             ///< Registry used by typed header parsing.
+    std::vector<std::uint8_t> m_applicationData{};               ///< Application-data bytes only.
+    std::string m_dataFieldHeaderType{};                         ///< Lookup name of the installed header type.
+    std::uint16_t m_dataPacketSize{2024};                        ///< Shared header/data capacity in bytes.
+    bool m_dataFieldHeaderUpdated{false};                        ///< True after the latest explicit update.
+    bool m_enableDataFieldUpdate{true};                          ///< Controls secondary-header update callbacks.
   };
 }
 

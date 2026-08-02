@@ -1,311 +1,282 @@
+<!--
+Copyright 2025-2026 ExoSpaceLabs
+SPDX-License-Identifier: Apache-2.0
+-->
+
 # Examples
 
-This page shows practical, copy‑paste examples for using **CCSDSPack** in C++.
-All snippets assume C++17 or newer and big‑endian wire format, as per CCSDS.
+[Documentation index](README.md) | [Configuration](CONFIG.md) | [v1.2 profile](CCSDS_133_0_B_2_PROFILE.md)
 
-[../](README.md) - CCSDSPack Documentation
+These examples use the current v1.2 C++17 API. They create CCSDS Space Packets with Packet Version Number `000`. The default packet-error-control profile is the project-specific CRC16 trailer; configure `PacketErrorControlMode::None` explicitly for CRC-free packets.
 
----
+## Build integration
 
-## Table of Contents
-- [1) Bytes Packets (with segmentation) Save to file](#1-bytes-packets-with-segmentation-save-to-file)
-- [2) Read packets from file Reassemble bytes](#2-read-packets-from-file-reassemble-bytes)
-- [3) End to end round trip (sanity test)](#3-end-to-end-round-trip-sanity-test)
-- [4) From a packet vector: serialize and de‑serialize](#4-from-a-packet-vector-serialize-de-serialize)
-- [5) Using a config file for template & settings](#5-using-a-config-file-for-template--settings)
-- [6) Validating packets (CLI helper)](#6-validating-packets-cli-helper)
-- [7) Error‑first pattern (no exceptions)](#7-error-first-pattern-no-exceptions)
-- [8)Using a custom Secondary header](#8-Using-a-custom-secondary-header)
+After installing CCSDSPack:
 
----
+```cmake
+find_package(CCSDSPack CONFIG REQUIRED)
 
+add_executable(example main.cpp)
+target_link_libraries(example PRIVATE ccsdspack::CCSDSPack)
+target_compile_features(example PRIVATE cxx_std_17)
+```
 
-> Headers:
-> ```c++
-> #include "CCSDSPack.h"
-> #include <iostream>
-> #include <vector>
-> ```
+## Create and parse one packet
 
-## 1) Bytes Packets (with segmentation) save to file
+```cpp
+#include <CCSDSPack.h>
 
-Create a template packet, segment an input buffer into CCSDS packets, and save them as a binary container.
-
-```c++
-#include "CCSDSPack.h"
+#include <cstdint>
 #include <iostream>
 #include <vector>
 
 int main() {
-  // 1) Define a template primary header (example value)
-  CCSDS::Packet tpl;
-  if (const auto r = tpl.setPrimaryHeader(0xF7FF4FFFFFFF); !r.has_value()) {
-    std::cerr << r.error().message() << "\n";
-    return r.error().code();
+  CCSDS::Packet packet;
+  packet.setDataFieldSize(1024);
+
+  const auto headerResult = packet.setPrimaryHeader(CCSDS::PrimaryHeader{
+    0,                       // Packet Version Number: must be 000
+    0,                       // Packet Type: telemetry
+    0,                       // no secondary header
+    0x123,                   // APID
+    CCSDS::UNSEGMENTED,
+    0,                       // Packet Sequence Count
+    0                        // calculated by serialize()
+  });
+  if (!headerResult) {
+    std::cerr << headerResult.error().message() << '\n';
+    return headerResult.error().code();
   }
 
-  // 2) Application bytes (e.g., file contents you loaded elsewhere)
-  std::vector<std::uint8_t> app(5000, 0xAB);
-
-  // 3) Segment & build packets
-  CCSDS::Manager m(tpl);
-  m.setDatFieldSize(1024); // max application data field per packet
-
-  if (const auto r = m.setApplicationData(app); !r.has_value()) {
-    std::cerr << r.error().message() << "\n";
-    return r.error().code();
+  const auto dataResult = packet.setApplicationData({0x10, 0x20, 0x30});
+  if (!dataResult) {
+    std::cerr << dataResult.error().message() << '\n';
+    return dataResult.error().code();
   }
 
-  // 4) (Optional) inspect in-memory packets
-  auto packets = m.getPackets();
-  std::cout << "Generated " << packets.size() << " packets\n";
-
-  // 5) Persist them via Manager's binary writer
-  if (const auto r = m.writePacketsBinary("packets.bin"); !r.has_value()) {
-    std::cerr << r.error().message() << "\n";
-    return r.error().code();
+  const std::vector<std::uint8_t> wire = packet.serialize();
+  if (wire.empty()) {
+    std::cerr << "Packet finalization failed\n";
+    return 1;
   }
 
+  CCSDS::Packet decoded; // CRC16 is also the receiving default
+  const auto consumedResult = decoded.deserializeBounded(wire);
+  if (!consumedResult) {
+    std::cerr << consumedResult.error().message() << '\n';
+    return consumedResult.error().code();
+  }
+
+  std::cout << "Consumed " << consumedResult.value()
+            << " bytes, APID=" << decoded.getPrimaryHeader().getAPID()
+            << ", application bytes=" << decoded.getApplicationDataBytes().size()
+            << '\n';
   return 0;
 }
 ```
-## 2) Read packets from file Reassemble bytes
-   Load serialized CCSDS packets from disk and reconstruct the original application data.
 
-```c++
-#include "CCSDSPack.h"
+`serialize()` finalizes Packet Data Length and the optional CRC16 trailer. Getters inspect the stored state and do not perform hidden finalization.
+
+## Segment a payload with Manager
+
+One Manager represents one complete Packet Identification value and one Packet Sequence Count stream.
+
+```cpp
+#include <CCSDSPack.h>
+
+#include <cstdint>
 #include <iostream>
 #include <vector>
 
 int main() {
-CCSDS::Manager m;
-m.setDatFieldSize(1024); // keep consistent with your system/template
+  CCSDS::Packet packetTemplate;
+  packetTemplate.setDataFieldSize(1024);
 
-// Load the packet container created earlier
-if (const auto r = m.readPacketsBinary("packets.bin"); !r.has_value()) {
-std::cerr << r.error().message() << "\n";
-return r.error().code();
-}
+  const auto headerResult = packetTemplate.setPrimaryHeader(CCSDS::PrimaryHeader{
+    0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0
+  });
+  if (!headerResult) return headerResult.error().code();
 
-// Reassemble application bytes
-std::vector<std::uint8_t> app = m.getApplicationDataBuffer();
-std::cout << "Recovered " << app.size() << " bytes\n";
-return 0;
+  CCSDS::Manager manager;
+  const auto templateResult = manager.setPacketTemplate(packetTemplate);
+  if (!templateResult) return templateResult.error().code();
+
+  manager.setDataFieldSize(1024);
+
+  std::vector<std::uint8_t> payload(5000, 0xAB);
+  const auto dataResult = manager.setApplicationData(payload);
+  if (!dataResult) {
+    std::cerr << dataResult.error().message() << '\n';
+    return dataResult.error().code();
+  }
+
+  const auto stream = manager.getPacketsBuffer();
+  std::cout << "Generated " << manager.getTotalPackets()
+            << " packets in " << stream.size() << " bytes\n";
+
+  const auto writeResult = manager.write("packets.bin");
+  if (!writeResult) return writeResult.error().code();
+  return 0;
 }
 ```
-## 3) End to end round trip (sanity test)
-   A minimal test you can drop into your project to validate encoding/decoding with file I/O.
 
-```c++
+A one-packet result uses `UNSEGMENTED`. A multi-packet result uses `FIRST_SEGMENT`, zero or more `CONTINUING_SEGMENT` packets, and `LAST_SEGMENT`. Automatic sequence counting advances once per packet and wraps modulo 16384.
 
-#include "CCSDSPack.h"
-#include <cassert>
+## Read a stream and reassemble application data
+
+The receiving Manager must use the same Packet Identification and packet-error-control profile as the stream.
+
+```cpp
+#include <CCSDSPack.h>
+
 #include <iostream>
+
+int main() {
+  CCSDS::Packet packetTemplate;
+  packetTemplate.setDataFieldSize(1024);
+
+  const auto headerResult = packetTemplate.setPrimaryHeader(CCSDS::PrimaryHeader{
+    0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0
+  });
+  if (!headerResult) return headerResult.error().code();
+
+  CCSDS::Manager manager(packetTemplate);
+  manager.setDataFieldSize(1024);
+
+  const auto readResult = manager.read("packets.bin");
+  if (!readResult) {
+    std::cerr << readResult.error().message() << '\n';
+    return readResult.error().code();
+  }
+
+  const auto payloadResult = manager.getApplicationDataBuffer();
+  if (!payloadResult) return payloadResult.error().code();
+
+  std::cout << "Recovered " << payloadResult.value().size() << " bytes\n";
+  return 0;
+}
+```
+
+`read()` and `load()` parse transactionally. A malformed packet, CRC failure, truncation, or mixed Packet Identification does not partially append the failed input.
+
+## Parse concatenated packets manually
+
+Use `deserializeBounded()` when the application owns stream iteration or must preserve trailing bytes.
+
+```cpp
+#include <CCSDSPack.h>
+
+#include <cstddef>
+#include <cstdint>
 #include <vector>
 
-int main() {
-// Source data
-std::vector<std::uint8_t> src(8192);
-for (size_t i = 0; i < src.size(); ++i) src[i] = static_cast<uint8_t>(i & 0xFF);
+CCSDS::ResultBool parseStream(const std::vector<std::uint8_t>& stream) {
+  std::size_t offset = 0;
 
-// Template header
-CCSDS::Packet tpl;
-if (const auto r = tpl.setPrimaryHeader(0xF7FF4FFFFFFF); !r.has_value())
-return r.error().code();
+  while (offset < stream.size()) {
+    std::vector<std::uint8_t> remaining(stream.begin() + offset, stream.end());
 
-// Encode to packets
-CCSDS::Manager enc(tpl);
-enc.setDatFieldSize(1024);
-if (const auto r = enc.setApplicationData(src); !r.has_value())
-return r.error().code();
+    CCSDS::Packet packet;
+    const auto consumedResult = packet.deserializeBounded(remaining);
+    if (!consumedResult) return consumedResult.error();
 
-// Save packets to disk
-if (const auto r = enc.writePacketsBinary("packets.bin"); !r.has_value())
-return r.error().code();
+    offset += consumedResult.value();
+    // Process packet.getPrimaryHeader() and packet.getApplicationDataBytes().
+  }
 
-// Decode back from disk
-CCSDS::Manager dec;
-dec.setDatFieldSize(1024);
-if (const auto r = dec.readPacketsBinary("packets.bin"); !r.has_value())
-return r.error().code();
-
-auto dst = dec.getApplicationDataBuffer();
-assert(src == dst && "Round-trip mismatch");
-std::cout << "Round-trip OK: " << dst.size() << " bytes\n";
-return 0;
+  return true;
 }
 ```
-## 4) From a packet vector: serialize de serialize
-   When you already have std::vector of CCSDS::Packet, serialize to disk and load back.
 
-```c++
-#include "CCSDSPack.h"
-#include <iostream>
-#include <vector>
+For large or zero-copy streams, wrap this policy around the application's own buffering layer. The current v1 API accepts vectors.
 
-int main() {
-// Pretend you already built some packets
-std::vector<CCSDS::Packet> packets = /* ... */;
+## Create CRC-free packets
 
-// Write vector to disk via Manager
-{
-CCSDS::Manager m;
-if (const auto r = m.load(packets); !r.has_value()) {
-std::cerr << r.error().message() << "\n";
-return r.error().code();
-}
-if (const auto r = m.writePacketsBinary("packets.bin"); !r.has_value()) {
-std::cerr << r.error().message() << "\n";
-return r.error().code();
-}
-}
+The sender and receiver must both select `None`. The mode is never inferred from packet bytes.
 
-// Later: read back and recover the vector
-CCSDS::Manager m2;
-if (const auto r = m2.readPacketsBinary("packets.bin"); !r.has_value()) {
-std::cerr << r.error().message() << "\n";
-return r.error().code();
-}
-auto roundtripped = m2.getPackets();
-std::cout << "Loaded " << roundtripped.size() << " packets from file\n";
-return 0;
-}
+```cpp
+CCSDS::Packet sender;
+sender.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+sender.setDataFieldSize(1024);
+sender.setPrimaryHeader({0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0});
+sender.setApplicationData({0x01, 0x02});
+const auto wire = sender.serialize();
+
+CCSDS::Packet receiver;
+receiver.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+const auto consumed = receiver.deserializeBounded(wire);
+if (!consumed) return consumed.error().code();
 ```
-## 5) Using a config file for template & settings
-   Leverage a configuration file to control data_field_size, sync pattern, validation, and packet header fields without recompiling.
 
-```c++
+## Add an opaque secondary header
 
-#include "CCSDSPack.h"
-#include <iostream>
+For mission-specific bytes that are not one of the legacy typed formats, use the `BufferHeader` path through `setDataFieldHeader()`.
 
-int main() {
-Config cfg;
-const std::string path = "templatePacket.cfg";
+```cpp
+CCSDS::Packet packet;
+packet.setDataFieldSize(1024);
+packet.setPrimaryHeader({0, 0, 1, 0x123, CCSDS::UNSEGMENTED, 0, 0});
 
-if (const auto r = cfg.load(path); !r.has_value()) {
-std::cerr << "[Error " << r.error().code() << "]: " << r.error().message() << "\n";
-return r.error().code();
-}
+const auto secondaryResult = packet.setDataFieldHeader(
+  std::vector<std::uint8_t>{0xAA, 0x55}
+);
+if (!secondaryResult) return secondaryResult.error().code();
 
-// Example: fetch data_field_size (int) with error checking
-uint16_t dataFieldSize = 0;
-if (cfg.isKey("data_field_size")) {
-if (const auto r = cfg.get<int>("data_field_size"); r.has_value()) {
-dataFieldSize = static_cast<uint16_t>(r.value());
-} else {
-std::cerr << r.error().message() << "\n";
-return r.error().code();
-}
-}
+const auto dataResult = packet.setApplicationData({0x10, 0x20});
+if (!dataResult) return dataResult.error().code();
 
-// Build packets using the template + size from config
-CCSDS::Packet tpl;
-// (Optional) You can also derive header bits from your config if you store them there
-if (const auto r = tpl.setPrimaryHeader(0xF7FF4FFFFFFF); !r.has_value())
-return r.error().code();
-
-CCSDS::Manager m(tpl);
-if (dataFieldSize) m.setDatFieldSize(dataFieldSize);
-
-// Set your application data and proceed as in Example #1 ...
-return 0;
-}
+const auto wire = packet.serialize();
 ```
-See `CONFIG.md` for the exact config syntax and the full list of supported keys.
 
-## 6) Validating packets (CLI helper)
-   While you can check coherence in your app flow, the quickest way to validate a packet container is via the provided CLI:
+When parsing an opaque secondary header, provide its byte count:
+
+```cpp
+CCSDS::Packet decoded;
+const auto consumed = decoded.deserializeBounded(wire, 2U);
+if (!consumed) return consumed.error().code();
+```
+
+The bundled `PusA`, `PusB`, and `PusC` types are legacy project-specific formats, not official ECSS PUS implementations.
+
+## Use a configuration file
+
+A minimal template configuration is:
+
+```ini
+ccsds_version_number:int=0
+ccsds_type:bool=false
+ccsds_data_field_header_flag:bool=false
+ccsds_APID:int=0x123
+ccsds_segmented:bool=false
+
+data_field_size:int=1024
+ccsds_packet_error_control:string=crc16
+
+define_secondary_header:bool=false
+```
+
+Load it directly into a Manager:
+
+```cpp
+CCSDS::Manager manager;
+const auto templateResult = manager.loadTemplateConfigFile("template.cfg");
+if (!templateResult) return templateResult.error().code();
+
+const auto dataResult = manager.setApplicationData({0x10, 0x20, 0x30});
+if (!dataResult) return dataResult.error().code();
+
+const auto writeResult = manager.write("packets.bin");
+if (!writeResult) return writeResult.error().code();
+```
+
+See [CONFIG.md](CONFIG.md) for all keys and Idle Packet constraints.
+
+## Command-line equivalent
 
 ```bash
-
-# Validate with a template (verbose report + packet print)
-ccsds_validator -i ./packets.bin -c ./template.cfg -v -p
-```
-If a config is provided, loaded packets are validated against the template packet defined there.
-Use this together with the round‑trip example to make CI‑friendly checks.
-
-## 7) Error first pattern (no exceptions)
-   All high‑level operations return a result. Always check has_value() and handle error().
-
-```c++
-
-auto res = manager.setApplicationData(buffer);
-if (!res.has_value()) {
-std::cerr << "[CCSDSPack] " << res.error().code() << ": " << res.error().message() << "\n";
-return res.error().code();
-}
+ccsds_encoder -i payload.bin -o packets.bin -c template.cfg
+ccsds_validator -i packets.bin -c template.cfg --verbose
+ccsds_decoder -i packets.bin -o recovered.bin -c template.cfg
 ```
 
-## 8) Using a custom secondary header
-Custom secondary headers can be defined and used where necessary. Custom secondary header definition:
-```c++
-
-class CustomSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
-public:
-  CustomSecondaryHeader() {variableLength = true;};
-
-  /**
-   * @brief Constructs a CustomSecondaryHeader object with all fields explicitly set.
-   */
-  explicit CustomSecondaryHeader(const std::vector<uint8_t>& data) : m_data(data) {
-    variableLength= true;
-  };
-
-  [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<uint8_t> &data) override {m_data = data; return true;};
-
-  [[nodiscard]] std::uint16_t getSize() const override { return m_data.size(); }
-  [[nodiscard]] std::string getType() const override { return m_type; }
-
-  [[nodiscard]] std::vector<uint8_t> serialize() const override {return m_data;};
-  void update(CCSDS::DataField* dataField) override {m_dataLength = m_data.size();}
-  CCSDS::ResultBool loadFromConfig(const Config &config) override{return true;};
-
-private:
-  std::vector<uint8_t> m_data{};
-  uint16_t m_dataLength = 0;
-  const std::string m_type = "CustomSecondaryHeader";
-};
-```
-Where:
-- The custom secondary header class extends from `CCSDS::SecondaryHeaderAbstract` class.
-- All `virtual` member functions to be defined (all which are defined in the example above).
-- In case of secondary header length is variable set `variableLength= true;` in the constructor /s.
-
-It is also recommended to view PUS service classes in the `PusServices.h` header and source file.
-
-The defined custom class must then be registered and set by each packet where used. This can be achieved as follows:
-```c++
-
-  CCSDS::Packet packet;
-  packet.RegisterSecondaryHeader<CustomSecondaryHeader>();
-  
-  if (const auto res = templatePacket.setDataFieldHeader(data, "CustomSecondaryHeader"); !res.has_value()) {
-    std::cerr << "Error: "<< res.error().message() << ". CODE: " << res.error().code() << std::endl;
-    return res.error().code();
-  }
-  
-  // alternatively using the setDataFieldHeader overload 
-  CustomSecondaryHeader myHeader{};
-  auto ptr = std::make_shared<CustomSecondaryHeader>(myHeader);
-  templatePacket.setDataFieldHeader(ptr);
-  
-```
-
-At this point the custom secondary header is part of the selected packet. If the secondary header is registered on a 
-packet used as a template packet for the `CCSDS::Manager`, than no successive registrations are required. Otherwise, 
-the registration is required to be performed on each individual packet where necessary.
-
----
-
----
-
-
-
-
-Notes:
-* Replace the example primary‑header constant with values suitable for your mission (APID, etc.).
-* Keep setDatFieldSize() consistent across encode/decode paths to avoid mismatches.
-*  The binary read/write helpers (writePacketsBinary, readPacketsBinary) make it easy to persist and reload packet sets.
-
-Additionally, library usage can be referred from the `test/src` source files.
+Use `--packet-error-control none` consistently on all three tools for a CRC-free stream. See [CLI.md](CLI.md) for complete options and trailing-byte handling.
