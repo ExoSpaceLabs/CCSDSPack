@@ -219,7 +219,8 @@ if (!consumed) return consumed.error().code();
 
 ## Add an opaque secondary header
 
-For mission-specific bytes that are not one of the legacy typed formats, use the `BufferHeader` path through `setSecondaryHeader()`.
+For mission-specific opaque bytes that do not use a registered typed header, use
+the `BufferHeader` path through `setSecondaryHeader()`.
 
 ```cpp
 CCSDS::Packet packet;
@@ -244,8 +245,6 @@ CCSDS::Packet decoded;
 const auto consumed = decoded.deserializeBounded(wire, 2U);
 if (!consumed) return consumed.error().code();
 ```
-
-The bundled `PusA`, `PusB`, and `PusC` types are legacy project-specific formats, not official ECSS PUS implementations.
 
 ## Use a configuration file
 

@@ -122,11 +122,16 @@ CCSDS 133.0-B-2 permits optional secondary-header information. CCSDSPack support
 
 - opaque `BufferHeader` bytes;
 - user-registered secondary-header classes;
-- legacy project-specific `PusA`, `PusB`, and `PusC` classes.
+- standards-oriented `PusATcHeader`, `PusATmHeader`, `PusCTcHeader`, and
+  `PusCTmHeader` classes selected by an explicit `MissionProfile`.
 
-The bundled `PusA`, `PusB`, and `PusC` names are retained for v1 compatibility. Their layouts are not claimed to implement an official ECSS Packet Utilisation Standard revision.
+The v1 project-specific `PusA`, `PusB`, and `PusC` classes are removed. There is
+no PUS-B revision. PUS-A and PUS-C parsing uses the canonical revision/direction
+selectors documented in the [examples](EXAMPLES.md).
 
-The `PusC` byte sequence described as a time-code field is not automatically a conformant CCSDS time code. Mission software must select and validate any required time-code format separately.
+PUS telemetry timestamp presence, family, and encoded width are profile-driven.
+CCSDSPack validates the serialized timestamp width but does not invent mission
+epoch or P-field policy.
 
 ## CCSDSPack CRC16 mission profile
 
