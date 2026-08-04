@@ -18,11 +18,11 @@ namespace {
       const CCSDS::PacketErrorControlMode mode = CCSDS::PacketErrorControlMode::CRC16,
       const std::uint8_t version = 0U,
       const std::uint8_t type = 0U,
-      const std::uint8_t dataFieldHeaderFlag = 0U) {
+      const std::uint8_t secondaryHeaderFlag = 0U) {
     CCSDS::Packet packet;
     packet.setPacketErrorControlMode(mode);
     const auto result = packet.setPrimaryHeader(
-      CCSDS::PrimaryHeader{version, type, dataFieldHeaderFlag, apid, flags, count, 0});
+      CCSDS::PrimaryHeader{version, type, secondaryHeaderFlag, apid, flags, count, 0});
     if (!result) {
       std::cerr << "[ Error ]: " << result.error().message() << '\n';
     }
@@ -301,7 +301,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Manager preserves secondary headers while segmenting.", [] {
     CCSDS::Packet packet = makePacket(1, CCSDS::FIRST_SEGMENT, 1);
-    TEST_VOID(packet.setDataFieldHeader({0x02, 0x04, 0x05, 0x06, 0x07, 0x0A, 0x00, 0x00}));
+    TEST_VOID(packet.setSecondaryHeader({0x02, 0x04, 0x05, 0x06, 0x07, 0x0A, 0x00, 0x00}));
 
     CCSDS::Manager manager(packet);
     manager.setAutoValidateEnable(false);
@@ -312,9 +312,9 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
            && packets[0].getApplicationDataBytes().size() == 5U
            && packets[1].getApplicationDataBytes().size() == 5U
            && packets[2].getApplicationDataBytes().size() == 2U
-           && packets[0].getDataFieldHeaderFlag()
-           && packets[1].getDataFieldHeaderFlag()
-           && packets[2].getDataFieldHeaderFlag();
+           && packets[0].getSecondaryHeaderFlag()
+           && packets[1].getSecondaryHeaderFlag()
+           && packets[2].getSecondaryHeaderFlag();
   });
 
   tester->unitTest("Manager supports CRC-disabled templates.", [] {

@@ -88,20 +88,20 @@ void printBufferData(const std::vector<std::uint8_t> &buffer, const std::int32_t
 }
 
 void printData(CCSDS::DataField dataField) {
-  const auto dataFieldHeader = dataField.getDataFieldHeaderBytes();
+  const auto secondaryHeader = dataField.getSecondaryHeaderBytes();
   auto applicationData = dataField.getApplicationData();
-  const std::uint16_t maxSize = (applicationData.size() > dataFieldHeader.size())
+  const std::uint16_t maxSize = (applicationData.size() > secondaryHeader.size())
                              ? applicationData.size()
-                             : dataFieldHeader.size();
+                             : secondaryHeader.size();
 
-  std::cout << " [CCSDS DATA] Data Field Length              : " << applicationData.size() + dataFieldHeader.size() << " bytes" << std::endl;
-  std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << (dataField.getDataFieldHeaderFlag()
+  std::cout << " [CCSDS DATA] Data Field Length              : " << applicationData.size() + secondaryHeader.size() << " bytes" << std::endl;
+  std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << (dataField.getSecondaryHeaderFlag()
                                                                          ? "True"
                                                                          : "False") << " ]" << std::endl;
-  if (!dataFieldHeader.empty()) {
+  if (!secondaryHeader.empty()) {
     std::cout << " [CCSDS DATA] Secondary Header         [Hex] : " << getBitsSpaces(
-    (maxSize - static_cast<std::uint16_t>(dataFieldHeader.size())) * 4);
-    printBufferData(dataFieldHeader);
+    (maxSize - static_cast<std::uint16_t>(secondaryHeader.size())) * 4);
+    printBufferData(secondaryHeader);
   }
 
   std::cout << " [CCSDS DATA] Application Data         [Hex] : ";
@@ -122,9 +122,9 @@ void printHeader(CCSDS::Header &header) {
       getBinaryString(header.getType(), 1) << " ]";
   std::cout << " - [Dec] : "<< std::dec << static_cast<int>( header.getType()) << std::endl;
 
-  std::cout << " [CCSDS HEADER] Data Field Header Flag       : [ " << getBitsSpaces(19 - 4) << getBinaryString(
-  header.getDataFieldHeaderFlag(), 1) << " ]";
-  std::cout << " -       : " << (header.getDataFieldHeaderFlag() ? "True" : "False")  << std::endl;
+  std::cout << " [CCSDS HEADER] Secondary Header Flag       : [ " << getBitsSpaces(19 - 4) << getBinaryString(
+  header.getSecondaryHeaderFlag(), 1) << " ]";
+  std::cout << " -       : " << (header.getSecondaryHeaderFlag() ? "True" : "False")  << std::endl;
 
   std::cout << " [CCSDS HEADER] APID                         : [ " << getBitsSpaces(17 - 12) <<
     getBinaryString(header.getAPID(), 11) << " ]";

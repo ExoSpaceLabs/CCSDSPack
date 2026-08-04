@@ -25,8 +25,8 @@ namespace {
                                         const CCSDS::PacketErrorControlMode errorControl) {
     if (header.getVersionNumber() != 0U) return false;
     if (header.getAPID() == CCSDS::IDLE_APID) {
-      return !profile.pusEnabled && header.getDataFieldHeaderFlag() == 0U
-             && !dataField.getDataFieldHeaderFlag()
+      return !profile.pusEnabled && header.getSecondaryHeaderFlag() == 0U
+             && !dataField.getSecondaryHeaderFlag()
              && dataField.getApplicationDataBytesSize() > 0U;
     }
 
@@ -37,7 +37,7 @@ namespace {
     if (!secondary || !secondary->isPusHeader()
         || !secondary->matchesMissionProfile(profile)
         || errorControl != profile.packetErrorControl
-        || header.getDataFieldHeaderFlag() == 0U) return false;
+        || header.getSecondaryHeaderFlag() == 0U) return false;
     const auto expectedType = profile.direction == CCSDS::PacketDirection::Telecommand ? 1U : 0U;
     return header.getType() == expectedType;
   }
@@ -114,7 +114,7 @@ namespace {
     }
 
     if (parsed.header.getAPID() == CCSDS::IDLE_APID) {
-      if (parsed.header.getDataFieldHeaderFlag() != 0U) {
+      if (parsed.header.getSecondaryHeaderFlag() != 0U) {
         return CCSDS::Error{CCSDS::ErrorCode::INVALID_HEADER_DATA,
                             "Cannot deserialize Idle Packet: secondary-header flag must be zero."};
       }
@@ -168,7 +168,7 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   int versionNumber{};
   bool type{};
   int APID{};
-  bool dataFieldHeaderFlag{};
+  bool secondaryHeaderFlag{};
   std::uint16_t sequenceCount{};
   ESequenceFlag sequenceFlag{};
   bool segmented{};
@@ -177,8 +177,8 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
                  "Config: Missing int field: ccsds_version_number");
   RET_IF_ERR_MSG(!cfg.isKey("ccsds_type"), ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Missing bool field: ccsds_type");
-  RET_IF_ERR_MSG(!cfg.isKey("ccsds_data_field_header_flag"), ErrorCode::CONFIG_FILE_ERROR,
-                 "Config: Missing bool field: ccsds_data_field_header_flag");
+  RET_IF_ERR_MSG(!cfg.isKey("ccsds_secondary_header_flag"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing bool field: ccsds_secondary_header_flag");
   RET_IF_ERR_MSG(!cfg.isKey("ccsds_APID"), ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Missing int field: ccsds_APID");
   RET_IF_ERR_MSG(!cfg.isKey("ccsds_segmented"), ErrorCode::CONFIG_FILE_ERROR,
@@ -186,7 +186,7 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
 
   ASSIGN_CP(versionNumber, cfg.get<int>("ccsds_version_number"));
   ASSIGN_CP(type, cfg.get<bool>("ccsds_type"));
-  ASSIGN_CP(dataFieldHeaderFlag, cfg.get<bool>("ccsds_data_field_header_flag"));
+  ASSIGN_CP(secondaryHeaderFlag, cfg.get<bool>("ccsds_secondary_header_flag"));
   ASSIGN_CP(APID, cfg.get<int>("ccsds_APID"));
   ASSIGN_CP(segmented, cfg.get<bool>("ccsds_segmented"));
 
@@ -197,7 +197,7 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
 
   FORWARD_RESULT(m_primaryHeader.setVersionNumber(static_cast<std::uint8_t>(versionNumber)));
   FORWARD_RESULT(m_primaryHeader.setType(static_cast<std::uint8_t>(type)));
-  FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(static_cast<std::uint8_t>(dataFieldHeaderFlag)));
+  FORWARD_RESULT(m_primaryHeader.setSecondaryHeaderFlag(static_cast<std::uint8_t>(secondaryHeaderFlag)));
   FORWARD_RESULT(m_primaryHeader.setAPID(static_cast<std::uint16_t>(APID)));
 
   if (segmented) {
@@ -239,8 +239,8 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
     bool secondaryHeaderFlag{false};
     ASSIGN_CP(secondaryHeaderFlag, cfg.get<bool>("define_secondary_header"));
     if (secondaryHeaderFlag) {
-      FORWARD_RESULT(m_dataField.setDataFieldHeader(cfg));
-      FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(1U));
+      FORWARD_RESULT(m_dataField.setSecondaryHeader(cfg));
+      FORWARD_RESULT(m_primaryHeader.setSecondaryHeaderFlag(1U));
     }
   }
 
@@ -275,12 +275,12 @@ std::uint16_t CCSDS::Packet::getDataFieldMaximumSize() const {
   return m_dataField.getDataFieldAvailableBytesSize();
 }
 
-bool CCSDS::Packet::getDataFieldHeaderFlag() {
-  return static_cast<const Packet &>(*this).getDataFieldHeaderFlag();
+bool CCSDS::Packet::getSecondaryHeaderFlag() {
+  return static_cast<const Packet &>(*this).getSecondaryHeaderFlag();
 }
 
-bool CCSDS::Packet::getDataFieldHeaderFlag() const {
-  return m_primaryHeader.getDataFieldHeaderFlag() != 0U;
+bool CCSDS::Packet::getSecondaryHeaderFlag() const {
+  return m_primaryHeader.getSecondaryHeaderFlag() != 0U;
 }
 
 std::vector<std::uint8_t> CCSDS::Packet::getCRCVectorBytes() {
@@ -315,12 +315,20 @@ std::vector<std::uint8_t> CCSDS::Packet::getPrimaryHeaderBytes() const {
   return m_primaryHeader.serialize();
 }
 
-std::vector<std::uint8_t> CCSDS::Packet::getDataFieldHeaderBytes() {
-  return static_cast<const Packet &>(*this).getDataFieldHeaderBytes();
+std::shared_ptr<CCSDS::SecondaryHeaderAbstract> CCSDS::Packet::getSecondaryHeader() {
+  return m_dataField.getSecondaryHeader();
 }
 
-std::vector<std::uint8_t> CCSDS::Packet::getDataFieldHeaderBytes() const {
-  return m_dataField.getDataFieldHeaderBytes();
+std::shared_ptr<const CCSDS::SecondaryHeaderAbstract> CCSDS::Packet::getSecondaryHeader() const {
+  return m_dataField.getSecondaryHeader();
+}
+
+std::vector<std::uint8_t> CCSDS::Packet::getSecondaryHeaderBytes() {
+  return static_cast<const Packet &>(*this).getSecondaryHeaderBytes();
+}
+
+std::vector<std::uint8_t> CCSDS::Packet::getSecondaryHeaderBytes() const {
+  return m_dataField.getSecondaryHeaderBytes();
 }
 
 std::vector<std::uint8_t> CCSDS::Packet::getApplicationDataBytes() {
@@ -336,7 +344,7 @@ std::vector<std::uint8_t> CCSDS::Packet::getFullDataFieldBytes() {
 }
 
 std::vector<std::uint8_t> CCSDS::Packet::getFullDataFieldBytes() const {
-  auto data = m_dataField.getDataFieldHeaderBytes();
+  auto data = m_dataField.getSecondaryHeaderBytes();
   const auto applicationData = m_dataField.getApplicationData();
   data.insert(data.end(), applicationData.begin(), applicationData.end());
   return data;
@@ -391,8 +399,8 @@ CCSDS::Result<std::size_t> CCSDS::Packet::deserializeBounded(
                  "Cannot deserialize packet: BufferHeader requires an explicit byte size.");
   const bool isPus = PusSecondaryHeaderFactory::isPusSelector(headerType);
   RET_IF_ERR_MSG(isPus
-                   ? !m_dataField.getPusDataFieldHeaderFactory().typeIsSupported(headerType)
-                   : !m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType),
+                   ? !m_dataField.getPusSecondaryHeaderFactory().typeIsSupported(headerType)
+                   : !m_dataField.getSecondaryHeaderFactory().typeIsRegistered(headerType),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: unsupported secondary header: " + headerType);
 
@@ -420,12 +428,12 @@ CCSDS::Result<std::size_t> CCSDS::Packet::deserializeBounded(
   parsedField.clearContent();
   std::shared_ptr<SecondaryHeaderAbstract> secondaryHeader;
   if (isPus) {
-    auto createResult = parsedField.getPusDataFieldHeaderFactory().create(
+    auto createResult = parsedField.getPusSecondaryHeaderFactory().create(
       headerType, parsedField.getMissionProfile());
     if (!createResult) return createResult.error();
     secondaryHeader = createResult.value();
   } else {
-    secondaryHeader = parsedField.getDataFieldHeaderFactory().create(headerType);
+    secondaryHeader = parsedField.getSecondaryHeaderFactory().create(headerType);
   }
   RET_IF_ERR_MSG(!secondaryHeader, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: failed to create secondary header: " + headerType);
@@ -441,7 +449,7 @@ CCSDS::Result<std::size_t> CCSDS::Packet::deserializeBounded(
     parsed.dataField.begin(), parsed.dataField.begin() + static_cast<std::ptrdiff_t>(secondaryHeaderSize));
   const auto secondaryResult = secondaryHeader->deserialize(secondaryBytes);
   if (!secondaryResult) return secondaryResult.error();
-  const auto attachResult = parsedField.setDataFieldHeader(secondaryHeader);
+  const auto attachResult = parsedField.setSecondaryHeader(secondaryHeader);
   if (!attachResult) return attachResult.error();
 
   const std::vector<std::uint8_t> applicationData(
@@ -480,7 +488,7 @@ CCSDS::Result<std::size_t> CCSDS::Packet::deserializeBounded(
     parsed.dataField.begin(),
     parsed.dataField.begin() + static_cast<std::ptrdiff_t>(headerDataSizeBytes));
   if (!secondaryBytes.empty()) {
-    const auto secondaryResult = parsedField.setDataFieldHeader(secondaryBytes);
+    const auto secondaryResult = parsedField.setSecondaryHeader(secondaryBytes);
     if (!secondaryResult) return secondaryResult.error();
   }
   const std::vector<std::uint8_t> applicationData(
@@ -580,10 +588,10 @@ CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(
+CCSDS::ResultBool CCSDS::Packet::setSecondaryHeader(
     const std::shared_ptr<SecondaryHeaderAbstract> &header) {
-  FORWARD_RESULT(m_dataField.setDataFieldHeader(header));
-  FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(header ? 1U : 0U));
+  FORWARD_RESULT(m_dataField.setSecondaryHeader(header));
+  FORWARD_RESULT(m_primaryHeader.setSecondaryHeaderFlag(header ? 1U : 0U));
   m_updateStatus = false;
   return true;
 }
@@ -596,35 +604,35 @@ CCSDS::ResultBool CCSDS::Packet::setMissionProfile(const MissionProfile &profile
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(
+CCSDS::ResultBool CCSDS::Packet::setSecondaryHeader(
     const std::vector<std::uint8_t> &data, const std::string &headerType) {
-  FORWARD_RESULT(m_dataField.setDataFieldHeader(data, headerType));
-  FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(1U));
+  FORWARD_RESULT(m_dataField.setSecondaryHeader(data, headerType));
+  FORWARD_RESULT(m_primaryHeader.setSecondaryHeaderFlag(1U));
   m_updateStatus = false;
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::uint8_t *pData,
+CCSDS::ResultBool CCSDS::Packet::setSecondaryHeader(const std::uint8_t *pData,
                                                      const std::size_t sizeData,
                                                      const std::string &headerType) {
-  FORWARD_RESULT(m_dataField.setDataFieldHeader(pData, sizeData, headerType));
-  FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(1U));
+  FORWARD_RESULT(m_dataField.setSecondaryHeader(pData, sizeData, headerType));
+  FORWARD_RESULT(m_primaryHeader.setSecondaryHeaderFlag(1U));
   m_updateStatus = false;
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(
+CCSDS::ResultBool CCSDS::Packet::setSecondaryHeader(
     const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(m_dataField.setDataFieldHeader(data));
-  FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(1U));
+  FORWARD_RESULT(m_dataField.setSecondaryHeader(data));
+  FORWARD_RESULT(m_primaryHeader.setSecondaryHeaderFlag(1U));
   m_updateStatus = false;
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(const std::uint8_t *pData,
+CCSDS::ResultBool CCSDS::Packet::setSecondaryHeader(const std::uint8_t *pData,
                                                      const std::size_t sizeData) {
-  FORWARD_RESULT(m_dataField.setDataFieldHeader(pData, sizeData));
-  FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(1U));
+  FORWARD_RESULT(m_dataField.setSecondaryHeader(pData, sizeData));
+  FORWARD_RESULT(m_primaryHeader.setSecondaryHeaderFlag(1U));
   m_updateStatus = false;
   return true;
 }
@@ -664,7 +672,7 @@ void CCSDS::Packet::setDataFieldSize(const std::uint16_t size) {
 
 void CCSDS::Packet::setUpdatePacketEnable(const bool enable) {
   m_enableUpdatePacket = enable;
-  m_dataField.setDataFieldHeaderAutoUpdateStatus(enable);
+  m_dataField.setSecondaryHeaderAutoUpdateStatus(enable);
 }
 
 void CCSDS::Packet::setPacketErrorControlMode(const PacketErrorControlMode mode) {

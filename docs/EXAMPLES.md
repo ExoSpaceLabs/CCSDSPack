@@ -5,9 +5,9 @@ SPDX-License-Identifier: Apache-2.0
 
 # Examples
 
-[Documentation index](README.md) | [Configuration](CONFIG.md) | [v1.2 profile](CCSDS_133_0_B_2_PROFILE.md)
+[Documentation index](README.md) | [Configuration](CONFIG.md) | [Space Packet profile](CCSDS_133_0_B_2_PROFILE.md)
 
-These examples use the current v1.2 C++17 API. They create CCSDS Space Packets with Packet Version Number `000`. The default packet-error-control profile is the project-specific CRC16 trailer; configure `PacketErrorControlMode::None` explicitly for CRC-free packets.
+These examples use the v2 C++17 API. They create CCSDS Space Packets with Packet Version Number `000`. The default packet-error-control profile is the project-specific CRC16 trailer; configure `PacketErrorControlMode::None` explicitly for CRC-free packets.
 
 ## Build integration
 
@@ -19,6 +19,15 @@ find_package(CCSDSPack CONFIG REQUIRED)
 add_executable(example main.cpp)
 target_link_libraries(example PRIVATE ccsdspack::CCSDSPack)
 target_compile_features(example PRIVATE cxx_std_17)
+```
+
+Four complete installed-package consumers are maintained under [`example/`](../example/README.md).
+Each has its own `CMakeLists.txt` and uses `find_package(CCSDSPack 2.0 CONFIG REQUIRED)`.
+After installing the library, build every example or one target directory:
+
+```bash
+./example/build_examples.sh all /path/to/install/prefix
+./example/build_examples.sh custom_secondary_header /path/to/install/prefix
 ```
 
 ## Create and parse one packet
@@ -210,14 +219,14 @@ if (!consumed) return consumed.error().code();
 
 ## Add an opaque secondary header
 
-For mission-specific bytes that are not one of the legacy typed formats, use the `BufferHeader` path through `setDataFieldHeader()`.
+For mission-specific bytes that are not one of the legacy typed formats, use the `BufferHeader` path through `setSecondaryHeader()`.
 
 ```cpp
 CCSDS::Packet packet;
 packet.setDataFieldSize(1024);
 packet.setPrimaryHeader({0, 0, 1, 0x123, CCSDS::UNSEGMENTED, 0, 0});
 
-const auto secondaryResult = packet.setDataFieldHeader(
+const auto secondaryResult = packet.setSecondaryHeader(
   std::vector<std::uint8_t>{0xAA, 0x55}
 );
 if (!secondaryResult) return secondaryResult.error().code();
@@ -245,7 +254,7 @@ A minimal template configuration is:
 ```ini
 ccsds_version_number:int=0
 ccsds_type:bool=false
-ccsds_data_field_header_flag:bool=false
+ccsds_secondary_header_flag:bool=false
 ccsds_APID:int=0x123
 ccsds_segmented:bool=false
 

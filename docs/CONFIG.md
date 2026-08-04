@@ -68,7 +68,7 @@ A normal v1.2 packet profile can begin with:
 ```ini
 ccsds_version_number:int=0
 ccsds_type:bool=false
-ccsds_data_field_header_flag:bool=false
+ccsds_secondary_header_flag:bool=false
 ccsds_APID:int=0x123
 ccsds_segmented:bool=false
 
@@ -96,7 +96,7 @@ The encoder, decoder, and validator also provide the additive `--packet-error-co
 |---|---|---:|---|
 | `ccsds_version_number` | int | yes | must be `0` for CCSDS 133.0-B-2 Space Packets |
 | `ccsds_type` | bool | yes | `false` telemetry, `true` telecommand |
-| `ccsds_data_field_header_flag` | bool | yes | indicates optional secondary-header presence |
+| `ccsds_secondary_header_flag` | bool | yes | indicates optional secondary-header presence |
 | `ccsds_APID` | int | yes | `0..2047`; `2047` is the Idle Packet APID |
 | `ccsds_segmented` | bool | yes | selects initial segmented or unsegmented template state |
 
@@ -108,7 +108,7 @@ CCSDSPack uses Packet Sequence Count semantics for telemetry and telecommand pac
 
 APID `0x7FF` is reserved for Idle Packets. A valid Idle Packet configuration must:
 
-- set `ccsds_data_field_header_flag` to `false`;
+- set `ccsds_secondary_header_flag` to `false`;
 - set `define_secondary_header` to `false`;
 - include non-empty mission-defined idle bytes in `application_data`.
 
@@ -117,7 +117,7 @@ Example:
 ```ini
 ccsds_version_number:int=0
 ccsds_type:bool=false
-ccsds_data_field_header_flag:bool=false
+ccsds_secondary_header_flag:bool=false
 ccsds_APID:int=0x7FF
 ccsds_segmented:bool=false
 

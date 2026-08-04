@@ -75,7 +75,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     const auto &stored = packet.getPrimaryHeader();
     return stored.getVersionNumber() == 0
            && stored.getType() == 1
-           && stored.getDataFieldHeaderFlag() == 1
+           && stored.getSecondaryHeaderFlag() == 1
            && stored.getAPID() == 0x123
            && stored.getSequenceFlags() == CCSDS::FIRST_SEGMENT
            && stored.getSequenceCount() == 7
@@ -88,7 +88,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     if (packet.getCRC() != 0U) return false;
     packet.update();
     return packet.getApplicationDataBytes() == std::vector<std::uint8_t>({1, 2, 3, 4, 5})
-           && packet.getDataFieldHeaderBytes().empty()
+           && packet.getSecondaryHeaderBytes().empty()
            && packet.getCRC() == 0x3B8D;
   });
 
@@ -101,7 +101,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Buffer secondary header inspection preserves current bytes.", [] {
     CCSDS::Packet packet;
-    TEST_VOID(packet.setDataFieldHeader({1, 2}));
+    TEST_VOID(packet.setSecondaryHeader({1, 2}));
     TEST_VOID(packet.setApplicationData({3, 4, 5}));
     const auto dataField = packet.getFullDataFieldBytes();
     if (dataField != std::vector<std::uint8_t>({1, 2, 3, 4, 5})) return false;
@@ -113,8 +113,12 @@ void testGroupCore(TestManager *tester, const std::string &description) {
   tester->unitTest("Custom secondary-header types remain registerable.", [] {
     CCSDS::Packet packet;
     TEST_VOID(packet.RegisterSecondaryHeader<TestSecondaryHeader>());
-    TEST_VOID(packet.setDataFieldHeader({0xAA, 0xBB, 0xCC}, "TestSecondaryHeader"));
-    return packet.getDataFieldHeaderBytes() == std::vector<std::uint8_t>({0xAA, 0xBB, 0xCC});
+    TEST_VOID(packet.setSecondaryHeader({0xAA, 0xBB, 0xCC}, "TestSecondaryHeader"));
+    const CCSDS::Packet &view = packet;
+    const auto header = view.getSecondaryHeader();
+    return header && header->getType() == "TestSecondaryHeader"
+           && view.getSecondaryHeaderBytes()
+              == std::vector<std::uint8_t>({0xAA, 0xBB, 0xCC});
   });
 
   tester->unitTest("Packet getters do not finalize dirty state.", [] {
@@ -122,17 +126,17 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.setPrimaryHeader(
       CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 7, 0}));
     TEST_VOID(packet.RegisterSecondaryHeader<UpdatingSecondaryHeader>());
-    TEST_VOID(packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>()));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<UpdatingSecondaryHeader>()));
     TEST_VOID(packet.setApplicationData({0xAA}));
 
     const CCSDS::Packet &view = packet;
     const auto headerBefore = view.getPrimaryHeaderBytes();
-    const auto secondaryBefore = view.getDataFieldHeaderBytes();
+    const auto secondaryBefore = view.getSecondaryHeaderBytes();
     const auto crcBefore = view.getCRC();
 
     (void)view.getPrimaryHeader64bit();
     (void)view.getFullPacketLength();
-    (void)view.getDataFieldHeaderFlag();
+    (void)view.getSecondaryHeaderFlag();
     (void)view.getDataField();
     (void)view.getPrimaryHeader();
     (void)view.getApplicationDataBytes();
@@ -140,7 +144,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     (void)view.getCRCVectorBytes();
 
     return view.getPrimaryHeaderBytes() == headerBefore
-           && view.getDataFieldHeaderBytes() == secondaryBefore
+           && view.getSecondaryHeaderBytes() == secondaryBefore
            && view.getCRC() == crcBefore
            && view.getPrimaryHeader().getSequenceCount() == 7U
            && view.getPrimaryHeader().getDataLength() == 0U
@@ -153,14 +157,14 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.setPrimaryHeader(
       CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 9, 0}));
     TEST_VOID(packet.RegisterSecondaryHeader<UpdatingSecondaryHeader>());
-    TEST_VOID(packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>()));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<UpdatingSecondaryHeader>()));
     TEST_VOID(packet.setApplicationData({0xAA}));
 
     const auto encoded = packet.serialize();
     return !encoded.empty()
            && packet.getPrimaryHeader().getSequenceCount() == 9U
            && packet.getPrimaryHeader().getDataLength() == 3U
-           && packet.getDataFieldHeaderBytes() == std::vector<std::uint8_t>({0x11})
+           && packet.getSecondaryHeaderBytes() == std::vector<std::uint8_t>({0x11})
            && packet.getCRC() != 0U;
   });
 
@@ -178,7 +182,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     const auto crcBefore = view.getCRC();
     (void)view.getApplicationDataBytes();
     (void)view.getFullDataFieldBytes();
-    (void)view.getDataFieldHeaderBytes();
+    (void)view.getSecondaryHeaderBytes();
 
     return view.getPrimaryHeaderBytes() == headerBefore
            && view.getPrimaryHeader().getSequenceCount() == 123U
@@ -188,7 +192,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Disabling automatic updates preserves a valid parsed packet.", [] {
     CCSDS::Packet source;
-    TEST_VOID(source.setDataFieldHeader({1, 2}));
+    TEST_VOID(source.setSecondaryHeader({1, 2}));
     TEST_VOID(source.setApplicationData({3, 4, 5}));
     const auto encoded = source.serialize();
 

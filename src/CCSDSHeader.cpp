@@ -27,12 +27,12 @@ CCSDS::ResultBool CCSDS::Header::setType(const std::uint8_t &value) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Header::setDataFieldHeaderFlag(const std::uint8_t &value) {
+CCSDS::ResultBool CCSDS::Header::setSecondaryHeaderFlag(const std::uint8_t &value) {
   if (value > 0x01U) {
     m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid data field header flag, value > 1");
+    return Error(INVALID_HEADER_DATA, "Invalid secondary header flag, value > 1");
   }
-  m_dataFieldHeaderFlag = value;
+  m_secondaryHeaderFlag = value;
   refreshStatus();
   return true;
 }
@@ -97,7 +97,7 @@ CCSDS::ResultBool CCSDS::Header::setData(const std::uint64_t &data) {
 
   m_versionNumber = static_cast<std::uint8_t>(m_packetIdentificationAndVersion >> 13);
   m_type = static_cast<std::uint8_t>((m_packetIdentificationAndVersion >> 12) & 0x01U);
-  m_dataFieldHeaderFlag = static_cast<std::uint8_t>((m_packetIdentificationAndVersion >> 11) & 0x01U);
+  m_secondaryHeaderFlag = static_cast<std::uint8_t>((m_packetIdentificationAndVersion >> 11) & 0x01U);
   m_APID = m_packetIdentificationAndVersion & 0x07FFU;
   m_sequenceFlags = static_cast<std::uint8_t>(m_packetSequenceControl >> 14);
   m_sequenceCount = m_packetSequenceControl & 0x3FFFU;
@@ -119,7 +119,7 @@ std::vector<std::uint8_t> CCSDS::Header::serialize() const {
   const auto packetIdentificationAndVersion = static_cast<std::uint16_t>(
     (static_cast<std::uint16_t>(m_versionNumber) << 13U)
     | (static_cast<std::uint16_t>(m_type) << 12U)
-    | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11U)
+    | (static_cast<std::uint16_t>(m_secondaryHeaderFlag) << 11U)
     | m_APID);
 
   return {
@@ -145,7 +145,7 @@ std::uint64_t CCSDS::Header::getFullHeader() const {
   const auto packetIdentificationAndVersion = static_cast<std::uint16_t>(
     (static_cast<std::uint16_t>(m_versionNumber) << 13U)
     | (static_cast<std::uint16_t>(m_type) << 12U)
-    | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11U)
+    | (static_cast<std::uint16_t>(m_secondaryHeaderFlag) << 11U)
     | m_APID);
   return (static_cast<std::uint64_t>(packetIdentificationAndVersion) << 32U)
          | (static_cast<std::uint32_t>(packetSequenceControl) << 16U)
@@ -161,9 +161,9 @@ CCSDS::ResultBool CCSDS::Header::setData(const PrimaryHeader &data) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid type, value > 1");
   }
-  if (data.dataFieldHeaderFlag > 0x01U) {
+  if (data.secondaryHeaderFlag > 0x01U) {
     m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid data field header flag, value > 1");
+    return Error(INVALID_HEADER_DATA, "Invalid secondary header flag, value > 1");
   }
   if (data.APID > IDLE_APID) {
     m_status = INVALID;
@@ -180,7 +180,7 @@ CCSDS::ResultBool CCSDS::Header::setData(const PrimaryHeader &data) {
 
   m_versionNumber = data.versionNumber;
   m_type = data.type;
-  m_dataFieldHeaderFlag = data.dataFieldHeaderFlag;
+  m_secondaryHeaderFlag = data.secondaryHeaderFlag;
   m_APID = data.APID;
   m_sequenceFlags = data.sequenceFlags;
   m_sequenceCount = data.sequenceCount;
@@ -190,7 +190,7 @@ CCSDS::ResultBool CCSDS::Header::setData(const PrimaryHeader &data) {
   m_packetIdentificationAndVersion = static_cast<std::uint16_t>(
     (static_cast<std::uint16_t>(m_versionNumber) << 13U)
     | (static_cast<std::uint16_t>(m_type) << 12U)
-    | (static_cast<std::uint16_t>(m_dataFieldHeaderFlag) << 11U)
+    | (static_cast<std::uint16_t>(m_secondaryHeaderFlag) << 11U)
     | m_APID);
   refreshStatus();
   return true;

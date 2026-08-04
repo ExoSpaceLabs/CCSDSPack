@@ -27,7 +27,7 @@ std::uint16_t CCSDS::Manager::packetIdentifier(const Packet &packet) {
   return static_cast<std::uint16_t>(
     (static_cast<std::uint16_t>(header.getVersionNumber()) << 13U)
     | (static_cast<std::uint16_t>(header.getType()) << 12U)
-    | (static_cast<std::uint16_t>(header.getDataFieldHeaderFlag()) << 11U)
+    | (static_cast<std::uint16_t>(header.getSecondaryHeaderFlag()) << 11U)
     | header.getAPID());
 }
 

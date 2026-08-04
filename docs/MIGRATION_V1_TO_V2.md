@@ -15,12 +15,31 @@ CCSDSPack v2 deliberately breaks the legacy secondary-header API. The old classe
 
 The standards-facing selectors are `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, and `PUS:revC:TM`. The `PUS:` namespace is reserved and cannot be registered by custom headers.
 
+## Secondary-header API naming
+
+v2 uses CCSDS “secondary header” terminology consistently across the public API:
+
+| Removed name | v2 name |
+|---|---|
+| `setDataFieldHeader(...)` | `setSecondaryHeader(...)` |
+| `getDataFieldHeader()` | `getSecondaryHeader()` |
+| `getDataFieldHeaderBytes()` | `getSecondaryHeaderBytes()` |
+| `getDataFieldHeaderFactory()` | `getSecondaryHeaderFactory()` |
+| `getPusDataFieldHeaderFactory()` | `getPusSecondaryHeaderFactory()` |
+| `getDataFieldHeaderFlag()` | `getSecondaryHeaderFlag()` |
+| `setDataFieldHeaderFlag(...)` | `setSecondaryHeaderFlag(...)` |
+
+The packet-template key is likewise renamed from `ccsds_data_field_header_flag` to
+`ccsds_secondary_header_flag`. v2 does not retain aliases for the former names.
+`getSecondaryHeader()` returns a nullable shared pointer; the former unchecked
+reference getter is removed.
+
 ## Construction
 
 Before:
 
 ```cpp
-packet.setDataFieldHeader(std::make_shared<PusC>(...));
+packet.setSecondaryHeader(std::make_shared<PusC>(...));
 ```
 
 After:
@@ -36,7 +55,7 @@ CCSDS::Packet packet;
 if (auto result = packet.setMissionProfile(profile); !result) {
   // handle result.error()
 }
-if (auto result = packet.setDataFieldHeader(
+if (auto result = packet.setSecondaryHeader(
       std::make_shared<CCSDS::PusCTmHeader>(
         profile, 3, 25, 1, 0x0001, 0, std::vector<std::uint8_t>{0, 0, 0, 0}));
     !result) {
@@ -44,7 +63,7 @@ if (auto result = packet.setDataFieldHeader(
 }
 ```
 
-`Packet::setDataFieldHeader(shared_ptr)` now returns `ResultBool`, because profile, namespace, type, and capacity mismatches are checked.
+`Packet::setSecondaryHeader(shared_ptr)` now returns `ResultBool`, because profile, namespace, type, and capacity mismatches are checked.
 
 ## Parsing
 

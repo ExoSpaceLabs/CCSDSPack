@@ -196,7 +196,7 @@ PacketChecks validatePacketBytes(const std::vector<std::uint8_t> &packetBytes,
     checks.apid = header.getAPID() == templateHeader.getAPID();
     checks.packetType = header.getType() == templateHeader.getType();
     checks.secondaryHeaderFlag =
-      header.getDataFieldHeaderFlag() == templateHeader.getDataFieldHeaderFlag();
+      header.getSecondaryHeaderFlag() == templateHeader.getSecondaryHeaderFlag();
   }
 
   updateSequenceState(header, sequenceState, checks);

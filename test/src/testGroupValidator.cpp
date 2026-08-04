@@ -15,11 +15,11 @@ namespace {
       const CCSDS::PacketErrorControlMode mode = CCSDS::PacketErrorControlMode::CRC16,
       const std::uint8_t version = 0U,
       const std::uint8_t type = 0U,
-      const std::uint8_t dataFieldHeaderFlag = 0U) {
+      const std::uint8_t secondaryHeaderFlag = 0U) {
     CCSDS::Packet packet;
     packet.setPacketErrorControlMode(mode);
     const auto headerResult = packet.setPrimaryHeader(
-      CCSDS::PrimaryHeader{version, type, dataFieldHeaderFlag, apid, flags, count, 0});
+      CCSDS::PrimaryHeader{version, type, secondaryHeaderFlag, apid, flags, count, 0});
     if (!headerResult) {
       return {};
     }

@@ -10,13 +10,14 @@
 #include "tests.h"
 
 namespace {
-  bool writeConfig(const std::string &path, const int version) {
+  bool writeConfig(const std::string &path, const int version,
+                   const char *secondaryHeaderFlagKey = "ccsds_secondary_header_flag") {
     std::ofstream file(path, std::ios::trunc);
     if (!file) return false;
 
     file << "ccsds_version_number:int=" << version << '\n'
          << "ccsds_type:bool=false\n"
-         << "ccsds_data_field_header_flag:bool=false\n"
+         << secondaryHeaderFlagKey << ":bool=false\n"
          << "ccsds_APID:int=1\n"
          << "ccsds_segmented:bool=false\n"
          << "data_field_size:int=8\n";
@@ -51,12 +52,22 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
     return validResult && !invalidResult;
   });
 
+  tester->unitTest("Configuration requires the v2 secondary-header flag key", []() {
+    const std::string path = "ccsdspack_legacy_secondary_header_flag.cfg";
+    if (!writeConfig(path, 0, "ccsds_data_field_header_flag")) return false;
+
+    CCSDS::Packet packet;
+    const auto result = packet.loadFromConfigFile(path);
+    std::remove(path.c_str());
+    return !result && result.error().code() == CCSDS::CONFIG_FILE_ERROR;
+  });
+
   tester->unitTest("Idle Packet rejects a secondary header", []() {
     CCSDS::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(CCSDS::PrimaryHeader{
       0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
     }));
-    TEST_VOID(packet.setDataFieldHeader({0x10}));
+    TEST_VOID(packet.setSecondaryHeader({0x10}));
     TEST_VOID(packet.setApplicationData({0x00}));
     return packet.serialize().empty();
   });
@@ -109,7 +120,7 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
     const auto bytes = packet.serialize();
     return bytes.size() == 9U
            && packet.getPrimaryHeader().getHeaderStatus() == CCSDS::IDLE
-           && packet.getPrimaryHeader().getDataFieldHeaderFlag() == 0U;
+           && packet.getPrimaryHeader().getSecondaryHeaderFlag() == 0U;
   });
 
   tester->unitTest("Maximum serialized size is reported without uint16 overflow", []() {

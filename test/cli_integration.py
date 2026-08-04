@@ -46,7 +46,7 @@ def packet_config(apid: int, data_field_size: int = 2, *, pec: str | None = None
         "validation_enable:bool=true",
         "ccsds_version_number:int=0",
         "ccsds_type:bool=false",
-        "ccsds_data_field_header_flag:bool=false",
+        "ccsds_secondary_header_flag:bool=false",
         f"ccsds_APID:int={apid}",
         "ccsds_segmented:bool=false",
         "define_secondary_header:bool=false",

@@ -192,6 +192,16 @@ For a non-standard install prefix:
 cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/install/prefix
 ```
 
+The [`example/`](example/README.md) directory contains independent installed-package
+consumers for a generic packet, a custom secondary header, and PUS-C telecommand
+and telemetry packets.
+Build all of them, or select one by directory name:
+
+```bash
+./example/build_examples.sh all /path/to/install/prefix
+./example/build_examples.sh pus_c_telecommand /path/to/install/prefix
+```
+
 ## C++ example
 
 ```cpp
@@ -285,7 +295,7 @@ auto profile = CCSDS::makePusProfile(
 CCSDS::Packet packet;
 packet.setPrimaryHeader({0, 1, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0});
 packet.setMissionProfile(profile);
-packet.setDataFieldHeader(std::make_shared<CCSDS::PusCTcHeader>(
+packet.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(
   profile, 17, 1, 0x1234, 0x09));
 packet.setApplicationData({0x10, 0x20});
 const auto wire = packet.serialize();

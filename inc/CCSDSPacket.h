@@ -128,7 +128,7 @@ namespace CCSDS {
      * @param header Shared secondary-header instance, or nullptr to remove it.
      * @note The Packet shares ownership of the supplied object. Idle Packets may not serialize with one.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(
+    [[nodiscard]] ResultBool setSecondaryHeader(
       const std::shared_ptr<SecondaryHeaderAbstract> &header);
 
     [[nodiscard]] ResultBool setMissionProfile(const MissionProfile &profile);
@@ -140,7 +140,7 @@ namespace CCSDS {
      * @return Success, or a registration error.
      *
      * The registered object's getType() value is the lookup key used by typed
-     * setDataFieldHeader() and deserializeBounded() overloads.
+     * setSecondaryHeader() and deserializeBounded() overloads.
      */
     template <typename T>
     ResultBool RegisterSecondaryHeader() {
@@ -154,7 +154,7 @@ namespace CCSDS {
      * @param headerType Value returned by the registered type's getType().
      * @return Success, or INVALID_SECONDARY_HEADER_DATA.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data,
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::vector<std::uint8_t> &data,
                                                 const std::string &headerType);
 
     /**
@@ -164,7 +164,7 @@ namespace CCSDS {
      * @param headerType Registered type name.
      * @return Success, or an error for a null pointer, size mismatch, or unknown type.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::uint8_t *pData,
                                                 std::size_t sizeData,
                                                 const std::string &headerType);
 
@@ -173,7 +173,7 @@ namespace CCSDS {
      * @param data Secondary-header bytes.
      * @return Success, or INVALID_SECONDARY_HEADER_DATA when the data exceeds capacity.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data);
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::vector<std::uint8_t> &data);
 
     /**
      * @brief Stores an opaque raw secondary header from a byte span.
@@ -181,7 +181,7 @@ namespace CCSDS {
      * @param sizeData Number of bytes to copy.
      * @return Success, or an error for a null pointer, empty span, or insufficient capacity.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::uint8_t *pData,
                                                 std::size_t sizeData);
 
     /**
@@ -349,10 +349,15 @@ namespace CCSDS {
     /** @brief Const overload of getPrimaryHeaderBytes(). */
     [[nodiscard]] std::vector<std::uint8_t> getPrimaryHeaderBytes() const;
 
+    /** @brief Returns shared mutable ownership of the installed secondary header, or nullptr. */
+    std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
+    /** @brief Returns shared read-only ownership of the installed secondary header, or nullptr. */
+    [[nodiscard]] std::shared_ptr<const SecondaryHeaderAbstract> getSecondaryHeader() const;
+
     /** @brief Returns the currently stored secondary-header bytes without finalizing. */
-    std::vector<std::uint8_t> getDataFieldHeaderBytes();
-    /** @brief Const overload of getDataFieldHeaderBytes(). */
-    [[nodiscard]] std::vector<std::uint8_t> getDataFieldHeaderBytes() const;
+    std::vector<std::uint8_t> getSecondaryHeaderBytes();
+    /** @brief Const overload of getSecondaryHeaderBytes(). */
+    [[nodiscard]] std::vector<std::uint8_t> getSecondaryHeaderBytes() const;
 
     /** @brief Returns a copy of the current application-data bytes without finalizing. */
     std::vector<std::uint8_t> getApplicationDataBytes();
@@ -382,9 +387,9 @@ namespace CCSDS {
     [[nodiscard]] std::uint16_t getDataFieldMaximumSize() const;
 
     /** @brief Returns whether the primary header currently asserts a secondary header. */
-    bool getDataFieldHeaderFlag();
-    /** @brief Const overload of getDataFieldHeaderFlag(). */
-    [[nodiscard]] bool getDataFieldHeaderFlag() const;
+    bool getSecondaryHeaderFlag();
+    /** @brief Const overload of getSecondaryHeaderFlag(). */
+    [[nodiscard]] bool getSecondaryHeaderFlag() const;
 
     /**
      * @brief Returns mutable access to the owned DataField.
