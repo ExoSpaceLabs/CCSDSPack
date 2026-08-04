@@ -24,6 +24,7 @@
  * packet.setPrimaryHeader({0, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0});
  * packet.setApplicationData({0x01, 0x02});
  * const auto bytes = packet.serialize();
+ * if (!bytes) return bytes.error().code();
  * @endcode
  */
 #ifndef CCSDSPACK_H

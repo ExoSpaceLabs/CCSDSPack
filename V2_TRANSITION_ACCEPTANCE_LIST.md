@@ -54,6 +54,10 @@
 - [x] PUS parsing requires the explicit canonical selector.
 - [x] Failed PUS parsing does not commit partial packet state.
 - [x] Generic CCSDS regression vectors remain passing.
+- [x] Packet finalization returns specific validation errors.
+- [x] Packet serialization returns `ResultBuffer` rather than using an empty vector as an error sentinel.
+- [x] DataField and Manager serialization propagate errors without collapsing them.
+- [x] Packet Data Length and CRC16 are updated only after successful checked finalization.
 
 ## Legacy removal and migration
 
@@ -68,7 +72,7 @@
 
 ## Local validation
 
-- [x] 98 native tests pass.
+- [x] 101 native tests pass.
 - [x] AddressSanitizer and UndefinedBehaviorSanitizer pass.
 - [x] MCU sources compile with `-fno-exceptions -fno-rtti`.
 - [x] `git diff --check` passes.

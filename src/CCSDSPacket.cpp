@@ -19,27 +19,57 @@ namespace {
     std::uint16_t receivedCRC{};
   };
 
-  bool packetProfileAllowsSerialization(const CCSDS::Header &header,
-                                        const CCSDS::DataField &dataField,
-                                        const CCSDS::MissionProfile &profile,
-                                        const CCSDS::PacketErrorControlMode errorControl) {
-    if (header.getVersionNumber() != 0U) return false;
+  CCSDS::ResultBool validatePacketForSerialization(
+      const CCSDS::Header &header,
+      const CCSDS::DataField &dataField,
+      const CCSDS::MissionProfile &profile,
+      const CCSDS::PacketErrorControlMode errorControl) {
+    RET_IF_ERR_MSG(header.getHeaderStatus() == CCSDS::INVALID,
+                   CCSDS::ErrorCode::INVALID_HEADER_DATA,
+                   "Cannot serialize packet: primary header is invalid.");
+    RET_IF_ERR_MSG(header.getVersionNumber() != 0U,
+                   CCSDS::ErrorCode::INVALID_HEADER_DATA,
+                   "Cannot serialize packet: unsupported CCSDS packet version.");
+    FORWARD_RESULT(CCSDS::validateMissionProfile(profile));
     if (header.getAPID() == CCSDS::IDLE_APID) {
-      return !profile.pusEnabled && header.getSecondaryHeaderFlag() == 0U
-             && !dataField.getSecondaryHeaderFlag()
-             && dataField.getApplicationDataBytesSize() > 0U;
+      RET_IF_ERR_MSG(profile.pusEnabled, CCSDS::ErrorCode::INVALID_DATA,
+                     "Cannot serialize Idle Packet with a PUS mission profile.");
+      RET_IF_ERR_MSG(header.getSecondaryHeaderFlag() != 0U,
+                     CCSDS::ErrorCode::INVALID_HEADER_DATA,
+                     "Cannot serialize Idle Packet: secondary-header flag must be zero.");
+      RET_IF_ERR_MSG(dataField.getSecondaryHeaderFlag(),
+                     CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "Cannot serialize Idle Packet with a secondary header.");
+      RET_IF_ERR_MSG(dataField.getApplicationDataBytesSize() == 0U,
+                     CCSDS::ErrorCode::INVALID_DATA,
+                     "Cannot serialize Idle Packet without mission-defined idle user data.");
+      return true;
     }
 
-    const auto profileResult = CCSDS::validateMissionProfile(profile);
-    if (!profileResult) return false;
     const auto secondary = dataField.getSecondaryHeader();
-    if (!profile.pusEnabled) return !secondary || !secondary->isPusHeader();
-    if (!secondary || !secondary->isPusHeader()
-        || !secondary->matchesMissionProfile(profile)
-        || errorControl != profile.packetErrorControl
-        || header.getSecondaryHeaderFlag() == 0U) return false;
+    RET_IF_ERR_MSG((header.getSecondaryHeaderFlag() != 0U) != static_cast<bool>(secondary),
+                   CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Cannot serialize packet: primary-header flag and secondary-header state differ.");
+    if (!profile.pusEnabled) {
+      RET_IF_ERR_MSG(secondary && secondary->isPusHeader(),
+                     CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "Cannot serialize a PUS secondary header with a generic mission profile.");
+      return true;
+    }
+    RET_IF_ERR_MSG(!secondary || !secondary->isPusHeader(),
+                   CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Cannot serialize a PUS packet without a standards-defined PUS secondary header.");
+    RET_IF_ERR_MSG(!secondary->matchesMissionProfile(profile),
+                   CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Cannot serialize packet: PUS secondary header does not match the mission profile.");
+    RET_IF_ERR_MSG(errorControl != profile.packetErrorControl,
+                   CCSDS::ErrorCode::INVALID_DATA,
+                   "Cannot serialize packet: packet error control differs from the mission profile.");
     const auto expectedType = profile.direction == CCSDS::PacketDirection::Telecommand ? 1U : 0U;
-    return header.getType() == expectedType;
+    RET_IF_ERR_MSG(header.getType() != expectedType,
+                   CCSDS::ErrorCode::INVALID_HEADER_DATA,
+                   "Cannot serialize packet: primary-header type differs from the PUS direction.");
+    return true;
   }
 
   CCSDS::Result<std::size_t> declaredPacketSize(const std::vector<std::uint8_t> &data) {
@@ -128,25 +158,29 @@ namespace {
   }
 }
 
-void CCSDS::Packet::update() {
-  if (m_updateStatus || !m_enableUpdatePacket) return;
-  if (m_primaryHeader.getHeaderStatus() == INVALID) return;
-  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField, m_missionProfile,
-                                        getPacketErrorControlMode())) return;
+CCSDS::ResultBool CCSDS::Packet::update() {
+  FORWARD_RESULT(validatePacketForSerialization(m_primaryHeader, m_dataField, m_missionProfile,
+                                                getPacketErrorControlMode()));
+  if (m_updateStatus || !m_enableUpdatePacket) return true;
 
-  const auto dataField = m_dataField.serialize();
+  std::vector<std::uint8_t> dataField;
+  ASSIGN_MV(dataField, m_dataField.serialize());
   const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
   constexpr auto maximumPacketDataFieldSize =
     static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
 
-  if (packetDataFieldSize == 0U || packetDataFieldSize > maximumPacketDataFieldSize) return;
+  RET_IF_ERR_MSG(packetDataFieldSize == 0U, ErrorCode::INVALID_DATA,
+                 "Cannot finalize packet: Packet Data Field is empty.");
+  RET_IF_ERR_MSG(packetDataFieldSize > maximumPacketDataFieldSize, ErrorCode::INVALID_DATA,
+                 "Cannot finalize packet: Packet Data Field exceeds the CCSDS length field.");
 
   m_primaryHeader.setDataLength(static_cast<std::uint16_t>(packetDataFieldSize - 1U));
-  if (!m_primaryHeader.setSequenceCount(m_sequenceCounter & SEQUENCE_COUNT_MASK)) return;
+  FORWARD_RESULT(m_primaryHeader.setSequenceCount(m_sequenceCounter & SEQUENCE_COUNT_MASK));
 
   if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
     auto crcInput = static_cast<const Header &>(m_primaryHeader).serialize();
-    if (crcInput.size() != 6U) return;
+    RET_IF_ERR_MSG(crcInput.size() != 6U, ErrorCode::INVALID_HEADER_DATA,
+                   "Cannot finalize packet: primary-header serialization failed.");
     crcInput.insert(crcInput.end(), dataField.begin(), dataField.end());
     m_CRC16 = ::crc16(crcInput, m_CRC16Config.polynomial, m_CRC16Config.initialValue,
                       m_CRC16Config.finalXorValue);
@@ -154,6 +188,7 @@ void CCSDS::Packet::update() {
     m_CRC16 = 0U;
   }
   m_updateStatus = true;
+  return true;
 }
 
 #ifndef CCSDS_MCU
@@ -250,12 +285,14 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
     FORWARD_RESULT(m_dataField.setApplicationData(applicationData));
   }
 
-  RET_IF_ERR_MSG(m_primaryHeader.getAPID() == IDLE_APID
-                 && !packetProfileAllowsSerialization(m_primaryHeader, m_dataField,
-                                                      m_missionProfile,
-                                                      getPacketErrorControlMode()),
-                 ErrorCode::CONFIG_FILE_ERROR,
-                 "Config: Idle Packets require no secondary header and non-empty idle user data");
+  if (m_primaryHeader.getAPID() == IDLE_APID) {
+    const auto idleResult = validatePacketForSerialization(
+      m_primaryHeader, m_dataField, m_missionProfile, getPacketErrorControlMode());
+    if (!idleResult) {
+      return Error{ErrorCode::CONFIG_FILE_ERROR,
+                   "Config: invalid Idle Packet: " + idleResult.error().message()};
+    }
+  }
 
   return true;
 }
@@ -350,24 +387,26 @@ std::vector<std::uint8_t> CCSDS::Packet::getFullDataFieldBytes() const {
   return data;
 }
 
-std::vector<std::uint8_t> CCSDS::Packet::serialize() {
-  if (m_primaryHeader.getHeaderStatus() == INVALID) return {};
-  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField, m_missionProfile,
-                                        getPacketErrorControlMode())) return {};
+CCSDS::ResultBuffer CCSDS::Packet::serialize() {
+  const auto updateResult = update();
+  if (!updateResult) return updateResult.error();
+  const auto header = static_cast<const Header &>(m_primaryHeader).serialize();
+  RET_IF_ERR_MSG(header.size() != 6U, ErrorCode::INVALID_HEADER_DATA,
+                 "Cannot serialize packet: primary-header serialization failed.");
+  std::vector<std::uint8_t> dataField;
+  ASSIGN_MV(dataField, m_dataField.serialize());
 
-  const auto currentDataField = getFullDataFieldBytes();
-  const auto currentPacketDataFieldSize = currentDataField.size() + getPacketErrorControlSize();
+  const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
   constexpr auto maximumPacketDataFieldSize =
     static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
-  if (currentPacketDataFieldSize == 0U || currentPacketDataFieldSize > maximumPacketDataFieldSize) {
-    return {};
-  }
-
-  update();
-  if (!m_updateStatus && m_enableUpdatePacket) return {};
-  const auto header = static_cast<const Header &>(m_primaryHeader).serialize();
-  if (header.size() != 6U) return {};
-  const auto dataField = getFullDataFieldBytes();
+  RET_IF_ERR_MSG(packetDataFieldSize == 0U, ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet: Packet Data Field is empty.");
+  RET_IF_ERR_MSG(packetDataFieldSize > maximumPacketDataFieldSize, ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet: Packet Data Field exceeds the CCSDS length field.");
+  RET_IF_ERR_MSG(static_cast<std::size_t>(m_primaryHeader.getDataLength()) + 1U
+                   != packetDataFieldSize,
+                 ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet: Packet Data Length does not match the finalized data field.");
 
   std::vector<std::uint8_t> packet;
   packet.reserve(header.size() + dataField.size() + getPacketErrorControlSize());

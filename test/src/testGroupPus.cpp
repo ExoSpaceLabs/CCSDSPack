@@ -167,7 +167,7 @@ void testGroupPus(TestManager *tester, const std::string &description) {
     TEST_VOID(source.setSecondaryHeader(
       std::make_shared<CCSDS::PusCTcHeader>(profile, 17U, 1U, 0x1234U, 0x09U)));
     TEST_VOID(source.setApplicationData({0x60U, 0x70U}));
-    const auto packetBytes = source.serialize();
+    const auto packetBytes = serializedPacket(source);
     auto stream = packetBytes;
     stream.insert(stream.end(), {0x99U, 0x88U});
 
@@ -190,7 +190,9 @@ void testGroupPus(TestManager *tester, const std::string &description) {
     TEST_VOID(wrongDirection.setMissionProfile(tcProfile));
     TEST_VOID(wrongDirection.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile)));
     TEST_VOID(wrongDirection.setApplicationData({1U}));
-    if (!wrongDirection.serialize().empty()) return false;
+    const auto directionResult = wrongDirection.serialize();
+    if (directionResult
+        || directionResult.error().code() != CCSDS::INVALID_HEADER_DATA) return false;
 
     CCSDS::Packet wrongProfile;
     TEST_VOID(wrongProfile.setMissionProfile(tmProfile));
@@ -202,7 +204,8 @@ void testGroupPus(TestManager *tester, const std::string &description) {
     TEST_VOID(wrongPec.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile)));
     TEST_VOID(wrongPec.setApplicationData({1U}));
     wrongPec.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
-    return wrongPec.serialize().empty();
+    const auto pecResult = wrongPec.serialize();
+    return !pecResult && pecResult.error().code() == CCSDS::INVALID_DATA;
   });
 
   tester->unitTest("Invalid profiles, versions, reserved bits, timestamp sizes, and spare bytes fail.", [] {

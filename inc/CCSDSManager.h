@@ -41,6 +41,7 @@ namespace CCSDS {
    * manager.setDataFieldSize(1024);
    * manager.setApplicationData(payload);
    * const auto stream = manager.getPacketsBuffer();
+   * if (!stream) return stream.error().code();
    * @endcode
    */
   class Manager {
@@ -50,14 +51,13 @@ namespace CCSDS {
 
     /**
      * @brief Constructs and binds a Manager to a packet template.
-     * @param packet Template copied into the Manager after finalization.
+     * @param packet Template copied into the Manager.
      *
      * The template's complete Packet Identification becomes immutable for packets
      * accepted by this Manager until clear() is called. Its sequence count becomes
      * the initial stream count.
      */
     explicit Manager(Packet packet) {
-      packet.update();
       m_templatePacket = std::move(packet);
       m_templateIsSet = true;
       m_sequenceCount = m_templatePacket.getPrimaryHeader().getSequenceCount() & SEQUENCE_COUNT_MASK;
@@ -86,7 +86,7 @@ namespace CCSDS {
     [[nodiscard]] bool getSyncPatternEnable() const;
 
     /**
-     * @brief Finalizes and installs a packet template, binding the Manager identifier.
+     * @brief Validates and installs a packet template, binding the Manager identifier.
      * @param packet Template packet to copy.
      * @return Success, TEMPLATE_SET_FAILURE when a template already exists, or a header error.
      * @note Call clear() before replacing an existing template.
@@ -170,21 +170,21 @@ namespace CCSDS {
      * @return Serialized template, or NO_DATA when serialization produces no bytes.
      * @note The stored template is not mutated by this inspection path.
      */
-    ResultBuffer getPacketTemplate();
+    [[nodiscard]] ResultBuffer getPacketTemplate();
 
     /**
      * @brief Finalizes a copy of one stored packet and returns its serialized bytes.
      * @param index Zero-based packet index.
      * @return Packet bytes, or an index, validation, or serialization error.
      */
-    ResultBuffer getPacketBufferAtIndex(std::uint16_t index);
+    [[nodiscard]] ResultBuffer getPacketBufferAtIndex(std::uint16_t index);
 
     /**
      * @brief Serializes all stored packets into one sequential byte buffer.
-     * @return Concatenated packet bytes, optionally prefixed by sync patterns.
+     * @return Concatenated packet bytes, or the first packet serialization error.
      * @note Stored packets are copied before finalization; this getter does not mutate them.
      */
-    [[nodiscard]] std::vector<std::uint8_t> getPacketsBuffer() const;
+    [[nodiscard]] ResultBuffer getPacketsBuffer() const;
 
     /**
      * @brief Reassembles application data from all stored packets in order.

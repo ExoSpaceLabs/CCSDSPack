@@ -244,7 +244,7 @@ int main() {
   }
 
   const auto wire = manager.getPacketsBuffer();
-  return wire.empty() ? 1 : 0;
+  return wire && !wire.value().empty() ? 0 : 1;
 }
 ```
 
@@ -299,9 +299,10 @@ packet.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(
   profile, 17, 1, 0x1234, 0x09));
 packet.setApplicationData({0x10, 0x20});
 const auto wire = packet.serialize();
+if (!wire) return wire.error().code();
 ```
 
-All checked results should be inspected in production code; they are omitted above only to keep the example compact.
+All checked setter results should also be inspected in production code; they are omitted above only to keep the example compact.
 
 ## Compatibility
 

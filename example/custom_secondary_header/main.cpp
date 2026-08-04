@@ -55,7 +55,9 @@ int main() {
     return fail("setApplicationData", result.error());
   }
 
-  const auto wire = packet.serialize();
+  const auto wireResult = packet.serialize();
+  if (!wireResult) return fail("serialize", wireResult.error());
+  const auto &wire = wireResult.value();
   CCSDS::Packet decoded;
   if (const auto result = decoded.RegisterSecondaryHeader<MissionSecondaryHeader>(); !result) {
     return fail("RegisterSecondaryHeader decoder", result.error());

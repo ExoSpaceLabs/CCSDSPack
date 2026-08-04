@@ -4,7 +4,30 @@
 #ifndef TESTS_H
 #define TESTS_H
 
+#include <CCSDSManager.h>
+#include <iostream>
+#include <vector>
 #include "TestManager.h"
+
+inline std::vector<std::uint8_t> serializedPacket(CCSDS::Packet &packet) {
+  const auto result = packet.serialize();
+  if (!result) {
+    std::cerr << "[ Error ]: Code [" << result.error().code()
+              << "]: " << result.error().message() << '\n';
+    return {};
+  }
+  return result.value();
+}
+
+inline std::vector<std::uint8_t> serializedPackets(const CCSDS::Manager &manager) {
+  const auto result = manager.getPacketsBuffer();
+  if (!result) {
+    std::cerr << "[ Error ]: Code [" << result.error().code()
+              << "]: " << result.error().message() << '\n';
+    return {};
+  }
+  return result.value();
+}
 
 void testGroupCore(TestManager *tester, const std::string &description);
 void testGroupValidator(TestManager *tester, const std::string &description);

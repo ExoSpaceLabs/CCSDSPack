@@ -24,7 +24,7 @@ namespace {
       return {};
     }
     const auto dataResult = packet.setApplicationData(data);
-    if (!dataResult || packet.serialize().empty()) {
+    if (!dataResult || !packet.serialize()) {
       return {};
     }
     packet.setUpdatePacketEnable(false);

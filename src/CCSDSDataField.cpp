@@ -5,9 +5,15 @@
 #include <CCSDSSecondaryHeaderFactory.h>
 #include <utility>
 
-std::vector<std::uint8_t> CCSDS::DataField::serialize() {
+CCSDS::ResultBuffer CCSDS::DataField::serialize() {
   update();
   const auto secondaryHeader = static_cast<const DataField &>(*this).getSecondaryHeaderBytes();
+  RET_IF_ERR_MSG(m_secondaryHeader && secondaryHeader.size() != m_secondaryHeader->getSize(),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Secondary header serialization failed or returned an unexpected size.");
+  RET_IF_ERR_MSG(secondaryHeader.size() + m_applicationData.size() > m_dataPacketSize,
+                 ErrorCode::INVALID_DATA,
+                 "Serialized packet data field exceeds its configured capacity.");
   std::vector<std::uint8_t> fullData{};
   fullData.reserve(secondaryHeader.size() + m_applicationData.size());
   fullData.insert(fullData.end(), secondaryHeader.begin(), secondaryHeader.end());

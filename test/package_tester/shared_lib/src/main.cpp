@@ -92,7 +92,9 @@ int main() {
     0xB7, 0x45
   };
 
-  const auto packetsData = manager.getPacketsBuffer();
+  const auto packetsResult = manager.getPacketsBuffer();
+  if (!packetsResult) return failResult("serialize Manager packets", packetsResult.error());
+  const auto &packetsData = packetsResult.value();
   if (packetsData != expectedPacket) {
     return fail("wire vector", "generated generic packet bytes differ from the expected vector");
   }
@@ -185,7 +187,11 @@ int main() {
   if (const auto result = crcDisabled.setApplicationData({0xAA, 0x55}); !result) {
     return failResult("CRC-disabled application data", result.error());
   }
-  const auto crcDisabledBytes = crcDisabled.serialize();
+  const auto crcDisabledResult = crcDisabled.serialize();
+  if (!crcDisabledResult) {
+    return failResult("serialize CRC-disabled packet", crcDisabledResult.error());
+  }
+  const auto &crcDisabledBytes = crcDisabledResult.value();
   const std::vector<std::uint8_t> expectedCrcDisabled{
     0x01, 0x23, 0xC0, 0x07, 0x00, 0x01, 0xAA, 0x55
   };
@@ -213,7 +219,7 @@ int main() {
   if (const auto result = invalidVersion.setApplicationData({0x01}); !result) {
     return failResult("non-zero PVN data", result.error());
   }
-  if (!invalidVersion.serialize().empty()) {
+  if (invalidVersion.serialize()) {
     return fail("Packet Version Number", "non-zero PVN was serialized as a Space Packet");
   }
 
@@ -229,7 +235,7 @@ int main() {
   if (const auto result = invalidIdle.setApplicationData({0x00}); !result) {
     return failResult("Idle Packet data", result.error());
   }
-  if (!invalidIdle.serialize().empty()) {
+  if (invalidIdle.serialize()) {
     return fail("Idle Packet", "Idle Packet with a secondary header was serialized");
   }
 
@@ -242,8 +248,10 @@ int main() {
   if (const auto result = validIdle.setApplicationData({0x00}); !result) {
     return failResult("valid Idle Packet data", result.error());
   }
-  const auto validIdleBytes = validIdle.serialize();
-  if (validIdleBytes.empty() || validIdle.getSerializedSize() != validIdleBytes.size()) {
+  const auto validIdleResult = validIdle.serialize();
+  if (!validIdleResult) return failResult("serialize valid Idle Packet", validIdleResult.error());
+  const auto &validIdleBytes = validIdleResult.value();
+  if (validIdle.getSerializedSize() != validIdleBytes.size()) {
     return fail("valid Idle Packet", "conformant Idle Packet did not serialize");
   }
 

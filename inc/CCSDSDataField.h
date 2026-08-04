@@ -176,9 +176,9 @@ namespace CCSDS {
 
     /**
      * @brief Finalizes the secondary header and serializes the complete data-field content.
-     * @return Secondary-header bytes followed by application-data bytes.
+     * @return Secondary-header bytes followed by application data, or a header/capacity error.
      */
-    std::vector<std::uint8_t> serialize();
+    [[nodiscard]] ResultBuffer serialize();
 
     /** @brief Returns a copy of application data without finalizing. */
     std::vector<std::uint8_t> getApplicationData();

@@ -162,13 +162,10 @@ int main(const int argc, char *argv[]) {
   if (args["verbose"] == "true") printPackets(manager);
 
   const auto packets = manager.getPacketsBuffer();
-  if (!manager.getPackets().empty() && packets.empty()) {
-    return printError(CCSDS::Error{CCSDS::ErrorCode::INVALID_HEADER_DATA,
-                                   "Unable to serialize generated packet stream"});
-  }
+  if (!packets) return printError(packets.error());
 
   customConsole(appName, "writing data to " + output);
-  if (const auto result = writeBinaryFile(packets, output); !result) {
+  if (const auto result = writeBinaryFile(packets.value(), output); !result) {
     return printError(result.error());
   }
 
