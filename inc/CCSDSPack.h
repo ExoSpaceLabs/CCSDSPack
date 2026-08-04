@@ -39,7 +39,8 @@
 #include "CCSDSSecondaryHeaderFactory.h"
 #include "CCSDSUtils.h"
 #include "CCSDSValidator.h"
-#include "PusServices.h"
+#include "PusSecondaryHeaderFactory.h"
+#include "PusSecondaryHeaders.h"
 
 #ifndef CCSDS_MCU
   #include "CCSDSConfig.h"

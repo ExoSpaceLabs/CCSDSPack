@@ -129,7 +129,7 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         uses: actions/upload-artifact@v4
         with:
-          name: ccsdspack-v1.2.0-hardware-${{ github.sha }}
+          name: ccsdspack-v2.0.0-hardware-${{ github.sha }}
           path: |
             packages/*.deb
             packages/*.tar.gz

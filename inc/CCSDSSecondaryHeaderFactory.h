@@ -1,87 +1,61 @@
 // Copyright 2025-2026 ExoSpaceLabs
 // SPDX-License-Identifier: Apache-2.0
 
-/**
- * @file CCSDSSecondaryHeaderFactory.h
- * @brief Defines the per-DataField registry used to look up secondary-header implementations.
- */
 #ifndef CCSDS_SECONDARY_HEADER_FACTORY_H
 #define CCSDS_SECONDARY_HEADER_FACTORY_H
 
-#include <memory>
-#include <unordered_map>
-#include <functional>
-#include <string>
 #include "CCSDSSecondaryHeaderAbstract.h"
+#include <functional>
+#include <memory>
+#include <string>
+#include <type_traits>
+#include <unordered_map>
+#include <utility>
 
 namespace CCSDS {
 
-/**
- * @class SecondaryHeaderFactory
- * @brief Registers secondary-header prototypes by type name and returns their shared instances.
- *
- * Each DataField owns one factory. registerType() stores the supplied shared pointer
- * under header->getType(). create() returns that same stored shared pointer; it does
- * not clone or default-construct a fresh object. Consequently, callers that need
- * independent mutable header instances should register separate objects in separate
- * DataField/Packet instances or explicitly supply their own shared object.
- *
- * Re-registering an existing type replaces the previous stored pointer. The class is
- * not synchronized for concurrent registration or lookup.
- */
-class SecondaryHeaderFactory {
-public:
-  /** @brief Constructs an empty registry. */
-  SecondaryHeaderFactory() = default;
+  /** Direction-neutral extension registry for mission-specific secondary headers. */
+  class SecondaryHeaderFactory {
+  public:
+    using CreatorFunc = std::function<std::shared_ptr<SecondaryHeaderAbstract>()>;
 
-  /**
-   * @typedef CreatorFunc
-   * @brief Legacy alias for a function returning a shared secondary-header object.
-   * @note The current registry stores shared objects directly rather than CreatorFunc values.
-   */
-  using CreatorFunc = std::function<std::shared_ptr<SecondaryHeaderAbstract>()>;
-
-  /**
-   * @brief Registers or replaces a secondary-header object by its getType() key.
-   * @param header Shared object to store.
-   * @return Success, or INVALID_HEADER_DATA when header is nullptr.
-   * @note Ownership is shared with the caller; later mutations are visible through the registry.
-   */
-  ResultBool registerType(std::shared_ptr<SecondaryHeaderAbstract> header) {
-    RET_IF_ERR_MSG(!header, INVALID_HEADER_DATA, "Cannot register, invalid Header provided.");
-    m_creators[header->getType()] = std::move(header);
-    return true;
-  }
-
-  /**
-   * @brief Looks up a registered secondary-header object.
-   * @param type Exact string returned by SecondaryHeaderAbstract::getType().
-   * @return The stored shared pointer, or nullptr when the type is unknown.
-   * @warning The returned object is the registry's stored instance, not a clone.
-   */
-  std::shared_ptr<SecondaryHeaderAbstract> create(const std::string& type) {
-    if (const auto it = m_creators.find(type); it != m_creators.end()) {
-      return it->second;
+    template <typename T>
+    ResultBool registerType() {
+      static_assert(std::is_base_of<SecondaryHeaderAbstract, T>::value,
+                    "T must derive from SecondaryHeaderAbstract");
+      static_assert(std::is_default_constructible<T>::value,
+                    "Custom secondary-header types must be default constructible");
+      const auto probe = std::make_shared<T>();
+      return registerCreator(probe->getType(), [] {
+        return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<T>());
+      });
     }
-    return nullptr;
-  }
 
-  /**
-   * @brief Tests whether a type key is present in the registry.
-   * @param type Exact secondary-header type name.
-   * @return True when a shared object is registered under the key.
-   */
-  bool typeIsRegistered(const std::string& type) {
-    if (const auto it = m_creators.find(type); it != m_creators.end()) {
+    ResultBool registerCreator(const std::string &type, CreatorFunc creator) {
+      RET_IF_ERR_MSG(type.empty(), ErrorCode::INVALID_HEADER_DATA,
+                     "Cannot register an empty secondary-header type.");
+      RET_IF_ERR_MSG(type.rfind("PUS:", 0U) == 0U, ErrorCode::INVALID_HEADER_DATA,
+                     "The PUS: namespace is reserved for standards-defined codecs.");
+      RET_IF_ERR_MSG(!creator, ErrorCode::INVALID_HEADER_DATA,
+                     "Cannot register an empty secondary-header creator.");
+      RET_IF_ERR_MSG(m_creators.find(type) != m_creators.end(), ErrorCode::INVALID_HEADER_DATA,
+                     "Secondary-header type is already registered: " + type);
+      m_creators.emplace(type, std::move(creator));
       return true;
     }
-    return false;
-  }
 
-private:
-  /** @brief Registered type names mapped to shared mutable header objects. */
-  std::unordered_map<std::string, std::shared_ptr<SecondaryHeaderAbstract> > m_creators;
-};
+    [[nodiscard]] std::shared_ptr<SecondaryHeaderAbstract> create(const std::string &type) const {
+      const auto it = m_creators.find(type);
+      return it == m_creators.end() ? nullptr : it->second();
+    }
+
+    [[nodiscard]] bool typeIsRegistered(const std::string &type) const {
+      return m_creators.find(type) != m_creators.end();
+    }
+
+  private:
+    std::unordered_map<std::string, CreatorFunc> m_creators;
+  };
 
 } // namespace CCSDS
 

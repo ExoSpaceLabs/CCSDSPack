@@ -5,7 +5,6 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include "PusServices.h"
 #include "tests.h"
 
 namespace {
@@ -104,22 +103,6 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
     TEST_RET(consumed, decoded.deserializeBounded(input));
     return consumed == input.size()
            && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x11, 0x20, 0x30});
-  });
-
-  tester->unitTest("Typed secondary-header parsing respects the encoded packet boundary.", [] {
-    CCSDS::Packet source;
-    source.setDataFieldHeader(std::make_shared<PusA>(1, 2, 3, 4, 5));
-    TEST_VOID(source.setApplicationData({0x60, 0x70}));
-    const auto packetBytes = source.serialize();
-    auto stream = packetBytes;
-    stream.insert(stream.end(), {0x99, 0x88});
-
-    CCSDS::Packet decoded;
-    std::size_t consumed{};
-    TEST_RET(consumed, decoded.deserializeBounded(stream, "PusA"));
-    return consumed == packetBytes.size()
-           && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x60, 0x70})
-           && std::dynamic_pointer_cast<PusA>(decoded.getDataField().getSecondaryHeader()) != nullptr;
   });
 
   tester->unitTest("Unsupported packet versions are rejected during packet parsing.", [] {

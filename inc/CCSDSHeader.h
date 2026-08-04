@@ -54,7 +54,7 @@ namespace CCSDS {
    * packet-data-field size including optional packet error-control bytes.
    */
   struct PrimaryHeader {
-    std::uint8_t versionNumber{};       ///< 3-bit protocol version; v1.2 parsing supports value 0.
+    std::uint8_t versionNumber{};       ///< 3-bit protocol version; Space Packet parsing supports value 0.
     std::uint8_t type{};                ///< 1-bit packet type.
     std::uint8_t dataFieldHeaderFlag{}; ///< 1-bit secondary-header presence flag.
     std::uint16_t APID{};               ///< 11-bit Application Process Identifier.

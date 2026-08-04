@@ -2,9 +2,9 @@
 
 ## Purpose
 
-CCSDS packet error control and ECSS-E-ST-70-41C secondary-header details contain mission-selected parameters. CCSDSPack v2 records those choices explicitly so packet encoding and parsing remain deterministic.
+CCSDS packet error control and the ECSS PUS-A/PUS-C secondary-header layouts contain mission-selected parameters. CCSDSPack v2 records those choices explicitly so packet encoding and parsing remain deterministic.
 
-The initial public contract is declared in `inc/CCSDSMissionProfile.h`. Issues #66 and #67 complete validation and codec integration.
+The public contract and validation API are declared in `inc/CCSDSMissionProfile.h`.
 
 ## Generic and PUS profiles
 
@@ -16,23 +16,23 @@ CCSDS::MissionProfile profile;
 
 The default does not silently enable PUS. This is required because generic CCSDS packets must remain usable without selecting a PUS revision.
 
-To construct a PUS-C packet, callers explicitly select:
+To construct a PUS packet, callers explicitly select:
 
 - `pusEnabled = true`;
-- `pusRevision = PusRevision::C`;
+- `pusRevision = PusRevision::A` or `PusRevision::C`;
 - `direction = PacketDirection::Telecommand` or `PacketDirection::Telemetry`;
 - the applicable identifier widths;
 - packet error control;
 - telemetry time configuration where applicable.
 
-PUS revision and packet direction are independent concepts. PUS-C is a standards revision; TC and TM are directions with different secondary-header layouts.
+PUS revision and packet direction are independent concepts. TC and TM are distinct layouts for each supported revision.
 
 ## Initial profile fields
 
 | Field | Meaning |
 |---|---|
 | `pusEnabled` | Selects generic CCSDS or the PUS-C profile |
-| `pusRevision` | Standards revision used by the PUS codec; v2.0.0 supports `PusRevision::C` only |
+| `pusRevision` | Standards revision used by the PUS codec: `A` or `C` |
 | `direction` | Telecommand or telemetry, independent from PUS revision |
 | `sourceIdOctets` | Number of source-ID octets where the selected TC layout requires them |
 | `destinationIdOctets` | Number of destination-ID octets where the selected TM layout requires them |
@@ -40,6 +40,8 @@ PUS revision and packet direction are independent concepts. PUS-C is a standards
 | `telemetryTimestampPresent` | Whether a TM secondary header includes a timestamp |
 | `telemetryTimeCode` | Selected CCSDS time-code family |
 | `telemetryTimeCodeOctets` | Total encoded timestamp length until a format-specific profile replaces it |
+| `pusATmPacketSubcounterPresent` | Selects the optional PUS-A TM packet subcounter |
+| `secondaryHeaderSpareOctets` | Number of zero-valued, octet-aligned spare bytes |
 
 The profile reuses the packet-layer error-control enum. It does not declare a second `PacketErrorControlMode`, because public types are apparently more useful when the compiler sees only one of them.
 
@@ -60,7 +62,7 @@ The parser shall not:
 
 The validator delivered by #67 shall reject at least:
 
-1. `pusEnabled == true` with a revision unsupported by v2.0.0;
+1. `pusEnabled == true` with an unspecified or unsupported revision;
 2. PUS construction without explicit direction;
 3. TC construction using TM-only destination or timestamp settings where disallowed;
 4. TM construction using TC-only acknowledgement or source settings where disallowed;
@@ -70,7 +72,7 @@ The validator delivered by #67 shall reject at least:
 8. `telemetryTimestampPresent == true` with a zero encoded time length;
 9. a time configuration invalid for the selected supported CCSDS time representation;
 10. identifier widths unable to represent the supplied identifier;
-11. identifier widths unsupported by the selected PUS-C layout;
+11. identifier widths unsupported by the selected revision/direction layout;
 12. an unknown packet error-control mode;
 13. packet construction exceeding the CCSDS Packet Data Length representation.
 
@@ -78,7 +80,7 @@ Validation returns an error and does not normalize an invalid profile into a dif
 
 ## Time-code scope
 
-The Phase 0 model can name CUC, CDS, and CCS, but naming a format is not a compliance claim. Issue #61 selects and implements the initial supported representation, including format-specific lengths, epoch handling, and P-field policy.
+The profile can select CUC or CDS timestamp bytes. The PUS secondary-header codec enforces presence and exact encoded size; epoch conversion, P-field construction, and numeric time conversion remain caller responsibilities.
 
 Only time formats with implemented codecs and independent vectors may appear in the final v2.0.0 support claim.
 
@@ -88,7 +90,7 @@ The final v2 configuration schema shall contain fields equivalent to:
 
 ```text
 packet_profile = "generic" | "pus"
-pus_revision = "C"
+pus_revision = "A" | "C"
 packet_direction = "telecommand" | "telemetry"
 source_id_octets = <integer>
 destination_id_octets = <integer>

@@ -39,8 +39,12 @@ diagrams:
       - inc/CCSDSResult.h
       - inc/CCSDSSecondaryHeaderAbstract.h
       - inc/CCSDSSecondaryHeaderFactory.h
-      - inc/PusServices.h
-      - src/PusServices.cpp
+      - inc/CCSDSMissionProfile.h
+      - inc/PusSecondaryHeaderFactory.h
+      - inc/PusSecondaryHeaders.h
+      - src/CCSDSMissionProfile.cpp
+      - src/PusSecondaryHeaderFactory.cpp
+      - src/PusSecondaryHeaders.cpp
     exclude:
       namespaces:
         - std
@@ -59,7 +63,7 @@ diagrams:
       - inc/CCSDSPacket.h
       - src/CCSDSPacket.cpp
       - inc/CCSDSValidator.h
-      - src/CCSDSValidator.h
+      - inc/CCSDSValidator.h
     exclude:
       namespaces:
         - std
