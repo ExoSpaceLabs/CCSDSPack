@@ -84,6 +84,11 @@ jobs:
         run: |
           LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
             ctest --test-dir build/package_tester/shared_lib --output-on-failure
+
+      - name: Build and run installed-package examples
+        run: |
+          LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
+            ./example/build_examples.sh all "$PWD/build/install"
         
       - name: Install cross and packaging deps (22.04 only)
         if: matrix.os == 'ubuntu-22.04'

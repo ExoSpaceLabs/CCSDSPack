@@ -39,6 +39,7 @@ Deliver a breaking, standards-oriented v2 release on the validated v1.2 CCSDS 13
 
 - removed the legacy `PusA`, `PusB`, and `PusC` public/runtime classes;
 - removed `PusServices.h/.cpp` and automatic registration;
+- renamed the public attachment, inspection, factory, and primary-header flag APIs to use CCSDS secondary-header terminology;
 - removed current tests and fixtures for the legacy formats;
 - legacy configuration selectors fail with migration guidance;
 - documented the breaking API/wire migration.
@@ -47,13 +48,14 @@ Deliver a breaking, standards-oriented v2 release on the validated v1.2 CCSDS 13
 
 Completed and integrated:
 
-- 97 native tests, including the four-selector PUS factory matrix;
+- 98 native tests, including the four-selector PUS factory matrix and v2 configuration naming;
 - PUS-A/PUS-C fixed byte vectors and negative vectors;
 - ASan/UBSan validation;
 - MCU compile with `-fno-exceptions -fno-rtti`;
 - diff hygiene;
 - Linux, Windows, and Doxygen workflows on `develop`;
 - installed-package consumer validation with v2 version expectations.
+- standalone generic, custom, PUS-C TC, and PUS-C TM `find_package` examples, built and executed as installed-package consumers on Linux and Windows.
 
 Remaining release-level evidence:
 

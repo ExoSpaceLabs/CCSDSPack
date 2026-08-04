@@ -63,11 +63,12 @@
 - [x] Legacy configuration selectors rejected with migration guidance.
 - [x] Current tests and diagrams no longer present legacy codecs as supported.
 - [x] `docs/MIGRATION_V1_TO_V2.md` documents API, selector, and wire changes.
+- [x] Public secondary-header APIs and configuration use CCSDS secondary-header terminology.
 - [x] Project version and SOVERSION set to 2.0.0/2.
 
 ## Local validation
 
-- [x] 97 native tests pass.
+- [x] 98 native tests pass.
 - [x] AddressSanitizer and UndefinedBehaviorSanitizer pass.
 - [x] MCU sources compile with `-fno-exceptions -fno-rtti`.
 - [x] `git diff --check` passes.
@@ -77,6 +78,7 @@
 - [x] `v2.0.0-dev` merged into `develop` through PR #111.
 - [x] Linux, Windows, and Doxygen CI pass on `develop`.
 - [x] Installed-consumer/package gates use v2 version expectations.
+- [x] Standalone generic, custom-header, PUS-C TC, and PUS-C TM examples consume the installed package in Linux and Windows CI.
 - [ ] Encoder, decoder, and validator accept/report complete PUS profiles.
 - [ ] Manager higher-level PUS profile workflows are covered.
 - [ ] Fuzz smoke jobs pass.

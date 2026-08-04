@@ -122,7 +122,7 @@ namespace CCSDS {
    * @class BufferHeader
    * @brief Opaque secondary header that stores bytes without interpreting them.
    *
-   * BufferHeader is used by setDataFieldHeader(bytes) and explicit-size parsing
+   * BufferHeader is used by setSecondaryHeader(bytes) and explicit-size parsing
    * overloads. It is suitable when a project needs a secondary-header boundary but
    * no typed decoder. Its registered type name is "DataOnlyHeader".
    */

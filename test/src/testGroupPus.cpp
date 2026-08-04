@@ -164,7 +164,7 @@ void testGroupPus(TestManager *tester, const std::string &description) {
     CCSDS::Packet source;
     TEST_VOID(source.setPrimaryHeader(primary(CCSDS::PacketDirection::Telecommand)));
     TEST_VOID(source.setMissionProfile(profile));
-    TEST_VOID(source.setDataFieldHeader(
+    TEST_VOID(source.setSecondaryHeader(
       std::make_shared<CCSDS::PusCTcHeader>(profile, 17U, 1U, 0x1234U, 0x09U)));
     TEST_VOID(source.setApplicationData({0x60U, 0x70U}));
     const auto packetBytes = source.serialize();
@@ -176,7 +176,7 @@ void testGroupPus(TestManager *tester, const std::string &description) {
     std::size_t consumed{};
     TEST_RET(consumed, decoded.deserializeBounded(stream, "PUS:revC:TC"));
     const auto header = std::dynamic_pointer_cast<CCSDS::PusCTcHeader>(
-      decoded.getDataField().getSecondaryHeader());
+      decoded.getSecondaryHeader());
     return consumed == packetBytes.size() && header && header->getSourceId() == 0x1234U
            && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x60U, 0x70U});
   });
@@ -188,18 +188,18 @@ void testGroupPus(TestManager *tester, const std::string &description) {
                                                  CCSDS::PacketDirection::Telemetry);
     CCSDS::Packet wrongDirection;
     TEST_VOID(wrongDirection.setMissionProfile(tcProfile));
-    TEST_VOID(wrongDirection.setDataFieldHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile)));
+    TEST_VOID(wrongDirection.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile)));
     TEST_VOID(wrongDirection.setApplicationData({1U}));
     if (!wrongDirection.serialize().empty()) return false;
 
     CCSDS::Packet wrongProfile;
     TEST_VOID(wrongProfile.setMissionProfile(tmProfile));
-    if (wrongProfile.setDataFieldHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile))) return false;
+    if (wrongProfile.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile))) return false;
 
     CCSDS::Packet wrongPec;
     TEST_VOID(wrongPec.setPrimaryHeader(primary(CCSDS::PacketDirection::Telecommand)));
     TEST_VOID(wrongPec.setMissionProfile(tcProfile));
-    TEST_VOID(wrongPec.setDataFieldHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile)));
+    TEST_VOID(wrongPec.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(tcProfile)));
     TEST_VOID(wrongPec.setApplicationData({1U}));
     wrongPec.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
     return wrongPec.serialize().empty();

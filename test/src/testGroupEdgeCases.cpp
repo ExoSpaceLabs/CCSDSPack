@@ -22,7 +22,7 @@ namespace {
     }
     file << "ccsds_version_number:int=0\n"
          << "ccsds_type:bool=false\n"
-         << "ccsds_data_field_header_flag:bool=false\n"
+         << "ccsds_secondary_header_flag:bool=false\n"
          << "ccsds_APID:int=" << apid << "\n"
          << "ccsds_segmented:bool=false\n";
     if (apid == static_cast<int>(CCSDS::IDLE_APID)) {
@@ -226,7 +226,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
 
   tester->unitTest("CRC16 covers primary header, secondary header and application data", []() {
     CCSDS::Packet packet;
-    TEST_VOID(packet.setDataFieldHeader({0x01, 0x02, 0x03}));
+    TEST_VOID(packet.setSecondaryHeader({0x01, 0x02, 0x03}));
     TEST_VOID(packet.setApplicationData({0x04, 0x05}));
 
     const std::vector<std::uint8_t> expected{
@@ -263,7 +263,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     return expected.size() == 8U
            && header.getVersionNumber() == 0U
            && header.getType() == 0U
-           && header.getDataFieldHeaderFlag() == 0U
+           && header.getSecondaryHeaderFlag() == 0U
            && header.getAPID() == 0U
            && header.getSequenceFlags() == CCSDS::UNSEGMENTED
            && header.getSequenceCount() == 0U
@@ -282,7 +282,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(expected));
-    return decoded.getPrimaryHeader().getDataFieldHeaderFlag() == 0U
+    return decoded.getPrimaryHeader().getSecondaryHeaderFlag() == 0U
            && decoded.getPrimaryHeader().getDataLength() == 3U
            && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0xAA, 0x55})
            && decoded.getCRC() == 0x2EBBU;
@@ -293,15 +293,15 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     if (!readHexResource("ccsds_golden_custom_secondary_crc16.hex", expected)) return false;
 
     CCSDS::Packet generated;
-    TEST_VOID(generated.setDataFieldHeader({0x01, 0x02, 0x03}));
+    TEST_VOID(generated.setSecondaryHeader({0x01, 0x02, 0x03}));
     TEST_VOID(generated.setApplicationData({0x04, 0x05}));
     if (generated.serialize() != expected) return false;
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(expected, 3U));
-    return decoded.getPrimaryHeader().getDataFieldHeaderFlag() == 1U
+    return decoded.getPrimaryHeader().getSecondaryHeaderFlag() == 1U
            && decoded.getPrimaryHeader().getDataLength() == 6U
-           && decoded.getDataFieldHeaderBytes() == std::vector<std::uint8_t>({0x01, 0x02, 0x03})
+           && decoded.getSecondaryHeaderBytes() == std::vector<std::uint8_t>({0x01, 0x02, 0x03})
            && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x04, 0x05})
            && decoded.getCRC() == 0x9903U;
   });
@@ -340,7 +340,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     const auto &header = decoded.getPrimaryHeader();
     return header.getVersionNumber() == 0U
            && header.getType() == 1U
-           && header.getDataFieldHeaderFlag() == 0U
+           && header.getSecondaryHeaderFlag() == 0U
            && header.getAPID() == 0x123U
            && header.getSequenceFlags() == CCSDS::UNSEGMENTED
            && header.getSequenceCount() == 0x123U

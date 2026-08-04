@@ -105,7 +105,7 @@ namespace CCSDSPackMcuTest {
     const std::vector<std::uint8_t> secondaryHeader{
       0x77, 0xFA, 0x0B, 0x00, 0x00, 0x0B, 0x05
     };
-    if (const auto result = templatePacket.setDataFieldHeader(
+    if (const auto result = templatePacket.setSecondaryHeader(
           secondaryHeader, "CustomSecondaryHeader"); !result) {
       return SetSecondaryHeaderFailed;
     }
@@ -154,11 +154,11 @@ namespace CCSDSPackMcuTest {
     const auto &header = decoded.getPrimaryHeader();
     if (header.getVersionNumber() != 0U
         || header.getType() != 1U
-        || header.getDataFieldHeaderFlag() != 1U
+        || header.getSecondaryHeaderFlag() != 1U
         || header.getAPID() != 0x123U
         || header.getSequenceFlags() != CCSDS::UNSEGMENTED
         || header.getSequenceCount() != 5U
-        || decoded.getDataFieldHeaderBytes() != secondaryHeader
+        || decoded.getSecondaryHeaderBytes() != secondaryHeader
         || decoded.getApplicationDataBytes() != applicationData
         || decoded.getCRC() != 0xB745U
         || decoded.getSerializedSize() != expectedPacket.size()) {
@@ -221,7 +221,7 @@ namespace CCSDSPackMcuTest {
         }); !result) {
       return InvalidIdleHeaderFailed;
     }
-    if (const auto result = invalidIdle.setDataFieldHeader({0x01}); !result) {
+    if (const auto result = invalidIdle.setSecondaryHeader({0x01}); !result) {
       return InvalidIdleSecondaryHeaderFailed;
     }
     if (const auto result = invalidIdle.setApplicationData({0x00}); !result) {

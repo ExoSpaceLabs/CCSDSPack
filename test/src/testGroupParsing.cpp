@@ -126,7 +126,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
 
     const auto versionResult = version.setVersionNumber(8);
     const auto typeResult = type.setType(2);
-    const auto dataFieldResult = dataFieldFlag.setDataFieldHeaderFlag(2);
+    const auto dataFieldResult = dataFieldFlag.setSecondaryHeaderFlag(2);
     const auto apidResult = apid.setAPID(2048);
     const auto flagsResult = sequenceFlags.setSequenceFlags(4);
     const auto countResult = sequenceCount.setSequenceCount(16384);

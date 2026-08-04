@@ -95,3 +95,20 @@ jobs:
           $installPrefix = Join-Path $PWD "build/install"
           $env:PATH = "$(Join-Path $installPrefix 'bin');$env:PATH"
           ctest --test-dir build/package_tester/shared_lib --output-on-failure
+
+      - name: Configure installed-package examples
+        shell: pwsh
+        run: |
+          $installPrefix = Join-Path $PWD "build/install"
+          cmake -S example `
+            -B build/examples/all `
+            -G "MinGW Makefiles" `
+            "-DCMAKE_PREFIX_PATH=$installPrefix"
+
+      - name: Build and run installed-package examples
+        shell: pwsh
+        run: |
+          $installPrefix = Join-Path $PWD "build/install"
+          cmake --build build/examples/all --
+          $env:PATH = "$(Join-Path $installPrefix 'bin');$env:PATH"
+          ctest --test-dir build/examples/all --output-on-failure

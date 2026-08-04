@@ -65,7 +65,7 @@ int main() {
   }
 
   const std::vector<std::uint8_t> secondaryHeader{0x77, 0xFA, 0x0B, 0x00, 0x00, 0x0B, 0x05};
-  if (const auto result = templatePacket.setDataFieldHeader(
+  if (const auto result = templatePacket.setSecondaryHeader(
         secondaryHeader, "CustomSecondaryHeader"); !result) {
     return failResult("set custom secondary header", result.error());
   }
@@ -140,11 +140,11 @@ int main() {
   const auto &header = view.getPrimaryHeader();
   if (header.getVersionNumber() != 0U
       || header.getType() != 1U
-      || header.getDataFieldHeaderFlag() != 1U
+      || header.getSecondaryHeaderFlag() != 1U
       || header.getAPID() != 0x123U
       || header.getSequenceFlags() != CCSDS::UNSEGMENTED
       || header.getSequenceCount() != 5U
-      || view.getDataFieldHeaderBytes() != secondaryHeader
+      || view.getSecondaryHeaderBytes() != secondaryHeader
       || view.getApplicationDataBytes() != std::vector<std::uint8_t>({0x01, 0x02, 0x03})
       || view.getCRC() != 0xB745U) {
     return fail("decoded fields", "decoded packet does not match the expected logical fields");
@@ -154,7 +154,7 @@ int main() {
   if (decoded.getPrimaryHeader64bit() == 0U
       || decoded.getFullPacketLength() != expectedPacket.size()
       || decoded.getSerializedSize() != expectedPacket.size()
-      || !decoded.getDataFieldHeaderFlag()
+      || !decoded.getSecondaryHeaderFlag()
       || decoded.getCRCVectorBytes() != std::vector<std::uint8_t>({0xB7, 0x45})) {
     return fail("packet API", "legacy or additive getters returned unexpected values");
   }
@@ -223,7 +223,7 @@ int main() {
       }); !result) {
     return failResult("Idle Packet setup", result.error());
   }
-  if (const auto result = invalidIdle.setDataFieldHeader({0x01}); !result) {
+  if (const auto result = invalidIdle.setSecondaryHeader({0x01}); !result) {
     return failResult("Idle Packet secondary header", result.error());
   }
   if (const auto result = invalidIdle.setApplicationData({0x00}); !result) {

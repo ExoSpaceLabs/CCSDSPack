@@ -85,7 +85,7 @@ namespace CCSDS {
      * @param sizeData Number of bytes to copy; must be non-zero.
      * @return Success, or a null-pointer, empty-span, or capacity error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::uint8_t *pData,
                                                 const std::size_t &sizeData);
 
     /**
@@ -95,7 +95,7 @@ namespace CCSDS {
      * @param pType Registered getType() string.
      * @return Success, or a null-pointer, unknown-type, size, or deserialization error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::uint8_t *pData,
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::uint8_t *pData,
                                                 const std::size_t &sizeData,
                                                 const std::string &pType);
 
@@ -105,22 +105,22 @@ namespace CCSDS {
      * @param pType Registered getType() string.
      * @return Success, or an unknown-type, size, capacity, or deserialization error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &data,
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::vector<std::uint8_t> &data,
                                                 const std::string &pType);
 
     /**
      * @brief Stores opaque secondary-header bytes using BufferHeader.
-     * @param dataFieldHeader Header bytes to copy.
+     * @param secondaryHeader Header bytes to copy.
      * @return Success, or INVALID_SECONDARY_HEADER_DATA when capacity is exceeded.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const std::vector<std::uint8_t> &dataFieldHeader);
+    [[nodiscard]] ResultBool setSecondaryHeader(const std::vector<std::uint8_t> &secondaryHeader);
 #ifndef CCSDS_MCU
     /**
      * @brief Creates and loads a registered secondary header from Config.
      * @param cfg Configuration containing secondary_header_type and type-specific fields.
      * @return Success, or a configuration/registration/header error.
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(const Config &cfg);
+    [[nodiscard]] ResultBool setSecondaryHeader(const Config &cfg);
 #endif
 
     /**
@@ -128,29 +128,19 @@ namespace CCSDS {
      * @param header Shared instance, or nullptr to remove the secondary header.
      * @note The DataField shares ownership and marks the header dirty for future update().
      */
-    [[nodiscard]] ResultBool setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
+    [[nodiscard]] ResultBool setSecondaryHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
 
     /** @brief Returns mutable access to the per-DataField secondary-header registry. */
-    SecondaryHeaderFactory &getDataFieldHeaderFactory() { return m_secondaryHeaderFactory; }
+    SecondaryHeaderFactory &getSecondaryHeaderFactory() { return m_secondaryHeaderFactory; }
     /** @brief Returns read-only access to the per-DataField secondary-header registry. */
-    [[nodiscard]] const SecondaryHeaderFactory &getDataFieldHeaderFactory() const {
+    [[nodiscard]] const SecondaryHeaderFactory &getSecondaryHeaderFactory() const {
       return m_secondaryHeaderFactory;
     }
 
-    [[nodiscard]] const PusSecondaryHeaderFactory &getPusDataFieldHeaderFactory() const {
+    /** @brief Returns read-only access to the fixed standards PUS codec registry. */
+    [[nodiscard]] const PusSecondaryHeaderFactory &getPusSecondaryHeaderFactory() const {
       return m_pusSecondaryHeaderFactory;
     }
-
-    /**
-     * @brief Returns a reference to the installed secondary header.
-     * @warning Dereferencing is undefined when no header is installed; check getDataFieldHeaderFlag() first.
-     */
-    SecondaryHeaderAbstract &getDataFieldHeader() { return *m_secondaryHeader; }
-    /**
-     * @brief Returns a read-only reference to the installed secondary header.
-     * @warning Dereferencing is undefined when no header is installed; check getDataFieldHeaderFlag() first.
-     */
-    [[nodiscard]] const SecondaryHeaderAbstract &getDataFieldHeader() const { return *m_secondaryHeader; }
 
     /**
      * @brief Sets total capacity shared by secondary-header and application-data bytes.
@@ -163,7 +153,9 @@ namespace CCSDS {
      * @brief Enables or disables calls to SecondaryHeaderAbstract::update().
      * @param enable True to let DataField::update()/serialize() refresh the header.
      */
-    void setDataFieldHeaderAutoUpdateStatus(const bool enable) { m_enableDataFieldUpdate = enable; }
+    void setSecondaryHeaderAutoUpdateStatus(const bool enable) {
+      m_enableSecondaryHeaderUpdate = enable;
+    }
 
     /** @brief Returns configured total packet data-field content capacity. */
     [[nodiscard]] std::uint16_t getDataFieldAbsoluteBytesSize() const;
@@ -178,9 +170,9 @@ namespace CCSDS {
     [[nodiscard]] std::uint16_t getDataFieldAvailableBytesSize() const;
 
     /** @brief Returns currently stored secondary-header bytes without finalizing. */
-    std::vector<std::uint8_t> getDataFieldHeaderBytes();
-    /** @brief Const overload of getDataFieldHeaderBytes(). */
-    [[nodiscard]] std::vector<std::uint8_t> getDataFieldHeaderBytes() const;
+    std::vector<std::uint8_t> getSecondaryHeaderBytes();
+    /** @brief Const overload of getSecondaryHeaderBytes(). */
+    [[nodiscard]] std::vector<std::uint8_t> getSecondaryHeaderBytes() const;
 
     /**
      * @brief Finalizes the secondary header and serializes the complete data-field content.
@@ -194,10 +186,12 @@ namespace CCSDS {
     [[nodiscard]] std::vector<std::uint8_t> getApplicationData() const;
 
     /** @brief Returns whether automatic secondary-header update is enabled. */
-    [[nodiscard]] bool getDataFieldHeaderAutoUpdateStatus() const { return m_enableDataFieldUpdate; }
+    [[nodiscard]] bool getSecondaryHeaderAutoUpdateStatus() const {
+      return m_enableSecondaryHeaderUpdate;
+    }
 
     /** @brief Returns true when a secondary-header object is installed. */
-    [[nodiscard]] bool getDataFieldHeaderFlag() const { return m_secondaryHeader != nullptr; }
+    [[nodiscard]] bool getSecondaryHeaderFlag() const { return m_secondaryHeader != nullptr; }
 
     /** @brief Returns shared mutable ownership of the installed secondary header, or nullptr. */
     std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
@@ -219,10 +213,10 @@ namespace CCSDS {
     PusSecondaryHeaderFactory m_pusSecondaryHeaderFactory;       ///< Fixed standards PUS codec registry.
     MissionProfile m_missionProfile{};                           ///< Explicit generic/PUS tailoring.
     std::vector<std::uint8_t> m_applicationData{};               ///< Application-data bytes only.
-    std::string m_dataFieldHeaderType{};                         ///< Lookup name of the installed header type.
+    std::string m_secondaryHeaderType{};                         ///< Lookup name of the installed header type.
     std::uint16_t m_dataPacketSize{2024};                        ///< Shared header/data capacity in bytes.
-    bool m_dataFieldHeaderUpdated{false};                        ///< True after the latest explicit update.
-    bool m_enableDataFieldUpdate{true};                          ///< Controls secondary-header update callbacks.
+    bool m_secondaryHeaderUpdated{false};                        ///< True after the latest explicit update.
+    bool m_enableSecondaryHeaderUpdate{true};                    ///< Controls secondary-header update callbacks.
   };
 }
 
