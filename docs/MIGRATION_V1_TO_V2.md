@@ -34,6 +34,42 @@ The packet-template key is likewise renamed from `ccsds_data_field_header_flag` 
 `getSecondaryHeader()` returns a nullable shared pointer; the former unchecked
 reference getter is removed.
 
+## Serialization and finalization results
+
+v1.2 returned packet bytes directly and used an empty vector for every finalization
+failure. v2 makes the error channel explicit:
+
+| v1.2 API | v2 API |
+|---|---|
+| `std::vector<std::uint8_t> Packet::serialize()` | `ResultBuffer Packet::serialize()` |
+| `void Packet::update()` | `ResultBool Packet::update()` |
+| `std::vector<std::uint8_t> DataField::serialize()` | `ResultBuffer DataField::serialize()` |
+| `std::vector<std::uint8_t> Manager::getPacketsBuffer()` | `ResultBuffer Manager::getPacketsBuffer()` |
+
+Before:
+
+```cpp
+const auto wire = packet.serialize();
+if (wire.empty()) {
+  // The failure reason is unavailable.
+}
+```
+
+After:
+
+```cpp
+const auto wire = packet.serialize();
+if (!wire) {
+  log(wire.error().code(), wire.error().message());
+  return wire.error().code();
+}
+send(wire.value());
+```
+
+`serialize()` invokes checked finalization. `update()` exposes the same validation
+and dependent-field update without allocating the complete packet output. Manager
+stream serialization propagates the first packet error unchanged.
+
 ## Construction
 
 Before:

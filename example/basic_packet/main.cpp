@@ -24,11 +24,9 @@ int main() {
     return fail("setApplicationData", result.error());
   }
 
-  const auto wire = packet.serialize();
-  if (wire.empty()) {
-    std::cerr << "serialize: packet finalization failed\n";
-    return 1;
-  }
+  const auto wireResult = packet.serialize();
+  if (!wireResult) return fail("serialize", wireResult.error());
+  const auto &wire = wireResult.value();
 
   CCSDS::Packet decoded;
   decoded.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);

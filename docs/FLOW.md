@@ -18,9 +18,9 @@ CCSDSPack exposes two main levels:
 2. Assign a version-0 `PrimaryHeader`.
 3. Configure the Packet Data Field capacity and packet-error-control mode.
 4. Add an optional secondary header and application data.
-5. Call `serialize()`.
+5. Call `serialize()` and check the returned `ResultBuffer`.
 
-`serialize()` finalizes Packet Data Length, the stored sequence count, and the optional CCSDSPack CRC16 trailer. Inspection getters do not perform hidden finalization.
+`serialize()` finalizes Packet Data Length, the stored sequence count, and the optional CCSDSPack CRC16 trailer. It returns the exact validation/finalization error instead of an empty byte vector. `update()` provides the same checked finalization without producing bytes. Inspection getters do not perform hidden finalization.
 
 ## Generate a packet stream
 
@@ -28,7 +28,7 @@ CCSDSPack exposes two main levels:
 2. Construct a `Manager` from the template or call `setPacketTemplate()`.
 3. Set the per-packet data capacity with `setDataFieldSize()`.
 4. Call `setApplicationData()` with the complete payload.
-5. Retrieve adjacent packet bytes with `getPacketsBuffer()` or persist them with `write()`.
+5. Retrieve adjacent packet bytes with `getPacketsBuffer()` and check its `ResultBuffer`, or persist them with `write()`.
 
 The Manager assigns `UNSEGMENTED` for one generated packet or `FIRST_SEGMENT`, `CONTINUING_SEGMENT`, and `LAST_SEGMENT` for a segmented sequence. Automatic Packet Sequence Count advances once per generated packet and wraps modulo 16384.
 

@@ -22,8 +22,8 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
     CCSDS::Packet second;
     TEST_VOID(first.setApplicationData({0x10, 0x20}));
     TEST_VOID(second.setApplicationData({0x30, 0x40, 0x50}));
-    const auto firstBytes = first.serialize();
-    const auto secondBytes = second.serialize();
+    const auto firstBytes = serializedPacket(first);
+    const auto secondBytes = serializedPacket(second);
 
     auto stream = firstBytes;
     stream.insert(stream.end(), secondBytes.begin(), secondBytes.end());
@@ -45,7 +45,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
   tester->unitTest("Existing deserialize parses the first declared packet and ignores trailing bytes.", [] {
     CCSDS::Packet source;
     TEST_VOID(source.setApplicationData({0xAA, 0x55}));
-    auto input = source.serialize();
+    auto input = serializedPacket(source);
     input.insert(input.end(), {0xDE, 0xAD, 0xBE, 0xEF});
 
     CCSDS::Packet decoded;
@@ -56,7 +56,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
   tester->unitTest("Truncated packet body returns a deterministic parsing error.", [] {
     CCSDS::Packet source;
     TEST_VOID(source.setApplicationData({1, 2, 3, 4}));
-    auto input = source.serialize();
+    auto input = serializedPacket(source);
     input.pop_back();
 
     CCSDS::Packet decoded;
@@ -67,7 +67,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
   tester->unitTest("A declared Packet Data Length larger than the buffer is rejected.", [] {
     CCSDS::Packet source;
     TEST_VOID(source.setApplicationData({1, 2}));
-    auto input = source.serialize();
+    auto input = serializedPacket(source);
     input[4] = 0x00;
     input[5] = 0x20;
 
@@ -79,7 +79,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
   tester->unitTest("CRC corruption returns INVALID_CHECKSUM without mutating the target packet.", [] {
     CCSDS::Packet source;
     TEST_VOID(source.setApplicationData({0x10, 0x20, 0x30}));
-    auto input = source.serialize();
+    auto input = serializedPacket(source);
     input[6] ^= 0x01U;
 
     CCSDS::Packet target;
@@ -94,7 +94,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
     CCSDS::Packet source;
     source.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
     TEST_VOID(source.setApplicationData({0x10, 0x20, 0x30}));
-    auto input = source.serialize();
+    auto input = serializedPacket(source);
     input[6] ^= 0x01U;
 
     CCSDS::Packet decoded;
@@ -106,10 +106,9 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Unsupported packet versions are rejected during packet parsing.", [] {
-    CCSDS::Packet source;
-    TEST_VOID(source.setPrimaryHeader(CCSDS::PrimaryHeader{1, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0}));
-    TEST_VOID(source.setApplicationData({0x01}));
-    const auto input = source.serialize();
+    const std::vector<std::uint8_t> input{
+      0x20U, 0x01U, 0xC0U, 0x00U, 0x00U, 0x00U, 0x01U
+    };
 
     CCSDS::Packet decoded;
     const auto result = decoded.deserializeBounded(input);
@@ -160,7 +159,7 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
   tester->unitTest("Separated header and body input must match the declared packet length.", [] {
     CCSDS::Packet source;
     TEST_VOID(source.setApplicationData({1, 2}));
-    const auto encoded = source.serialize();
+    const auto encoded = serializedPacket(source);
     const std::vector<std::uint8_t> header(encoded.begin(), encoded.begin() + 6);
     std::vector<std::uint8_t> body(encoded.begin() + 6, encoded.end());
     body.pop_back();

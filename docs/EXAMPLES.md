@@ -63,11 +63,12 @@ int main() {
     return dataResult.error().code();
   }
 
-  const std::vector<std::uint8_t> wire = packet.serialize();
-  if (wire.empty()) {
-    std::cerr << "Packet finalization failed\n";
-    return 1;
+  const auto wireResult = packet.serialize();
+  if (!wireResult) {
+    std::cerr << wireResult.error().message() << '\n';
+    return wireResult.error().code();
   }
+  const auto &wire = wireResult.value();
 
   CCSDS::Packet decoded; // CRC16 is also the receiving default
   const auto consumedResult = decoded.deserializeBounded(wire);
@@ -84,7 +85,7 @@ int main() {
 }
 ```
 
-`serialize()` finalizes Packet Data Length and the optional CRC16 trailer. Getters inspect the stored state and do not perform hidden finalization.
+`serialize()` returns `ResultBuffer` and reports the exact finalization error. `update()` returns `ResultBool` when finalization without bytes is required. Getters inspect the stored state and do not perform hidden finalization.
 
 ## Segment a payload with Manager
 
@@ -119,7 +120,9 @@ int main() {
     return dataResult.error().code();
   }
 
-  const auto stream = manager.getPacketsBuffer();
+  const auto streamResult = manager.getPacketsBuffer();
+  if (!streamResult) return streamResult.error().code();
+  const auto &stream = streamResult.value();
   std::cout << "Generated " << manager.getTotalPackets()
             << " packets in " << stream.size() << " bytes\n";
 
@@ -197,7 +200,7 @@ CCSDS::ResultBool parseStream(const std::vector<std::uint8_t>& stream) {
 }
 ```
 
-For large or zero-copy streams, wrap this policy around the application's own buffering layer. The current v1 API accepts vectors.
+For large or zero-copy streams, wrap this policy around the application's own buffering layer. The current v2 parsing API accepts vectors.
 
 ## Create CRC-free packets
 
@@ -209,7 +212,9 @@ sender.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
 sender.setDataFieldSize(1024);
 sender.setPrimaryHeader({0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0});
 sender.setApplicationData({0x01, 0x02});
-const auto wire = sender.serialize();
+const auto wireResult = sender.serialize();
+if (!wireResult) return wireResult.error().code();
+const auto &wire = wireResult.value();
 
 CCSDS::Packet receiver;
 receiver.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
@@ -235,7 +240,9 @@ if (!secondaryResult) return secondaryResult.error().code();
 const auto dataResult = packet.setApplicationData({0x10, 0x20});
 if (!dataResult) return dataResult.error().code();
 
-const auto wire = packet.serialize();
+const auto wireResult = packet.serialize();
+if (!wireResult) return wireResult.error().code();
+const auto &wire = wireResult.value();
 ```
 
 When parsing an opaque secondary header, provide its byte count:

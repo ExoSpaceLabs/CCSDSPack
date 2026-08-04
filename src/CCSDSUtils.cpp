@@ -199,7 +199,12 @@ void printPackets(CCSDS::Manager& manager) {
     std::cout << "[ CCSDS Manager ] Printing Packet [ " << idx << " ]:" << std::endl;
     std::cout << "[ CCSDS Manager ] Packet Length : " << packet.getFullPacketLength() << " bytes" << std::endl;
     std::cout << "[ CCSDS Manager ] Data ";
-    printBufferData(packet.serialize(), 20);
+    const auto serialized = packet.serialize();
+    if (serialized) {
+      printBufferData(serialized.value(), 20);
+    } else {
+      std::cout << "[ Error ]: " << serialized.error().message() << std::endl;
+    }
     printPacket(packet);
     idx++;
   }

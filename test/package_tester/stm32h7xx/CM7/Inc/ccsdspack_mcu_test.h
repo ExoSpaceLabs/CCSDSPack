@@ -133,7 +133,9 @@ namespace CCSDSPackMcuTest {
       0xB7, 0x45
     };
 
-    const auto packetsData = manager.getPacketsBuffer();
+    const auto packetsResult = manager.getPacketsBuffer();
+    if (!packetsResult) return WireVectorMismatch;
+    const auto &packetsData = packetsResult.value();
     if (packetsData != expectedPacket) {
       return WireVectorMismatch;
     }
@@ -185,7 +187,9 @@ namespace CCSDSPackMcuTest {
     const std::vector<std::uint8_t> expectedCrcDisabled{
       0x01, 0x23, 0xC0, 0x07, 0x00, 0x01, 0xAA, 0x55
     };
-    const auto crcDisabledBytes = crcDisabled.serialize();
+    const auto crcDisabledResult = crcDisabled.serialize();
+    if (!crcDisabledResult) return CrcFreeVectorMismatch;
+    const auto &crcDisabledBytes = crcDisabledResult.value();
     if (crcDisabledBytes != expectedCrcDisabled) {
       return CrcFreeVectorMismatch;
     }
@@ -211,7 +215,7 @@ namespace CCSDSPackMcuTest {
     if (const auto result = invalidVersion.setApplicationData({0x01}); !result) {
       return InvalidVersionDataFailed;
     }
-    if (!invalidVersion.serialize().empty()) {
+    if (invalidVersion.serialize()) {
       return InvalidVersionSerialized;
     }
 
@@ -227,7 +231,7 @@ namespace CCSDSPackMcuTest {
     if (const auto result = invalidIdle.setApplicationData({0x00}); !result) {
       return InvalidIdleDataFailed;
     }
-    if (!invalidIdle.serialize().empty()) {
+    if (invalidIdle.serialize()) {
       return InvalidIdleSerialized;
     }
 
@@ -240,8 +244,10 @@ namespace CCSDSPackMcuTest {
     if (const auto result = validIdle.setApplicationData({0x00}); !result) {
       return ValidIdleDataFailed;
     }
-    const auto validIdleBytes = validIdle.serialize();
-    if (validIdleBytes.empty() || validIdle.getSerializedSize() != validIdleBytes.size()) {
+    const auto validIdleResult = validIdle.serialize();
+    if (!validIdleResult) return ValidIdleSerializationFailed;
+    const auto &validIdleBytes = validIdleResult.value();
+    if (validIdle.getSerializedSize() != validIdleBytes.size()) {
       return ValidIdleSerializationFailed;
     }
 

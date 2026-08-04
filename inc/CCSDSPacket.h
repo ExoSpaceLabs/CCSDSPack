@@ -59,9 +59,10 @@ namespace CCSDS {
    *
    * @par Finalization
    * Setters mark the packet dirty. Getters only inspect the currently stored
-   * state and never call update(). update() recalculates dependent fields without
-   * producing bytes. serialize() calls update() and returns the finalized wire
-   * representation. Packet finalization accepts only encoded Packet Version
+   * state and never call update(). update() recalculates dependent fields and returns
+   * any validation error without producing bytes. serialize() calls update() and
+   * returns either the finalized wire representation or the same explicit error.
+   * Packet finalization accepts only encoded Packet Version
    * Number 000, as required by CCSDS 133.0-B-2.
    *
    * @par Idle packets
@@ -81,9 +82,10 @@ namespace CCSDS {
    *                          CCSDS::UNSEGMENTED, 0, 0});
    * packet.setApplicationData({0x10, 0x20});
    * const auto wire = packet.serialize();
+   * if (!wire) return;
    *
    * CCSDS::Packet decoded;
-   * const auto consumed = decoded.deserializeBounded(wire);
+   * const auto consumed = decoded.deserializeBounded(wire.value());
    * @endcode
    */
   class Packet {
@@ -339,10 +341,9 @@ namespace CCSDS {
 
     /**
      * @brief Finalizes and serializes the packet under the v2 mission profile.
-     * @return Complete wire bytes, or an empty vector when the header, version,
-     * Idle Packet structure, size, or update state is invalid.
+     * @return Complete wire bytes, or a specific header, profile, data, or finalization error.
      */
-    std::vector<std::uint8_t> serialize();
+    [[nodiscard]] ResultBuffer serialize();
 
     /** @brief Returns the currently stored six primary-header bytes without finalizing. */
     std::vector<std::uint8_t> getPrimaryHeaderBytes();
@@ -432,12 +433,12 @@ namespace CCSDS {
     /**
      * @brief Finalizes dependent packet state without returning serialized bytes.
      *
-     * When updates are enabled and the packet satisfies the active mission profile, this
-     * refreshes the secondary header, encodes Packet Data Length as Packet Data
-     * Field octets minus one, writes the cached sequence count, and recalculates
-     * the optional CRC16 trailer over the finalized header and preceding data.
+     * When updates are enabled, this validates the active mission profile, refreshes
+     * the secondary header, encodes Packet Data Length as Packet Data Field octets
+     * minus one, writes the cached sequence count, and recalculates the optional CRC16.
+     * @return Success, or a specific header, profile, data, or secondary-header error.
      */
-    void update();
+    [[nodiscard]] ResultBool update();
 
     /**
      * @brief Loads packet construction settings from a configuration file.

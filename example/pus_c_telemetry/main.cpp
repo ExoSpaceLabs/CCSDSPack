@@ -39,7 +39,9 @@ int main() {
     return fail("setApplicationData", result.error());
   }
 
-  const auto wire = packet.serialize();
+  const auto wireResult = packet.serialize();
+  if (!wireResult) return fail("serialize", wireResult.error());
+  const auto &wire = wireResult.value();
   CCSDS::Packet decoded;
   if (const auto result = decoded.setMissionProfile(profile); !result) {
     return fail("setMissionProfile decoder", result.error());

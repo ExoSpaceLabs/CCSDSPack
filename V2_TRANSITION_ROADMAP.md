@@ -48,7 +48,9 @@ Deliver a breaking, standards-oriented v2 release on the validated v1.2 CCSDS 13
 
 Completed and integrated:
 
-- 98 native tests, including the four-selector PUS factory matrix and v2 configuration naming;
+- checked `Packet::update()`, `Packet::serialize()`, `DataField::serialize()`, and Manager stream serialization results;
+- native tests covering exact finalization, profile, header, data-length, and Manager propagation errors;
+- 101 native tests, including the four-selector PUS factory matrix and v2 configuration naming;
 - PUS-A/PUS-C fixed byte vectors and negative vectors;
 - ASan/UBSan validation;
 - MCU compile with `-fno-exceptions -fno-rtti`;

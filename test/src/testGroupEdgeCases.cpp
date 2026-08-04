@@ -70,7 +70,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     std::vector<uint8_t> largeData(1024, 0x5A);
     TEST_VOID(pkt.setApplicationData(largeData));
 
-    auto buffer = pkt.serialize();
+    auto buffer = serializedPacket(pkt);
     if (buffer.size() < 1024 + 6 + 2) return false;
 
     CCSDS::Packet pktDec;
@@ -124,7 +124,10 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       0, 0, 0, static_cast<std::uint16_t>(CCSDS::IDLE_APID + 1U),
       CCSDS::UNSEGMENTED, 0, 0
     });
-    return !result && packet.serialize().empty() && packet.getPrimaryHeaderBytes().empty();
+    const auto serialized = packet.serialize();
+    return !result && !serialized
+           && serialized.error().code() == CCSDS::INVALID_HEADER_DATA
+           && packet.getPrimaryHeaderBytes().empty();
   });
 
   tester->unitTest("Configuration supports the complete APID range and rejects overflow", []() {
@@ -167,7 +170,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     if (packet.getPacketErrorControlSize() != 2) return false;
 
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
-    const auto serialized = packet.serialize();
+    const auto serialized = serializedPacket(packet);
     return serialized.size() == 10 && packet.getFullPacketLength() == 10;
   });
 
@@ -176,7 +179,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
 
-    const auto serialized = packet.serialize();
+    const auto serialized = serializedPacket(packet);
     if (serialized.size() != 8) return false;
     if (packet.getFullPacketLength() != 8) return false;
     if (!packet.getCRCVectorBytes().empty()) return false;
@@ -191,7 +194,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   tester->unitTest("CRC16 mode still strips the received error control field", []() {
     CCSDS::Packet packet;
     TEST_VOID(packet.setApplicationData({0x10, 0x20, 0x30}));
-    const auto serialized = packet.serialize();
+    const auto serialized = serializedPacket(packet);
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(serialized));
@@ -207,7 +210,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       0x00, 0x00, 0xC0, 0x00, 0x00, 0x03, 0xAA, 0x55, 0x2E, 0xBB
     };
 
-    const auto serialized = packet.serialize();
+    const auto serialized = serializedPacket(packet);
     return serialized == expected && packet.getPrimaryHeader().getDataLength() == 3U;
   });
 
@@ -220,7 +223,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       0x00, 0x00, 0xC0, 0x00, 0x00, 0x01, 0xAA, 0x55
     };
 
-    const auto serialized = packet.serialize();
+    const auto serialized = serializedPacket(packet);
     return serialized == expected && packet.getPrimaryHeader().getDataLength() == 1U;
   });
 
@@ -235,7 +238,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       0x99, 0x03
     };
 
-    return packet.serialize() == expected;
+    return serializedPacket(packet) == expected;
   });
 
   tester->unitTest("Configured CRC16 parameters remain effective", []() {
@@ -247,7 +250,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       0x00, 0x00, 0xC0, 0x00, 0x00, 0x03, 0xAA, 0x55, 0x1F, 0x85
     };
 
-    return packet.serialize() == expected;
+    return serializedPacket(packet) == expected;
   });
 
   tester->unitTest("Independent minimum packet vector encodes and decodes", []() {
@@ -255,7 +258,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     if (!readHexResource("ccsds_golden_minimum_crc16.hex", expected)) return false;
 
     CCSDS::Packet generated;
-    if (generated.serialize() != expected) return false;
+    if (serializedPacket(generated) != expected) return false;
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(expected));
@@ -278,7 +281,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
 
     CCSDS::Packet generated;
     TEST_VOID(generated.setApplicationData({0xAA, 0x55}));
-    if (generated.serialize() != expected) return false;
+    if (serializedPacket(generated) != expected) return false;
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(expected));
@@ -295,7 +298,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     CCSDS::Packet generated;
     TEST_VOID(generated.setSecondaryHeader({0x01, 0x02, 0x03}));
     TEST_VOID(generated.setApplicationData({0x04, 0x05}));
-    if (generated.serialize() != expected) return false;
+    if (serializedPacket(generated) != expected) return false;
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(expected, 3U));
@@ -313,7 +316,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     CCSDS::Packet generated;
     generated.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
     TEST_VOID(generated.setApplicationData({0xAA, 0x55}));
-    if (generated.serialize() != expected) return false;
+    if (serializedPacket(generated) != expected) return false;
 
     CCSDS::Packet decoded;
     decoded.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
@@ -333,7 +336,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       0, 1, 0, 0x123, CCSDS::UNSEGMENTED, 0x123, 0
     }));
     TEST_VOID(generated.setApplicationData({0xDE, 0xAD}));
-    if (generated.serialize() != expected) return false;
+    if (serializedPacket(generated) != expected) return false;
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(expected));
@@ -365,8 +368,8 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     }));
     TEST_VOID(generatedSecond.setApplicationData({0xBB}));
 
-    auto generated = generatedFirst.serialize();
-    const auto generatedSecondBytes = generatedSecond.serialize();
+    auto generated = serializedPacket(generatedFirst);
+    const auto generatedSecondBytes = serializedPacket(generatedSecond);
     generated.insert(generated.end(), generatedSecondBytes.begin(), generatedSecondBytes.end());
     if (generated != expected) return false;
 
@@ -401,7 +404,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     packet.setDataFieldSize(0xFFFEU);
     TEST_VOID(packet.setApplicationData(std::vector<std::uint8_t>(0xFFFEU, 0x00)));
 
-    const auto serialized = packet.serialize();
+    const auto serialized = serializedPacket(packet);
     return serialized.size() == 0x10006U
            && serialized[4] == 0xFF
            && serialized[5] == 0xFF
@@ -412,6 +415,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
     packet.setDataFieldSize(0xFFFFU);
     TEST_VOID(packet.setApplicationData(std::vector<std::uint8_t>(0xFFFFU, 0x00)));
-    return packet.serialize().empty();
+    const auto result = packet.serialize();
+    return !result && result.error().code() == CCSDS::INVALID_DATA;
   });
 }

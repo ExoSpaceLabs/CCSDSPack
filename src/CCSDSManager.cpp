@@ -73,10 +73,6 @@ CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   RET_IF_ERR_MSG(packet.getPrimaryHeader().getHeaderStatus() == INVALID,
                  ErrorCode::INVALID_HEADER_DATA, "Cannot set an invalid packet template");
 
-  packet.update();
-  RET_IF_ERR_MSG(packet.getPrimaryHeader().getHeaderStatus() == INVALID,
-                 ErrorCode::INVALID_HEADER_DATA, "Cannot finalize an invalid packet template");
-
   m_templatePacket = std::move(packet);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK)
                     | (m_templatePacket.getPrimaryHeader().getSequenceCount()
@@ -197,10 +193,8 @@ void CCSDS::Manager::setAutoValidateEnable(const bool enable) {
 
 CCSDS::ResultBuffer CCSDS::Manager::getPacketTemplate() {
   auto packet = m_templatePacket;
-  const auto data = packet.serialize();
-  RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA,
-                 "Cannot get Packet template data, data is empty");
-  return data;
+  packet.setUpdatePacketEnable(true);
+  return packet.serialize();
 }
 
 CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const std::uint16_t index) {
@@ -209,20 +203,18 @@ CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const std::uint16_t i
 
   auto packet = m_packets[index];
   if (m_validateEnable) {
-    packet.update();
+    const auto updateResult = packet.update();
+    if (!updateResult) return updateResult.error();
     const std::string errorMessage =
       "Validation failure for packet at index " + std::to_string(index);
     RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
                    errorMessage);
   }
 
-  const auto packetBuffer = packet.serialize();
-  RET_IF_ERR_MSG(packetBuffer.empty(), ErrorCode::INVALID_HEADER_DATA,
-                 "Cannot serialize packet with an invalid header");
-  return packetBuffer;
+  return packet.serialize();
 }
 
-std::vector<std::uint8_t> CCSDS::Manager::getPacketsBuffer() const {
+CCSDS::ResultBuffer CCSDS::Manager::getPacketsBuffer() const {
   std::vector<std::uint8_t> buffer;
   for (auto packet : m_packets) {
     if (m_syncPattEnable) {
@@ -232,8 +224,8 @@ std::vector<std::uint8_t> CCSDS::Manager::getPacketsBuffer() const {
       buffer.push_back(static_cast<std::uint8_t>(m_syncPattern & 0xFFU));
     }
 
-    const auto packetBuffer = packet.serialize();
-    if (packetBuffer.empty()) return {};
+    std::vector<std::uint8_t> packetBuffer;
+    ASSIGN_MV(packetBuffer, packet.serialize());
     buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());
   }
   return buffer;
@@ -365,10 +357,8 @@ CCSDS::ResultBool CCSDS::Manager::read(const std::string &binaryFile) {
 }
 
 CCSDS::ResultBool CCSDS::Manager::write(const std::string &binaryFile) const {
-  const auto buffer = getPacketsBuffer();
-  RET_IF_ERR_MSG(!m_packets.empty() && buffer.empty(),
-                 ErrorCode::INVALID_HEADER_DATA,
-                 "Cannot write packet stream containing an invalid header");
+  std::vector<std::uint8_t> buffer;
+  ASSIGN_MV(buffer, getPacketsBuffer());
   FORWARD_RESULT(writeBinaryFile(buffer, binaryFile));
   return true;
 }

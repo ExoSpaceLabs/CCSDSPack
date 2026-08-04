@@ -36,7 +36,7 @@ namespace {
     auto packet = makePacket(apid, flags, count, CCSDS::PacketErrorControlMode::CRC16,
                              0U, type, 0U);
     const auto result = packet.setApplicationData({1, 2});
-    if (!result || packet.serialize().empty()) {
+    if (!result || !packet.serialize()) {
       return {};
     }
     packet.setUpdatePacketEnable(false);
@@ -81,7 +81,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     packet.setSequenceFlags(CCSDS::UNSEGMENTED);
     TEST_VOID(packet.setSequenceCount(123));
     TEST_VOID(packet.setApplicationData({0xAA}));
-    const auto encoded = packet.serialize();
+    const auto encoded = serializedPacket(packet);
     return !encoded.empty()
            && packet.getPrimaryHeader().getSequenceCount() == 123U
            && (static_cast<std::uint16_t>(encoded[2] & 0x3FU) << 8U | encoded[3]) == 123U;
@@ -211,8 +211,8 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
   tester->unitTest("Concatenated buffer loads reject mixed identifiers transactionally.", [] {
     auto packet1 = finalizedPacket(1, CCSDS::FIRST_SEGMENT, 1, 0);
     auto packet2 = finalizedPacket(1, CCSDS::LAST_SEGMENT, 2, 1);
-    auto buffer = packet1.serialize();
-    const auto bytes2 = packet2.serialize();
+    auto buffer = serializedPacket(packet1);
+    const auto bytes2 = serializedPacket(packet2);
     buffer.insert(buffer.end(), bytes2.begin(), bytes2.end());
 
     CCSDS::Manager manager;
@@ -243,7 +243,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     producer.setDataFieldSize(5);
     const std::vector<std::uint8_t> input{1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 7};
     TEST_VOID(producer.setApplicationData(input));
-    const auto buffer = producer.getPacketsBuffer();
+    const auto buffer = serializedPackets(producer);
 
     CCSDS::Manager consumer;
     consumer.setAutoValidateEnable(false);
@@ -251,7 +251,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> reassembled;
     TEST_RET(reassembled, consumer.getApplicationDataBuffer());
     if (consumer.getTotalPackets() != 3U || reassembled != input
-        || consumer.getPacketsBuffer() != buffer) {
+        || serializedPackets(consumer) != buffer) {
       return false;
     }
 
@@ -268,7 +268,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     producer.setDataFieldSize(3);
     producer.setSyncPatternEnable(true);
     TEST_VOID(producer.setApplicationData({1, 2, 3, 4, 5}));
-    const auto framed = producer.getPacketsBuffer();
+    const auto framed = serializedPackets(producer);
     if (framed.size() < 4U || framed[0] != 0x1A || framed[1] != 0xCF
         || framed[2] != 0xFC || framed[3] != 0x1D) {
       return false;
@@ -288,7 +288,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     producer.setAutoValidateEnable(false);
     producer.setDataFieldSize(4);
     TEST_VOID(producer.setApplicationData({1, 2, 3, 4, 5, 6}));
-    const auto expected = producer.getPacketsBuffer();
+    const auto expected = serializedPackets(producer);
     const std::string path = "test_resources/myPackets.bin";
     TEST_VOID(producer.write(path));
 
@@ -296,7 +296,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     consumer.setAutoValidateEnable(false);
     TEST_VOID(consumer.read(path));
     std::remove(path.c_str());
-    return consumer.getPacketsBuffer() == expected;
+    return serializedPackets(consumer) == expected;
   });
 
   tester->unitTest("Manager preserves secondary headers while segmenting.", [] {
@@ -327,6 +327,17 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
     TEST_RET(serialized, manager.getPacketBufferAtIndex(0));
     return serialized == std::vector<std::uint8_t>({0x00, 0x01, 0xC0, 0x00,
                                                      0x00, 0x01, 0xAA, 0x55});
+  });
+
+  tester->unitTest("Manager propagates packet serialization errors.", [] {
+    CCSDS::Manager manager;
+    manager.setAutoValidateEnable(false);
+    TEST_VOID(manager.addPacket(makePacket(1U, CCSDS::UNSEGMENTED, 0U,
+                                           CCSDS::PacketErrorControlMode::CRC16,
+                                           1U)));
+
+    const auto result = manager.getPacketsBuffer();
+    return !result && result.error().code() == CCSDS::INVALID_HEADER_DATA;
   });
 
   tester->unitTest("Manager rejects data without a template or with an empty payload.", [] {

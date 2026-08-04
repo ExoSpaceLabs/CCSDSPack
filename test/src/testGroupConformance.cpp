@@ -34,7 +34,8 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
       1, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0
     }));
     TEST_VOID(packet.setApplicationData({0x01}));
-    return packet.serialize().empty();
+    const auto result = packet.serialize();
+    return !result && result.error().code() == CCSDS::INVALID_HEADER_DATA;
   });
 
   tester->unitTest("Configuration accepts only Packet Version Number zero", []() {
@@ -69,7 +70,8 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
     }));
     TEST_VOID(packet.setSecondaryHeader({0x10}));
     TEST_VOID(packet.setApplicationData({0x00}));
-    return packet.serialize().empty();
+    const auto result = packet.serialize();
+    return !result && result.error().code() == CCSDS::INVALID_HEADER_DATA;
   });
 
   tester->unitTest("Idle Packet rejects an asserted secondary-header flag", []() {
@@ -78,7 +80,8 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
       0, 0, 1, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
     }));
     TEST_VOID(packet.setApplicationData({0x00}));
-    return packet.serialize().empty();
+    const auto result = packet.serialize();
+    return !result && result.error().code() == CCSDS::INVALID_HEADER_DATA;
   });
 
   tester->unitTest("Idle Packet requires mission-defined idle user data", []() {
@@ -86,7 +89,8 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.setPrimaryHeader(CCSDS::PrimaryHeader{
       0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
     }));
-    return packet.serialize().empty();
+    const auto result = packet.serialize();
+    return !result && result.error().code() == CCSDS::INVALID_DATA;
   });
 
   tester->unitTest("Received Idle Packet rejects secondary-header flag", []() {
@@ -117,7 +121,7 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
       0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
     }));
     TEST_VOID(packet.setApplicationData({0x00}));
-    const auto bytes = packet.serialize();
+    const auto bytes = serializedPacket(packet);
     return bytes.size() == 9U
            && packet.getPrimaryHeader().getHeaderStatus() == CCSDS::IDLE
            && packet.getPrimaryHeader().getSecondaryHeaderFlag() == 0U;
@@ -127,7 +131,7 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
     packet.setDataFieldSize(0xFFFEU);
     TEST_VOID(packet.setApplicationData(std::vector<std::uint8_t>(0xFFFEU, 0x00)));
-    const auto bytes = packet.serialize();
+    const auto bytes = serializedPacket(packet);
     return bytes.size() == 65542U
            && packet.getSerializedSize() == 65542U
            && packet.getFullPacketLength() == 0xFFFFU;

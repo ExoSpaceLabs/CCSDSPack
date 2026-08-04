@@ -57,6 +57,17 @@ namespace {
   private:
     std::vector<std::uint8_t> m_data{};
   };
+
+  class FailingSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
+  public:
+    [[nodiscard]] CCSDS::ResultBool deserialize(
+        const std::vector<std::uint8_t> &) override { return true; }
+    [[nodiscard]] std::uint16_t getSize() const override { return 1U; }
+    [[nodiscard]] std::string getType() const override { return "FailingSecondaryHeader"; }
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return {}; }
+    void update(CCSDS::DataField *) override {}
+    CCSDS::ResultBool loadFromConfig(const Config &) override { return true; }
+  };
 }
 
 void testGroupCore(TestManager *tester, const std::string &description) {
@@ -86,7 +97,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     CCSDS::Packet packet;
     TEST_VOID(packet.setApplicationData({1, 2, 3, 4, 5}));
     if (packet.getCRC() != 0U) return false;
-    packet.update();
+    TEST_VOID(packet.update());
     return packet.getApplicationDataBytes() == std::vector<std::uint8_t>({1, 2, 3, 4, 5})
            && packet.getSecondaryHeaderBytes().empty()
            && packet.getCRC() == 0x3B8D;
@@ -106,7 +117,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     const auto dataField = packet.getFullDataFieldBytes();
     if (dataField != std::vector<std::uint8_t>({1, 2, 3, 4, 5})) return false;
     if (packet.getCRC() != 0U) return false;
-    packet.update();
+    TEST_VOID(packet.update());
     return packet.getCRC() == 0x9903;
   });
 
@@ -160,7 +171,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<UpdatingSecondaryHeader>()));
     TEST_VOID(packet.setApplicationData({0xAA}));
 
-    const auto encoded = packet.serialize();
+    const auto encoded = serializedPacket(packet);
     return !encoded.empty()
            && packet.getPrimaryHeader().getSequenceCount() == 9U
            && packet.getPrimaryHeader().getDataLength() == 3U
@@ -168,12 +179,38 @@ void testGroupCore(TestManager *tester, const std::string &description) {
            && packet.getCRC() != 0U;
   });
 
+  tester->unitTest("Finalization and serialization return secondary-header errors.", [] {
+    CCSDS::Packet packet;
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<FailingSecondaryHeader>()));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+
+    const auto updateResult = packet.update();
+    const auto serializeResult = packet.serialize();
+    return !updateResult
+           && updateResult.error().code() == CCSDS::INVALID_SECONDARY_HEADER_DATA
+           && !serializeResult
+           && serializeResult.error().code() == CCSDS::INVALID_SECONDARY_HEADER_DATA;
+  });
+
+  tester->unitTest("Serialization reports a stale manual Packet Data Length.", [] {
+    CCSDS::Packet packet;
+    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    TEST_VOID(packet.setPrimaryHeader(
+      CCSDS::PrimaryHeader{0U, 0U, 0U, 1U, CCSDS::UNSEGMENTED, 0U, 7U}));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    packet.setUpdatePacketEnable(false);
+
+    const auto result = packet.serialize();
+    return !result && result.error().code() == CCSDS::INVALID_DATA
+           && result.error().message().find("Packet Data Length") != std::string::npos;
+  });
+
   tester->unitTest("Parsed packet inspection preserves received sequence and CRC.", [] {
     CCSDS::Packet source;
     TEST_VOID(source.setPrimaryHeader(
       CCSDS::PrimaryHeader{0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 123, 0}));
     TEST_VOID(source.setApplicationData({0xDE, 0xAD}));
-    const auto encoded = source.serialize();
+    const auto encoded = serializedPacket(source);
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(encoded));
@@ -194,18 +231,18 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     CCSDS::Packet source;
     TEST_VOID(source.setSecondaryHeader({1, 2}));
     TEST_VOID(source.setApplicationData({3, 4, 5}));
-    const auto encoded = source.serialize();
+    const auto encoded = serializedPacket(source);
 
     CCSDS::Packet decoded;
     TEST_VOID(decoded.deserialize(encoded, 2));
     decoded.setUpdatePacketEnable(false);
-    return decoded.serialize() == encoded;
+    return serializedPacket(decoded) == encoded;
   });
 
   tester->unitTest("Binary file helpers round-trip packet bytes.", [] {
     CCSDS::Packet packet;
     TEST_VOID(packet.setApplicationData({0xDE, 0xAD, 0xBE, 0xEF}));
-    const auto encoded = packet.serialize();
+    const auto encoded = serializedPacket(packet);
     const std::string path = "test_resources/core_packet.bin";
     TEST_VOID(writeBinaryFile(encoded, path));
     std::vector<std::uint8_t> decoded;

@@ -118,6 +118,7 @@ The following diagram shows the main v1.x relationships between the user applica
 ## Documentation
 
 - [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/)
+- [CCSDS compliance matrix](CCSDS_COMPLIANCE.md)
 - [CCSDS 133.0-B-2 EC2 PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
 - [PUS and mission tailoring](docs/MISSION_TAILORING.md)
 - [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md)
@@ -244,7 +245,7 @@ int main() {
   }
 
   const auto wire = manager.getPacketsBuffer();
-  return wire.empty() ? 1 : 0;
+  return wire && !wire.value().empty() ? 0 : 1;
 }
 ```
 
@@ -299,9 +300,10 @@ packet.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(
   profile, 17, 1, 0x1234, 0x09));
 packet.setApplicationData({0x10, 0x20});
 const auto wire = packet.serialize();
+if (!wire) return wire.error().code();
 ```
 
-All checked results should be inspected in production code; they are omitted above only to keep the example compact.
+All checked setter results should also be inspected in production code; they are omitted above only to keep the example compact.
 
 ## Compatibility
 
