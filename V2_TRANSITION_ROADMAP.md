@@ -18,6 +18,7 @@ Deliver a breaking, standards-oriented v2 release on the validated v1.2 CCSDS 13
 - `SecondaryHeaderFactory` handles custom, direction-neutral extensions.
 - fixed `PusSecondaryHeaderFactory` owns the reserved canonical selectors.
 - both factory paths create fresh mutable instances.
+- all four canonical selector paths are covered directly by the PUS factory tests.
 
 ## Stage 2: Mission profiles — implemented for the codec boundary
 
@@ -44,17 +45,18 @@ Deliver a breaking, standards-oriented v2 release on the validated v1.2 CCSDS 13
 
 ## Stage 5: Evidence — codec evidence implemented, release evidence ongoing
 
-Completed locally:
+Completed and integrated:
 
-- 96 native tests;
+- 97 native tests, including the four-selector PUS factory matrix;
 - PUS-A/PUS-C fixed byte vectors and negative vectors;
 - ASan/UBSan validation;
 - MCU compile with `-fno-exceptions -fno-rtti`;
-- diff hygiene.
+- diff hygiene;
+- Linux, Windows, and Doxygen workflows on `develop`;
+- installed-package consumer validation with v2 version expectations.
 
 Remaining release-level evidence:
 
-- repository Linux/Windows/Doxygen workflows after integration;
 - installed-package and CLI PUS-profile integration;
 - bounded fuzz smoke jobs;
 - arm64 and STM32 hardware repetition with representative PUS vectors.
@@ -68,8 +70,8 @@ Remaining release-level evidence:
 
 ## Stage 7: Release preparation
 
-1. Merge `v2.0.0-dev` into `develop` and use the existing integration CI.
+1. Continue reviewed v2 changes through pull requests from `v2.0.0-dev` to `develop`.
 2. Resolve integration failures without weakening fixed vectors or profile checks.
-3. Complete remaining CLI/package/fuzz/hardware gates.
+3. Complete remaining CLI/profile/fuzz/hardware gates.
 4. Synchronize release notes and final compliance traceability.
 5. Merge approved `develop` into `main` and tag `v2.0.0` from `main` only.

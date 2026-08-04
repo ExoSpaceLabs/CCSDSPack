@@ -26,6 +26,7 @@
 - [x] Custom headers remain direction-neutral and extensible.
 - [x] Custom and PUS factories are separate.
 - [x] Standards selectors are fixed and cannot be overridden.
+- [x] All four canonical selectors are covered through the string factory path.
 - [x] Factory creation returns fresh mutable objects.
 - [x] Duplicate custom keys and custom `PUS:` keys are rejected.
 
@@ -66,16 +67,16 @@
 
 ## Local validation
 
-- [x] 96 native tests pass.
+- [x] 97 native tests pass.
 - [x] AddressSanitizer and UndefinedBehaviorSanitizer pass.
 - [x] MCU sources compile with `-fno-exceptions -fno-rtti`.
 - [x] `git diff --check` passes.
 
 ## Integration and release gates
 
-- [ ] `v2.0.0-dev` merged into `develop`.
-- [ ] Linux, Windows, and Doxygen CI pass on `develop`.
-- [ ] Installed-consumer/package gates use v2 version expectations.
+- [x] `v2.0.0-dev` merged into `develop` through PR #111.
+- [x] Linux, Windows, and Doxygen CI pass on `develop`.
+- [x] Installed-consumer/package gates use v2 version expectations.
 - [ ] Encoder, decoder, and validator accept/report complete PUS profiles.
 - [ ] Manager higher-level PUS profile workflows are covered.
 - [ ] Fuzz smoke jobs pass.
