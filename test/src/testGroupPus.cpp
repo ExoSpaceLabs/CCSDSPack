@@ -4,6 +4,7 @@
 #include "PusSecondaryHeaderFactory.h"
 #include "tests.h"
 #include <CCSDSPacket.h>
+#include <array>
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -36,18 +37,48 @@ namespace {
 void testGroupPus(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupPus: " << description << std::endl;
 
-  tester->unitTest("PUS factory returns fresh fixed codecs and custom registration reserves PUS:.", [] {
-    CCSDS::PusSecondaryHeaderFactory factory;
-    const auto profile = CCSDS::makePusProfile(CCSDS::PusRevision::C,
-                                               CCSDS::PacketDirection::Telecommand);
-    const auto first = factory.create("PUS:revC:TC", profile);
-    const auto second = factory.create("PUS:revC:TC", profile);
-    if (!first || !second || first.value() == second.value()) return false;
+  tester->unitTest("PUS factory resolves every canonical selector to a fresh matching codec.", [] {
+    struct SelectorCase {
+      const char *selector;
+      CCSDS::PusRevision revision;
+      CCSDS::PacketDirection direction;
+    };
 
+    constexpr std::array<SelectorCase, 4U> cases{{
+      {"PUS:revA:TC", CCSDS::PusRevision::A, CCSDS::PacketDirection::Telecommand},
+      {"PUS:revA:TM", CCSDS::PusRevision::A, CCSDS::PacketDirection::Telemetry},
+      {"PUS:revC:TC", CCSDS::PusRevision::C, CCSDS::PacketDirection::Telecommand},
+      {"PUS:revC:TM", CCSDS::PusRevision::C, CCSDS::PacketDirection::Telemetry}
+    }};
+
+    CCSDS::PusSecondaryHeaderFactory factory;
+    for (const auto &entry : cases) {
+      const auto profile = CCSDS::makePusProfile(entry.revision, entry.direction);
+      const auto first = factory.create(entry.selector, profile);
+      const auto second = factory.create(entry.selector, profile);
+      if (!first || !second || first.value() == second.value()) return false;
+
+      const auto header = std::dynamic_pointer_cast<CCSDS::PusSecondaryHeader>(first.value());
+      if (!header || header->getType() != entry.selector
+          || header->getRevision() != entry.revision
+          || header->getDirection() != entry.direction
+          || !header->matchesMissionProfile(profile)) return false;
+    }
+
+    const auto aTcProfile = CCSDS::makePusProfile(CCSDS::PusRevision::A,
+                                                  CCSDS::PacketDirection::Telecommand);
+    if (factory.create("PUS:revA:TM", aTcProfile)
+        || factory.create("PUS:revB:TC", aTcProfile)
+        || factory.typeIsSupported("PUS:reva:TC")) return false;
+
+    return true;
+  });
+
+  tester->unitTest("Custom header registration rejects the reserved PUS namespace.", [] {
     CCSDS::SecondaryHeaderFactory custom;
     return !custom.registerType<ReservedCustomHeader>()
-           && factory.typeIsSupported("PUS:revA:TC")
-           && !factory.typeIsSupported("PUS:revB:TC");
+           && CCSDS::PusSecondaryHeaderFactory::isPusSelector("PUS:mission:custom")
+           && !CCSDS::PusSecondaryHeaderFactory::isPusSelector("MissionHeader");
   });
 
   tester->unitTest("PUS-A TC matches the ECSS-E-70-41A field layout.", [] {
