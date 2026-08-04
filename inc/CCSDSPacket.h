@@ -22,6 +22,7 @@
 #include <vector>
 #include "CCSDSHeader.h"
 #include "CCSDSDataField.h"
+#include "CCSDSMissionProfile.h"
 
 namespace CCSDS {
   /**
@@ -41,19 +42,6 @@ namespace CCSDS {
     std::uint16_t polynomial = 0x1021;   ///< CRC generator polynomial.
     std::uint16_t initialValue = 0xFFFF; ///< Initial CRC register value.
     std::uint16_t finalXorValue = 0x0000;///< Value XORed with the final CRC.
-  };
-
-  /**
-   * @enum PacketErrorControlMode
-   * @brief Selects whether the Packet Data Field ends with the CCSDSPack CRC16 trailer.
-   *
-   * Parsing never infers the mode from trailing bytes. Configure the receiving
-   * Packet before deserialization when the stream does not use the default CRC16
-   * profile. The trailer octets are included in the CCSDS Packet Data Length.
-   */
-  enum class PacketErrorControlMode : std::uint8_t {
-    None = 0, ///< No mission-profile CRC trailer is serialized or validated.
-    CRC16 = 1 ///< Reserve and validate a two-byte CRC16 trailer. This is the v1 default.
   };
 
   /**
@@ -140,7 +128,11 @@ namespace CCSDS {
      * @param header Shared secondary-header instance, or nullptr to remove it.
      * @note The Packet shares ownership of the supplied object. Idle Packets may not serialize with one.
      */
-    void setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header);
+    [[nodiscard]] ResultBool setDataFieldHeader(
+      const std::shared_ptr<SecondaryHeaderAbstract> &header);
+
+    [[nodiscard]] ResultBool setMissionProfile(const MissionProfile &profile);
+    [[nodiscard]] const MissionProfile &getMissionProfile() const { return m_missionProfile; }
 
     /**
      * @brief Registers a custom secondary-header type for subsequent typed parsing.
@@ -269,7 +261,7 @@ namespace CCSDS {
      * @brief Parses one packet and decodes a registered secondary-header type.
      * @param data Buffer beginning with a CCSDS packet.
      * @param headerType Registered secondary-header type name.
-     * @param headerSize Explicit PusC header size when positive; otherwise the type's getSize().
+     * @param headerSize Explicit variable custom-header size when positive; PUS sizes come from the profile.
      * @return Success, or a parsing/secondary-header error.
      */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data,
@@ -305,7 +297,7 @@ namespace CCSDS {
      * @brief Bounded parse with a registered secondary-header type.
      * @param data Buffer beginning with a packet.
      * @param headerType Registered secondary-header type name.
-     * @param headerSize Explicit PusC header size when positive; otherwise the type's getSize().
+     * @param headerSize Explicit variable custom-header size when positive; PUS sizes come from the profile.
      * @return Consumed byte count on success, or a parsing/secondary-header error.
      */
     [[nodiscard]] Result<std::size_t> deserializeBounded(const std::vector<std::uint8_t> &data,
@@ -346,7 +338,7 @@ namespace CCSDS {
     }
 
     /**
-     * @brief Finalizes and serializes the packet under the v1.2 PDU profile.
+     * @brief Finalizes and serializes the packet under the v2 mission profile.
      * @return Complete wire bytes, or an empty vector when the header, version,
      * Idle Packet structure, size, or update state is invalid.
      */
@@ -435,7 +427,7 @@ namespace CCSDS {
     /**
      * @brief Finalizes dependent packet state without returning serialized bytes.
      *
-     * When updates are enabled and the packet satisfies the v1.2 profile, this
+     * When updates are enabled and the packet satisfies the active mission profile, this
      * refreshes the secondary header, encodes Packet Data Length as Packet Data
      * Field octets minus one, writes the cached sequence count, and recalculates
      * the optional CRC16 trailer over the finalized header and preceding data.
@@ -465,6 +457,7 @@ namespace CCSDS {
 
     Header m_primaryHeader{};
     DataField m_dataField{};
+    MissionProfile m_missionProfile{};
     std::uint16_t m_CRC16{};
     CRC16Config m_CRC16Config;
     bool m_updateStatus{false};

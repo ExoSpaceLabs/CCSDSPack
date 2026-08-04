@@ -8,7 +8,6 @@
 #include "CCSDSManager.h"
 #include "CCSDSResult.h"
 #include "CCSDSUtils.h"
-#include "PusServices.h"
 #include "tests.h"
 
 namespace {
@@ -302,9 +301,7 @@ void testGroupManagement(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Manager preserves secondary headers while segmenting.", [] {
     CCSDS::Packet packet = makePacket(1, CCSDS::FIRST_SEGMENT, 1);
-    PusC secondaryHeader;
-    TEST_VOID(secondaryHeader.deserialize({0x02, 0x04, 0x05, 0x06, 0x07, 0x0A, 0x00, 0x00}));
-    packet.setDataFieldHeader(std::make_shared<PusC>(secondaryHeader));
+    TEST_VOID(packet.setDataFieldHeader({0x02, 0x04, 0x05, 0x06, 0x07, 0x0A, 0x00, 0x00}));
 
     CCSDS::Manager manager(packet);
     manager.setAutoValidateEnable(false);

@@ -94,7 +94,7 @@ int main() {
 
   const auto packetsData = manager.getPacketsBuffer();
   if (packetsData != expectedPacket) {
-    return fail("wire vector", "generated v1.2 packet bytes differ from the expected vector");
+    return fail("wire vector", "generated generic packet bytes differ from the expected vector");
   }
   if (manager.getSequenceCount() != 6U || manager.getTotalPackets() != 1U) {
     return fail("automatic sequence count", "Manager did not consume exactly one sequence count");
@@ -147,7 +147,7 @@ int main() {
       || view.getDataFieldHeaderBytes() != secondaryHeader
       || view.getApplicationDataBytes() != std::vector<std::uint8_t>({0x01, 0x02, 0x03})
       || view.getCRC() != 0xB745U) {
-    return fail("decoded fields", "decoded packet does not match the v1.2 logical fields");
+    return fail("decoded fields", "decoded packet does not match the expected logical fields");
   }
 
   // Exercise legacy and additive observation APIs from an external translation unit.

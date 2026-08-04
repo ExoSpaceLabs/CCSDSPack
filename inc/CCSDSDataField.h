@@ -17,7 +17,8 @@
 #include <vector>
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "CCSDSSecondaryHeaderFactory.h"
-#include "PusServices.h"
+#include "CCSDSMissionProfile.h"
+#include "PusSecondaryHeaderFactory.h"
 
 namespace CCSDS {
   /**
@@ -28,9 +29,8 @@ namespace CCSDS {
    * primary header or optional packet error-control bytes. Capacity is shared between
    * secondary-header and application-data bytes.
    *
-   * Built-in secondary-header registrations include BufferHeader and the legacy,
-   * project-specific PusA/PusB/PusC formats. Custom types can be registered through
-   * RegisterSecondaryHeader().
+   * Custom secondary headers use SecondaryHeaderFactory. Standards-defined PUS
+   * headers use the separate, fixed PusSecondaryHeaderFactory.
    *
    * Inspection APIs do not call update(). serialize() is the explicit finalization
    * path: it optionally invokes the installed secondary header's update() method and
@@ -43,16 +43,7 @@ namespace CCSDS {
      *
      * Registration failures are printed because the constructor cannot return ResultBool.
      */
-    DataField() {
-      bool noError = true;
-      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<BufferHeader>()));
-      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusA>()));
-      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusB>()));
-      ASSIGN_OR_PRINT(noError, m_secondaryHeaderFactory.registerType(std::make_shared<PusC>()));
-      if (!noError) {
-        std::printf("[CCSDS DataField] Unable to create data field: secondary-header registration failed.");
-      }
-    }
+    DataField() { (void)m_secondaryHeaderFactory.registerType<BufferHeader>(); }
 
     /** @brief Destroys the data field and releases shared secondary-header ownership. */
     ~DataField() = default;
@@ -65,9 +56,12 @@ namespace CCSDS {
      */
     template <typename T>
     ResultBool RegisterSecondaryHeader() {
-      FORWARD_RESULT(m_secondaryHeaderFactory.registerType(std::make_shared<T>()));
+      FORWARD_RESULT(m_secondaryHeaderFactory.registerType<T>());
       return true;
     }
+
+    [[nodiscard]] ResultBool setMissionProfile(const MissionProfile &profile);
+    [[nodiscard]] const MissionProfile &getMissionProfile() const { return m_missionProfile; }
 
     /**
      * @brief Replaces application data from a vector.
@@ -134,13 +128,17 @@ namespace CCSDS {
      * @param header Shared instance, or nullptr to remove the secondary header.
      * @note The DataField shares ownership and marks the header dirty for future update().
      */
-    void setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
+    [[nodiscard]] ResultBool setDataFieldHeader(std::shared_ptr<SecondaryHeaderAbstract> header);
 
     /** @brief Returns mutable access to the per-DataField secondary-header registry. */
     SecondaryHeaderFactory &getDataFieldHeaderFactory() { return m_secondaryHeaderFactory; }
     /** @brief Returns read-only access to the per-DataField secondary-header registry. */
     [[nodiscard]] const SecondaryHeaderFactory &getDataFieldHeaderFactory() const {
       return m_secondaryHeaderFactory;
+    }
+
+    [[nodiscard]] const PusSecondaryHeaderFactory &getPusDataFieldHeaderFactory() const {
+      return m_pusSecondaryHeaderFactory;
     }
 
     /**
@@ -218,6 +216,8 @@ namespace CCSDS {
 
     std::shared_ptr<SecondaryHeaderAbstract> m_secondaryHeader{}; ///< Installed optional secondary header.
     SecondaryHeaderFactory m_secondaryHeaderFactory;             ///< Registry used by typed header parsing.
+    PusSecondaryHeaderFactory m_pusSecondaryHeaderFactory;       ///< Fixed standards PUS codec registry.
+    MissionProfile m_missionProfile{};                           ///< Explicit generic/PUS tailoring.
     std::vector<std::uint8_t> m_applicationData{};               ///< Application-data bytes only.
     std::string m_dataFieldHeaderType{};                         ///< Lookup name of the installed header type.
     std::uint16_t m_dataPacketSize{2024};                        ///< Shared header/data capacity in bytes.

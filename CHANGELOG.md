@@ -9,11 +9,12 @@ All notable changes to CCSDSPack are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses semantic versioning for its public package versions.
 
-## [1.2.0] - 2026-07-16
+## [1.2.0] - 2026-08-02
 
 ### Added
 
 - A documented **CCSDS 133.0-B-2 Issue 2, including Editorial Change 2, Space Packet PDU profile**.
+- A clause-level CCSDS Space Packet compliance matrix with Annex A PICS scope classification, implementation references, and named evidence.
 - `PacketErrorControlMode::None` alongside the existing CRC16 default.
 - `Packet::deserializeBounded()` overloads that parse one declared packet and report the consumed byte count.
 - `Packet::getSerializedSize()` using `std::size_t`, covering the complete 65,542-octet Space Packet size range.
@@ -23,6 +24,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Encoder, decoder, and validator support for explicit `crc16` and `none` profiles.
 - Decoder support for concatenated packets and preservation of unrelated trailing bytes.
 - Detailed Doxygen contracts and representative usage documentation for every installed public header.
+- Native Raspberry Pi 5 arm64 package validation and deterministic NUCLEO-H755ZI-Q Cortex-M7 hardware validation.
 
 ### Changed
 
@@ -66,14 +68,19 @@ The bundled `PusA`, `PusB`, and `PusC` types remain legacy project-specific seco
 
 ### Validation
 
-The final release candidate is gated by:
+The release was validated by:
 
 - Ubuntu 22.04, Ubuntu 24.04, and `ubuntu-latest` native builds and tests;
 - Windows `windows-latest` MinGW build and tests;
 - CLI integration on Linux and Windows;
 - installation and exact-version external-consumer checks on Linux and Windows;
 - Ubuntu 22.04 native, Cortex-M, aarch64, and package generation;
-- independent byte vectors and 93 native regression/conformance tests.
+- independent byte vectors and 93 native regression/conformance tests;
+- Raspberry Pi 5 native arm64 package installation, CLI integration, and external consumer execution, ending in `CCSDSPACK_AARCH64_TEST:PASS`;
+- NUCLEO-H755ZI-Q Cortex-M7 packet, CRC, Manager, Validator, PVN, and Idle Packet execution, with `CCSDSPACK_MCU_TEST:PASS` observed twice;
+- promotion of the validated `develop` state to `main` through pull request #107.
+
+Detailed target evidence is recorded in `docs/V1_2_HARDWARE_VALIDATION.md`. Clause-level protocol traceability is recorded in `CCSDS_COMPLIANCE.md`.
 
 ## Earlier releases
 

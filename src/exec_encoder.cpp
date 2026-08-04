@@ -28,7 +28,7 @@ void printHelp() {
     << "  -h, --help                            Show this help message\n\n"
     << "The configuration file defines the packet template, data-field capacity,\n"
     << "and optional synchronization marker. Packet Data Length and CRC16 are\n"
-    << "calculated by the v1.2 packet serializer.\n";
+    << "calculated by the packet serializer.\n";
 }
 
 int printError(const CCSDS::Error &error) {

@@ -20,13 +20,26 @@ namespace {
   };
 
   bool packetProfileAllowsSerialization(const CCSDS::Header &header,
-                                        const CCSDS::DataField &dataField) {
+                                        const CCSDS::DataField &dataField,
+                                        const CCSDS::MissionProfile &profile,
+                                        const CCSDS::PacketErrorControlMode errorControl) {
     if (header.getVersionNumber() != 0U) return false;
-    if (header.getAPID() != CCSDS::IDLE_APID) return true;
+    if (header.getAPID() == CCSDS::IDLE_APID) {
+      return !profile.pusEnabled && header.getDataFieldHeaderFlag() == 0U
+             && !dataField.getDataFieldHeaderFlag()
+             && dataField.getApplicationDataBytesSize() > 0U;
+    }
 
-    return header.getDataFieldHeaderFlag() == 0U
-           && !dataField.getDataFieldHeaderFlag()
-           && dataField.getApplicationDataBytesSize() > 0U;
+    const auto profileResult = CCSDS::validateMissionProfile(profile);
+    if (!profileResult) return false;
+    const auto secondary = dataField.getSecondaryHeader();
+    if (!profile.pusEnabled) return !secondary || !secondary->isPusHeader();
+    if (!secondary || !secondary->isPusHeader()
+        || !secondary->matchesMissionProfile(profile)
+        || errorControl != profile.packetErrorControl
+        || header.getDataFieldHeaderFlag() == 0U) return false;
+    const auto expectedType = profile.direction == CCSDS::PacketDirection::Telecommand ? 1U : 0U;
+    return header.getType() == expectedType;
   }
 
   CCSDS::Result<std::size_t> declaredPacketSize(const std::vector<std::uint8_t> &data) {
@@ -118,7 +131,8 @@ namespace {
 void CCSDS::Packet::update() {
   if (m_updateStatus || !m_enableUpdatePacket) return;
   if (m_primaryHeader.getHeaderStatus() == INVALID) return;
-  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField)) return;
+  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField, m_missionProfile,
+                                        getPacketErrorControlMode())) return;
 
   const auto dataField = m_dataField.serialize();
   const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
@@ -224,7 +238,10 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   if (cfg.isKey("define_secondary_header")) {
     bool secondaryHeaderFlag{false};
     ASSIGN_CP(secondaryHeaderFlag, cfg.get<bool>("define_secondary_header"));
-    if (secondaryHeaderFlag) FORWARD_RESULT(m_dataField.setDataFieldHeader(cfg));
+    if (secondaryHeaderFlag) {
+      FORWARD_RESULT(m_dataField.setDataFieldHeader(cfg));
+      FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(1U));
+    }
   }
 
   if (cfg.isKey("application_data")) {
@@ -234,7 +251,9 @@ CCSDS::ResultBool CCSDS::Packet::loadFromConfig(const Config &cfg) {
   }
 
   RET_IF_ERR_MSG(m_primaryHeader.getAPID() == IDLE_APID
-                 && !packetProfileAllowsSerialization(m_primaryHeader, m_dataField),
+                 && !packetProfileAllowsSerialization(m_primaryHeader, m_dataField,
+                                                      m_missionProfile,
+                                                      getPacketErrorControlMode()),
                  ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Idle Packets require no secondary header and non-empty idle user data");
 
@@ -325,7 +344,8 @@ std::vector<std::uint8_t> CCSDS::Packet::getFullDataFieldBytes() const {
 
 std::vector<std::uint8_t> CCSDS::Packet::serialize() {
   if (m_primaryHeader.getHeaderStatus() == INVALID) return {};
-  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField)) return {};
+  if (!packetProfileAllowsSerialization(m_primaryHeader, m_dataField, m_missionProfile,
+                                        getPacketErrorControlMode())) return {};
 
   const auto currentDataField = getFullDataFieldBytes();
   const auto currentPacketDataFieldSize = currentDataField.size() + getPacketErrorControlSize();
@@ -369,9 +389,12 @@ CCSDS::Result<std::size_t> CCSDS::Packet::deserializeBounded(
     const std::int32_t headerSize) {
   RET_IF_ERR_MSG(headerType == "BufferHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: BufferHeader requires an explicit byte size.");
-  RET_IF_ERR_MSG(!m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType),
+  const bool isPus = PusSecondaryHeaderFactory::isPusSelector(headerType);
+  RET_IF_ERR_MSG(isPus
+                   ? !m_dataField.getPusDataFieldHeaderFactory().typeIsSupported(headerType)
+                   : !m_dataField.getDataFieldHeaderFactory().typeIsRegistered(headerType),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "Cannot deserialize packet: unregistered secondary header: " + headerType);
+                 "Cannot deserialize packet: unsupported secondary header: " + headerType);
 
   std::size_t packetSize{};
   ASSIGN_CP(packetSize, declaredPacketSize(data));
@@ -383,14 +406,33 @@ CCSDS::Result<std::size_t> CCSDS::Packet::deserializeBounded(
   if (!validated) return validated.error();
 
   auto parsed = validated.value();
+  if (isPus) {
+    RET_IF_ERR_MSG(!m_missionProfile.pusEnabled
+                   || getPacketErrorControlMode() != m_missionProfile.packetErrorControl,
+                   ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "PUS parsing requires the matching active mission profile and packet error control.");
+    const auto expectedType = m_missionProfile.direction == PacketDirection::Telecommand ? 1U : 0U;
+    RET_IF_ERR_MSG(parsed.header.getType() != expectedType,
+                   ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "PUS secondary-header direction does not match the CCSDS Packet Type.");
+  }
   DataField parsedField = m_dataField;
   parsedField.clearContent();
-  auto secondaryHeader = parsedField.getDataFieldHeaderFactory().create(headerType);
+  std::shared_ptr<SecondaryHeaderAbstract> secondaryHeader;
+  if (isPus) {
+    auto createResult = parsedField.getPusDataFieldHeaderFactory().create(
+      headerType, parsedField.getMissionProfile());
+    if (!createResult) return createResult.error();
+    secondaryHeader = createResult.value();
+  } else {
+    secondaryHeader = parsedField.getDataFieldHeaderFactory().create(headerType);
+  }
   RET_IF_ERR_MSG(!secondaryHeader, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: failed to create secondary header: " + headerType);
 
   std::size_t secondaryHeaderSize = secondaryHeader->getSize();
-  if (headerType == "PusC" && headerSize > 0) secondaryHeaderSize = static_cast<std::size_t>(headerSize);
+  if (!isPus && secondaryHeader->variableLength && headerSize > 0)
+    secondaryHeaderSize = static_cast<std::size_t>(headerSize);
   RET_IF_ERR_MSG(secondaryHeaderSize > parsed.dataField.size(),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: secondary header exceeds the packet data field.");
@@ -399,7 +441,8 @@ CCSDS::Result<std::size_t> CCSDS::Packet::deserializeBounded(
     parsed.dataField.begin(), parsed.dataField.begin() + static_cast<std::ptrdiff_t>(secondaryHeaderSize));
   const auto secondaryResult = secondaryHeader->deserialize(secondaryBytes);
   if (!secondaryResult) return secondaryResult.error();
-  parsedField.setDataFieldHeader(secondaryHeader);
+  const auto attachResult = parsedField.setDataFieldHeader(secondaryHeader);
+  if (!attachResult) return attachResult.error();
 
   const std::vector<std::uint8_t> applicationData(
     parsed.dataField.begin() + static_cast<std::ptrdiff_t>(secondaryHeaderSize), parsed.dataField.end());
@@ -477,6 +520,8 @@ CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &da
 
 CCSDS::ResultBool CCSDS::Packet::deserialize(const std::vector<std::uint8_t> &headerData,
                                               const std::vector<std::uint8_t> &data) {
+  RET_IF_ERR_MSG(m_missionProfile.pusEnabled, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "PUS packet parsing requires an explicit canonical secondary-header selector.");
   const auto validated = validatePacketBytes(headerData, data,
                                              getPacketErrorControlMode(), m_CRC16Config);
   if (!validated) return validated.error();
@@ -535,10 +580,20 @@ CCSDS::ResultBool CCSDS::Packet::setPrimaryHeader(const PrimaryHeader data) {
   return true;
 }
 
-void CCSDS::Packet::setDataFieldHeader(const std::shared_ptr<SecondaryHeaderAbstract> &header) {
-  m_dataField.setDataFieldHeader(header);
-  if (!m_primaryHeader.setDataFieldHeaderFlag(header ? 1U : 0U)) return;
+CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(
+    const std::shared_ptr<SecondaryHeaderAbstract> &header) {
+  FORWARD_RESULT(m_dataField.setDataFieldHeader(header));
+  FORWARD_RESULT(m_primaryHeader.setDataFieldHeaderFlag(header ? 1U : 0U));
   m_updateStatus = false;
+  return true;
+}
+
+CCSDS::ResultBool CCSDS::Packet::setMissionProfile(const MissionProfile &profile) {
+  FORWARD_RESULT(validateMissionProfile(profile));
+  FORWARD_RESULT(m_dataField.setMissionProfile(profile));
+  m_missionProfile = profile;
+  setPacketErrorControlMode(profile.packetErrorControl);
+  return true;
 }
 
 CCSDS::ResultBool CCSDS::Packet::setDataFieldHeader(

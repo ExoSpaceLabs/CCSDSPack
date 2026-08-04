@@ -16,8 +16,8 @@ set(LIB_NAME "CCSDSPack")
 # PATCH: Increases for backward-compatible bug fixes or small improvements. A patch update fixes issues, improves stability, or makes minor improvements without adding new features.
 
 # Versioning
-set(MAJOR "1")
-set(MINOR "2")
+set(MAJOR "2")
+set(MINOR "0")
 set(PATCH "0")
 
 set(VER "-v${MAJOR}.${MINOR}.${PATCH}")
@@ -64,10 +64,12 @@ set(LIBRARY_SOURCES
         "${SOURCE_DIR}/CCSDSDataField.cpp"
         "${SOURCE_DIR}/CCSDSHeader.cpp"
         "${SOURCE_DIR}/CCSDSManager.cpp"
+        "${SOURCE_DIR}/CCSDSMissionProfile.cpp"
         "${SOURCE_DIR}/CCSDSPacket.cpp"
         "${SOURCE_DIR}/CCSDSUtils.cpp"
         "${SOURCE_DIR}/CCSDSValidator.cpp"
-        "${SOURCE_DIR}/PusServices.cpp"
+        "${SOURCE_DIR}/PusSecondaryHeaderFactory.cpp"
+        "${SOURCE_DIR}/PusSecondaryHeaders.cpp"
 )
 
 # exclude source files when building static library for MCU

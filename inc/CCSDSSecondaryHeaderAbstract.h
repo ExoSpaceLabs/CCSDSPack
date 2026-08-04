@@ -18,6 +18,7 @@
 
 namespace CCSDS {
   class DataField;
+  struct MissionProfile;
 
   /**
    * @class SecondaryHeaderAbstract
@@ -86,6 +87,14 @@ namespace CCSDS {
      * @return Non-empty registry key unique within a DataField factory.
      */
     [[nodiscard]] virtual std::string getType() const = 0;
+
+    /** @brief Identifies standards-defined PUS codecs without requiring RTTI. */
+    [[nodiscard]] virtual bool isPusHeader() const { return false; }
+
+    /** @brief Tests PUS profile compatibility; custom headers return false. */
+    [[nodiscard]] virtual bool matchesMissionProfile(const MissionProfile &) const {
+      return false;
+    }
 
 #ifndef CCSDS_MCU
     /**

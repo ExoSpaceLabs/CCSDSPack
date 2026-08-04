@@ -38,8 +38,11 @@ namespace {
                                     const std::vector<std::uint8_t> &data = {1, 2, 3}) {
     CCSDS::Packet packet;
     packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
-    packet.setPrimaryHeader(CCSDS::PrimaryHeader{0, 0, 0, apid, flags, count, dataLength});
-    packet.setApplicationData(data);
+    if (!packet.setPrimaryHeader(
+          CCSDS::PrimaryHeader{0, 0, 0, apid, flags, count, dataLength})
+        || !packet.setApplicationData(data)) {
+      return {};
+    }
     packet.setUpdatePacketEnable(false);
     return packet;
   }
@@ -169,7 +172,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Validator report isolates a CRC failure.", [] {
     auto packet = finalizedPacket(1, CCSDS::UNSEGMENTED, 9, {1, 2, 3});
-    packet.setApplicationData({1, 2, 4});
+    TEST_VOID(packet.setApplicationData({1, 2, 4}));
     auto templatePacket = finalizedPacket(1, CCSDS::UNSEGMENTED, 9, {1, 2, 3});
     auto validator = validatorWithTemplate(templatePacket);
     validator.validate(packet);

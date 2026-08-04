@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack documentation
 
-[Main README](../README.md) | [v1.2 compliance statement](../COMPLIANCE.md) | [CCSDS compliance matrix](../CCSDS_COMPLIANCE.md)
+[Main README](../README.md) | [v2 compliance baseline](CCSDS_COMPLIANCE.md) | [v1 to v2 migration](MIGRATION_V1_TO_V2.md)
 
 CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and managing CCSDS Space Packet PDUs. Start with the examples, then use the profile and API reference for protocol details.
 
@@ -15,10 +15,13 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 - [Configuration reference](CONFIG.md): packet-template and command-line configuration keys.
 - [Command-line tools](CLI.md): encoder, decoder, validator, packet-error-control modes, and exit behaviour.
 - [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/): installed public types and functions.
+- [PUS mission tailoring](MISSION_TAILORING.md): explicit PUS-A/PUS-C revision, direction, identifier, time, spare, and packet-error-control choices.
+- [v1 to v2 migration](MIGRATION_V1_TO_V2.md): removed legacy types and replacement APIs.
 
 ## Compliance and behaviour
 
-- [Concise v1.2 compliance statement](../COMPLIANCE.md): the supported release claim and its explicit boundary.
+- [v2 compliance baseline](CCSDS_COMPLIANCE.md): current PUS and inherited generic packet scope.
+- [Concise v1.2 compliance statement](../COMPLIANCE.md): historical generic packet release claim.
 - [CCSDS Space Packet compliance matrix](../CCSDS_COMPLIANCE.md): clause-level traceability, PICS scope classification, implementation references, and evidence.
 - [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](CCSDS_133_0_B_2_PROFILE.md): detailed protocol scope, packet rules, limitations, and evidence.
 - [v1.2 current behaviour](V1_2_CURRENT_BEHAVIOUR.md): implementation behaviour and compatibility notes.

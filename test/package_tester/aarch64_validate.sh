@@ -57,8 +57,8 @@ if [[ "${package_arch}" != "arm64" ]]; then
 fi
 
 package_version="$(dpkg-deb -f "${package_path}" Version)"
-if [[ "${package_version}" != "1.2.0" ]]; then
-  echo "ERROR: package version is ${package_version}, expected 1.2.0" >&2
+if [[ "${package_version}" != "2.0.0" ]]; then
+  echo "ERROR: package version is ${package_version}, expected 2.0.0" >&2
   exit 7
 fi
 
@@ -104,7 +104,7 @@ test_resources="$(find_installed '/test_resources$')" || {
   echo "ERROR: installed CCSDSPack_tester resources not found" >&2
   exit 13
 }
-library_file="$(find_installed '/libccsdspack\.so(\.1(\.2\.0)?)?$' || true)"
+library_file="$(find_installed '/libccsdspack\.so(\.2(\.0\.0)?)?$' || true)"
 
 bin_dir="$(dirname "${tester}")"
 cmake_dir="$(dirname "${cmake_config}")"
@@ -143,7 +143,7 @@ python3 "${repo_root}/test/cli_integration.py" \
   --bin-dir "${bin_dir}" \
   --resources "${repo_root}/test/test_resources"
 
-echo "Building external consumer against installed CCSDSPack 1.2.0"
+echo "Building external consumer against installed CCSDSPack 2.0.0"
 consumer_build="${repo_root}/build/aarch64-package-validation"
 rm -rf "${consumer_build}"
 cmake \

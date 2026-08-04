@@ -9,7 +9,6 @@
 #include <vector>
 #include "CCSDSResult.h"
 #include "CCSDSUtils.h"
-#include "PusServices.h"
 #include "tests.h"
 
 namespace {
@@ -123,7 +122,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.setPrimaryHeader(
       CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 7, 0}));
     TEST_VOID(packet.RegisterSecondaryHeader<UpdatingSecondaryHeader>());
-    packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>());
+    TEST_VOID(packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>()));
     TEST_VOID(packet.setApplicationData({0xAA}));
 
     const CCSDS::Packet &view = packet;
@@ -154,7 +153,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     TEST_VOID(packet.setPrimaryHeader(
       CCSDS::PrimaryHeader{0, 0, 0, 1, CCSDS::UNSEGMENTED, 9, 0}));
     TEST_VOID(packet.RegisterSecondaryHeader<UpdatingSecondaryHeader>());
-    packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>());
+    TEST_VOID(packet.setDataFieldHeader(std::make_shared<UpdatingSecondaryHeader>()));
     TEST_VOID(packet.setApplicationData({0xAA}));
 
     const auto encoded = packet.serialize();
@@ -185,49 +184,6 @@ void testGroupCore(TestManager *tester, const std::string &description) {
            && view.getPrimaryHeader().getSequenceCount() == 123U
            && view.getCRC() == crcBefore
            && crcBefore != 0U;
-  });
-
-  tester->unitTest("PUS-A packet uses a valid generated CRC during round-trip.", [] {
-    CCSDS::Packet source;
-    source.setDataFieldHeader(std::make_shared<PusA>(1, 2, 3, 4, 5));
-    TEST_VOID(source.setApplicationData({0x10, 0x20}));
-    const auto encoded = source.serialize();
-
-    CCSDS::Packet decoded;
-    TEST_VOID(decoded.deserialize(encoded, "PusA"));
-    const auto secondary = std::dynamic_pointer_cast<PusA>(decoded.getDataField().getSecondaryHeader());
-    return secondary != nullptr
-           && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x10, 0x20})
-           && decoded.serialize() == encoded;
-  });
-
-  tester->unitTest("PUS-B packet uses a valid generated CRC during round-trip.", [] {
-    CCSDS::Packet source;
-    source.setDataFieldHeader(std::make_shared<PusB>(1, 2, 3, 4, 5, 6));
-    TEST_VOID(source.setApplicationData({0x30, 0x40}));
-    const auto encoded = source.serialize();
-
-    CCSDS::Packet decoded;
-    TEST_VOID(decoded.deserialize(encoded, "PusB"));
-    const auto secondary = std::dynamic_pointer_cast<PusB>(decoded.getDataField().getSecondaryHeader());
-    return secondary != nullptr
-           && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x30, 0x40})
-           && decoded.serialize() == encoded;
-  });
-
-  tester->unitTest("PUS-C packet uses a valid generated CRC during round-trip.", [] {
-    CCSDS::Packet source;
-    source.setDataFieldHeader(std::make_shared<PusC>(1, 2, 3, 4,
-                                                      std::vector<std::uint8_t>{0x00, 0xBF, 0x00, 0xBF}, 6));
-    TEST_VOID(source.setApplicationData({0x50, 0x60}));
-    const auto encoded = source.serialize();
-
-    CCSDS::Packet decoded;
-    TEST_VOID(decoded.deserialize(encoded, "PusC", 10));
-    const auto secondary = std::dynamic_pointer_cast<PusC>(decoded.getDataField().getSecondaryHeader());
-    return secondary != nullptr
-           && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x50, 0x60})
-           && decoded.serialize() == encoded;
   });
 
   tester->unitTest("Disabling automatic updates preserves a valid parsed packet.", [] {

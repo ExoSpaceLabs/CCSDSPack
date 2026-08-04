@@ -11,19 +11,19 @@ SPDX-License-Identifier: Apache-2.0
 
 **CCSDSPack** is a C++17 library for creating, parsing, managing, and validating CCSDS Space Packet protocol data units.
 
-The v1.2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Change 2 (September 2024)** through a documented Space Packet PDU profile.
+The v2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Change 2 (September 2024)** and provides standards-facing secondary headers for **ECSS-E-70-41A (PUS-A)** and **ECSS-E-ST-70-41C (PUS-C)**.
 
 > [!IMPORTANT]
-> The v1.2 implementation scope is limited to the documented **Space Packet PDU profile**. CCSDSPack does not implement the complete abstract Packet Service, Octet String Service, all protocol procedures, or a Protocol Implementation Conformance Statement.
+> The implementation scope is limited to the documented **Space Packet PDU profile** and PUS secondary-header layouts. CCSDSPack does not implement every PUS service, the complete abstract Packet Service, transfer frames, or a Protocol Implementation Conformance Statement.
 
 > [!IMPORTANT]
-> The bundled `PusA`, `PusB`, and `PusC` classes are legacy project-specific secondary-header formats. They are not official ECSS Packet Utilisation Standard implementations.
+> v2 removed the project-specific `PusA`, `PusB`, and `PusC` model. The public PUS types are direction-specific: `PusATcHeader`, `PusATmHeader`, `PusCTcHeader`, and `PusCTmHeader`. There is no PUS-B revision.
 
 ## Status
 
 | Linux | Windows |
 |---|---|
-| ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=main) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=main) |
+| ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=develop) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=develop) |
 
 | Platform | CI |
 |---|---|
@@ -32,15 +32,15 @@ The v1.2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Ch
 | Ubuntu latest | ![Ubuntu latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest) |
 | Windows latest | ![Windows latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest) |
 
-## v1.2 Space Packet PDU profile
+## v2 Space Packet PDU profile
 
-The v1.x implementation serializes packets using a six-octet CCSDS primary header followed by the Packet Data Field.
+The v2 implementation inherits the validated v1.2 six-octet CCSDS primary header and Packet Data Field behaviour.
 
 The Packet Data Field contains optional secondary-header bytes, mission application data, and, when enabled, the optional CCSDSPack CRC16 trailer.
 
-### CCSDSPack v1.2 packet layout
+### CCSDSPack packet layout
 
-The following diagram represents the wire layout produced by the v1.2 implementation.
+The following diagram represents the generic Space Packet wire layout.
 
 ![CCSDSPack v1.2 Space Packet layout](docs/imgs/ccsdsPacket.drawio.png)
 
@@ -50,13 +50,13 @@ Detailed scope, limitations, and migration behavior are documented in the [CCSDS
 
 ### Primary-header rules
 
-CCSDSPack v1.2 enforces the following packet-level rules:
+CCSDSPack v2 enforces the following packet-level rules:
 
 - Packet Version Number is `000`;
 - telemetry and telecommand Packet Types are supported;
 - the complete 11-bit APID range is supported;
 - APID `0x7FF` is reserved for Idle Packets;
-- within the CCSDSPack v1.2 profile, Idle Packets omit the secondary header and carry mission-defined idle data;
+- within the CCSDSPack profile, Idle Packets omit the secondary header and carry mission-defined idle data;
 - Packet Data Length is the number of octets after the primary header minus one;
 - Sequence Flags use the CCSDS first, continuation, last, and unsegmented values;
 - Packet Sequence Count advances modulo 16384 in automatic `CCSDS::Manager` mode.
@@ -106,6 +106,9 @@ The following diagram shows the main v1.x relationships between the user applica
 - modulo-16384 sequence counting and segmentation utilities;
 - one configured Packet Identification value per `CCSDS::Manager` instance;
 - custom and opaque secondary-header support;
+- PUS-A and PUS-C direction-specific TC/TM secondary headers;
+- separate fixed PUS and extensible custom secondary-header factories;
+- explicit mission-profile validation for revision, direction, identifiers, time, spare fields, and packet error control;
 - exception-free `Result` and `Error` handling;
 - Linux and Windows builds;
 - optional bare-metal and cross-build targets;
@@ -116,6 +119,8 @@ The following diagram shows the main v1.x relationships between the user applica
 
 - [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/)
 - [CCSDS 133.0-B-2 EC2 PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
+- [PUS and mission tailoring](docs/MISSION_TAILORING.md)
+- [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md)
 - [v1.2 current behavior](docs/V1_2_CURRENT_BEHAVIOUR.md)
 - [CLI reference](docs/CLI.md)
 - [Configuration reference](docs/CONFIG.md)
@@ -264,22 +269,33 @@ Run the installed tester with:
 docker run --rm ghcr.io/exospacelabs/ccsdspack:<version> /usr/bin/CCSDSPack_tester
 ```
 
-## Legacy secondary headers
+## PUS secondary headers
 
-The v1 API retains `PusA`, `PusB`, and `PusC` for compatibility with existing projects and configuration files.
+PUS selection is explicit and direction-safe. Canonical diagnostic/factory selectors are:
 
-Their layouts are project-specific ancillary-data formats:
+- `PUS:revA:TC` and `PUS:revA:TM`;
+- `PUS:revC:TC` and `PUS:revC:TM`.
 
-- `PusA` and `PusB` are fixed-size legacy formats;
-- `PusC` contains a variable application-configured byte sequence described as a time-code field;
-- none of these classes is claimed to implement an official ECSS PUS revision;
-- `PusC` bytes are not automatically validated as a CCSDS time-code format.
+Custom headers remain string-keyed in `SecondaryHeaderFactory`; the reserved PUS selectors are owned by the non-extensible `PusSecondaryHeaderFactory`. Both return fresh header objects.
 
-Standards-oriented ECSS PUS support remains in the v2.0.0 scope.
+```cpp
+auto profile = CCSDS::makePusProfile(
+  CCSDS::PusRevision::C, CCSDS::PacketDirection::Telecommand);
 
-## Compatibility with pre-v1.2 packets
+CCSDS::Packet packet;
+packet.setPrimaryHeader({0, 1, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0});
+packet.setMissionProfile(profile);
+packet.setDataFieldHeader(std::make_shared<CCSDS::PusCTcHeader>(
+  profile, 17, 1, 0x1234, 0x09));
+packet.setApplicationData({0x10, 0x20});
+const auto wire = packet.serialize();
+```
 
-Although the public source API remains in the v1 series, v1.2 is not wire-compatible with packets produced using the incorrect length, CRC, sequence, Packet Identification, version, or Idle Packet semantics of earlier releases.
+All checked results should be inspected in production code; they are omitted above only to keep the example compact.
+
+## Compatibility
+
+v2 is a breaking release. The generic CCSDS packet corrections introduced by v1.2 are retained, while the non-standard secondary-header classes and their wire formats are removed without aliases.
 
 Changes include:
 
@@ -291,7 +307,9 @@ Changes include:
 - Packet Version Number validation;
 - Idle Packet validation.
 
-Stored or transmitted packets generated by older releases should be regenerated or migrated explicitly before adopting the v1.2 profile.
+Stored or transmitted packets generated by older releases should be regenerated or migrated explicitly before adopting v2.
+
+See the [v1 to v2 migration guide](docs/MIGRATION_V1_TO_V2.md) for API and selector replacements.
 
 ## License
 

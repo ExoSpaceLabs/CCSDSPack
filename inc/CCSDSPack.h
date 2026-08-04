@@ -14,6 +14,7 @@
  * - Use CCSDS::Packet for one Space Packet.
  * - Use CCSDS::Manager for one packet-identifier stream and sequence counter.
  * - Use CCSDS::Validator for explicit coherence/template checks.
+ * - Use CCSDS::MissionProfile for standards-facing v2 mission tailoring.
  * - Derive from CCSDS::SecondaryHeaderAbstract for mission-specific headers.
  *
  * @code{.cpp}
@@ -32,12 +33,14 @@
 #include "CCSDSHeader.h"
 #include "CCSDSManager.h"
 #include "CCSDSPacket.h"
+#include "CCSDSMissionProfile.h"
 #include "CCSDSResult.h"
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "CCSDSSecondaryHeaderFactory.h"
 #include "CCSDSUtils.h"
 #include "CCSDSValidator.h"
-#include "PusServices.h"
+#include "PusSecondaryHeaderFactory.h"
+#include "PusSecondaryHeaders.h"
 
 #ifndef CCSDS_MCU
   #include "CCSDSConfig.h"
