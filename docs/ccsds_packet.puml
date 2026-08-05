@@ -313,7 +313,7 @@ class C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +getSecondaryHeaderFactory() : SecondaryHeaderFactory & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L134{getSecondaryHeaderFactory}]]]
 +getSecondaryHeaderFactory() const : const SecondaryHeaderFactory & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L136{getSecondaryHeaderFactory}]]]
 +getSecondaryHeaderFlag() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L194{getSecondaryHeaderFlag}]]]
-+serialize() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L181{serialize}]]]
++serialize() : ResultBuffer [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L181{serialize}]]]
 +setApplicationData(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L79{setApplicationData}]]]
 +setApplicationData(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L71{setApplicationData}]]]
 +setDataPacketSize(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L150{setDataPacketSize}]]]
@@ -336,73 +336,73 @@ __
 +polynomial : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L42{polynomial}]]]
 }
 class "Result<std::size_t>" as C_0006681659169358588769
-class C_0006681659169358588769 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L294{Result}]] {
+class C_0006681659169358588769 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L296{Result}]] {
 __
 }
 class "Packet" as C_0009809857242509377472
-class C_0009809857242509377472 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L89{Packet}]] {
-+Packet() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L92{Packet}]]]
+class C_0009809857242509377472 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L91{Packet}]] {
++Packet() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L94{Packet}]]]
 ..
 +RegisterSecondaryHeader<T>() : ResultBool
-+deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L258{deserialize}]]]
-+deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L267{deserialize}]]]
-+deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L277{deserialize}]]]
-+deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L286{deserialize}]]]
-+deserializeBounded(const std::v...) : CCSDS::Result<std::size_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L313{deserializeBounded}]]]
-+deserializeBounded(const std::v...) : CCSDS::Result<std::size_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L303{deserializeBounded}]]]
-+deserializeBounded(const std::v...) : CCSDS::Result<std::size_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L294{deserializeBounded}]]]
-+getApplicationDataBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L365{getApplicationDataBytes}]]]
-+getApplicationDataBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L363{getApplicationDataBytes}]]]
-+getCRC() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L384{getCRC}]]]
-+getCRC() : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L382{getCRC}]]]
-+getCRCVectorBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L379{getCRCVectorBytes}]]]
-+getCRCVectorBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L377{getCRCVectorBytes}]]]
-+getDataField() : DataField & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L398{getDataField}]]]
-+getDataField() const : const DataField & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L400{getDataField}]]]
-+getDataFieldMaximumSize() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L387{getDataFieldMaximumSize}]]]
-+getFullDataFieldBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L374{getFullDataFieldBytes}]]]
-+getFullDataFieldBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L372{getFullDataFieldBytes}]]]
-+getFullPacketLength() : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L326{getFullPacketLength}]]]
-+getFullPacketLength() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L328{getFullPacketLength}]]]
-+getMissionProfile() const : const MissionProfile & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L135{getMissionProfile}]]]
-+getPacketErrorControlMode() const : PacketErrorControlMode [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L241{getPacketErrorControlMode}]]]
-+getPacketErrorControlSize() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L248{getPacketErrorControlSize}]]]
-+getPrimaryHeader() const : const Header & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L408{getPrimaryHeader}]]]
-+getPrimaryHeader() : Header & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L406{getPrimaryHeader}]]]
-+getPrimaryHeader64bit() : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L317{getPrimaryHeader64bit}]]]
-+getPrimaryHeader64bit() const : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L319{getPrimaryHeader64bit}]]]
-+getPrimaryHeaderBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L348{getPrimaryHeaderBytes}]]]
-+getPrimaryHeaderBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L350{getPrimaryHeaderBytes}]]]
-+getSecondaryHeader() : std::shared_ptr<SecondaryHeaderAbstract> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L353{getSecondaryHeader}]]]
-+getSecondaryHeader() const : std::shared_ptr<const SecondaryHeaderAbstract> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L355{getSecondaryHeader}]]]
-+getSecondaryHeaderBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L358{getSecondaryHeaderBytes}]]]
-+getSecondaryHeaderBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L360{getSecondaryHeaderBytes}]]]
-+getSecondaryHeaderFlag() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L392{getSecondaryHeaderFlag}]]]
-+getSecondaryHeaderFlag() : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L390{getSecondaryHeaderFlag}]]]
-+getSerializedSize() const : std::size_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L335{getSerializedSize}]]]
-+loadFromConfig(const Config...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L456{loadFromConfig}]]]
-+loadFromConfigFile(const std::s...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L448{loadFromConfigFile}]]]
-+serialize() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L345{serialize}]]]
-+setApplicationData(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L192{setApplicationData}]]]
-+setApplicationData(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L200{setApplicationData}]]]
-+setCrcConfig(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L425{setCrcConfig}]]]
-+setCrcConfig(const CRC16C...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L414{setCrcConfig}]]]
-+setDataFieldSize(std::uint16_...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L223{setDataFieldSize}]]]
-+setMissionProfile(const Missio...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L134{setMissionProfile}]]]
-+setPacketErrorControlMode(PacketErrorC...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L238{setPacketErrorControlMode}]]]
-+setPrimaryHeader(const Header...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L124{setPrimaryHeader}]]]
-+setPrimaryHeader(std::uint64_...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L109{setPrimaryHeader}]]]
-+setPrimaryHeader(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L117{setPrimaryHeader}]]]
-+setPrimaryHeader(PrimaryHeade...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L101{setPrimaryHeader}]]]
-+setSecondaryHeader(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L184{setSecondaryHeader}]]]
-+setSecondaryHeader(const std::s...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L131{setSecondaryHeader}]]]
-+setSecondaryHeader(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L157{setSecondaryHeader}]]]
-+setSecondaryHeader(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L167{setSecondaryHeader}]]]
-+setSecondaryHeader(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L176{setSecondaryHeader}]]]
-+setSequenceCount(std::uint16_...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L216{setSequenceCount}]]]
-+setSequenceFlags(ESequenceFla...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L207{setSequenceFlags}]]]
-+setUpdatePacketEnable(bool enable) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L230{setUpdatePacketEnable}]]]
-+update() : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L440{update}]]]
++deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L260{deserialize}]]]
++deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L269{deserialize}]]]
++deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L279{deserialize}]]]
++deserialize(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L288{deserialize}]]]
++deserializeBounded(const std::v...) : CCSDS::Result<std::size_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L315{deserializeBounded}]]]
++deserializeBounded(const std::v...) : CCSDS::Result<std::size_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L305{deserializeBounded}]]]
++deserializeBounded(const std::v...) : CCSDS::Result<std::size_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L296{deserializeBounded}]]]
++getApplicationDataBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L366{getApplicationDataBytes}]]]
++getApplicationDataBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L364{getApplicationDataBytes}]]]
++getCRC() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L385{getCRC}]]]
++getCRC() : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L383{getCRC}]]]
++getCRCVectorBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L380{getCRCVectorBytes}]]]
++getCRCVectorBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L378{getCRCVectorBytes}]]]
++getDataField() : DataField & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L399{getDataField}]]]
++getDataField() const : const DataField & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L401{getDataField}]]]
++getDataFieldMaximumSize() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L388{getDataFieldMaximumSize}]]]
++getFullDataFieldBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L375{getFullDataFieldBytes}]]]
++getFullDataFieldBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L373{getFullDataFieldBytes}]]]
++getFullPacketLength() : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L328{getFullPacketLength}]]]
++getFullPacketLength() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L330{getFullPacketLength}]]]
++getMissionProfile() const : const MissionProfile & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L137{getMissionProfile}]]]
++getPacketErrorControlMode() const : PacketErrorControlMode [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L243{getPacketErrorControlMode}]]]
++getPacketErrorControlSize() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L250{getPacketErrorControlSize}]]]
++getPrimaryHeader() const : const Header & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L409{getPrimaryHeader}]]]
++getPrimaryHeader() : Header & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L407{getPrimaryHeader}]]]
++getPrimaryHeader64bit() : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L319{getPrimaryHeader64bit}]]]
++getPrimaryHeader64bit() const : std::uint64_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L321{getPrimaryHeader64bit}]]]
++getPrimaryHeaderBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L349{getPrimaryHeaderBytes}]]]
++getPrimaryHeaderBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L351{getPrimaryHeaderBytes}]]]
++getSecondaryHeader() : std::shared_ptr<SecondaryHeaderAbstract> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L354{getSecondaryHeader}]]]
++getSecondaryHeader() const : std::shared_ptr<const SecondaryHeaderAbstract> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L356{getSecondaryHeader}]]]
++getSecondaryHeaderBytes() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L359{getSecondaryHeaderBytes}]]]
++getSecondaryHeaderBytes() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L361{getSecondaryHeaderBytes}]]]
++getSecondaryHeaderFlag() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L393{getSecondaryHeaderFlag}]]]
++getSecondaryHeaderFlag() : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L391{getSecondaryHeaderFlag}]]]
++getSerializedSize() const : std::size_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L337{getSerializedSize}]]]
++loadFromConfig(const Config...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L457{loadFromConfig}]]]
++loadFromConfigFile(const std::s...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L449{loadFromConfigFile}]]]
++serialize() : ResultBuffer [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L346{serialize}]]]
++setApplicationData(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L194{setApplicationData}]]]
++setApplicationData(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L202{setApplicationData}]]]
++setCrcConfig(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L426{setCrcConfig}]]]
++setCrcConfig(const CRC16C...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L415{setCrcConfig}]]]
++setDataFieldSize(std::uint16_...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L225{setDataFieldSize}]]]
++setMissionProfile(const Missio...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L136{setMissionProfile}]]]
++setPacketErrorControlMode(PacketErrorC...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L240{setPacketErrorControlMode}]]]
++setPrimaryHeader(const Header...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L126{setPrimaryHeader}]]]
++setPrimaryHeader(std::uint64_...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L111{setPrimaryHeader}]]]
++setPrimaryHeader(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L119{setPrimaryHeader}]]]
++setPrimaryHeader(PrimaryHeade...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L103{setPrimaryHeader}]]]
++setSecondaryHeader(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L186{setSecondaryHeader}]]]
++setSecondaryHeader(const std::s...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L133{setSecondaryHeader}]]]
++setSecondaryHeader(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L159{setSecondaryHeader}]]]
++setSecondaryHeader(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L169{setSecondaryHeader}]]]
++setSecondaryHeader(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L178{setSecondaryHeader}]]]
++setSequenceCount(std::uint16_...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L218{setSequenceCount}]]]
++setSequenceFlags(ESequenceFla...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L209{setSequenceFlags}]]]
++setUpdatePacketEnable(bool enable) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L232{setUpdatePacketEnable}]]]
++update() : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L441{update}]]]
 __
 }
 class "Validator" as C_0015641474125909340471
@@ -419,9 +419,9 @@ class C_0015641474125909340471 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 __
 }
 class "Manager" as C_0012258095910604845950
-class C_0012258095910604845950 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L46{Manager}]] {
-+Manager() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L49{Manager}]]]
-+Manager(Packet packet) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L59{Manager}]]]
+class C_0012258095910604845950 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L47{Manager}]] {
++Manager() = default : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L50{Manager}]]]
++Manager(Packet packet) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L60{Manager}]]]
 ..
 +addPacket(Packet packet) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L226{addPacket}]]]
 +addPacketFromBuffer(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L234{addPacketFromBuffer}]]]
@@ -436,7 +436,7 @@ class C_0012258095910604845950 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +getPacketTemplate() : ResultBuffer [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L173{getPacketTemplate}]]]
 +getPackets() const : std::vector<Packet> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L216{getPackets}]]]
 +getPackets() : std::vector<Packet> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L214{getPackets}]]]
-+getPacketsBuffer() const : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L187{getPacketsBuffer}]]]
++getPacketsBuffer() const : ResultBuffer [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L187{getPacketsBuffer}]]]
 +getPacketsReference() : std::vector<Packet> & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L295{getPacketsReference}]]]
 +getSequenceCount() const : std::uint16_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L164{getSequenceCount}]]]
 +getSyncPattern() const : std::uint32_t [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSManager.h#L77{getSyncPattern}]]]
@@ -546,24 +546,26 @@ C_0016695687058631780890 ..> C_0017173607616216397172 [[https://github.com/ExoSp
 C_0009576894308489276275 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L63{}]]
 C_0009576894308489276275 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L63{}]]
 C_0009576894308489276275 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L123{}]]
+C_0009576894308489276275 ..> C_0004629493886474321807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L181{}]]
 C_0009576894308489276275 --> C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L211{m_secondaryHeader}]] : -m_secondaryHeader
 C_0009576894308489276275 o-- C_0005588309261265651757 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L212{m_secondaryHeaderFactory}]] : -m_secondaryHeaderFactory
 C_0009576894308489276275 o-- C_0016695687058631780890 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L213{m_pusSecondaryHeaderFactory}]] : -m_pusSecondaryHeaderFactory
 C_0009576894308489276275 o-- C_0017357119726862570320 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L214{m_missionProfile}]] : -m_missionProfile
 C_0009576894308489276275 <.. C_0009809857242509377472 : +<<friend>>
 C_0006681659169358588769 ..|> C_0004081418331934384486
-C_0009809857242509377472 ..> C_0005167639859745434657 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L101{}]]
-C_0009809857242509377472 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L101{}]]
-C_0009809857242509377472 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L101{}]]
-C_0009809857242509377472 ..> C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L132{}]]
-C_0009809857242509377472 ..> C_0002097049991889074748 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L207{}]]
-C_0009809857242509377472 ..> C_0001243513306714304585 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L238{}]]
-C_0009809857242509377472 ..> C_0006681659169358588769 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L294{}]]
-C_0009809857242509377472 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L456{}]]
-C_0009809857242509377472 o-- C_0004705280547409404765 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L463{m_primaryHeader}]] : -m_primaryHeader
-C_0009809857242509377472 o-- C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L464{m_dataField}]] : -m_dataField
-C_0009809857242509377472 o-- C_0017357119726862570320 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L465{m_missionProfile}]] : -m_missionProfile
-C_0009809857242509377472 o-- C_0005838138750192050804 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L467{m_CRC16Config}]] : -m_CRC16Config
+C_0009809857242509377472 ..> C_0005167639859745434657 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L103{}]]
+C_0009809857242509377472 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L103{}]]
+C_0009809857242509377472 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L103{}]]
+C_0009809857242509377472 ..> C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L134{}]]
+C_0009809857242509377472 ..> C_0002097049991889074748 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L209{}]]
+C_0009809857242509377472 ..> C_0001243513306714304585 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L240{}]]
+C_0009809857242509377472 ..> C_0006681659169358588769 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L296{}]]
+C_0009809857242509377472 ..> C_0004629493886474321807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L346{}]]
+C_0009809857242509377472 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L457{}]]
+C_0009809857242509377472 o-- C_0004705280547409404765 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L464{m_primaryHeader}]] : -m_primaryHeader
+C_0009809857242509377472 o-- C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L465{m_dataField}]] : -m_dataField
+C_0009809857242509377472 o-- C_0017357119726862570320 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L466{m_missionProfile}]] : -m_missionProfile
+C_0009809857242509377472 o-- C_0005838138750192050804 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSPacket.h#L468{m_CRC16Config}]] : -m_CRC16Config
 C_0015641474125909340471 ..> C_0004705280547409404765 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L104{}]]
 C_0015641474125909340471 o-- C_0009809857242509377472 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L106{m_templatePacket}]] : -m_templatePacket
 C_0015641474125909340471 o-- C_0005838138750192050804 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSValidator.h#L113{m_CRCConfig}]] : -m_CRCConfig

@@ -260,7 +260,7 @@ class C_0009576894308489276275 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/
 +getSecondaryHeaderFactory() : SecondaryHeaderFactory & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L134{getSecondaryHeaderFactory}]]]
 +getSecondaryHeaderFactory() const : const SecondaryHeaderFactory & [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L136{getSecondaryHeaderFactory}]]]
 +getSecondaryHeaderFlag() const : bool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L194{getSecondaryHeaderFlag}]]]
-+serialize() : std::vector<std::uint8_t> [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L181{serialize}]]]
++serialize() : ResultBuffer [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L181{serialize}]]]
 +setApplicationData(const std::u...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L79{setApplicationData}]]]
 +setApplicationData(const std::v...) : ResultBool [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L71{setApplicationData}]]]
 +setDataPacketSize(const std::u...) : void [[[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L150{setDataPacketSize}]]]
@@ -351,6 +351,7 @@ C_0016695687058631780890 ..> C_0017173607616216397172 [[https://github.com/ExoSp
 C_0009576894308489276275 ..> C_0014174674997599217076 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L63{}]]
 C_0009576894308489276275 ..> C_0004081418331934384486 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L63{}]]
 C_0009576894308489276275 ..> C_0003888813716297410290 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L123{}]]
+C_0009576894308489276275 ..> C_0004629493886474321807 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L181{}]]
 C_0009576894308489276275 --> C_0017173607616216397172 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L211{m_secondaryHeader}]] : -m_secondaryHeader
 C_0009576894308489276275 o-- C_0005588309261265651757 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L212{m_secondaryHeaderFactory}]] : -m_secondaryHeaderFactory
 C_0009576894308489276275 o-- C_0016695687058631780890 [[https://github.com/ExoSpaceLabs/CCSDSPack/blob/develop/inc/CCSDSDataField.h#L213{m_pusSecondaryHeaderFactory}]] : -m_pusSecondaryHeaderFactory
