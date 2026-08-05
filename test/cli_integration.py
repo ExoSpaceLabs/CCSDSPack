@@ -207,6 +207,9 @@ def main() -> int:
             "pus_c_tc": reference_packet(
                 1, 42, bytes([0x29, 17, 1, 0x12, 0x34]), payload.read_bytes()
             ),
+            "pus_c_tm_no_time": reference_packet(
+                0, 42, bytes([0x20, 3, 25, 0, 7, 0x12, 0x34]), payload.read_bytes()
+            ),
             "pus_c_tm": reference_packet(
                 0, 42,
                 bytes([

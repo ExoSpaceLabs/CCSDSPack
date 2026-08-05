@@ -128,7 +128,8 @@ preamble. For an implicit P-field, the wire contains only the coarse and fine
 T-field counters.
 
 Complete executable configurations are committed in
-[`example/config`](../example/config).
+[`example/config`](../example/config), including PUS-C TM profiles with and
+without a CUC time field.
 
 ## Idle Packets
 

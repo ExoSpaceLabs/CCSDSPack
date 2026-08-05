@@ -32,7 +32,8 @@ and all three CLIs:
 
 - `generic.cfg`;
 - `pus_a_tc.cfg` and `pus_a_tm.cfg`;
-- `pus_c_tc.cfg` and `pus_c_tm.cfg`.
+- `pus_c_tc.cfg`, `pus_c_tm_no_time.cfg`, and `pus_c_tm.cfg`.
 
+`pus_c_tm_no_time.cfg` demonstrates PUS-C telemetry without a time field.
 `pus_c_tm.cfg` demonstrates numeric basic CUC time with the CCSDS 1958 TAI
 epoch, an explicit P-field, four coarse octets, and two fine octets.
