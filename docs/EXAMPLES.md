@@ -40,15 +40,15 @@ After installing the library, build every example or one target directory:
 #include <vector>
 
 int main() {
-  CCSDS::Packet packet;
+  ccsds::Packet packet;
   packet.setDataFieldSize(1024);
 
-  const auto headerResult = packet.setPrimaryHeader(CCSDS::PrimaryHeader{
+  const auto headerResult = packet.setPrimaryHeader(ccsds::PrimaryHeader{
     0,                       // Packet Version Number: must be 000
     0,                       // Packet Type: telemetry
     0,                       // no secondary header
     0x123,                   // APID
-    CCSDS::UNSEGMENTED,
+    ccsds::UNSEGMENTED,
     0,                       // Packet Sequence Count
     0                        // calculated by serialize()
   });
@@ -70,7 +70,7 @@ int main() {
   }
   const auto &wire = wireResult.value();
 
-  CCSDS::Packet decoded; // CRC16 is also the receiving default
+  ccsds::Packet decoded; // CRC16 is also the receiving default
   const auto consumedResult = decoded.deserializeBounded(wire);
   if (!consumedResult) {
     std::cerr << consumedResult.error().message() << '\n';
@@ -99,15 +99,15 @@ One Manager represents one complete Packet Identification value and one Packet S
 #include <vector>
 
 int main() {
-  CCSDS::Packet packetTemplate;
+  ccsds::Packet packetTemplate;
   packetTemplate.setDataFieldSize(1024);
 
-  const auto headerResult = packetTemplate.setPrimaryHeader(CCSDS::PrimaryHeader{
-    0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0
+  const auto headerResult = packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
+    0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
   });
   if (!headerResult) return headerResult.error().code();
 
-  CCSDS::Manager manager;
+  ccsds::Manager manager;
   const auto templateResult = manager.setPacketTemplate(packetTemplate);
   if (!templateResult) return templateResult.error().code();
 
@@ -144,15 +144,15 @@ The receiving Manager must use the same Packet Identification and packet-error-c
 #include <iostream>
 
 int main() {
-  CCSDS::Packet packetTemplate;
+  ccsds::Packet packetTemplate;
   packetTemplate.setDataFieldSize(1024);
 
-  const auto headerResult = packetTemplate.setPrimaryHeader(CCSDS::PrimaryHeader{
-    0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0
+  const auto headerResult = packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
+    0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
   });
   if (!headerResult) return headerResult.error().code();
 
-  CCSDS::Manager manager(packetTemplate);
+  ccsds::Manager manager(packetTemplate);
   manager.setDataFieldSize(1024);
 
   const auto readResult = manager.read("packets.bin");
@@ -182,13 +182,13 @@ Use `deserializeBounded()` when the application owns stream iteration or must pr
 #include <cstdint>
 #include <vector>
 
-CCSDS::ResultBool parseStream(const std::vector<std::uint8_t>& stream) {
+ccsds::ResultBool parseStream(const std::vector<std::uint8_t>& stream) {
   std::size_t offset = 0;
 
   while (offset < stream.size()) {
     std::vector<std::uint8_t> remaining(stream.begin() + offset, stream.end());
 
-    CCSDS::Packet packet;
+    ccsds::Packet packet;
     const auto consumedResult = packet.deserializeBounded(remaining);
     if (!consumedResult) return consumedResult.error();
 
@@ -207,17 +207,17 @@ For large or zero-copy streams, wrap this policy around the application's own bu
 The sender and receiver must both select `None`. The mode is never inferred from packet bytes.
 
 ```cpp
-CCSDS::Packet sender;
-sender.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+ccsds::Packet sender;
+sender.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
 sender.setDataFieldSize(1024);
-sender.setPrimaryHeader({0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0});
+sender.setPrimaryHeader({0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
 sender.setApplicationData({0x01, 0x02});
 const auto wireResult = sender.serialize();
 if (!wireResult) return wireResult.error().code();
 const auto &wire = wireResult.value();
 
-CCSDS::Packet receiver;
-receiver.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+ccsds::Packet receiver;
+receiver.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
 const auto consumed = receiver.deserializeBounded(wire);
 if (!consumed) return consumed.error().code();
 ```
@@ -228,9 +228,9 @@ For mission-specific opaque bytes that do not use a registered typed header, use
 the `BufferHeader` path through `setSecondaryHeader()`.
 
 ```cpp
-CCSDS::Packet packet;
+ccsds::Packet packet;
 packet.setDataFieldSize(1024);
-packet.setPrimaryHeader({0, 0, 1, 0x123, CCSDS::UNSEGMENTED, 0, 0});
+packet.setPrimaryHeader({0, 0, 1, 0x123, ccsds::UNSEGMENTED, 0, 0});
 
 const auto secondaryResult = packet.setSecondaryHeader(
   std::vector<std::uint8_t>{0xAA, 0x55}
@@ -248,7 +248,7 @@ const auto &wire = wireResult.value();
 When parsing an opaque secondary header, provide its byte count:
 
 ```cpp
-CCSDS::Packet decoded;
+ccsds::Packet decoded;
 const auto consumed = decoded.deserializeBounded(wire, 2U);
 if (!consumed) return consumed.error().code();
 ```
@@ -258,6 +258,9 @@ if (!consumed) return consumed.error().code();
 A minimal template configuration is:
 
 ```ini
+mission_profile:string=generic
+ccsds_packet_error_control:string=crc16
+
 ccsds_version_number:int=0
 ccsds_type:bool=false
 ccsds_secondary_header_flag:bool=false
@@ -265,7 +268,6 @@ ccsds_APID:int=0x123
 ccsds_segmented:bool=false
 
 data_field_size:int=1024
-ccsds_packet_error_control:string=crc16
 
 define_secondary_header:bool=false
 ```
@@ -273,7 +275,7 @@ define_secondary_header:bool=false
 Load it directly into a Manager:
 
 ```cpp
-CCSDS::Manager manager;
+ccsds::Manager manager;
 const auto templateResult = manager.loadTemplateConfigFile("template.cfg");
 if (!templateResult) return templateResult.error().code();
 
@@ -284,7 +286,9 @@ const auto writeResult = manager.write("packets.bin");
 if (!writeResult) return writeResult.error().code();
 ```
 
-See [CONFIG.md](CONFIG.md) for all keys and Idle Packet constraints.
+See [CONFIG.md](CONFIG.md) for all keys, PUS/CUC profiles, and Idle Packet
+constraints. Complete CLI-ready configurations are in
+[`example/config`](../example/config).
 
 ## Command-line equivalent
 

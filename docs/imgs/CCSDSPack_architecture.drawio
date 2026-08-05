@@ -30,13 +30,13 @@
         <mxCell id="ae_gUdKZbPHSHadRNdAd-7" edge="1" parent="1" source="ae_gUdKZbPHSHadRNdAd-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="ae_gUdKZbPHSHadRNdAd-4" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ae_gUdKZbPHSHadRNdAd-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;CCSDS::Manager&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;packet generation,&amp;nbsp;&lt;/div&gt;&lt;div&gt;splitting, loading&lt;/div&gt;" vertex="1">
+        <mxCell id="ae_gUdKZbPHSHadRNdAd-2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;ccsds::Manager&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;packet generation,&amp;nbsp;&lt;/div&gt;&lt;div&gt;splitting, loading&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="400" x="160" y="200" as="geometry" />
         </mxCell>
-        <mxCell id="ae_gUdKZbPHSHadRNdAd-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="CCSDS::Packet" vertex="1">
+        <mxCell id="ae_gUdKZbPHSHadRNdAd-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="ccsds::Packet" vertex="1">
           <mxGeometry height="40" width="400" x="160" y="320" as="geometry" />
         </mxCell>
-        <mxCell id="ae_gUdKZbPHSHadRNdAd-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="CCSDS::Header" vertex="1">
+        <mxCell id="ae_gUdKZbPHSHadRNdAd-9" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="ccsds::Header" vertex="1">
           <mxGeometry height="40" width="200" x="160" y="360" as="geometry" />
         </mxCell>
         <mxCell id="ae_gUdKZbPHSHadRNdAd-20" edge="1" parent="1" source="ae_gUdKZbPHSHadRNdAd-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ae_gUdKZbPHSHadRNdAd-14">
@@ -45,7 +45,7 @@
         <mxCell id="ae_gUdKZbPHSHadRNdAd-21" edge="1" parent="1" source="ae_gUdKZbPHSHadRNdAd-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="ae_gUdKZbPHSHadRNdAd-16">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="ae_gUdKZbPHSHadRNdAd-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="CCSDS::DataField" vertex="1">
+        <mxCell id="ae_gUdKZbPHSHadRNdAd-11" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="ccsds::DataField" vertex="1">
           <mxGeometry height="40" width="200" x="360" y="360" as="geometry" />
         </mxCell>
         <mxCell id="ae_gUdKZbPHSHadRNdAd-14" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="Secondary Header" vertex="1">

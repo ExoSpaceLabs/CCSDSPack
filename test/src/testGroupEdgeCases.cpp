@@ -21,11 +21,13 @@ namespace {
       return false;
     }
     file << "ccsds_version_number:int=0\n"
+         << "mission_profile:string=generic\n"
+         << "ccsds_packet_error_control:string=crc16\n"
          << "ccsds_type:bool=false\n"
          << "ccsds_secondary_header_flag:bool=false\n"
          << "ccsds_APID:int=" << apid << "\n"
          << "ccsds_segmented:bool=false\n";
-    if (apid == static_cast<int>(CCSDS::IDLE_APID)) {
+    if (apid == static_cast<int>(ccsds::IDLE_APID)) {
       file << "application_data:bytes=[0x00]\n";
     }
     return static_cast<bool>(file);
@@ -65,7 +67,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupEdgeCases: " << description << std::endl;
 
   tester->unitTest("Large application data check (approx 1KB)", []() {
-    CCSDS::Packet pkt;
+    ccsds::Packet pkt;
     pkt.setUpdatePacketEnable(true);
     std::vector<uint8_t> largeData(1024, 0x5A);
     TEST_VOID(pkt.setApplicationData(largeData));
@@ -73,7 +75,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     auto buffer = serializedPacket(pkt);
     if (buffer.size() < 1024 + 6 + 2) return false;
 
-    CCSDS::Packet pktDec;
+    ccsds::Packet pktDec;
     TEST_VOID(pktDec.deserialize(buffer));
 
     auto decData = pktDec.getApplicationDataBytes();
@@ -81,52 +83,52 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Deserialization of too short data", []() {
-    CCSDS::Packet pkt;
+    ccsds::Packet pkt;
     std::vector<uint8_t> shortData = {0x00, 0x01, 0x02, 0x03, 0x04};
     auto res = pkt.deserialize(shortData);
     return !res;
   });
 
   tester->unitTest("APID range and header status are handled explicitly", []() {
-    CCSDS::Header header;
+    ccsds::Header header;
     for (const std::uint16_t apid : {0U, 255U, 256U, 2046U}) {
       TEST_VOID(header.setAPID(apid));
-      if (header.getAPID() != apid || header.getHeaderStatus() != CCSDS::NORMAL) {
+      if (header.getAPID() != apid || header.getHeaderStatus() != ccsds::NORMAL) {
         return false;
       }
     }
 
-    TEST_VOID(header.setAPID(CCSDS::IDLE_APID));
-    if (header.getHeaderStatus() != CCSDS::IDLE || header.serialize().size() != 6U) {
+    TEST_VOID(header.setAPID(ccsds::IDLE_APID));
+    if (header.getHeaderStatus() != ccsds::IDLE || header.serialize().size() != 6U) {
       return false;
     }
 
-    const auto invalid = header.setAPID(CCSDS::IDLE_APID + 1U);
-    if (invalid || header.getHeaderStatus() != CCSDS::INVALID || !header.serialize().empty()) {
+    const auto invalid = header.setAPID(ccsds::IDLE_APID + 1U);
+    if (invalid || header.getHeaderStatus() != ccsds::INVALID || !header.serialize().empty()) {
       return false;
     }
 
     TEST_VOID(header.setAPID(256U));
-    return header.getHeaderStatus() == CCSDS::NORMAL && header.serialize().size() == 6U;
+    return header.getHeaderStatus() == ccsds::NORMAL && header.serialize().size() == 6U;
   });
 
   tester->unitTest("Packed primary header derives idle APID status", []() {
-    CCSDS::Header header;
-    TEST_VOID(header.setData(static_cast<std::uint64_t>(CCSDS::IDLE_APID) << 32));
-    return header.getAPID() == CCSDS::IDLE_APID
-           && header.getHeaderStatus() == CCSDS::IDLE
+    ccsds::Header header;
+    TEST_VOID(header.setData(static_cast<std::uint64_t>(ccsds::IDLE_APID) << 32));
+    return header.getAPID() == ccsds::IDLE_APID
+           && header.getHeaderStatus() == ccsds::IDLE
            && header.serialize().size() == 6U;
   });
 
   tester->unitTest("Invalid PrimaryHeader assignment cannot be serialized", []() {
-    CCSDS::Packet packet;
-    const auto result = packet.setPrimaryHeader(CCSDS::PrimaryHeader{
-      0, 0, 0, static_cast<std::uint16_t>(CCSDS::IDLE_APID + 1U),
-      CCSDS::UNSEGMENTED, 0, 0
+    ccsds::Packet packet;
+    const auto result = packet.setPrimaryHeader(ccsds::PrimaryHeader{
+      0, 0, 0, static_cast<std::uint16_t>(ccsds::IDLE_APID + 1U),
+      ccsds::UNSEGMENTED, 0, 0
     });
     const auto serialized = packet.serialize();
     return !result && !serialized
-           && serialized.error().code() == CCSDS::INVALID_HEADER_DATA
+           && serialized.error().code() == ccsds::INVALID_HEADER_DATA
            && packet.getPrimaryHeaderBytes().empty();
   });
 
@@ -137,13 +139,13 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       if (!writePacketConfig(path, apid)) {
         return false;
       }
-      CCSDS::Packet packet;
+      ccsds::Packet packet;
       const auto result = packet.loadFromConfigFile(path);
       std::remove(path.c_str());
       if (!result || packet.getPrimaryHeader().getAPID() != static_cast<std::uint16_t>(apid)) {
         return false;
       }
-      const auto expectedStatus = apid == 2047 ? CCSDS::IDLE : CCSDS::NORMAL;
+      const auto expectedStatus = apid == 2047 ? ccsds::IDLE : ccsds::NORMAL;
       if (packet.getPrimaryHeader().getHeaderStatus() != expectedStatus) {
         return false;
       }
@@ -154,7 +156,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       if (!writePacketConfig(path, apid)) {
         return false;
       }
-      CCSDS::Packet packet;
+      ccsds::Packet packet;
       const auto result = packet.loadFromConfigFile(path);
       std::remove(path.c_str());
       if (result) {
@@ -164,9 +166,20 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     return true;
   });
 
+  tester->unitTest("Configuration rejects invalid boolean spelling", []() {
+    const std::string path{"ccsdspack_invalid_bool.cfg"};
+    std::ofstream file(path, std::ios::trunc);
+    file << "enabled:bool=truthy\n";
+    file.close();
+    ccsds::Config config;
+    const auto result = config.load(path);
+    std::remove(path.c_str());
+    return !result && result.error().code() == ccsds::CONFIG_FILE_ERROR;
+  });
+
   tester->unitTest("Packet error control defaults to CRC16", []() {
-    CCSDS::Packet packet;
-    if (packet.getPacketErrorControlMode() != CCSDS::PacketErrorControlMode::CRC16) return false;
+    ccsds::Packet packet;
+    if (packet.getPacketErrorControlMode() != ccsds::PacketErrorControlMode::CRC16) return false;
     if (packet.getPacketErrorControlSize() != 2) return false;
 
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
@@ -175,8 +188,8 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Packet error control can be disabled", []() {
-    CCSDS::Packet packet;
-    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    ccsds::Packet packet;
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
 
     const auto serialized = serializedPacket(packet);
@@ -185,25 +198,25 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     if (!packet.getCRCVectorBytes().empty()) return false;
     if (packet.getCRC() != 0) return false;
 
-    CCSDS::Packet decoded;
-    decoded.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    ccsds::Packet decoded;
+    decoded.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(decoded.deserialize(serialized));
     return decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0xAA, 0x55});
   });
 
   tester->unitTest("CRC16 mode still strips the received error control field", []() {
-    CCSDS::Packet packet;
+    ccsds::Packet packet;
     TEST_VOID(packet.setApplicationData({0x10, 0x20, 0x30}));
     const auto serialized = serializedPacket(packet);
 
-    CCSDS::Packet decoded;
+    ccsds::Packet decoded;
     TEST_VOID(decoded.deserialize(serialized));
-    if (decoded.getPacketErrorControlMode() != CCSDS::PacketErrorControlMode::CRC16) return false;
+    if (decoded.getPacketErrorControlMode() != ccsds::PacketErrorControlMode::CRC16) return false;
     return decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0x10, 0x20, 0x30});
   });
 
   tester->unitTest("Packet Data Length and CRC16 match independent reference vector", []() {
-    CCSDS::Packet packet;
+    ccsds::Packet packet;
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
 
     const std::vector<std::uint8_t> expected{
@@ -215,8 +228,8 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Packet Data Length excludes absent packet error control", []() {
-    CCSDS::Packet packet;
-    packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    ccsds::Packet packet;
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
 
     const std::vector<std::uint8_t> expected{
@@ -228,7 +241,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("CRC16 covers primary header, secondary header and application data", []() {
-    CCSDS::Packet packet;
+    ccsds::Packet packet;
     TEST_VOID(packet.setSecondaryHeader({0x01, 0x02, 0x03}));
     TEST_VOID(packet.setApplicationData({0x04, 0x05}));
 
@@ -242,7 +255,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Configured CRC16 parameters remain effective", []() {
-    CCSDS::Packet packet;
+    ccsds::Packet packet;
     packet.setCrcConfig(0x1021, 0x0000, 0x0000);
     TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
 
@@ -257,10 +270,10 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> expected;
     if (!readHexResource("ccsds_golden_minimum_crc16.hex", expected)) return false;
 
-    CCSDS::Packet generated;
+    ccsds::Packet generated;
     if (serializedPacket(generated) != expected) return false;
 
-    CCSDS::Packet decoded;
+    ccsds::Packet decoded;
     TEST_VOID(decoded.deserialize(expected));
     const auto &header = decoded.getPrimaryHeader();
     return expected.size() == 8U
@@ -268,7 +281,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
            && header.getType() == 0U
            && header.getSecondaryHeaderFlag() == 0U
            && header.getAPID() == 0U
-           && header.getSequenceFlags() == CCSDS::UNSEGMENTED
+           && header.getSequenceFlags() == ccsds::UNSEGMENTED
            && header.getSequenceCount() == 0U
            && header.getDataLength() == 1U
            && decoded.getApplicationDataBytes().empty()
@@ -279,11 +292,11 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> expected;
     if (!readHexResource("ccsds_golden_no_secondary_crc16.hex", expected)) return false;
 
-    CCSDS::Packet generated;
+    ccsds::Packet generated;
     TEST_VOID(generated.setApplicationData({0xAA, 0x55}));
     if (serializedPacket(generated) != expected) return false;
 
-    CCSDS::Packet decoded;
+    ccsds::Packet decoded;
     TEST_VOID(decoded.deserialize(expected));
     return decoded.getPrimaryHeader().getSecondaryHeaderFlag() == 0U
            && decoded.getPrimaryHeader().getDataLength() == 3U
@@ -295,12 +308,12 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> expected;
     if (!readHexResource("ccsds_golden_custom_secondary_crc16.hex", expected)) return false;
 
-    CCSDS::Packet generated;
+    ccsds::Packet generated;
     TEST_VOID(generated.setSecondaryHeader({0x01, 0x02, 0x03}));
     TEST_VOID(generated.setApplicationData({0x04, 0x05}));
     if (serializedPacket(generated) != expected) return false;
 
-    CCSDS::Packet decoded;
+    ccsds::Packet decoded;
     TEST_VOID(decoded.deserialize(expected, 3U));
     return decoded.getPrimaryHeader().getSecondaryHeaderFlag() == 1U
            && decoded.getPrimaryHeader().getDataLength() == 6U
@@ -313,13 +326,13 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> expected;
     if (!readHexResource("ccsds_golden_no_crc.hex", expected)) return false;
 
-    CCSDS::Packet generated;
-    generated.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    ccsds::Packet generated;
+    generated.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(generated.setApplicationData({0xAA, 0x55}));
     if (serializedPacket(generated) != expected) return false;
 
-    CCSDS::Packet decoded;
-    decoded.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    ccsds::Packet decoded;
+    decoded.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(decoded.deserialize(expected));
     return decoded.getPrimaryHeader().getDataLength() == 1U
            && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0xAA, 0x55})
@@ -331,21 +344,21 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> expected;
     if (!readHexResource("ccsds_golden_apid_0123_seq_0123_crc16.hex", expected)) return false;
 
-    CCSDS::Packet generated;
-    TEST_VOID(generated.setPrimaryHeader(CCSDS::PrimaryHeader{
-      0, 1, 0, 0x123, CCSDS::UNSEGMENTED, 0x123, 0
+    ccsds::Packet generated;
+    TEST_VOID(generated.setPrimaryHeader(ccsds::PrimaryHeader{
+      0, 1, 0, 0x123, ccsds::UNSEGMENTED, 0x123, 0
     }));
     TEST_VOID(generated.setApplicationData({0xDE, 0xAD}));
     if (serializedPacket(generated) != expected) return false;
 
-    CCSDS::Packet decoded;
+    ccsds::Packet decoded;
     TEST_VOID(decoded.deserialize(expected));
     const auto &header = decoded.getPrimaryHeader();
     return header.getVersionNumber() == 0U
            && header.getType() == 1U
            && header.getSecondaryHeaderFlag() == 0U
            && header.getAPID() == 0x123U
-           && header.getSequenceFlags() == CCSDS::UNSEGMENTED
+           && header.getSequenceFlags() == ccsds::UNSEGMENTED
            && header.getSequenceCount() == 0x123U
            && header.getDataLength() == 3U
            && decoded.getApplicationDataBytes() == std::vector<std::uint8_t>({0xDE, 0xAD})
@@ -356,15 +369,15 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> expected;
     if (!readHexResource("ccsds_golden_rollover_concat_crc16.hex", expected)) return false;
 
-    CCSDS::Packet generatedFirst;
-    TEST_VOID(generatedFirst.setPrimaryHeader(CCSDS::PrimaryHeader{
-      0, 0, 0, 1, CCSDS::UNSEGMENTED, 0x3FFF, 0
+    ccsds::Packet generatedFirst;
+    TEST_VOID(generatedFirst.setPrimaryHeader(ccsds::PrimaryHeader{
+      0, 0, 0, 1, ccsds::UNSEGMENTED, 0x3FFF, 0
     }));
     TEST_VOID(generatedFirst.setApplicationData({0xAA}));
 
-    CCSDS::Packet generatedSecond;
-    TEST_VOID(generatedSecond.setPrimaryHeader(CCSDS::PrimaryHeader{
-      0, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0
+    ccsds::Packet generatedSecond;
+    TEST_VOID(generatedSecond.setPrimaryHeader(ccsds::PrimaryHeader{
+      0, 0, 0, 1, ccsds::UNSEGMENTED, 0, 0
     }));
     TEST_VOID(generatedSecond.setApplicationData({0xBB}));
 
@@ -373,17 +386,17 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     generated.insert(generated.end(), generatedSecondBytes.begin(), generatedSecondBytes.end());
     if (generated != expected) return false;
 
-    CCSDS::Packet first;
+    ccsds::Packet first;
     const auto firstConsumed = first.deserializeBounded(expected);
     if (!firstConsumed || firstConsumed.value() != 9U) return false;
 
     const std::vector<std::uint8_t> remaining(
       expected.begin() + static_cast<std::ptrdiff_t>(firstConsumed.value()), expected.end());
-    CCSDS::Packet second;
+    ccsds::Packet second;
     const auto secondConsumed = second.deserializeBounded(remaining);
     if (!secondConsumed || secondConsumed.value() != 9U) return false;
 
-    CCSDS::Manager manager;
+    ccsds::Manager manager;
     manager.setAutoValidateEnable(false);
     TEST_VOID(manager.load(expected));
     const auto packets = manager.getPackets();
@@ -400,7 +413,7 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Maximum Packet Data Length value is encoded", []() {
-    CCSDS::Packet packet;
+    ccsds::Packet packet;
     packet.setDataFieldSize(0xFFFEU);
     TEST_VOID(packet.setApplicationData(std::vector<std::uint8_t>(0xFFFEU, 0x00)));
 
@@ -412,10 +425,10 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Packet Data Length overflow is rejected", []() {
-    CCSDS::Packet packet;
+    ccsds::Packet packet;
     packet.setDataFieldSize(0xFFFFU);
     TEST_VOID(packet.setApplicationData(std::vector<std::uint8_t>(0xFFFFU, 0x00)));
     const auto result = packet.serialize();
-    return !result && result.error().code() == CCSDS::INVALID_DATA;
+    return !result && result.error().code() == ccsds::INVALID_DATA;
   });
 }

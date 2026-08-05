@@ -7,24 +7,24 @@
 #include <string>
 #include <vector>
 
-class MissionSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
+class MissionSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
 public:
-  [[nodiscard]] CCSDS::ResultBool deserialize(
+  [[nodiscard]] ccsds::ResultBool deserialize(
       const std::vector<std::uint8_t> &data) override {
     if (data.size() != getSize()) {
-      return CCSDS::Error{CCSDS::INVALID_SECONDARY_HEADER_DATA,
+      return ccsds::Error{ccsds::INVALID_SECONDARY_HEADER_DATA,
                           "MissionSecondaryHeader requires two bytes"};
     }
     m_data = data;
     return true;
   }
 
-  void update(CCSDS::DataField *) override {}
+  void update(ccsds::DataField *) override {}
   [[nodiscard]] std::uint16_t getSize() const override { return 2U; }
   [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return m_data; }
   [[nodiscard]] std::string getType() const override { return "MissionSecondaryHeader"; }
 #ifndef CCSDS_MCU
-  CCSDS::ResultBool loadFromConfig(const Config &) override { return true; }
+  ccsds::ResultBool loadFromConfig(const ccsds::Config &) override { return true; }
 #endif
 
 private:
@@ -32,16 +32,16 @@ private:
 };
 
 namespace {
-  int fail(const char *operation, const CCSDS::Error &error) {
+  int fail(const char *operation, const ccsds::Error &error) {
     std::cerr << operation << ": " << error.message() << '\n';
-    return error.code() == CCSDS::NONE ? 1 : error.code();
+    return error.code() == ccsds::NONE ? 1 : error.code();
   }
 }
 
 int main() {
-  CCSDS::Packet packet;
-  if (const auto result = packet.setPrimaryHeader(CCSDS::PrimaryHeader{
-        0U, 0U, 0U, 0x321U, CCSDS::UNSEGMENTED, 0U, 0U}); !result) {
+  ccsds::Packet packet;
+  if (const auto result = packet.setPrimaryHeader(ccsds::PrimaryHeader{
+        0U, 0U, 0U, 0x321U, ccsds::UNSEGMENTED, 0U, 0U}); !result) {
     return fail("setPrimaryHeader", result.error());
   }
   if (const auto result = packet.RegisterSecondaryHeader<MissionSecondaryHeader>(); !result) {
@@ -58,7 +58,7 @@ int main() {
   const auto wireResult = packet.serialize();
   if (!wireResult) return fail("serialize", wireResult.error());
   const auto &wire = wireResult.value();
-  CCSDS::Packet decoded;
+  ccsds::Packet decoded;
   if (const auto result = decoded.RegisterSecondaryHeader<MissionSecondaryHeader>(); !result) {
     return fail("RegisterSecondaryHeader decoder", result.error());
   }

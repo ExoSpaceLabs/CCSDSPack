@@ -5,10 +5,15 @@
 #define CCSDS_MISSION_PROFILE_H
 
 #include <CCSDSResult.h>
+#include <CCSDSTime.h>
 #include <cstdint>
 #include <string>
 
-namespace CCSDS {
+namespace ccsds {
+
+#ifndef CCSDS_MCU
+  class Config;
+#endif
 
   /** @brief Packet error-control mode selected by a mission profile. */
   enum class PacketErrorControlMode : std::uint8_t {
@@ -16,26 +21,21 @@ namespace CCSDS {
     CRC16 = 1  ///< CRC-16 packet error-control field.
   };
 
-  /** @brief Supported ECSS PUS revisions. */
-  enum class PusRevision : std::uint8_t {
-    Unspecified = 0,  ///< No PUS revision selected.
-    A = 1,            ///< ECSS-E-70-41A.
-    C = 2             ///< ECSS-E-ST-70-41C.
-  };
+  namespace pus {
+    /** @brief Supported ECSS PUS revisions. */
+    enum class Revision : std::uint8_t {
+      Unspecified = 0, ///< No PUS revision selected.
+      A = 1,           ///< ECSS-E-70-41A.
+      C = 2            ///< ECSS-E-ST-70-41C.
+    };
 
-  /** @brief Packet direction used by a PUS secondary header. */
-  enum class PacketDirection : std::uint8_t {
-    Unspecified = 0,  ///< No packet direction selected.
-    Telemetry = 1,    ///< Telemetry packet type.
-    Telecommand = 2   ///< Telecommand packet type.
-  };
-
-  /** @brief Supported CCSDS time-code families for PUS telemetry. */
-  enum class TimeCodeFormat : std::uint8_t {
-    None = 0,  ///< No telemetry time code.
-    Cuc = 1,   ///< CCSDS Unsegmented Time Code.
-    Cds = 2    ///< CCSDS Day Segmented Time Code.
-  };
+    /** @brief Packet direction used by a PUS secondary header. */
+    enum class Direction : std::uint8_t {
+      Unspecified = 0, ///< No packet direction selected.
+      Telemetry = 1,   ///< Telemetry packet type.
+      Telecommand = 2  ///< Telecommand packet type.
+    };
+  }
 
   /**
    * @brief Explicit mission tailoring used by the standards-facing PUS codecs.
@@ -46,30 +46,34 @@ namespace CCSDS {
    */
   struct MissionProfile {
     bool pusEnabled{false};
-    PusRevision pusRevision{PusRevision::Unspecified};
-    PacketDirection direction{PacketDirection::Unspecified};
+    pus::Revision pusRevision{pus::Revision::Unspecified};
+    pus::Direction direction{pus::Direction::Unspecified};
     std::uint8_t sourceIdOctets{0};
     std::uint8_t destinationIdOctets{0};
     PacketErrorControlMode packetErrorControl{PacketErrorControlMode::CRC16};
     bool telemetryTimestampPresent{false};
-    TimeCodeFormat telemetryTimeCode{TimeCodeFormat::None};
-    std::uint8_t telemetryTimeCodeOctets{0};
+    time::Format telemetryTimeCode{time::Format::None};
+    time::CucConfiguration telemetryCuc{};
     bool pusATmPacketSubcounterPresent{false};
     std::uint8_t secondaryHeaderSpareOctets{0};
   };
 
-  /** @brief Builds a default PUS profile for one revision and direction. */
-  [[nodiscard]] MissionProfile makePusProfile(PusRevision revision,
-                                              PacketDirection direction);
   /** @brief Validates all generic CCSDS and PUS mission-profile fields. */
   [[nodiscard]] ResultBool validateMissionProfile(const MissionProfile &profile);
   /** @brief Returns whether two mission profiles select identical wire tailoring. */
   [[nodiscard]] bool missionProfilesEqual(const MissionProfile &lhs,
                                           const MissionProfile &rhs);
-  /** @brief Returns the canonical selector for a supported PUS revision and direction. */
-  [[nodiscard]] std::string pusSelector(PusRevision revision,
-                                        PacketDirection direction);
+#ifndef CCSDS_MCU
+  /** @brief Loads one explicit generic or PUS mission profile from configuration. */
+  [[nodiscard]] Result<MissionProfile> missionProfileFromConfig(const Config &config);
+#endif
+  namespace pus {
+    /** @brief Builds a default PUS profile for one revision and direction. */
+    [[nodiscard]] MissionProfile makeProfile(Revision revision, Direction direction);
+    /** @brief Returns the canonical selector for a supported revision and direction. */
+    [[nodiscard]] std::string selector(Revision revision, Direction direction);
+  }
 
-} // namespace CCSDS
+} // namespace ccsds
 
 #endif // CCSDS_MISSION_PROFILE_H

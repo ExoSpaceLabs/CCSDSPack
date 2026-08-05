@@ -6,18 +6,18 @@
 #include <vector>
 
 namespace {
-  int fail(const char *operation, const CCSDS::Error &error) {
+  int fail(const char *operation, const ccsds::Error &error) {
     std::cerr << operation << ": " << error.message() << '\n';
-    return error.code() == CCSDS::NONE ? 1 : error.code();
+    return error.code() == ccsds::NONE ? 1 : error.code();
   }
 }
 
 int main() {
-  CCSDS::Packet packet;
-  packet.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+  ccsds::Packet packet;
+  packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
 
-  if (const auto result = packet.setPrimaryHeader(CCSDS::PrimaryHeader{
-        0U, 0U, 0U, 0x123U, CCSDS::UNSEGMENTED, 42U, 0U}); !result) {
+  if (const auto result = packet.setPrimaryHeader(ccsds::PrimaryHeader{
+        0U, 0U, 0U, 0x123U, ccsds::UNSEGMENTED, 42U, 0U}); !result) {
     return fail("setPrimaryHeader", result.error());
   }
   if (const auto result = packet.setApplicationData({0x10U, 0x20U, 0x30U}); !result) {
@@ -28,8 +28,8 @@ int main() {
   if (!wireResult) return fail("serialize", wireResult.error());
   const auto &wire = wireResult.value();
 
-  CCSDS::Packet decoded;
-  decoded.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+  ccsds::Packet decoded;
+  decoded.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
   const auto consumed = decoded.deserializeBounded(wire);
   if (!consumed) return fail("deserializeBounded", consumed.error());
 

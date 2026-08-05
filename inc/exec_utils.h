@@ -42,7 +42,7 @@ struct PacketStreamLayout {
  * @param booleanArgs Long option names which do not consume a value.
  * @return Success, or ARG_PARSE_ERROR for unknown options or missing values.
  */
-CCSDS::ResultBool parseArguments(int argc, char *argv[],
+ccsds::ResultBool parseArguments(int argc, char *argv[],
                                  std::unordered_map<std::string, std::string> &allowedMap,
                                  std::unordered_map<std::string, std::string> &outArgs,
                                  const std::set<std::string> &booleanArgs);
@@ -52,11 +52,15 @@ CCSDS::ResultBool parseArguments(int argc, char *argv[],
  * @param value Case-insensitive `crc16` or `none`.
  * @return Parsed mode, or ARG_PARSE_ERROR for an unsupported value.
  */
-CCSDS::Result<CCSDS::PacketErrorControlMode>
+ccsds::Result<ccsds::PacketErrorControlMode>
 parsePacketErrorControlMode(const std::string &value);
 
 /** @brief Returns the stable CLI spelling for a packet-error-control mode. */
-const char *packetErrorControlModeName(CCSDS::PacketErrorControlMode mode);
+const char *packetErrorControlModeName(ccsds::PacketErrorControlMode mode);
+
+/** @brief Applies a CLI packet-error-control override to the packet and its profile. */
+ccsds::ResultBool applyPacketErrorControlMode(
+  ccsds::Packet &packet, ccsds::PacketErrorControlMode mode);
 
 /**
  * @brief Scans adjacent packets using each encoded Packet Data Length boundary.
@@ -66,7 +70,7 @@ const char *packetErrorControlModeName(CCSDS::PacketErrorControlMode mode);
  * @param allowTrailingBytes When true, a non-packet suffix after at least one packet is left unconsumed.
  * @return Packet ranges and consumed prefix, or a deterministic framing/length error.
  */
-CCSDS::Result<PacketStreamLayout>
+ccsds::Result<PacketStreamLayout>
 inspectPacketStream(const std::vector<std::uint8_t> &data,
                     bool syncPatternEnable,
                     std::uint32_t syncPattern,

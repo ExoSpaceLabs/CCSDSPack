@@ -4,7 +4,7 @@
 #include "CCSDSValidator.h"
 #include "CCSDSUtils.h"
 
-void CCSDS::Validator::configure(const bool validatePacketCoherence,
+void ccsds::Validator::configure(const bool validatePacketCoherence,
                                  const bool validateSequenceCount,
                                  const bool validateAgainstTemplate) {
   m_validatePacketCoherence = validatePacketCoherence;
@@ -12,7 +12,7 @@ void CCSDS::Validator::configure(const bool validatePacketCoherence,
   m_validateAgainstTemplate = validateAgainstTemplate;
 }
 
-void CCSDS::Validator::acceptSequence(const Header &header) {
+void ccsds::Validator::acceptSequence(const Header &header) {
   const auto next = static_cast<std::uint16_t>(
     (header.getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
   auto state = static_cast<std::uint16_t>(SEQUENCE_INITIALIZED_MASK | next);
@@ -23,7 +23,7 @@ void CCSDS::Validator::acceptSequence(const Header &header) {
   m_sequenceCounter = state;
 }
 
-bool CCSDS::Validator::validate(const Packet &packet) {
+bool ccsds::Validator::validate(const Packet &packet) {
   m_report.assign(m_reportSize, true);
   bool result{true};
 
@@ -45,7 +45,7 @@ bool CCSDS::Validator::validate(const Packet &packet) {
     if (packet.getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
       auto crcInput = headerData;
       crcInput.insert(crcInput.end(), dataFieldBytes.begin(), dataFieldBytes.end());
-      const auto calculatedCRC = ::crc16(
+      const auto calculatedCRC = ccsds::crc16(
         crcInput, m_CRCConfig.polynomial, m_CRCConfig.initialValue,
         m_CRCConfig.finalXorValue);
       m_report[1] = calculatedCRC == packet.getCRC();
@@ -103,7 +103,7 @@ bool CCSDS::Validator::validate(const Packet &packet) {
   return result;
 }
 
-void CCSDS::Validator::clear() {
+void ccsds::Validator::clear() {
   m_sequenceCounter = 0U;
   m_report.clear();
   m_templatePacket = {};

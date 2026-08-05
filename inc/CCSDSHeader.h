@@ -12,7 +12,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace CCSDS {
+namespace ccsds {
   /** @brief Reserved 11-bit APID value identifying an idle Space Packet. */
   inline constexpr std::uint16_t IDLE_APID = 0x07FFU;
 
@@ -99,9 +99,9 @@ namespace CCSDS {
    * so ignored errors cannot silently produce truncated wire values.
    *
    * @code{.cpp}
-   * CCSDS::Header header;
+   * ccsds::Header header;
    * header.setAPID(0x123);
-   * header.setSequenceFlags(CCSDS::UNSEGMENTED);
+   * header.setSequenceFlags(ccsds::UNSEGMENTED);
    * header.setSequenceCount(42);
    * const auto bytes = header.serialize();
    * @endcode

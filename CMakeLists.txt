@@ -65,6 +65,7 @@ set(LIBRARY_SOURCES
         "${SOURCE_DIR}/CCSDSHeader.cpp"
         "${SOURCE_DIR}/CCSDSManager.cpp"
         "${SOURCE_DIR}/CCSDSMissionProfile.cpp"
+        "${SOURCE_DIR}/CCSDSTime.cpp"
         "${SOURCE_DIR}/CCSDSPacket.cpp"
         "${SOURCE_DIR}/CCSDSUtils.cpp"
         "${SOURCE_DIR}/CCSDSValidator.cpp"

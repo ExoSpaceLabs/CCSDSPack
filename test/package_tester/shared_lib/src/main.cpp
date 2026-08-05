@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-class CustomSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
+class CustomSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
 public:
   CustomSecondaryHeader() { variableLength = true; }
 
@@ -16,7 +16,7 @@ public:
     variableLength = true;
   }
 
-  [[nodiscard]] CCSDS::ResultBool deserialize(const std::vector<std::uint8_t> &data) override {
+  [[nodiscard]] ccsds::ResultBool deserialize(const std::vector<std::uint8_t> &data) override {
     m_data = data;
     return true;
   }
@@ -28,11 +28,11 @@ public:
   [[nodiscard]] std::string getType() const override { return "CustomSecondaryHeader"; }
   [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return m_data; }
 
-  void update(CCSDS::DataField *) override {
+  void update(ccsds::DataField *) override {
     m_dataLength = static_cast<std::uint16_t>(m_data.size());
   }
 
-  CCSDS::ResultBool loadFromConfig(const Config &) override { return true; }
+  ccsds::ResultBool loadFromConfig(const ccsds::Config &) override { return true; }
 
 private:
   std::vector<std::uint8_t> m_data{};
@@ -45,7 +45,7 @@ namespace {
     return 1;
   }
 
-  int failResult(const std::string &stage, const CCSDS::Error &error) {
+  int failResult(const std::string &stage, const ccsds::Error &error) {
     std::cerr << "[external consumer] " << stage << ": " << error.message()
               << " (code " << error.code() << ")\n";
     return error.code() == 0 ? 1 : error.code();
@@ -53,9 +53,9 @@ namespace {
 }
 
 int main() {
-  CCSDS::Packet templatePacket;
-  if (const auto result = templatePacket.setPrimaryHeader(CCSDS::PrimaryHeader{
-        0, 1, 0, 0x123, CCSDS::UNSEGMENTED, 5, 0
+  ccsds::Packet templatePacket;
+  if (const auto result = templatePacket.setPrimaryHeader(ccsds::PrimaryHeader{
+        0, 1, 0, 0x123, ccsds::UNSEGMENTED, 5, 0
       }); !result) {
     return failResult("set primary header", result.error());
   }
@@ -70,7 +70,7 @@ int main() {
     return failResult("set custom secondary header", result.error());
   }
 
-  CCSDS::Manager manager;
+  ccsds::Manager manager;
   if (const auto result = manager.setPacketTemplate(templatePacket); !result) {
     return failResult("set Manager template", result.error());
   }
@@ -122,7 +122,7 @@ int main() {
     return fail("legacy getPacketBufferAtIndex", "indexed packet differs from stream bytes");
   }
 
-  CCSDS::Packet decoded;
+  ccsds::Packet decoded;
   if (const auto result = decoded.RegisterSecondaryHeader<CustomSecondaryHeader>(); !result) {
     return failResult("register decoder secondary header", result.error());
   }
@@ -138,13 +138,13 @@ int main() {
     return fail("bounded decode", "consumed-byte count differs from packet size");
   }
 
-  const CCSDS::Packet &view = decoded;
+  const ccsds::Packet &view = decoded;
   const auto &header = view.getPrimaryHeader();
   if (header.getVersionNumber() != 0U
       || header.getType() != 1U
       || header.getSecondaryHeaderFlag() != 1U
       || header.getAPID() != 0x123U
-      || header.getSequenceFlags() != CCSDS::UNSEGMENTED
+      || header.getSequenceFlags() != ccsds::UNSEGMENTED
       || header.getSequenceCount() != 5U
       || view.getSecondaryHeaderBytes() != secondaryHeader
       || view.getApplicationDataBytes() != std::vector<std::uint8_t>({0x01, 0x02, 0x03})
@@ -163,13 +163,13 @@ int main() {
   (void)decoded.getDataField();
   (void)decoded.getPrimaryHeader();
 
-  CCSDS::Validator validator(templatePacket);
+  ccsds::Validator validator(templatePacket);
   validator.configure(true, false, true);
   if (!validator.validate(decoded)) {
     return fail("Validator", "valid packet was rejected against its template identifier");
   }
 
-  CCSDS::Packet mismatchedIdentifier = decoded;
+  ccsds::Packet mismatchedIdentifier = decoded;
   if (const auto result = mismatchedIdentifier.getPrimaryHeader().setType(0U); !result) {
     return failResult("prepare mismatched identifier", result.error());
   }
@@ -177,10 +177,10 @@ int main() {
     return fail("Manager identifier", "packet with a different identifier was accepted");
   }
 
-  CCSDS::Packet crcDisabled;
-  crcDisabled.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
-  if (const auto result = crcDisabled.setPrimaryHeader(CCSDS::PrimaryHeader{
-        0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 7, 0
+  ccsds::Packet crcDisabled;
+  crcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+  if (const auto result = crcDisabled.setPrimaryHeader(ccsds::PrimaryHeader{
+        0, 0, 0, 0x123, ccsds::UNSEGMENTED, 7, 0
       }); !result) {
     return failResult("CRC-disabled primary header", result.error());
   }
@@ -199,8 +199,8 @@ int main() {
     return fail("CRC-disabled vector", "packet bytes differ from the expected vector");
   }
 
-  CCSDS::Packet decodedCrcDisabled;
-  decodedCrcDisabled.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+  ccsds::Packet decodedCrcDisabled;
+  decodedCrcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
   const auto crcDisabledConsumed = decodedCrcDisabled.deserializeBounded(crcDisabledBytes);
   if (!crcDisabledConsumed || crcDisabledConsumed.value() != crcDisabledBytes.size()
       || decodedCrcDisabled.getPrimaryHeader().getSequenceCount() != 7U
@@ -210,9 +210,9 @@ int main() {
     return fail("CRC-disabled decode", "CRC-free packet did not round-trip");
   }
 
-  CCSDS::Packet invalidVersion;
-  if (const auto result = invalidVersion.setPrimaryHeader(CCSDS::PrimaryHeader{
-        1, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0
+  ccsds::Packet invalidVersion;
+  if (const auto result = invalidVersion.setPrimaryHeader(ccsds::PrimaryHeader{
+        1, 0, 0, 1, ccsds::UNSEGMENTED, 0, 0
       }); !result) {
     return failResult("non-zero PVN setup", result.error());
   }
@@ -223,9 +223,9 @@ int main() {
     return fail("Packet Version Number", "non-zero PVN was serialized as a Space Packet");
   }
 
-  CCSDS::Packet invalidIdle;
-  if (const auto result = invalidIdle.setPrimaryHeader(CCSDS::PrimaryHeader{
-        0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
+  ccsds::Packet invalidIdle;
+  if (const auto result = invalidIdle.setPrimaryHeader(ccsds::PrimaryHeader{
+        0, 0, 0, ccsds::IDLE_APID, ccsds::UNSEGMENTED, 0, 0
       }); !result) {
     return failResult("Idle Packet setup", result.error());
   }
@@ -239,9 +239,9 @@ int main() {
     return fail("Idle Packet", "Idle Packet with a secondary header was serialized");
   }
 
-  CCSDS::Packet validIdle;
-  if (const auto result = validIdle.setPrimaryHeader(CCSDS::PrimaryHeader{
-        0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
+  ccsds::Packet validIdle;
+  if (const auto result = validIdle.setPrimaryHeader(ccsds::PrimaryHeader{
+        0, 0, 0, ccsds::IDLE_APID, ccsds::UNSEGMENTED, 0, 0
       }); !result) {
     return failResult("valid Idle Packet setup", result.error());
   }

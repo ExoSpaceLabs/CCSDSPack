@@ -9,8 +9,8 @@ SPDX-License-Identifier: Apache-2.0
 
 CCSDSPack exposes two main levels:
 
-- `CCSDS::Packet` represents exactly one CCSDS Space Packet PDU;
-- `CCSDS::Manager` generates or consumes a stream whose packets share one complete Packet Identification value.
+- `ccsds::Packet` represents exactly one CCSDS Space Packet PDU;
+- `ccsds::Manager` generates or consumes a stream whose packets share one complete Packet Identification value.
 
 ## Construct one packet
 

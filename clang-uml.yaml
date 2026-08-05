@@ -30,7 +30,7 @@ diagrams:
         - private
     plantuml:
       before:
-        - 'title CCSDS::Packet UML Diagram'
+        - 'title ccsds::Packet UML Diagram'
   ccsds_data_field:
     type: class
     glob:
@@ -40,9 +40,11 @@ diagrams:
       - inc/CCSDSSecondaryHeaderAbstract.h
       - inc/CCSDSSecondaryHeaderFactory.h
       - inc/CCSDSMissionProfile.h
+      - inc/CCSDSTime.h
       - inc/PusSecondaryHeaderFactory.h
       - inc/PusSecondaryHeaders.h
       - src/CCSDSMissionProfile.cpp
+      - src/CCSDSTime.cpp
       - src/PusSecondaryHeaderFactory.cpp
       - src/PusSecondaryHeaders.cpp
     exclude:
@@ -52,7 +54,7 @@ diagrams:
         - private
     plantuml:
       before:
-        - 'title CCSDS::DataField UML Diagram'
+        - 'title ccsds::DataField UML Diagram'
 
   ccsds_manager:
     type: class
@@ -71,7 +73,7 @@ diagrams:
         - private
     plantuml:
       before:
-        - 'title CCSDS::Manager UML Diagram'
+        - 'title ccsds::Manager UML Diagram'
 #  ccsds_tester:
 #    type: class
 #    glob:

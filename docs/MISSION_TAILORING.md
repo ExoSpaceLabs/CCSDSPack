@@ -1,119 +1,121 @@
-# CCSDSPack v2 Mission Tailoring
+# CCSDSPack v2 mission tailoring
 
 ## Purpose
 
-CCSDS packet error control and the ECSS PUS-A/PUS-C secondary-header layouts contain mission-selected parameters. CCSDSPack v2 records those choices explicitly so packet encoding and parsing remain deterministic.
+CCSDS packet error control and the ECSS PUS-A/PUS-C secondary-header layouts
+contain mission-selected parameters. CCSDSPack records those choices in one
+validated `ccsds::MissionProfile`, which is shared by Packet, Manager, and the
+command-line tools.
 
-The public contract and validation API are declared in `inc/CCSDSMissionProfile.h`.
+## Namespace and type model
+
+Generic Space Packet types live in `ccsds`. Standards-defined PUS types are
+grouped by revision and direction:
+
+| Wire profile | C++ type | Canonical selector |
+|---|---|---|
+| PUS-A TC | `ccsds::pus::rev_a::TcHeader` | `PUS:revA:TC` |
+| PUS-A TM | `ccsds::pus::rev_a::TmHeader` | `PUS:revA:TM` |
+| PUS-C TC | `ccsds::pus::rev_c::TcHeader` | `PUS:revC:TC` |
+| PUS-C TM | `ccsds::pus::rev_c::TmHeader` | `PUS:revC:TM` |
+
+The lowercase namespace is a v2 source-level convention. It does not alter the
+wire format or runtime performance. The nested PUS namespaces keep
+standards-specific codecs out of the generic packet API and prevent a revision
+from being confused with packet direction.
+
+`ccsds::pus::SecondaryHeaderFactory` owns the fixed standards registry. The
+direction-neutral `ccsds::SecondaryHeaderFactory` remains the extension point
+for custom secondary headers.
 
 ## Generic and PUS profiles
 
-A default-constructed `MissionProfile` represents a generic CCSDS Space Packet:
+A default-constructed profile represents a generic Space Packet:
 
 ```cpp
-CCSDS::MissionProfile profile;
+ccsds::MissionProfile profile;
 ```
 
-The default does not silently enable PUS. This is required because generic CCSDS packets must remain usable without selecting a PUS revision.
+Create a PUS profile with an explicit revision and direction:
 
-To construct a PUS packet, callers explicitly select:
+```cpp
+auto profile = ccsds::pus::makeProfile(
+  ccsds::pus::Revision::C,
+  ccsds::pus::Direction::Telemetry);
+profile.packetErrorControl = ccsds::PacketErrorControlMode::CRC16;
+profile.destinationIdOctets = 2;
+```
 
-- `pusEnabled = true`;
-- `pusRevision = PusRevision::A` or `PusRevision::C`;
-- `direction = PacketDirection::Telecommand` or `PacketDirection::Telemetry`;
-- the applicable identifier widths;
-- packet error control;
-- telemetry time configuration where applicable.
+PUS-C requires a two-octet source ID for TC and a two-octet destination ID for
+TM. PUS-A identifier widths are mission-tailored to 0, 1, 2, or 4 octets.
 
-PUS revision and packet direction are independent concepts. TC and TM are distinct layouts for each supported revision.
+## Numeric CUC time
 
-## Initial profile fields
+PUS telemetry can carry a numeric CCSDS Unsegmented Time Code (CUC). The profile
+defines the wire representation; the header stores the numeric coarse and fine
+counters:
 
-| Field | Meaning |
-|---|---|
-| `pusEnabled` | Selects generic CCSDS or the PUS-C profile |
-| `pusRevision` | Standards revision used by the PUS codec: `A` or `C` |
-| `direction` | Telecommand or telemetry, independent from PUS revision |
-| `sourceIdOctets` | Number of source-ID octets where the selected TC layout requires them |
-| `destinationIdOctets` | Number of destination-ID octets where the selected TM layout requires them |
-| `packetErrorControl` | Common packet-layer `PacketErrorControlMode` used by `CCSDS::Packet` |
-| `telemetryTimestampPresent` | Whether a TM secondary header includes a timestamp |
-| `telemetryTimeCode` | Selected CCSDS time-code family |
-| `telemetryTimeCodeOctets` | Total encoded timestamp length until a format-specific profile replaces it |
-| `pusATmPacketSubcounterPresent` | Selects the optional PUS-A TM packet subcounter |
-| `secondaryHeaderSpareOctets` | Number of zero-valued, octet-aligned spare bytes |
+```cpp
+profile.telemetryTimestampPresent = true;
+profile.telemetryTimeCode = ccsds::time::Format::Cuc;
+profile.telemetryCuc = {
+  ccsds::time::Epoch::Ccsds1958Tai,
+  ccsds::time::PFieldMode::Explicit,
+  4, // coarse octets
+  2  // fine octets
+};
 
-The profile reuses the packet-layer error-control enum. It does not declare a second `PacketErrorControlMode`, because public types are apparently more useful when the compiler sees only one of them.
+ccsds::time::CucTime timestamp{
+  0x01020304, // integral seconds from the selected epoch
+  0xA0B0      // binary fraction scaled by 2^(8 * fineOctets)
+};
+```
 
-## Required behaviour
+The implemented basic CUC profile supports:
 
-A standards-facing v2 encoder shall use a validated applicable profile before finalization. A standards-facing parser shall receive the applicable profile from the caller or a higher-level routing context.
+- 1 through 4 coarse-time octets;
+- 0 through 3 fine-time octets;
+- the CCSDS epoch at 1958-01-01 TAI or an agency-defined epoch;
+- an implicit P-field supplied by the mission profile or an explicit one-octet
+  P-field carried on the wire;
+- network-byte-order encoding and exact P-field validation during decoding.
 
-The parser shall not:
-
-- guess whether a CRC is present from trailing bytes;
-- infer a timestamp format from the number of bytes remaining;
-- infer packet direction from a class name;
-- reinterpret unknown layouts as PUS-C;
-- silently truncate identifiers to fit a configured width;
-- treat a generic packet as PUS merely because a profile object was default constructed.
+CCSDSPack represents the counter and validates its encoding. It does not convert
+UTC calendar timestamps, apply leap-second tables, or define an agency epoch.
+Those responsibilities belong to the mission time-correlation layer and its
+interface control document.
 
 ## Validation rules
 
-The validator delivered by #67 shall reject at least:
+A profile is rejected when it is ambiguous or permits a different wire layout.
+The checks include:
 
-1. `pusEnabled == true` with an unspecified or unsupported revision;
-2. PUS construction without explicit direction;
-3. TC construction using TM-only destination or timestamp settings where disallowed;
-4. TM construction using TC-only acknowledgement or source settings where disallowed;
-5. `telemetryTimestampPresent == false` with a non-`None` time-code family;
-6. `telemetryTimestampPresent == false` with a non-zero time-code length;
-7. `telemetryTimestampPresent == true` with `TimeCodeFormat::None`;
-8. `telemetryTimestampPresent == true` with a zero encoded time length;
-9. a time configuration invalid for the selected supported CCSDS time representation;
-10. identifier widths unable to represent the supplied identifier;
-11. identifier widths unsupported by the selected revision/direction layout;
-12. an unknown packet error-control mode;
-13. packet construction exceeding the CCSDS Packet Data Length representation.
+- explicit supported PUS revision and direction;
+- TC/TM consistency with the primary-header Packet Type;
+- supported identifier widths and PUS-C fixed widths;
+- no TC-only fields in TM profiles or TM-only fields in TC profiles;
+- no timestamp metadata when time is disabled;
+- valid CUC epoch, P-field policy, and coarse/fine widths;
+- counter values fitting their configured widths;
+- consistent packet-error-control policy;
+- zero-valued configured spare octets.
 
-Validation returns an error and does not normalize an invalid profile into a different valid profile.
+Parsing never guesses revision, direction, identifier widths, time layout, or
+packet error control from the remaining bytes.
 
-## Time-code scope
+## Configuration ownership
 
-The profile can select CUC or CDS timestamp bytes. The PUS secondary-header codec enforces presence and exact encoded size; epoch conversion, P-field construction, and numeric time conversion remain caller responsibilities.
+The same configuration profile is loaded by `ccsds::Packet`, propagated by
+`ccsds::Manager`, and used by the encoder, decoder, and validator. See
+[CONFIG.md](CONFIG.md) for the complete schema and the committed profiles in
+[`example/config`](../example/config).
 
-Only time formats with implemented codecs and independent vectors may appear in the final v2.0.0 support claim.
-
-## Configuration migration target
-
-The final v2 configuration schema shall contain fields equivalent to:
-
-```text
-packet_profile = "generic" | "pus"
-pus_revision = "A" | "C"
-packet_direction = "telecommand" | "telemetry"
-source_id_octets = <integer>
-destination_id_octets = <integer>
-packet_error_control = "none" | "crc16"
-telemetry_timestamp_present = true | false
-telemetry_time_code = "none" | <supported-format>
-telemetry_time_code_octets = <integer>
-```
-
-Legacy values such as `secondary_header_type = "PusA"`, `"PusB"`, or `"PusC"` shall fail with a migration error rather than acquiring an invented standards meaning.
-
-## Ownership of tailoring decisions
-
-CCSDSPack validates and applies a mission profile. It does not decide which services, identifier widths, packet error control, epoch, or time representation a mission should use. Those selections belong in the mission interface control documentation.
+CCSDSPack validates and applies mission choices. It does not decide which PUS
+services, identifiers, packet-error control, epoch, or time resolution a mission
+should use.
 
 ## Change control
 
-Adding or claiming support for a profile field requires:
-
-- a normative or mission-interface reason;
-- explicit units and valid ranges;
-- validation rules;
-- deterministic serialization and parsing behaviour;
-- positive and negative tests;
-- independent vectors where wire representation changes;
-- an update to `docs/CCSDS_COMPLIANCE.md`.
+Adding a profile field or support claim requires explicit units and ranges,
+deterministic serialization and parsing, positive and negative tests,
+independent wire vectors, and an update to the compliance matrix.

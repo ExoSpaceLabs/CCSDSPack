@@ -14,20 +14,20 @@
 #include <string>
 #include <vector>
 
-namespace CCSDS {
+namespace ccsds::pus {
 
   /** @brief Common profile-aware base for standards-defined PUS headers. */
-  class PusSecondaryHeader : public SecondaryHeaderAbstract {
+  class SecondaryHeader : public ccsds::SecondaryHeaderAbstract {
   public:
     /** @brief Returns the ECSS PUS revision selected by the mission profile. */
-    [[nodiscard]] PusRevision getRevision() const { return m_profile.pusRevision; }
+    [[nodiscard]] Revision getRevision() const { return m_profile.pusRevision; }
     /** @brief Returns the packet direction selected by the mission profile. */
-    [[nodiscard]] PacketDirection getDirection() const { return m_profile.direction; }
+    [[nodiscard]] Direction getDirection() const { return m_profile.direction; }
     /** @brief Returns the immutable mission profile used by this header. */
     [[nodiscard]] const MissionProfile &getMissionProfile() const { return m_profile; }
     /** @brief Returns the canonical PUS revision/direction selector. */
     [[nodiscard]] std::string getType() const override {
-      return pusSelector(m_profile.pusRevision, m_profile.direction);
+      return selector(m_profile.pusRevision, m_profile.direction);
     }
     /** @brief Identifies this instance as a standards-defined PUS header. */
     [[nodiscard]] bool isPusHeader() const override { return true; }
@@ -43,12 +43,12 @@ namespace CCSDS {
     void update(DataField *dataField) override { (void)dataField; }
 
 #ifndef CCSDS_MCU
-    /** @brief Rejects legacy configuration loading for profile-defined PUS headers. */
-    ResultBool loadFromConfig(const Config &config) override;
+    /** @brief Validates that the configuration selects this header profile. */
+    ResultBool loadFromConfig(const ccsds::Config &config) override;
 #endif
 
   protected:
-    explicit PusSecondaryHeader(MissionProfile profile) : m_profile(profile) {}
+    explicit SecondaryHeader(MissionProfile profile) : m_profile(profile) {}
     [[nodiscard]] bool profileIsValid() const {
       return static_cast<bool>(validateMissionProfile(m_profile));
     }
@@ -63,7 +63,7 @@ namespace CCSDS {
   };
 
   /** @brief Shared service and source fields for PUS telecommand headers. */
-  class PusTcSecondaryHeader : public PusSecondaryHeader {
+  class TcSecondaryHeader : public SecondaryHeader {
   public:
     /** @brief Returns the four PUS acknowledgement flags. */
     [[nodiscard]] std::uint8_t getAcknowledgementFlags() const { return m_acknowledgementFlags; }
@@ -83,10 +83,15 @@ namespace CCSDS {
     /** @brief Sets the source identifier when it fits the mission profile. */
     ResultBool setSourceId(std::uint32_t value);
 
+#ifndef CCSDS_MCU
+    /** @brief Loads common PUS telecommand fields. */
+    ResultBool loadFromConfig(const ccsds::Config &config) override;
+#endif
+
   protected:
-    PusTcSecondaryHeader(MissionProfile profile, std::uint8_t serviceType,
-                         std::uint8_t serviceSubtype, std::uint32_t sourceId,
-                         std::uint8_t acknowledgementFlags);
+    TcSecondaryHeader(MissionProfile profile, std::uint8_t serviceType,
+                      std::uint8_t serviceSubtype, std::uint32_t sourceId,
+                      std::uint8_t acknowledgementFlags);
     [[nodiscard]] std::uint16_t tcSize() const;
     void appendTcBody(std::vector<std::uint8_t> &bytes) const;
     ResultBool parseTcBody(const std::vector<std::uint8_t> &data, std::size_t offset);
@@ -98,7 +103,7 @@ namespace CCSDS {
   };
 
   /** @brief Shared service, destination, and time fields for PUS telemetry headers. */
-  class PusTmSecondaryHeader : public PusSecondaryHeader {
+  class TmSecondaryHeader : public SecondaryHeader {
   public:
     /** @brief Returns the PUS service type. */
     [[nodiscard]] std::uint8_t getServiceType() const { return m_serviceType; }
@@ -106,8 +111,8 @@ namespace CCSDS {
     [[nodiscard]] std::uint8_t getServiceSubtype() const { return m_serviceSubtype; }
     /** @brief Returns the mission-tailored destination identifier. */
     [[nodiscard]] std::uint32_t getDestinationId() const { return m_destinationId; }
-    /** @brief Returns the serialized telemetry timestamp bytes. */
-    [[nodiscard]] const std::vector<std::uint8_t> &getTimestamp() const { return m_timestamp; }
+    /** @brief Returns the numeric CUC telemetry timestamp. */
+    [[nodiscard]] const time::CucTime &getTimestamp() const { return m_timestamp; }
 
     /** @brief Sets the PUS service type. */
     void setServiceType(std::uint8_t value) { m_serviceType = value; }
@@ -115,64 +120,76 @@ namespace CCSDS {
     void setServiceSubtype(std::uint8_t value) { m_serviceSubtype = value; }
     /** @brief Sets the destination identifier when it fits the mission profile. */
     ResultBool setDestinationId(std::uint32_t value);
-    /** @brief Sets timestamp bytes when their size matches the mission profile. */
-    ResultBool setTimestamp(const std::vector<std::uint8_t> &timestamp);
+    /** @brief Sets a numeric timestamp when it fits the mission CUC layout. */
+    ResultBool setTimestamp(const time::CucTime &timestamp);
+
+#ifndef CCSDS_MCU
+    /** @brief Loads common PUS telemetry fields and the numeric CUC value. */
+    ResultBool loadFromConfig(const ccsds::Config &config) override;
+#endif
 
   protected:
-    PusTmSecondaryHeader(MissionProfile profile, std::uint8_t serviceType,
-                         std::uint8_t serviceSubtype, std::uint32_t destinationId,
-                         std::vector<std::uint8_t> timestamp);
-    void appendTmTail(std::vector<std::uint8_t> &bytes) const;
+    TmSecondaryHeader(MissionProfile profile, std::uint8_t serviceType,
+                      std::uint8_t serviceSubtype, std::uint32_t destinationId,
+                      time::CucTime timestamp);
+    ResultBool appendTmTail(std::vector<std::uint8_t> &bytes) const;
     ResultBool parseTmTail(const std::vector<std::uint8_t> &data, std::size_t offset);
     [[nodiscard]] std::uint16_t tmTailSize() const;
 
     std::uint8_t m_serviceType{0};
     std::uint8_t m_serviceSubtype{0};
     std::uint32_t m_destinationId{0};
-    std::vector<std::uint8_t> m_timestamp{};
+    time::CucTime m_timestamp{};
   };
 
+  namespace rev_a {
   /** @brief ECSS-E-70-41A telecommand secondary header. */
-  class PusATcHeader final : public PusTcSecondaryHeader {
+  class TcHeader final : public TcSecondaryHeader {
   public:
     /** @brief Constructs a PUS-A telecommand secondary header. */
-    explicit PusATcHeader(MissionProfile profile = makePusProfile(
-                            PusRevision::A, PacketDirection::Telecommand),
-                          std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
-                          std::uint32_t sourceId = 0, std::uint8_t acknowledgementFlags = 0);
+    explicit TcHeader(MissionProfile profile = makeProfile(
+                        Revision::A, Direction::Telecommand),
+                      std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
+                      std::uint32_t sourceId = 0, std::uint8_t acknowledgementFlags = 0);
     /** @brief Parses a complete PUS-A telecommand secondary header. */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override;
     /** @brief Returns the profile-derived encoded header size. */
     [[nodiscard]] std::uint16_t getSize() const override { return tcSize(); }
     /** @brief Serializes the PUS-A telecommand secondary header. */
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
-  };
 
+  };
+  } // namespace rev_a
+
+  namespace rev_c {
   /** @brief ECSS-E-ST-70-41C telecommand secondary header. */
-  class PusCTcHeader final : public PusTcSecondaryHeader {
+  class TcHeader final : public TcSecondaryHeader {
   public:
     /** @brief Constructs a PUS-C telecommand secondary header. */
-    explicit PusCTcHeader(MissionProfile profile = makePusProfile(
-                            PusRevision::C, PacketDirection::Telecommand),
-                          std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
-                          std::uint32_t sourceId = 0, std::uint8_t acknowledgementFlags = 0);
+    explicit TcHeader(MissionProfile profile = makeProfile(
+                        Revision::C, Direction::Telecommand),
+                      std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
+                      std::uint32_t sourceId = 0, std::uint8_t acknowledgementFlags = 0);
     /** @brief Parses a complete PUS-C telecommand secondary header. */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override;
     /** @brief Returns the profile-derived encoded header size. */
     [[nodiscard]] std::uint16_t getSize() const override { return tcSize(); }
     /** @brief Serializes the PUS-C telecommand secondary header. */
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
-  };
 
+  };
+  } // namespace rev_c
+
+  namespace rev_a {
   /** @brief ECSS-E-70-41A telemetry secondary header. */
-  class PusATmHeader final : public PusTmSecondaryHeader {
+  class TmHeader final : public TmSecondaryHeader {
   public:
     /** @brief Constructs a PUS-A telemetry secondary header. */
-    explicit PusATmHeader(MissionProfile profile = makePusProfile(
-                            PusRevision::A, PacketDirection::Telemetry),
-                          std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
-                          std::uint8_t packetSubcounter = 0, std::uint32_t destinationId = 0,
-                          std::vector<std::uint8_t> timestamp = {});
+    explicit TmHeader(MissionProfile profile = makeProfile(
+                        Revision::A, Direction::Telemetry),
+                      std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
+                      std::uint8_t packetSubcounter = 0, std::uint32_t destinationId = 0,
+                      time::CucTime timestamp = {});
     /** @brief Returns the optional PUS-A packet subcounter. */
     [[nodiscard]] std::uint8_t getPacketSubcounter() const { return m_packetSubcounter; }
     /** @brief Sets the optional PUS-A packet subcounter. */
@@ -184,21 +201,28 @@ namespace CCSDS {
     /** @brief Serializes the PUS-A telemetry secondary header. */
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
 
+#ifndef CCSDS_MCU
+    /** @brief Loads the optional PUS-A packet subcounter. */
+    ResultBool loadFromConfig(const ccsds::Config &config) override;
+#endif
+
   private:
     std::uint8_t m_packetSubcounter{0};
   };
+  } // namespace rev_a
 
+  namespace rev_c {
   /** @brief ECSS-E-ST-70-41C telemetry secondary header. */
-  class PusCTmHeader final : public PusTmSecondaryHeader {
+  class TmHeader final : public TmSecondaryHeader {
   public:
     /** @brief Constructs a PUS-C telemetry secondary header. */
-    explicit PusCTmHeader(MissionProfile profile = makePusProfile(
-                            PusRevision::C, PacketDirection::Telemetry),
-                          std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
-                          std::uint16_t messageTypeCounter = 0,
-                          std::uint32_t destinationId = 0,
-                          std::uint8_t timeReferenceStatus = 0,
-                          std::vector<std::uint8_t> timestamp = {});
+    explicit TmHeader(MissionProfile profile = makeProfile(
+                        Revision::C, Direction::Telemetry),
+                      std::uint8_t serviceType = 0, std::uint8_t serviceSubtype = 0,
+                      std::uint16_t messageTypeCounter = 0,
+                      std::uint32_t destinationId = 0,
+                      std::uint8_t timeReferenceStatus = 0,
+                      time::CucTime timestamp = {});
     /** @brief Returns the PUS-C message-type counter. */
     [[nodiscard]] std::uint16_t getMessageTypeCounter() const { return m_messageTypeCounter; }
     /** @brief Returns the PUS-C time-reference status. */
@@ -214,11 +238,17 @@ namespace CCSDS {
     /** @brief Serializes the PUS-C telemetry secondary header. */
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
 
+#ifndef CCSDS_MCU
+    /** @brief Loads the PUS-C message counter and time-reference status. */
+    ResultBool loadFromConfig(const ccsds::Config &config) override;
+#endif
+
   private:
     std::uint16_t m_messageTypeCounter{0};
     std::uint8_t m_timeReferenceStatus{0};
   };
+  } // namespace rev_c
 
-} // namespace CCSDS
+} // namespace ccsds::pus
 
 #endif // PUS_SECONDARY_HEADERS_H

@@ -3,11 +3,11 @@
 
 #include "CCSDSHeader.h"
 
-void CCSDS::Header::refreshStatus() {
+void ccsds::Header::refreshStatus() {
   m_status = m_APID == IDLE_APID ? IDLE : NORMAL;
 }
 
-CCSDS::ResultBool CCSDS::Header::setVersionNumber(const std::uint8_t &value) {
+ccsds::ResultBool ccsds::Header::setVersionNumber(const std::uint8_t &value) {
   if (value > 0x07U) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid version number, value > 7");
@@ -17,7 +17,7 @@ CCSDS::ResultBool CCSDS::Header::setVersionNumber(const std::uint8_t &value) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Header::setType(const std::uint8_t &value) {
+ccsds::ResultBool ccsds::Header::setType(const std::uint8_t &value) {
   if (value > 0x01U) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid type, value > 1");
@@ -27,7 +27,7 @@ CCSDS::ResultBool CCSDS::Header::setType(const std::uint8_t &value) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Header::setSecondaryHeaderFlag(const std::uint8_t &value) {
+ccsds::ResultBool ccsds::Header::setSecondaryHeaderFlag(const std::uint8_t &value) {
   if (value > 0x01U) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid secondary header flag, value > 1");
@@ -37,7 +37,7 @@ CCSDS::ResultBool CCSDS::Header::setSecondaryHeaderFlag(const std::uint8_t &valu
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Header::setAPID(const std::uint16_t &value) {
+ccsds::ResultBool ccsds::Header::setAPID(const std::uint16_t &value) {
   if (value > IDLE_APID) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid APID, value > 2047");
@@ -47,7 +47,7 @@ CCSDS::ResultBool CCSDS::Header::setAPID(const std::uint16_t &value) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Header::setSequenceFlags(const std::uint8_t &value) {
+ccsds::ResultBool ccsds::Header::setSequenceFlags(const std::uint8_t &value) {
   if (value > 0x03U) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid sequence flag, value > 3");
@@ -57,7 +57,7 @@ CCSDS::ResultBool CCSDS::Header::setSequenceFlags(const std::uint8_t &value) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Header::setSequenceCount(const std::uint16_t &value) {
+ccsds::ResultBool ccsds::Header::setSequenceCount(const std::uint16_t &value) {
   if (value > 0x3FFFU) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid sequence count, value > 16383");
@@ -67,11 +67,11 @@ CCSDS::ResultBool CCSDS::Header::setSequenceCount(const std::uint16_t &value) {
   return true;
 }
 
-void CCSDS::Header::setDataLength(const std::uint16_t &value) {
+void ccsds::Header::setDataLength(const std::uint16_t &value) {
   m_dataLength = value;
 }
 
-CCSDS::ResultBool CCSDS::Header::deserialize(const std::vector<std::uint8_t> &data) {
+ccsds::ResultBool ccsds::Header::deserialize(const std::vector<std::uint8_t> &data) {
   if (data.size() != 6U) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid Header Data provided: size != 6");
@@ -85,7 +85,7 @@ CCSDS::ResultBool CCSDS::Header::deserialize(const std::vector<std::uint8_t> &da
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Header::setData(const std::uint64_t &data) {
+ccsds::ResultBool ccsds::Header::setData(const std::uint64_t &data) {
   if (data > 0xFFFFFFFFFFFFULL) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Input data exceeds expected bit size for version or size.");
@@ -105,11 +105,11 @@ CCSDS::ResultBool CCSDS::Header::setData(const std::uint64_t &data) {
   return true;
 }
 
-std::vector<std::uint8_t> CCSDS::Header::serialize() {
+std::vector<std::uint8_t> ccsds::Header::serialize() {
   return static_cast<const Header &>(*this).serialize();
 }
 
-std::vector<std::uint8_t> CCSDS::Header::serialize() const {
+std::vector<std::uint8_t> ccsds::Header::serialize() const {
   if (m_status == INVALID) {
     return {};
   }
@@ -132,11 +132,11 @@ std::vector<std::uint8_t> CCSDS::Header::serialize() const {
   };
 }
 
-std::uint64_t CCSDS::Header::getFullHeader() {
+std::uint64_t ccsds::Header::getFullHeader() {
   return static_cast<const Header &>(*this).getFullHeader();
 }
 
-std::uint64_t CCSDS::Header::getFullHeader() const {
+std::uint64_t ccsds::Header::getFullHeader() const {
   if (m_status == INVALID) {
     return 0U;
   }
@@ -152,7 +152,7 @@ std::uint64_t CCSDS::Header::getFullHeader() const {
          | m_dataLength;
 }
 
-CCSDS::ResultBool CCSDS::Header::setData(const PrimaryHeader &data) {
+ccsds::ResultBool ccsds::Header::setData(const PrimaryHeader &data) {
   if (data.versionNumber > 0x07U) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid version number, value > 7");

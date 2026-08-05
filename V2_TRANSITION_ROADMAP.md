@@ -13,10 +13,10 @@ Deliver a breaking, standards-oriented v2 release on the validated v1.2 CCSDS 13
 
 ## Stage 1: Typed PUS architecture — implemented
 
-- `PusRevision` and `PacketDirection` are independent strong types.
+- `ccsds::pus::Revision` and `ccsds::pus::Direction` are independent strong types.
 - TC and TM use distinct concrete classes for each revision.
-- `SecondaryHeaderFactory` handles custom, direction-neutral extensions.
-- fixed `PusSecondaryHeaderFactory` owns the reserved canonical selectors.
+- `ccsds::SecondaryHeaderFactory` handles custom, direction-neutral extensions.
+- fixed `ccsds::pus::SecondaryHeaderFactory` owns the reserved canonical selectors.
 - both factory paths create fresh mutable instances.
 - all four canonical selector paths are covered directly by the PUS factory tests.
 
@@ -50,7 +50,8 @@ Completed and integrated:
 
 - checked `Packet::update()`, `Packet::serialize()`, `DataField::serialize()`, and Manager stream serialization results;
 - native tests covering exact finalization, profile, header, data-length, and Manager propagation errors;
-- 101 native tests, including the four-selector PUS factory matrix and v2 configuration naming;
+- 106 native tests, including the four-selector PUS factory/configuration matrices
+  and numeric CUC vectors;
 - PUS-A/PUS-C fixed byte vectors and negative vectors;
 - ASan/UBSan validation;
 - MCU compile with `-fno-exceptions -fno-rtti`;
@@ -61,21 +62,26 @@ Completed and integrated:
 
 Remaining release-level evidence:
 
-- installed-package and CLI PUS-profile integration;
 - bounded fuzz smoke jobs;
 - arm64 and STM32 hardware repetition with representative PUS vectors.
 
-## Stage 6: Higher-level integration
+## Stage 6: Higher-level integration — implemented
 
-- extend the configuration schema to construct complete PUS mission profiles;
-- expose PUS fields through encoder, decoder, and validator tools;
-- thread mission profiles through Manager workflows where automatic PUS construction/parsing is required;
-- add dedicated numeric CCSDS time conversion only when its epoch and P-field policy are selected.
+- the public namespace is `ccsds`, with revision-specific PUS codecs under
+  `ccsds::pus::rev_a` and `ccsds::pus::rev_c`;
+- the configuration schema constructs generic and complete PUS-A/PUS-C TC/TM
+  mission profiles and rejects legacy mappings;
+- encoder, decoder, and validator use and report the configured PUS profile;
+- Manager applies the template profile during automatic PUS parsing;
+- numeric basic CUC supports CCSDS/agency epoch metadata, implicit/explicit
+  P-field, and validated coarse/fine widths;
+- CLI integration round-trips every committed generic/PUS profile and rejects a
+  corrupted PUS secondary header.
 
 ## Stage 7: Release preparation
 
 1. Continue reviewed v2 changes through pull requests from `v2.0.0-dev` to `develop`.
 2. Resolve integration failures without weakening fixed vectors or profile checks.
-3. Complete remaining CLI/profile/fuzz/hardware gates.
+3. Complete remaining fuzz/hardware gates.
 4. Synchronize release notes and final compliance traceability.
 5. Merge approved `develop` into `main` and tag `v2.0.0` from `main` only.

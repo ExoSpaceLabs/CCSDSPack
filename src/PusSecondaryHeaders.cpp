@@ -5,32 +5,63 @@
 #include <utility>
 
 namespace {
-  CCSDS::ResultBool validateHeaderProfile(const CCSDS::MissionProfile &profile,
-                                          const CCSDS::PusRevision revision,
-                                          const CCSDS::PacketDirection direction) {
-    FORWARD_RESULT(CCSDS::validateMissionProfile(profile));
+  ccsds::ResultBool validateHeaderProfile(const ccsds::MissionProfile &profile,
+                                          const ccsds::pus::Revision revision,
+                                          const ccsds::pus::Direction direction) {
+    FORWARD_RESULT(ccsds::validateMissionProfile(profile));
     RET_IF_ERR_MSG(profile.pusRevision != revision || profile.direction != direction,
-                   CCSDS::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   ccsds::ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "PUS header concrete type does not match its mission profile.");
     return true;
   }
+
+#ifndef CCSDS_MCU
+  ccsds::Result<std::uint64_t> requiredUnsigned(const ccsds::Config &config,
+                                                const char *key,
+                                                const std::uint64_t maximum) {
+    RET_IF_ERR_MSG(!config.isKey(key), ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                   std::string{"Config: Missing uint field: "} + key);
+    const auto unsignedResult = config.get<std::uint64_t>(key);
+    if (unsignedResult) {
+      RET_IF_ERR_MSG(unsignedResult.value() > maximum,
+                     ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                     std::string{"Config: Out-of-range uint field: "} + key);
+      return unsignedResult.value();
+    }
+    const auto intResult = config.get<int>(key);
+    RET_IF_ERR_MSG(!intResult || intResult.value() < 0
+                   || static_cast<std::uint64_t>(intResult.value()) > maximum,
+                   ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                   std::string{"Config: Invalid unsigned field: "} + key);
+    return static_cast<std::uint64_t>(intResult.value());
+  }
+#endif
 }
 
 #ifndef CCSDS_MCU
-CCSDS::ResultBool CCSDS::PusSecondaryHeader::loadFromConfig(const Config &config) {
-  (void)config;
+ccsds::ResultBool ccsds::pus::SecondaryHeader::loadFromConfig(const ccsds::Config &config) {
+  MissionProfile configuredProfile;
+  ASSIGN_CP(configuredProfile, missionProfileFromConfig(config));
+  RET_IF_ERR_MSG(!missionProfilesEqual(configuredProfile, m_profile),
+                 ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: PUS header profile does not match the packet mission profile.");
+  RET_IF_ERR_MSG(!config.isKey("secondary_header_type"), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: Missing string field: secondary_header_type");
+  const auto type = config.get<std::string>("secondary_header_type");
+  RET_IF_ERR_MSG(!type || type.value() != getType(), ErrorCode::CONFIG_FILE_ERROR,
+                 "Config: secondary_header_type does not match the PUS profile.");
   return true;
 }
 #endif
 
-bool CCSDS::PusSecondaryHeader::identifierFits(const std::uint32_t value,
+bool ccsds::pus::SecondaryHeader::identifierFits(const std::uint32_t value,
                                                const std::uint8_t octets) const {
   if (octets == 0U) return value == 0U;
   if (octets >= 4U) return true;
   return value < (1UL << (octets * 8U));
 }
 
-void CCSDS::PusSecondaryHeader::appendIdentifier(std::vector<std::uint8_t> &bytes,
+void ccsds::pus::SecondaryHeader::appendIdentifier(std::vector<std::uint8_t> &bytes,
                                                  const std::uint32_t value,
                                                  const std::uint8_t octets) {
   for (std::uint8_t i = 0; i < octets; ++i) {
@@ -39,7 +70,7 @@ void CCSDS::PusSecondaryHeader::appendIdentifier(std::vector<std::uint8_t> &byte
   }
 }
 
-std::uint32_t CCSDS::PusSecondaryHeader::readIdentifier(
+std::uint32_t ccsds::pus::SecondaryHeader::readIdentifier(
     const std::vector<std::uint8_t> &bytes, const std::size_t offset,
     const std::uint8_t octets) {
   std::uint32_t result = 0U;
@@ -49,7 +80,7 @@ std::uint32_t CCSDS::PusSecondaryHeader::readIdentifier(
   return result;
 }
 
-bool CCSDS::PusSecondaryHeader::trailingSpareIsZero(
+bool ccsds::pus::SecondaryHeader::trailingSpareIsZero(
     const std::vector<std::uint8_t> &bytes) const {
   const auto spare = static_cast<std::size_t>(m_profile.secondaryHeaderSpareOctets);
   if (spare > bytes.size()) return false;
@@ -59,15 +90,15 @@ bool CCSDS::PusSecondaryHeader::trailingSpareIsZero(
   return true;
 }
 
-CCSDS::PusTcSecondaryHeader::PusTcSecondaryHeader(
+ccsds::pus::TcSecondaryHeader::TcSecondaryHeader(
     MissionProfile profile, const std::uint8_t serviceType,
     const std::uint8_t serviceSubtype, const std::uint32_t sourceId,
     const std::uint8_t acknowledgementFlags)
-  : PusSecondaryHeader(std::move(profile)),
+  : SecondaryHeader(std::move(profile)),
     m_acknowledgementFlags(acknowledgementFlags), m_serviceType(serviceType),
     m_serviceSubtype(serviceSubtype), m_sourceId(sourceId) {}
 
-CCSDS::ResultBool CCSDS::PusTcSecondaryHeader::setAcknowledgementFlags(
+ccsds::ResultBool ccsds::pus::TcSecondaryHeader::setAcknowledgementFlags(
     const std::uint8_t flags) {
   RET_IF_ERR_MSG(flags > 0x0FU, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS acknowledgement flags exceed four bits.");
@@ -75,7 +106,7 @@ CCSDS::ResultBool CCSDS::PusTcSecondaryHeader::setAcknowledgementFlags(
   return true;
 }
 
-CCSDS::ResultBool CCSDS::PusTcSecondaryHeader::setSourceId(const std::uint32_t value) {
+ccsds::ResultBool ccsds::pus::TcSecondaryHeader::setSourceId(const std::uint32_t value) {
   RET_IF_ERR_MSG(!identifierFits(value, m_profile.sourceIdOctets),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS source ID does not fit the configured width.");
@@ -83,19 +114,40 @@ CCSDS::ResultBool CCSDS::PusTcSecondaryHeader::setSourceId(const std::uint32_t v
   return true;
 }
 
-std::uint16_t CCSDS::PusTcSecondaryHeader::tcSize() const {
+#ifndef CCSDS_MCU
+ccsds::ResultBool ccsds::pus::TcSecondaryHeader::loadFromConfig(
+    const ccsds::Config &config) {
+  FORWARD_RESULT(SecondaryHeader::loadFromConfig(config));
+  std::uint64_t serviceType{};
+  std::uint64_t serviceSubtype{};
+  std::uint64_t acknowledgementFlags{};
+  std::uint64_t sourceId{};
+  ASSIGN_CP(serviceType, requiredUnsigned(config, "pus_service_type", UINT8_MAX));
+  ASSIGN_CP(serviceSubtype, requiredUnsigned(config, "pus_service_subtype", UINT8_MAX));
+  ASSIGN_CP(acknowledgementFlags,
+            requiredUnsigned(config, "pus_acknowledgement_flags", 0x0FU));
+  ASSIGN_CP(sourceId, requiredUnsigned(config, "pus_source_id", UINT32_MAX));
+  m_serviceType = static_cast<std::uint8_t>(serviceType);
+  m_serviceSubtype = static_cast<std::uint8_t>(serviceSubtype);
+  FORWARD_RESULT(setAcknowledgementFlags(static_cast<std::uint8_t>(acknowledgementFlags)));
+  FORWARD_RESULT(setSourceId(static_cast<std::uint32_t>(sourceId)));
+  return true;
+}
+#endif
+
+std::uint16_t ccsds::pus::TcSecondaryHeader::tcSize() const {
   return static_cast<std::uint16_t>(3U + m_profile.sourceIdOctets
                                     + m_profile.secondaryHeaderSpareOctets);
 }
 
-void CCSDS::PusTcSecondaryHeader::appendTcBody(std::vector<std::uint8_t> &bytes) const {
+void ccsds::pus::TcSecondaryHeader::appendTcBody(std::vector<std::uint8_t> &bytes) const {
   bytes.push_back(m_serviceType);
   bytes.push_back(m_serviceSubtype);
   appendIdentifier(bytes, m_sourceId, m_profile.sourceIdOctets);
   bytes.insert(bytes.end(), m_profile.secondaryHeaderSpareOctets, 0U);
 }
 
-CCSDS::ResultBool CCSDS::PusTcSecondaryHeader::parseTcBody(
+ccsds::ResultBool ccsds::pus::TcSecondaryHeader::parseTcBody(
     const std::vector<std::uint8_t> &data, const std::size_t offset) {
   RET_IF_ERR_MSG(data.size() != tcSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS TC secondary-header size does not match the mission profile.");
@@ -108,15 +160,15 @@ CCSDS::ResultBool CCSDS::PusTcSecondaryHeader::parseTcBody(
   return true;
 }
 
-CCSDS::PusTmSecondaryHeader::PusTmSecondaryHeader(
+ccsds::pus::TmSecondaryHeader::TmSecondaryHeader(
     MissionProfile profile, const std::uint8_t serviceType,
     const std::uint8_t serviceSubtype, const std::uint32_t destinationId,
-    std::vector<std::uint8_t> timestamp)
-  : PusSecondaryHeader(std::move(profile)), m_serviceType(serviceType),
+    time::CucTime timestamp)
+  : SecondaryHeader(std::move(profile)), m_serviceType(serviceType),
     m_serviceSubtype(serviceSubtype), m_destinationId(destinationId),
     m_timestamp(std::move(timestamp)) {}
 
-CCSDS::ResultBool CCSDS::PusTmSecondaryHeader::setDestinationId(const std::uint32_t value) {
+ccsds::ResultBool ccsds::pus::TmSecondaryHeader::setDestinationId(const std::uint32_t value) {
   RET_IF_ERR_MSG(!identifierFits(value, m_profile.destinationIdOctets),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS destination ID does not fit the configured width.");
@@ -124,23 +176,62 @@ CCSDS::ResultBool CCSDS::PusTmSecondaryHeader::setDestinationId(const std::uint3
   return true;
 }
 
-CCSDS::ResultBool CCSDS::PusTmSecondaryHeader::setTimestamp(
-    const std::vector<std::uint8_t> &timestamp) {
-  const auto expected = m_profile.telemetryTimestampPresent
-                          ? m_profile.telemetryTimeCodeOctets : 0U;
-  RET_IF_ERR_MSG(timestamp.size() != expected, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS TM timestamp size does not match the mission profile.");
+ccsds::ResultBool ccsds::pus::TmSecondaryHeader::setTimestamp(
+    const time::CucTime &timestamp) {
+  RET_IF_ERR_MSG(!m_profile.telemetryTimestampPresent,
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "PUS TM timestamp is disabled by the mission profile.");
+  const auto encoded = time::serialize(timestamp, m_profile.telemetryCuc);
+  if (!encoded) {
+    return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Invalid PUS TM CUC timestamp: " + encoded.error().message()};
+  }
   m_timestamp = timestamp;
   return true;
 }
 
-void CCSDS::PusTmSecondaryHeader::appendTmTail(std::vector<std::uint8_t> &bytes) const {
+#ifndef CCSDS_MCU
+ccsds::ResultBool ccsds::pus::TmSecondaryHeader::loadFromConfig(
+    const ccsds::Config &config) {
+  FORWARD_RESULT(SecondaryHeader::loadFromConfig(config));
+  std::uint64_t serviceType{};
+  std::uint64_t serviceSubtype{};
+  std::uint64_t destinationId{};
+  ASSIGN_CP(serviceType, requiredUnsigned(config, "pus_service_type", UINT8_MAX));
+  ASSIGN_CP(serviceSubtype, requiredUnsigned(config, "pus_service_subtype", UINT8_MAX));
+  ASSIGN_CP(destinationId, requiredUnsigned(config, "pus_destination_id", UINT32_MAX));
+  m_serviceType = static_cast<std::uint8_t>(serviceType);
+  m_serviceSubtype = static_cast<std::uint8_t>(serviceSubtype);
+  FORWARD_RESULT(setDestinationId(static_cast<std::uint32_t>(destinationId)));
+
+  if (m_profile.telemetryTimestampPresent) {
+    time::CucTime timestamp;
+    ASSIGN_CP(timestamp.coarse, requiredUnsigned(config, "pus_time_coarse", UINT32_MAX));
+    ASSIGN_CP(timestamp.fine, requiredUnsigned(config, "pus_time_fine", 0xFFFFFFU));
+    FORWARD_RESULT(setTimestamp(timestamp));
+  } else {
+    RET_IF_ERR_MSG(config.isKey("pus_time_coarse") || config.isKey("pus_time_fine"),
+                   ErrorCode::CONFIG_FILE_ERROR,
+                   "Config: disabled PUS time cannot contain a numeric timestamp.");
+    m_timestamp = {};
+  }
+  return true;
+}
+#endif
+
+ccsds::ResultBool ccsds::pus::TmSecondaryHeader::appendTmTail(
+    std::vector<std::uint8_t> &bytes) const {
   appendIdentifier(bytes, m_destinationId, m_profile.destinationIdOctets);
-  bytes.insert(bytes.end(), m_timestamp.begin(), m_timestamp.end());
+  if (m_profile.telemetryTimestampPresent) {
+    std::vector<std::uint8_t> encoded;
+    ASSIGN_MV(encoded, time::serialize(m_timestamp, m_profile.telemetryCuc));
+    bytes.insert(bytes.end(), encoded.begin(), encoded.end());
+  }
   bytes.insert(bytes.end(), m_profile.secondaryHeaderSpareOctets, 0U);
+  return true;
 }
 
-CCSDS::ResultBool CCSDS::PusTmSecondaryHeader::parseTmTail(
+ccsds::ResultBool ccsds::pus::TmSecondaryHeader::parseTmTail(
     const std::vector<std::uint8_t> &data, const std::size_t offset) {
   const auto tail = tmTailSize();
   RET_IF_ERR_MSG(offset + tail != data.size(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -149,29 +240,37 @@ CCSDS::ResultBool CCSDS::PusTmSecondaryHeader::parseTmTail(
                  "PUS TM secondary-header spare octets must be zero.");
   const auto destination = readIdentifier(data, offset, m_profile.destinationIdOctets);
   const auto timestampOffset = offset + m_profile.destinationIdOctets;
-  const auto timestampEnd = timestampOffset + m_profile.telemetryTimeCodeOctets;
-  std::vector<std::uint8_t> timestamp(data.begin() + static_cast<std::ptrdiff_t>(timestampOffset),
-                                      data.begin() + static_cast<std::ptrdiff_t>(timestampEnd));
+  const auto timestampSize = m_profile.telemetryTimestampPresent
+                               ? time::encodedSize(m_profile.telemetryCuc) : 0U;
+  const auto timestampEnd = timestampOffset + timestampSize;
   m_destinationId = destination;
-  m_timestamp = std::move(timestamp);
+  if (m_profile.telemetryTimestampPresent) {
+    const std::vector<std::uint8_t> encoded(
+      data.begin() + static_cast<std::ptrdiff_t>(timestampOffset),
+      data.begin() + static_cast<std::ptrdiff_t>(timestampEnd));
+    ASSIGN_CP(m_timestamp, time::deserialize(encoded, m_profile.telemetryCuc));
+  } else {
+    m_timestamp = {};
+  }
   return true;
 }
 
-std::uint16_t CCSDS::PusTmSecondaryHeader::tmTailSize() const {
+std::uint16_t ccsds::pus::TmSecondaryHeader::tmTailSize() const {
   return static_cast<std::uint16_t>(m_profile.destinationIdOctets
-                                    + m_profile.telemetryTimeCodeOctets
+                                    + (m_profile.telemetryTimestampPresent
+                                         ? time::encodedSize(m_profile.telemetryCuc) : 0U)
                                     + m_profile.secondaryHeaderSpareOctets);
 }
 
-CCSDS::PusATcHeader::PusATcHeader(MissionProfile profile, const std::uint8_t serviceType,
+ccsds::pus::rev_a::TcHeader::TcHeader(MissionProfile profile, const std::uint8_t serviceType,
                                   const std::uint8_t serviceSubtype,
                                   const std::uint32_t sourceId,
                                   const std::uint8_t acknowledgementFlags)
-  : PusTcSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
+  : TcSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
                          sourceId, acknowledgementFlags) {}
 
-CCSDS::ResultBool CCSDS::PusATcHeader::deserialize(const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateHeaderProfile(m_profile, PusRevision::A, PacketDirection::Telecommand));
+ccsds::ResultBool ccsds::pus::rev_a::TcHeader::deserialize(const std::vector<std::uint8_t> &data) {
+  FORWARD_RESULT(validateHeaderProfile(m_profile, pus::Revision::A, pus::Direction::Telecommand));
   RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-A TC secondary-header size mismatch.");
   RET_IF_ERR_MSG((data[0] & 0x80U) != 0U || ((data[0] >> 4U) & 0x07U) != 1U,
@@ -183,9 +282,9 @@ CCSDS::ResultBool CCSDS::PusATcHeader::deserialize(const std::vector<std::uint8_
   return true;
 }
 
-std::vector<std::uint8_t> CCSDS::PusATcHeader::serialize() const {
-  if (!profileIsValid() || m_profile.pusRevision != PusRevision::A
-      || m_profile.direction != PacketDirection::Telecommand
+std::vector<std::uint8_t> ccsds::pus::rev_a::TcHeader::serialize() const {
+  if (!profileIsValid() || m_profile.pusRevision != pus::Revision::A
+      || m_profile.direction != pus::Direction::Telecommand
       || m_acknowledgementFlags > 0x0FU
       || !identifierFits(m_sourceId, m_profile.sourceIdOctets)) return {};
   std::vector<std::uint8_t> bytes{static_cast<std::uint8_t>(0x10U | m_acknowledgementFlags)};
@@ -193,15 +292,15 @@ std::vector<std::uint8_t> CCSDS::PusATcHeader::serialize() const {
   return bytes;
 }
 
-CCSDS::PusCTcHeader::PusCTcHeader(MissionProfile profile, const std::uint8_t serviceType,
+ccsds::pus::rev_c::TcHeader::TcHeader(MissionProfile profile, const std::uint8_t serviceType,
                                   const std::uint8_t serviceSubtype,
                                   const std::uint32_t sourceId,
                                   const std::uint8_t acknowledgementFlags)
-  : PusTcSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
+  : TcSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
                          sourceId, acknowledgementFlags) {}
 
-CCSDS::ResultBool CCSDS::PusCTcHeader::deserialize(const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateHeaderProfile(m_profile, PusRevision::C, PacketDirection::Telecommand));
+ccsds::ResultBool ccsds::pus::rev_c::TcHeader::deserialize(const std::vector<std::uint8_t> &data) {
+  FORWARD_RESULT(validateHeaderProfile(m_profile, pus::Revision::C, pus::Direction::Telecommand));
   RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-C TC secondary-header size mismatch.");
   RET_IF_ERR_MSG((data[0] >> 4U) != 2U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -212,9 +311,9 @@ CCSDS::ResultBool CCSDS::PusCTcHeader::deserialize(const std::vector<std::uint8_
   return true;
 }
 
-std::vector<std::uint8_t> CCSDS::PusCTcHeader::serialize() const {
-  if (!profileIsValid() || m_profile.pusRevision != PusRevision::C
-      || m_profile.direction != PacketDirection::Telecommand
+std::vector<std::uint8_t> ccsds::pus::rev_c::TcHeader::serialize() const {
+  if (!profileIsValid() || m_profile.pusRevision != pus::Revision::C
+      || m_profile.direction != pus::Direction::Telecommand
       || m_acknowledgementFlags > 0x0FU
       || !identifierFits(m_sourceId, m_profile.sourceIdOctets)) return {};
   std::vector<std::uint8_t> bytes{static_cast<std::uint8_t>(0x20U | m_acknowledgementFlags)};
@@ -222,22 +321,22 @@ std::vector<std::uint8_t> CCSDS::PusCTcHeader::serialize() const {
   return bytes;
 }
 
-CCSDS::PusATmHeader::PusATmHeader(MissionProfile profile, const std::uint8_t serviceType,
+ccsds::pus::rev_a::TmHeader::TmHeader(MissionProfile profile, const std::uint8_t serviceType,
                                   const std::uint8_t serviceSubtype,
                                   const std::uint8_t packetSubcounter,
                                   const std::uint32_t destinationId,
-                                  std::vector<std::uint8_t> timestamp)
-  : PusTmSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
+                                  time::CucTime timestamp)
+  : TmSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
                          destinationId, std::move(timestamp)),
     m_packetSubcounter(packetSubcounter) {}
 
-std::uint16_t CCSDS::PusATmHeader::getSize() const {
+std::uint16_t ccsds::pus::rev_a::TmHeader::getSize() const {
   return static_cast<std::uint16_t>(3U
     + (m_profile.pusATmPacketSubcounterPresent ? 1U : 0U) + tmTailSize());
 }
 
-CCSDS::ResultBool CCSDS::PusATmHeader::deserialize(const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateHeaderProfile(m_profile, PusRevision::A, PacketDirection::Telemetry));
+ccsds::ResultBool ccsds::pus::rev_a::TmHeader::deserialize(const std::vector<std::uint8_t> &data) {
+  FORWARD_RESULT(validateHeaderProfile(m_profile, pus::Revision::A, pus::Direction::Telemetry));
   RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-A TM secondary-header size mismatch.");
   RET_IF_ERR_MSG(data[0] != 0x10U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -252,40 +351,56 @@ CCSDS::ResultBool CCSDS::PusATmHeader::deserialize(const std::vector<std::uint8_
   return true;
 }
 
-std::vector<std::uint8_t> CCSDS::PusATmHeader::serialize() const {
-  if (!profileIsValid() || m_profile.pusRevision != PusRevision::A
-      || m_profile.direction != PacketDirection::Telemetry
-      || !identifierFits(m_destinationId, m_profile.destinationIdOctets)
-      || m_timestamp.size() != m_profile.telemetryTimeCodeOctets) return {};
+std::vector<std::uint8_t> ccsds::pus::rev_a::TmHeader::serialize() const {
+  if (!profileIsValid() || m_profile.pusRevision != pus::Revision::A
+      || m_profile.direction != pus::Direction::Telemetry
+      || !identifierFits(m_destinationId, m_profile.destinationIdOctets)) return {};
   std::vector<std::uint8_t> bytes{0x10U, m_serviceType, m_serviceSubtype};
   if (m_profile.pusATmPacketSubcounterPresent) bytes.push_back(m_packetSubcounter);
-  appendTmTail(bytes);
+  if (!appendTmTail(bytes)) return {};
   return bytes;
 }
 
-CCSDS::PusCTmHeader::PusCTmHeader(MissionProfile profile, const std::uint8_t serviceType,
+#ifndef CCSDS_MCU
+ccsds::ResultBool ccsds::pus::rev_a::TmHeader::loadFromConfig(
+    const ccsds::Config &config) {
+  FORWARD_RESULT(TmSecondaryHeader::loadFromConfig(config));
+  if (m_profile.pusATmPacketSubcounterPresent) {
+    std::uint64_t subcounter{};
+    ASSIGN_CP(subcounter, requiredUnsigned(config, "pus_packet_subcounter", UINT8_MAX));
+    m_packetSubcounter = static_cast<std::uint8_t>(subcounter);
+  } else {
+    RET_IF_ERR_MSG(config.isKey("pus_packet_subcounter"), ErrorCode::CONFIG_FILE_ERROR,
+                   "Config: the profile disables the PUS-A packet subcounter.");
+    m_packetSubcounter = 0U;
+  }
+  return true;
+}
+#endif
+
+ccsds::pus::rev_c::TmHeader::TmHeader(MissionProfile profile, const std::uint8_t serviceType,
                                   const std::uint8_t serviceSubtype,
                                   const std::uint16_t messageTypeCounter,
                                   const std::uint32_t destinationId,
                                   const std::uint8_t timeReferenceStatus,
-                                  std::vector<std::uint8_t> timestamp)
-  : PusTmSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
+                                  time::CucTime timestamp)
+  : TmSecondaryHeader(std::move(profile), serviceType, serviceSubtype,
                          destinationId, std::move(timestamp)),
     m_messageTypeCounter(messageTypeCounter), m_timeReferenceStatus(timeReferenceStatus) {}
 
-CCSDS::ResultBool CCSDS::PusCTmHeader::setTimeReferenceStatus(const std::uint8_t value) {
+ccsds::ResultBool ccsds::pus::rev_c::TmHeader::setTimeReferenceStatus(const std::uint8_t value) {
   RET_IF_ERR_MSG(value > 0x0FU, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-C time-reference status exceeds four bits.");
   m_timeReferenceStatus = value;
   return true;
 }
 
-std::uint16_t CCSDS::PusCTmHeader::getSize() const {
+std::uint16_t ccsds::pus::rev_c::TmHeader::getSize() const {
   return static_cast<std::uint16_t>(5U + tmTailSize());
 }
 
-CCSDS::ResultBool CCSDS::PusCTmHeader::deserialize(const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateHeaderProfile(m_profile, PusRevision::C, PacketDirection::Telemetry));
+ccsds::ResultBool ccsds::pus::rev_c::TmHeader::deserialize(const std::vector<std::uint8_t> &data) {
+  FORWARD_RESULT(validateHeaderProfile(m_profile, pus::Revision::C, pus::Direction::Telemetry));
   RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS-C TM secondary-header size mismatch.");
   RET_IF_ERR_MSG((data[0] >> 4U) != 2U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -300,18 +415,33 @@ CCSDS::ResultBool CCSDS::PusCTmHeader::deserialize(const std::vector<std::uint8_
   return true;
 }
 
-std::vector<std::uint8_t> CCSDS::PusCTmHeader::serialize() const {
-  if (!profileIsValid() || m_profile.pusRevision != PusRevision::C
-      || m_profile.direction != PacketDirection::Telemetry
+std::vector<std::uint8_t> ccsds::pus::rev_c::TmHeader::serialize() const {
+  if (!profileIsValid() || m_profile.pusRevision != pus::Revision::C
+      || m_profile.direction != pus::Direction::Telemetry
       || m_timeReferenceStatus > 0x0FU
-      || !identifierFits(m_destinationId, m_profile.destinationIdOctets)
-      || m_timestamp.size() != m_profile.telemetryTimeCodeOctets) return {};
+      || !identifierFits(m_destinationId, m_profile.destinationIdOctets)) return {};
   std::vector<std::uint8_t> bytes{
     static_cast<std::uint8_t>(0x20U | m_timeReferenceStatus),
     m_serviceType, m_serviceSubtype,
     static_cast<std::uint8_t>(m_messageTypeCounter >> 8U),
     static_cast<std::uint8_t>(m_messageTypeCounter & 0xFFU)
   };
-  appendTmTail(bytes);
+  if (!appendTmTail(bytes)) return {};
   return bytes;
 }
+
+#ifndef CCSDS_MCU
+ccsds::ResultBool ccsds::pus::rev_c::TmHeader::loadFromConfig(
+    const ccsds::Config &config) {
+  FORWARD_RESULT(TmSecondaryHeader::loadFromConfig(config));
+  std::uint64_t messageTypeCounter{};
+  std::uint64_t timeReferenceStatus{};
+  ASSIGN_CP(messageTypeCounter,
+            requiredUnsigned(config, "pus_message_type_counter", UINT16_MAX));
+  ASSIGN_CP(timeReferenceStatus,
+            requiredUnsigned(config, "pus_time_reference_status", 0x0FU));
+  m_messageTypeCounter = static_cast<std::uint16_t>(messageTypeCounter);
+  FORWARD_RESULT(setTimeReferenceStatus(static_cast<std::uint8_t>(timeReferenceStatus)));
+  return true;
+}
+#endif
