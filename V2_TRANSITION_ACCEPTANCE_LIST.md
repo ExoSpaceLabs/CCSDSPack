@@ -18,6 +18,8 @@
 - [x] PUS-A TM packet-subcounter and spare-byte choices are explicit.
 - [x] Invalid combinations return errors without normalization.
 - [x] Header sizes derive from the validated profile.
+- [x] Basic CUC uses numeric coarse/fine counters with an explicit epoch and P-field policy.
+- [x] CUC coarse/fine widths and counter overflow are rejected.
 
 ## Factory and type architecture
 
@@ -29,6 +31,7 @@
 - [x] All four canonical selectors are covered through the string factory path.
 - [x] Factory creation returns fresh mutable objects.
 - [x] Duplicate custom keys and custom `PUS:` keys are rejected.
+- [x] Public types use `ccsds`; PUS codecs are grouped under `ccsds::pus::rev_a` and `ccsds::pus::rev_c`.
 
 ## PUS-A
 
@@ -72,7 +75,7 @@
 
 ## Local validation
 
-- [x] 101 native tests pass.
+- [x] 106 native tests pass.
 - [x] AddressSanitizer and UndefinedBehaviorSanitizer pass.
 - [x] MCU sources compile with `-fno-exceptions -fno-rtti`.
 - [x] `git diff --check` passes.
@@ -83,8 +86,8 @@
 - [x] Linux, Windows, and Doxygen CI pass on `develop`.
 - [x] Installed-consumer/package gates use v2 version expectations.
 - [x] Standalone generic, custom-header, PUS-C TC, and PUS-C TM examples consume the installed package in Linux and Windows CI.
-- [ ] Encoder, decoder, and validator accept/report complete PUS profiles.
-- [ ] Manager higher-level PUS profile workflows are covered.
+- [x] Encoder, decoder, and validator accept/report complete PUS profiles.
+- [x] Manager higher-level PUS profile workflows are covered.
 - [ ] Fuzz smoke jobs pass.
 - [ ] arm64 and STM32 representative PUS validation is recorded.
 - [ ] Release notes and final compliance traceability are approved.

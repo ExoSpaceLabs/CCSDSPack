@@ -16,7 +16,7 @@
   #include "CCSDSConfig.h"
 #endif
 
-namespace CCSDS {
+namespace ccsds {
   class DataField;
   struct MissionProfile;
 
@@ -39,11 +39,11 @@ namespace CCSDS {
    * boundary when parsing ambiguous packet data fields.
    *
    * @code{.cpp}
-   * class MissionHeader final : public CCSDS::SecondaryHeaderAbstract {
+   * class MissionHeader final : public ccsds::SecondaryHeaderAbstract {
    * public:
    *   MissionHeader() { variableLength = true; }
-   *   CCSDS::ResultBool deserialize(const std::vector<std::uint8_t>& bytes) override;
-   *   void update(CCSDS::DataField* field) override;
+   *   ccsds::ResultBool deserialize(const std::vector<std::uint8_t>& bytes) override;
+   *   void update(ccsds::DataField* field) override;
    *   std::uint16_t getSize() const override;
    *   std::vector<std::uint8_t> serialize() const override;
    *   std::string getType() const override { return "MissionHeader"; }
@@ -98,11 +98,11 @@ namespace CCSDS {
 
 #ifndef CCSDS_MCU
     /**
-     * @brief Loads type-specific fields from Config.
+     * @brief Loads type-specific fields from ccsds::Config.
      * @param config Parsed configuration object.
      * @return Success, or a configuration/type-specific validation error.
      */
-    virtual ResultBool loadFromConfig(const Config &config) = 0;
+    virtual ResultBool loadFromConfig(const ccsds::Config &config) = 0;
 #endif
 
     /**
@@ -168,7 +168,7 @@ namespace CCSDS {
     }
 #ifndef CCSDS_MCU
     /** @brief Accepts configuration without modifying raw bytes. */
-    ResultBool loadFromConfig(const Config &config) override {
+    ResultBool loadFromConfig(const ccsds::Config &config) override {
       (void)config;
       return true;
     }

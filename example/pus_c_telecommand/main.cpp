@@ -7,27 +7,27 @@
 #include <vector>
 
 namespace {
-  int fail(const char *operation, const CCSDS::Error &error) {
+  int fail(const char *operation, const ccsds::Error &error) {
     std::cerr << operation << ": " << error.message() << '\n';
-    return error.code() == CCSDS::NONE ? 1 : error.code();
+    return error.code() == ccsds::NONE ? 1 : error.code();
   }
 }
 
 int main() {
-  auto profile = CCSDS::makePusProfile(
-    CCSDS::PusRevision::C, CCSDS::PacketDirection::Telecommand);
+  auto profile = ccsds::pus::makeProfile(
+    ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
   profile.sourceIdOctets = 2U;
 
-  CCSDS::Packet packet;
-  if (const auto result = packet.setPrimaryHeader(CCSDS::PrimaryHeader{
-        0U, 1U, 0U, 0x123U, CCSDS::UNSEGMENTED, 7U, 0U}); !result) {
+  ccsds::Packet packet;
+  if (const auto result = packet.setPrimaryHeader(ccsds::PrimaryHeader{
+        0U, 1U, 0U, 0x123U, ccsds::UNSEGMENTED, 7U, 0U}); !result) {
     return fail("setPrimaryHeader", result.error());
   }
   if (const auto result = packet.setMissionProfile(profile); !result) {
     return fail("setMissionProfile", result.error());
   }
   if (const auto result = packet.setSecondaryHeader(
-        std::make_shared<CCSDS::PusCTcHeader>(profile, 17U, 1U, 0x1234U, 0x09U)); !result) {
+        std::make_shared<ccsds::pus::rev_c::TcHeader>(profile, 17U, 1U, 0x1234U, 0x09U)); !result) {
     return fail("setSecondaryHeader", result.error());
   }
   if (const auto result = packet.setApplicationData({0x60U, 0x70U}); !result) {
@@ -37,14 +37,14 @@ int main() {
   const auto wireResult = packet.serialize();
   if (!wireResult) return fail("serialize", wireResult.error());
   const auto &wire = wireResult.value();
-  CCSDS::Packet decoded;
+  ccsds::Packet decoded;
   if (const auto result = decoded.setMissionProfile(profile); !result) {
     return fail("setMissionProfile decoder", result.error());
   }
   const auto consumed = decoded.deserializeBounded(wire, "PUS:revC:TC");
   if (!consumed) return fail("deserializeBounded", consumed.error());
 
-  const auto header = std::dynamic_pointer_cast<const CCSDS::PusCTcHeader>(
+  const auto header = std::dynamic_pointer_cast<const ccsds::pus::rev_c::TcHeader>(
     decoded.getSecondaryHeader());
   if (consumed.value() != wire.size() || !header
       || header->getServiceType() != 17U || header->getServiceSubtype() != 1U

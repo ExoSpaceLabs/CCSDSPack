@@ -8,14 +8,14 @@
 #include <memory>
 #include <string>
 
-namespace CCSDS {
+namespace ccsds::pus {
 
   /** @brief Fixed, non-extensible registry for standards-defined PUS codecs. */
-  class PusSecondaryHeaderFactory {
+  class SecondaryHeaderFactory {
   public:
     /** @brief Creates a PUS codec from typed revision and direction values. */
     [[nodiscard]] Result<std::shared_ptr<SecondaryHeaderAbstract>> create(
-      PusRevision revision, PacketDirection direction, const MissionProfile &profile) const;
+      Revision revision, Direction direction, const MissionProfile &profile) const;
     /** @brief Creates a PUS codec from its canonical selector. */
     [[nodiscard]] Result<std::shared_ptr<SecondaryHeaderAbstract>> create(
       const std::string &selector, const MissionProfile &profile) const;
@@ -27,6 +27,6 @@ namespace CCSDS {
     }
   };
 
-} // namespace CCSDS
+} // namespace ccsds::pus
 
 #endif // PUS_SECONDARY_HEADER_FACTORY_H

@@ -24,7 +24,7 @@
 #include "CCSDSDataField.h"
 #include "CCSDSMissionProfile.h"
 
-namespace CCSDS {
+namespace ccsds {
   /**
    * @struct CRC16Config
    * @brief Parameters for the optional CCSDSPack mission-profile CRC16 trailer.
@@ -77,14 +77,14 @@ namespace CCSDS {
    * unconsumed, allowing callers to iterate over concatenated packets.
    *
    * @code{.cpp}
-   * CCSDS::Packet packet;
+   * ccsds::Packet packet;
    * packet.setPrimaryHeader({0, 0, 0, 0x123,
-   *                          CCSDS::UNSEGMENTED, 0, 0});
+   *                          ccsds::UNSEGMENTED, 0, 0});
    * packet.setApplicationData({0x10, 0x20});
    * const auto wire = packet.serialize();
    * if (!wire) return;
    *
-   * CCSDS::Packet decoded;
+   * ccsds::Packet decoded;
    * const auto consumed = decoded.deserializeBounded(wire.value());
    * @endcode
    */
@@ -449,12 +449,12 @@ namespace CCSDS {
     ResultBool loadFromConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
     /**
-     * @brief Loads packet construction settings from an already parsed Config.
+     * @brief Loads packet construction settings from an already parsed ccsds::Config.
      * @param cfg Configuration object containing the required CCSDS header keys.
      * @return Success, or a configuration/field validation error.
      * @note ccsds_version_number must be zero for this Space Packet profile.
      */
-    ResultBool loadFromConfig(const Config &cfg);
+    ResultBool loadFromConfig(const ccsds::Config &cfg);
 #endif
 
   private:

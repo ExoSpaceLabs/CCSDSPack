@@ -10,7 +10,7 @@
 
 #include "CCSDSPacket.h"
 
-namespace CCSDS {
+namespace ccsds {
   /**
    * @class Validator
    * @brief Validates packet structure and one sequence-count stream.
@@ -112,6 +112,6 @@ namespace CCSDS {
     std::size_t m_reportSize{6};           ///< Stable number of report entries.
     CRC16Config m_CRCConfig;               ///< CRC parameters used for coherence checks.
   };
-} // namespace CCSDS
+} // namespace ccsds
 
 #endif // CCSDS_VALIDATOR_H

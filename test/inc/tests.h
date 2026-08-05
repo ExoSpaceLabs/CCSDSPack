@@ -9,7 +9,7 @@
 #include <vector>
 #include "TestManager.h"
 
-inline std::vector<std::uint8_t> serializedPacket(CCSDS::Packet &packet) {
+inline std::vector<std::uint8_t> serializedPacket(ccsds::Packet &packet) {
   const auto result = packet.serialize();
   if (!result) {
     std::cerr << "[ Error ]: Code [" << result.error().code()
@@ -19,7 +19,7 @@ inline std::vector<std::uint8_t> serializedPacket(CCSDS::Packet &packet) {
   return result.value();
 }
 
-inline std::vector<std::uint8_t> serializedPackets(const CCSDS::Manager &manager) {
+inline std::vector<std::uint8_t> serializedPackets(const ccsds::Manager &manager) {
   const auto result = manager.getPacketsBuffer();
   if (!result) {
     std::cerr << "[ Error ]: Code [" << result.error().code()

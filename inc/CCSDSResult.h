@@ -18,7 +18,7 @@
   #include <string>
 #endif
 
-namespace CCSDS {
+namespace ccsds {
   /**
    * @enum ErrorCode
    * @brief Stable categories returned by checked CCSDSPack operations.
@@ -148,15 +148,15 @@ do { if (condition) return errorCode; } while (0)
 
 /**
  * @def RET_IF_ERR_MSG
- * @brief Returns CCSDS::Error when condition is true.
+ * @brief Returns ccsds::Error when condition is true.
  * @param condition Failure predicate evaluated once.
- * @param errorCode CCSDS::ErrorCode category.
+ * @param errorCode ccsds::ErrorCode category.
  * @param message Diagnostic expression used to construct the Error.
  */
 #define RET_IF_ERR_MSG(condition, errorCode, message)    \
 do {                                                     \
     if (condition) {                                     \
-        return CCSDS::Error{errorCode,message};          \
+        return ccsds::Error{errorCode,message};          \
     }                                                    \
 } while (0)
 

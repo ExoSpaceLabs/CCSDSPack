@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+namespace ccsds {
 /**
  * @brief Computes an MSB-first 16-bit CRC over the supplied bytes.
  * @param data Bytes processed in order.
@@ -29,11 +30,6 @@ std::uint16_t crc16(const std::vector<std::uint8_t> &data,
                     std::uint16_t initialValue = 0xFFFF,
                     std::uint16_t finalXorValue = 0x0000);
 
-namespace CCSDS {
-  /** @brief Makes the global crc16() helper available as CCSDS::crc16. */
-  using ::crc16;
-}
-
 /**
  * @brief Tests whether a string ends with an exact suffix.
  * @param str Input string.
@@ -46,13 +42,13 @@ bool stringEndsWith(const std::string &str, const std::string &suffix);
  * @brief Prints a human-readable summary of one packet to standard output.
  * @param packet Packet to inspect; current stored state is printed.
  */
-void printPacket(CCSDS::Packet &packet);
+void printPacket(ccsds::Packet &packet);
 
 /**
  * @brief Prints all packets currently stored in a Manager.
  * @param manager Manager to inspect.
  */
-void printPackets(CCSDS::Manager &manager);
+void printPackets(ccsds::Manager &manager);
 
 /**
  * @brief Formats the low-order bits of an integer as a binary string.
@@ -80,26 +76,26 @@ void printBufferData(const std::vector<std::uint8_t> &buffer, std::int32_t limit
  * @brief Prints a DataField summary.
  * @param dataField DataField copied for diagnostic output.
  */
-void printData(CCSDS::DataField dataField);
+void printData(ccsds::DataField dataField);
 
 /**
  * @brief Prints a primary-header summary.
  * @param header Header to inspect.
  */
-void printHeader(CCSDS::Header &header);
+void printHeader(ccsds::Header &header);
 
 /**
  * @brief Prints the primary header owned by a packet.
  * @param packet Packet to inspect.
  * @return Success, or an error when the header cannot be represented.
  */
-CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet);
+ccsds::ResultBool printPrimaryHeader(ccsds::Packet &packet);
 
 /**
  * @brief Prints the secondary-header and application-data portions of a packet.
  * @param packet Packet to inspect.
  */
-void printDataField(CCSDS::Packet &packet);
+void printDataField(ccsds::Packet &packet);
 
 /**
  * @brief Writes bytes to a binary file, replacing any existing content.
@@ -107,7 +103,7 @@ void printDataField(CCSDS::Packet &packet);
  * @param filename Output path.
  * @return Success, or FILE_WRITE_ERROR.
  */
-CCSDS::ResultBool writeBinaryFile(const std::vector<std::uint8_t> &data,
+ccsds::ResultBool writeBinaryFile(const std::vector<std::uint8_t> &data,
                                   const std::string &filename);
 
 /**
@@ -115,7 +111,7 @@ CCSDS::ResultBool writeBinaryFile(const std::vector<std::uint8_t> &data,
  * @param filename Input path.
  * @return File bytes, or FILE_READ_ERROR.
  */
-CCSDS::ResultBuffer readBinaryFile(const std::string &filename);
+ccsds::ResultBuffer readBinaryFile(const std::string &filename);
 
 /**
  * @brief Tests whether a file can be opened for reading.
@@ -123,5 +119,6 @@ CCSDS::ResultBuffer readBinaryFile(const std::string &filename);
  * @return True when the file exists and is accessible.
  */
 bool fileExists(const std::string &fileName);
+} // namespace ccsds
 
 #endif // CCSDS_UTILS_H

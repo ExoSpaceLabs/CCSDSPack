@@ -20,7 +20,7 @@
 #include "CCSDSMissionProfile.h"
 #include "PusSecondaryHeaderFactory.h"
 
-namespace CCSDS {
+namespace ccsds {
   /**
    * @class DataField
    * @brief Owns the optional secondary header and application-data bytes of one packet.
@@ -30,7 +30,7 @@ namespace CCSDS {
    * secondary-header and application-data bytes.
    *
    * Custom secondary headers use SecondaryHeaderFactory. Standards-defined PUS
-   * headers use the separate, fixed PusSecondaryHeaderFactory.
+   * headers use the separate, fixed pus::SecondaryHeaderFactory.
    *
    * Inspection APIs do not call update(). serialize() is the explicit finalization
    * path: it optionally invokes the installed secondary header's update() method and
@@ -116,11 +116,11 @@ namespace CCSDS {
     [[nodiscard]] ResultBool setSecondaryHeader(const std::vector<std::uint8_t> &secondaryHeader);
 #ifndef CCSDS_MCU
     /**
-     * @brief Creates and loads a registered secondary header from Config.
+     * @brief Creates and loads a registered secondary header from ccsds::Config.
      * @param cfg Configuration containing secondary_header_type and type-specific fields.
      * @return Success, or a configuration/registration/header error.
      */
-    [[nodiscard]] ResultBool setSecondaryHeader(const Config &cfg);
+    [[nodiscard]] ResultBool setSecondaryHeader(const ccsds::Config &cfg);
 #endif
 
     /**
@@ -138,7 +138,7 @@ namespace CCSDS {
     }
 
     /** @brief Returns read-only access to the fixed standards PUS codec registry. */
-    [[nodiscard]] const PusSecondaryHeaderFactory &getPusSecondaryHeaderFactory() const {
+    [[nodiscard]] const pus::SecondaryHeaderFactory &getPusSecondaryHeaderFactory() const {
       return m_pusSecondaryHeaderFactory;
     }
 
@@ -210,7 +210,7 @@ namespace CCSDS {
 
     std::shared_ptr<SecondaryHeaderAbstract> m_secondaryHeader{}; ///< Installed optional secondary header.
     SecondaryHeaderFactory m_secondaryHeaderFactory;             ///< Registry used by typed header parsing.
-    PusSecondaryHeaderFactory m_pusSecondaryHeaderFactory;       ///< Fixed standards PUS codec registry.
+    pus::SecondaryHeaderFactory m_pusSecondaryHeaderFactory;       ///< Fixed standards PUS codec registry.
     MissionProfile m_missionProfile{};                           ///< Explicit generic/PUS tailoring.
     std::vector<std::uint8_t> m_applicationData{};               ///< Application-data bytes only.
     std::string m_secondaryHeaderType{};                         ///< Lookup name of the installed header type.

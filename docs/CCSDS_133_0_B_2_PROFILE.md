@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 
 ## Normative baseline
 
-CCSDSPack v1.2 targets the Space Packet Protocol packet data unit defined by:
+CCSDSPack v2 targets the Space Packet Protocol packet data unit defined by:
 
 - **CCSDS 133.0-B-2, Issue 2, June 2020**;
 - including **Editorial Change 2, September 2024**.
@@ -20,7 +20,7 @@ Editorial Change 2 changes document presentation only. It does not alter the Spa
 
 The supported claim is:
 
-> CCSDSPack v1.2 implements a CCSDS 133.0-B-2 EC2 Space Packet PDU profile.
+> CCSDSPack v2 implements a CCSDS 133.0-B-2 EC2 Space Packet PDU profile.
 
 This claim covers construction, serialization, bounded parsing, validation, sequence-count handling, and stream management for CCSDS Space Packet PDUs.
 
@@ -35,7 +35,7 @@ It does **not** claim implementation of the complete CCSDS Space Packet Protocol
 
 This boundary is intentional and appropriate for a packet PDU library. Complete abstract services, lower-layer transfer, routing, and system-wide managed behavior belong to a larger flight or ground protocol entity when that system requires them.
 
-`CCSDS::Manager` may prepend a configurable synchronization pattern around packet streams. That pattern is a CCSDSPack container convenience and is not part of a CCSDS Space Packet.
+`ccsds::Manager` may prepend a configurable synchronization pattern around packet streams. That pattern is a CCSDSPack container convenience and is not part of a CCSDS Space Packet.
 
 ## Primary header profile
 
@@ -53,7 +53,7 @@ CCSDSPack uses the fixed six-octet primary header with:
 
 A serialized or parsed Space Packet must encode Packet Version Number `000`.
 
-`CCSDS::Header` remains a low-level three-bit field container for source compatibility and future protocol work. `CCSDS::Packet` is the Space Packet profile gate and refuses to serialize non-zero versions. Configuration files also require:
+`ccsds::Header` remains a low-level three-bit field container for source compatibility and future protocol work. `ccsds::Packet` is the Space Packet profile gate and refuses to serialize non-zero versions. Configuration files also require:
 
 ```ini
 ccsds_version_number:int=0
@@ -111,7 +111,7 @@ The representable Packet Data Field range is 1 through 65,536 octets, giving a t
 Use:
 
 ```cpp
-std::size_t CCSDS::Packet::getSerializedSize() const;
+std::size_t ccsds::Packet::getSerializedSize() const;
 ```
 
 for the complete range. The legacy `getFullPacketLength()` returns `std::uint16_t` and saturates at `UINT16_MAX` rather than wrapping when the exact packet size is larger.
@@ -122,16 +122,19 @@ CCSDS 133.0-B-2 permits optional secondary-header information. CCSDSPack support
 
 - opaque `BufferHeader` bytes;
 - user-registered secondary-header classes;
-- standards-oriented `PusATcHeader`, `PusATmHeader`, `PusCTcHeader`, and
-  `PusCTmHeader` classes selected by an explicit `MissionProfile`.
+- standards-oriented `ccsds::pus::rev_a::TcHeader`,
+  `ccsds::pus::rev_a::TmHeader`, `ccsds::pus::rev_c::TcHeader`, and
+  `ccsds::pus::rev_c::TmHeader` classes selected by an explicit
+  `ccsds::MissionProfile`.
 
 The v1 project-specific `PusA`, `PusB`, and `PusC` classes are removed. There is
 no PUS-B revision. PUS-A and PUS-C parsing uses the canonical revision/direction
 selectors documented in the [examples](EXAMPLES.md).
 
-PUS telemetry timestamp presence, family, and encoded width are profile-driven.
-CCSDSPack validates the serialized timestamp width but does not invent mission
-epoch or P-field policy.
+PUS telemetry time is numeric and profile-driven. The supported basic CUC codec
+records the CCSDS-1958 or agency-defined epoch, implicit or explicit P-field,
+and 1–4 coarse plus 0–3 fine octets. Calendar conversion, leap-second handling,
+and agency-epoch definition remain outside the packet codec.
 
 ## CCSDSPack CRC16 mission profile
 
@@ -158,7 +161,8 @@ six-octet Packet Primary Header
 + application-data bytes
 ```
 
-`PacketErrorControlMode::None` reserves no trailer octets. CRC16 remains the default for existing v1 construction and configuration paths.
+`PacketErrorControlMode::None` reserves no trailer octets. Configuration selects
+the mode explicitly.
 
 ## Parsing profile
 
@@ -177,7 +181,7 @@ The receiving application must configure whether the stream uses the CRC16 profi
 
 ## Manager profile
 
-One `CCSDS::Manager` represents one complete Packet Identification value and one sequence-count stream.
+One `ccsds::Manager` represents one complete Packet Identification value and one sequence-count stream.
 
 The bound identifier contains:
 
@@ -190,9 +194,10 @@ Sequence Flags, Packet Sequence Count, and Packet Data Length are excluded becau
 
 Applications managing multiple identifiers use multiple Manager instances or independent Packet objects. Within one managed data path, one APID should have one sequence-count authority.
 
-## Compatibility with releases before v1.2
+## Compatibility
 
-The public v1 source API remains available, but corrected wire behavior may be incompatible with packets generated by earlier versions. In particular, v1.2 corrects:
+v2 does not retain the v1 namespace or legacy PUS source API. It preserves the
+corrected v1.2 packet-wire behavior, including:
 
 - Packet Data Length to use `N - 1`;
 - inclusion of the optional CRC trailer in Packet Data Length;
@@ -202,7 +207,9 @@ The public v1 source API remains available, but corrected wire behavior may be i
 - full Packet Identification enforcement;
 - Packet Version Number and Idle Packet profile validation.
 
-Stored or transmitted pre-v1.2 packets should be regenerated or migrated with an explicit compatibility tool. They should not be assumed to parse under the corrected profile.
+Stored or transmitted packets using the removed project-specific secondary
+headers must be regenerated with an explicit v2 mission profile. See the
+[migration guide](MIGRATION_V1_TO_V2.md).
 
 ## Conformance evidence
 

@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <utility>
 
-namespace CCSDS {
+namespace ccsds {
 
   /** Direction-neutral extension registry for mission-specific secondary headers. */
   class SecondaryHeaderFactory {
@@ -57,6 +57,6 @@ namespace CCSDS {
     std::unordered_map<std::string, CreatorFunc> m_creators;
   };
 
-} // namespace CCSDS
+} // namespace ccsds
 
 #endif // CCSDS_SECONDARY_HEADER_FACTORY_H

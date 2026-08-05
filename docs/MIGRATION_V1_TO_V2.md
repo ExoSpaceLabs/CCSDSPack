@@ -1,23 +1,38 @@
 # Migrating CCSDSPack v1 to v2
 
-CCSDSPack v2 deliberately breaks the legacy secondary-header API. The old classes were project-specific formats whose names could be mistaken for ECSS Packet Utilisation Standard revisions. They have no compatibility aliases in v2.
+CCSDSPack v2 intentionally breaks source compatibility. It removes
+project-specific formats that could be mistaken for ECSS PUS revisions and
+makes packet finalization, mission tailoring, and time encoding explicit.
 
-## Type replacements
+## Namespace migration
 
-| Removed v1 concept | v2 replacement |
+The public C++ namespace is lowercase in v2:
+
+```cpp
+// v1
+CCSDS::Packet packet;
+
+// v2
+ccsds::Packet packet;
+```
+
+There is no compatibility alias. CMake package and target names remain
+`CCSDSPack` and `ccsdspack::CCSDSPack`.
+
+Standards-defined PUS codecs use revision namespaces:
+
+| Removed v1 concept | v2 type |
 |---|---|
-| `PusA` | `PusATcHeader` or `PusATmHeader` with an explicit PUS-A profile |
-| `PusB` | No replacement; ECSS-E-70-41B was never issued |
-| `PusC` | `PusCTcHeader` or `PusCTmHeader` with an explicit PUS-C profile |
-| `PusServices.h/.cpp` | `PusSecondaryHeaders.h/.cpp` |
-| Shared prototype registry | Fresh-instance creator registry |
-| One mixed custom/PUS registry | `SecondaryHeaderFactory` plus fixed `PusSecondaryHeaderFactory` |
+| `PusA` | `ccsds::pus::rev_a::TcHeader` or `ccsds::pus::rev_a::TmHeader` |
+| `PusB` | No replacement; no standards-facing PUS-B revision exists |
+| `PusC` | `ccsds::pus::rev_c::TcHeader` or `ccsds::pus::rev_c::TmHeader` |
+| mixed factory | `ccsds::SecondaryHeaderFactory` for custom types plus fixed `ccsds::pus::SecondaryHeaderFactory` |
 
-The standards-facing selectors are `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, and `PUS:revC:TM`. The `PUS:` namespace is reserved and cannot be registered by custom headers.
+The canonical string selectors remain `PUS:revA:TC`, `PUS:revA:TM`,
+`PUS:revC:TC`, and `PUS:revC:TM`. Custom registration cannot claim the reserved
+`PUS:` prefix.
 
 ## Secondary-header API naming
-
-v2 uses CCSDS “secondary header” terminology consistently across the public API:
 
 | Removed name | v2 name |
 |---|---|
@@ -29,33 +44,20 @@ v2 uses CCSDS “secondary header” terminology consistently across the public 
 | `getDataFieldHeaderFlag()` | `getSecondaryHeaderFlag()` |
 | `setDataFieldHeaderFlag(...)` | `setSecondaryHeaderFlag(...)` |
 
-The packet-template key is likewise renamed from `ccsds_data_field_header_flag` to
-`ccsds_secondary_header_flag`. v2 does not retain aliases for the former names.
-`getSecondaryHeader()` returns a nullable shared pointer; the former unchecked
-reference getter is removed.
+The configuration key is `ccsds_secondary_header_flag`; the former
+`ccsds_data_field_header_flag` is rejected.
 
-## Serialization and finalization results
+## Checked serialization
 
-v1.2 returned packet bytes directly and used an empty vector for every finalization
-failure. v2 makes the error channel explicit:
+v1 used an empty byte vector as the only finalization-failure signal. v2 returns
+the existing exception-free result types:
 
-| v1.2 API | v2 API |
+| v1 API | v2 API |
 |---|---|
-| `std::vector<std::uint8_t> Packet::serialize()` | `ResultBuffer Packet::serialize()` |
-| `void Packet::update()` | `ResultBool Packet::update()` |
-| `std::vector<std::uint8_t> DataField::serialize()` | `ResultBuffer DataField::serialize()` |
-| `std::vector<std::uint8_t> Manager::getPacketsBuffer()` | `ResultBuffer Manager::getPacketsBuffer()` |
-
-Before:
-
-```cpp
-const auto wire = packet.serialize();
-if (wire.empty()) {
-  // The failure reason is unavailable.
-}
-```
-
-After:
+| `std::vector<std::uint8_t> Packet::serialize()` | `ccsds::ResultBuffer Packet::serialize()` |
+| `void Packet::update()` | `ccsds::ResultBool Packet::update()` |
+| `std::vector<std::uint8_t> DataField::serialize()` | `ccsds::ResultBuffer DataField::serialize()` |
+| `std::vector<std::uint8_t> Manager::getPacketsBuffer()` | `ccsds::ResultBuffer Manager::getPacketsBuffer()` |
 
 ```cpp
 const auto wire = packet.serialize();
@@ -66,55 +68,69 @@ if (!wire) {
 send(wire.value());
 ```
 
-`serialize()` invokes checked finalization. `update()` exposes the same validation
-and dependent-field update without allocating the complete packet output. Manager
-stream serialization propagates the first packet error unchanged.
+## PUS construction and numeric time
 
-## Construction
-
-Before:
+Raw timestamp byte vectors are replaced by a numeric CUC value plus an explicit
+wire profile:
 
 ```cpp
-packet.setSecondaryHeader(std::make_shared<PusC>(...));
-```
-
-After:
-
-```cpp
-auto profile = CCSDS::makePusProfile(
-  CCSDS::PusRevision::C, CCSDS::PacketDirection::Telemetry);
+auto profile = ccsds::pus::makeProfile(
+  ccsds::pus::Revision::C,
+  ccsds::pus::Direction::Telemetry);
+profile.destinationIdOctets = 2;
 profile.telemetryTimestampPresent = true;
-profile.telemetryTimeCode = CCSDS::TimeCodeFormat::Cuc;
-profile.telemetryTimeCodeOctets = 4;
+profile.telemetryTimeCode = ccsds::time::Format::Cuc;
+profile.telemetryCuc = {
+  ccsds::time::Epoch::Ccsds1958Tai,
+  ccsds::time::PFieldMode::Explicit,
+  4,
+  2
+};
 
-CCSDS::Packet packet;
-if (auto result = packet.setMissionProfile(profile); !result) {
-  // handle result.error()
+ccsds::Packet packet;
+if (const auto result = packet.setMissionProfile(profile); !result) {
+  return result.error().code();
 }
-if (auto result = packet.setSecondaryHeader(
-      std::make_shared<CCSDS::PusCTmHeader>(
-        profile, 3, 25, 1, 0x0001, 0, std::vector<std::uint8_t>{0, 0, 0, 0}));
-    !result) {
-  // handle result.error()
+
+auto header = std::make_shared<ccsds::pus::rev_c::TmHeader>(
+  profile, 3, 25, 1, 0x1234, 0,
+  ccsds::time::CucTime{0x01020304, 0xA0B0});
+if (const auto result = packet.setSecondaryHeader(std::move(header)); !result) {
+  return result.error().code();
 }
 ```
 
-`Packet::setSecondaryHeader(shared_ptr)` now returns `ResultBool`, because profile, namespace, type, and capacity mismatches are checked.
-
-## Parsing
-
-Configure the same profile used by the sender, then provide the canonical selector:
+The same profile must be active before parsing:
 
 ```cpp
-CCSDS::Packet decoded;
+ccsds::Packet decoded;
 decoded.setMissionProfile(profile);
-auto result = decoded.deserializeBounded(bytes, "PUS:revC:TM");
+const auto consumed = decoded.deserializeBounded(wire.value(), "PUS:revC:TM");
 ```
 
-The parser does not infer revision, direction, timestamp size, identifier width, or packet error control from remaining bytes. A generic parsing overload rejects a packet when the active profile requires PUS.
+The parser does not infer revision, direction, identifier widths, time layout,
+epoch, P-field policy, or packet error control from remaining bytes.
+
+## Configuration migration
+
+Every v2 profile declares:
+
+```ini
+mission_profile:string=generic
+ccsds_packet_error_control:string=crc16
+```
+
+PUS profiles additionally declare exact `pus_revision`, `pus_direction`, the
+canonical `secondary_header_type`, identifier widths, revision-specific fields,
+and `pus_time_*` values for CUC telemetry. Packet, Manager, encoder, decoder, and
+validator all use this same profile.
+
+Legacy `pus_version`, `pus_event_id`, `pus_time_code`, and
+`secondary_header_type=PusA|PusB|PusC` values fail with a migration error.
+Complete v2 profiles are in [`example/config`](../example/config).
 
 ## Wire-format impact
 
-The old classes encoded project-specific fields, including non-standard application-data lengths. The new types encode the revision- and direction-specific secondary-header fields. Existing serialized legacy headers must be regenerated; renaming a selector is not sufficient.
-
-Legacy configuration values `secondary_header_type=PusA`, `PusB`, or `PusC` fail with a migration diagnostic. v2 configuration and CLI profile integration is tracked separately from the C++ codec API.
+The removed classes encoded project-specific layouts. Existing legacy packet
+bytes must be regenerated with a selected revision, direction, mission profile,
+and time layout; renaming a class or selector is insufficient.

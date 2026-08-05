@@ -3,39 +3,41 @@ Copyright 2025-2026 ExoSpaceLabs
 SPDX-License-Identifier: Apache-2.0
 -->
 
-# CCSDSPack v1.2 CCSDS Space Packet compliance matrix
+# CCSDSPack v2 CCSDS Space Packet compliance matrix
 
 ## Status
 
 This document is the detailed compliance and traceability matrix for the
-CCSDSPack v1.2.0 Space Packet implementation. It shall be read together with:
+CCSDSPack v2.0.0 Space Packet implementation. It shall be read together with:
 
 - [`COMPLIANCE.md`](COMPLIANCE.md), the concise release-facing claim;
 - [`docs/CCSDS_133_0_B_2_PROFILE.md`](docs/CCSDS_133_0_B_2_PROFILE.md), the
   supported packet profile and wire behaviour;
-- [`docs/V1_2_CURRENT_BEHAVIOUR.md`](docs/V1_2_CURRENT_BEHAVIOUR.md), the
-  implementation and compatibility record.
+- [`docs/MISSION_TAILORING.md`](docs/MISSION_TAILORING.md), the PUS and CUC
+  mission-profile contract.
 
-This matrix covers the CCSDS Space Packet layer only. The bundled legacy
-`PusA`, `PusB`, and `PusC` classes are deliberately excluded from this matrix
-and do not contribute to the v1.2 compliance claim.
+The detailed rows cover the CCSDS Space Packet layer. The additional v2 profile
+section records the narrower PUS secondary-header and CUC codec scope. The
+removed project-specific `PusA`, `PusB`, and `PusC` formats do not contribute to
+any compliance claim.
 
 The presence of an API, an internal encode/decode round trip, or a similarly
 named class is not, by itself, conformance evidence.
 
 ## Normative baseline
 
-| Area | Selected baseline | v1.2.0 decision |
+| Area | Selected baseline | v2.0.0 decision |
 |---|---|---|
 | CCSDS Space Packet Protocol | CCSDS 133.0-B-2, Recommended Standard Issue 2, June 2020, including Editorial Change 2 of September 2024 | Space Packet PDU construction, serialization, bounded parsing, validation, supported assembly/extraction behaviour, and packet-format parameters |
-| Packet Utilisation Standard | Not selected for the v1.2 claim | Legacy secondary-header classes remain available but are outside this compliance matrix |
+| Packet Utilisation Standard | ECSS-E-70-41A and ECSS-E-ST-70-41C | Direction-specific supported secondary-header layouts only; complete PUS services are outside scope |
+| CCSDS time code | CCSDS 301.0-B-4 | Basic CUC numeric counter with selected epoch, implicit/explicit P-field, 1–4 coarse octets, and 0–3 fine octets |
 
 Where this matrix and an implementation comment disagree, the normative
 standard, the concise claim, and this matrix take precedence in that order.
 
 ## Conformance claim boundary
 
-CCSDSPack v1.2.0 claims conformance for the supported Space Packet PDU profile
+CCSDSPack v2.0.0 claims conformance for the supported Space Packet PDU profile
 and the library behaviour required to create, serialize, parse, inspect,
 validate, segment, and manage those PDUs.
 
@@ -63,9 +65,9 @@ covering every applicable mandatory item in annex A.
 | Status | Meaning |
 |---|---|
 | Implemented | Behaviour is present and backed by focused automated or independent evidence. |
-| Implemented in profile | The applicable subset used by the v1.2 PDU profile is implemented; the complete abstract protocol service remains outside scope. |
+| Implemented in profile | The applicable subset used by the v2 PDU profile is implemented; the complete abstract protocol service remains outside scope. |
 | Mission-tailored | CCSDS permits or requires mission-specific content or policy. |
-| Unsupported | Intentionally outside the v1.2 compliance claim. |
+| Unsupported | Intentionally outside the v2 compliance claim. |
 | Not applicable | The requirement belongs to a lower or higher layer not implemented by this library. |
 
 ## Traceability conventions
@@ -80,17 +82,29 @@ covering every applicable mandatory item in annex A.
 
 Test references name the focused repository test source or the fixed independent
 evidence used by the release. The complete native suite currently contains
-93 passing regression and conformance tests.
+106 passing regression and conformance tests.
+
+## PUS secondary-header and CUC profile
+
+| Area | Classification | Status | Evidence |
+|---|---|---|---|
+| PUS-A TC/TM direction-specific layouts | Direct supported subset | Implemented | fixed layout vectors, round trips, profile mismatch rejection |
+| PUS-C TC/TM direction-specific layouts | Direct supported subset | Implemented | fixed layout vectors, round trips, reserved-bit and direction rejection |
+| Canonical revision/direction selection | Library invariant | Implemented | four-selector factory matrix and configuration matrix |
+| Identifier widths and spare octets | Mission-tailored | Implemented | width boundaries, profile validation, zero-spare rejection |
+| Basic CUC counter encoding | Direct supported subset | Implemented | independent explicit/implicit P-field vectors and negative vectors |
+| Epoch and P-field policy | Mission-tailored | Implemented | configuration, P-field verification, invalid-policy rejection |
+| Complete PUS services and time correlation | Outside codec scope | Unsupported | documented claim boundary |
 
 ## Annex A PICS scope summary
 
 This table records the relationship between the CCSDS 133.0-B-2 PICS proforma
-and the v1.2 library claim. It is a scope statement, not a completed
+and the v2 library claim. It is a scope statement, not a completed
 system-level PICS.
 
-| PICS item(s) | CCSDS reference | Capability | v1.2 classification | Status |
+| PICS item(s) | CCSDS reference | Capability | v2 classification | Status |
 |---|---|---|---|---|
-| SPP-1 | 3.2.2 | Space Packet service data unit | Represented by `CCSDS::Packet`; complete abstract service API is outside scope | Implemented in profile |
+| SPP-1 | 3.2.2 | Space Packet service data unit | Represented by `ccsds::Packet`; complete abstract service API is outside scope | Implemented in profile |
 | SPP-2 | 3.2.3 | Octet String service data unit | Complete Octet String Service is outside scope | Unsupported |
 | SPP-3, SPP-7 | 3.3.2.2, 3.4.2.2 | APID service parameter | Full 11-bit APID and Idle APID handling are in scope | Implemented |
 | SPP-4, SPP-9 | 3.3.2.3, 3.4.2.4 | Packet/Data Loss Indicator | Sequence continuity can be validated; the abstract service indicator is outside scope | Implemented in profile |
@@ -116,9 +130,9 @@ system-level PICS.
 
 | ID | CCSDS 133.0-B-2 clause(s) | PICS item(s) | Trace type | Requirement | Status | Implementation reference | Evidence |
 |---|---|---|---|---|---|---|---|
-| SPP-PDU-001 | 4.1.2.1 | SPP-14, SPP-15, SPP-16 | Direct | A Space Packet contains a contiguous six-octet Packet Primary Header followed by a Packet Data Field of 1 to 65,536 octets. | Implemented | `CCSDS::PrimaryHeader`, `CCSDS::Packet::serialize`, `deserializeBounded` | independent minimum and ordinary packet vectors; `testGroupEdgeCases.cpp`; `testGroupParsing.cpp` |
+| SPP-PDU-001 | 4.1.2.1 | SPP-14, SPP-15, SPP-16 | Direct | A Space Packet contains a contiguous six-octet Packet Primary Header followed by a Packet Data Field of 1 to 65,536 octets. | Implemented | `ccsds::PrimaryHeader`, `ccsds::Packet::serialize`, `deserializeBounded` | independent minimum and ordinary packet vectors; `testGroupEdgeCases.cpp`; `testGroupParsing.cpp` |
 | SPP-PDU-002 | 4.1.2.2 | SPP-14, SPP-23 | Direct | Total Space Packet size is 7 to 65,542 octets, subject to any smaller configured limit. | Implemented | `Packet::getSerializedSize`; overflow checks during serialization | maximum Packet Data Length and overflow rejection tests |
-| SPP-HDR-001 | 4.1.3.1 | SPP-15 | Direct | The Packet Primary Header is mandatory, exactly six octets, and contains version, identification, sequence control, and data length in that order. | Implemented | `CCSDS::PrimaryHeader`; header serialization and parsing | primary-header assignment, exact-vector, and bounded-parse tests |
+| SPP-HDR-001 | 4.1.3.1 | SPP-15 | Direct | The Packet Primary Header is mandatory, exactly six octets, and contains version, identification, sequence control, and data length in that order. | Implemented | `ccsds::PrimaryHeader`; header serialization and parsing | primary-header assignment, exact-vector, and bounded-parse tests |
 | SPP-HDR-002 | 4.1.3.2.1, 4.1.3.2.2 | SPP-15 | Direct | Packet Version Number occupies bits 0-2 and is `000` for a Space Packet. | Implemented | packet serialization/configuration/parser gates | non-zero PVN serialization, configuration, and parsing rejection tests; STM32 PVN test |
 | SPP-HDR-003 | 4.1.3.3.1.1, 4.1.3.3.1.2 | SPP-15 | Direct | Bits 3-15 contain Packet Type, Secondary Header Flag, and APID. | Implemented | `PrimaryHeader` field packing and unpacking | independent APID/non-zero sequence vector and primary-header range tests |
 | SPP-HDR-004 | 4.1.3.3.2.1 to 4.1.3.3.2.3 | SPP-15, SPP-24 | Direct | Packet Type is `0` for telemetry/reporting and `1` for telecommand/requesting. | Implemented | `PrimaryHeader::setType`; packet template | field-boundary and identifier-template tests |
@@ -128,7 +142,7 @@ system-level PICS.
 | SPP-HDR-008 | 4.1.3.4.2.1 to 4.1.3.4.2.3 | SPP-15 | Direct | Sequence Flags encode continuation `00`, first `01`, last `10`, and unsegmented `11`. | Implemented | sequence flag enum, packet generation, segmentation | segmented Manager generation and validator coherence tests |
 | SPP-HDR-009 | 4.1.3.4.3.1 to 4.1.3.4.3.4 | SPP-15, SPP-19 | Direct | Packet Sequence Count is preserved, advances continuously when automatic, and rolls over modulo 16,384. | Implemented | `Packet`, `Manager`, `Validator` sequence handling | non-zero unsegmented count, segmented continuity, rollover, parsed preservation, and STM32 Manager tests |
 | SPP-HDR-010 | 4.1.3.5.1 to 4.1.3.5.3 | SPP-15 | Direct | Packet Data Length equals the number of octets after the primary header minus one. | Implemented | packet finalization and bounded parser | independent minimum/ordinary/no-CRC/custom-header vectors; length mismatch and overflow tests |
-| SPP-DATA-001 | 4.1.4.1.1, 4.1.4.1.2 | SPP-16, SPP-17, SPP-18 | Direct | The Packet Data Field contains at least one octet and comprises optional secondary-header bytes followed by optional user data. | Implemented | `CCSDS::DataField`; packet construction and parsing | minimum packet, custom secondary header, application-data, and empty/invalid construction tests |
+| SPP-DATA-001 | 4.1.4.1.1, 4.1.4.1.2 | SPP-16, SPP-17, SPP-18 | Direct | The Packet Data Field contains at least one octet and comprises optional secondary-header bytes followed by optional user data. | Implemented | `ccsds::DataField`; packet construction and parsing | minimum packet, custom secondary header, application-data, and empty/invalid construction tests |
 | SPP-DATA-002 | 4.1.4.2.1.1 to 4.1.4.2.1.6 | SPP-17 | Direct | A present secondary header immediately follows the primary header, has an integral-octet mission-defined layout, and matches the flag. | Implemented | opaque `BufferHeader` and registered secondary-header factory | custom header independent vector; typed boundary test; segmentation preservation test |
 | SPP-DATA-003 | 4.1.4.3 | SPP-18 | Direct | User data follows the optional secondary header and remains within the declared packet boundary. | Implemented | application-data storage and bounded parsing | pointer round trip, large application data, truncation, and separated header/body tests |
 | SPP-LEN-001 | 4.1.3.5.2, 4.1.3.5.3; 4.1.4.1.1 | SPP-15, SPP-16 | Direct | Every packet octet after the primary header contributes to Packet Data Length. | Implemented | packet finalization includes secondary header, application data, and selected CRC trailer | CRC coverage, no-CRC length, custom-header, and golden-vector tests |
@@ -146,7 +160,7 @@ system-level PICS.
 CCSDS 133.0-B-2 does not define a Packet Error Control field or a CRC
 algorithm for the Space Packet PDU.
 
-For CCSDSPack v1.2.0:
+For CCSDSPack v2.0.0:
 
 - packet-error-control mode is selected explicitly as `CRC16` or `None`;
 - no CRC presence is inferred from trailing bytes;
@@ -166,21 +180,20 @@ For CCSDSPack v1.2.0:
 
 ## Evidence baseline
 
-The v1.2 claim is supported by:
+The v2 claim is supported by:
 
-- 93 native regression and conformance tests;
+- 106 native regression and conformance tests;
 - independent Python-generated fixed byte vectors under `test/test_resources`;
 - negative tests for invalid version, field ranges, length, CRC, identifier,
   segmentation, sequence continuity, and Idle Packet structure;
 - Linux and Windows CI;
 - installed-package and exact-version external-consumer tests;
-- native Raspberry Pi 5 arm64 package validation ending in
-  `CCSDSPACK_AARCH64_TEST:PASS`;
-- NUCLEO-H755ZI-Q Cortex-M7 hardware validation ending in
-  `CCSDSPACK_MCU_TEST:PASS`.
+- historical v1.2 Raspberry Pi 5 and NUCLEO-H755ZI-Q execution evidence for the
+  inherited packet core.
 
-The hardware runs establish execution on the tested targets. They do not expand
-the protocol claim beyond the profile in this matrix.
+The historical hardware runs do not establish the new v2 namespace, PUS, CUC,
+or configuration APIs on those targets. v2 hardware revalidation remains a
+release gate.
 
 ## Matrix maintenance policy
 

@@ -17,7 +17,10 @@ The v2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Chan
 > The implementation scope is limited to the documented **Space Packet PDU profile** and PUS secondary-header layouts. CCSDSPack does not implement every PUS service, the complete abstract Packet Service, transfer frames, or a Protocol Implementation Conformance Statement.
 
 > [!IMPORTANT]
-> v2 removed the project-specific `PusA`, `PusB`, and `PusC` model. The public PUS types are direction-specific: `PusATcHeader`, `PusATmHeader`, `PusCTcHeader`, and `PusCTmHeader`. There is no PUS-B revision.
+> v2 removed the project-specific `PusA`, `PusB`, and `PusC` model. The public
+> PUS types are `ccsds::pus::rev_a::TcHeader`, `ccsds::pus::rev_a::TmHeader`,
+> `ccsds::pus::rev_c::TcHeader`, and `ccsds::pus::rev_c::TmHeader`. There is no
+> standards-facing PUS-B revision.
 
 ## Status
 
@@ -59,7 +62,7 @@ CCSDSPack v2 enforces the following packet-level rules:
 - within the CCSDSPack profile, Idle Packets omit the secondary header and carry mission-defined idle data;
 - Packet Data Length is the number of octets after the primary header minus one;
 - Sequence Flags use the CCSDS first, continuation, last, and unsegmented values;
-- Packet Sequence Count advances modulo 16384 in automatic `CCSDS::Manager` mode.
+- Packet Sequence Count advances modulo 16384 in automatic `ccsds::Manager` mode.
 
 CCSDSPack uses Packet Sequence Count semantics for both telemetry and telecommand packets. The optional telecommand Packet Name interpretation is not implemented.
 
@@ -92,7 +95,7 @@ The receiver must configure the expected mode before parsing.
 
 ### Library architecture
 
-The following diagram shows the main v1.x relationships between the user application, `CCSDS::Manager`, `CCSDS::Packet`, primary-header handling, Packet Data Field handling, secondary-header creation, serialization, validation, CRC16, and utility functions.
+The following diagram shows the main v1.x relationships between the user application, `ccsds::Manager`, `ccsds::Packet`, primary-header handling, Packet Data Field handling, secondary-header creation, serialization, validation, CRC16, and utility functions.
 
 ![CCSDSPack v1 library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
 
@@ -104,11 +107,12 @@ The following diagram shows the main v1.x relationships between the user applica
 - optional project-specific CRC16 trailer;
 - complete 11-bit APID handling and Idle Packet validation;
 - modulo-16384 sequence counting and segmentation utilities;
-- one configured Packet Identification value per `CCSDS::Manager` instance;
+- one configured Packet Identification value per `ccsds::Manager` instance;
 - custom and opaque secondary-header support;
 - PUS-A and PUS-C direction-specific TC/TM secondary headers;
 - separate fixed PUS and extensible custom secondary-header factories;
 - explicit mission-profile validation for revision, direction, identifiers, time, spare fields, and packet error control;
+- numeric basic CUC time with explicit epoch, P-field, and coarse/fine-width policy;
 - exception-free `Result` and `Error` handling;
 - Linux and Windows builds;
 - optional bare-metal and cross-build targets;
@@ -194,8 +198,7 @@ cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/install/prefix
 ```
 
 The [`example/`](example/README.md) directory contains independent installed-package
-consumers for a generic packet, a custom secondary header, and PUS-C telecommand
-and telemetry packets.
+consumers and complete generic/PUS configuration profiles.
 Build all of them, or select one by directory name:
 
 ```bash
@@ -212,14 +215,14 @@ Build all of them, or select one by directory name:
 #include <vector>
 
 int main() {
-  CCSDS::Packet packetTemplate;
+  ccsds::Packet packetTemplate;
 
-  const auto headerResult = packetTemplate.setPrimaryHeader(CCSDS::PrimaryHeader{
+  const auto headerResult = packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
     0,                       // Packet Version Number 000
     0,                       // telemetry packet
     0,                       // no secondary header
     0x123,                   // APID
-    CCSDS::UNSEGMENTED,
+    ccsds::UNSEGMENTED,
     0,
     0                        // calculated during serialization
   });
@@ -230,7 +233,7 @@ int main() {
 
   packetTemplate.setDataFieldSize(1024);
 
-  CCSDS::Manager manager;
+  ccsds::Manager manager;
 
   const auto templateResult = manager.setPacketTemplate(packetTemplate);
   if (!templateResult) {
@@ -287,16 +290,19 @@ PUS selection is explicit and direction-safe. Canonical diagnostic/factory selec
 - `PUS:revA:TC` and `PUS:revA:TM`;
 - `PUS:revC:TC` and `PUS:revC:TM`.
 
-Custom headers remain string-keyed in `SecondaryHeaderFactory`; the reserved PUS selectors are owned by the non-extensible `PusSecondaryHeaderFactory`. Both return fresh header objects.
+Custom headers remain string-keyed in `ccsds::SecondaryHeaderFactory`; the
+reserved PUS selectors are owned by the non-extensible
+`ccsds::pus::SecondaryHeaderFactory`. Both return fresh header objects.
 
 ```cpp
-auto profile = CCSDS::makePusProfile(
-  CCSDS::PusRevision::C, CCSDS::PacketDirection::Telecommand);
+auto profile = ccsds::pus::makeProfile(
+  ccsds::pus::Revision::C,
+  ccsds::pus::Direction::Telecommand);
 
-CCSDS::Packet packet;
-packet.setPrimaryHeader({0, 1, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0});
+ccsds::Packet packet;
+packet.setPrimaryHeader({0, 1, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
 packet.setMissionProfile(profile);
-packet.setSecondaryHeader(std::make_shared<CCSDS::PusCTcHeader>(
+packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TcHeader>(
   profile, 17, 1, 0x1234, 0x09));
 packet.setApplicationData({0x10, 0x20});
 const auto wire = packet.serialize();

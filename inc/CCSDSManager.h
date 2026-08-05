@@ -13,7 +13,7 @@
 #include "CCSDSResult.h"
 #include "CCSDSValidator.h"
 
-namespace CCSDS {
+namespace ccsds {
   /**
    * @class Manager
    * @brief Generates, stores, parses, and validates one CCSDS packet-identifier stream.
@@ -34,10 +34,10 @@ namespace CCSDS {
    * sequence count per generated packet. Automatic counting wraps from 16383 to 0.
    *
    * @code{.cpp}
-   * CCSDS::Packet packetTemplate;
+   * ccsds::Packet packetTemplate;
    * packetTemplate.setPrimaryHeader({0, 0, 0, 0x123,
-   *                                  CCSDS::UNSEGMENTED, 0, 0});
-   * CCSDS::Manager manager(packetTemplate);
+   *                                  ccsds::UNSEGMENTED, 0, 0});
+   * ccsds::Manager manager(packetTemplate);
    * manager.setDataFieldSize(1024);
    * manager.setApplicationData(payload);
    * const auto stream = manager.getPacketsBuffer();
@@ -101,11 +101,11 @@ namespace CCSDS {
     [[nodiscard]] ResultBool loadTemplateConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
     /**
-     * @brief Loads and installs a template from an already parsed Config object.
+     * @brief Loads and installs a template from an already parsed ccsds::Config object.
      * @param cfg Packet configuration.
      * @return Success, or a configuration, template, or header error.
      */
-    [[nodiscard]] ResultBool loadTemplateConfig(const Config &cfg);
+    [[nodiscard]] ResultBool loadTemplateConfig(const ccsds::Config &cfg);
 #endif
 
     /**
@@ -303,6 +303,7 @@ namespace CCSDS {
     [[nodiscard]] std::uint16_t boundPacketIdentifier() const;
     [[nodiscard]] ResultBool validatePacketIdentifier(const Packet &packet) const;
     [[nodiscard]] PacketErrorControlMode boundPacketErrorControlMode() const;
+    [[nodiscard]] const MissionProfile *boundMissionProfile() const;
     void advanceSequenceCount();
     void syncSequenceCountFromPacket(const Packet &packet);
 
@@ -317,6 +318,6 @@ namespace CCSDS {
     Validator m_validator{};           ///< Stateful validator for this stream.
     std::uint32_t m_syncPattern{0x1ACFFC1D}; ///< Project-specific four-byte sync marker.
   };
-} // namespace CCSDS
+} // namespace ccsds
 
 #endif // CCSDS_MANAGER_H

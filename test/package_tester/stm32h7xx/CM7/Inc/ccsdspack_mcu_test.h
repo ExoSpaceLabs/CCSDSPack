@@ -47,7 +47,7 @@ namespace CCSDSPackMcuTest {
     ValidIdleSerializationFailed = 26
   };
 
-  class CustomSecondaryHeader final : public CCSDS::SecondaryHeaderAbstract {
+  class CustomSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
   public:
     CustomSecondaryHeader() { setVariableLength(true); }
 
@@ -55,13 +55,13 @@ namespace CCSDSPackMcuTest {
       setVariableLength(true);
     }
 
-    [[nodiscard]] CCSDS::ResultBool deserialize(
+    [[nodiscard]] ccsds::ResultBool deserialize(
       const std::vector<std::uint8_t> &data) override {
       m_data = data;
       return true;
     }
 
-    void update(CCSDS::DataField *) override {}
+    void update(ccsds::DataField *) override {}
 
     [[nodiscard]] std::uint16_t getSize() const override {
       return static_cast<std::uint16_t>(m_data.size());
@@ -90,9 +90,9 @@ namespace CCSDSPackMcuTest {
    * the target MCU.
    */
   inline int run() {
-    CCSDS::Packet templatePacket;
-    if (const auto result = templatePacket.setPrimaryHeader(CCSDS::PrimaryHeader{
-          0, 1, 0, 0x123, CCSDS::UNSEGMENTED, 5, 0
+    ccsds::Packet templatePacket;
+    if (const auto result = templatePacket.setPrimaryHeader(ccsds::PrimaryHeader{
+          0, 1, 0, 0x123, ccsds::UNSEGMENTED, 5, 0
         }); !result) {
       return SetPrimaryHeaderFailed;
     }
@@ -110,7 +110,7 @@ namespace CCSDSPackMcuTest {
       return SetSecondaryHeaderFailed;
     }
 
-    CCSDS::Manager manager;
+    ccsds::Manager manager;
     if (const auto result = manager.setPacketTemplate(templatePacket); !result) {
       return SetManagerTemplateFailed;
     }
@@ -143,7 +143,7 @@ namespace CCSDSPackMcuTest {
       return ManagerSequenceAdvanceFailed;
     }
 
-    CCSDS::Packet decoded;
+    ccsds::Packet decoded;
     const auto consumed = decoded.deserializeBounded(
       packetsData, static_cast<std::uint16_t>(secondaryHeader.size()));
     if (!consumed) {
@@ -158,7 +158,7 @@ namespace CCSDSPackMcuTest {
         || header.getType() != 1U
         || header.getSecondaryHeaderFlag() != 1U
         || header.getAPID() != 0x123U
-        || header.getSequenceFlags() != CCSDS::UNSEGMENTED
+        || header.getSequenceFlags() != ccsds::UNSEGMENTED
         || header.getSequenceCount() != 5U
         || decoded.getSecondaryHeaderBytes() != secondaryHeader
         || decoded.getApplicationDataBytes() != applicationData
@@ -167,16 +167,16 @@ namespace CCSDSPackMcuTest {
       return DecodedFieldsMismatch;
     }
 
-    CCSDS::Validator validator(templatePacket);
+    ccsds::Validator validator(templatePacket);
     validator.configure(true, false, true);
     if (!validator.validate(decoded)) {
       return ValidatorRejectedPacket;
     }
 
-    CCSDS::Packet crcDisabled;
-    crcDisabled.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
-    if (const auto result = crcDisabled.setPrimaryHeader(CCSDS::PrimaryHeader{
-          0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 7, 0
+    ccsds::Packet crcDisabled;
+    crcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    if (const auto result = crcDisabled.setPrimaryHeader(ccsds::PrimaryHeader{
+          0, 0, 0, 0x123, ccsds::UNSEGMENTED, 7, 0
         }); !result) {
       return CrcFreeHeaderFailed;
     }
@@ -194,8 +194,8 @@ namespace CCSDSPackMcuTest {
       return CrcFreeVectorMismatch;
     }
 
-    CCSDS::Packet decodedCrcDisabled;
-    decodedCrcDisabled.setPacketErrorControlMode(CCSDS::PacketErrorControlMode::None);
+    ccsds::Packet decodedCrcDisabled;
+    decodedCrcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     const auto crcDisabledConsumed = decodedCrcDisabled.deserializeBounded(crcDisabledBytes);
     if (!crcDisabledConsumed
         || crcDisabledConsumed.value() != crcDisabledBytes.size()
@@ -206,9 +206,9 @@ namespace CCSDSPackMcuTest {
       return CrcFreeDecodeFailed;
     }
 
-    CCSDS::Packet invalidVersion;
-    if (const auto result = invalidVersion.setPrimaryHeader(CCSDS::PrimaryHeader{
-          1, 0, 0, 1, CCSDS::UNSEGMENTED, 0, 0
+    ccsds::Packet invalidVersion;
+    if (const auto result = invalidVersion.setPrimaryHeader(ccsds::PrimaryHeader{
+          1, 0, 0, 1, ccsds::UNSEGMENTED, 0, 0
         }); !result) {
       return InvalidVersionHeaderFailed;
     }
@@ -219,9 +219,9 @@ namespace CCSDSPackMcuTest {
       return InvalidVersionSerialized;
     }
 
-    CCSDS::Packet invalidIdle;
-    if (const auto result = invalidIdle.setPrimaryHeader(CCSDS::PrimaryHeader{
-          0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
+    ccsds::Packet invalidIdle;
+    if (const auto result = invalidIdle.setPrimaryHeader(ccsds::PrimaryHeader{
+          0, 0, 0, ccsds::IDLE_APID, ccsds::UNSEGMENTED, 0, 0
         }); !result) {
       return InvalidIdleHeaderFailed;
     }
@@ -235,9 +235,9 @@ namespace CCSDSPackMcuTest {
       return InvalidIdleSerialized;
     }
 
-    CCSDS::Packet validIdle;
-    if (const auto result = validIdle.setPrimaryHeader(CCSDS::PrimaryHeader{
-          0, 0, 0, CCSDS::IDLE_APID, CCSDS::UNSEGMENTED, 0, 0
+    ccsds::Packet validIdle;
+    if (const auto result = validIdle.setPrimaryHeader(ccsds::PrimaryHeader{
+          0, 0, 0, ccsds::IDLE_APID, ccsds::UNSEGMENTED, 0, 0
         }); !result) {
       return ValidIdleHeaderFailed;
     }

@@ -5,7 +5,7 @@
 #include <CCSDSSecondaryHeaderFactory.h>
 #include <utility>
 
-CCSDS::ResultBuffer CCSDS::DataField::serialize() {
+ccsds::ResultBuffer ccsds::DataField::serialize() {
   update();
   const auto secondaryHeader = static_cast<const DataField &>(*this).getSecondaryHeaderBytes();
   RET_IF_ERR_MSG(m_secondaryHeader && secondaryHeader.size() != m_secondaryHeader->getSize(),
@@ -21,49 +21,49 @@ CCSDS::ResultBuffer CCSDS::DataField::serialize() {
   return fullData;
 }
 
-std::vector<std::uint8_t> CCSDS::DataField::getApplicationData() {
+std::vector<std::uint8_t> ccsds::DataField::getApplicationData() {
   return static_cast<const DataField &>(*this).getApplicationData();
 }
 
-std::vector<std::uint8_t> CCSDS::DataField::getApplicationData() const {
+std::vector<std::uint8_t> ccsds::DataField::getApplicationData() const {
   return m_applicationData;
 }
 
-std::uint16_t CCSDS::DataField::getDataFieldAvailableBytesSize() const {
+std::uint16_t ccsds::DataField::getDataFieldAvailableBytesSize() const {
   return static_cast<std::uint16_t>(m_dataPacketSize - getDataFieldUsedBytesSize());
 }
 
-std::uint16_t CCSDS::DataField::getDataFieldAbsoluteBytesSize() const {
+std::uint16_t ccsds::DataField::getDataFieldAbsoluteBytesSize() const {
   return m_dataPacketSize;
 }
 
-std::uint16_t CCSDS::DataField::getApplicationDataBytesSize() const {
+std::uint16_t ccsds::DataField::getApplicationDataBytesSize() const {
   return static_cast<std::uint16_t>(m_applicationData.size());
 }
 
-std::uint16_t CCSDS::DataField::getDataFieldUsedBytesSize() const {
+std::uint16_t ccsds::DataField::getDataFieldUsedBytesSize() const {
   if (!m_secondaryHeader) {
     return static_cast<std::uint16_t>(m_applicationData.size());
   }
   return static_cast<std::uint16_t>(m_applicationData.size() + m_secondaryHeader->getSize());
 }
 
-std::shared_ptr<CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHeader() {
+std::shared_ptr<ccsds::SecondaryHeaderAbstract> ccsds::DataField::getSecondaryHeader() {
   return m_secondaryHeader;
 }
 
-std::shared_ptr<const CCSDS::SecondaryHeaderAbstract> CCSDS::DataField::getSecondaryHeader() const {
+std::shared_ptr<const ccsds::SecondaryHeaderAbstract> ccsds::DataField::getSecondaryHeader() const {
   return m_secondaryHeader;
 }
 
-void CCSDS::DataField::update() {
+void ccsds::DataField::update() {
   if (!m_secondaryHeaderUpdated && m_enableSecondaryHeaderUpdate) {
     if (m_secondaryHeader) m_secondaryHeader->update(this);
     m_secondaryHeaderUpdated = true;
   }
 }
 
-CCSDS::ResultBool CCSDS::DataField::setMissionProfile(const MissionProfile &profile) {
+ccsds::ResultBool ccsds::DataField::setMissionProfile(const MissionProfile &profile) {
   FORWARD_RESULT(validateMissionProfile(profile));
   if (m_secondaryHeader) {
     if (m_secondaryHeader->isPusHeader()) {
@@ -80,14 +80,14 @@ CCSDS::ResultBool CCSDS::DataField::setMissionProfile(const MissionProfile &prof
   return true;
 }
 
-void CCSDS::DataField::clearContent() {
+void ccsds::DataField::clearContent() {
   m_secondaryHeader.reset();
   m_applicationData.clear();
   m_secondaryHeaderType.clear();
   m_secondaryHeaderUpdated = false;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setApplicationData(const std::uint8_t *pData,
+ccsds::ResultBool ccsds::DataField::setApplicationData(const std::uint8_t *pData,
                                                        const std::size_t &sizeData) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Application data is nullptr");
   RET_IF_ERR_MSG(sizeData < 1U, ErrorCode::INVALID_APPLICATION_DATA,
@@ -103,7 +103,7 @@ CCSDS::ResultBool CCSDS::DataField::setApplicationData(const std::uint8_t *pData
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setApplicationData(
+ccsds::ResultBool ccsds::DataField::setApplicationData(
     const std::vector<std::uint8_t> &applicationData) {
   const auto secondaryHeaderSize = m_secondaryHeader
                                      ? static_cast<std::size_t>(m_secondaryHeader->getSize()) : 0U;
@@ -115,7 +115,7 @@ CCSDS::ResultBool CCSDS::DataField::setApplicationData(
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(const std::uint8_t *pData,
+ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const std::uint8_t *pData,
                                                        const std::size_t &sizeData) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
   RET_IF_ERR_MSG(sizeData < 1U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -129,7 +129,7 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(const std::uint8_t *pData
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(const std::uint8_t *pData,
+ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const std::uint8_t *pData,
                                                        const std::size_t &sizeData,
                                                        const std::string &pType) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
@@ -138,13 +138,13 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(const std::uint8_t *pData
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(
+ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
     const std::vector<std::uint8_t> &data, const std::string &pType) {
   RET_IF_ERR_MSG(data.size() + m_applicationData.size() > m_dataPacketSize,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
   std::shared_ptr<SecondaryHeaderAbstract> header;
-  if (PusSecondaryHeaderFactory::isPusSelector(pType)) {
+  if (pus::SecondaryHeaderFactory::isPusSelector(pType)) {
     auto result = m_pusSecondaryHeaderFactory.create(pType, m_missionProfile);
     if (!result) return result.error();
     header = result.value();
@@ -168,7 +168,7 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(
   return true;
 }
 
-CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(
+ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
     const std::vector<std::uint8_t> &secondaryHeader) {
   RET_IF_ERR_MSG(secondaryHeader.size() + m_applicationData.size() > m_dataPacketSize,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -183,7 +183,7 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(
 }
 
 #ifndef CCSDS_MCU
-CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(const Config &cfg) {
+ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const ccsds::Config &cfg) {
   RET_IF_ERR_MSG(!cfg.isKey("secondary_header_type"), ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Missing string field: secondary_header_type");
   std::string type{};
@@ -192,7 +192,7 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(const Config &cfg) {
                  ErrorCode::CONFIG_FILE_ERROR,
                  "Legacy PusA/PusB/PusC selectors were removed in v2; use an explicit PUS profile and canonical selector.");
   std::shared_ptr<SecondaryHeaderAbstract> header;
-  if (PusSecondaryHeaderFactory::isPusSelector(type)) {
+  if (pus::SecondaryHeaderFactory::isPusSelector(type)) {
     auto result = m_pusSecondaryHeaderFactory.create(type, m_missionProfile);
     if (!result) return result.error();
     header = result.value();
@@ -212,7 +212,7 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(const Config &cfg) {
 }
 #endif
 
-CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(
+ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
     std::shared_ptr<SecondaryHeaderAbstract> header) {
   if (header) {
     RET_IF_ERR_MSG(static_cast<std::size_t>(header->getSize()) + m_applicationData.size()
@@ -225,7 +225,7 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(
                      ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                      "PUS secondary header does not match the active mission profile.");
     } else {
-      RET_IF_ERR_MSG(PusSecondaryHeaderFactory::isPusSelector(header->getType()),
+      RET_IF_ERR_MSG(pus::SecondaryHeaderFactory::isPusSelector(header->getType()),
                      ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                      "Custom secondary headers cannot use the reserved PUS: namespace.");
       RET_IF_ERR_MSG(m_missionProfile.pusEnabled, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -238,14 +238,14 @@ CCSDS::ResultBool CCSDS::DataField::setSecondaryHeader(
   return true;
 }
 
-void CCSDS::DataField::setDataPacketSize(const std::uint16_t &value) {
+void ccsds::DataField::setDataPacketSize(const std::uint16_t &value) {
   m_dataPacketSize = value;
 }
 
-std::vector<std::uint8_t> CCSDS::DataField::getSecondaryHeaderBytes() {
+std::vector<std::uint8_t> ccsds::DataField::getSecondaryHeaderBytes() {
   return static_cast<const DataField &>(*this).getSecondaryHeaderBytes();
 }
 
-std::vector<std::uint8_t> CCSDS::DataField::getSecondaryHeaderBytes() const {
+std::vector<std::uint8_t> ccsds::DataField::getSecondaryHeaderBytes() const {
   return m_secondaryHeader ? m_secondaryHeader->serialize() : std::vector<std::uint8_t>{};
 }

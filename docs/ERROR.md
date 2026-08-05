@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 
 [Documentation index](README.md) | [API reference](https://exospacelabs.github.io/CCSDSPack/html/)
 
-CCSDSPack reports checked failures through `CCSDS::Result<T>` and `CCSDS::Error`, defined in `inc/CCSDSResult.h`. Public packet and Manager operations do not use exceptions as their normal error channel.
+CCSDSPack reports checked failures through `ccsds::Result<T>` and `ccsds::Error`, defined in `inc/CCSDSResult.h`. Public packet and Manager operations do not use exceptions as their normal error channel.
 
 ## Basic pattern
 
