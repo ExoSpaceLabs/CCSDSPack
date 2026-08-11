@@ -14,7 +14,9 @@ CCSDSPack configuration files use one typed entry per line:
 ```
 
 Lines beginning with `#` are comments. The host-only parser is
-`ccsds::Config`.
+`ccsds::Config`. Configuration parsing is intentionally excluded from
+`CCSDS_MCU`; bare-metal applications construct `ccsds::MissionProfile` and
+packet objects directly in C++17.
 
 ## Value types
 
@@ -95,7 +97,7 @@ canonical selector:
 | Key | Type | Constraint |
 |---|---|---|
 | `pus_source_id_octets` | int | `0`, `1`, `2`, or `4`; PUS-C requires `2` |
-| `pus_acknowledgement_flags` | uint | `0..15` |
+| `pus_acknowledgement_flags` | uint | four-bit field, `0..15` |
 | `pus_source_id` | uint | Must fit `pus_source_id_octets` |
 
 ### Telemetry fields
@@ -107,7 +109,7 @@ canonical selector:
 | `pus_a_tm_packet_subcounter_present` | bool | Optional for PUS-A TM only |
 | `pus_packet_subcounter` | uint | Required when the PUS-A subcounter is present; `0..255` |
 | `pus_message_type_counter` | uint | PUS-C TM only; `0..65535` |
-| `pus_time_reference_status` | uint | PUS-C TM only; `0..7` |
+| `pus_time_reference_status` | uint | PUS-C TM only; four-bit field, `0..15` |
 | `pus_destination_id` | uint | Must fit `pus_destination_id_octets` |
 
 ### CUC telemetry time
@@ -130,6 +132,13 @@ T-field counters.
 Complete executable configurations are committed in
 [`example/config`](../example/config), including PUS-C TM profiles with and
 without a CUC time field.
+
+## Validation ownership
+
+Configuration selects the expected wire profile. It does not replace runtime
+validation. `ccsds::Packet` validates profile-dependent parsing/finalization and
+`ccsds::Validator` reports named generic and PUS checks through
+`ccsds::ValidationReport`. See [VALIDATION.md](VALIDATION.md).
 
 ## Idle Packets
 
