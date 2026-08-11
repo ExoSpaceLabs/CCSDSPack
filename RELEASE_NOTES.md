@@ -7,7 +7,7 @@
 
 CCSDSPack v2 is a breaking C++17 release that keeps the corrected v1.2 generic CCSDS Space Packet wire behavior and replaces the legacy project-specific PUS model with standards-oriented PUS-A and PUS-C revision/direction codecs.
 
-The release also adds explicit mission profiles, numeric CUC time, checked packet finalization, structured packet validation, a lowercase public namespace, installed-package examples, and updated hosted/bare-metal integration.
+The release also adds explicit mission profiles, numeric CUC time, checked packet finalization, structured packet validation, raw transport-buffer adapters, a lowercase public namespace, installed-package examples, and updated hosted/bare-metal integration.
 
 ## Standards scope
 
@@ -31,6 +31,18 @@ This is not a claim to implement every PUS service, transfer frames, COP-1, CFDP
 - packet finalization and serialization paths return checked `Result` types;
 - the Validator no longer exposes a positional six-boolean report;
 - hosted configuration uses the explicit v2 mission-profile schema and rejects legacy PUS selectors/keys.
+
+## Raw transport-buffer APIs
+
+The existing vector APIs remain available. v2.0.0 additionally exposes pointer-plus-size entry points for transport-owned buffers.
+
+`ccsds::buffer::declaredPacketSize()` determines the complete Space Packet size from only the six-byte primary header, allowing UART, DMA, SpaceWire, TCP, or other receivers to determine how many additional bytes belong to one packet before the body is available.
+
+`ccsds::buffer` also provides raw generic, PUS/custom typed, and opaque-header Packet parsing adapters. `ccsds::Manager` provides raw pointer + size overloads for application-data input, one-packet ingestion, and concatenated packet streams.
+
+Const Manager objects additionally expose read-only references to the stored template, packet collection, and Validator, avoiding unnecessary copies during inspection. `ccsds::errorCodeName()` provides allocation-free symbolic labels for `ErrorCode` values.
+
+The v2.0.0 raw parsing adapters currently bridge to vector-backed internals. The public API is intentionally structured so later zero-copy or heap-free parser work can be introduced without forcing callers to change these transport-facing signatures. v2.0.0 therefore does not claim a globally heap-free runtime.
 
 ## Structured validation
 
@@ -108,8 +120,9 @@ v2 provides:
 
 - encoder, decoder, and validator CLIs using the same mission-profile model;
 - generic and PUS configuration examples;
-- installed-package CMake consumers using `find_package(CCSDSPack 2.0 CONFIG REQUIRED)`;
-- Linux and Windows CI;
+- six standalone installed-package CMake consumers, including raw Packet and raw Manager examples;
+- Linux Ubuntu 22.04, Ubuntu 24.04, and Ubuntu latest CI;
+- Windows latest CI;
 - Doxygen API documentation.
 
 Automatic UML generation is intentionally disabled for v2.0.0 development. The workflow remains available manually through `workflow_dispatch`; diagrams are not a release gate.
@@ -118,17 +131,20 @@ Automatic UML generation is intentionally disabled for v2.0.0 development. The w
 
 The project remains C++17. `CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a static archive and excludes hosted Config/CLI components.
 
-The MCU public library includes Packet, Manager, MissionProfile, PUS-A/PUS-C codecs, CUC time, Result/Error, and the structured Validator.
+The MCU public library includes Packet, Manager, MissionProfile, PUS-A/PUS-C codecs, CUC time, Result/Error, raw-buffer adapters, and the structured Validator.
 
-The ARM compile/link consumer probe uses the same `CCSDSPACK_MCU_FLAGS` as the library and exercises both the structured Validator API and a representative PUS-C telecommand packet.
+The ARM compile/link consumer probe uses the same `CCSDSPACK_MCU_FLAGS` as the library and exercises the structured Validator, a representative PUS-C telecommand packet, declared packet-size inspection, and raw bounded Packet parsing.
 
 ## Validation status
 
 Current development evidence includes:
 
-- 108 passing hosted native tests after the structured Validator work;
-- Linux/Windows hosted builds and Doxygen;
+- 115 hosted native tests after the structured Validator and raw-buffer work;
+- Linux hosted builds across Ubuntu 22.04, 24.04, and latest;
+- Windows hosted build;
+- Doxygen;
 - representative generic/PUS CLI integration;
+- installed-package example execution including the raw-buffer examples;
 - local ASan and UBSan runs;
 - independent generic and representative PUS byte vectors;
 - MCU compile/link probe coverage designed for `-fno-exceptions -fno-rtti`.
@@ -137,7 +153,7 @@ The final release still requires the remaining gates tracked by the v2 milestone
 
 ## Migration
 
-See [`docs/MIGRATION_V1_TO_V2.md`](docs/MIGRATION_V1_TO_V2.md) for the source, configuration, Validator, and wire-layout migration guidance.
+See [`docs/MIGRATION_V1_TO_V2.md`](docs/MIGRATION_V1_TO_V2.md) for source, configuration, Validator, raw-buffer, and wire-layout migration guidance.
 
 ## Release control
 
