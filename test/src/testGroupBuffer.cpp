@@ -10,6 +10,14 @@
 #include <string>
 #include <vector>
 
+namespace {
+  ccsds::MissionProfile genericNoCrcProfile() {
+    ccsds::MissionProfile profile;
+    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
+    return profile;
+  }
+}
+
 void testGroupBuffer(TestManager *tester, const std::string &description) {
   std::cout << "\n" << description << '\n';
 
@@ -86,7 +94,7 @@ void testGroupBuffer(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Manager accepts raw application and packet-stream buffers", []() {
     ccsds::Packet packetTemplate;
-    packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    TEST_VOID(packetTemplate.setMissionProfile(genericNoCrcProfile()));
     TEST_VOID(packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
       0, 0, 0, 0x155, ccsds::UNSEGMENTED, 0, 0
     }));
@@ -113,7 +121,7 @@ void testGroupBuffer(TestManager *tester, const std::string &description) {
 
   tester->unitTest("Const Manager reference accessors avoid packet/template copies", []() {
     ccsds::Packet packetTemplate;
-    packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    TEST_VOID(packetTemplate.setMissionProfile(genericNoCrcProfile()));
     TEST_VOID(packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
       0, 0, 0, 0x155, ccsds::UNSEGMENTED, 0, 0
     }));
