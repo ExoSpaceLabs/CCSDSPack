@@ -56,7 +56,8 @@ namespace {
 
   ccsds::Packet pusCTcPacket(ccsds::MissionProfile profile) {
     ccsds::Packet packet;
-    if (!packet.setPrimaryHeader({0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U})) return {};
+    if (!packet.setPrimaryHeader(
+          ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U})) return {};
     if (!packet.setMissionProfile(profile)) return {};
     if (!packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TcHeader>(
           profile, 17U, 1U, 0x1234U, 0x09U))) return {};
@@ -248,7 +249,8 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
 
     ccsds::Packet packet;
-    TEST_VOID(packet.setPrimaryHeader({0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
     TEST_VOID(packet.setMissionProfile(profile));
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TcHeader>(
       profile, 17U, 1U, 0x10000U, 0x10U)));
@@ -268,7 +270,8 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     profile.secondaryHeaderSpareOctets = 1U;
 
     ccsds::Packet packet;
-    TEST_VOID(packet.setPrimaryHeader({0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
     TEST_VOID(packet.setMissionProfile(profile));
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<MalformedPusCTcHeader>(profile)));
     TEST_VOID(packet.setApplicationData({0xAAU}));
@@ -285,7 +288,8 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
 
     ccsds::Packet packet;
-    TEST_VOID(packet.setPrimaryHeader({0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
     TEST_VOID(packet.setMissionProfile(profile));
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_a::TmHeader>(
       profile, 3U, 25U, 7U, 0U)));
@@ -310,7 +314,8 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     };
 
     ccsds::Packet packet;
-    TEST_VOID(packet.setPrimaryHeader({0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
     TEST_VOID(packet.setMissionProfile(profile));
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TmHeader>(
       profile, 3U, 25U, 1U, 0x1234U, 0U,
