@@ -12,11 +12,11 @@ case "${selection}" in
   all)
     source_dir="${script_dir}"
     ;;
-  basic_packet|custom_secondary_header|pus_c_telecommand|pus_c_telemetry)
+  basic_packet|custom_secondary_header|pus_c_telecommand|pus_c_telemetry|raw_buffer_packet|raw_buffer_manager)
     source_dir="${script_dir}/${selection}"
     ;;
   *)
-    echo "Usage: $0 [all|basic_packet|custom_secondary_header|pus_c_telecommand|pus_c_telemetry] [install-prefix]" >&2
+    echo "Usage: $0 [all|basic_packet|custom_secondary_header|pus_c_telecommand|pus_c_telemetry|raw_buffer_packet|raw_buffer_manager] [install-prefix]" >&2
     exit 2
     ;;
 esac
