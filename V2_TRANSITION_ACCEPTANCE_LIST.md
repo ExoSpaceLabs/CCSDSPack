@@ -76,6 +76,21 @@
 - [x] `ccsds_validator` delegates protocol/profile checks to the library Validator.
 - [x] Native structured-validator tests cover generic and PUS positive/negative cases.
 
+## Embedded/raw-buffer ergonomics (#117)
+
+- [x] Existing vector APIs remain available as convenience interfaces.
+- [x] `ccsds::buffer::declaredPacketSize()` determines the complete packet size from only the six-byte primary header.
+- [x] Raw pointer + size Packet adapters cover generic, PUS/custom typed, and opaque-header parsing.
+- [x] Bounded raw parsing reports consumed bytes.
+- [x] Manager accepts raw application-data, one-packet, and concatenated-stream buffers through additive member overloads.
+- [x] Const Manager inspection can return template, packet collection, and Validator references without copying.
+- [x] `ccsds::errorCodeName()` exposes allocation-free symbolic error labels.
+- [x] Raw APIs document that v2.0 currently bridges through vector-backed internals and does not claim zero-copy or globally heap-free operation.
+- [x] `raw_buffer_packet` and `raw_buffer_manager` are installed-package example applications.
+- [x] Native regression coverage includes generic raw parsing, PUS-C raw parsing, Manager raw ingestion, const views, packet-size inspection, and error names.
+- [x] Cortex-M compile/link probe exercises declared-size inspection and raw bounded parsing.
+- [ ] Linux and Windows hosted installed-package example gates pass with both new examples.
+
 ## Legacy removal and migration
 
 - [x] Legacy project-specific `PusA`, `PusB`, and `PusC` classes removed.
@@ -90,13 +105,15 @@
 
 ## Current validation
 
-- [x] 108 native tests pass in the current Linux build.
+- [x] 108 native tests passed before the #117 raw-buffer additions.
 - [x] AddressSanitizer and UndefinedBehaviorSanitizer have passed locally.
 - [x] MCU sources are designed for `-fno-exceptions -fno-rtti` and the ARM compile/link probe exercises the structured Validator and representative PUS-C TC path.
 - [x] Linux and Windows hosted builds compile the structured Validator and CLI.
 - [x] Doxygen builds the updated public API documentation.
 - [x] Ubuntu 22.04 package/cross-build generation passes with the updated MCU structured-Validator/PUS probe.
 - [x] Automatic UML generation is disabled; the workflow remains manual-only through `workflow_dispatch`.
+- [ ] The expanded native suite including #117 passes on the promotion candidate.
+- [ ] The expanded ARM compile/link probe including #117 passes on the promotion candidate.
 
 ## Integration and release gates
 
@@ -106,6 +123,7 @@
 - [x] Encoder, decoder, and validator accept/report complete PUS profiles.
 - [x] Manager higher-level PUS profile workflows are covered.
 - [x] Linux package/cross-build gate passes with the updated MCU structured-Validator probe.
+- [ ] Raw-buffer installed-package examples pass in Linux and Windows CI.
 - [ ] Dedicated sanitizer/fuzz smoke jobs pass.
 - [ ] Final PUS-C acknowledgement-vector matrix and traceability are approved.
 - [ ] Final structured negative-vector coverage is approved.
