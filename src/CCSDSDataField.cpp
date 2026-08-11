@@ -42,9 +42,7 @@ std::uint16_t ccsds::DataField::getApplicationDataBytesSize() const {
 }
 
 std::uint16_t ccsds::DataField::getDataFieldUsedBytesSize() const {
-  if (!m_secondaryHeader) {
-    return static_cast<std::uint16_t>(m_applicationData.size());
-  }
+  if (!m_secondaryHeader) return static_cast<std::uint16_t>(m_applicationData.size());
   return static_cast<std::uint16_t>(m_applicationData.size() + m_secondaryHeader->getSize());
 }
 
@@ -61,23 +59,6 @@ void ccsds::DataField::update() {
     if (m_secondaryHeader) m_secondaryHeader->update(this);
     m_secondaryHeaderUpdated = true;
   }
-}
-
-ccsds::ResultBool ccsds::DataField::setMissionProfile(const MissionProfile &profile) {
-  FORWARD_RESULT(validateMissionProfile(profile));
-  if (m_secondaryHeader) {
-    if (m_secondaryHeader->isPusHeader()) {
-      RET_IF_ERR_MSG(!m_secondaryHeader->matchesMissionProfile(profile),
-                     ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                     "Installed PUS secondary header does not match the new mission profile.");
-    } else {
-      RET_IF_ERR_MSG(profile.pusEnabled, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                     "A PUS mission profile cannot retain a custom secondary header.");
-    }
-  }
-  m_missionProfile = profile;
-  m_secondaryHeaderUpdated = false;
-  return true;
 }
 
 void ccsds::DataField::clearContent() {
@@ -97,7 +78,6 @@ ccsds::ResultBool ccsds::DataField::setApplicationData(const std::uint8_t *pData
   RET_IF_ERR_MSG(sizeData + secondaryHeaderSize > m_dataPacketSize,
                  ErrorCode::INVALID_APPLICATION_DATA,
                  "Application data field exceeds available size");
-
   m_applicationData.assign(pData, pData + sizeData);
   m_secondaryHeaderUpdated = false;
   return true;
@@ -123,10 +103,8 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const std::uint8_t *pData
   RET_IF_ERR_MSG(sizeData + m_applicationData.size() > m_dataPacketSize,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
-
   const std::vector<std::uint8_t> data(pData, pData + sizeData);
-  FORWARD_RESULT(setSecondaryHeader(data));
-  return true;
+  return setSecondaryHeader(data);
 }
 
 ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const std::uint8_t *pData,
@@ -134,8 +112,7 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const std::uint8_t *pData
                                                        const std::string &pType) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
   const std::vector<std::uint8_t> data(pData, pData + sizeData);
-  FORWARD_RESULT(setSecondaryHeader(data, pType));
-  return true;
+  return setSecondaryHeader(data, pType);
 }
 
 ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
@@ -145,7 +122,7 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
                  "Secondary header data exceeds available size");
   std::shared_ptr<SecondaryHeaderAbstract> header;
   if (pus::SecondaryHeaderFactory::isPusSelector(pType)) {
-    auto result = m_pusSecondaryHeaderFactory.create(pType, m_missionProfile);
+    auto result = m_pusSecondaryHeaderFactory.create(pType);
     if (!result) return result.error();
     header = result.value();
   } else {
@@ -160,7 +137,6 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
     RET_IF_ERR_MSG(data.size() != header->getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Secondary header data size mismatch for type: " + pType);
   }
-
   FORWARD_RESULT(header->deserialize(data));
   m_secondaryHeader = std::move(header);
   m_secondaryHeaderType = pType;
@@ -173,7 +149,6 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
   RET_IF_ERR_MSG(secondaryHeader.size() + m_applicationData.size() > m_dataPacketSize,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
-
   auto header = std::make_shared<BufferHeader>(secondaryHeader);
   FORWARD_RESULT(header->deserialize(secondaryHeader));
   m_secondaryHeader = std::move(header);
@@ -190,10 +165,10 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const ccsds::Config &cfg)
   ASSIGN_CP(type, cfg.get<std::string>("secondary_header_type"));
   RET_IF_ERR_MSG(type == "PusA" || type == "PusB" || type == "PusC",
                  ErrorCode::CONFIG_FILE_ERROR,
-                 "Legacy PusA/PusB/PusC selectors were removed in v2; use an explicit PUS profile and canonical selector.");
+                 "Legacy PusA/PusB/PusC selectors were removed in v2; use a canonical PUS selector.");
   std::shared_ptr<SecondaryHeaderAbstract> header;
   if (pus::SecondaryHeaderFactory::isPusSelector(type)) {
-    auto result = m_pusSecondaryHeaderFactory.create(type, m_missionProfile);
+    auto result = m_pusSecondaryHeaderFactory.create(type);
     if (!result) return result.error();
     header = result.value();
   } else {
@@ -219,18 +194,10 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
                      > m_dataPacketSize,
                    ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Secondary header exceeds available data-field capacity.");
-    if (header->isPusHeader()) {
-      RET_IF_ERR_MSG(!m_missionProfile.pusEnabled
-                     || !header->matchesMissionProfile(m_missionProfile),
-                     ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                     "PUS secondary header does not match the active mission profile.");
-    } else {
-      RET_IF_ERR_MSG(pus::SecondaryHeaderFactory::isPusSelector(header->getType()),
-                     ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                     "Custom secondary headers cannot use the reserved PUS: namespace.");
-      RET_IF_ERR_MSG(m_missionProfile.pusEnabled, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                     "A PUS mission profile requires a standards-defined PUS secondary header.");
-    }
+    RET_IF_ERR_MSG(!header->isPusHeader()
+                   && pus::SecondaryHeaderFactory::isPusSelector(header->getType()),
+                   ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Custom secondary headers cannot use the reserved PUS: namespace.");
   }
   m_secondaryHeader = std::move(header);
   m_secondaryHeaderType = m_secondaryHeader ? m_secondaryHeader->getType() : std::string{};

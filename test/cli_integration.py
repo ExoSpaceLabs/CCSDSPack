@@ -56,14 +56,12 @@ def reference_packet(packet_type: int, apid: int, secondary: bytes, payload: byt
 
 def packet_config(apid: int, data_field_size: int = 2, *, pec: str | None = None) -> str:
     lines = [
-        "mission_profile:string=generic",
         f"ccsds_packet_error_control:string={pec or 'crc16'}",
         f"data_field_size:int={data_field_size}",
         "sync_pattern_enable:bool=false",
         "validation_enable:bool=true",
         "ccsds_version_number:int=0",
         "ccsds_type:bool=false",
-        "ccsds_secondary_header_flag:bool=false",
         f"ccsds_APID:int={apid}",
         "ccsds_segmented:bool=false",
         "define_secondary_header:bool=false",
@@ -198,24 +196,13 @@ def main() -> int:
 
         profile_vectors = {
             "generic": reference_packet(0, 42, b"", payload.read_bytes()),
-            "pus_a_tc": reference_packet(
-                1, 42, bytes([0x19, 17, 1, 0x42]), payload.read_bytes()
-            ),
-            "pus_a_tm": reference_packet(
-                0, 42, bytes([0x10, 3, 25, 7, 0x42]), payload.read_bytes()
-            ),
-            "pus_c_tc": reference_packet(
-                1, 42, bytes([0x29, 17, 1, 0x12, 0x34]), payload.read_bytes()
-            ),
-            "pus_c_tm_no_time": reference_packet(
-                0, 42, bytes([0x20, 3, 25, 0, 7, 0x12, 0x34]), payload.read_bytes()
-            ),
+            "pus_a_tc": reference_packet(1, 42, bytes([0x19, 17, 1, 0x42]), payload.read_bytes()),
+            "pus_a_tm": reference_packet(0, 42, bytes([0x10, 3, 25, 7, 0x42]), payload.read_bytes()),
+            "pus_c_tc": reference_packet(1, 42, bytes([0x29, 17, 1, 0x12, 0x34]), payload.read_bytes()),
+            "pus_c_tm_no_time": reference_packet(0, 42, bytes([0x20, 3, 25, 0, 7, 0x12, 0x34]), payload.read_bytes()),
             "pus_c_tm": reference_packet(
                 0, 42,
-                bytes([
-                    0x22, 3, 25, 0, 7, 0x12, 0x34,
-                    0x1E, 1, 2, 3, 4, 0xA0, 0xB0,
-                ]),
+                bytes([0x22, 3, 25, 0, 7, 0x12, 0x34, 0x1E, 1, 2, 3, 4, 0xA0, 0xB0]),
                 payload.read_bytes(),
             ),
         }
@@ -227,13 +214,8 @@ def main() -> int:
             assert profile_wire.read_bytes() == expected_wire, (
                 f"{profile_name} encoder differs from the independent vector"
             )
-            run([
-                str(decoder), "-i", str(profile_wire), "-o", str(profile_output),
-                "-c", str(profile),
-            ])
-            assert profile_output.read_bytes() == payload.read_bytes(), (
-                f"{profile_name} CLI round trip failed"
-            )
+            run([str(decoder), "-i", str(profile_wire), "-o", str(profile_output), "-c", str(profile)])
+            assert profile_output.read_bytes() == payload.read_bytes(), f"{profile_name} CLI round trip failed"
             validation = run([str(validator), "-i", str(profile_wire), "-c", str(profile), "-v"])
             if profile_name.startswith("pus_"):
                 assert_contains(validation, "PUS secondary header")
@@ -256,7 +238,7 @@ def main() -> int:
         help_result = run([str(decoder), "--help"])
         assert_contains(help_result, "--trailing-output")
         help_result = run([str(validator), "--help"])
-        assert_contains(help_result, "CCSDS version")
+        assert_contains(help_result, "Packet template")
 
     print("CCSDSPack CLI integration tests passed")
     return 0

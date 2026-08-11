@@ -54,34 +54,59 @@ void testGroupBuffer(TestManager *tester, const std::string &description) {
            && incoming.getApplicationDataBytes() == payload;
   });
 
-  tester->unitTest("Raw PUS-C Packet parsing uses the active profile and selector", []() {
-    const auto profile = ccsds::pus::makeProfile(
-      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
-
+  tester->unitTest("Raw typed PUS-C Packet parsing uses intrinsic header identity", []() {
     ccsds::Packet outgoing;
     TEST_VOID(outgoing.setPrimaryHeader(ccsds::PrimaryHeader{
-      0, 1, 1, 0x42, ccsds::UNSEGMENTED, 3, 0
+      0, 0, 0, 0x42, ccsds::UNSEGMENTED, 3, 0
     }));
-    TEST_VOID(outgoing.setMissionProfile(profile));
     TEST_VOID(outgoing.setSecondaryHeader(
       std::make_shared<ccsds::pus::rev_c::TcHeader>(
-        profile, 17U, 1U, 0x1234U, 0x09U)));
+        17U, 1U, 0x1234U, 0x09U)));
     TEST_VOID(outgoing.setApplicationData({0xAA, 0x55}));
 
     std::vector<std::uint8_t> wire;
     TEST_RET(wire, outgoing.serialize());
 
     ccsds::Packet incoming;
-    TEST_VOID(incoming.setMissionProfile(profile));
     std::size_t consumed{};
-    TEST_RET(consumed, ccsds::buffer::deserializeBounded(
-      incoming, wire.data(), wire.size(),
-      ccsds::pus::selector(profile.pusRevision, profile.direction)));
+    TEST_RET(consumed, ccsds::buffer::deserializeBounded<ccsds::pus::rev_c::TcHeader>(
+      incoming, wire.data(), wire.size()));
 
-    const auto secondary = incoming.getSecondaryHeader();
+    const auto secondary = std::static_pointer_cast<ccsds::pus::rev_c::TcHeader>(
+      incoming.getSecondaryHeader());
     return consumed == wire.size()
-           && secondary && secondary->isPusHeader()
+           && secondary && secondary->getSourceId() == 0x1234U
+           && secondary->getDirection() == ccsds::PacketDirection::Telecommand
            && incoming.getApplicationDataBytes() == std::vector<std::uint8_t>({0xAA, 0x55});
+  });
+
+  tester->unitTest("Raw typed PUS-C TM parsing accepts explicit tailoring", []() {
+    ccsds::pus::rev_c::TmTailoring tailoring;
+    tailoring.timestampPresent = true;
+    tailoring.cuc = {ccsds::time::Epoch::Ccsds1958Tai,
+                     ccsds::time::PFieldMode::Implicit, 4U, 0U};
+
+    ccsds::Packet outgoing;
+    TEST_VOID(outgoing.setPrimaryHeader(ccsds::PrimaryHeader{
+      0, 1, 0, 0x43, ccsds::UNSEGMENTED, 4, 0
+    }));
+    TEST_VOID(outgoing.setSecondaryHeader(
+      std::make_shared<ccsds::pus::rev_c::TmHeader>(
+        tailoring, 3U, 25U, 7U, 0x1234U, 2U,
+        ccsds::time::CucTime{0x01020304U, 0U})));
+    TEST_VOID(outgoing.setApplicationData({0x11U, 0x22U}));
+    std::vector<std::uint8_t> wire;
+    TEST_RET(wire, outgoing.serialize());
+
+    ccsds::Packet incoming;
+    std::size_t consumed{};
+    TEST_RET(consumed, ccsds::buffer::deserializeBounded<ccsds::pus::rev_c::TmHeader>(
+      incoming, wire.data(), wire.size(), tailoring));
+    const auto secondary = std::static_pointer_cast<ccsds::pus::rev_c::TmHeader>(
+      incoming.getSecondaryHeader());
+    return consumed == wire.size()
+           && secondary->getTimestamp() == ccsds::time::CucTime{0x01020304U, 0U}
+           && incoming.getDirection() == ccsds::PacketDirection::Telemetry;
   });
 
   tester->unitTest("Manager preserves explicit generic PEC for vector and raw streams", []() {
@@ -92,11 +117,6 @@ void testGroupBuffer(TestManager *tester, const std::string &description) {
     }));
     packetTemplate.setDataFieldSize(32U);
 
-    // The default generic MissionProfile still carries its default CRC16 convenience
-    // value. Manager receive paths must preserve the Packet template's explicitly
-    // selected PEC mode rather than letting that generic metadata override it.
-    if (packetTemplate.getMissionProfile().packetErrorControl
-        != ccsds::PacketErrorControlMode::CRC16) return false;
     if (packetTemplate.getPacketErrorControlMode()
         != ccsds::PacketErrorControlMode::None) return false;
 
