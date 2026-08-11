@@ -89,7 +89,15 @@
 - [x] `raw_buffer_packet` and `raw_buffer_manager` are installed-package example applications.
 - [x] Native regression coverage includes generic raw parsing, PUS-C raw parsing, Manager raw ingestion, const views, packet-size inspection, and error names.
 - [x] Cortex-M compile/link probe exercises declared-size inspection and raw bounded parsing.
-- [ ] Linux and Windows hosted installed-package example gates pass with both new examples.
+- [x] Linux Ubuntu 22.04/24.04/latest and Windows hosted installed-package example gates pass with both new examples.
+
+## Generic Manager PEC coherence (#119)
+
+- [x] Generic Manager parsing preserves the actual Packet PEC mode bound by its template/stream.
+- [x] A manually configured CRC-free generic template round-trips without requiring a redundant MissionProfile PEC edit.
+- [x] Vector and raw-buffer Manager stream paths are regression-covered.
+- [x] PUS receive paths remain mission-profile driven and strict.
+- [x] No packet wire-format change is introduced.
 
 ## Legacy removal and migration
 
@@ -99,35 +107,35 @@
 - [x] Legacy configuration selectors rejected with migration guidance.
 - [x] Current tests no longer present legacy codecs as supported.
 - [x] UML diagrams are not treated as current v2 release evidence while generation is deferred.
-- [x] `docs/MIGRATION_V1_TO_V2.md` documents API, selector, wire, and structured Validator changes.
+- [x] `docs/MIGRATION_V1_TO_V2.md` documents API, selector, wire, structured Validator, and raw-buffer changes.
 - [x] Public secondary-header APIs and configuration use CCSDS secondary-header terminology.
 - [x] Project version and SOVERSION set to 2.0.0/2.
 
 ## Current validation
 
-- [x] 108 native tests passed before the #117 raw-buffer additions.
+- [x] 115 native tests pass after the structured Validator and #117/#119 additions.
 - [x] AddressSanitizer and UndefinedBehaviorSanitizer have passed locally.
-- [x] MCU sources are designed for `-fno-exceptions -fno-rtti` and the ARM compile/link probe exercises the structured Validator and representative PUS-C TC path.
-- [x] Linux and Windows hosted builds compile the structured Validator and CLI.
+- [x] MCU sources are designed for `-fno-exceptions -fno-rtti` and the ARM compile/link probe exercises the structured Validator, representative PUS-C TC path, declared-size inspection, and raw bounded parsing.
+- [x] Linux and Windows hosted builds compile the current v2 public API and tools.
 - [x] Doxygen builds the updated public API documentation.
-- [x] Ubuntu 22.04 package/cross-build generation passes with the updated MCU structured-Validator/PUS probe.
+- [x] Ubuntu 22.04 package/cross-build generation passes with the expanded MCU compile/link probe.
 - [x] Automatic UML generation is disabled; the workflow remains manual-only through `workflow_dispatch`.
-- [ ] The expanded native suite including #117 passes on the promotion candidate.
-- [ ] The expanded ARM compile/link probe including #117 passes on the promotion candidate.
+- [x] The expanded native suite including #117/#119 passes on the promotion candidate.
+- [x] The expanded ARM compile/link probe passes on the promotion candidate.
 
 ## Integration and release gates
 
 - [x] Linux, Windows, and Doxygen CI are retained as active hosted gates.
 - [x] Installed-consumer/package gates use v2 version expectations.
-- [x] Standalone generic, custom-header, PUS-C TC, and PUS-C TM examples consume the installed package in Linux and Windows CI.
+- [x] Standalone generic, custom-header, PUS-C TC, PUS-C TM, raw Packet, and raw Manager examples consume the installed package in Linux and Windows CI.
 - [x] Encoder, decoder, and validator accept/report complete PUS profiles.
 - [x] Manager higher-level PUS profile workflows are covered.
-- [x] Linux package/cross-build gate passes with the updated MCU structured-Validator probe.
-- [ ] Raw-buffer installed-package examples pass in Linux and Windows CI.
+- [x] Linux package/cross-build gate passes with the expanded MCU probe.
+- [x] Raw-buffer installed-package examples pass in Linux and Windows CI.
 - [ ] Dedicated sanitizer/fuzz smoke jobs pass.
 - [ ] Final PUS-C acknowledgement-vector matrix and traceability are approved.
 - [ ] Final structured negative-vector coverage is approved.
-- [ ] arm64 and STM32 representative v2 PUS/Validator execution is recorded.
+- [ ] arm64 and STM32 representative v2 PUS/Validator/raw-buffer execution is recorded.
 - [ ] Complete v1.2-to-v2 migration guide is approved.
 - [ ] Release notes and final compliance traceability are approved.
 - [ ] Approved `v2.0.0-dev` is merged into `develop`.
