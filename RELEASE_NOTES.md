@@ -1,30 +1,150 @@
-# CCSDSPack v1.1.1
+# CCSDSPack v2.0.0 release notes — draft
 
-Maintenance release focusing on critical bug fixes and CMake integration improvements.
+> [!IMPORTANT]
+> These are **draft** release notes for the v2.0.0 release candidate. v2.0.0 is not approved for tagging until the remaining conformance, fuzz/sanitizer, arm64, STM32, migration-guide, and publication gates are complete.
 
-## Highlights
-- Fixed a critical deserialization bug where primary headers were not correctly populated when using secondary headers.
-- Modernized CMake package configuration for easier integration in downstream projects.
-- Docker images now include a `:latest` tag for the most recent stable release.
+## Summary
 
-## Bug Fixes
-- **#42 (Deserialize issue):** Fixed `CCSDS::Packet::deserialize(data, headerType, headerSize)` skipping primary header processing.
-- Fixed off-by-one errors in packet length validation during deserialization.
-- Corrected `PusB` `eventId` type from `uint8_t` to `uint16_t` to prevent data truncation.
-- Fixed `setApplicationData` return value handling in tests to resolve compiler warnings.
+CCSDSPack v2 is a breaking C++17 release that keeps the corrected v1.2 generic CCSDS Space Packet wire behavior and replaces the legacy project-specific PUS model with standards-oriented PUS-A and PUS-C revision/direction codecs.
 
-## Enhancements
-- Added `CCSDSPackConfig.cmake.in` template for robust `find_package(CCSDSPack CONFIG)` support.
-- Improved `build_terminal.sh` for reliable test execution regardless of current working directory.
-- Expanded test suite with `testGroupEdgeCases.cpp` covering PUS B/C edge cases and large payloads.
+The release also adds explicit mission profiles, numeric CUC time, checked packet finalization, structured packet validation, a lowercase public namespace, installed-package examples, and updated hosted/bare-metal integration.
 
-## Distribution
-- Docker image published to GHCR:
-```bash
-docker pull ghcr.io/exospacelabs/ccsdspack:latest
-docker run --rm ghcr.io/exospacelabs/ccsdspack:latest /usr/bin/CCSDSPack_tester
+## Standards scope
+
+Implemented and documented baselines:
+
+- CCSDS 133.0-B-2 Issue 2, including Editorial Change 2, for the supported Space Packet PDU profile;
+- ECSS-E-70-41A for supported PUS-A TC/TM secondary-header layouts;
+- ECSS-E-ST-70-41C for supported PUS-C TC/TM secondary-header layouts;
+- CCSDS 301.0-B-4 basic CUC numeric time for the documented supported subset.
+
+This is not a claim to implement every PUS service, transfer frames, COP-1, CFDP, a complete CCSDS protocol entity, UTC/leap-second conversion, or mission time correlation.
+
+## Breaking API changes
+
+- public namespace changes from `CCSDS` to `ccsds`;
+- legacy project-specific `PusA`, `PusB`, and `PusC` classes are removed;
+- `PusServices` is removed;
+- there is no standards-facing PUS-B revision;
+- PUS-A and PUS-C TC/TM use distinct public types under `ccsds::pus::rev_a` and `ccsds::pus::rev_c`;
+- secondary-header APIs use `setSecondaryHeader`, `getSecondaryHeader`, and related CCSDS terminology rather than `DataFieldHeader` naming;
+- packet finalization and serialization paths return checked `Result` types;
+- the Validator no longer exposes a positional six-boolean report;
+- hosted configuration uses the explicit v2 mission-profile schema and rejects legacy PUS selectors/keys.
+
+## Structured validation
+
+`ccsds::Validator::validate()` returns a `ccsds::ValidationReport` containing named `ValidationCode` checks.
+
+The report covers the applicable subset of:
+
+- primary-header/version validity;
+- Packet Data Length;
+- CRC16 when enabled;
+- secondary-header presence;
+- segmentation state and sequence-count continuity;
+- Packet Identification, segmentation class, and mission-profile template matching;
+- PUS revision, direction, and Packet Type consistency;
+- PUS profile and encoded header size;
+- PUS version/reserved bits and spare fields;
+- telecommand acknowledgement flags and source ID;
+- telemetry destination ID;
+- PUS-A TM packet-subcounter policy;
+- PUS-C TM four-bit time-reference status;
+- configured CUC timestamp fit.
+
+`ValidationReport` stores its checks in a fixed `std::array`, performs no dynamic allocation itself, requires only C++17, and remains available in `CCSDS_MCU` builds with exceptions and RTTI disabled.
+
+The hosted `ccsds_validator` command delegates packet/profile checks to the library Validator rather than maintaining a parallel validation implementation.
+
+## Mission profiles and PUS
+
+A default `ccsds::MissionProfile` represents generic CCSDS without implicit PUS.
+
+PUS profiles explicitly select:
+
+- PUS-A or PUS-C;
+- telecommand or telemetry direction;
+- packet error control;
+- applicable source/destination identifier widths;
+- optional PUS-A TM packet subcounter;
+- zero spare-octet count;
+- optional CUC telemetry time and its epoch/P-field/coarse/fine layout.
+
+Canonical selectors are:
+
+- `PUS:revA:TC`;
+- `PUS:revA:TM`;
+- `PUS:revC:TC`;
+- `PUS:revC:TM`.
+
+## CUC time
+
+The v2 CUC codec stores numeric coarse/fine counters with an explicit wire profile. The supported subset includes:
+
+- CCSDS 1958 TAI or agency-defined epoch metadata;
+- implicit or explicit basic one-octet P-field;
+- 1–4 coarse octets;
+- 0–3 fine octets;
+- counter-width and P-field validation.
+
+Calendar conversion, leap-second handling, and time correlation remain outside scope.
+
+## Generic Space Packet behavior retained from v1.2
+
+The following are **not new v2 wire changes**. They were corrected in v1.2 and remain the v2 foundation:
+
+- correct Packet Data Length calculation;
+- optional CRC16 coverage over primary header plus packet data excluding the CRC bytes themselves;
+- bounded parsing and exact packet consumption;
+- complete 11-bit APID support and Idle Packet handling;
+- modulo-16384 Packet Sequence Count behavior;
+- complete Packet Identification binding in Manager;
+- non-mutating inspection getters.
+
+## Hosted integration
+
+v2 provides:
+
+- encoder, decoder, and validator CLIs using the same mission-profile model;
+- generic and PUS configuration examples;
+- installed-package CMake consumers using `find_package(CCSDSPack 2.0 CONFIG REQUIRED)`;
+- Linux and Windows CI;
+- Doxygen API documentation.
+
+Automatic UML generation is intentionally disabled for v2.0.0 development. The workflow remains available manually through `workflow_dispatch`; diagrams are not a release gate.
+
+## Bare-metal integration
+
+The project remains C++17. `CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a static archive and excludes hosted Config/CLI components.
+
+The MCU public library includes Packet, Manager, MissionProfile, PUS-A/PUS-C codecs, CUC time, Result/Error, and the structured Validator.
+
+The ARM compile/link consumer probe uses the same `CCSDSPACK_MCU_FLAGS` as the library and exercises both the structured Validator API and a representative PUS-C telecommand packet.
+
+## Validation status
+
+Current development evidence includes:
+
+- 108 passing hosted native tests after the structured Validator work;
+- Linux/Windows hosted builds and Doxygen;
+- representative generic/PUS CLI integration;
+- local ASan and UBSan runs;
+- independent generic and representative PUS byte vectors;
+- MCU compile/link probe coverage designed for `-fno-exceptions -fno-rtti`.
+
+The final release still requires the remaining gates tracked by the v2 milestone, including dedicated fuzz/sanitizer CI, final PUS-C/negative traceability, fresh arm64 execution, fresh NUCLEO-H755ZI-Q/Cortex-M7 execution, final migration-guide approval, and release publication checks.
+
+## Migration
+
+See [`docs/MIGRATION_V1_TO_V2.md`](docs/MIGRATION_V1_TO_V2.md) for the source, configuration, Validator, and wire-layout migration guidance.
+
+## Release control
+
+The intended promotion path is:
+
+```text
+feature/* -> v2.0.0-dev -> develop -> main -> tag v2.0.0
 ```
 
-___
-
-For detailed changes, see `CHANGE_LOG.md`.
+The `v2.0.0` tag is created only after the final `main` commit passes the approved release gates.

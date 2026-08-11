@@ -1,137 +1,66 @@
 # Cross-Build Guide (aarch64 Linux and Bare-metal MCU)
 
-[../](README.md) - CCSDSPack Documentation
+[Documentation index](README.md) | [Structured validation](VALIDATION.md)
 
-This document collects everything you need to cross-build CCSDSPack for:
-- aarch64/arm64 Linux (e.g., Raspberry Pi 4/5)
-- Bare‑metal static library for ARM Cortex‑M (e.g., STM32, M4/M7)
+CCSDSPack v2 is a C++17 library. This document covers:
 
-It also shows how to use the `package.sh` helper to generate packages or archives.
+- aarch64/arm64 Linux cross-builds;
+- the bare-metal ARM Cortex-M static-library profile;
+- `package.sh` package/archive generation.
 
----
-## Contents
-- [aarch64 (arm64) cross-build for Linux](#aarch64-arm64-cross-build-for-linux)
-  - [Prerequisites on Ubuntu 22.04 (Jammy) and newer](#prerequisites-on-ubuntu-2204-jammy-and-newer)
-  - [Prerequisites on Ubuntu 20.04 (Focal)](#prerequisites-on-ubuntu-2004-focal)
-  - [Build and package for aarch64](#build-and-package-for-aarch64)
-- [Bare‑metal (MCU) static library](#bare-metal-mcu-static-library)
-  - [Prerequisites](#prerequisites)
-  - [Build and package for MCU](#build-and-package-for-mcu)
-- [package.sh reference](#packagesh-reference)
-- [Troubleshooting](#troubleshooting)
+## aarch64 Linux
 
----
-## aarch64 (arm64) cross-build for Linux
+The toolchain file `cmake/toolchains/aarch64-linux-gnu.cmake` is provided for
+cross-compiling to arm64/aarch64.
 
-The toolchain file `cmake/toolchains/aarch64-linux-gnu.cmake` is provided for cross-compiling to arm64/aarch64.
+### Ubuntu 22.04 and newer
 
-### Prerequisites on Ubuntu 22.04 (Jammy) and newer
-On Jammy-based systems (including GitHub Actions ubuntu-22.04 runners), it is usually enough to enable the foreign architecture and install the toolchain + runtime libraries used by `cpack`'s dependency scanner:
+Enable the foreign architecture and install the cross toolchain and runtime
+libraries required by package dependency inspection:
 
 ```bash
 sudo dpkg --add-architecture arm64
-dpkg --print-foreign-architectures   # should show: arm64 (and i386 if you added it)
-
-# 2) Backup current sources
-sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak.$(date +%s)
-
-# 3) Write a clean dual-arch sources.list
-sudo tee /etc/apt/sources.list >/dev/null <<'EOF'
-# amd64 from main archive
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
-deb [arch=amd64] http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
-
-# arm64 from ports (the place that actually serves non-amd64 reliably)
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted universe multiverse
-EOF
-
-# 4) Clean and refresh indexes (force IPv4 because some networks are drama)
-sudo apt-get clean
-sudo rm -rf /var/lib/apt/lists/*
-sudo apt-get -o Acquire::ForceIPv4=true update
-
-# 5) Install the cross toolchain and the arm64 runtimes shlibdeps wants
+sudo apt-get update
 sudo apt-get install -y \
   gcc-aarch64-linux-gnu g++-aarch64-linux-gnu qemu-user-static rsync \
   libc6:arm64 libgcc-s1:arm64 libstdc++6:arm64
-
-# 6) Sanity check that the files exist
-dpkg -L libc6:arm64        | grep -E 'ld-linux-aarch64\.so\.1|libc\.so\.6' || true
-dpkg -L libgcc-s1:arm64    | grep libgcc_s.so.1 || true
-dpkg -L libstdc++6:arm64   | grep 'libstdc\+\+\.so\.6' || true
 ```
 
-### Prerequisites on Ubuntu 20.04 (Focal)
-On Focal, arm64 runtime packages are reliably served via `ports.ubuntu.com`. Configure a clean dual-arch sources list:
+Systems whose normal Ubuntu mirror does not serve arm64 must use the matching
+`ports.ubuntu.com/ubuntu-ports` entries for that architecture.
+
+Build and package:
 
 ```bash
-# 1) add arm64 architecture
-sudo dpkg --add-architecture arm64
-sudo dpkg --print-foreign-architectures  # should show: arm64
-
-# 2) Backup current sources
-sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak.$(date +%s)
-
-# 3) Write a clean dual-arch sources.list for Focal
-sudo tee /etc/apt/sources.list >/dev/null <<'EOF'
-# amd64 from main archive (Focal)
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse
-deb [arch=amd64] http://archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse
-deb [arch=amd64] http://security.ubuntu.com/ubuntu focal-security main restricted universe multiverse
-
-# arm64 from ports (Focal)
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-updates main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-backports main restricted universe multiverse
-deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports focal-security main restricted universe multiverse
-EOF
-
-# 4) Clean and refresh indexes
-sudo apt-get clean
-sudo rm -rf /var/lib/apt/lists/*
-sudo apt-get -o Acquire::ForceIPv4=true update
-
-# 5) Install toolchain and the arm64 runtime libs
-sudo apt-get install -y \
-  gcc-aarch64-linux-gnu g++-aarch64-linux-gnu qemu-user-static rsync \
-  libc6:arm64 libgcc-s1:arm64 libstdc++6:arm64
-
-# 6) Sanity checks
-dpkg -L libc6:arm64      | grep -E 'ld-linux-aarch64\.so\.1|libc\.so\.6' || true
-dpkg -L libgcc-s1:arm64  | grep libgcc_s.so.1 || true
-dpkg -L libstdc++6:arm64 | grep 'libstdc\+\+\.so\.6' || true
-```
-
-### Build and package for aarch64
-Use the provided toolchain file and `package.sh`:
-
-```bash
-# From the project root
 ./package.sh -p DEB -t cmake/toolchains/aarch64-linux-gnu.cmake
-
-# Artifacts will be placed under ./packages/
-ls -l packages/
 ```
 
-If you prefer to just build (no packaging), configure and build in your usual build directory:
+Build without packaging:
 
 ```bash
-mkdir -p build-aarch64 && cd build-aarch64
-cmake -S .. -B . -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/aarch64-linux-gnu.cmake
-cmake --build . -- -j
+cmake -S . -B build-aarch64 \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/aarch64-linux-gnu.cmake
+cmake --build build-aarch64 -j
 ```
 
----
-## Bare‑metal (MCU) static library
+## Bare-metal MCU static library
 
-You can build a static library suitable for microcontrollers (exceptionless, no executables) by enabling `CCSDSPACK_BUILD_MCU` and using the `arm-none-eabi` toolchain.
+`CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a static archive and
+defines `CCSDS_MCU` publicly. Host-only configuration parsing and command-line
+executables are excluded.
+
+The MCU library still contains the protocol-facing C++17 API, including:
+
+- `ccsds::Packet` and `ccsds::Manager`;
+- `ccsds::MissionProfile`;
+- PUS-A/PUS-C TC/TM codecs;
+- CUC time support;
+- `ccsds::Result` error handling;
+- `ccsds::Validator`, `ValidationCode`, and fixed-capacity `ValidationReport`.
+
+The structured report uses `std::array` and performs no dynamic allocation
+itself. The MCU build does not require RTTI or exceptions.
 
 ### Prerequisites
 
@@ -144,64 +73,67 @@ sudo apt install -y \
   libstdc++-arm-none-eabi-newlib
 ```
 
-### Build and package for MCU
-Example for Cortex‑M7 (adjust flags for M4, etc.):
+### Package a Cortex-M7 archive
 
 ```bash
-# Package a TGZ archive with headers + static library
-./package.sh -t cmake/toolchains/arm-none-eabi.cmake -p MCU \
+./package.sh \
+  -t cmake/toolchains/arm-none-eabi.cmake \
+  -p MCU \
   -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
-
-# Artifacts will be placed under ./packages/
-ls -l packages/
 ```
 
-If you only want to build the static library:
+`package.sh -m` forwards the flags to `CCSDSPACK_MCU_FLAGS`, so the flags apply
+to the library itself as well as the MCU compile/link probe.
+
+### Build only the static library
 
 ```bash
-mkdir -p build-mcu && cd build-mcu
-cmake -S .. -B . \
+cmake -S . -B build-mcu \
   -DCMAKE_BUILD_TYPE=Release \
   -DCCSDSPACK_BUILD_MCU=ON \
-  -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/arm-none-eabi.cmake \
-  -DMCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
-cmake --build . -j
+  -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-none-eabi.cmake \
+  -DCCSDSPACK_MCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+
+cmake --build build-mcu -j
 ```
 
----
-## package.sh reference
+`CCSDSPACK_MCU_FLAGS` is the current CMake cache variable for target-specific
+MCU flags. Older documentation referring to `MCU_FLAGS` should not be used for
+direct CMake configuration.
 
-`package.sh` is a convenience wrapper around CMake and CPack. It accepts the following options:
+## Using the Validator on bare metal
 
-- `-p, --package-type`  Package type: `DEB`, `RPM`, `TGZ`, `MCU` (default: `DEB`).
-- `-t, --toolchain`     Path to a CMake toolchain file for cross-builds (e.g., `cmake/toolchains/aarch64-linux-gnu.cmake`).
-- `-m, --mcu-flags`     Extra flags to use when `-p MCU` is selected (e.g., Cortex‑M tuning flags).
-- `-h, --help`          Show usage and examples.
+Validation uses the same API as a hosted build:
 
-Examples:
+```cpp
+ccsds::Validator validator;
+const auto report = validator.validate(packet);
 
-```bash
-# Native x86_64 .deb
-./package.sh -p DEB
-
-# aarch64 .deb
-./package.sh -p DEB -t cmake/toolchains/aarch64-linux-gnu.cmake
-
-# Bare‑metal Cortex‑M7 archive (TGZ)
-./package.sh -p MCU -t cmake/toolchains/arm-none-eabi.cmake \
-  -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+if (report.failed(ccsds::ValidationCode::PusDirection)) {
+  // mission-specific fault handling
+}
 ```
 
-Artifacts are written to `./packages/`.
+There is no dependency on `ccsds::Config`, file I/O, iostreams, exceptions, or
+RTTI in the Validator API. The packet types themselves retain their existing
+C++ containers and ownership model; the fixed-capacity statement applies to the
+`ValidationReport`, not to every object in the library.
 
----
-## Troubleshooting
+## `package.sh` reference
 
-- `E: Unable to locate package libc6:arm64` on 20.04
-  - Follow the Focal-specific dual-arch setup using `ports.ubuntu.com` above.
-- `cpack` produces no artifacts
-  - Ensure the project built successfully and that CPack configuration is enabled for the chosen generator.
-- aarch64 binary can’t run locally
-  - Use `qemu-user-static` or test on an actual arm64 machine.
-- Building in CI
-  - See `.github/workflows/linux.yml` — on ubuntu-22.04 runners we only add `arm64` and install the required `:arm64` libs without rewriting sources.
+- `-p, --package-type`: `DEB`, `RPM`, `TGZ`, or `MCU`;
+- `-t, --toolchain`: CMake toolchain file;
+- `-m, --mcu-flags`: additional flags forwarded to the MCU library and probe;
+- `-h, --help`: command usage.
+
+Artifacts are written under `packages/`.
+
+## Release validation
+
+Cross-compilation proves that a target can be built; it is not a substitute for
+execution on the target. v2 release acceptance records arm64 installed-package
+execution and representative Cortex-M7 hardware execution separately under the
+release-validation issue.
+
+Historical v1.2 Raspberry Pi and STM32 results remain useful regression evidence
+but are not silently treated as v2 hardware acceptance.

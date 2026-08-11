@@ -182,7 +182,7 @@ def main() -> int:
         apid_path = temp / "apid-mismatch.bin"
         apid_path.write_bytes(golden_crc)
         result = run([str(validator), "-i", str(apid_path), "-c", str(config1)], expected=18)
-        assert_contains(result, "APID")
+        assert_contains(result, "Packet Identification")
 
         sequence_bad = bytearray(golden_rollover)
         second = 9

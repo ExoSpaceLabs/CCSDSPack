@@ -2,7 +2,8 @@
 
 CCSDSPack v2 intentionally breaks source compatibility. It removes
 project-specific formats that could be mistaken for ECSS PUS revisions and
-makes packet finalization, mission tailoring, and time encoding explicit.
+makes packet finalization, mission tailoring, validation, and time encoding
+explicit.
 
 ## Namespace migration
 
@@ -68,6 +69,45 @@ if (!wire) {
 send(wire.value());
 ```
 
+## Validator migration
+
+The v1/v1.2 Validator exposed a boolean result and a positional six-element
+`std::vector<bool>` report. Code had to know that, for example, one index meant
+CRC and another meant sequence continuity.
+
+v2 replaces those positional report semantics with named checks:
+
+```cpp
+ccsds::Validator validator;
+const auto report = validator.validate(packet);
+
+if (report.failed(ccsds::ValidationCode::Crc16)) {
+  handleBadCrc();
+}
+
+if (report.failed(ccsds::ValidationCode::PusDirection)) {
+  handleWrongPusDirection();
+}
+```
+
+`ccsds::ValidationReport`:
+
+- uses a fixed `std::array` with capacity for 32 named checks;
+- performs no dynamic allocation itself;
+- is available in hosted and `CCSDS_MCU` builds;
+- requires only C++17;
+- does not require RTTI or exceptions;
+- contains only checks that were actually performed;
+- can be iterated or queried with `contains()`, `passed()`, and `failed()`.
+
+`ccsds::Validator::validate()` does not mutate the packet, mission profile, or
+secondary header. The Validator still maintains its own sequence-stream state.
+Call `clear()` before reusing it for an unrelated sequence stream.
+
+The `ccsds_validator` executable now delegates packet/profile validation to the
+library Validator instead of keeping an independent copy of the validation
+rules. See [VALIDATION.md](VALIDATION.md).
+
 ## PUS construction and numeric time
 
 Raw timestamp byte vectors are replaced by a numeric CUC value plus an explicit
@@ -104,7 +144,8 @@ The same profile must be active before parsing:
 
 ```cpp
 ccsds::Packet decoded;
-decoded.setMissionProfile(profile);
+const auto profileResult = decoded.setMissionProfile(profile);
+if (!profileResult) return profileResult.error().code();
 const auto consumed = decoded.deserializeBounded(wire.value(), "PUS:revC:TM");
 ```
 
@@ -129,8 +170,29 @@ Legacy `pus_version`, `pus_event_id`, `pus_time_code`, and
 `secondary_header_type=PusA|PusB|PusC` values fail with a migration error.
 Complete v2 profiles are in [`example/config`](../example/config).
 
+## Hosted versus bare-metal use
+
+The public protocol library remains C++17. `ccsds::Packet`, `ccsds::Manager`,
+mission profiles, PUS codecs, CUC time, Result types, and the structured Validator
+are built into the MCU static library.
+
+`ccsds::Config` and the command-line executables are host-side conveniences and
+are excluded when `CCSDSPACK_BUILD_MCU=ON` defines `CCSDS_MCU`.
+
+A typical MCU build can use:
+
+```text
+-fno-exceptions -fno-rtti
+```
+
+without changing the Validator API.
+
 ## Wire-format impact
 
 The removed classes encoded project-specific layouts. Existing legacy packet
 bytes must be regenerated with a selected revision, direction, mission profile,
 and time layout; renaming a class or selector is insufficient.
+
+The generic Packet Data Length, CRC coverage, bounded parsing, APID-width, and
+sequence corrections were already part of v1.2.0. They are retained by v2 and
+should not be presented as new v1.2-to-v2 wire-format breaks.

@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <CCSDSValidator.h>
+#include <PusSecondaryHeaders.h>
 #include <iostream>
+#include <memory>
 #include <vector>
 #include "tests.h"
 
@@ -20,13 +22,9 @@ namespace {
     packet.setPacketErrorControlMode(mode);
     const auto headerResult = packet.setPrimaryHeader(
       ccsds::PrimaryHeader{version, type, secondaryHeaderFlag, apid, flags, count, 0});
-    if (!headerResult) {
-      return {};
-    }
+    if (!headerResult) return {};
     const auto dataResult = packet.setApplicationData(data);
-    if (!dataResult || !packet.serialize()) {
-      return {};
-    }
+    if (!dataResult || !packet.serialize()) return {};
     packet.setUpdatePacketEnable(false);
     return packet;
   }
@@ -55,6 +53,41 @@ namespace {
     validator.setTemplatePacket(packet);
     return validator;
   }
+
+  ccsds::Packet pusCTcPacket(ccsds::MissionProfile profile) {
+    ccsds::Packet packet;
+    if (!packet.setPrimaryHeader(
+          ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U})) return {};
+    if (!packet.setMissionProfile(profile)) return {};
+    if (!packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TcHeader>(
+          profile, 17U, 1U, 0x1234U, 0x09U))) return {};
+    if (!packet.setApplicationData({0xAAU})) return {};
+    if (!packet.serialize()) return {};
+    packet.setUpdatePacketEnable(false);
+    return packet;
+  }
+
+  class MalformedPusCTcHeader final : public ccsds::pus::TcSecondaryHeader {
+  public:
+    explicit MalformedPusCTcHeader(ccsds::MissionProfile profile)
+      : TcSecondaryHeader(profile, 17U, 1U, 0x1234U, 0x09U) {}
+
+    [[nodiscard]] ccsds::ResultBool deserialize(
+        const std::vector<std::uint8_t> &data) override {
+      (void)data;
+      return true;
+    }
+
+    [[nodiscard]] std::uint16_t getSize() const override { return tcSize(); }
+
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override {
+      std::vector<std::uint8_t> bytes{
+        0x39U, 17U, 1U, 0x12U, 0x34U
+      };
+      bytes.insert(bytes.end(), m_profile.secondaryHeaderSpareOctets, 0xFFU);
+      return bytes;
+    }
+  };
 }
 
 void testGroupValidator(TestManager *tester, const std::string &description) {
@@ -63,13 +96,13 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
   tester->unitTest("Validator accepts a non-zero unsegmented sequence count.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 5));
+    return validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 5)).valid();
   });
 
   tester->unitTest("Validator accepts first segment sequence count zero.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(finalizedPacket(1, ccsds::FIRST_SEGMENT, 0));
+    return validator.validate(finalizedPacket(1, ccsds::FIRST_SEGMENT, 0)).valid();
   });
 
   tester->unitTest("Validator tracks a coherent segmented sequence.", [] {
@@ -78,45 +111,44 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     const auto last = finalizedPacket(1, ccsds::LAST_SEGMENT, 12);
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(first)
-           && validator.validate(continuing)
-           && validator.validate(last);
+    return validator.validate(first).valid()
+           && validator.validate(continuing).valid()
+           && validator.validate(last).valid();
   });
 
   tester->unitTest("Validator rejects continuation without an open segmented sequence.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    const auto packet = finalizedPacket(1, ccsds::CONTINUING_SEGMENT, 7);
-    if (validator.validate(packet)) return false;
-    const auto report = validator.getReport();
-    return report.size() == 6U && !report[2] && report[3];
+    const auto report = validator.validate(
+      finalizedPacket(1, ccsds::CONTINUING_SEGMENT, 7));
+    return !report.valid()
+           && report.failed(ccsds::ValidationCode::SequenceFlags)
+           && report.passed(ccsds::ValidationCode::SequenceCount);
   });
 
   tester->unitTest("Validator rejects an unsegmented packet before a segmented sequence is closed.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    if (!validator.validate(finalizedPacket(1, ccsds::FIRST_SEGMENT, 3))) return false;
-    const auto packet = finalizedPacket(1, ccsds::UNSEGMENTED, 4);
-    if (validator.validate(packet)) return false;
-    const auto report = validator.getReport();
-    return report.size() == 6U && !report[2] && report[3];
+    if (!validator.validate(finalizedPacket(1, ccsds::FIRST_SEGMENT, 3)).valid()) return false;
+    const auto report = validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 4));
+    return report.failed(ccsds::ValidationCode::SequenceFlags)
+           && report.passed(ccsds::ValidationCode::SequenceCount);
   });
 
   tester->unitTest("Validator rejects a discontinuous sequence count.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    if (!validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 20))) return false;
-    const auto packet = finalizedPacket(1, ccsds::UNSEGMENTED, 22);
-    if (validator.validate(packet)) return false;
-    const auto report = validator.getReport();
-    return report.size() == 6U && report[2] && !report[3];
+    if (!validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 20)).valid()) return false;
+    const auto report = validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 22));
+    return report.passed(ccsds::ValidationCode::SequenceFlags)
+           && report.failed(ccsds::ValidationCode::SequenceCount);
   });
 
   tester->unitTest("Validator sequence count rolls over modulo 16384.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 0x3FFFU))
-           && validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 0U));
+    return validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 0x3FFFU)).valid()
+           && validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 0U)).valid();
   });
 
   tester->unitTest("Validator accepts a packet matching its template identifier.", [] {
@@ -124,7 +156,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
                                         {1, 2, 3}, ccsds::PacketErrorControlMode::CRC16,
                                         0, 1, 0);
     auto validator = validatorWithTemplate(packet, false, true);
-    return validator.validate(packet);
+    return validator.validate(packet).valid();
   });
 
   tester->unitTest("Validator rejects a packet with a different template identifier.", [] {
@@ -135,16 +167,15 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
                                         {1, 2, 3}, ccsds::PacketErrorControlMode::CRC16,
                                         0, 1, 0);
     auto validator = validatorWithTemplate(templatePacket, false, true);
-    if (validator.validate(packet)) return false;
-    const auto report = validator.getReport();
-    return report.size() == 6U && !report[4];
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::PacketIdentifier);
   });
 
   tester->unitTest("Validator rejects segmented state against an unsegmented template.", [] {
     const auto templatePacket = finalizedPacket(1, ccsds::UNSEGMENTED, 0);
     const auto packet = finalizedPacket(1, ccsds::FIRST_SEGMENT, 1);
     auto validator = validatorWithTemplate(templatePacket, false, true);
-    return !validator.validate(packet);
+    return validator.validate(packet).failed(ccsds::ValidationCode::SegmentationClass);
   });
 
   tester->unitTest("Validator accepts packets without packet error control.", [] {
@@ -152,62 +183,146 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
                                   ccsds::PacketErrorControlMode::None);
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    return validator.validate(packet);
+    const auto report = validator.validate(packet);
+    return report.valid() && !report.contains(ccsds::ValidationCode::Crc16);
   });
 
-  tester->unitTest("Validator report is fully true for a valid packet.", [] {
+  tester->unitTest("Validator report exposes named checks instead of boolean indices.", [] {
     const auto packet = finalizedPacket(1, ccsds::UNSEGMENTED, 9);
     auto validator = validatorWithTemplate(packet);
-    validator.validate(packet);
-    return validator.getReport() == std::vector<bool>({true, true, true, true, true, true});
+    const auto report = validator.validate(packet);
+    return report.valid()
+           && report.contains(ccsds::ValidationCode::PacketDataLength)
+           && report.contains(ccsds::ValidationCode::Crc16)
+           && report.contains(ccsds::ValidationCode::PacketIdentifier)
+           && report.size() <= ccsds::ValidationReport::Capacity;
   });
 
-  tester->unitTest("Validator report isolates a Packet Data Length failure.", [] {
+  tester->unitTest("Validator isolates a Packet Data Length failure.", [] {
     auto packet = rawPacketWithoutCRC(1, ccsds::UNSEGMENTED, 9, 7);
     auto templatePacket = rawPacketWithoutCRC(1, ccsds::UNSEGMENTED, 9, 2);
     auto validator = validatorWithTemplate(templatePacket);
-    validator.validate(packet);
-    return validator.getReport() == std::vector<bool>({false, true, true, true, true, true});
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::PacketDataLength)
+           && report.passed(ccsds::ValidationCode::PacketIdentifier);
   });
 
-  tester->unitTest("Validator report isolates a CRC failure.", [] {
+  tester->unitTest("Validator isolates a CRC failure.", [] {
     auto packet = finalizedPacket(1, ccsds::UNSEGMENTED, 9, {1, 2, 3});
     TEST_VOID(packet.setApplicationData({1, 2, 4}));
     auto templatePacket = finalizedPacket(1, ccsds::UNSEGMENTED, 9, {1, 2, 3});
     auto validator = validatorWithTemplate(templatePacket);
-    validator.validate(packet);
-    return validator.getReport() == std::vector<bool>({true, false, true, true, true, true});
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::Crc16)
+           && report.passed(ccsds::ValidationCode::PacketDataLength);
   });
 
-  tester->unitTest("Validator report isolates sequence-flag coherence.", [] {
-    auto packet = rawPacketWithoutCRC(1, ccsds::CONTINUING_SEGMENT, 5, 2);
-    auto templatePacket = rawPacketWithoutCRC(1, ccsds::FIRST_SEGMENT, 5, 2);
-    auto validator = validatorWithTemplate(templatePacket);
-    validator.validate(packet);
-    return validator.getReport() == std::vector<bool>({true, true, false, true, true, true});
+  tester->unitTest("Validator compares mission profiles explicitly.", [] {
+    auto templatePacket = rawPacketWithoutCRC(1, ccsds::UNSEGMENTED, 0, 2);
+    auto packet = templatePacket;
+    ccsds::MissionProfile profile;
+    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
+    TEST_VOID(packet.setMissionProfile(profile));
+    auto validator = validatorWithTemplate(templatePacket, false, false);
+    return validator.validate(packet).failed(
+      ccsds::ValidationCode::TemplateMissionProfile);
   });
 
-  tester->unitTest("Validator report isolates sequence-count continuity.", [] {
+  tester->unitTest("Validator reports PUS Packet Type and packet-error-control mismatches.", [] {
+    auto profile = ccsds::pus::makeProfile(
+      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
+    auto packet = pusCTcPacket(profile);
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    TEST_VOID(packet.getPrimaryHeader().setType(0U));
+
     ccsds::Validator validator;
-    validator.configure(true, true, false);
-    if (!validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 5))) return false;
-    validator.validate(finalizedPacket(1, ccsds::UNSEGMENTED, 7));
-    return validator.getReport() == std::vector<bool>({true, true, true, false, true, true});
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::PacketErrorControlProfile)
+           && report.failed(ccsds::ValidationCode::PusPacketType)
+           && report.passed(ccsds::ValidationCode::PusRevision)
+           && report.passed(ccsds::ValidationCode::PusDirection);
   });
 
-  tester->unitTest("Validator report isolates template identity.", [] {
-    const auto templatePacket = finalizedPacket(1, ccsds::UNSEGMENTED, 0);
-    const auto packet = finalizedPacket(2, ccsds::UNSEGMENTED, 0);
-    auto validator = validatorWithTemplate(templatePacket);
-    validator.validate(packet);
-    return validator.getReport() == std::vector<bool>({true, true, true, true, false, true});
+  tester->unitTest("Validator distinguishes invalid PUS acknowledgement and source-ID fields.", [] {
+    auto profile = ccsds::pus::makeProfile(
+      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
+    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
+
+    ccsds::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setMissionProfile(profile));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TcHeader>(
+      profile, 17U, 1U, 0x10000U, 0x10U)));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+
+    ccsds::Validator validator;
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::PusAcknowledgement)
+           && report.failed(ccsds::ValidationCode::PusSourceId)
+           && report.failed(ccsds::ValidationCode::PusSecondaryHeaderSize);
   });
 
-  tester->unitTest("Validator report isolates template sequence flags.", [] {
-    const auto templatePacket = finalizedPacket(1, ccsds::UNSEGMENTED, 0);
-    const auto packet = finalizedPacket(1, ccsds::FIRST_SEGMENT, 0);
-    auto validator = validatorWithTemplate(templatePacket);
-    validator.validate(packet);
-    return validator.getReport() == std::vector<bool>({true, true, true, true, true, false});
+  tester->unitTest("Validator distinguishes PUS reserved bits and spare-field failures.", [] {
+    auto profile = ccsds::pus::makeProfile(
+      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
+    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
+    profile.secondaryHeaderSpareOctets = 1U;
+
+    ccsds::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setMissionProfile(profile));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<MalformedPusCTcHeader>(profile)));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+
+    ccsds::Validator validator;
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::PusReservedBits)
+           && report.failed(ccsds::ValidationCode::PusSpareFields);
+  });
+
+  tester->unitTest("Validator distinguishes disabled PUS-A TM subcounter state.", [] {
+    auto profile = ccsds::pus::makeProfile(
+      ccsds::pus::Revision::A, ccsds::pus::Direction::Telemetry);
+    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
+
+    ccsds::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setMissionProfile(profile));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_a::TmHeader>(
+      profile, 3U, 25U, 7U, 0U)));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+
+    ccsds::Validator validator;
+    return validator.validate(packet).failed(
+      ccsds::ValidationCode::PusPacketSubcounter);
+  });
+
+  tester->unitTest("Validator distinguishes an overflowing PUS TM CUC timestamp.", [] {
+    auto profile = ccsds::pus::makeProfile(
+      ccsds::pus::Revision::C, ccsds::pus::Direction::Telemetry);
+    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
+    profile.telemetryTimestampPresent = true;
+    profile.telemetryTimeCode = ccsds::time::Format::Cuc;
+    profile.telemetryCuc = {
+      ccsds::time::Epoch::Ccsds1958Tai,
+      ccsds::time::PFieldMode::Implicit,
+      4U,
+      0U
+    };
+
+    ccsds::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setMissionProfile(profile));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TmHeader>(
+      profile, 3U, 25U, 1U, 0x1234U, 0U,
+      ccsds::time::CucTime{0x100000000ULL, 0U})));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+
+    ccsds::Validator validator;
+    return validator.validate(packet).failed(ccsds::ValidationCode::PusTimestamp);
   });
 }

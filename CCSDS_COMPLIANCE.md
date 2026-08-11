@@ -14,7 +14,8 @@ CCSDSPack v2.0.0 Space Packet implementation. It shall be read together with:
 - [`docs/CCSDS_133_0_B_2_PROFILE.md`](docs/CCSDS_133_0_B_2_PROFILE.md), the
   supported packet profile and wire behaviour;
 - [`docs/MISSION_TAILORING.md`](docs/MISSION_TAILORING.md), the PUS and CUC
-  mission-profile contract.
+  mission-profile contract;
+- [`docs/VALIDATION.md`](docs/VALIDATION.md), the structured Validator contract.
 
 The detailed rows cover the CCSDS Space Packet layer. The additional v2 profile
 section records the narrower PUS secondary-header and CUC codec scope. The
@@ -28,7 +29,7 @@ named class is not, by itself, conformance evidence.
 
 | Area | Selected baseline | v2.0.0 decision |
 |---|---|---|
-| CCSDS Space Packet Protocol | CCSDS 133.0-B-2, Recommended Standard Issue 2, June 2020, including Editorial Change 2 of September 2024 | Space Packet PDU construction, serialization, bounded parsing, validation, supported assembly/extraction behaviour, and packet-format parameters |
+| CCSDS Space Packet Protocol | CCSDS 133.0-B-2, Recommended Standard Issue 2, June 2020, including Editorial Change 2 of September 2024 | Space Packet PDU construction, serialization, bounded parsing, structured validation, supported assembly/extraction behaviour, and packet-format parameters |
 | Packet Utilisation Standard | ECSS-E-70-41A and ECSS-E-ST-70-41C | Direction-specific supported secondary-header layouts only; complete PUS services are outside scope |
 | CCSDS time code | CCSDS 301.0-B-4 | Basic CUC numeric counter with selected epoch, implicit/explicit P-field, 1–4 coarse octets, and 0–3 fine octets |
 
@@ -82,9 +83,9 @@ covering every applicable mandatory item in annex A.
 
 Test references name the focused repository test source or the fixed independent
 evidence used by the release. The complete native suite currently contains
-106 passing regression and conformance tests.
+108 passing regression and conformance tests.
 
-## PUS secondary-header and CUC profile
+## PUS secondary-header, CUC, and validation profile
 
 | Area | Classification | Status | Evidence |
 |---|---|---|---|
@@ -94,6 +95,7 @@ evidence used by the release. The complete native suite currently contains
 | Identifier widths and spare octets | Mission-tailored | Implemented | width boundaries, profile validation, zero-spare rejection |
 | Basic CUC counter encoding | Direct supported subset | Implemented | independent explicit/implicit P-field vectors and negative vectors |
 | Epoch and P-field policy | Mission-tailored | Implemented | configuration, P-field verification, invalid-policy rejection |
+| Structured generic/PUS validation | Library invariant supporting the claimed profile | Implemented | named `ValidationCode` checks, fixed-capacity `ValidationReport`, generic/PUS positive and negative tests, CLI delegation |
 | Complete PUS services and time correlation | Outside codec scope | Unsupported | documented claim boundary |
 
 ## Annex A PICS scope summary
@@ -119,7 +121,7 @@ system-level PICS.
 | SPP-18 | 4.1.4.3 | User Data Field | Conditional packet content | Implemented |
 | SPP-19 | 4.2.2 | Packet Assembly Function | Implemented by the supported `Packet` and `Manager` construction paths | Implemented in profile |
 | SPP-20 | 4.2.3 | Packet Transfer Function | Lower-layer transport responsibility | Not applicable |
-| SPP-21 | 4.3.2 | Packet Extraction Function | Implemented by bounded parsing and validation for the supported profile | Implemented in profile |
+| SPP-21 | 4.3.2 | Packet Extraction Function | Implemented by bounded parsing and structured validation for the supported profile | Implemented in profile |
 | SPP-22 | 4.3.3 | Packet Reception Function | Subnetwork reception and routing are outside scope | Unsupported |
 | SPP-23 | table 5-1 | Maximum Packet Length | Full representable PDU size is supported and boundary-tested | Implemented |
 | SPP-24 | table 5-1 | Packet Type of outgoing packets | Telemetry and telecommand values are supported | Implemented |
@@ -150,7 +152,7 @@ system-level PICS.
 | SPP-PARSE-002 | 4.1.2; 4.1.3.5; 4.3.2.2 | SPP-14, SPP-21 | Derived | Input shorter than the declared packet boundary is rejected without committing partial state. | Implemented | bounded transactional parser | truncated body and oversized declared-length tests |
 | SPP-PARSE-003 | 2.1.1; 4.1.3.5; 4.3.2.2 | SPP-14, SPP-21 | Derived | Parsing reports consumed octets and does not absorb following packets or trailing bytes. | Implemented | `deserializeBounded` result value | concatenated parsing and legacy first-packet behaviour tests |
 | SPP-PROC-001 | 4.2.2.2 to 4.2.2.4 | SPP-19 | Direct | Supported packet assembly creates the primary header, applies secondary-header indication, and applies maintained sequence count. | Implemented in profile | `Packet::serialize`; `Manager::setApplicationData` | Manager creation, segmentation, sequence, identifier, CRC, and STM32 packet-generation tests |
-| SPP-PROC-002 | 4.3.2.1, 4.3.2.2 | SPP-21 | Direct | Supported extraction exposes packet components, secondary-header presence, exact boundaries, and sequence continuity information. | Implemented in profile | bounded parser and `Validator` | parsing, decoded-field, CRC, template identity, and sequence-continuity tests |
+| SPP-PROC-002 | 4.3.2.1, 4.3.2.2 | SPP-21 | Direct | Supported extraction exposes packet components, secondary-header presence, exact boundaries, and sequence continuity information. | Implemented in profile | bounded parser and `Validator` | parsing, structured named length/CRC/template/PUS checks, decoded-field, and sequence-continuity tests |
 | SPP-PROC-003 | 4.3.3.1 to 4.3.3.3 | SPP-22 | Direct | Subnetwork reception and APID demultiplexing are performed outside this library. | Unsupported | caller/higher-layer responsibility | explicit claim boundary |
 | SPP-MGMT-001 | 5.1; 5.2 table 5-1 | SPP-23, SPP-24, SPP-26 | Direct | Maximum length and outgoing packet type used by the profile are explicit configuration; complete service management remains outside scope. | Implemented in profile | packet template and configuration parser | configuration, field-range, maximum-size, and packet-type tests |
 | SPP-API-001 | No direct CCSDS clause | N/A | Library invariant | Inspecting a parsed packet does not mutate received header, sequence, data, or CRC state. | Implemented | const packet getters and explicit finalization | getter non-finalization and parsed inspection preservation tests |
@@ -176,24 +178,29 @@ For CCSDSPack v2.0.0:
 | Error-control presence | External selection; encoded bytes remain within the CCSDS Packet Data Field | External / mission-tailored | Implemented | CRC16 and CRC-disabled vectors and parser tests |
 | CRC coverage | Not defined by CCSDS 133.0-B-2 | External / mission-tailored | Implemented | independent CRC vector, coverage test, and STM32 exact-vector test |
 | CRC encoding | Not defined by CCSDS 133.0-B-2 | External / mission-tailored | Implemented | fixed golden vectors and big-endian comparisons |
-| CRC verification | Not defined by CCSDS 133.0-B-2 | External / mission-tailored | Implemented | corruption rejection and non-mutating failure tests |
+| CRC verification | Not defined by CCSDS 133.0-B-2 | External / mission-tailored | Implemented | corruption rejection, structured `Crc16` validation check, and non-mutating failure tests |
 
 ## Evidence baseline
 
 The v2 claim is supported by:
 
-- 106 native regression and conformance tests;
+- 108 native regression and conformance tests;
 - independent Python-generated fixed byte vectors under `test/test_resources`;
 - negative tests for invalid version, field ranges, length, CRC, identifier,
-  segmentation, sequence continuity, and Idle Packet structure;
-- Linux and Windows CI;
-- installed-package and exact-version external-consumer tests;
-- historical v1.2 Raspberry Pi 5 and NUCLEO-H755ZI-Q execution evidence for the
-  inherited packet core.
+  segmentation, sequence continuity, mission profiles, and supported PUS fields;
+- structured generic/PUS `ValidationCode` and `ValidationReport` tests;
+- Linux and Windows CI plus Doxygen;
+- installed-package and exact-version external-consumer tests and standalone examples;
+- Ubuntu 22.04 package/cross-build generation with the ARM compile/link probe exercising the structured Validator and a representative PUS-C TC packet;
+- historical v1.2 Raspberry Pi 5 and NUCLEO-H755ZI-Q execution evidence for the inherited packet core.
 
 The historical hardware runs do not establish the new v2 namespace, PUS, CUC,
-or configuration APIs on those targets. v2 hardware revalidation remains a
-release gate.
+Validator, or configuration APIs on those targets. v2 hardware revalidation
+remains a release gate.
+
+Automatic UML generation is disabled for the v2.0.0 release path. The manual
+workflow remains available as a documentation utility, but diagrams are not
+conformance or release evidence.
 
 ## Matrix maintenance policy
 
@@ -208,5 +215,5 @@ A row remains **Implemented** only while:
 6. no contradictory supported configuration path exists.
 
 Changes to packet wire behaviour, the claim boundary, or the selected normative
-baseline require this matrix, `COMPLIANCE.md`, and the detailed PDU profile to
-be updated together.
+baseline require this matrix, `COMPLIANCE.md`, the structured validation
+contract, and the detailed PDU profile to be updated together.
