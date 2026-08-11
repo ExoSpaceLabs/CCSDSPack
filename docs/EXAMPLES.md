@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # Examples
 
-[Documentation index](README.md) | [Configuration](CONFIG.md) | [Space Packet profile](CCSDS_133_0_B_2_PROFILE.md)
+[Documentation index](README.md) | [Configuration](CONFIG.md) | [Structured validation](VALIDATION.md) | [Space Packet profile](CCSDS_133_0_B_2_PROFILE.md)
 
 These examples use the v2 C++17 API. They create CCSDS Space Packets with Packet Version Number `000`. The default packet-error-control profile is the project-specific CRC16 trailer; configure `PacketErrorControlMode::None` explicitly for CRC-free packets.
 
@@ -86,6 +86,32 @@ int main() {
 ```
 
 `serialize()` returns `ResultBuffer` and reports the exact finalization error. `update()` returns `ResultBool` when finalization without bytes is required. Getters inspect the stored state and do not perform hidden finalization.
+
+## Validate a packet with named checks
+
+```cpp
+ccsds::Validator validator;
+const auto report = validator.validate(decoded);
+
+if (!report.valid()) {
+  for (const auto &check : report) {
+    if (!check.passed) {
+      handleValidationFailure(check.code,
+                              ccsds::validationCodeName(check.code));
+    }
+  }
+}
+```
+
+The report contains only checks that were performed. Query a specific condition without relying on report indices:
+
+```cpp
+if (report.failed(ccsds::ValidationCode::PacketDataLength)) {
+  handleLengthFailure();
+}
+```
+
+The same Validator API is available in the C++17 `CCSDS_MCU` build. The report uses fixed `std::array` storage and performs no dynamic allocation itself. See [VALIDATION.md](VALIDATION.md).
 
 ## Segment a payload with Manager
 
@@ -210,7 +236,9 @@ The sender and receiver must both select `None`. The mode is never inferred from
 ccsds::Packet sender;
 sender.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
 sender.setDataFieldSize(1024);
-sender.setPrimaryHeader({0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
+sender.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
+});
 sender.setApplicationData({0x01, 0x02});
 const auto wireResult = sender.serialize();
 if (!wireResult) return wireResult.error().code();
@@ -230,7 +258,9 @@ the `BufferHeader` path through `setSecondaryHeader()`.
 ```cpp
 ccsds::Packet packet;
 packet.setDataFieldSize(1024);
-packet.setPrimaryHeader({0, 0, 1, 0x123, ccsds::UNSEGMENTED, 0, 0});
+packet.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 1, 0x123, ccsds::UNSEGMENTED, 0, 0
+});
 
 const auto secondaryResult = packet.setSecondaryHeader(
   std::vector<std::uint8_t>{0xAA, 0x55}
