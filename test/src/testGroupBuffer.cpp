@@ -10,14 +10,6 @@
 #include <string>
 #include <vector>
 
-namespace {
-  ccsds::MissionProfile genericNoCrcProfile() {
-    ccsds::MissionProfile profile;
-    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
-    return profile;
-  }
-}
-
 void testGroupBuffer(TestManager *tester, const std::string &description) {
   std::cout << "\n" << description << '\n';
 
@@ -92,13 +84,21 @@ void testGroupBuffer(TestManager *tester, const std::string &description) {
            && incoming.getApplicationDataBytes() == std::vector<std::uint8_t>({0xAA, 0x55});
   });
 
-  tester->unitTest("Manager accepts raw application and packet-stream buffers", []() {
+  tester->unitTest("Manager preserves explicit generic PEC for vector and raw streams", []() {
     ccsds::Packet packetTemplate;
-    TEST_VOID(packetTemplate.setMissionProfile(genericNoCrcProfile()));
+    packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
       0, 0, 0, 0x155, ccsds::UNSEGMENTED, 0, 0
     }));
     packetTemplate.setDataFieldSize(32U);
+
+    // The default generic MissionProfile still carries its default CRC16 convenience
+    // value. Manager receive paths must preserve the Packet template's explicitly
+    // selected PEC mode rather than letting that generic metadata override it.
+    if (packetTemplate.getMissionProfile().packetErrorControl
+        != ccsds::PacketErrorControlMode::CRC16) return false;
+    if (packetTemplate.getPacketErrorControlMode()
+        != ccsds::PacketErrorControlMode::None) return false;
 
     ccsds::Manager sender;
     TEST_VOID(sender.setPacketTemplate(packetTemplate));
@@ -109,19 +109,33 @@ void testGroupBuffer(TestManager *tester, const std::string &description) {
     std::vector<std::uint8_t> stream;
     TEST_RET(stream, sender.getPacketsBuffer());
 
-    ccsds::Manager receiver;
-    TEST_VOID(receiver.setPacketTemplate(packetTemplate));
-    receiver.setAutoValidateEnable(false);
-    TEST_VOID(receiver.load(stream.data(), stream.size()));
+    ccsds::Manager vectorReceiver;
+    TEST_VOID(vectorReceiver.setPacketTemplate(packetTemplate));
+    vectorReceiver.setAutoValidateEnable(false);
+    TEST_VOID(vectorReceiver.load(stream));
 
-    std::vector<std::uint8_t> rebuilt;
-    TEST_RET(rebuilt, receiver.getApplicationDataBuffer());
-    return rebuilt == std::vector<std::uint8_t>(payload, payload + sizeof(payload));
+    ccsds::Manager rawReceiver;
+    TEST_VOID(rawReceiver.setPacketTemplate(packetTemplate));
+    rawReceiver.setAutoValidateEnable(false);
+    TEST_VOID(rawReceiver.load(stream.data(), stream.size()));
+
+    std::vector<std::uint8_t> vectorRebuilt;
+    TEST_RET(vectorRebuilt, vectorReceiver.getApplicationDataBuffer());
+    std::vector<std::uint8_t> rawRebuilt;
+    TEST_RET(rawRebuilt, rawReceiver.getApplicationDataBuffer());
+    const std::vector<std::uint8_t> expected(payload, payload + sizeof(payload));
+
+    return vectorRebuilt == expected
+           && rawRebuilt == expected
+           && vectorReceiver.getPacketsReference().front().getPacketErrorControlMode()
+              == ccsds::PacketErrorControlMode::None
+           && rawReceiver.getPacketsReference().front().getPacketErrorControlMode()
+              == ccsds::PacketErrorControlMode::None;
   });
 
   tester->unitTest("Const Manager reference accessors avoid packet/template copies", []() {
     ccsds::Packet packetTemplate;
-    TEST_VOID(packetTemplate.setMissionProfile(genericNoCrcProfile()));
+    packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
       0, 0, 0, 0x155, ccsds::UNSEGMENTED, 0, 0
     }));
