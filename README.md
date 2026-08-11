@@ -25,6 +25,13 @@ The v2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Chan
 |---|---|
 | ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=develop) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=develop) |
 
+| Platform | CI |
+|---|---|
+| Ubuntu 22.04 | ![Ubuntu 22.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-22-04) |
+| Ubuntu 24.04 | ![Ubuntu 24.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-24-04) |
+| Ubuntu latest | ![Ubuntu latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest) |
+| Windows latest | ![Windows latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest) |
+
 UML generation is currently **manual-only** and is not a v2.0.0 CI/release gate. The workflow remains available through `workflow_dispatch` for later documentation maintenance.
 
 ## v2 Space Packet PDU profile
@@ -50,23 +57,68 @@ Use:
 std::size_t packetSize = packet.getSerializedSize();
 ```
 
-for the complete size range.
+for the complete size range of an already constructed packet.
+
+### Raw transport buffers
+
+The existing `std::vector<std::uint8_t>` APIs remain the easiest general-purpose interface. v2 also provides additive pointer-plus-size APIs for transport-owned buffers such as UART, DMA, SpaceWire, TCP, or shared-memory receive areas.
+
+A receiver can determine the complete packet size from only the six-byte primary header:
+
+```cpp
+std::uint8_t primaryHeader[6];
+receive(primaryHeader, sizeof(primaryHeader));
+
+const auto packetSize = ccsds::buffer::declaredPacketSize(
+  primaryHeader, sizeof(primaryHeader));
+if (!packetSize) return packetSize.error().code();
+
+// Receive packetSize.value() - 6 more bytes from the transport.
+```
+
+A complete raw buffer can then be parsed without requiring the caller to first construct a vector:
+
+```cpp
+ccsds::Packet packet;
+packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+
+const auto consumed = ccsds::buffer::deserializeBounded(
+  packet, rxBuffer, receivedBytes);
+if (!consumed) return consumed.error().code();
+```
+
+`ccsds::Manager` also has raw pointer + size overloads for application data, one-packet ingestion, and concatenated packet streams:
+
+```cpp
+manager.setApplicationData(payload, payloadSize);
+manager.addPacketFromBuffer(packetBytes, packetSize);
+manager.load(streamBytes, streamSize);
+```
+
+These signatures intentionally coexist with the vector APIs. In v2.0 the raw parsing adapters still bridge to the existing vector-backed implementation internally. That keeps the public API useful now while leaving room for later zero-copy or heap-free internals without forcing callers to change again.
+
+For low-copy inspection, a const Manager exposes references to its template, packet collection, and Validator through `getTemplateReference()`, `getPacketsReference()`, and `getValidatorReference()`.
+
+See [Raw-buffer APIs](docs/RAW_BUFFERS.md).
 
 ## Features
 
 - CCSDS 133.0-B-2 EC2 Space Packet PDU construction and parsing;
 - exact bounded parsing with consumed-byte reporting;
+- raw pointer + size transport adapters and primary-header packet-size inspection;
 - concatenated packet-stream handling;
 - optional project-specific CRC16 trailer;
 - complete 11-bit APID handling and Idle Packet validation;
 - modulo-16384 sequence counting and segmentation utilities;
 - one configured Packet Identification value per `ccsds::Manager` instance;
+- low-copy const-reference Manager inspection;
 - custom and opaque secondary-header support;
 - PUS-A and PUS-C direction-specific TC/TM secondary headers;
 - separate fixed PUS and extensible custom secondary-header factories;
 - explicit mission-profile validation for revision, direction, identifiers, time, spare fields, and packet error control;
 - numeric basic CUC time with explicit epoch, P-field, and coarse/fine-width policy;
 - fixed-capacity structured `ccsds::ValidationReport` with named generic/PUS checks;
+- symbolic `errorCodeName()` and `validationCodeName()` diagnostics;
 - exception-free `Result` and `Error` handling;
 - C++17 hosted and bare-metal builds;
 - MCU builds compatible with `-fno-exceptions -fno-rtti`;
@@ -135,14 +187,20 @@ if (!wire) return wire.error().code();
 ### Requirements
 
 - CMake 3.16 or newer;
-- a C++17 compiler.
+- a C++17 compiler;
+- GCC 8.5 or newer on supported Linux configurations.
 
 ```bash
 git clone https://github.com/ExoSpaceLabs/CCSDSPack.git
 cd CCSDSPack
 cmake -S . -B build
 cmake --build build
-./build/bin/CCSDSPack_tester
+```
+
+Run the regression tester from the repository binary directory:
+
+```bash
+./bin/CCSDSPack_tester
 ```
 
 Install the library and exported package:
@@ -162,7 +220,16 @@ cmake --install build
 | `ENABLE_DECODER` | `ON` | Build `ccsds_decoder` |
 | `ENABLE_VALIDATOR` | `ON` | Build `ccsds_validator` |
 
-Bare-metal Cortex-M example:
+### Windows with MinGW
+
+```powershell
+cmake -S . -B build -G "MinGW Makefiles"
+cmake --build build
+```
+
+The Windows workflow copies the shared-library DLL beside the test, example, and external-consumer executables before running them.
+
+### Bare-metal Cortex-M
 
 ```bash
 cmake -S . -B build-mcu \
@@ -172,7 +239,7 @@ cmake -S . -B build-mcu \
 cmake --build build-mcu -j
 ```
 
-Host-only `ccsds::Config` and CLI executables are excluded from the MCU target. Packet, Manager, PUS, CUC, Result, and Validator APIs remain part of the static library.
+Host-only `ccsds::Config` and CLI executables are excluded from the MCU target. Packet, Manager, raw-buffer adapters, PUS, CUC, Result, and Validator APIs remain available to the static-library consumer.
 
 ## CMake integration
 
@@ -186,7 +253,20 @@ target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
 target_compile_features(my_app PRIVATE cxx_std_17)
 ```
 
-The [`example/`](example/README.md) directory contains independent installed-package consumers and complete generic/PUS configuration profiles.
+For a non-standard install prefix:
+
+```bash
+cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/install/prefix
+```
+
+The [`example/`](example/README.md) directory contains independent installed-package consumers and complete generic/PUS configuration profiles. Build all examples, or select one by directory name:
+
+```bash
+./example/build_examples.sh all /path/to/install/prefix
+./example/build_examples.sh raw_buffer_packet /path/to/install/prefix
+./example/build_examples.sh raw_buffer_manager /path/to/install/prefix
+./example/build_examples.sh pus_c_telecommand /path/to/install/prefix
+```
 
 ## Command-line tools
 
@@ -202,6 +282,7 @@ See [CLI reference](docs/CLI.md).
 ## Documentation
 
 - [Documentation index](docs/README.md)
+- [Raw-buffer APIs](docs/RAW_BUFFERS.md)
 - [Structured validation](docs/VALIDATION.md)
 - [CCSDS compliance baseline](docs/CCSDS_COMPLIANCE.md)
 - [CCSDS 133.0-B-2 EC2 PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
@@ -228,6 +309,7 @@ The principal v1.2-to-v2 changes include:
 - secondary-header API renaming;
 - checked serialization/finalization results;
 - structured named Validator reports;
+- raw pointer + size transport adapters alongside vector convenience APIs;
 - v2 configuration schema and canonical PUS selectors.
 
 See [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md).
