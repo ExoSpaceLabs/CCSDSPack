@@ -9,15 +9,16 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
 
-**CCSDSPack** is a C++17 library for creating, parsing, managing, and validating CCSDS Space Packet protocol data units.
+**CCSDSPack** is a C++17 library for constructing, serializing, parsing, managing, and validating CCSDS Space Packet protocol data units. It provides a compact packet-oriented API for hosted applications and embedded systems while keeping packet identity, secondary-header layout, error control, and stream validation explicit.
 
-The v2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Change 2 (September 2024)** and provides standards-facing secondary headers for **ECSS-E-70-41A (PUS-A)** and **ECSS-E-ST-70-41C (PUS-C)**.
+The v2.0.0 implementation targets:
 
-> [!IMPORTANT]
-> The implementation scope is the documented Space Packet PDU profile and supported PUS secondary-header layouts. CCSDSPack does not implement every PUS service, the complete abstract Packet Service, transfer frames, or a complete protocol entity.
+- **CCSDS 133.0-B-2, Issue 2, including Editorial Change 2** for the supported Space Packet PDU profile;
+- **ECSS-E-70-41A** for supported PUS-A telecommand and telemetry secondary headers;
+- **ECSS-E-ST-70-41C** for supported PUS-C telecommand and telemetry secondary headers;
+- **CCSDS 301.0-B-4** for the supported basic numeric CUC time subset.
 
-> [!IMPORTANT]
-> v2 removed the project-specific `PusA`, `PusB`, and `PusC` model. The public PUS types are `ccsds::pus::rev_a::TcHeader`, `ccsds::pus::rev_a::TmHeader`, `ccsds::pus::rev_c::TcHeader`, and `ccsds::pus::rev_c::TmHeader`. There is no standards-facing PUS-B revision.
+The implementation scope is intentionally packet-focused. Complete PUS services, transfer frames, COP-1, CFDP, routing, UTC/leap-second conversion, mission time correlation, and complete abstract CCSDS service interfaces are outside the library scope.
 
 ## Status
 
@@ -25,148 +26,126 @@ The v2 packet layer targets **CCSDS 133.0-B-2, Issue 2, including Editorial Chan
 |---|---|
 | ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=develop) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=develop) |
 
-| Platform | CI |
-|---|---|
-| Ubuntu 22.04 | ![Ubuntu 22.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-22-04) |
-| Ubuntu 24.04 | ![Ubuntu 24.04](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-24-04) |
-| Ubuntu latest | ![Ubuntu latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/linux.yml/badge.svg?job=ubuntu-latest) |
-| Windows latest | ![Windows latest](https://github.com/ExoSpaceLabs/CCSDSPack/actions/workflows/windows.yml/badge.svg?job=windows-latest) |
+CI covers Ubuntu 22.04, Ubuntu 24.04, Ubuntu latest, Windows latest, Doxygen, CLI integration, installed-package consumers, examples, and package/cross-build generation. UML generation is available manually and is not a release gate.
 
-UML generation is currently **manual-only** and is not a v2.0.0 CI/release gate. The workflow remains available through `workflow_dispatch` for later documentation maintenance.
+## Why CCSDSPack
 
-## v2 Space Packet PDU profile
+CCSDSPack is designed around a few deliberately simple ownership rules:
 
-The v2 implementation retains the validated v1.2 six-octet CCSDS primary-header and Packet Data Field behaviour and adds explicit mission profiles, standards-oriented PUS-A/PUS-C secondary headers, CUC time support, checked finalization, and structured validation.
+- a `ccsds::Packet` owns one complete Space Packet and its packet-level policy;
+- a concrete secondary-header object owns its own wire layout;
+- PUS revision and TC/TM direction are intrinsic to the concrete PUS header type;
+- packet error control is a Packet-level policy independent of PUS;
+- a `ccsds::Manager` uses one complete Packet template as its stream contract;
+- parsing is bounded and transactional, so failed input does not partially replace packet state;
+- validation uses named checks rather than positional result fields;
+- vector and pointer-plus-size APIs provide convenient application and transport-facing entry points.
 
-The Packet Data Field contains optional secondary-header bytes, mission application data, and, when enabled, the optional CCSDSPack CRC16 trailer.
+This keeps configuration state localized and makes contradictory combinations difficult to express.
 
-### CCSDSPack packet layout
+## Space Packet model
 
-The following diagram represents the generic Space Packet wire layout.
+CCSDSPack implements the six-octet CCSDS primary header followed by a Packet Data Field. The Packet Data Field can contain an optional secondary header, application data, and, when enabled, the CCSDSPack packet-level CRC16 trailer.
 
 ![CCSDSPack Space Packet layout](docs/imgs/ccsdsPacket.drawio.png)
 
-When the optional CCSDSPack CRC16 profile is enabled, the final two Packet Data Field octets are reserved for the CRC trailer. CCSDS 133.0-B-2 does not define this trailer as a third top-level Space Packet structural field.
-
-Detailed scope, limitations, and migration behavior are documented in the [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md).
-
-### Primary-header rules
-
-CCSDSPack v2 enforces:
+The implementation enforces:
 
 - Packet Version Number `000`;
 - telemetry and telecommand Packet Types;
-- the complete 11-bit APID range;
-- Idle Packet structural rules for APID `0x7FF`;
-- Packet Data Length as the number of octets after the primary header minus one;
-- CCSDS sequence flags and modulo-16384 Packet Sequence Count handling;
-- explicit packet-error-control selection;
-- explicit PUS revision/direction/profile consistency.
+- the complete 11-bit APID range and Idle APID `0x7FF` structure;
+- CCSDS Sequence Flags and modulo-16384 Packet Sequence Count handling;
+- Packet Data Length equal to the number of octets following the primary header minus one;
+- a Packet Data Field range of 1 to 65,536 octets and total packet size of 7 to 65,542 octets;
+- consistency between directional secondary headers and the primary-header Packet Type.
 
-CCSDSPack uses Packet Sequence Count semantics for both telemetry and telecommand packets. The optional telecommand Packet Name interpretation is not implemented.
+`Packet::getSerializedSize()` returns the exact complete packet size as `std::size_t`. `getFullPacketLength()` remains available as a 16-bit view and saturates at `UINT16_MAX`.
 
-### Packet size
+## Packet error control
 
-The Packet Data Field can contain 1 through 65,536 octets, giving a total serialized packet size of 7 through 65,542 octets.
-
-Profiles requiring a two-octet CRC trailer have a practical minimum serialized packet size of 8 octets.
-
-Use:
+`ccsds::PacketErrorControlMode` is generic Packet policy:
 
 ```cpp
-std::size_t packetSize = packet.getSerializedSize();
+packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::CRC16);
+// or
+packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
 ```
 
-for the complete size range of an already constructed packet.
+When CRC16 is enabled, the final two Packet Data Field octets contain CRC-16/CCITT-FALSE. Those octets contribute to Packet Data Length and are excluded from their own CRC calculation. The receiving side selects the expected mode before parsing.
 
-The legacy `getFullPacketLength()` API returns `std::uint16_t` and saturates at `UINT16_MAX` rather than wrapping.
+## PUS secondary headers
 
-### Packet error control
+Supported PUS identities are represented directly by concrete C++ types:
 
-`PacketErrorControlMode` supports:
-
-- `PacketErrorControlMode::CRC16`, the existing v1 default;
-- `PacketErrorControlMode::None`.
-
-In CRC16 mode, CCSDSPack reserves the final two Packet Data Field octets for CRC-16/CCITT-FALSE and includes those octets in Packet Data Length.
-
-The receiver must configure the expected mode before parsing.
-
-### Library architecture
-
-The following diagram shows the main relationships between the user application, `ccsds::Manager`, `ccsds::Packet`, primary-header handling, Packet Data Field handling, secondary-header creation, serialization, validation, CRC16, and utility functions.
-
-![CCSDSPack library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
-
-### Raw transport buffers
-
-The existing `std::vector<std::uint8_t>` APIs remain the easiest general-purpose interface. v2 also provides additive pointer-plus-size APIs for transport-owned buffers such as UART, DMA, SpaceWire, TCP, or shared-memory receive areas.
-
-A receiver can determine the complete packet size from only the six-byte primary header:
-
-```cpp
-std::uint8_t primaryHeader[6];
-receive(primaryHeader, sizeof(primaryHeader));
-
-const auto packetSize = ccsds::buffer::declaredPacketSize(
-  primaryHeader, sizeof(primaryHeader));
-if (!packetSize) return packetSize.error().code();
-
-// Receive packetSize.value() - 6 more bytes from the transport.
+```text
+ccsds::pus::rev_a::TcHeader  -> PUS-A Telecommand
+ccsds::pus::rev_a::TmHeader  -> PUS-A Telemetry
+ccsds::pus::rev_c::TcHeader  -> PUS-C Telecommand
+ccsds::pus::rev_c::TmHeader  -> PUS-C Telemetry
 ```
 
-A complete raw buffer can then be parsed without requiring the caller to first construct a vector:
+Installing a directional header sets the CCSDS secondary-header flag and synchronizes Packet Type automatically.
 
 ```cpp
 ccsds::Packet packet;
-packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+packet.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
 
-const auto consumed = ccsds::buffer::deserializeBounded(
-  packet, rxBuffer, receivedBytes);
-if (!consumed) return consumed.error().code();
+const auto result = packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TcHeader>(
+    17, 1, 0x1234, 0x09));
+if (!result) return result.error().code();
 ```
 
-`ccsds::Manager` also has raw pointer + size overloads for application data, one-packet ingestion, and concatenated packet streams:
+PUS headers have standards-compatible default tailoring. Direction-specific tailoring types expose only optional layout choices such as PUS-A identifier widths, the PUS-A TM packet subcounter, spare octets, or an optional TM CUC timestamp. PUS-C TC source ID and TM destination ID are fixed at two octets by the supported layout.
+
+Canonical runtime/configuration selectors are `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, and `PUS:revC:TM`.
+
+See [PUS tailoring](docs/MISSION_TAILORING.md).
+
+## PUS parsing
+
+A Packet can use a preinstalled secondary header as its parsing schema:
 
 ```cpp
-manager.setApplicationData(payload, payloadSize);
-manager.addPacketFromBuffer(packetBytes, packetSize);
-manager.load(streamBytes, streamSize);
+ccsds::Packet packet;
+packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TmHeader>());
+const auto parsed = packet.deserialize(wire);
 ```
 
-These signatures intentionally coexist with the vector APIs. In v2.0 the raw parsing adapters still bridge to the existing vector-backed implementation internally. That keeps the public API useful now while leaving room for later zero-copy or heap-free internals without forcing callers to change again.
+or the typed convenience API:
 
-For low-copy inspection, a const Manager exposes references to its template, packet collection, and Validator through `getTemplateReference()`, `getPacketsReference()`, and `getValidatorReference()`.
+```cpp
+ccsds::Packet packet;
+const auto parsed =
+  packet.deserialize<ccsds::pus::rev_c::TmHeader>(wire);
+```
 
-See [Raw-buffer APIs](docs/RAW_BUFFERS.md).
+Optional tailoring can be passed to the typed constructor path. The parser checks the primary-header Packet Type against the concrete header direction and commits decoded state only after the complete parse succeeds.
 
-## Features
+## Manager stream model
 
-- CCSDS 133.0-B-2 EC2 Space Packet PDU construction and parsing;
-- exact bounded parsing with consumed-byte reporting;
-- raw pointer + size transport adapters and primary-header packet-size inspection;
-- concatenated packet-stream handling;
-- optional project-specific CRC16 trailer;
-- complete 11-bit APID handling and Idle Packet validation;
-- modulo-16384 sequence counting and segmentation utilities;
-- one configured Packet Identification value per `ccsds::Manager` instance;
-- low-copy const-reference Manager inspection;
-- custom and opaque secondary-header support;
-- PUS-A and PUS-C direction-specific TC/TM secondary headers;
-- separate fixed PUS and extensible custom secondary-header factories;
-- explicit mission-profile validation for revision, direction, identifiers, time, spare fields, and packet error control;
-- numeric basic CUC time with explicit epoch, P-field, and coarse/fine-width policy;
-- fixed-capacity structured `ccsds::ValidationReport` with named generic/PUS checks;
-- symbolic `errorCodeName()` and `validationCodeName()` diagnostics;
-- exception-free `Result` and `Error` handling;
-- C++17 hosted and bare-metal builds;
-- MCU builds compatible with `-fno-exceptions -fno-rtti`;
-- encoder, decoder, validator, and regression-test executables on hosted platforms;
-- installed CMake package and shared-library consumer tests.
+A `ccsds::Manager` represents one Packet Identification and one Packet Sequence Count stream. Its complete Packet template is the generation and receive contract, carrying Packet Identification, packet error control, secondary-header type, and any PUS tailoring.
+
+```cpp
+ccsds::Packet packetTemplate;
+packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 0, 0x155, ccsds::UNSEGMENTED, 0, 0});
+packetTemplate.setDataFieldSize(256);
+
+ccsds::Manager manager;
+manager.setPacketTemplate(packetTemplate);
+manager.setApplicationData(payload, payloadSize);
+```
+
+Manager supports unsegmented and segmented packet generation, modulo-16384 sequence counting, transactional stream loading, application-data reassembly, and optional external synchronization-pattern framing.
+
+Applications that manage multiple Packet Identification values use separate Manager instances or independent Packet objects.
 
 ## Structured validation
 
-`ccsds::Validator` validates an existing packet without mutating it. Reports use named `ValidationCode` values instead of positional boolean indices:
+`ccsds::Validator` returns a fixed-capacity `ccsds::ValidationReport` with named `ValidationCode` entries:
 
 ```cpp
 ccsds::Validator validator;
@@ -175,191 +154,105 @@ const auto report = validator.validate(packet);
 if (report.failed(ccsds::ValidationCode::PacketDataLength)) {
   handleLengthFailure();
 }
-
-if (report.failed(ccsds::ValidationCode::PusDirection)) {
-  handlePusDirectionFailure();
-}
 ```
 
-`ValidationReport` stores up to 32 performed checks in `std::array` and performs no dynamic allocation itself. The API is available in `CCSDS_MCU`, requires C++17, and does not require RTTI or exceptions.
+Checks cover generic packet structure, CRC16 when enabled, secondary-header presence/direction, segmentation and sequence continuity, Packet-template comparison, PUS revision/direction/tailoring, PUS field constraints, and CUC timestamp fit.
 
-The host-side `ccsds_validator` executable delegates protocol/profile checks to this library implementation rather than maintaining separate validation logic.
+`ValidationReport` stores its checks in `std::array` and performs no dynamic allocation itself. The Validator is available in `CCSDS_MCU` builds and requires neither RTTI nor exceptions.
 
 See [Structured validation](docs/VALIDATION.md).
 
-## PUS secondary headers
+## Raw transport buffers
 
-PUS selection is explicit and direction-safe. Canonical selectors are:
+CCSDSPack supports both `std::vector<std::uint8_t>` interfaces and pointer-plus-size transport interfaces.
 
-- `PUS:revA:TC` and `PUS:revA:TM`;
-- `PUS:revC:TC` and `PUS:revC:TM`.
-
-Custom headers remain string-keyed in `ccsds::SecondaryHeaderFactory`; the reserved PUS selectors are owned by the non-extensible `ccsds::pus::SecondaryHeaderFactory`.
+A receiver can determine the complete packet size from the six-byte primary header:
 
 ```cpp
-auto profile = ccsds::pus::makeProfile(
-  ccsds::pus::Revision::C,
-  ccsds::pus::Direction::Telecommand);
-
-ccsds::Packet packet;
-const auto primary = packet.setPrimaryHeader(
-  {0, 1, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
-if (!primary) return primary.error().code();
-
-const auto profileResult = packet.setMissionProfile(profile);
-if (!profileResult) return profileResult.error().code();
-
-const auto secondary = packet.setSecondaryHeader(
-  std::make_shared<ccsds::pus::rev_c::TcHeader>(
-    profile, 17, 1, 0x1234, 0x09));
-if (!secondary) return secondary.error().code();
-
-const auto data = packet.setApplicationData({0x10, 0x20});
-if (!data) return data.error().code();
-
-const auto wire = packet.serialize();
-if (!wire) return wire.error().code();
+const auto packetSize = ccsds::buffer::declaredPacketSize(
+  primaryHeader, sizeof(primaryHeader));
 ```
 
-## Build from source
+A complete buffer can then be parsed directly:
 
-### Requirements
+```cpp
+const auto consumed = ccsds::buffer::deserializeBounded(
+  packet, rxBuffer, receivedBytes);
+```
+
+Typed PUS raw parsing mirrors the vector API. The v2.0.0 implementation currently bridges these raw entry points through vector-backed parsing internally; it does not claim zero-copy or globally heap-free Packet/Manager storage.
+
+See [Raw-buffer APIs](docs/RAW_BUFFERS.md).
+
+## Numeric CUC time
+
+TM tailoring can enable basic numeric CUC timestamps with:
+
+- CCSDS 1958 TAI or agency-defined epoch metadata;
+- implicit or explicit basic one-octet P-field;
+- 1 to 4 coarse octets;
+- 0 to 3 fine octets;
+- validated counter-width and P-field consistency.
+
+CCSDSPack represents the numeric time code. Calendar conversion, leap-second handling, agency-epoch definition, and mission time correlation remain application responsibilities.
+
+## Library architecture
+
+![CCSDSPack library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
+
+The protocol library is C++17 and supports hosted shared-library builds and bare-metal static-library builds. `CCSDSPACK_BUILD_MCU=ON` excludes host-only configuration and command-line components while retaining Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, and Validator.
+
+MCU builds can use `-fno-exceptions -fno-rtti`. The library as a whole is not described as heap-free; fixed-capacity/no-allocation claims apply specifically where documented, such as `ValidationReport`.
+
+## Build and install
+
+Requirements:
 
 - CMake 3.16 or newer;
-- a C++17 compiler;
-- GCC 8.5 or newer on supported Linux configurations.
+- a C++17 compiler.
 
 ```bash
 git clone https://github.com/ExoSpaceLabs/CCSDSPack.git
 cd CCSDSPack
-cmake -S . -B build
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
-```
-
-Run the regression tester from the repository binary directory:
-
-```bash
-./bin/CCSDSPack_tester
-```
-
-Install the library and exported package:
-
-```bash
 cmake --install build
 ```
 
-### Main CMake options
-
-| CMake option | Default | Description |
-|---|---:|---|
-| `CCSDSPACK_BUILD_MCU` | `OFF` | Build the bare-metal static-library profile |
-| `CCSDSPACK_MCU_FLAGS` | empty | Additional flags for the MCU library target |
-| `ENABLE_TESTER` | `ON` | Build `CCSDSPack_tester` |
-| `ENABLE_ENCODER` | `ON` | Build `ccsds_encoder` |
-| `ENABLE_DECODER` | `ON` | Build `ccsds_decoder` |
-| `ENABLE_VALIDATOR` | `ON` | Build `ccsds_validator` |
-
-### Windows with MinGW
-
-```powershell
-cmake -S . -B build -G "MinGW Makefiles"
-cmake --build build
-```
-
-The Windows workflow copies the shared-library DLL beside the test, example, and external-consumer executables before running them.
-
-### Bare-metal Cortex-M
-
-```bash
-cmake -S . -B build-mcu \
-  -DCCSDSPACK_BUILD_MCU=ON \
-  -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-none-eabi.cmake \
-  -DCCSDSPACK_MCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb"
-cmake --build build-mcu -j
-```
-
-Host-only `ccsds::Config` and CLI executables are excluded from the MCU target. Packet, Manager, raw-buffer adapters, PUS, CUC, Result, and Validator APIs remain available to the static-library consumer.
-
-## CMake integration
-
-After installing CCSDSPack:
+Installed consumers use the exported package:
 
 ```cmake
 find_package(CCSDSPack 2.0 CONFIG REQUIRED)
-
-add_executable(my_app main.cpp)
 target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
 target_compile_features(my_app PRIVATE cxx_std_17)
 ```
 
-For a non-standard install prefix:
-
-```bash
-cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/install/prefix
-```
-
-The [`example/`](example/README.md) directory contains independent installed-package consumers and complete generic/PUS configuration profiles. Build all examples, or select one by directory name:
-
-```bash
-./example/build_examples.sh all /path/to/install/prefix
-./example/build_examples.sh raw_buffer_packet /path/to/install/prefix
-./example/build_examples.sh raw_buffer_manager /path/to/install/prefix
-./example/build_examples.sh pus_c_telecommand /path/to/install/prefix
-```
+Standalone `find_package()` examples are available under [`example/`](example/README.md).
 
 ## Command-line tools
 
-Hosted builds can provide:
+Hosted builds provide:
 
-- `ccsds_encoder`;
-- `ccsds_decoder`;
-- `ccsds_validator`;
-- `CCSDSPack_tester`.
+- `ccsds_encoder` for packet generation;
+- `ccsds_decoder` for packet-stream decoding and application-data recovery;
+- `ccsds_validator` for parser and structured validation diagnostics;
+- `CCSDSPack_tester` for the native regression/conformance suite.
 
-See [CLI reference](docs/CLI.md).
+See [Command-line tools](docs/CLI.md).
 
 ## Documentation
 
 - [Documentation index](docs/README.md)
-- [Raw-buffer APIs](docs/RAW_BUFFERS.md)
+- [Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
+- [Compliance statement](COMPLIANCE.md)
+- [Detailed CCSDS compliance matrix](CCSDS_COMPLIANCE.md)
+- [PUS tailoring](docs/MISSION_TAILORING.md)
 - [Structured validation](docs/VALIDATION.md)
-- [CCSDS compliance baseline](docs/CCSDS_COMPLIANCE.md)
-- [CCSDS 133.0-B-2 EC2 PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
-- [PUS and mission tailoring](docs/MISSION_TAILORING.md)
-- [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md)
-- [CLI reference](docs/CLI.md)
-- [Configuration reference](docs/CONFIG.md)
-- [Error handling](docs/ERROR.md)
-- [Packages](docs/PACKAGES.md)
-- [Cross-build guide](docs/CROSSBUILD.md)
+- [Configuration](docs/CONFIG.md)
+- [Raw-buffer APIs](docs/RAW_BUFFERS.md)
 - [Examples](docs/EXAMPLES.md)
-- [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/)
-
-## Compatibility
-
-v2 is a breaking **source/API and PUS-layout** release. The generic Space Packet wire corrections introduced by v1.2.0 are retained rather than being reintroduced as v2 changes.
-
-The principal v1.2-to-v2 changes include:
-
-- namespace `CCSDS` to `ccsds`;
-- removal of project-specific `PusA`, `PusB`, and `PusC`;
-- explicit PUS-A/PUS-C revision and direction types;
-- explicit mission profiles and numeric CUC time;
-- secondary-header API renaming;
-- checked serialization/finalization results;
-- structured named Validator reports;
-- raw pointer + size transport adapters alongside vector convenience APIs;
-- v2 configuration schema and canonical PUS selectors.
-
-See [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md).
-
-## Packages and container
-
-Release packages are published under GitHub Releases. Container images use:
-
-```bash
-docker pull ghcr.io/exospacelabs/ccsdspack:<version>
-```
+- [Packages and cross-builds](docs/PACKAGES.md)
+- [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md)
 
 ## License
 

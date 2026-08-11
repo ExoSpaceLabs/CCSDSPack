@@ -13,14 +13,21 @@ namespace ccsds::pus {
   /** @brief Fixed, non-extensible registry for standards-defined PUS codecs. */
   class SecondaryHeaderFactory {
   public:
-    /** @brief Creates a PUS codec from typed revision and direction values. */
+    /** @brief Creates a default-tailored PUS codec from revision and packet direction. */
     [[nodiscard]] Result<std::shared_ptr<SecondaryHeaderAbstract>> create(
-      Revision revision, Direction direction, const MissionProfile &profile) const;
-    /** @brief Creates a PUS codec from its canonical selector. */
+      Revision revision, PacketDirection direction) const;
+
+    /** @brief Creates a default-tailored PUS codec from its canonical selector. */
     [[nodiscard]] Result<std::shared_ptr<SecondaryHeaderAbstract>> create(
-      const std::string &selector, const MissionProfile &profile) const;
+      const std::string &selector) const;
+
+    /** @brief Clones one concrete PUS header, retaining its tailoring and current values. */
+    [[nodiscard]] Result<std::shared_ptr<SecondaryHeaderAbstract>> clone(
+      const SecondaryHeader &header) const;
+
     /** @brief Returns whether a canonical PUS selector is supported. */
     [[nodiscard]] bool typeIsSupported(const std::string &selector) const;
+
     /** @brief Returns whether a selector belongs to the reserved PUS namespace. */
     [[nodiscard]] static bool isPusSelector(const std::string &selector) {
       return selector.rfind("PUS:", 0U) == 0U;

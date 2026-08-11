@@ -5,24 +5,23 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 #include "tests.h"
 
 namespace {
-  bool writeConfig(const std::string &path, const int version,
-                   const char *secondaryHeaderFlagKey = "ccsds_secondary_header_flag") {
+  bool writeConfig(const std::string &path, const int version) {
     std::ofstream file(path, std::ios::trunc);
     if (!file) return false;
 
     file << "ccsds_version_number:int=" << version << '\n'
-         << "mission_profile:string=generic\n"
          << "ccsds_packet_error_control:string=crc16\n"
          << "ccsds_type:bool=false\n"
-         << secondaryHeaderFlagKey << ":bool=false\n"
          << "ccsds_APID:int=1\n"
          << "ccsds_segmented:bool=false\n"
-         << "data_field_size:int=8\n";
+         << "data_field_size:int=8\n"
+         << "define_secondary_header:bool=false\n";
     return static_cast<bool>(file);
   }
 }
@@ -55,14 +54,28 @@ void testGroupConformance(TestManager *tester, const std::string &description) {
     return validResult && !invalidResult;
   });
 
-  tester->unitTest("Configuration requires the v2 secondary-header flag key", []() {
-    const std::string path = "ccsdspack_legacy_secondary_header_flag.cfg";
-    if (!writeConfig(path, 0, "ccsds_data_field_header_flag")) return false;
+  tester->unitTest("Configuration does not require a duplicated secondary-header flag", []() {
+    const std::string path = "ccsdspack_inferred_secondary_header_flag.cfg";
+    if (!writeConfig(path, 0)) return false;
 
     ccsds::Packet packet;
     const auto result = packet.loadFromConfigFile(path);
     std::remove(path.c_str());
-    return !result && result.error().code() == ccsds::CONFIG_FILE_ERROR;
+    return result
+           && packet.getPrimaryHeader().getSecondaryHeaderFlag() == 0U
+           && !packet.getSecondaryHeader();
+  });
+
+  tester->unitTest("Directional PUS header synchronizes the secondary-header flag and Packet Type", []() {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setPrimaryHeader(ccsds::PrimaryHeader{
+      0, 0, 0, 1, ccsds::UNSEGMENTED, 0, 0
+    }));
+    TEST_VOID(packet.setSecondaryHeader(
+      std::make_shared<ccsds::pus::rev_c::TcHeader>()));
+    return packet.getPrimaryHeader().getSecondaryHeaderFlag() == 1U
+           && packet.getPrimaryHeader().getType() == 1U
+           && packet.getDirection() == ccsds::PacketDirection::Telecommand;
   });
 
   tester->unitTest("Idle Packet rejects a secondary header", []() {

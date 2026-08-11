@@ -5,18 +5,17 @@ SPDX-License-Identifier: Apache-2.0
 
 # Configuration file
 
-[Main README](../README.md) | [Mission tailoring](MISSION_TAILORING.md) | [CLI](CLI.md)
+[Main README](../README.md) | [PUS tailoring](MISSION_TAILORING.md) | [CLI](CLI.md)
 
-CCSDSPack configuration files use one typed entry per line:
+Hosted CCSDSPack configuration files use one typed entry per line:
 
 ```ini
 <key>:<type>=<value>
 ```
 
-Lines beginning with `#` are comments. The host-only parser is
-`ccsds::Config`. Configuration parsing is intentionally excluded from
-`CCSDS_MCU`; bare-metal applications construct `ccsds::MissionProfile` and
-packet objects directly in C++17.
+Lines beginning with `#` are comments. The parser is `ccsds::Config`; configuration parsing is excluded from `CCSDS_MCU` builds.
+
+The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring.
 
 ## Value types
 
@@ -26,130 +25,114 @@ packet objects directly in C++17.
 | `int` | Signed 32-bit decimal or hexadecimal integer |
 | `uint` | Unsigned 64-bit decimal or hexadecimal integer |
 | `float` | Floating-point value |
-| `string` | Text, optionally enclosed in double quotes |
-| `bytes` | Comma-separated octets such as `[0x01, 2, 255]` |
+| `string` | Text, optionally quoted |
+| `bytes` | Comma-separated octets, e.g. `[0x01, 2, 255]` |
 
-Use `uint` for PUS identifiers, counters, and numeric time values so the full
-configured wire width is available.
-
-```cpp
-ccsds::Config config;
-const auto loaded = config.load("mission.cfg");
-if (!loaded) return loaded.error().code();
-
-const auto coarse = config.get<std::uint64_t>("pus_time_coarse");
-```
-
-## Common packet profile
-
-Every v2 packet configuration explicitly declares its profile and packet-error
-control:
+## Generic Packet configuration
 
 ```ini
-mission_profile:string=generic
 ccsds_packet_error_control:string=crc16
 data_field_size:int=1024
-
 ccsds_version_number:int=0
 ccsds_type:bool=false
-ccsds_secondary_header_flag:bool=false
 ccsds_APID:int=0x123
 ccsds_segmented:bool=false
 define_secondary_header:bool=false
 ```
 
-| Key | Type | Required | Constraint |
-|---|---|---:|---|
-| `mission_profile` | string | yes | `generic` or `pus` |
-| `ccsds_packet_error_control` | string | yes | `crc16` or `none` |
-| `data_field_size` | int | optional | Manager application-data capacity, `0..65535` |
-| `ccsds_version_number` | int | yes | `0` |
-| `ccsds_type` | bool | yes | `false` TM, `true` TC |
-| `ccsds_secondary_header_flag` | bool | yes | Must agree with the selected profile/header |
-| `ccsds_APID` | int | yes | `0..2047`; `2047` is the Idle Packet APID |
-| `ccsds_segmented` | bool | yes | Initial segmented/unsegmented template state |
-| `define_secondary_header` | bool | yes for PUS | PUS requires `true` |
-| `secondary_header_type` | string | when enabled | Canonical PUS selector or registered custom type |
-| `application_data` | bytes | optional | Initial application or Idle Packet data |
+| Key | Required | Constraint |
+|---|---:|---|
+| `ccsds_packet_error_control` | optional | `crc16` or `none`; default `crc16` |
+| `data_field_size` | optional | content capacity `0..65535` |
+| `ccsds_version_number` | yes | `0` |
+| `ccsds_type` | for direction-neutral packets | `false` TM, `true` TC |
+| `ccsds_APID` | yes | `0..2047` |
+| `ccsds_segmented` | yes | initial segmented/unsegmented template state |
+| `define_secondary_header` | optional | default `false` |
+| `secondary_header_type` | when enabled | canonical PUS selector or registered custom type |
+| `application_data` | optional | initial application or Idle Packet data |
 
-`data_field_size` is a capacity setting. Packet Data Length is calculated during
-serialization from the bytes actually present.
+The Secondary Header Flag is derived from the installed secondary-header object. `data_field_size` is capacity; Packet Data Length is calculated from the actual serialized content.
 
-The CLI framing keys are `sync_pattern_enable`, optional `sync_pattern`, and
-`validation_enable` for decoder validation behavior.
+## PUS identity
 
-## PUS profile
+A PUS configuration selects one concrete header:
 
-A PUS configuration additionally requires an exact revision, direction, and
-canonical selector:
+```ini
+define_secondary_header:bool=true
+secondary_header_type:string=PUS:revC:TC
+```
 
-| Key | Type | Applies to | Constraint |
-|---|---|---|---|
-| `pus_revision` | string | all PUS | `A` or `C` |
-| `pus_direction` | string | all PUS | `TC` or `TM` |
-| `secondary_header_type` | string | all PUS | `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, or `PUS:revC:TM` |
-| `secondary_header_spare_octets` | int | all PUS | `0..255`; encoded spares must be zero |
-| `pus_service_type` | uint | all PUS | `0..255` |
-| `pus_service_subtype` | uint | all PUS | `0..255` |
-
-### Telecommand fields
-
-| Key | Type | Constraint |
+| Selector | Concrete class | Direction |
 |---|---|---|
-| `pus_source_id_octets` | int | `0`, `1`, `2`, or `4`; PUS-C requires `2` |
-| `pus_acknowledgement_flags` | uint | four-bit field, `0..15` |
-| `pus_source_id` | uint | Must fit `pus_source_id_octets` |
+| `PUS:revA:TC` | `ccsds::pus::rev_a::TcHeader` | Telecommand |
+| `PUS:revA:TM` | `ccsds::pus::rev_a::TmHeader` | Telemetry |
+| `PUS:revC:TC` | `ccsds::pus::rev_c::TcHeader` | Telecommand |
+| `PUS:revC:TM` | `ccsds::pus::rev_c::TmHeader` | Telemetry |
 
-### Telemetry fields
+For a directional PUS header, `ccsds_type` may be omitted. If supplied, it must agree with the concrete direction.
 
-| Key | Type | Constraint |
+Common packet fields:
+
+| Key | Constraint |
+|---|---|
+| `secondary_header_spare_octets` | optional `0..255`, encoded as zero bytes |
+| `pus_service_type` | `0..255` |
+| `pus_service_subtype` | `0..255` |
+
+## Telecommand fields
+
+| Key | Applies to | Constraint |
 |---|---|---|
-| `pus_destination_id_octets` | int | `0`, `1`, `2`, or `4`; PUS-C requires `2` |
-| `pus_time_format` | string | `none` or `cuc` |
-| `pus_a_tm_packet_subcounter_present` | bool | Optional for PUS-A TM only |
-| `pus_packet_subcounter` | uint | Required when the PUS-A subcounter is present; `0..255` |
-| `pus_message_type_counter` | uint | PUS-C TM only; `0..65535` |
-| `pus_time_reference_status` | uint | PUS-C TM only; four-bit field, `0..15` |
-| `pus_destination_id` | uint | Must fit `pus_destination_id_octets` |
+| `pus_source_id_octets` | PUS-A TC | `0`, `1`, `2`, or `4` |
+| `pus_acknowledgement_flags` | PUS-A/C TC | `0..15` |
+| `pus_source_id` | PUS-A/C TC | must fit active width |
 
-### CUC telemetry time
+PUS-C TC source ID width is fixed at two octets.
 
-When `pus_time_format:string=cuc`, all of these keys are required:
+## Telemetry fields
 
-| Key | Type | Constraint |
+| Key | Applies to | Constraint |
 |---|---|---|
-| `pus_time_epoch` | string | `ccsds-1958-tai` or `agency-defined` |
-| `pus_time_p_field` | string | `implicit` or `explicit` |
-| `pus_time_coarse_octets` | int | `1..4` |
-| `pus_time_fine_octets` | int | `0..3` |
-| `pus_time_coarse` | uint | Integral seconds fitting the coarse width |
-| `pus_time_fine` | uint | Binary fractional counter fitting the fine width |
+| `pus_destination_id_octets` | PUS-A TM | `0`, `1`, `2`, or `4` |
+| `pus_a_tm_packet_subcounter_present` | PUS-A TM | optional boolean tailoring |
+| `pus_packet_subcounter` | PUS-A TM | `0..255` when present |
+| `pus_message_type_counter` | PUS-C TM | `0..65535` |
+| `pus_time_reference_status` | PUS-C TM | `0..15` |
+| `pus_destination_id` | PUS-A/C TM | must fit active width |
+| `pus_time_format` | PUS-A/C TM | `none` or `cuc` |
 
-For an explicit P-field, the codec writes and verifies the one-octet basic CUC
-preamble. For an implicit P-field, the wire contains only the coarse and fine
-T-field counters.
+PUS-C TM destination ID width is fixed at two octets.
 
-Complete executable configurations are committed in
-[`example/config`](../example/config), including PUS-C TM profiles with and
-without a CUC time field.
+## CUC telemetry time
 
-## Validation ownership
+```ini
+pus_time_format:string=cuc
+pus_time_epoch:string=ccsds-1958-tai
+pus_time_p_field:string=explicit
+pus_time_coarse_octets:int=4
+pus_time_fine_octets:int=2
+pus_time_coarse:uint=0x01020304
+pus_time_fine:uint=0xA0B0
+```
 
-Configuration selects the expected wire profile. It does not replace runtime
-validation. `ccsds::Packet` validates profile-dependent parsing/finalization and
-`ccsds::Validator` reports named generic and PUS checks through
-`ccsds::ValidationReport`. See [VALIDATION.md](VALIDATION.md).
+| Key | Constraint |
+|---|---|
+| `pus_time_epoch` | `ccsds-1958-tai` or `agency-defined` |
+| `pus_time_p_field` | `implicit` or `explicit` |
+| `pus_time_coarse_octets` | `1..4` |
+| `pus_time_fine_octets` | `0..3` |
+| `pus_time_coarse` | must fit configured coarse width |
+| `pus_time_fine` | must fit configured fine width |
+
+## Packet error control
+
+`ccsds_packet_error_control` configures the enclosing Packet independently of the selected secondary-header type. In `crc16` mode the CCSDSPack CRC16 trailer is appended at Packet level.
 
 ## Idle Packets
 
-APID `0x7FF` is reserved for Idle Packets. A valid Idle Packet configuration
-uses a generic profile, disables the secondary header, and supplies non-empty
-mission-defined `application_data`. CCSDSPack validates the structure but not the
-mission-specific fill pattern.
+APID `0x7FF` identifies Idle Packets. A valid Idle Packet configuration has no secondary header and provides non-empty mission-defined `application_data`. CCSDSPack validates the structure, not the fill pattern.
 
-## Removed v1 keys
+Complete configurations are maintained under [`example/config`](../example/config).
 
-The v1 `pus_version`, `pus_event_id`, and `pus_time_code` fields and the
-`secondary_header_type=PusA|PusB|PusC` categories are rejected. They are not
-silently mapped to standards-compliant PUS layouts. See
-[MIGRATION_V1_TO_V2.md](MIGRATION_V1_TO_V2.md).
+Upgrade-specific configuration-key mapping is documented in [MIGRATION_V1_TO_V2.md](MIGRATION_V1_TO_V2.md).

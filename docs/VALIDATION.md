@@ -1,8 +1,8 @@
 # Structured packet validation
 
-CCSDSPack v2 exposes packet validation through `ccsds::Validator` and the fixed-capacity `ccsds::ValidationReport`.
+CCSDSPack exposes packet validation through `ccsds::Validator` and the fixed-capacity `ccsds::ValidationReport`.
 
-The validator is part of the C++17 library and is compiled in both hosted and `CCSDS_MCU` builds. It does not require exceptions or RTTI. The report itself stores checks in a fixed `std::array` and performs no dynamic allocation.
+The Validator is part of both hosted and `CCSDS_MCU` C++17 builds. It does not require RTTI or exceptions. The report stores checks in `std::array` and performs no dynamic allocation itself.
 
 ## Basic use
 
@@ -20,77 +20,68 @@ if (!report.valid()) {
 }
 ```
 
-`validate()` does not modify the `Packet`, its mission profile, or its secondary header. A Validator does retain sequence-stream state between calls when sequence validation is enabled.
+Validation is read-only with respect to the Packet and its secondary header. A Validator retains sequence-stream state between calls when sequence validation is enabled.
 
-## Structured checks
+## Validation model
 
-`ValidationCode` names the performed checks. Callers do not depend on positional report indices.
+Validation follows the object model directly:
 
-Generic Space Packet checks include:
+- Packet-level PEC/CRC belongs to `ccsds::Packet`;
+- packet direction is represented by the CCSDS primary-header Packet Type;
+- directional secondary headers report `ccsds::PacketDirection`;
+- PUS revision/direction are intrinsic to the concrete PUS header class;
+- optional PUS layout choices are stored in that header's tailoring;
+- a Manager Packet template is the complete stream contract.
+
+This provides one validation source for the same state used by serialization and parsing.
+
+## Named checks
+
+Generic checks include:
 
 - `PrimaryHeader`;
 - `PacketVersion`;
 - `PacketDataLength`;
-- `Crc16` when CRC16 packet error control is enabled;
+- `Crc16` when enabled;
 - `SecondaryHeaderPresence`;
+- `SecondaryHeaderDirection`;
 - `SequenceFlags`;
-- `SequenceCount` when sequence-count validation is enabled;
-- `PacketIdentifier` and `SegmentationClass` when template comparison is enabled;
-- `MissionProfile` and `TemplateMissionProfile`.
+- `SequenceCount`;
+- `PacketIdentifier`;
+- `SegmentationClass`;
+- `TemplatePacketErrorControl`;
+- `TemplateSecondaryHeader`.
 
-PUS profiles additionally expose checks for:
+PUS headers additionally expose applicable checks for:
 
-- `PacketErrorControlProfile`;
 - `PusHeader`;
 - `PusRevision`;
 - `PusDirection`;
 - `PusPacketType`;
-- `PusProfile`;
+- `PusTailoring`;
 - `PusSecondaryHeaderSize`;
 - `PusReservedBits`;
 - `PusSpareFields`;
-- `PusAcknowledgement` and `PusSourceId` for telecommands;
-- `PusDestinationId` for telemetry;
-- `PusPacketSubcounter` for PUS-A telemetry;
-- `PusTimeReferenceStatus` for PUS-C telemetry;
-- `PusTimestamp` for the configured CUC timestamp policy.
+- `PusAcknowledgement`;
+- `PusSourceId`;
+- `PusDestinationId`;
+- `PusPacketSubcounter`;
+- `PusTimeReferenceStatus`;
+- `PusTimestamp`.
 
-Only checks that are relevant and actually performed are stored in a report. For example, a CRC-free profile does not create a `Crc16` entry.
+Only checks that are actually performed are stored. For example, a Packet using `PacketErrorControlMode::None` does not produce a `Crc16` entry.
 
-## Querying a report
-
-```cpp
-const auto report = validator.validate(packet);
-
-if (report.failed(ccsds::ValidationCode::PacketDataLength)) {
-  // handle a length mismatch
-}
-
-if (report.failed(ccsds::ValidationCode::PusDirection)) {
-  // handle a revision/direction/profile mismatch
-}
-
-if (report.contains(ccsds::ValidationCode::Crc16)
-    && report.failed(ccsds::ValidationCode::Crc16)) {
-  // CRC16 was enabled and failed
-}
-```
-
-`ValidationReport::Capacity` is fixed at 32 checks. The v2 validation set is bounded below that capacity.
+`ValidationReport::Capacity` is 32 checks.
 
 ## Stateful sequence validation
 
-`Validator` represents one sequence-validation stream. With packet-coherence and sequence-count validation enabled, it checks:
+A Validator represents one sequence-validation stream. When enabled it checks legal segmented/unsegmented transitions, Packet Sequence Count continuity, and modulo-16384 rollover. Sequence state advances only after the enabled checks for a packet pass.
 
-- legal segmented/unsegmented transitions;
-- Packet Sequence Count continuity;
-- modulo-16384 rollover.
-
-Sequence state advances only after the enabled validation checks for the packet pass. Call `clear()` before reusing the Validator for an unrelated stream.
+Call `clear()` before using a Validator for an unrelated stream.
 
 ## Template validation
 
-A packet template can be installed with `setTemplatePacket()` and enabled with `configure()`:
+A complete Packet template can be installed with `setTemplatePacket()`:
 
 ```cpp
 ccsds::Validator validator;
@@ -98,23 +89,15 @@ validator.setTemplatePacket(packetTemplate);
 validator.configure(true, true, true);
 ```
 
-Template validation compares:
+Template validation compares Packet Identification, segmentation class, packet-level PEC, secondary-header presence, concrete secondary-header type/direction, and PUS tailoring where applicable. Packet Sequence Count and Packet Data Length remain stream-varying fields.
 
-- the complete Packet Identification value;
-- segmented versus unsegmented class;
-- the complete `MissionProfile` wire tailoring.
+## Parser validation and object validation
 
-Sequence Flags, Packet Sequence Count, and Packet Data Length are not treated as fixed Packet Identification fields.
+Wire-level failures can occur before a complete Packet object exists. `deserializeBounded()` is responsible for packet boundary checks, primary-header parsing, CRC verification, and secondary-header decoding. It commits state only after parsing succeeds.
 
-## Parser validation versus object validation
+`Validator` then checks the resulting object and its relationships. The hosted `ccsds_validator` command uses the same Packet parser and Validator implementation rather than a parallel protocol checker.
 
-Malformed wire bytes can fail before a `Packet` object is produced. `deserializeBounded()` remains responsible for bounded parsing, primary-header decoding, declared packet size, CRC verification, and secondary-header decoding.
-
-`Validator` operates on an existing `Packet` and provides structured named checks for the packet state and the selected profile. The command-line `ccsds_validator` uses these library paths rather than maintaining a separate protocol-validation implementation.
-
-## Bare-metal profile
-
-The validation API is intentionally compatible with the v2 MCU build:
+## Bare-metal build
 
 ```bash
 cmake -S . -B build-mcu \
@@ -123,4 +106,4 @@ cmake -S . -B build-mcu \
   -DCCSDSPACK_MCU_FLAGS="-fno-exceptions -fno-rtti"
 ```
 
-The project language standard remains C++17. Host-only `ccsds::Config` and command-line tools are excluded from `CCSDS_MCU`, while `ccsds::Validator`, `ValidationCode`, and `ValidationReport` remain part of the static-library API.
+Host-only `ccsds::Config` and command-line tools are excluded from `CCSDS_MCU`; Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, `Validator`, `ValidationCode`, and `ValidationReport` remain available.

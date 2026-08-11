@@ -1,69 +1,188 @@
-# Migrating CCSDSPack v1 to v2
+# Migrating CCSDSPack v1.2 to v2.0
 
-CCSDSPack v2 intentionally breaks source compatibility. It removes project-specific formats that could be mistaken for ECSS PUS revisions and makes packet finalization, mission tailoring, validation, and time encoding explicit.
+This document is the authoritative source for source, configuration, CLI, package, and wire-format changes when upgrading a v1.2 application to v2.0. Current v2 behavior is documented elsewhere without migration history.
 
-## Namespace migration
+## Migration summary
 
-The public C++ namespace is lowercase in v2:
+The main upgrade areas are:
+
+- public namespace `CCSDS` to `ccsds`;
+- secondary-header terminology and APIs;
+- standards-oriented PUS-A/PUS-C TC/TM concrete types;
+- Packet-centered ownership instead of duplicated profile state;
+- checked Result-based finalization/serialization;
+- named structured Validator reports;
+- updated hosted configuration selectors;
+- raw pointer-plus-size transport interfaces;
+- package major version/SOVERSION 2.
+
+## Namespace
 
 ```cpp
-// v1
+// v1.2
 CCSDS::Packet packet;
 
-// v2
+// v2.0
 ccsds::Packet packet;
 ```
 
-There is no compatibility alias. CMake package and target names remain `CCSDSPack` and `ccsdspack::CCSDSPack`.
+There is no uppercase namespace compatibility alias. The installed CMake package remains `CCSDSPack` and the imported target remains `ccsdspack::CCSDSPack`.
 
-Standards-defined PUS codecs use revision namespaces:
+## Generic Packet example
 
-| Removed v1 concept | v2 type |
+Typical v1.2 source:
+
+```cpp
+CCSDS::Packet packet;
+packet.setPrimaryHeader(CCSDS::PrimaryHeader{
+  0, 0, 0, 0x123, CCSDS::UNSEGMENTED, 0, 0});
+packet.setApplicationData({0x10, 0x20});
+const auto wire = packet.serialize();
+```
+
+v2.0 source:
+
+```cpp
+ccsds::Packet packet;
+packet.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
+packet.setApplicationData({0x10, 0x20});
+
+const auto wire = packet.serialize();
+if (!wire) return wire.error().code();
+send(wire.value());
+```
+
+## PUS migration
+
+The v1.2 `PusA`, `PusB`, and `PusC` classes were project-specific formats and do not have a byte-for-byte standards mapping. Migration therefore starts from the intended standard revision/direction and mission fields, not from a class-name substitution.
+
+| v1.2 concept | v2.0 direction |
 |---|---|
-| `PusA` | `ccsds::pus::rev_a::TcHeader` or `ccsds::pus::rev_a::TmHeader` |
-| `PusB` | No replacement; no standards-facing PUS-B revision exists |
-| `PusC` | `ccsds::pus::rev_c::TcHeader` or `ccsds::pus::rev_c::TmHeader` |
-| mixed factory | `ccsds::SecondaryHeaderFactory` for custom types plus fixed `ccsds::pus::SecondaryHeaderFactory` |
+| `PusA` project header | select the intended `rev_a::TcHeader` or `rev_a::TmHeader` |
+| `PusC` project header | select the intended `rev_c::TcHeader` or `rev_c::TmHeader` |
+| `PusB` event field | place the event identifier in the appropriate service/application data or a deliberately proprietary custom secondary header |
+| mixed secondary-header factory | custom `ccsds::SecondaryHeaderFactory` plus fixed `ccsds::pus::SecondaryHeaderFactory` |
 
-The canonical string selectors remain `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, and `PUS:revC:TM`. Custom registration cannot claim the reserved `PUS:` prefix.
+### PUS-A telecommand
 
-## Secondary-header API naming
+Representative v1.2 project header:
 
-| Removed name | v2 name |
+```cpp
+PusA oldHeader(1, serviceType, serviceSubtype, sourceId, dataLength);
+```
+
+v2.0 PUS-A TC:
+
+```cpp
+ccsds::pus::rev_a::TcTailoring tailoring;
+tailoring.sourceIdOctets = 1;
+
+packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_a::TcHeader>(
+    tailoring, serviceType, serviceSubtype, sourceId, acknowledgementFlags));
+```
+
+### PUS-A telemetry
+
+The same v1.2 project header must be reinterpreted from mission intent rather than wire compatibility. A v2.0 PUS-A TM is explicit:
+
+```cpp
+ccsds::pus::rev_a::TmTailoring tailoring;
+tailoring.destinationIdOctets = 1;
+tailoring.packetSubcounterPresent = true;
+
+packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_a::TmHeader>(
+    tailoring, serviceType, serviceSubtype,
+    packetSubcounter, destinationId, timestamp));
+```
+
+### PUS-C telecommand
+
+Representative v1.2 variable-time project header:
+
+```cpp
+PusC oldHeader(2, serviceType, serviceSubtype,
+               sourceId, timeCodeBytes, dataLength);
+```
+
+v2.0 PUS-C TC:
+
+```cpp
+packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TcHeader>(
+    serviceType, serviceSubtype, sourceId, acknowledgementFlags));
+```
+
+PUS-C TC source ID is two octets in the supported layout.
+
+### PUS-C telemetry
+
+```cpp
+ccsds::pus::rev_c::TmTailoring tailoring;
+tailoring.timestampPresent = true;
+tailoring.cuc = {
+  ccsds::time::Epoch::Ccsds1958Tai,
+  ccsds::time::PFieldMode::Explicit,
+  4, 2
+};
+
+packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TmHeader>(
+    tailoring, serviceType, serviceSubtype,
+    messageTypeCounter, destinationId,
+    timeReferenceStatus, timestamp));
+```
+
+PUS-C TM destination ID is two octets.
+
+## PUS-B event identifiers
+
+The v1.2 `PusB` `eventID` field was part of a project-specific secondary header. v2.0 does not assign that field an ECSS meaning automatically. Migration should choose one of:
+
+1. encode the event identifier in the application/service data defined by the mission's PUS service;
+2. preserve a proprietary wire field through a clearly named custom secondary-header implementation.
+
+A proprietary event field should not be relabeled as a standards PUS field without a normative mapping.
+
+## Secondary-header API names
+
+| v1.2 | v2.0 |
 |---|---|
 | `setDataFieldHeader(...)` | `setSecondaryHeader(...)` |
 | `getDataFieldHeader()` | `getSecondaryHeader()` |
 | `getDataFieldHeaderBytes()` | `getSecondaryHeaderBytes()` |
 | `getDataFieldHeaderFactory()` | `getSecondaryHeaderFactory()` |
-| `getPusDataFieldHeaderFactory()` | `getPusSecondaryHeaderFactory()` |
 | `getDataFieldHeaderFlag()` | `getSecondaryHeaderFlag()` |
-| `setDataFieldHeaderFlag(...)` | `setSecondaryHeaderFlag(...)` |
 
-The configuration key is `ccsds_secondary_header_flag`; the former `ccsds_data_field_header_flag` is rejected.
+Packet-level secondary-header presence is normally derived from the installed object.
 
-## Checked serialization
+## Packet ownership and direction
 
-v1 used an empty byte vector as the only finalization-failure signal. v2 returns the existing exception-free result types:
+v2.0 uses `ccsds::PacketDirection` for generic directional headers. PUS revision/direction come from the concrete `rev_a`/`rev_c` plus `TcHeader`/`TmHeader` type. Installing a directional header synchronizes the primary-header Packet Type.
 
-| v1 API | v2 API |
-|---|---|
-| `std::vector<std::uint8_t> Packet::serialize()` | `ccsds::ResultBuffer Packet::serialize()` |
-| `void Packet::update()` | `ccsds::ResultBool Packet::update()` |
-| `std::vector<std::uint8_t> DataField::serialize()` | `ccsds::ResultBuffer DataField::serialize()` |
-| `std::vector<std::uint8_t> Manager::getPacketsBuffer()` | `ccsds::ResultBuffer Manager::getPacketsBuffer()` |
+Packet error control remains generic Packet policy:
 
 ```cpp
-const auto wire = packet.serialize();
-if (!wire) {
-  log(wire.error().code(), wire.error().message());
-  return wire.error().code();
-}
-send(wire.value());
+packet.setPacketErrorControlMode(
+  ccsds::PacketErrorControlMode::None);
 ```
 
-## Validator migration
+## Checked finalization and serialization
 
-The v1/v1.2 Validator exposed a boolean result and a positional six-element `std::vector<bool>` report. v2 replaces those positional report semantics with named checks:
+| v1.2 API | v2.0 API |
+|---|---|
+| `Packet::serialize()` byte vector | `ccsds::ResultBuffer` |
+| `Packet::update()` unreported finalization | `ccsds::ResultBool` |
+| `DataField::serialize()` byte vector | `ccsds::ResultBuffer` |
+| `Manager::getPacketsBuffer()` byte vector | `ccsds::ResultBuffer` |
+
+All call sites should check the returned Result before accessing bytes.
+
+## Validator
+
+v2.0 uses named checks:
 
 ```cpp
 ccsds::Validator validator;
@@ -72,136 +191,152 @@ const auto report = validator.validate(packet);
 if (report.failed(ccsds::ValidationCode::Crc16)) {
   handleBadCrc();
 }
-
-if (report.failed(ccsds::ValidationCode::PusDirection)) {
-  handleWrongPusDirection();
-}
 ```
 
-`ccsds::ValidationReport`:
+Template comparison covers Packet Identification, segmentation class, Packet-level PEC, and secondary-header contract/tailoring. `ValidationReport` has fixed storage and is available under `CCSDS_MCU`.
 
-- uses a fixed `std::array` with capacity for 32 named checks;
-- performs no dynamic allocation itself;
-- is available in hosted and `CCSDS_MCU` builds;
-- requires only C++17;
-- does not require RTTI or exceptions;
-- contains only checks that were actually performed;
-- can be iterated or queried with `contains()`, `passed()`, and `failed()`.
+## Manager migration
 
-`ccsds::Validator::validate()` does not mutate the packet, mission profile, or secondary header. The Validator still maintains its own sequence-stream state. Call `clear()` before reusing it for an unrelated sequence stream.
-
-The `ccsds_validator` executable now delegates packet/profile validation to the library Validator instead of keeping an independent copy of the validation rules. See [VALIDATION.md](VALIDATION.md).
-
-## Raw-buffer and embedded integration
-
-The v2 vector API remains supported. New code that already receives data into fixed, DMA, UART, SpaceWire, TCP, or driver-owned buffers can use the additive pointer-plus-size API instead of constructing a vector at the call site.
-
-Determine a complete packet size from only the six-byte primary header:
+A v2.0 Manager uses a complete Packet template as its generation and receive schema:
 
 ```cpp
-const auto declared = ccsds::buffer::declaredPacketSize(header, 6U);
-if (!declared) return declared.error().code();
+ccsds::Packet packetTemplate;
+packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
+packetTemplate.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TmHeader>(tailoring));
+
+ccsds::Manager manager;
+manager.setPacketTemplate(packetTemplate);
 ```
 
-Parse an externally owned receive buffer:
+One Manager represents one Packet Identification and one sequence stream. Raw pointer-plus-size overloads are available for application data, packet ingestion, and stream loading. Const Manager objects expose template, packet collection, and Validator references through `getTemplateReference()`, `getPacketsReference()`, and `getValidatorReference()`.
+
+## Deserialization
+
+PUS parsing can use a preinstalled schema:
 
 ```cpp
-const auto consumed = ccsds::buffer::deserializeBounded(
-  packet, rxBuffer, receivedBytes);
+packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TmHeader>());
+packet.deserialize(wire);
 ```
 
-Manager also accepts raw application and stream buffers:
+or typed parsing:
 
 ```cpp
-manager.setApplicationData(payload, payloadSize);
-manager.addPacketFromBuffer(packetBytes, packetSize);
-manager.load(streamBytes, streamSize);
+packet.deserialize<ccsds::pus::rev_c::TmHeader>(wire);
 ```
 
-Read-only code can avoid copying Manager state:
-
-```cpp
-const ccsds::Manager &view = manager;
-const auto &packetTemplate = view.getTemplateReference();
-const auto &packets = view.getPacketsReference();
-const auto &validator = view.getValidatorReference();
-```
-
-`ccsds::errorCodeName()` complements `validationCodeName()` with an allocation-free symbolic label for `ErrorCode`.
-
-These additions do not require existing vector-based code to migrate. In v2.0.0 the raw adapters still bridge through vector-backed internals, so they establish a transport-facing API for later zero-copy/heap-free work rather than claiming that work is already complete. See [RAW_BUFFERS.md](RAW_BUFFERS.md).
-
-## PUS construction and numeric time
-
-Raw timestamp byte vectors are replaced by a numeric CUC value plus an explicit wire profile:
-
-```cpp
-auto profile = ccsds::pus::makeProfile(
-  ccsds::pus::Revision::C,
-  ccsds::pus::Direction::Telemetry);
-profile.destinationIdOctets = 2;
-profile.telemetryTimestampPresent = true;
-profile.telemetryTimeCode = ccsds::time::Format::Cuc;
-profile.telemetryCuc = {
-  ccsds::time::Epoch::Ccsds1958Tai,
-  ccsds::time::PFieldMode::Explicit,
-  4,
-  2
-};
-
-ccsds::Packet packet;
-if (const auto result = packet.setMissionProfile(profile); !result) {
-  return result.error().code();
-}
-
-auto header = std::make_shared<ccsds::pus::rev_c::TmHeader>(
-  profile, 3, 25, 1, 0x1234, 0,
-  ccsds::time::CucTime{0x01020304, 0xA0B0});
-if (const auto result = packet.setSecondaryHeader(std::move(header)); !result) {
-  return result.error().code();
-}
-```
-
-The same profile must be active before parsing:
-
-```cpp
-ccsds::Packet decoded;
-const auto profileResult = decoded.setMissionProfile(profile);
-if (!profileResult) return profileResult.error().code();
-const auto consumed = decoded.deserializeBounded(wire.value(), "PUS:revC:TM");
-```
-
-The parser does not infer revision, direction, identifier widths, time layout, epoch, P-field policy, or packet error control from remaining bytes.
+The equivalent typed pointer-plus-size path is available through `ccsds::buffer`.
 
 ## Configuration migration
 
-Every v2 profile declares:
+v2.0 PUS identity is selected by `secondary_header_type`.
+
+### Generic
 
 ```ini
-mission_profile:string=generic
 ccsds_packet_error_control:string=crc16
+ccsds_version_number:int=0
+ccsds_type:bool=false
+ccsds_APID:int=42
+ccsds_segmented:bool=false
+define_secondary_header:bool=false
 ```
 
-PUS profiles additionally declare exact `pus_revision`, `pus_direction`, the canonical `secondary_header_type`, identifier widths, revision-specific fields, and `pus_time_*` values for CUC telemetry. Packet, Manager, encoder, decoder, and validator all use this same profile.
+### PUS-A TC
 
-Legacy `pus_version`, `pus_event_id`, `pus_time_code`, and `secondary_header_type=PusA|PusB|PusC` values fail with a migration error. Complete v2 profiles are in [`example/config`](../example/config).
-
-## Hosted versus bare-metal use
-
-The public protocol library remains C++17. `ccsds::Packet`, `ccsds::Manager`, mission profiles, PUS codecs, CUC time, Result types, raw-buffer adapters, and the structured Validator are built into the MCU static library.
-
-`ccsds::Config` and the command-line executables are host-side conveniences and are excluded when `CCSDSPACK_BUILD_MCU=ON` defines `CCSDS_MCU`.
-
-A typical MCU build can use:
-
-```text
--fno-exceptions -fno-rtti
+```ini
+ccsds_version_number:int=0
+ccsds_APID:int=42
+ccsds_segmented:bool=false
+define_secondary_header:bool=true
+secondary_header_type:string=PUS:revA:TC
+pus_source_id_octets:int=1
+pus_service_type:uint=17
+pus_service_subtype:uint=1
+pus_acknowledgement_flags:uint=9
+pus_source_id:uint=1
 ```
 
-without changing the Validator or raw-buffer API.
+### PUS-A TM
+
+```ini
+ccsds_version_number:int=0
+ccsds_APID:int=42
+ccsds_segmented:bool=false
+define_secondary_header:bool=true
+secondary_header_type:string=PUS:revA:TM
+pus_destination_id_octets:int=1
+pus_a_tm_packet_subcounter_present:bool=true
+pus_packet_subcounter:uint=1
+pus_service_type:uint=3
+pus_service_subtype:uint=25
+pus_destination_id:uint=1
+```
+
+### PUS-C TC
+
+```ini
+ccsds_version_number:int=0
+ccsds_APID:int=42
+ccsds_segmented:bool=false
+define_secondary_header:bool=true
+secondary_header_type:string=PUS:revC:TC
+pus_service_type:uint=17
+pus_service_subtype:uint=1
+pus_acknowledgement_flags:uint=9
+pus_source_id:uint=0x1234
+```
+
+### PUS-C TM
+
+```ini
+ccsds_version_number:int=0
+ccsds_APID:int=42
+ccsds_segmented:bool=false
+define_secondary_header:bool=true
+secondary_header_type:string=PUS:revC:TM
+pus_service_type:uint=3
+pus_service_subtype:uint=25
+pus_message_type_counter:uint=1
+pus_destination_id:uint=0x1234
+pus_time_reference_status:uint=0
+```
+
+When CUC is enabled, add the `pus_time_*` fields documented in [CONFIG.md](CONFIG.md).
+
+Configuration keys representing the v1 project-specific PUS layouts or the intermediate profile model are rejected by v2.0 rather than silently reinterpreted.
+
+## CLI migration
+
+The executable names remain `ccsds_encoder`, `ccsds_decoder`, and `ccsds_validator`. Their configuration must use the v2 Packet template schema and canonical PUS selectors. Packet error control can be selected consistently through configuration or `--packet-error-control crc16|none`.
+
+Validator diagnostics are named structured checks rather than positional report fields.
+
+## Package and ABI migration
+
+v2.0.0 uses project version `2.0.0` and shared-library SOVERSION `2`. Installed consumers should rebuild against the v2 headers/library and may require the major version explicitly:
+
+```cmake
+find_package(CCSDSPack 2.0 CONFIG REQUIRED)
+target_link_libraries(app PRIVATE ccsdspack::CCSDSPack)
+```
+
+A v1 binary should not be assumed ABI-compatible with the v2 shared library.
+
+## Hosted and MCU builds
+
+The protocol API remains C++17. `CCSDSPACK_BUILD_MCU=ON` builds Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, and Validator as a static library while excluding hosted Config and command-line programs. `-fno-exceptions -fno-rtti` is supported.
+
+The complete library is not claimed to be allocation-free; the fixed-capacity guarantee applies to `ValidationReport`.
 
 ## Wire-format impact
 
-The removed classes encoded project-specific layouts. Existing legacy packet bytes must be regenerated with a selected revision, direction, mission profile, and time layout; renaming a class or selector is insufficient.
+Generic Space Packet behavior from v1.2, including corrected Packet Data Length, CRC coverage, bounded parsing, full APID support, sequence rollover, and Idle Packet validation, remains the packet foundation of v2.0.
 
-The generic Packet Data Length, CRC coverage, bounded parsing, APID-width, and sequence corrections were already part of v1.2.0. They are retained by v2 and should not be presented as new v1.2-to-v2 wire-format breaks.
+The v1.2 project-specific PUS-like secondary headers are not wire-compatible aliases for the standards-oriented v2 PUS codecs. Stored/transmitted packets using those layouts must be interpreted according to their original schema and regenerated according to the intended v2 PUS or custom-header schema.
+
+For packet-wire changes that occurred before v1.2, consult the historical v1.2 behavior/release documentation rather than treating them as v1.2-to-v2 changes.

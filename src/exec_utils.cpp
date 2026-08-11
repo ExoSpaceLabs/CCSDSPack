@@ -78,12 +78,9 @@ const char *packetErrorControlModeName(const ccsds::PacketErrorControlMode mode)
 
 ccsds::ResultBool applyPacketErrorControlMode(
     ccsds::Packet &packet, const ccsds::PacketErrorControlMode mode) {
-  auto profile = packet.getMissionProfile();
-  RET_IF_ERR_MSG(profile.pusEnabled && profile.packetErrorControl != mode,
-                 static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
-                 "A PUS packet-error-control override must match the mission profile.");
-  profile.packetErrorControl = mode;
-  FORWARD_RESULT(packet.setMissionProfile(profile));
+  // Packet error control is a generic CCSDS Packet policy. PUS secondary headers
+  // carry no independent CRC/PEC setting in the v2 API.
+  packet.setPacketErrorControlMode(mode);
   return true;
 }
 

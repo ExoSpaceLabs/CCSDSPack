@@ -102,40 +102,30 @@ int main() {
     return fail("automatic sequence count", "Manager did not consume exactly one sequence count");
   }
 
-  std::vector<std::uint8_t> templateBytes;
-  if (const auto result = manager.getPacketTemplate(); result) {
-    templateBytes = result.value();
-  } else {
-    return failResult("legacy getPacketTemplate", result.error());
-  }
-  if (templateBytes.empty()) {
-    return fail("legacy getPacketTemplate", "serialized template is empty");
+  const auto templateBytesResult = manager.getPacketTemplate();
+  if (!templateBytesResult || templateBytesResult.value().empty()) {
+    return templateBytesResult
+      ? fail("getPacketTemplate", "serialized template is empty")
+      : failResult("getPacketTemplate", templateBytesResult.error());
   }
 
-  std::vector<std::uint8_t> indexedPacket;
-  if (const auto result = manager.getPacketBufferAtIndex(0); result) {
-    indexedPacket = result.value();
-  } else {
-    return failResult("legacy getPacketBufferAtIndex", result.error());
-  }
-  if (indexedPacket != expectedPacket) {
-    return fail("legacy getPacketBufferAtIndex", "indexed packet differs from stream bytes");
+  const auto indexedPacketResult = manager.getPacketBufferAtIndex(0);
+  if (!indexedPacketResult) return failResult("getPacketBufferAtIndex", indexedPacketResult.error());
+  if (indexedPacketResult.value() != expectedPacket) {
+    return fail("getPacketBufferAtIndex", "indexed packet differs from stream bytes");
   }
 
   ccsds::Packet decoded;
   if (const auto result = decoded.RegisterSecondaryHeader<CustomSecondaryHeader>(); !result) {
     return failResult("register decoder secondary header", result.error());
   }
-  // A project-specific variable-length secondary header has no wire-level size
-  // field of its own. The external consumer therefore supplies the explicit
-  // byte boundary through the public fixed-size overload.
+  // Preserve the custom secondary-header schema as well as its explicit variable
+  // byte boundary. The opaque-size overload intentionally creates BufferHeader.
   const auto consumed = decoded.deserializeBounded(
-    packetsData, static_cast<std::uint16_t>(secondaryHeader.size()));
-  if (!consumed) {
-    return failResult("bounded decode", consumed.error());
-  }
+    packetsData, "CustomSecondaryHeader", static_cast<std::int32_t>(secondaryHeader.size()));
+  if (!consumed) return failResult("bounded custom decode", consumed.error());
   if (consumed.value() != packetsData.size()) {
-    return fail("bounded decode", "consumed-byte count differs from packet size");
+    return fail("bounded custom decode", "consumed-byte count differs from packet size");
   }
 
   const ccsds::Packet &view = decoded;
@@ -147,26 +137,29 @@ int main() {
       || header.getSequenceFlags() != ccsds::UNSEGMENTED
       || header.getSequenceCount() != 5U
       || view.getSecondaryHeaderBytes() != secondaryHeader
+      || !view.getSecondaryHeader()
+      || view.getSecondaryHeader()->getType() != "CustomSecondaryHeader"
       || view.getApplicationDataBytes() != std::vector<std::uint8_t>({0x01, 0x02, 0x03})
       || view.getCRC() != 0xB745U) {
     return fail("decoded fields", "decoded packet does not match the expected logical fields");
   }
 
-  // Exercise legacy and additive observation APIs from an external translation unit.
   if (decoded.getPrimaryHeader64bit() == 0U
       || decoded.getFullPacketLength() != expectedPacket.size()
       || decoded.getSerializedSize() != expectedPacket.size()
       || !decoded.getSecondaryHeaderFlag()
       || decoded.getCRCVectorBytes() != std::vector<std::uint8_t>({0xB7, 0x45})) {
-    return fail("packet API", "legacy or additive getters returned unexpected values");
+    return fail("packet API", "packet getters returned unexpected values");
   }
   (void)decoded.getDataField();
   (void)decoded.getPrimaryHeader();
 
   ccsds::Validator validator(templatePacket);
   validator.configure(true, false, true);
-  if (!validator.validate(decoded)) {
-    return fail("Validator", "valid packet was rejected against its template identifier");
+  const auto validation = validator.validate(decoded);
+  if (!validation.valid()
+      || !validation.passed(ccsds::ValidationCode::TemplateSecondaryHeader)) {
+    return fail("Validator", "valid custom packet was rejected against its template contract");
   }
 
   ccsds::Packet mismatchedIdentifier = decoded;
@@ -188,9 +181,7 @@ int main() {
     return failResult("CRC-disabled application data", result.error());
   }
   const auto crcDisabledResult = crcDisabled.serialize();
-  if (!crcDisabledResult) {
-    return failResult("serialize CRC-disabled packet", crcDisabledResult.error());
-  }
+  if (!crcDisabledResult) return failResult("serialize CRC-disabled packet", crcDisabledResult.error());
   const auto &crcDisabledBytes = crcDisabledResult.value();
   const std::vector<std::uint8_t> expectedCrcDisabled{
     0x01, 0x23, 0xC0, 0x07, 0x00, 0x01, 0xAA, 0x55
@@ -208,6 +199,47 @@ int main() {
          != std::vector<std::uint8_t>({0xAA, 0x55})
       || decodedCrcDisabled.getCRC() != 0U) {
     return fail("CRC-disabled decode", "CRC-free packet did not round-trip");
+  }
+
+  // Installed-package coverage for the final profile-free PUS API.
+  ccsds::Packet pusSource;
+  if (const auto result = pusSource.setPrimaryHeader(ccsds::PrimaryHeader{
+        0U, 0U, 0U, 0x42U, ccsds::UNSEGMENTED, 0U, 0U}); !result) {
+    return failResult("PUS primary header", result.error());
+  }
+  if (const auto result = pusSource.setSecondaryHeader(
+        std::make_shared<ccsds::pus::rev_c::TcHeader>(
+          17U, 1U, 0x1234U, 0x09U)); !result) {
+    return failResult("PUS secondary header", result.error());
+  }
+  if (pusSource.getDirection() != ccsds::PacketDirection::Telecommand) {
+    return fail("PUS direction", "TcHeader did not synchronize Packet direction");
+  }
+  if (const auto result = pusSource.setApplicationData({0xDEU, 0xADU}); !result) {
+    return failResult("PUS application data", result.error());
+  }
+  const auto pusWire = pusSource.serialize();
+  if (!pusWire) return failResult("PUS serialize", pusWire.error());
+
+  ccsds::Packet pusDecoded;
+  const auto pusConsumed = pusDecoded.deserializeBounded<ccsds::pus::rev_c::TcHeader>(
+    pusWire.value());
+  if (!pusConsumed || pusConsumed.value() != pusWire.value().size()) {
+    return pusConsumed
+      ? fail("typed PUS decode", "consumed-byte count differs from PUS packet size")
+      : failResult("typed PUS decode", pusConsumed.error());
+  }
+  const auto pusHeader = std::static_pointer_cast<const ccsds::pus::rev_c::TcHeader>(
+    pusDecoded.getSecondaryHeader());
+  if (!pusHeader || pusHeader->getRevision() != ccsds::pus::Revision::C
+      || pusHeader->getDirection() != ccsds::PacketDirection::Telecommand
+      || pusHeader->getSourceId() != 0x1234U
+      || pusDecoded.getApplicationDataBytes() != std::vector<std::uint8_t>({0xDEU, 0xADU})) {
+    return fail("typed PUS decode", "profile-free PUS packet did not round-trip");
+  }
+  const auto pusReport = ccsds::Validator{}.validate(pusDecoded);
+  if (!pusReport.valid() || !pusReport.passed(ccsds::ValidationCode::PusTailoring)) {
+    return fail("PUS Validator", "installed PUS public surface failed validation");
   }
 
   ccsds::Packet invalidVersion;
@@ -250,8 +282,7 @@ int main() {
   }
   const auto validIdleResult = validIdle.serialize();
   if (!validIdleResult) return failResult("serialize valid Idle Packet", validIdleResult.error());
-  const auto &validIdleBytes = validIdleResult.value();
-  if (validIdle.getSerializedSize() != validIdleBytes.size()) {
+  if (validIdle.getSerializedSize() != validIdleResult.value().size()) {
     return fail("valid Idle Packet", "conformant Idle Packet did not serialize");
   }
 
