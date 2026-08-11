@@ -3,11 +3,18 @@
 
 #include <CCSDSPack.h>
 
+#include <cstddef>
 #include <cstdint>
+#include <string>
 
 int main() {
+  ccsds::MissionProfile profile;
+  profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
+
   ccsds::Packet packetTemplate;
-  packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+  const auto profileResult = packetTemplate.setMissionProfile(profile);
+  if (!profileResult) return profileResult.error().code();
+
   const auto headerResult = packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
     0, 0, 0, 0x155, ccsds::UNSEGMENTED, 0, 0
   });
