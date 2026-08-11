@@ -19,7 +19,7 @@ jobs:
         os: [windows-latest]
 
     runs-on: ${{ matrix.os }}
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,18 +33,18 @@ jobs:
       - name: Configure CMake
         run: |
           cd build && cmake -G "MinGW Makefiles" ..
-          
+
       - name: Build project
         run: |
           cd build
-          cmake --build . -- 
+          cmake --build . --
 
       - name: Verify build artifacts
         run: |
           echo "Listing contents of build/lib/"
           Get-ChildItem -Path build/lib/
           echo "Listing contents of build/bin/"
-          Get-ChildItem -Path build/bin/      
+          Get-ChildItem -Path build/bin/
 
       - name: Run tests
         shell: pwsh
@@ -63,11 +63,21 @@ jobs:
           if-no-files-found: error
 
       - name: Run CLI integration tests
+        id: cli_integration
         shell: pwsh
         run: |
           python test/cli_integration.py `
             --bin-dir "$PWD/build/bin" `
-            --resources "$PWD/test/test_resources"
+            --resources "$PWD/test/test_resources" 2>&1 | Tee-Object -FilePath cli_integration.log
+          exit $LASTEXITCODE
+
+      - name: Upload CLI integration failure log
+        if: steps.cli_integration.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-cli-log-${{ github.sha }}
+          path: cli_integration.log
+          if-no-files-found: error
 
       - name: Install shared library package
         shell: pwsh
