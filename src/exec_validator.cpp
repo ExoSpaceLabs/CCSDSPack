@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <set>
 #include <sstream>
 #include <string>
@@ -31,7 +32,9 @@ void printHelp() {
     << "  -v, --verbose                          Print every performed validation check\n"
     << "  -p, --print-packets                    Print packets that parse successfully\n"
     << "  -h, --help                             Show this help message\n\n"
-    << "The configured Packet template is also the secondary-header parsing schema.\n"
+    << "The configured Packet template supplies Packet Identification, PEC, and the\n"
+    << "secondary-header parsing schema. Parser capacity is widened for validation so\n"
+    << "a malformed but structurally parseable packet can reach the named checks.\n"
     << "PUS revision/direction come from the concrete PUS header type; optional PUS\n"
     << "tailoring comes from that header. Packet error control remains packet-level.\n";
 }
@@ -127,6 +130,10 @@ void emitParseFailure(const ccsds::Error &error, const bool pusHeaderExpected) {
 ccsds::Packet parserPacket(const ValidatorSettings &settings) {
   ccsds::Packet packet = settings.hasTemplate ? settings.templatePacket : ccsds::Packet{};
   packet.setPacketErrorControlMode(settings.mode);
+  // data_field_size is a generation/template capacity, not a wire-level CCSDS
+  // invariant. Keep the template's identifier/PEC/header schema but make the
+  // validator parser permissive enough to classify an oversized/mismatched packet.
+  packet.setDataFieldSize(std::numeric_limits<std::uint16_t>::max());
   return packet;
 }
 
