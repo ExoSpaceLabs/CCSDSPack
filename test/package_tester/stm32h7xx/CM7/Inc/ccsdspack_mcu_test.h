@@ -4,8 +4,6 @@
 #ifndef CCSDSPACK_MCU_TEST_H
 #define CCSDSPACK_MCU_TEST_H
 
-// The prebuilt MCU archive is compiled with CCSDS_MCU. Consumers of the static
-// archive must see the same public-header interface in every translation unit.
 #ifndef CCSDS_MCU
 #error "Define CCSDS_MCU when compiling the STM32 validation application"
 #endif
@@ -47,8 +45,8 @@ namespace CCSDSPackMcuTest {
     ValidIdleDataFailed = 25,
     ValidIdleSerializationFailed = 26,
     StructuredValidatorReportMissing = 27,
-    PusProfileFailed = 28,
-    PusHeaderFailed = 29,
+    PusHeaderFailed = 28,
+    PusDirectionInferenceFailed = 29,
     PusDataFailed = 30,
     PusSerializationFailed = 31,
     PusValidatorFailed = 32,
@@ -58,81 +56,51 @@ namespace CCSDSPackMcuTest {
   class CustomSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
   public:
     CustomSecondaryHeader() { setVariableLength(true); }
-
     explicit CustomSecondaryHeader(const std::vector<std::uint8_t> &data) : m_data(data) {
       setVariableLength(true);
     }
-
     [[nodiscard]] ccsds::ResultBool deserialize(
       const std::vector<std::uint8_t> &data) override {
       m_data = data;
       return true;
     }
-
     void update(ccsds::DataField *) override {}
-
     [[nodiscard]] std::uint16_t getSize() const override {
       return static_cast<std::uint16_t>(m_data.size());
     }
-
-    [[nodiscard]] std::vector<std::uint8_t> serialize() const override {
-      return m_data;
-    }
-
-    [[nodiscard]] std::string getType() const override {
-      return "CustomSecondaryHeader";
-    }
-
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return m_data; }
+    [[nodiscard]] std::string getType() const override { return "CustomSecondaryHeader"; }
   private:
     std::vector<std::uint8_t> m_data{};
   };
 
-  /**
-   * @brief Runs the deterministic bare-metal consumer validation suite.
-   * @return Pass, or the first non-zero ResultCode identifying the failed stage.
-   *
-   * The suite deliberately exercises std::vector, std::string, shared ownership,
-   * factory registration, packet generation, CRC16, bounded parsing, the structured
-   * Validator, a representative PUS-C TC profile, CRC-free packets, PVN enforcement,
-   * and Idle Packet rules. It therefore checks the C++ runtime and heap configuration
-   * as well as the packet logic when run on the target MCU.
-   */
   inline int run() {
     ccsds::Packet templatePacket;
     if (const auto result = templatePacket.setPrimaryHeader(ccsds::PrimaryHeader{
           0, 1, 0, 0x123, ccsds::UNSEGMENTED, 5, 0
-        }); !result) {
-      return SetPrimaryHeaderFailed;
-    }
+        }); !result) return SetPrimaryHeaderFailed;
 
     if (const auto result = templatePacket.RegisterSecondaryHeader<CustomSecondaryHeader>();
-        !result) {
-      return RegisterSecondaryHeaderFailed;
-    }
+        !result) return RegisterSecondaryHeaderFailed;
 
     const std::vector<std::uint8_t> secondaryHeader{
       0x77, 0xFA, 0x0B, 0x00, 0x00, 0x0B, 0x05
     };
     if (const auto result = templatePacket.setSecondaryHeader(
-          secondaryHeader, "CustomSecondaryHeader"); !result) {
-      return SetSecondaryHeaderFailed;
-    }
+          secondaryHeader, "CustomSecondaryHeader"); !result) return SetSecondaryHeaderFailed;
 
     ccsds::Manager manager;
-    if (const auto result = manager.setPacketTemplate(templatePacket); !result) {
+    if (const auto result = manager.setPacketTemplate(templatePacket); !result)
       return SetManagerTemplateFailed;
-    }
     manager.setAutoValidateEnable(false);
     manager.setDataFieldSize(1000U);
 
-    if (manager.getSequenceCount() != 5U || !manager.getAutoSequenceCountEnable()) {
+    if (manager.getSequenceCount() != 5U || !manager.getAutoSequenceCountEnable())
       return ManagerSequenceConfigurationFailed;
-    }
 
     const std::vector<std::uint8_t> applicationData{0x01, 0x02, 0x03};
-    if (const auto result = manager.setApplicationData(applicationData); !result) {
+    if (const auto result = manager.setApplicationData(applicationData); !result)
       return SetApplicationDataFailed;
-    }
 
     const std::vector<std::uint8_t> expectedPacket{
       0x19, 0x23, 0xC0, 0x05, 0x00, 0x0B,
@@ -144,22 +112,15 @@ namespace CCSDSPackMcuTest {
     const auto packetsResult = manager.getPacketsBuffer();
     if (!packetsResult) return WireVectorMismatch;
     const auto &packetsData = packetsResult.value();
-    if (packetsData != expectedPacket) {
-      return WireVectorMismatch;
-    }
-    if (manager.getSequenceCount() != 6U || manager.getTotalPackets() != 1U) {
+    if (packetsData != expectedPacket) return WireVectorMismatch;
+    if (manager.getSequenceCount() != 6U || manager.getTotalPackets() != 1U)
       return ManagerSequenceAdvanceFailed;
-    }
 
     ccsds::Packet decoded;
     const auto consumed = decoded.deserializeBounded(
       packetsData, static_cast<std::uint16_t>(secondaryHeader.size()));
-    if (!consumed) {
-      return BoundedDecodeFailed;
-    }
-    if (consumed.value() != expectedPacket.size()) {
-      return BoundedDecodeSizeMismatch;
-    }
+    if (!consumed) return BoundedDecodeFailed;
+    if (consumed.value() != expectedPacket.size()) return BoundedDecodeSizeMismatch;
 
     const auto &header = decoded.getPrimaryHeader();
     if (header.getVersionNumber() != 0U
@@ -171,69 +132,50 @@ namespace CCSDSPackMcuTest {
         || decoded.getSecondaryHeaderBytes() != secondaryHeader
         || decoded.getApplicationDataBytes() != applicationData
         || decoded.getCRC() != 0xB745U
-        || decoded.getSerializedSize() != expectedPacket.size()) {
-      return DecodedFieldsMismatch;
-    }
+        || decoded.getSerializedSize() != expectedPacket.size()) return DecodedFieldsMismatch;
 
     ccsds::Validator validator(templatePacket);
     validator.configure(true, false, true);
     const auto validation = validator.validate(decoded);
-    if (!validation.valid()) {
-      return ValidatorRejectedPacket;
-    }
+    if (!validation.valid()) return ValidatorRejectedPacket;
     if (!validation.contains(ccsds::ValidationCode::PacketDataLength)
         || !validation.contains(ccsds::ValidationCode::Crc16)
         || !validation.contains(ccsds::ValidationCode::PacketIdentifier)
-        || !validation.passed(ccsds::ValidationCode::TemplateMissionProfile)) {
+        || !validation.passed(ccsds::ValidationCode::TemplateSecondaryHeader))
       return StructuredValidatorReportMissing;
-    }
 
-    auto pusProfile = ccsds::pus::makeProfile(
-      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
     ccsds::Packet pusPacket;
     if (const auto result = pusPacket.setPrimaryHeader(ccsds::PrimaryHeader{
-          0, 1, 1, 0x42, ccsds::UNSEGMENTED, 0, 0
-        }); !result) {
-      return PusHeaderFailed;
-    }
-    if (const auto result = pusPacket.setMissionProfile(pusProfile); !result) {
-      return PusProfileFailed;
-    }
+          0, 0, 0, 0x42, ccsds::UNSEGMENTED, 0, 0
+        }); !result) return PusHeaderFailed;
     if (const auto result = pusPacket.setSecondaryHeader(
           std::make_shared<ccsds::pus::rev_c::TcHeader>(
-            pusProfile, 17U, 1U, 0x1234U, 0x09U)); !result) {
-      return PusHeaderFailed;
-    }
-    if (const auto result = pusPacket.setApplicationData({0xAAU, 0x55U}); !result) {
+            17U, 1U, 0x1234U, 0x09U)); !result) return PusHeaderFailed;
+    if (pusPacket.getDirection() != ccsds::PacketDirection::Telecommand
+        || pusPacket.getPrimaryHeader().getType() != 1U)
+      return PusDirectionInferenceFailed;
+    if (const auto result = pusPacket.setApplicationData({0xAAU, 0x55U}); !result)
       return PusDataFailed;
-    }
-    if (!pusPacket.serialize()) {
-      return PusSerializationFailed;
-    }
+    if (!pusPacket.serialize()) return PusSerializationFailed;
 
     ccsds::Validator pusValidator;
     const auto pusValidation = pusValidator.validate(pusPacket);
-    if (!pusValidation.valid()) {
-      return PusValidatorFailed;
-    }
+    if (!pusValidation.valid()) return PusValidatorFailed;
     if (!pusValidation.passed(ccsds::ValidationCode::PusRevision)
         || !pusValidation.passed(ccsds::ValidationCode::PusDirection)
         || !pusValidation.passed(ccsds::ValidationCode::PusPacketType)
+        || !pusValidation.passed(ccsds::ValidationCode::PusTailoring)
         || !pusValidation.passed(ccsds::ValidationCode::PusAcknowledgement)
-        || !pusValidation.passed(ccsds::ValidationCode::PusSourceId)) {
+        || !pusValidation.passed(ccsds::ValidationCode::PusSourceId))
       return PusValidatorReportMissing;
-    }
 
     ccsds::Packet crcDisabled;
     crcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     if (const auto result = crcDisabled.setPrimaryHeader(ccsds::PrimaryHeader{
           0, 0, 0, 0x123, ccsds::UNSEGMENTED, 7, 0
-        }); !result) {
-      return CrcFreeHeaderFailed;
-    }
-    if (const auto result = crcDisabled.setApplicationData({0xAA, 0x55}); !result) {
+        }); !result) return CrcFreeHeaderFailed;
+    if (const auto result = crcDisabled.setApplicationData({0xAA, 0x55}); !result)
       return CrcFreeDataFailed;
-    }
 
     const std::vector<std::uint8_t> expectedCrcDisabled{
       0x01, 0x23, 0xC0, 0x07, 0x00, 0x01, 0xAA, 0x55
@@ -241,9 +183,7 @@ namespace CCSDSPackMcuTest {
     const auto crcDisabledResult = crcDisabled.serialize();
     if (!crcDisabledResult) return CrcFreeVectorMismatch;
     const auto &crcDisabledBytes = crcDisabledResult.value();
-    if (crcDisabledBytes != expectedCrcDisabled) {
-      return CrcFreeVectorMismatch;
-    }
+    if (crcDisabledBytes != expectedCrcDisabled) return CrcFreeVectorMismatch;
 
     ccsds::Packet decodedCrcDisabled;
     decodedCrcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
@@ -253,54 +193,37 @@ namespace CCSDSPackMcuTest {
         || decodedCrcDisabled.getPrimaryHeader().getSequenceCount() != 7U
         || decodedCrcDisabled.getApplicationDataBytes()
            != std::vector<std::uint8_t>({0xAA, 0x55})
-        || decodedCrcDisabled.getCRC() != 0U) {
-      return CrcFreeDecodeFailed;
-    }
+        || decodedCrcDisabled.getCRC() != 0U) return CrcFreeDecodeFailed;
 
     ccsds::Packet invalidVersion;
     if (const auto result = invalidVersion.setPrimaryHeader(ccsds::PrimaryHeader{
           1, 0, 0, 1, ccsds::UNSEGMENTED, 0, 0
-        }); !result) {
-      return InvalidVersionHeaderFailed;
-    }
-    if (const auto result = invalidVersion.setApplicationData({0x01}); !result) {
+        }); !result) return InvalidVersionHeaderFailed;
+    if (const auto result = invalidVersion.setApplicationData({0x01}); !result)
       return InvalidVersionDataFailed;
-    }
-    if (invalidVersion.serialize()) {
-      return InvalidVersionSerialized;
-    }
+    if (invalidVersion.serialize()) return InvalidVersionSerialized;
 
     ccsds::Packet invalidIdle;
     if (const auto result = invalidIdle.setPrimaryHeader(ccsds::PrimaryHeader{
           0, 0, 0, ccsds::IDLE_APID, ccsds::UNSEGMENTED, 0, 0
-        }); !result) {
-      return InvalidIdleHeaderFailed;
-    }
-    if (const auto result = invalidIdle.setSecondaryHeader({0x01}); !result) {
+        }); !result) return InvalidIdleHeaderFailed;
+    if (const auto result = invalidIdle.setSecondaryHeader({0x01}); !result)
       return InvalidIdleSecondaryHeaderFailed;
-    }
-    if (const auto result = invalidIdle.setApplicationData({0x00}); !result) {
+    if (const auto result = invalidIdle.setApplicationData({0x00}); !result)
       return InvalidIdleDataFailed;
-    }
-    if (invalidIdle.serialize()) {
-      return InvalidIdleSerialized;
-    }
+    if (invalidIdle.serialize()) return InvalidIdleSerialized;
 
     ccsds::Packet validIdle;
     if (const auto result = validIdle.setPrimaryHeader(ccsds::PrimaryHeader{
           0, 0, 0, ccsds::IDLE_APID, ccsds::UNSEGMENTED, 0, 0
-        }); !result) {
-      return ValidIdleHeaderFailed;
-    }
-    if (const auto result = validIdle.setApplicationData({0x00}); !result) {
+        }); !result) return ValidIdleHeaderFailed;
+    if (const auto result = validIdle.setApplicationData({0x00}); !result)
       return ValidIdleDataFailed;
-    }
     const auto validIdleResult = validIdle.serialize();
     if (!validIdleResult) return ValidIdleSerializationFailed;
     const auto &validIdleBytes = validIdleResult.value();
-    if (validIdle.getSerializedSize() != validIdleBytes.size()) {
+    if (validIdle.getSerializedSize() != validIdleBytes.size())
       return ValidIdleSerializationFailed;
-    }
 
     return Pass;
   }

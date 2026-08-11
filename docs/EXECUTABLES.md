@@ -5,16 +5,14 @@ SPDX-License-Identifier: Apache-2.0
 
 # Executables
 
-[Documentation index](README.md) | [Canonical CLI reference](CLI.md) | [Structured validation](VALIDATION.md)
+CCSDSPack hosted builds provide:
 
-CCSDSPack provides these host-side executables:
+- `ccsds_encoder`: application data to adjacent Space Packets;
+- `ccsds_decoder`: adjacent Space Packets to reassembled application data;
+- `ccsds_validator`: bounded parsing plus structured packet/template/PUS validation;
+- `CCSDSPack_tester`: native regression and conformance tests.
 
-- `ccsds_encoder`: converts application bytes into one or more adjacent Space Packets;
-- `ccsds_decoder`: parses adjacent Space Packets and reassembles application bytes;
-- `ccsds_validator`: parses packet streams and reports the named checks produced by the library Validator;
-- `CCSDSPack_tester`: runs the native regression and conformance test suite.
-
-The authoritative option, packet-error-control, trailing-byte, validation, and exit-code documentation is maintained in [CLI.md](CLI.md). The Validator API itself is documented in [VALIDATION.md](VALIDATION.md).
+The canonical command-line option and behavior reference is [CLI.md](CLI.md).
 
 ## Build controls
 
@@ -27,10 +25,7 @@ cmake -S . -B build \
 cmake --build build
 ```
 
-These executables are hosted components and are not built when
-`CCSDSPACK_BUILD_MCU=ON`. The underlying Packet, Manager, MissionProfile, PUS,
-time, Result, and structured Validator APIs remain available in the MCU static
-library.
+These executables are host-side components and are excluded when `CCSDSPACK_BUILD_MCU=ON`. The MCU static library retains Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer, and structured Validator APIs.
 
 ## Typical flow
 
@@ -40,14 +35,12 @@ ccsds_validator -i packets.bin -c template.cfg --verbose
 ccsds_decoder -i packets.bin -o recovered.bin -c template.cfg
 ```
 
-The encoder and decoder require a template configuration. The validator can operate without one for generic packets, but a template enables Packet Identification, segmentation-class, and mission-profile comparison. All tools must use the same `crc16` or `none` packet-error-control profile as the packet stream.
+All tools use the same packet-error-control mode expected by the stream. A Validator template enables Packet Identification, segmentation class, PEC, and secondary-header contract checks.
 
-The validator executable delegates protocol/profile checks to `ccsds::Validator`; it does not maintain an independent copy of the validation rules.
-
-Run the installed or built test executable with:
+Run the regression/conformance suite with:
 
 ```bash
 CCSDSPack_tester
 ```
 
-A non-zero process status indicates a failed command or test.
+A non-zero process status indicates a failed operation or test.

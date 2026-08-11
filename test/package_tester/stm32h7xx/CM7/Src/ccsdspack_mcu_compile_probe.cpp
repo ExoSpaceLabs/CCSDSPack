@@ -10,8 +10,6 @@ extern "C" int ccsdspack_mcu_compile_probe() {
   const int baseResult = CCSDSPackMcuTest::run();
   if (baseResult != 0) return baseResult;
 
-  // Representative raw transport buffer. The packet is generic CCSDS, CRC-free,
-  // APID 0x123, sequence count 7, with two application-data bytes AA 55.
   const std::uint8_t wire[]{
     0x01, 0x23, 0xC0, 0x07, 0x00, 0x01, 0xAA, 0x55
   };
@@ -25,6 +23,22 @@ extern "C" int ccsdspack_mcu_compile_probe() {
   if (!consumed || consumed.value() != sizeof(wire)) return 101;
   if (packet.getApplicationDataBytes()
       != std::vector<std::uint8_t>({0xAA, 0x55})) return 102;
+
+  ccsds::Packet pusSource;
+  if (!pusSource.setPrimaryHeader(ccsds::PrimaryHeader{
+        0U, 0U, 0U, 0x42U, ccsds::UNSEGMENTED, 0U, 0U})) return 103;
+  if (!pusSource.setSecondaryHeader(
+        std::make_shared<ccsds::pus::rev_c::TcHeader>(
+          17U, 1U, 0x1234U, 0x09U))) return 104;
+  if (!pusSource.setApplicationData({0xAAU, 0x55U})) return 105;
+  const auto pusWire = pusSource.serialize();
+  if (!pusWire) return 106;
+
+  ccsds::Packet pusDecoded;
+  const auto pusConsumed = ccsds::buffer::deserializeBounded<ccsds::pus::rev_c::TcHeader>(
+    pusDecoded, pusWire.value().data(), pusWire.value().size());
+  if (!pusConsumed || pusConsumed.value() != pusWire.value().size()) return 107;
+  if (pusDecoded.getDirection() != ccsds::PacketDirection::Telecommand) return 108;
 
   return 0;
 }

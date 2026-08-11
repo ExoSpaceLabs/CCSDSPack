@@ -1,185 +1,114 @@
-CCSDSPack v1.2.0 STM32H745 CM7 hardware validation
-====================================================
+CCSDSPack v2 Cortex-M7 validation harness
+=========================================
 
 Purpose
 -------
 
-This project validates the CCSDSPack bare-metal static archive on a real
-NUCLEO-H745ZI-Q. It is derived from an STMicroelectronics STM32CubeH7 example,
-but the old UART wake-from-STOP demonstration is no longer part of the test.
-The validation starts automatically after reset.
+This directory contains the shared CCSDSPack C++17 MCU validation core and a
+committed NUCLEO-H745ZI-Q/STM32H745ZITx board harness. The same shared core is
+used by the generic arm-none-eabi compile/link probe and is intended to be
+integrated into the NUCLEO-H755ZI-Q project used for final v2.0.0 hardware
+release evidence.
 
-The HAL-independent validation core is located at:
+Shared validation core:
 
   CM7/Inc/ccsdspack_mcu_test.h
 
-The generic arm-none-eabi package build compiles the same core through:
+Compile/link probe:
 
   CM7/Src/ccsdspack_mcu_compile_probe.cpp
 
-That compile-only check catches stale API calls and MCU preprocessor errors.
-Only execution on the STM32 validates startup, final linking, C++ runtime,
-heap behavior, UART reporting, and operation on silicon.
+The H745 CubeIDE project proves only that board when executed. H755 release
+validation must use a native H755 startup, linker script, device configuration,
+and board initialization as described in H755_INTEGRATION.md.
 
-Target
-------
-
-- Board: NUCLEO-H745ZI-Q
-- Device: STM32H745ZITx
-- Core under test: Cortex-M7
-- CPU flags: cortex-m7, Thumb, FPv5-D16, hard-float ABI
-- Language: C++17
-- Exceptions: disabled
-- RTTI: disabled
-
-Build the MCU package
----------------------
-
-From the CCSDSPack repository root:
+Library build
+-------------
 
   ./package.sh \
     -t cmake/toolchains/arm-none-eabi.cmake \
     -p MCU \
     -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 
-The archive contains the installed public headers and `libccsdspack.a`.
-The application and library must use the same CPU, FPU, float-ABI, exception,
-RTTI, and `CCSDS_MCU` settings.
+The application and library must use C++17, CCSDS_MCU, matching Cortex-M7/FPU
+ABI flags, -fno-exceptions, and -fno-rtti. The archive is libccsdspack.a.
 
-STM32CubeIDE configuration
---------------------------
+Runtime and memory model
+------------------------
 
-Extract or copy the package into a stable directory. A convenient project-local
-layout is:
+CCSDSPack uses an exception-free Result/Error API for normal failures, but the
+complete library is not allocation-free. Packet/Manager/PUS paths use standard
+C++ containers/shared ownership. A working heap and sufficient RAM are required.
+ValidationReport itself uses fixed std::array storage and performs no dynamic
+allocation.
 
-  test/package_tester/stm32h7xx/
-    Middlewares/Third_Party/CCSDSPack/
-      include/CCSDSPack.h
-      lib/libccsdspack.a
-
-For both Debug and Release CM7 configurations, verify these settings in
-STM32CubeIDE. Do not rely on paths generated on another workstation.
-
-C++ compiler:
-
-- Preprocessor symbol: `CCSDS_MCU`
-- Include path from the CM7 build directory:
-
-    ../../../Middlewares/Third_Party/CCSDSPack/include
-
-- Language standard: GNU C++17 or C++17
-- Other flags:
-
-    -fno-exceptions -fno-rtti -fno-use-cxa-atexit
-
-C++ linker:
-
-- Library search path from the CM7 build directory:
-
-    ../../../Middlewares/Third_Party/CCSDSPack/lib
-
-- Library name:
-
-    ccsdspack
-
-This corresponds to `libccsdspack.a`. The obsolete library name
-`ccsdspack_mcu` is not produced by the current CMake build.
-
-Important: older committed/generated STM32CubeIDE metadata may contain absolute
-`/home/dev/...` paths. Replace them with the project-local paths above before
-building. Generated Debug/Release makefiles and compile_commands files should
-not be treated as portable configuration.
-
-Memory model
-------------
-
-CCSDSPack's API is exception-free, but it is not allocation-free. The library
-and this validation use `std::vector`, `std::string`, `std::shared_ptr`, and the
-secondary-header factory. A working newlib heap and sufficient RAM are required.
-
-The supplied linker script reserves a minimum stack area and permits `_sbrk()`
-to grow the heap from `_end` toward the reserved stack boundary. Review heap and
-stack usage for the final mission application; a successful smoke test is not a
-worst-case memory proof.
-
-Build, flash, and observe
--------------------------
-
-1. Import/open the dual-core STM32CubeIDE project.
-2. Build the CM7 image with the configuration above.
-3. Flash the board using ST-Link/STM32CubeProgrammer.
-4. Connect to the ST-Link virtual COM port:
-
-     picocom -b 115200 -d 8 -p n -f n /dev/ttyACM0
-
-5. Reset the board.
-
-Expected successful output:
-
-  CCSDSPack STM32H745 CM7 hardware validation
-  Running packet generation, parsing, CRC, Manager, Validator, PVN, and Idle tests...
-  CCSDSPACK_MCU_TEST:PASS
-  Reset the board to run the validation again.
-
-LED behavior:
-
-- LED1: test is running
-- LED2: validation passed
-- LED3: validation or HAL initialization failed
-
-A packet-test failure is printed as:
-
-  CCSDSPACK_MCU_TEST:FAIL:<code>
-
-A board/HAL initialization failure is printed as:
-
-  CCSDSPACK_MCU_TEST:HAL_FAILURE
-
-Failure codes
--------------
-
-  1  set primary header
-  2  register custom secondary header
-  3  set custom secondary header bytes
-  4  set Manager template
-  5  Manager sequence configuration
-  6  generate application-data packet
-  7  generated wire vector mismatch
-  8  Manager sequence-count advancement
-  9  bounded decode
-  10 consumed-byte count
-  11 decoded logical fields or CRC
-  12 Validator rejected valid packet
-  13 CRC-free primary header
-  14 CRC-free application data
-  15 CRC-free wire vector
-  16 CRC-free bounded decode
-  17 non-zero PVN test setup
-  18 non-zero PVN application data
-  19 non-zero PVN was serialized
-  20 invalid Idle Packet setup
-  21 invalid Idle secondary-header setup
-  22 invalid Idle application data
-  23 invalid Idle Packet was serialized
-  24 valid Idle Packet setup
-  25 valid Idle application data
-  26 valid Idle Packet serialization
-
-What the test covers
+Shared test coverage
 --------------------
 
-- Cortex-M7 consumer compilation with `CCSDS_MCU`
-- custom variable-length secondary-header registration
-- Manager template and automatic sequence-count advancement
-- exact independent CRC16 packet vector
-- bounded parsing and consumed-byte reporting
-- decoded primary-header, secondary-header, application-data, and CRC fields
-- Validator template/coherence checks
-- CRC-disabled packet generation and parsing
-- rejection of non-zero Packet Version Number serialization
-- Idle Packet restrictions and valid Idle Packet generation
-- C++ container/shared-ownership allocation on the configured target runtime
+The shared v2 core covers:
 
-The test does not prove timing bounds, fragmentation behavior over long mission
-operation, worst-case memory use, interrupt safety, thread safety, radiation
-tolerance, or suitability of the project's linker layout for another STM32.
+- generic Packet construction and exact independent CRC16 bytes;
+- custom variable-length secondary-header registration;
+- Manager Packet-template and automatic sequence-count behavior;
+- bounded parsing and consumed-byte reporting;
+- decoded primary-header, secondary-header, application-data, and CRC fields;
+- structured Validator PacketDataLength/CRC/identifier/template checks;
+- PUS-C telecommand construction and intrinsic Telecommand Packet Type;
+- PUS revision/direction/tailoring/acknowledgement/source-ID validation checks;
+- CRC-disabled Packet generation and parsing;
+- non-zero Packet Version Number rejection;
+- Idle Packet rejection/acceptance cases;
+- standard-container/shared-ownership runtime operation on the target.
+
+Result codes
+------------
+
+  0  pass
+  1  set primary header
+  2  register custom secondary header
+  3  set custom secondary header
+  4  set Manager template
+  5  Manager sequence configuration
+  6  set application data
+  7  generated wire vector
+  8  Manager sequence advancement
+  9  bounded decode
+  10 bounded consumed-byte count
+  11 decoded fields
+  12 Validator rejected packet
+  13 CRC-free header
+  14 CRC-free data
+  15 CRC-free wire vector
+  16 CRC-free decode
+  17 invalid-version header setup
+  18 invalid-version data setup
+  19 invalid version serialized
+  20 invalid Idle header setup
+  21 invalid Idle secondary header setup
+  22 invalid Idle data setup
+  23 invalid Idle packet serialized
+  24 valid Idle header setup
+  25 valid Idle data setup
+  26 valid Idle serialization
+  27 structured Validator report missing
+  28 PUS header setup
+  29 PUS direction inference
+  30 PUS application data
+  31 PUS serialization
+  32 PUS Validator rejection
+  33 PUS Validator named checks missing
+
+Physical execution
+------------------
+
+A successful board run reports:
+
+  CCSDSPACK_MCU_TEST:PASS
+
+Compile/link success is useful CI evidence but does not prove startup, final
+link/runtime memory behavior, UART reporting, or operation on silicon. Final
+v2.0.0 release acceptance records a fresh NUCLEO-H755ZI-Q execution separately.
+
+The test is not a proof of timing bounds, long-duration fragmentation, worst-case
+memory use, interrupt/thread safety, radiation tolerance, or suitability of any
+committed board linker layout for a different target.
