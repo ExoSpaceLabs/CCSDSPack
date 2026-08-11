@@ -5,37 +5,60 @@
 
 ccsds::Result<std::shared_ptr<ccsds::SecondaryHeaderAbstract>>
 ccsds::pus::SecondaryHeaderFactory::create(const Revision revision,
-                                           const Direction direction,
-                                           const MissionProfile &profile) const {
-  const auto profileResult = validateMissionProfile(profile);
-  if (!profileResult) return profileResult.error();
-  RET_IF_ERR_MSG(profile.pusRevision != revision || profile.direction != direction,
-                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS factory selection does not match the mission profile.");
-
-  if (revision == Revision::A && direction == Direction::Telecommand)
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_a::TcHeader>(profile));
-  if (revision == Revision::A && direction == Direction::Telemetry)
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_a::TmHeader>(profile));
-  if (revision == Revision::C && direction == Direction::Telecommand)
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_c::TcHeader>(profile));
-  if (revision == Revision::C && direction == Direction::Telemetry)
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_c::TmHeader>(profile));
-  return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA, "Unsupported PUS revision/direction selection."};
+                                           const PacketDirection direction) const {
+  if (revision == Revision::A && direction == PacketDirection::Telecommand)
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_a::TcHeader>());
+  if (revision == Revision::A && direction == PacketDirection::Telemetry)
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_a::TmHeader>());
+  if (revision == Revision::C && direction == PacketDirection::Telecommand)
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_c::TcHeader>());
+  if (revision == Revision::C && direction == PacketDirection::Telemetry)
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(std::make_shared<rev_c::TmHeader>());
+  return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+               "Unsupported PUS revision/direction selection."};
 }
 
 ccsds::Result<std::shared_ptr<ccsds::SecondaryHeaderAbstract>>
-ccsds::pus::SecondaryHeaderFactory::create(const std::string &selector,
-                                         const MissionProfile &profile) const {
-  RET_IF_ERR_MSG(!typeIsSupported(selector), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "Unsupported PUS secondary-header selector: " + selector);
-  RET_IF_ERR_MSG(selector != ccsds::pus::selector(profile.pusRevision, profile.direction),
-                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS selector does not match the mission profile.");
-  return create(profile.pusRevision, profile.direction, profile);
+ccsds::pus::SecondaryHeaderFactory::create(const std::string &value) const {
+  RET_IF_ERR_MSG(!typeIsSupported(value), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Unsupported PUS secondary-header selector: " + value);
+  if (value == "PUS:revA:TC") return create(Revision::A, PacketDirection::Telecommand);
+  if (value == "PUS:revA:TM") return create(Revision::A, PacketDirection::Telemetry);
+  if (value == "PUS:revC:TC") return create(Revision::C, PacketDirection::Telecommand);
+  return create(Revision::C, PacketDirection::Telemetry);
 }
 
-bool ccsds::pus::SecondaryHeaderFactory::typeIsSupported(const std::string &selector) const {
-  return selector == "PUS:revA:TC" || selector == "PUS:revA:TM"
-         || selector == "PUS:revC:TC" || selector == "PUS:revC:TM";
+ccsds::Result<std::shared_ptr<ccsds::SecondaryHeaderAbstract>>
+ccsds::pus::SecondaryHeaderFactory::clone(const SecondaryHeader &header) const {
+  if (header.getRevision() == Revision::A
+      && header.getDirection() == PacketDirection::Telecommand) {
+    const auto &typed = static_cast<const rev_a::TcHeader &>(header);
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(
+      std::make_shared<rev_a::TcHeader>(typed));
+  }
+  if (header.getRevision() == Revision::A
+      && header.getDirection() == PacketDirection::Telemetry) {
+    const auto &typed = static_cast<const rev_a::TmHeader &>(header);
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(
+      std::make_shared<rev_a::TmHeader>(typed));
+  }
+  if (header.getRevision() == Revision::C
+      && header.getDirection() == PacketDirection::Telecommand) {
+    const auto &typed = static_cast<const rev_c::TcHeader &>(header);
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(
+      std::make_shared<rev_c::TcHeader>(typed));
+  }
+  if (header.getRevision() == Revision::C
+      && header.getDirection() == PacketDirection::Telemetry) {
+    const auto &typed = static_cast<const rev_c::TmHeader &>(header);
+    return std::static_pointer_cast<SecondaryHeaderAbstract>(
+      std::make_shared<rev_c::TmHeader>(typed));
+  }
+  return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+               "Cannot clone unsupported PUS header identity."};
+}
+
+bool ccsds::pus::SecondaryHeaderFactory::typeIsSupported(const std::string &value) const {
+  return value == "PUS:revA:TC" || value == "PUS:revA:TM"
+         || value == "PUS:revC:TC" || value == "PUS:revC:TM";
 }
