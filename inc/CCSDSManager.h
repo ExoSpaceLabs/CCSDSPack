@@ -8,6 +8,8 @@
 #ifndef CCSDS_MANAGER_H
 #define CCSDS_MANAGER_H
 
+#include <cstddef>
+#include <cstdint>
 #include <utility>
 #include "CCSDSPacket.h"
 #include "CCSDSResult.h"
@@ -128,6 +130,23 @@ namespace ccsds {
     [[nodiscard]] ResultBool setApplicationData(const std::vector<std::uint8_t> &data);
 
     /**
+     * @brief Raw-buffer overload of setApplicationData().
+     * @param data Pointer to the first application byte.
+     * @param size Number of readable application bytes.
+     * @return The same result as the vector overload.
+     * @note The current implementation bridges through vector-backed storage. The
+     * signature is intentionally stable so a later implementation may avoid that copy.
+     */
+    [[nodiscard]] ResultBool setApplicationData(const std::uint8_t *data,
+                                                const std::size_t size) {
+      RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
+                     "Cannot set Application data, raw buffer pointer is null");
+      RET_IF_ERR_MSG(size == 0U, ErrorCode::NO_DATA,
+                     "Cannot set Application data, raw buffer is empty");
+      return setApplicationData(std::vector<std::uint8_t>(data, data + size));
+    }
+
+    /**
      * @brief Enables or disables automatic packet finalization for stored/generated packets.
      * @param enable True to let serialization refresh dependent fields.
      */
@@ -209,6 +228,8 @@ namespace ccsds {
     Packet getTemplate() { return m_templatePacket; }
     /** @brief Const overload returning a copy of the stored packet template. */
     [[nodiscard]] Packet getTemplate() const { return m_templatePacket; }
+    /** @brief Returns read-only zero-copy access to the stored packet template. */
+    [[nodiscard]] const Packet &getTemplateReference() const noexcept { return m_templatePacket; }
 
     /** @brief Returns a copy of all stored packets. */
     std::vector<Packet> getPackets();
@@ -234,6 +255,19 @@ namespace ccsds {
     [[nodiscard]] ResultBool addPacketFromBuffer(const std::vector<std::uint8_t> &packetBuffer);
 
     /**
+     * @brief Raw-buffer overload of addPacketFromBuffer().
+     * @note The current implementation copies into the vector-backed parser internally.
+     */
+    [[nodiscard]] ResultBool addPacketFromBuffer(const std::uint8_t *data,
+                                                 const std::size_t size) {
+      RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
+                     "Cannot add packet, raw buffer pointer is null");
+      RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
+                     "Cannot add packet, raw buffer is empty");
+      return addPacketFromBuffer(std::vector<std::uint8_t>(data, data + size));
+    }
+
+    /**
      * @brief Transactionally loads a packet collection.
      * @param packets Packets to append in order.
      * @return Success, or the first identifier/validation error without partial mutation.
@@ -246,6 +280,18 @@ namespace ccsds {
      * @return Success, or the first framing, parsing, CRC, identifier, or validation error.
      */
     [[nodiscard]] ResultBool load(const std::vector<std::uint8_t> &packetsBuffer);
+
+    /**
+     * @brief Raw-buffer overload of load() for concatenated packet bytes.
+     * @note The current implementation copies into the vector-backed parser internally.
+     */
+    [[nodiscard]] ResultBool load(const std::uint8_t *data, const std::size_t size) {
+      RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
+                     "Cannot load packet stream, raw buffer pointer is null");
+      RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
+                     "Cannot load packet stream, raw buffer is empty");
+      return load(std::vector<std::uint8_t>(data, data + size));
+    }
 
     /**
      * @brief Reads a binary file and transactionally loads its packet stream.
@@ -286,6 +332,8 @@ namespace ccsds {
      * @warning Reconfiguration directly changes subsequent Manager validation behavior.
      */
     Validator &getValidatorReference() { return m_validator; }
+    /** @brief Returns read-only zero-copy access to the owned Validator. */
+    [[nodiscard]] const Validator &getValidatorReference() const noexcept { return m_validator; }
 
     /**
      * @brief Returns mutable access to the internal packet collection.
@@ -293,6 +341,10 @@ namespace ccsds {
      * @warning Direct edits bypass identifier checks, sequence synchronization, and validation.
      */
     std::vector<Packet> &getPacketsReference() { return m_packets; }
+    /** @brief Returns read-only zero-copy access to the internal packet collection. */
+    [[nodiscard]] const std::vector<Packet> &getPacketsReference() const noexcept {
+      return m_packets;
+    }
 
   private:
     static constexpr std::uint16_t SEQUENCE_COUNT_MASK{0x3FFFU};

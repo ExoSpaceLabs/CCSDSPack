@@ -7,6 +7,7 @@
 - [x] ECSS-E-70-41A selected for PUS-A secondary headers.
 - [x] ECSS-E-ST-70-41C selected for PUS-C secondary headers.
 - [x] PUS-B rejected as a standards revision.
+- [x] Public implementation remains C++17.
 
 ## Mission profile
 
@@ -45,7 +46,7 @@
 
 - [x] TC version and acknowledgement fields are correct.
 - [x] TC service, subtype, two-octet source ID, and spare fields are encoded and parsed.
-- [x] TM version and time-reference status are correct.
+- [x] TM version and four-bit time-reference status are correct.
 - [x] TM service, subtype, message counter, destination, timestamp, and spare fields are encoded and parsed.
 - [x] Fixed vectors with and without timestamp pass.
 
@@ -62,34 +63,81 @@
 - [x] DataField and Manager serialization propagate errors without collapsing them.
 - [x] Packet Data Length and CRC16 are updated only after successful checked finalization.
 
+## Structured validation
+
+- [x] `ccsds::Validator::validate()` returns a structured `ValidationReport`.
+- [x] Validation failures are named by `ValidationCode` instead of positional boolean indices.
+- [x] Generic length, CRC, sequence, Packet Identification, segmentation, and mission-profile checks are represented.
+- [x] PUS revision, direction, Packet Type, profile, identifier, reserved/spare, optional-field, and CUC checks are represented.
+- [x] Validation does not mutate Packet, MissionProfile, or secondary-header state.
+- [x] Sequence validation remains stateful and rolls over modulo 16384.
+- [x] `ValidationReport` uses fixed `std::array` storage and performs no dynamic allocation itself.
+- [x] The Validator requires neither RTTI nor exceptions and remains part of `CCSDS_MCU`.
+- [x] `ccsds_validator` delegates protocol/profile checks to the library Validator.
+- [x] Native structured-validator tests cover generic and PUS positive/negative cases.
+
+## Embedded/raw-buffer ergonomics (#117)
+
+- [x] Existing vector APIs remain available as convenience interfaces.
+- [x] `ccsds::buffer::declaredPacketSize()` determines the complete packet size from only the six-byte primary header.
+- [x] Raw pointer + size Packet adapters cover generic, PUS/custom typed, and opaque-header parsing.
+- [x] Bounded raw parsing reports consumed bytes.
+- [x] Manager accepts raw application-data, one-packet, and concatenated-stream buffers through additive member overloads.
+- [x] Const Manager inspection can return template, packet collection, and Validator references without copying.
+- [x] `ccsds::errorCodeName()` exposes allocation-free symbolic error labels.
+- [x] Raw APIs document that v2.0 currently bridges through vector-backed internals and does not claim zero-copy or globally heap-free operation.
+- [x] `raw_buffer_packet` and `raw_buffer_manager` are installed-package example applications.
+- [x] Native regression coverage includes generic raw parsing, PUS-C raw parsing, Manager raw ingestion, const views, packet-size inspection, and error names.
+- [x] Cortex-M compile/link probe exercises declared-size inspection and raw bounded parsing.
+- [x] Linux Ubuntu 22.04/24.04/latest and Windows hosted installed-package example gates pass with both new examples.
+
+## Generic Manager PEC coherence (#119)
+
+- [x] Generic Manager parsing preserves the actual Packet PEC mode bound by its template/stream.
+- [x] A manually configured CRC-free generic template round-trips without requiring a redundant MissionProfile PEC edit.
+- [x] Vector and raw-buffer Manager stream paths are regression-covered.
+- [x] PUS receive paths remain mission-profile driven and strict.
+- [x] No packet wire-format change is introduced.
+
 ## Legacy removal and migration
 
 - [x] Legacy project-specific `PusA`, `PusB`, and `PusC` classes removed.
 - [x] `PusServices.h/.cpp` removed.
 - [x] Automatic legacy registration removed.
 - [x] Legacy configuration selectors rejected with migration guidance.
-- [x] Current tests and diagrams no longer present legacy codecs as supported.
-- [x] `docs/MIGRATION_V1_TO_V2.md` documents API, selector, and wire changes.
+- [x] Current tests no longer present legacy codecs as supported.
+- [x] UML diagrams are not treated as current v2 release evidence while generation is deferred.
+- [x] `docs/MIGRATION_V1_TO_V2.md` documents API, selector, wire, structured Validator, and raw-buffer changes.
 - [x] Public secondary-header APIs and configuration use CCSDS secondary-header terminology.
 - [x] Project version and SOVERSION set to 2.0.0/2.
 
-## Local validation
+## Current validation
 
-- [x] 106 native tests pass.
-- [x] AddressSanitizer and UndefinedBehaviorSanitizer pass.
-- [x] MCU sources compile with `-fno-exceptions -fno-rtti`.
-- [x] `git diff --check` passes.
+- [x] 115 native tests pass after the structured Validator and #117/#119 additions.
+- [x] AddressSanitizer and UndefinedBehaviorSanitizer have passed locally.
+- [x] MCU sources are designed for `-fno-exceptions -fno-rtti` and the ARM compile/link probe exercises the structured Validator, representative PUS-C TC path, declared-size inspection, and raw bounded parsing.
+- [x] Linux and Windows hosted builds compile the current v2 public API and tools.
+- [x] Doxygen builds the updated public API documentation.
+- [x] Ubuntu 22.04 package/cross-build generation passes with the expanded MCU compile/link probe.
+- [x] Automatic UML generation is disabled; the workflow remains manual-only through `workflow_dispatch`.
+- [x] The expanded native suite including #117/#119 passes on the promotion candidate.
+- [x] The expanded ARM compile/link probe passes on the promotion candidate.
 
 ## Integration and release gates
 
-- [x] `v2.0.0-dev` merged into `develop` through PR #111.
-- [x] Linux, Windows, and Doxygen CI pass on `develop`.
+- [x] Linux, Windows, and Doxygen CI are retained as active hosted gates.
 - [x] Installed-consumer/package gates use v2 version expectations.
-- [x] Standalone generic, custom-header, PUS-C TC, and PUS-C TM examples consume the installed package in Linux and Windows CI.
+- [x] Standalone generic, custom-header, PUS-C TC, PUS-C TM, raw Packet, and raw Manager examples consume the installed package in Linux and Windows CI.
 - [x] Encoder, decoder, and validator accept/report complete PUS profiles.
 - [x] Manager higher-level PUS profile workflows are covered.
-- [ ] Fuzz smoke jobs pass.
-- [ ] arm64 and STM32 representative PUS validation is recorded.
+- [x] Linux package/cross-build gate passes with the expanded MCU probe.
+- [x] Raw-buffer installed-package examples pass in Linux and Windows CI.
+- [ ] Dedicated sanitizer/fuzz smoke jobs pass.
+- [ ] Final PUS-C acknowledgement-vector matrix and traceability are approved.
+- [ ] Final structured negative-vector coverage is approved.
+- [ ] arm64 and STM32 representative v2 PUS/Validator/raw-buffer execution is recorded.
+- [ ] Complete v1.2-to-v2 migration guide is approved.
 - [ ] Release notes and final compliance traceability are approved.
-- [ ] Approved `develop` merged into `main`.
-- [ ] `v2.0.0` tag created from approved `main` only.
+- [ ] Approved `v2.0.0-dev` is merged into `develop`.
+- [ ] Approved `develop` is merged into `main`.
+- [ ] `v2.0.0` tag is created from approved `main` only.

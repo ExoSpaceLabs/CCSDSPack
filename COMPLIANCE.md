@@ -22,13 +22,15 @@ complete PUS application.
 - Packet Version Number `000`, TM/TC Packet Types, the 11-bit APID range, Idle
   Packet structure, Sequence Flags, and modulo-16384 sequence count;
 - checked construction, serialization, bounded parsing, stream management, and
-  validation;
+  structured validation;
 - explicit PUS-A/PUS-C revision and TC/TM selection;
 - service, subtype, acknowledgement, source/destination, counter,
-  time-reference-status, optional PUS-A subcounter, and spare fields applicable
-  to the selected layout;
+  four-bit time-reference-status, optional PUS-A subcounter, and spare fields
+  applicable to the selected layout;
 - numeric basic CCSDS CUC time with explicit epoch, P-field policy, and
   coarse/fine widths;
+- fixed-capacity named `ValidationReport` checks for generic CCSDS, templates,
+  mission profiles, and the supported PUS fields;
 - independent vectors, negative tests, CLI round trips, and installed-package
   consumer tests.
 
@@ -44,6 +46,17 @@ inside the Packet Data Field. CCSDS 133.0-B-2 does not define it as a separate
 top-level field. The optional Manager synchronization marker is external stream
 framing, not part of a Space Packet.
 
+## Validation and bare-metal profile
+
+`ccsds::Validator` reports named `ValidationCode` checks and does not mutate the
+Packet, MissionProfile, or secondary header being inspected. Its
+`ValidationReport` stores checks in fixed `std::array` storage and performs no
+dynamic allocation itself.
+
+The protocol library remains C++17 and the Validator is part of the
+`CCSDS_MCU` static-library build. MCU builds can disable exceptions and RTTI;
+host-only Config and command-line components are excluded.
+
 ## Evidence
 
 Technical scope and traceability are documented in:
@@ -51,6 +64,7 @@ Technical scope and traceability are documented in:
 - [CCSDS compliance matrix](CCSDS_COMPLIANCE.md);
 - [Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md);
 - [PUS and mission tailoring](docs/MISSION_TAILORING.md);
+- [structured validation](docs/VALIDATION.md);
 - [configuration reference](docs/CONFIG.md);
 - independent vectors and regression tests under `test/`;
 - Linux and Windows CI, CLI integration, examples, sanitizers, and package
@@ -58,4 +72,8 @@ Technical scope and traceability are documented in:
 
 Historical v1.2 execution on Raspberry Pi 5 and NUCLEO-H755ZI-Q supports the
 inherited packet core only. It does not replace v2 hardware revalidation for the
-new namespace, PUS, time, or configuration APIs.
+new namespace, PUS, time, Validator, or configuration APIs.
+
+Automatic UML generation is currently disabled and is not part of the v2.0.0
+compliance or release gate. The workflow remains available manually for later
+documentation maintenance.

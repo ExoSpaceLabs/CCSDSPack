@@ -12,14 +12,14 @@
 
 Supported options:
 
-- `-p` or `--package-type`: package type, one of `DEB`, `RPM`, `TGZ`, or `MCU`; default is `DEB`.
-- `-t` or `--toolchain`: optional CMake toolchain file for cross-builds.
-- `-m` or `--mcu-flags`: additional MCU compiler flags when producing an `MCU` package.
-- `--help`: show command usage and examples.
+- `-p` or `--package-type`: `DEB`, `RPM`, `TGZ`, or `MCU`; default is `DEB`;
+- `-t` or `--toolchain`: optional CMake toolchain file for cross-builds;
+- `-m` or `--mcu-flags`: additional MCU compiler flags, forwarded to the MCU library build and compile/link probe;
+- `--help`: command usage and examples.
 
 Successful packages are written under `packages/`.
 
-Do not build with `sudo`. Root privileges are only required when installing or removing a system package. Building as root can leave root-owned files in the repository checkout.
+Do not build with `sudo`. Root privileges are only required when installing or removing a system package.
 
 ### RPM prerequisite
 
@@ -31,57 +31,46 @@ rpmbuild --version
 
 ## Installing a DEB
 
-System package installation requires root permissions:
-
 ```bash
 sudo dpkg -i packages/ccsdspack-v<version>-Linux-<architecture>.deb
 ```
 
-Inspect the installed package:
+Inspect or remove it with:
 
 ```bash
 dpkg -s ccsdspack
 dpkg -L ccsdspack
-```
-
-Remove it with:
-
-```bash
 sudo dpkg --remove ccsdspack
 ```
 
 ## Installed test fixtures
 
-Packages that include `CCSDSPack_tester` also install a sibling `test_resources` directory under the executable installation directory. The tester uses relative `test_resources/...` paths for committed fixtures and temporary file-I/O round trips.
-
-These resources belong only to the regression tester. They are not a dependency of:
-
-- `libccsdspack`;
-- `ccsds_encoder`;
-- `ccsds_decoder`;
-- `ccsds_validator`;
-- applications linking `ccsdspack::CCSDSPack`.
-
-Applications must not treat the installed test resources as public runtime data or API assets.
+Packages that include `CCSDSPack_tester` also install a sibling `test_resources`
+directory under the executable installation directory. These fixtures are for
+the regression suite only. They are not runtime dependencies of the library,
+the CLI programs, or external applications.
 
 ## CMake package consumption
 
-After installation, use the exported CMake package:
+After installation:
 
 ```cmake
 find_package(CCSDSPack CONFIG REQUIRED)
 target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
 ```
 
-A release consumer can require the exact version:
+A v2 consumer can require the breaking-release API explicitly:
 
 ```cmake
-find_package(CCSDSPack 1.2.0 EXACT CONFIG REQUIRED)
+find_package(CCSDSPack 2.0.0 EXACT CONFIG REQUIRED)
 ```
+
+The package exports the C++17 library API, including the structured Validator.
 
 ## Raspberry Pi arm64 validation
 
-On a native 64-bit Raspberry Pi system, run the complete installed-package validation from a checkout matching the package candidate:
+On a native 64-bit Raspberry Pi system, run the installed-package validation
+from a checkout matching the package candidate:
 
 ```bash
 ARM64_DEB="$(find ./packages -type f -name '*arm64*.deb' -print -quit)"
@@ -90,22 +79,30 @@ bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
   2>&1 | tee ~/ccsdspack-aarch64-validation.log
 ```
 
-Launch the script as a normal user. It invokes `sudo dpkg -i` because package installation requires root permissions. It then copies the installed test-only fixtures into a writable temporary directory, preserves their expected relative layout, and runs the tester unprivileged without writing into `/bin`.
-
 The required final marker is:
 
 ```text
 CCSDSPACK_AARCH64_TEST:PASS
 ```
 
-The recorded v1.2 Raspberry Pi 5 result and complete reproduction procedure are in [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md).
+The recorded v1.2 Raspberry Pi 5 result remains historical regression evidence.
+The v2 release records a fresh arm64 result under the v2 release-validation gate.
 
 ## Cross-builds and bare metal
 
-For aarch64 Linux cross-compilation and bare-metal Cortex-M packaging, see the [Cross-build guide](CROSSBUILD.md). It documents toolchain prerequisites and `package.sh` examples.
+For aarch64 Linux cross-compilation and the bare-metal Cortex-M static library,
+see [CROSSBUILD.md](CROSSBUILD.md).
 
-The STM32H745 reference harness and STM32H755-native integration guidance are under:
+The MCU package path uses `CCSDSPACK_BUILD_MCU=ON`, C++17, and the supplied
+`CCSDSPACK_MCU_FLAGS`. A typical Cortex-M7 build disables exceptions and RTTI.
+The MCU package contains the protocol library, including `ccsds::Validator`; it
+does not contain host-only CLI/configuration components.
+
+The STM32H7 reference harness is under:
 
 ```text
 test/package_tester/stm32h7xx/
 ```
+
+Historical v1.2 STM32 evidence is not treated as the final v2 hardware result;
+representative v2 PUS/Validator execution is recorded separately before release.

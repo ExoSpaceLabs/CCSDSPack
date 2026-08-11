@@ -13,6 +13,7 @@
 #include "CCSDSPack.h"
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -44,7 +45,14 @@ namespace CCSDSPackMcuTest {
     InvalidIdleSerialized = 23,
     ValidIdleHeaderFailed = 24,
     ValidIdleDataFailed = 25,
-    ValidIdleSerializationFailed = 26
+    ValidIdleSerializationFailed = 26,
+    StructuredValidatorReportMissing = 27,
+    PusProfileFailed = 28,
+    PusHeaderFailed = 29,
+    PusDataFailed = 30,
+    PusSerializationFailed = 31,
+    PusValidatorFailed = 32,
+    PusValidatorReportMissing = 33
   };
 
   class CustomSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
@@ -84,10 +92,10 @@ namespace CCSDSPackMcuTest {
    * @return Pass, or the first non-zero ResultCode identifying the failed stage.
    *
    * The suite deliberately exercises std::vector, std::string, shared ownership,
-   * factory registration, packet generation, CRC16, bounded parsing, Validator,
-   * CRC-free packets, PVN enforcement, and Idle Packet rules. It therefore checks
-   * the C++ runtime and heap configuration as well as the packet logic when run on
-   * the target MCU.
+   * factory registration, packet generation, CRC16, bounded parsing, the structured
+   * Validator, a representative PUS-C TC profile, CRC-free packets, PVN enforcement,
+   * and Idle Packet rules. It therefore checks the C++ runtime and heap configuration
+   * as well as the packet logic when run on the target MCU.
    */
   inline int run() {
     ccsds::Packet templatePacket;
@@ -169,8 +177,51 @@ namespace CCSDSPackMcuTest {
 
     ccsds::Validator validator(templatePacket);
     validator.configure(true, false, true);
-    if (!validator.validate(decoded)) {
+    const auto validation = validator.validate(decoded);
+    if (!validation.valid()) {
       return ValidatorRejectedPacket;
+    }
+    if (!validation.contains(ccsds::ValidationCode::PacketDataLength)
+        || !validation.contains(ccsds::ValidationCode::Crc16)
+        || !validation.contains(ccsds::ValidationCode::PacketIdentifier)
+        || !validation.passed(ccsds::ValidationCode::TemplateMissionProfile)) {
+      return StructuredValidatorReportMissing;
+    }
+
+    auto pusProfile = ccsds::pus::makeProfile(
+      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
+    ccsds::Packet pusPacket;
+    if (const auto result = pusPacket.setPrimaryHeader(ccsds::PrimaryHeader{
+          0, 1, 1, 0x42, ccsds::UNSEGMENTED, 0, 0
+        }); !result) {
+      return PusHeaderFailed;
+    }
+    if (const auto result = pusPacket.setMissionProfile(pusProfile); !result) {
+      return PusProfileFailed;
+    }
+    if (const auto result = pusPacket.setSecondaryHeader(
+          std::make_shared<ccsds::pus::rev_c::TcHeader>(
+            pusProfile, 17U, 1U, 0x1234U, 0x09U)); !result) {
+      return PusHeaderFailed;
+    }
+    if (const auto result = pusPacket.setApplicationData({0xAAU, 0x55U}); !result) {
+      return PusDataFailed;
+    }
+    if (!pusPacket.serialize()) {
+      return PusSerializationFailed;
+    }
+
+    ccsds::Validator pusValidator;
+    const auto pusValidation = pusValidator.validate(pusPacket);
+    if (!pusValidation.valid()) {
+      return PusValidatorFailed;
+    }
+    if (!pusValidation.passed(ccsds::ValidationCode::PusRevision)
+        || !pusValidation.passed(ccsds::ValidationCode::PusDirection)
+        || !pusValidation.passed(ccsds::ValidationCode::PusPacketType)
+        || !pusValidation.passed(ccsds::ValidationCode::PusAcknowledgement)
+        || !pusValidation.passed(ccsds::ValidationCode::PusSourceId)) {
+      return PusValidatorReportMissing;
     }
 
     ccsds::Packet crcDisabled;

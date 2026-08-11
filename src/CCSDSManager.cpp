@@ -303,16 +303,21 @@ ccsds::ResultBool ccsds::Manager::addPacket(Packet packet) {
 ccsds::ResultBool ccsds::Manager::addPacketFromBuffer(
     const std::vector<std::uint8_t> &packetBuffer) {
   Packet packet;
-  packet.setPacketErrorControlMode(boundPacketErrorControlMode());
+  const auto errorControl = boundPacketErrorControlMode();
   if (const auto profile = boundMissionProfile(); profile != nullptr) {
     FORWARD_RESULT(packet.setMissionProfile(*profile));
     if (profile->pusEnabled) {
       FORWARD_RESULT(packet.deserialize(
         packetBuffer, pus::selector(profile->pusRevision, profile->direction)));
     } else {
+      // Generic packets may select PEC directly on Packet without using the
+      // MissionProfile convenience field. Preserve the Manager template's actual
+      // selected mode after applying the generic profile metadata.
+      packet.setPacketErrorControlMode(errorControl);
       FORWARD_RESULT(packet.deserialize(packetBuffer));
     }
   } else {
+    packet.setPacketErrorControlMode(errorControl);
     FORWARD_RESULT(packet.deserialize(packetBuffer));
   }
   FORWARD_RESULT(addPacket(std::move(packet)));
@@ -357,7 +362,7 @@ ccsds::ResultBool ccsds::Manager::load(
       packetsBuffer.begin() + static_cast<std::ptrdiff_t>(offset),
       packetsBuffer.end());
     Packet packet;
-    packet.setPacketErrorControlMode(staged.boundPacketErrorControlMode());
+    const auto errorControl = staged.boundPacketErrorControlMode();
     std::size_t consumed{};
     if (const auto profile = staged.boundMissionProfile(); profile != nullptr) {
       FORWARD_RESULT(packet.setMissionProfile(*profile));
@@ -365,9 +370,11 @@ ccsds::ResultBool ccsds::Manager::load(
         ASSIGN_CP(consumed, packet.deserializeBounded(
           remaining, pus::selector(profile->pusRevision, profile->direction)));
       } else {
+        packet.setPacketErrorControlMode(errorControl);
         ASSIGN_CP(consumed, packet.deserializeBounded(remaining));
       }
     } else {
+      packet.setPacketErrorControlMode(errorControl);
       ASSIGN_CP(consumed, packet.deserializeBounded(remaining));
     }
     const auto addResult = staged.addPacket(std::move(packet));

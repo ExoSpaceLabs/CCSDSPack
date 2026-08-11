@@ -8,14 +8,13 @@
 #ifndef CCSDS_RESULT_H
 #define CCSDS_RESULT_H
 
+#include <cstdint>
+#include <string>
 #include <variant>
 #include <vector>
-#include <cstdint>
 
 #ifndef CCSDS_MCU
   #include <iostream>
-#else
-  #include <string>
 #endif
 
 namespace ccsds {
@@ -42,6 +41,32 @@ namespace ccsds {
     FILE_WRITE_ERROR = 12,              ///< Output file could not be written.
     CONFIG_FILE_ERROR = 13              ///< Configuration file/key/type/value is invalid.
   };
+
+  /**
+   * @brief Returns a stable symbolic label for an ErrorCode.
+   * @param code Error category to format.
+   * @return Static storage requiring no allocation; unknown numeric values return
+   * `UNRECOGNIZED_ERROR_CODE`.
+   */
+  [[nodiscard]] inline const char *errorCodeName(const ErrorCode code) noexcept {
+    switch (code) {
+      case NONE: return "NONE";
+      case UNKNOWN_ERROR: return "UNKNOWN_ERROR";
+      case NO_DATA: return "NO_DATA";
+      case INVALID_DATA: return "INVALID_DATA";
+      case INVALID_HEADER_DATA: return "INVALID_HEADER_DATA";
+      case INVALID_SECONDARY_HEADER_DATA: return "INVALID_SECONDARY_HEADER_DATA";
+      case INVALID_APPLICATION_DATA: return "INVALID_APPLICATION_DATA";
+      case NULL_POINTER: return "NULL_POINTER";
+      case INVALID_CHECKSUM: return "INVALID_CHECKSUM";
+      case VALIDATION_FAILURE: return "VALIDATION_FAILURE";
+      case TEMPLATE_SET_FAILURE: return "TEMPLATE_SET_FAILURE";
+      case FILE_READ_ERROR: return "FILE_READ_ERROR";
+      case FILE_WRITE_ERROR: return "FILE_WRITE_ERROR";
+      case CONFIG_FILE_ERROR: return "CONFIG_FILE_ERROR";
+      default: return "UNRECOGNIZED_ERROR_CODE";
+    }
+  }
 
   /**
    * @class Error

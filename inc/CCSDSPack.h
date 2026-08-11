@@ -15,6 +15,7 @@
  * - Use ccsds::Manager for one packet-identifier stream and sequence counter.
  * - Use ccsds::Validator for explicit coherence/template checks.
  * - Use ccsds::MissionProfile for standards-facing v2 mission tailoring.
+ * - Use ccsds::buffer for raw pointer-plus-size transport adapters.
  * - Derive from ccsds::SecondaryHeaderAbstract for mission-specific headers.
  *
  * @code{.cpp}
@@ -41,6 +42,7 @@
 #include "CCSDSSecondaryHeaderFactory.h"
 #include "CCSDSUtils.h"
 #include "CCSDSValidator.h"
+#include "CCSDSBuffer.h"
 #include "PusSecondaryHeaderFactory.h"
 #include "PusSecondaryHeaders.h"
 

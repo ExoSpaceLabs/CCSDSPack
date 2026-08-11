@@ -225,11 +225,11 @@ namespace ccsds::pus {
                       time::CucTime timestamp = {});
     /** @brief Returns the PUS-C message-type counter. */
     [[nodiscard]] std::uint16_t getMessageTypeCounter() const { return m_messageTypeCounter; }
-    /** @brief Returns the PUS-C time-reference status. */
+    /** @brief Returns the four-bit PUS-C time-reference status. */
     [[nodiscard]] std::uint8_t getTimeReferenceStatus() const { return m_timeReferenceStatus; }
     /** @brief Sets the PUS-C message-type counter. */
     void setMessageTypeCounter(std::uint16_t value) { m_messageTypeCounter = value; }
-    /** @brief Sets the three-bit PUS-C time-reference status. */
+    /** @brief Sets the four-bit PUS-C time-reference status. */
     ResultBool setTimeReferenceStatus(std::uint8_t value);
     /** @brief Parses a complete PUS-C telemetry secondary header. */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override;

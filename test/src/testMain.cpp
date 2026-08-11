@@ -16,6 +16,7 @@ int main() {
   testGroupParsing(&tester, "Bounded parsing, CRC validation, and header validation tests.");
   testGroupConformance(&tester, "CCSDS 133.0-B-2 EC2 Space Packet PDU profile tests.");
   testGroupPus(&tester, "ECSS PUS-A and PUS-C TC/TM secondary-header tests.");
+  testGroupBuffer(&tester, "Raw-buffer and embedded API ergonomics tests.");
 
   return tester.Result();
 }

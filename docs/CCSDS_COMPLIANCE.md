@@ -6,7 +6,7 @@ CCSDSPack v2 inherits the validated generic Space Packet PDU behaviour from v1.2
 
 | Area | Baseline | Implemented scope |
 |---|---|---|
-| Space Packet | CCSDS 133.0-B-2 Issue 2, including Editorial Change 2 | Construction, serialization, bounded parsing, inspection, validation, segmentation, and packet-error-control profile |
+| Space Packet | CCSDS 133.0-B-2 Issue 2, including Editorial Change 2 | Construction, serialization, bounded parsing, inspection, structured validation, segmentation, and packet-error-control profile |
 | PUS-A | ECSS-E-70-41A, 30 January 2003 | TC and TM secondary-header layouts |
 | PUS-C | ECSS-E-ST-70-41C, 15 April 2016 | TC and TM secondary-header layouts |
 | CUC time | CCSDS 301.0-B-4 | Basic numeric CUC with selected epoch, P-field, and coarse/fine widths |
@@ -110,16 +110,47 @@ synchronizes packet-error-control mode. PUS attachment and parsing reject:
 - identifier and timestamp sizes inconsistent with the profile;
 - invalid CUC epoch, P-field, coarse/fine widths, or overflowing counters.
 
+## Structured validation
+
+`ccsds::Validator` exposes named checks through `ccsds::ValidationReport` rather
+than a positional boolean vector. The report has fixed capacity and stores its
+checks in `std::array`, so the report itself performs no dynamic allocation.
+
+The validator covers the inherited generic checks and the selected v2 profile,
+including:
+
+- primary-header/version and Packet Data Length coherence;
+- CRC16 when enabled;
+- secondary-header presence;
+- sequence-flag state and modulo-16384 count continuity;
+- Packet Identification, segmentation class, and profile matching against a template;
+- PUS revision, direction, Packet Type, and header-profile consistency;
+- PUS header size, version/reserved bits, and zero spare fields;
+- telecommand acknowledgement/source-ID constraints;
+- telemetry destination-ID constraints;
+- PUS-A TM packet-subcounter policy;
+- PUS-C TM time-reference status;
+- numeric CUC timestamp fit under the mission profile.
+
+Validation does not modify the packet, mission profile, or secondary header. The
+Validator maintains only its own sequence-stream state. `ccsds_validator`
+delegates protocol/profile validation to this library implementation. See
+[VALIDATION.md](VALIDATION.md).
+
 ## Evidence
 
-The current native suite contains 106 passing tests. Evidence includes fixed
-TC/TM byte vectors for both revisions, explicit and implicit P-field CUC vectors,
-fresh-instance factory checks, all four configuration selectors, Manager PUS
-parsing, wrong-direction/profile/error-control failures, version and
-reserved-bit rejection, timestamp overflow, and spare-byte validation. CLI
-integration round-trips generic, PUS-A TC/TM, and PUS-C TC/TM configurations and
-rejects a corrupted PUS version.
+The native test suite covers fixed TC/TM byte vectors for both revisions,
+explicit and implicit P-field CUC vectors, fresh-instance factory checks, all
+four configuration selectors, Manager PUS parsing, structured Validator checks,
+wrong-direction/profile/error-control failures, version and reserved-bit
+rejection, timestamp overflow, spare-byte validation, and generic v1.2
+regressions. CLI integration round-trips generic, PUS-A TC/TM, and PUS-C TC/TM
+configurations and rejects a corrupted PUS version.
 
-The library also compiles in MCU mode with `-fno-exceptions -fno-rtti`. Generic v1.2 independent CCSDS vectors and regression tests remain passing.
+The library also compiles in MCU mode with C++17 and supports builds with
+`-fno-exceptions -fno-rtti`. Host-only configuration and CLI components are not
+part of the MCU build; the structured Validator is.
 
-CI, installed-package, Doxygen, cross-platform, sanitizer, fuzz, arm64, and hardware release gates remain authoritative at integration/release time and are not implied by a local compile.
+Linux, Windows, Doxygen, installed-package, sanitizer, fuzz, arm64, and hardware
+release gates remain authoritative at integration/release time. UML generation
+is currently a manual documentation tool and is not a v2.0.0 release gate.
