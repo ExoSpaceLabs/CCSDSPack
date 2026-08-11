@@ -7,11 +7,9 @@ SPDX-License-Identifier: Apache-2.0
 
 [Documentation index](README.md) | [Raw buffers](RAW_BUFFERS.md) | [Configuration](CONFIG.md) | [Structured validation](VALIDATION.md) | [Space Packet profile](CCSDS_133_0_B_2_PROFILE.md)
 
-These examples use the v2 C++17 API. They create CCSDS Space Packets with Packet Version Number `000`. The default packet-error-control profile is the project-specific CRC16 trailer; configure `PacketErrorControlMode::None` explicitly for CRC-free packets.
+These examples use the v2 C++17 API. Packet-level CRC16 is the default; use `PacketErrorControlMode::None` explicitly for CRC-free streams. PUS revision/direction is carried by the concrete PUS header type, while optional mission layout choices use direction-specific tailoring structs.
 
 ## Build integration
-
-After installing CCSDSPack:
 
 ```cmake
 find_package(CCSDSPack 2.0 CONFIG REQUIRED)
@@ -21,69 +19,123 @@ target_link_libraries(example PRIVATE ccsdspack::CCSDSPack)
 target_compile_features(example PRIVATE cxx_std_17)
 ```
 
-Six complete installed-package consumers are maintained under [`example/`](../example/README.md). Each has its own `CMakeLists.txt` and uses `find_package(CCSDSPack 2.0 CONFIG REQUIRED)`.
-
-After installing the library, build every example or one target directory:
+Six installed-package consumers are maintained under [`example/`](../example/README.md). Build all or one target:
 
 ```bash
 ./example/build_examples.sh all /path/to/install/prefix
 ./example/build_examples.sh raw_buffer_packet /path/to/install/prefix
 ./example/build_examples.sh raw_buffer_manager /path/to/install/prefix
 ./example/build_examples.sh custom_secondary_header /path/to/install/prefix
+./example/build_examples.sh pus_c_telecommand /path/to/install/prefix
+./example/build_examples.sh pus_c_telemetry /path/to/install/prefix
 ```
 
-The complete example set is built and executed by the Linux and Windows installed-package CI paths.
+Linux and Windows CI compile and execute the complete installed-package example set.
 
-## Create and parse one packet with vectors
+## Generic packet with vectors
 
 ```cpp
 #include <CCSDSPack.h>
 
-#include <cstdint>
-#include <iostream>
-#include <vector>
+ccsds::Packet packet;
+packet.setDataFieldSize(1024);
 
-int main() {
-  ccsds::Packet packet;
-  packet.setDataFieldSize(1024);
+const auto header = packet.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
+});
+if (!header) return header.error().code();
 
-  const auto headerResult = packet.setPrimaryHeader(ccsds::PrimaryHeader{
-    0,                       // Packet Version Number: must be 000
-    0,                       // Packet Type: telemetry
-    0,                       // no secondary header
-    0x123,                   // APID
-    ccsds::UNSEGMENTED,
-    0,                       // Packet Sequence Count
-    0                        // calculated by serialize()
-  });
-  if (!headerResult) return headerResult.error().code();
+const auto data = packet.setApplicationData({0x10, 0x20, 0x30});
+if (!data) return data.error().code();
 
-  const auto dataResult = packet.setApplicationData({0x10, 0x20, 0x30});
-  if (!dataResult) return dataResult.error().code();
+const auto wire = packet.serialize();
+if (!wire) return wire.error().code();
 
-  const auto wireResult = packet.serialize();
-  if (!wireResult) return wireResult.error().code();
-  const auto &wire = wireResult.value();
-
-  ccsds::Packet decoded; // CRC16 is also the receiving default
-  const auto consumedResult = decoded.deserializeBounded(wire);
-  if (!consumedResult) return consumedResult.error().code();
-
-  std::cout << "Consumed " << consumedResult.value()
-            << " bytes, APID=" << decoded.getPrimaryHeader().getAPID()
-            << ", application bytes=" << decoded.getApplicationDataBytes().size()
-            << '\n';
-  return 0;
-}
+ccsds::Packet decoded;
+const auto consumed = decoded.deserializeBounded(wire.value());
+if (!consumed) return consumed.error().code();
 ```
 
-`serialize()` returns `ResultBuffer` and reports the exact finalization error. `update()` returns `ResultBool` when finalization without bytes is required. Getters inspect stored state and do not perform hidden finalization.
+`serialize()` returns `ResultBuffer`; `update()` returns `ResultBool`. Getters inspect stored state and do not perform hidden finalization.
 
-The vector APIs remain the most convenient interface when the application already owns data in vectors.
+## PUS-C telecommand with defaults
+
+No profile object is required:
+
+```cpp
+ccsds::Packet packet;
+packet.setPrimaryHeader(ccsds::PrimaryHeader{
+  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
+});
+
+const auto secondary = packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TcHeader>(
+    17,       // service type
+    1,        // service subtype
+    0x1234,   // source ID
+    0x09));   // acknowledgement flags
+if (!secondary) return secondary.error().code();
+```
+
+`rev_c::TcHeader` intrinsically means PUS-C Telecommand. Installing it sets the CCSDS secondary-header flag and synchronizes Packet Type to Telecommand.
+
+The PUS-C TC source-ID width is fixed at two octets by the supported layout.
+
+## PUS-C telemetry with optional CUC tailoring
+
+```cpp
+ccsds::pus::rev_c::TmTailoring tailoring;
+tailoring.timestampPresent = true;
+tailoring.cuc = {
+  ccsds::time::Epoch::Ccsds1958Tai,
+  ccsds::time::PFieldMode::Implicit,
+  4,
+  0
+};
+
+ccsds::Packet packet;
+packet.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TmHeader>(
+    tailoring,
+    3, 25, 7, 0x1234, 2,
+    ccsds::time::CucTime{0x01020304, 0}));
+```
+
+Default PUS-C TM has no timestamp. Tailoring is supplied only when the wire layout requires an optional choice such as CUC time or spare octets.
+
+## PUS deserialization
+
+Preinstall a parsing schema:
+
+```cpp
+ccsds::Packet decoded;
+decoded.setSecondaryHeader(
+  std::make_shared<ccsds::pus::rev_c::TmHeader>());
+
+const auto parsed = decoded.deserialize(wire);
+```
+
+Or use the typed convenience API:
+
+```cpp
+ccsds::Packet decoded;
+const auto parsed =
+  decoded.deserialize<ccsds::pus::rev_c::TmHeader>(wire);
+```
+
+Tailored wire layouts pass the same tailoring object to the typed parser:
+
+```cpp
+const auto parsed =
+  decoded.deserialize<ccsds::pus::rev_c::TmHeader>(
+    wire, tailoring);
+```
+
+The parser rejects a CCSDS Packet Type that contradicts the concrete `TcHeader`/`TmHeader` direction.
 
 ## Receive from a raw transport buffer
 
-Use `ccsds::buffer::declaredPacketSize()` after receiving the six-byte primary header. The packet body does not need to be present yet:
+After receiving the six-byte primary header:
 
 ```cpp
 std::uint8_t header[6];
@@ -91,11 +143,9 @@ receive(header, sizeof(header));
 
 const auto declared = ccsds::buffer::declaredPacketSize(header, sizeof(header));
 if (!declared) return declared.error().code();
-
-const std::size_t remaining = declared.value() - sizeof(header);
 ```
 
-Once the complete packet is available in transport-owned storage:
+For a complete generic packet:
 
 ```cpp
 ccsds::Packet packet;
@@ -103,18 +153,31 @@ packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
 
 const auto consumed = ccsds::buffer::deserializeBounded(
   packet, rxBuffer, receivedBytes);
-if (!consumed) {
-  log(ccsds::errorCodeName(consumed.error().code()),
-      consumed.error().message());
-  return consumed.error().code();
-}
 ```
 
-The public pointer-plus-size API is intended to remain stable as internals evolve. In v2.0.0 the raw parsing adapters still bridge through vector-backed parsing internally, so this is not yet a zero-copy claim. See [RAW_BUFFERS.md](RAW_BUFFERS.md).
+For a PUS-C TC packet with default tailoring:
 
-## Use raw buffers with Manager
+```cpp
+const auto consumed =
+  ccsds::buffer::deserializeBounded<ccsds::pus::rev_c::TcHeader>(
+    packet, rxBuffer, receivedBytes);
+```
 
-A Manager can accept fixed or externally owned application and stream buffers directly:
+For tailored PUS-C TM:
+
+```cpp
+const auto consumed =
+  ccsds::buffer::deserializeBounded<ccsds::pus::rev_c::TmHeader>(
+    packet, rxBuffer, receivedBytes, tailoring);
+```
+
+The raw API currently bridges to vector-backed internals. It establishes a stable transport boundary for later zero-copy/heap-free work but does not claim that the v2.0 implementation is allocation-free.
+
+See [RAW_BUFFERS.md](RAW_BUFFERS.md).
+
+## Manager with a complete Packet template
+
+Manager has no independent profile state. Its Packet template carries Packet Identification, PEC, secondary-header type, and any PUS tailoring.
 
 ```cpp
 ccsds::Packet packetTemplate;
@@ -129,19 +192,20 @@ sender.setPacketTemplate(packetTemplate);
 
 std::uint8_t payload[128];
 const std::size_t payloadSize = acquirePayload(payload, sizeof(payload));
-const auto setResult = sender.setApplicationData(payload, payloadSize);
-if (!setResult) return setResult.error().code();
+sender.setApplicationData(payload, payloadSize);
 
 const auto wire = sender.getPacketsBuffer();
 if (!wire) return wire.error().code();
 
 ccsds::Manager receiver;
 receiver.setPacketTemplate(packetTemplate);
-const auto loadResult = receiver.load(wire.value().data(), wire.value().size());
-if (!loadResult) return loadResult.error().code();
+const auto loaded = receiver.load(wire.value().data(), wire.value().size());
+if (!loaded) return loaded.error().code();
 ```
 
-For read-only inspection without copying the packet collection:
+A PUS Manager works the same way: install the desired concrete PUS header/tailoring in `packetTemplate` before passing it to Manager.
+
+For read-only inspection without copies:
 
 ```cpp
 const ccsds::Manager &view = receiver;
@@ -150,180 +214,96 @@ const auto &packets = view.getPacketsReference();
 const auto &validator = view.getValidatorReference();
 ```
 
-These references remain owned by the Manager.
-
-## Parse PUS from a raw buffer
-
-PUS raw parsing retains the same explicit mission-profile and selector contract:
-
-```cpp
-auto profile = ccsds::pus::makeProfile(
-  ccsds::pus::Revision::C,
-  ccsds::pus::Direction::Telecommand);
-
-ccsds::Packet packet;
-const auto profileResult = packet.setMissionProfile(profile);
-if (!profileResult) return profileResult.error().code();
-
-const auto consumed = ccsds::buffer::deserializeBounded(
-  packet,
-  rxBuffer,
-  receivedBytes,
-  ccsds::pus::selector(profile.pusRevision, profile.direction));
-if (!consumed) return consumed.error().code();
-```
-
-The raw adapter does not infer a PUS revision or direction from bytes.
-
-## Validate a packet with named checks
+## Validate with named checks
 
 ```cpp
 ccsds::Validator validator;
 const auto report = validator.validate(packet);
 
-if (!report.valid()) {
-  for (const auto &check : report) {
-    if (!check.passed) {
-      handleValidationFailure(check.code,
-                              ccsds::validationCodeName(check.code));
-    }
-  }
-}
-```
-
-Query a specific condition without relying on report indices:
-
-```cpp
 if (report.failed(ccsds::ValidationCode::PacketDataLength)) {
   handleLengthFailure();
 }
+
+if (report.failed(ccsds::ValidationCode::PusTailoring)) {
+  handlePusTailoringFailure();
+}
 ```
 
-The same Validator API is available in the C++17 `CCSDS_MCU` build. The report uses fixed `std::array` storage and performs no dynamic allocation itself. See [VALIDATION.md](VALIDATION.md).
+The same fixed-capacity Validator API is available under `CCSDS_MCU`.
 
-## Segment a payload with Manager
+## Segment application data with Manager
 
-One Manager represents one complete Packet Identification value and one Packet Sequence Count stream.
+One Manager represents one Packet Identification value and one Packet Sequence Count stream.
 
 ```cpp
 ccsds::Packet packetTemplate;
-packetTemplate.setDataFieldSize(1024);
-
-const auto headerResult = packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
+packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
   0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
 });
-if (!headerResult) return headerResult.error().code();
+packetTemplate.setDataFieldSize(1024);
 
 ccsds::Manager manager;
-const auto templateResult = manager.setPacketTemplate(packetTemplate);
-if (!templateResult) return templateResult.error().code();
+manager.setPacketTemplate(packetTemplate);
 
-manager.setDataFieldSize(1024);
 std::vector<std::uint8_t> payload(5000, 0xAB);
-const auto dataResult = manager.setApplicationData(payload);
-if (!dataResult) return dataResult.error().code();
-
-const auto streamResult = manager.getPacketsBuffer();
-if (!streamResult) return streamResult.error().code();
+const auto result = manager.setApplicationData(payload);
 ```
 
-A one-packet result uses `UNSEGMENTED`. A multi-packet result uses `FIRST_SEGMENT`, zero or more `CONTINUING_SEGMENT` packets, and `LAST_SEGMENT`. Automatic sequence counting advances once per packet and wraps modulo 16384.
+A one-packet result uses `UNSEGMENTED`. A multi-packet result uses `FIRST_SEGMENT`, zero or more `CONTINUING_SEGMENT` packets, and `LAST_SEGMENT`. Automatic sequence counting wraps modulo 16384.
 
-## Parse concatenated packets manually
+## CRC-free packets
 
-Vector-owned stream iteration remains valid:
-
-```cpp
-std::size_t offset = 0;
-while (offset < stream.size()) {
-  std::vector<std::uint8_t> remaining(stream.begin() + offset, stream.end());
-  ccsds::Packet packet;
-  const auto consumed = packet.deserializeBounded(remaining);
-  if (!consumed) return consumed.error();
-  offset += consumed.value();
-}
-```
-
-For externally owned contiguous memory, avoid constructing the `remaining` vector in caller code and use the raw adapter instead:
-
-```cpp
-std::size_t offset = 0;
-while (offset < streamSize) {
-  ccsds::Packet packet;
-  const auto consumed = ccsds::buffer::deserializeBounded(
-    packet, streamData + offset, streamSize - offset);
-  if (!consumed) return consumed.error();
-  offset += consumed.value();
-}
-```
-
-The current adapter may still allocate internally; the caller-facing API no longer requires ownership transfer into a vector.
-
-## Create CRC-free packets
-
-The sender and receiver must both select `None`. The mode is never inferred from packet bytes.
+Sender and receiver both select `None`; the mode is not inferred from packet bytes.
 
 ```cpp
 ccsds::Packet sender;
 sender.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
-sender.setPrimaryHeader(ccsds::PrimaryHeader{
-  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
-});
-sender.setApplicationData({0x01, 0x02});
-const auto wireResult = sender.serialize();
-if (!wireResult) return wireResult.error().code();
 
 ccsds::Packet receiver;
 receiver.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
-const auto consumed = receiver.deserializeBounded(wireResult.value());
-if (!consumed) return consumed.error().code();
 ```
 
-## Add an opaque secondary header
+This is generic packet policy and is independent of whether a PUS/custom secondary header is installed.
 
-For mission-specific opaque bytes that do not use a registered typed header, use the `BufferHeader` path through `setSecondaryHeader()`:
+## Opaque secondary headers
 
 ```cpp
 ccsds::Packet packet;
 packet.setPrimaryHeader(ccsds::PrimaryHeader{
-  0, 0, 1, 0x123, ccsds::UNSEGMENTED, 0, 0
+  0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0
 });
 packet.setSecondaryHeader(std::vector<std::uint8_t>{0xAA, 0x55});
 packet.setApplicationData({0x10, 0x20});
-const auto wireResult = packet.serialize();
-if (!wireResult) return wireResult.error().code();
 ```
 
-When parsing an opaque secondary header, provide its byte count. Both vector and raw adapters support this contract.
+When parsing an opaque header, provide its byte count. Registered custom headers may override `SecondaryHeaderAbstract::getDirection()` when their format has an intrinsic direction; otherwise they remain direction-neutral.
 
-## Use a configuration file
+## Configuration file
 
-A minimal template configuration is:
+Minimal generic configuration:
 
 ```ini
-mission_profile:string=generic
 ccsds_packet_error_control:string=crc16
-
 ccsds_version_number:int=0
 ccsds_type:bool=false
-ccsds_secondary_header_flag:bool=false
 ccsds_APID:int=0x123
 ccsds_segmented:bool=false
-
 data_field_size:int=1024
-
 define_secondary_header:bool=false
 ```
 
-Load it directly into a Manager:
+PUS identity is selected by the concrete selector, not separate revision/direction/profile keys:
 
-```cpp
-ccsds::Manager manager;
-const auto templateResult = manager.loadTemplateConfigFile("template.cfg");
-if (!templateResult) return templateResult.error().code();
+```ini
+define_secondary_header:bool=true
+secondary_header_type:string=PUS:revC:TC
+pus_service_type:uint=17
+pus_service_subtype:uint=1
+pus_acknowledgement_flags:uint=9
+pus_source_id:uint=0x1234
 ```
 
-See [CONFIG.md](CONFIG.md) for all keys, PUS/CUC profiles, and Idle Packet constraints. Complete CLI-ready configurations are in [`example/config`](../example/config).
+See [CONFIG.md](CONFIG.md) and [`example/config`](../example/config).
 
 ## Command-line equivalent
 
@@ -333,4 +313,4 @@ ccsds_validator -i packets.bin -c template.cfg --verbose
 ccsds_decoder -i packets.bin -o recovered.bin -c template.cfg
 ```
 
-Use `--packet-error-control none` consistently on all three tools for a CRC-free stream. See [CLI.md](CLI.md) for complete options and trailing-byte handling.
+Use `--packet-error-control none` consistently for CRC-free streams. See [CLI.md](CLI.md).
