@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # Error and Result handling
 
-[Documentation index](README.md) | [Structured validation](VALIDATION.md) | [API reference](https://exospacelabs.github.io/CCSDSPack/html/)
+[Documentation index](README.md) | [Structured validation](VALIDATION.md) | [Raw buffers](RAW_BUFFERS.md) | [API reference](https://exospacelabs.github.io/CCSDSPack/html/)
 
 CCSDSPack reports checked operation failures through `ccsds::Result<T>` and
 `ccsds::Error`, defined in `inc/CCSDSResult.h`. Public packet and Manager
@@ -45,6 +45,22 @@ before calling `value()` or `error()`.
 | `FILE_WRITE_ERROR` | 12 | Output could not be written. |
 | `CONFIG_FILE_ERROR` | 13 | A configuration file, key, type, or value is invalid. |
 
+## Stable symbolic names
+
+`ccsds::errorCodeName()` returns a static symbolic label for every `ErrorCode` and performs no allocation:
+
+```cpp
+const auto result = ccsds::buffer::deserializeBounded(packet, rxBuffer, rxSize);
+if (!result) {
+  log(ccsds::errorCodeName(result.error().code()),
+      result.error().message());
+}
+```
+
+Examples include `INVALID_DATA`, `INVALID_CHECKSUM`, and `CONFIG_FILE_ERROR`. An unrecognized numeric enum value returns `UNRECOGNIZED_ERROR_CODE`.
+
+The helper is intended for stable logs, telemetry diagnostics, test output, and bare-metal code that needs something more descriptive than the numeric category. The operation-specific `Error::message()` remains the detailed diagnostic and may change as diagnostics improve.
+
 ## Structured Validator reports
 
 `ccsds::Validator::validate()` is intentionally different from an operation that
@@ -61,6 +77,8 @@ if (report.failed(ccsds::ValidationCode::Crc16)) {
 A report is not an `Error` and does not use numeric report positions. This lets
 bare-metal code branch on stable enum values without allocating error strings or
 depending on a six-element boolean-vector layout.
+
+Use `ccsds::validationCodeName()` when a symbolic Validator-check label is needed.
 
 Malformed wire input can still return a normal `Error` from parsing before a
 Packet exists to pass to the Validator.
@@ -81,6 +99,4 @@ boundaries.
 
 ## Hosted and MCU builds
 
-The same Result types and structured Validator API are available in host and
-`CCSDS_MCU` builds. The project remains C++17 and supports MCU builds with
-`-fno-exceptions -fno-rtti`.
+The same Result types, `errorCodeName()`, raw-buffer adapters, and structured Validator API are available in host and `CCSDS_MCU` builds. The project remains C++17 and supports MCU builds with `-fno-exceptions -fno-rtti`.
