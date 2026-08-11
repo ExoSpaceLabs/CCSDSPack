@@ -17,7 +17,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Explicit `ccsds::MissionProfile` selection and validation for generic CCSDS and PUS revision/direction profiles.
 - Numeric basic CCSDS CUC time with explicit epoch, P-field, coarse-width, and fine-width policy.
 - Fixed-capacity `ccsds::ValidationReport` and named `ccsds::ValidationCode` checks for generic CCSDS, templates, mission profiles, and supported PUS fields.
-- Standalone installed-package examples and complete generic/PUS configuration profiles.
+- `ccsds::buffer::declaredPacketSize()` for determining complete packet size from only a six-byte primary header.
+- Pointer-plus-size Packet adapters for generic, PUS/custom typed, and opaque-header parsing while preserving the vector convenience APIs.
+- Pointer-plus-size Manager overloads for application data, one-packet ingestion, and concatenated packet streams.
+- Const-reference Manager inspection for the template, packet collection, and Validator.
+- Allocation-free `ccsds::errorCodeName()` symbolic error labels.
+- Standalone installed-package examples, including raw Packet and raw Manager consumers, plus complete generic/PUS configuration profiles.
 
 ### Changed
 
@@ -28,6 +33,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - `ccsds_validator` delegates protocol/profile checks to the library Validator.
 - PUS packet configuration requires explicit revision, TC/TM direction, canonical selector, identifier widths, packet error control, and applicable CUC policy.
 - The bare-metal package path forwards `-m` flags through `CCSDSPACK_MCU_FLAGS` to the library and consumer probe.
+- Raw pointer APIs establish a stable transport-facing boundary for later zero-copy/heap-free work while v2.0.0 continues to use vector-backed parsing internally.
+- The main README again exposes the detailed Ubuntu 22.04, Ubuntu 24.04, Ubuntu latest, and Windows latest build view.
 
 ### Removed
 
@@ -39,11 +46,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 v2.0.0 is a breaking source/API and PUS-layout release. The corrected generic Space Packet wire behavior delivered in v1.2.0 is retained and is not reclassified as a new v2 wire break.
 
-The project remains C++17. The protocol-facing Validator, MissionProfile, PUS, CUC, Packet, Manager, and Result APIs remain available in the `CCSDS_MCU` static-library build and are compatible with builds that disable exceptions and RTTI.
+The new raw-buffer APIs are additive. Existing vector-based source does not need to migrate to them.
+
+The project remains C++17. The protocol-facing Validator, MissionProfile, PUS, CUC, Packet, Manager, raw-buffer, and Result APIs remain available in the `CCSDS_MCU` static-library build and are compatible with builds that disable exceptions and RTTI.
 
 ### Validation status
 
-Current development evidence includes 108 passing hosted native tests, Linux/Windows hosted builds, Doxygen, representative generic/PUS CLI integration, local ASan/UBSan runs, and an ARM compile/link consumer probe that exercises the structured Validator and a PUS-C telecommand path. Final v2 release gates remain tracked by the v2 milestone.
+Current development evidence includes 115 hosted native tests after the raw-buffer additions, Linux Ubuntu 22.04/24.04/latest hosted builds, Windows hosted builds, Doxygen, representative generic/PUS CLI integration, installed-package examples, local ASan/UBSan runs, and an ARM compile/link consumer probe that exercises the structured Validator, a PUS-C telecommand path, declared packet-size inspection, and raw bounded parsing. Final v2 release gates remain tracked by the v2 milestone.
 
 ## [1.2.0] - 2026-08-02
 
