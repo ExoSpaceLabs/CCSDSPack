@@ -11,7 +11,8 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 
 ## Start here
 
-- [Examples](EXAMPLES.md): current C++17 construction, segmentation, file I/O, parsing, CRC-free operation, and configuration examples.
+- [Examples](EXAMPLES.md): current C++17 construction, segmentation, file I/O, parsing, CRC-free operation, configuration, and raw-buffer examples.
+- [Raw-buffer APIs](RAW_BUFFERS.md): pointer-plus-size transport adapters, six-byte packet-size inspection, Manager raw ingestion, and const-reference views.
 - [Structured validation](VALIDATION.md): fixed-capacity named validation checks for generic CCSDS, mission profiles, PUS, templates, and sequence streams.
 - [Configuration reference](CONFIG.md): host-side packet-template and command-line configuration keys.
 - [Command-line tools](CLI.md): encoder, decoder, validator, packet-error-control modes, and exit behaviour.
@@ -39,7 +40,7 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 
 ## Reference
 
-- [Error and Result handling](ERROR.md): exception-free Result types and the distinction from structured validation reports.
+- [Error and Result handling](ERROR.md): exception-free Result types, symbolic error-code names, and the distinction from structured validation reports.
 - [Executable overview](EXECUTABLES.md): compatibility entry point for the canonical CLI reference.
 
 ## Generated diagrams
