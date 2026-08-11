@@ -1,156 +1,78 @@
-# CCSDSPack v2.0.0 compliance baseline
+# CCSDSPack v2.0.0 PUS and CUC compliance baseline
 
 ## Scope
 
-CCSDSPack v2 inherits the validated generic Space Packet PDU behaviour from v1.2 and adds revision- and direction-specific PUS secondary-header codecs.
-
 | Area | Baseline | Implemented scope |
 |---|---|---|
-| Space Packet | CCSDS 133.0-B-2 Issue 2, including Editorial Change 2 | Construction, serialization, bounded parsing, inspection, structured validation, segmentation, and packet-error-control profile |
-| PUS-A | ECSS-E-70-41A, 30 January 2003 | TC and TM secondary-header layouts |
-| PUS-C | ECSS-E-ST-70-41C, 15 April 2016 | TC and TM secondary-header layouts |
-| CUC time | CCSDS 301.0-B-4 | Basic numeric CUC with selected epoch, P-field, and coarse/fine widths |
+| Space Packet | CCSDS 133.0-B-2 Issue 2, including Editorial Change 2 | Construction, serialization, bounded parsing, inspection, structured validation, segmentation, stream management, packet-level error-control selection |
+| PUS-A | ECSS-E-70-41A, 30 January 2003 | Supported TC and TM secondary-header layouts |
+| PUS-C | ECSS-E-ST-70-41C, 15 April 2016 | Supported TC and TM secondary-header layouts |
+| CUC time | CCSDS 301.0-B-4 | Basic numeric CUC with selected epoch metadata, P-field mode, and coarse/fine widths |
 
-This is not a claim to implement every PUS service, UTC/calendar time
-conversion, leap-second processing, mission time correlation, transfer frames,
-COP-1, CFDP, a transport binding, or a complete protocol entity.
+Complete PUS services, calendar/UTC conversion, leap-second processing, mission time correlation, transfer frames, COP-1, CFDP, transport bindings, and a complete protocol entity are outside scope.
 
-## PUS public model
+## Public PUS model
 
-The standards-facing types are:
+The standards-facing secondary-header types are:
 
 - `ccsds::pus::rev_a::TcHeader` and `ccsds::pus::rev_a::TmHeader`;
 - `ccsds::pus::rev_c::TcHeader` and `ccsds::pus::rev_c::TmHeader`.
 
-PUS revision and packet direction are independent strong types. Canonical selectors are `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, and `PUS:revC:TM`.
+Revision and direction are intrinsic to the concrete class. `ccsds::PacketDirection` is used where generic code needs to query a directional secondary header. Canonical selectors are `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, and `PUS:revC:TM`.
 
-There is no PUS-B revision. The former project-specific `PusA`, `PusB`, and `PusC` classes and `PusServices` translation unit are absent from the v2 runtime and public API.
+`ccsds::SecondaryHeaderFactory` remains the extensible direction-neutral custom-header factory and reserves the `PUS:` selector namespace. `ccsds::pus::SecondaryHeaderFactory` provides the fixed standards selectors.
 
-## Factory boundary
+## Tailoring model
 
-`ccsds::SecondaryHeaderFactory` is the direction-neutral extension point for
-custom and opaque headers. It is string-keyed, returns a fresh instance per
-creation, rejects duplicate keys, and reserves the `PUS:` namespace.
+Generic Packet policy belongs to `ccsds::Packet`, including Packet Type, packet-level PEC mode, CRC parameters, data-field capacity, and the installed secondary-header object.
 
-`ccsds::pus::SecondaryHeaderFactory` is fixed and non-extensible. It constructs
-only the four supported standards codecs from a validated mission profile. User
-code cannot replace a standards selector.
+PUS tailoring contains only optional secondary-header layout choices:
 
-## Mission-profile rules
+- PUS-A TC: optional source-ID width and spare octets;
+- PUS-A TM: optional destination-ID width, packet subcounter, CUC timestamp, and spare octets;
+- PUS-C TC: spare octets, with fixed two-octet source ID;
+- PUS-C TM: optional CUC timestamp and spare octets, with fixed two-octet destination ID.
 
-A default `MissionProfile` is generic CCSDS and contains no implied PUS selection. A PUS profile explicitly selects:
+Invalid widths, overflowing identifiers/counters, invalid CUC configuration, non-zero spare bytes, and direction-inapplicable states are rejected.
 
-- PUS-A or PUS-C;
-- TC or TM;
-- applicable source/destination identifier widths;
-- packet error control;
-- TM timestamp presence and basic CUC epoch/P-field/coarse/fine layout;
-- PUS-A TM packet-subcounter presence;
-- octet-aligned zero spare fields.
+## PUS-A coverage
 
-PUS-C uses the standard two-octet source ID for TC and destination ID for TM. PUS-A supports the mission-defined optional identifier fields exposed by the profile. Invalid or direction-inapplicable combinations return errors without normalization.
+Telecommand coverage includes PUS version 1, acknowledgement bits, service type/subtype, optional source ID, and spare fields.
 
-The time codec stores numeric coarse/fine CUC counters, constructs or verifies
-the supported basic one-octet P-field, and validates counter widths. The CCSDS
-1958 TAI epoch and an agency-defined epoch are selectable. Calendar conversion,
-leap-second handling, agency-epoch definition, and time correlation are outside
-this implementation.
+Telemetry coverage includes PUS version 1, service type/subtype, optional packet subcounter, optional destination ID, optional numeric CUC timestamp, and spare fields.
 
-## PUS-A layout coverage
+## PUS-C coverage
 
-TC coverage:
+Telecommand coverage includes PUS version 2, acknowledgement bits, service type/subtype, fixed two-octet source ID, and spare fields.
 
-- zero CCSDS-secondary-header indicator bit;
-- PUS version 1;
-- four acknowledgement bits;
-- service type and subtype;
-- mission-selected optional source ID;
-- zero spare bytes.
+Telemetry coverage includes PUS version 2, four-bit time-reference status, service type/subtype, two-octet message-type counter, fixed two-octet destination ID, optional numeric CUC timestamp, and spare fields.
 
-TM coverage:
+## Numeric CUC subset
 
-- reserved zero bits and PUS version 1;
-- service type and subtype;
-- optional packet subcounter;
-- mission-selected optional destination ID;
-- optional timestamp;
-- zero spare bytes.
+The CUC codec supports:
 
-## PUS-C layout coverage
+- CCSDS 1958 TAI or agency-defined epoch metadata;
+- implicit or explicit basic one-octet P-field;
+- 1 to 4 coarse octets;
+- 0 to 3 fine octets;
+- exact P-field verification and counter-width validation.
 
-TC coverage:
-
-- PUS version 2;
-- four acknowledgement bits;
-- service type and subtype;
-- two-octet source ID;
-- zero spare bytes.
-
-TM coverage:
-
-- PUS version 2;
-- four-bit time-reference status;
-- service type and subtype;
-- two-octet message-type counter;
-- two-octet destination ID;
-- optional timestamp;
-- zero spare bytes.
+The codec stores numeric coarse/fine counters. Calendar conversion, leap-second handling, agency-epoch definition, and time correlation remain outside scope.
 
 ## Packet integration
 
-`ccsds::Packet::setMissionProfile` validates and installs the profile and
-synchronizes packet-error-control mode. PUS attachment and parsing reject:
+Installing a directional PUS header synchronizes the CCSDS secondary-header flag and Packet Type. Serialization and parsing enforce the concrete header direction, field sizes, reserved bits, spare bytes, identifiers, optional fields, and active CUC configuration.
 
-- revision/direction/profile mismatch;
-- TC/TM mismatch with the CCSDS primary-header Packet Type;
-- packet-error-control mismatch;
-- custom headers under a PUS profile;
-- generic parsing while a PUS profile requires an explicit selector;
-- malformed version/reserved/spare fields;
-- identifier and timestamp sizes inconsistent with the profile;
-- invalid CUC epoch, P-field, coarse/fine widths, or overflowing counters.
+Packet error control is validated independently of PUS tailoring. `PacketErrorControlMode::CRC16` and `None` apply equally to generic, custom-secondary-header, and PUS packets.
 
 ## Structured validation
 
-`ccsds::Validator` exposes named checks through `ccsds::ValidationReport` rather
-than a positional boolean vector. The report has fixed capacity and stores its
-checks in `std::array`, so the report itself performs no dynamic allocation.
+`ccsds::Validator` uses named `ValidationCode` entries stored in a fixed-capacity `ValidationReport`. Applicable checks include primary-header/version, Packet Data Length, CRC16, secondary-header presence/direction, sequence state, Packet-template comparison, concrete PUS identity/tailoring, header size, reserved/spare fields, TC acknowledgement/source ID, TM destination ID, PUS-A TM packet subcounter, PUS-C TM time-reference status, and CUC timestamp fit.
 
-The validator covers the inherited generic checks and the selected v2 profile,
-including:
-
-- primary-header/version and Packet Data Length coherence;
-- CRC16 when enabled;
-- secondary-header presence;
-- sequence-flag state and modulo-16384 count continuity;
-- Packet Identification, segmentation class, and profile matching against a template;
-- PUS revision, direction, Packet Type, and header-profile consistency;
-- PUS header size, version/reserved bits, and zero spare fields;
-- telecommand acknowledgement/source-ID constraints;
-- telemetry destination-ID constraints;
-- PUS-A TM packet-subcounter policy;
-- PUS-C TM time-reference status;
-- numeric CUC timestamp fit under the mission profile.
-
-Validation does not modify the packet, mission profile, or secondary header. The
-Validator maintains only its own sequence-stream state. `ccsds_validator`
-delegates protocol/profile validation to this library implementation. See
-[VALIDATION.md](VALIDATION.md).
+Validation is read-only with respect to the Packet and secondary header. The Validator owns only its sequence-stream validation state.
 
 ## Evidence
 
-The native test suite covers fixed TC/TM byte vectors for both revisions,
-explicit and implicit P-field CUC vectors, fresh-instance factory checks, all
-four configuration selectors, Manager PUS parsing, structured Validator checks,
-wrong-direction/profile/error-control failures, version and reserved-bit
-rejection, timestamp overflow, spare-byte validation, and generic v1.2
-regressions. CLI integration round-trips generic, PUS-A TC/TM, and PUS-C TC/TM
-configurations and rejects a corrupted PUS version.
+The current integration candidate has 125 native tests covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, and structured validation. CLI integration covers generic and representative PUS streams and malformed PUS input. Linux/Windows CI, Doxygen, installed-package examples/consumer, package generation, and the Cortex-M compile/link probe provide integration evidence.
 
-The library also compiles in MCU mode with C++17 and supports builds with
-`-fno-exceptions -fno-rtti`. Host-only configuration and CLI components are not
-part of the MCU build; the structured Validator is.
-
-Linux, Windows, Doxygen, installed-package, sanitizer, fuzz, arm64, and hardware
-release gates remain authoritative at integration/release time. UML generation
-is currently a manual documentation tool and is not a v2.0.0 release gate.
+Dedicated fuzz/sanitizer CI and fresh physical arm64/STM32 execution remain release-level acceptance gates.

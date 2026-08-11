@@ -1,78 +1,44 @@
-# Priv Helper document
+# Maintainer branch workflow
 
-[../](README.md) - CCSDSPack Documentation
+This note records the repository workflow used for CCSDSPack v2 development. It is a maintainer aid, not part of the public library API.
 
-## install gitflow
-If you haven't already installed GitFlow, you can do so using your package manager:
-for Debian/Ubuntu use command
+## Branch roles
 
-```bash
-sudo apt-get install git-flow
+- `main`: released/approved line; release tags are created from approved `main` commits;
+- `develop`: integrated development line;
+- `v2.0.0-dev`: v2.0.0 staging/integration branch until the release is promoted;
+- `feature/<name>`: short-lived implementation branches.
 
-```
-## Initialise gitflow
-Navigate to your repository and initialize GitFlow:
+## Feature flow
 
-```bash
-git flow init
+For v2.0.0 work:
 
-```
-
-## New Feature Start
-To start a new feature, use the following command:
-```bash
-git flow feature start <feature-name>
-```
-This will create a new branch off the develop branch named feature/<feature-name>.
-
-
-## Work on Your Feature
-
-```bash
-git add .
-git commit -m "Add some feature"
+```text
+feature/<name> -> v2.0.0-dev -> develop -> main -> tag v2.0.0
 ```
 
-## Finish the feature
-Once you’ve completed the feature and tested it, you can finish it with:
+Features are reviewed through pull requests and are not merged directly from a feature branch into `develop` while the v2 staging branch is active.
 
-```bash
-git flow feature finish <feature-name>
-```
-This command will:
+## Commit messages
 
-Merge the feature branch back into the develop branch.
-Delete the feature branch.
-## Push changes
-After finishing your feature, push your changes to the remote repository:
-```bash
-git push origin develop
+Library/documentation commits use Conventional Commit form with the project scope and a real issue reference when applicable:
+
+```text
+feat(CCSDSPack): #123 description
+docs(CCSDSPack): #123 description
+fix(CCSDSPack): #123 description
 ```
 
+CI-only changes use the `CI` scope where appropriate.
 
-## Other gitflow commands
+## Release control
 
-List Features:
-```bash
-git flow feature list
-```
-Show Feature:
-```bash
-git flow feature show <feature-name>
-```
-Publish Feature (to share your feature branch):
-```bash
-git flow feature publish <feature-name>
-```
-Track a Feature (if someone else has published it):
-```bash
-git flow feature track <feature-name>
-```
+Before each promotion:
 
+1. reconcile the relevant issue acceptance criteria;
+2. run/verify required hosted checks;
+3. keep protocol/compliance claims aligned with the tested implementation;
+4. merge through a reviewed pull request;
+5. tag only the approved `main` commit after the final release gates pass.
 
-
-
-
-
-
-
+Automatic UML generation is not a release gate. The manual workflow can be used for ad-hoc architecture inspection when useful.

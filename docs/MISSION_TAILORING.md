@@ -2,54 +2,41 @@
 
 ## Purpose
 
-CCSDSPack separates generic CCSDS Packet policy from optional PUS secondary-header tailoring.
-
-There is no public `MissionProfile` runtime object in v2. A complete `ccsds::Packet` already owns the packet-level settings and installed secondary-header schema required by `ccsds::Manager`, parsing, and validation.
+CCSDSPack separates generic Space Packet policy from optional PUS secondary-header layout choices. This keeps packet-level concerns such as Packet Type and CRC policy independent from revision-specific PUS fields.
 
 ## Ownership model
 
-Generic packet state belongs to `ccsds::Packet`:
+A complete `ccsds::Packet` owns:
 
-- CCSDS primary header;
-- `ccsds::PacketDirection`, represented by the primary-header Packet Type;
-- `ccsds::PacketErrorControlMode`;
-- `ccsds::CRC16Config`;
+- the CCSDS primary header;
+- packet direction through the primary-header Packet Type;
+- `ccsds::PacketErrorControlMode` and CRC configuration;
 - data-field capacity and application data;
 - the optional secondary-header object.
 
 PUS identity belongs to the concrete secondary-header type:
 
-| Wire layout | C++ type | Intrinsic direction | Canonical selector |
+| Wire layout | C++ type | Direction | Selector |
 |---|---|---|---|
-| PUS-A TC | `ccsds::pus::rev_a::TcHeader` | `Telecommand` | `PUS:revA:TC` |
-| PUS-A TM | `ccsds::pus::rev_a::TmHeader` | `Telemetry` | `PUS:revA:TM` |
-| PUS-C TC | `ccsds::pus::rev_c::TcHeader` | `Telecommand` | `PUS:revC:TC` |
-| PUS-C TM | `ccsds::pus::rev_c::TmHeader` | `Telemetry` | `PUS:revC:TM` |
+| PUS-A TC | `ccsds::pus::rev_a::TcHeader` | Telecommand | `PUS:revA:TC` |
+| PUS-A TM | `ccsds::pus::rev_a::TmHeader` | Telemetry | `PUS:revA:TM` |
+| PUS-C TC | `ccsds::pus::rev_c::TcHeader` | Telecommand | `PUS:revC:TC` |
+| PUS-C TM | `ccsds::pus::rev_c::TmHeader` | Telemetry | `PUS:revC:TM` |
 
-A PUS class cannot be configured to report another revision or direction. Installing a directional secondary header with `Packet::setSecondaryHeader()` synchronizes the CCSDS primary-header Packet Type.
+Installing a directional secondary header synchronizes the CCSDS Packet Type and Secondary Header Flag. Custom secondary headers are direction-neutral by default and may override `getDirection()` when their own format has an intrinsic direction.
 
-Custom secondary headers are direction-neutral by default. A custom implementation may override `SecondaryHeaderAbstract::getDirection()` to expose `ccsds::PacketDirection::Telemetry` or `Telecommand` when its own format has an intrinsic direction.
+## Packet error control
 
-## Packet error control is not PUS tailoring
+`PacketErrorControlMode::{CRC16,None}` is Packet-level policy and applies uniformly to packets with no secondary header, a custom header, or a PUS header. When CRC16 is selected, the trailer is encoded at the end of the CCSDS Packet Data Field.
 
-`ccsds::PacketErrorControlMode::{CRC16,None}` is packet-level policy:
+This gives packet error control one source of truth and keeps PUS tailoring limited to PUS wire-layout decisions.
 
-```cpp
-ccsds::Packet packet;
-packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
-```
+## Default PUS construction
 
-It works for packets with no secondary header, custom secondary headers, and PUS secondary headers. The optional CRC16 is appended at the end of the CCSDS Packet Data Field; it is not an additional CRC owned by the PUS header.
-
-A Manager template also carries this Packet setting directly. There is no second PUS copy of the PEC choice to synchronize.
-
-## Default PUS usage
-
-The normal PUS path requires no tailoring object.
+PUS headers provide standards-compatible default tailoring:
 
 ```cpp
 ccsds::Packet packet;
-
 packet.setPrimaryHeader(ccsds::PrimaryHeader{
   0, 0, 0, 0x123, ccsds::UNSEGMENTED, 0, 0});
 
@@ -58,13 +45,9 @@ packet.setSecondaryHeader(
     17, 1, 0x1234, 0x09));
 ```
 
-`rev_c::TcHeader` intrinsically means PUS-C Telecommand and uses the fixed two-octet PUS-C source identifier supported by CCSDSPack. The packet's CCSDS Packet Type is synchronized to Telecommand when the header is installed.
+`rev_c::TcHeader` identifies PUS-C Telecommand directly. PUS-C TC source ID and PUS-C TM destination ID use the fixed two-octet widths of the supported layout.
 
-PUS-C TM similarly uses the fixed two-octet destination identifier.
-
-## Optional tailoring types
-
-Tailoring structs contain only actual optional layout choices.
+## Direction-specific tailoring
 
 ### PUS-A TC
 
@@ -85,7 +68,7 @@ tailoring.packetSubcounterPresent = true;
 tailoring.secondaryHeaderSpareOctets = 0;
 ```
 
-The same tailoring can optionally enable a numeric CUC timestamp.
+PUS-A TM tailoring can also enable a numeric CUC timestamp.
 
 ### PUS-C TC
 
@@ -93,8 +76,6 @@ The same tailoring can optionally enable a numeric CUC timestamp.
 ccsds::pus::rev_c::TcTailoring tailoring;
 tailoring.secondaryHeaderSpareOctets = 1;
 ```
-
-The source identifier remains fixed at two octets and is intentionally not configurable.
 
 ### PUS-C TM
 
@@ -107,34 +88,23 @@ tailoring.cuc = {
   4,
   2
 };
-tailoring.secondaryHeaderSpareOctets = 0;
 ```
-
-The destination identifier remains fixed at two octets.
 
 ## Numeric CUC time
 
-When TM tailoring enables a timestamp, the header stores numeric coarse/fine counters:
+TM tailoring can store a `ccsds::time::CucTime` numeric coarse/fine counter. The supported subset provides:
 
-```cpp
-ccsds::time::CucTime timestamp{0x01020304, 0xA0B0};
-```
+- 1–4 coarse-time octets;
+- 0–3 fine-time octets;
+- CCSDS 1958 TAI or agency-defined epoch metadata;
+- implicit or explicit basic one-octet P-field;
+- network-byte-order encoding and exact P-field validation.
 
-The implemented basic CUC support provides:
+The codec does not perform UTC/calendar conversion, leap-second processing, agency-epoch definition, or time correlation.
 
-- 1 through 4 coarse-time octets;
-- 0 through 3 fine-time octets;
-- the CCSDS epoch at 1958-01-01 TAI or an agency-defined epoch;
-- implicit or explicit one-octet P-field policy;
-- network-byte-order encoding and exact P-field validation during decoding.
+## Parsing
 
-CCSDSPack represents and validates the numeric counter. It does not convert UTC calendar timestamps, maintain leap-second tables, or define an agency epoch.
-
-## Parsing ownership
-
-Parsing never tries to infer PUS revision or optional layout from arbitrary remaining bytes. The caller supplies a secondary-header schema either through the Packet or the typed API.
-
-Preinstalled schema:
+Parsing uses an explicit secondary-header schema. A caller may preinstall a header:
 
 ```cpp
 ccsds::Packet packet;
@@ -143,66 +113,28 @@ packet.setSecondaryHeader(
 packet.deserialize(wire);
 ```
 
-Typed default schema:
+or use typed parsing:
 
 ```cpp
-ccsds::Packet packet;
 packet.deserialize<ccsds::pus::rev_c::TmHeader>(wire);
 ```
 
-Typed tailored schema:
+Tailoring constructor arguments can be supplied for layouts that enable optional fields. Typed raw pointer-plus-size parsing is available through `ccsds::buffer` with the same model.
 
-```cpp
-packet.deserialize<ccsds::pus::rev_c::TmHeader>(wire, tailoring);
-```
+## Manager and validation
 
-The parser checks that the CCSDS primary-header Packet Type matches the intrinsic direction of the supplied concrete PUS header.
+`ccsds::Manager` uses its complete Packet template as the stream contract. The same object therefore carries Packet Identification, packet-level PEC, concrete PUS identity, and optional tailoring.
 
-Raw pointer + size typed parsing is provided through `ccsds::buffer` using the same model.
+`ccsds::Validator` checks secondary-header direction, concrete PUS revision/direction, tailoring validity, encoded header size, reserved/spare fields, identifiers, counters, and active CUC timestamp state. Packet-level PEC is checked independently.
 
-## Manager ownership
+See [VALIDATION.md](VALIDATION.md).
 
-`ccsds::Manager` uses its complete Packet template as the stream contract. The template carries:
+## Configuration
 
-- Packet Identification;
-- packet-level PEC mode;
-- secondary-header presence and concrete type;
-- PUS revision/direction through that type;
-- optional PUS tailoring through that header instance;
-- sequence configuration.
-
-Consequently Manager has no independent PUS profile to keep synchronized.
-
-## Validation ownership
-
-PUS codecs validate their own tailoring and fields while serializing/parsing. `ccsds::Validator` exposes the resulting relationships as named checks including:
-
-- secondary-header direction versus CCSDS Packet Type;
-- PUS revision and direction;
-- PUS tailoring validity;
-- encoded header size;
-- reserved/version and spare fields;
-- acknowledgement and source/destination identifiers;
-- PUS-A TM subcounter state;
-- PUS-C TM time-reference status;
-- numeric CUC timestamp fit.
-
-Packet-level PEC and template secondary-header tailoring are checked independently. See [VALIDATION.md](VALIDATION.md).
-
-## Configuration ownership
-
-Hosted configuration selects a concrete PUS header using `secondary_header_type`, for example:
+Hosted configuration selects a concrete PUS identity through `secondary_header_type`, for example:
 
 ```ini
 secondary_header_type:string=PUS:revC:TM
 ```
 
-The selector already defines revision and direction. Configuration therefore does not need a separate mission-profile, PUS-revision, or PUS-direction field. Optional fields such as PUS-A identifier widths or TM CUC layout configure only the applicable header tailoring.
-
-See [CONFIG.md](CONFIG.md) and [`example/config`](../example/config).
-
-`ccsds::Config` is host-only. Bare-metal C++17 applications construct the same concrete PUS headers and optional tailoring structs directly.
-
-## Change control
-
-Adding a tailoring field or support claim requires explicit units and ranges, deterministic serialization/parsing, positive and negative tests, independent wire evidence, and an update to the compliance documentation.
+Optional configuration keys then apply only to the selected header's supported tailoring and packet fields. See [CONFIG.md](CONFIG.md).

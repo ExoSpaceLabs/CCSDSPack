@@ -1,22 +1,14 @@
-# Cross-Build Guide (aarch64 Linux and Bare-metal MCU)
+# Cross-build guide
 
-[Documentation index](README.md) | [Structured validation](VALIDATION.md)
+[Documentation index](README.md) | [Packages](PACKAGES.md) | [Structured validation](VALIDATION.md)
 
-CCSDSPack v2 is a C++17 library. This document covers:
-
-- aarch64/arm64 Linux cross-builds;
-- the bare-metal ARM Cortex-M static-library profile;
-- `package.sh` package/archive generation.
+CCSDSPack is a C++17 library with supported build paths for native hosted systems, aarch64 Linux targets, and bare-metal ARM Cortex-M consumers.
 
 ## aarch64 Linux
 
-The toolchain file `cmake/toolchains/aarch64-linux-gnu.cmake` is provided for
-cross-compiling to arm64/aarch64.
+The repository provides `cmake/toolchains/aarch64-linux-gnu.cmake`.
 
-### Ubuntu 22.04 and newer
-
-Enable the foreign architecture and install the cross toolchain and runtime
-libraries required by package dependency inspection:
+On Ubuntu 22.04 or newer, install the cross toolchain and target runtime dependencies required by package inspection:
 
 ```bash
 sudo dpkg --add-architecture arm64
@@ -26,16 +18,7 @@ sudo apt-get install -y \
   libc6:arm64 libgcc-s1:arm64 libstdc++6:arm64
 ```
 
-Systems whose normal Ubuntu mirror does not serve arm64 must use the matching
-`ports.ubuntu.com/ubuntu-ports` entries for that architecture.
-
-Build and package:
-
-```bash
-./package.sh -p DEB -t cmake/toolchains/aarch64-linux-gnu.cmake
-```
-
-Build without packaging:
+Build directly:
 
 ```bash
 cmake -S . -B build-aarch64 \
@@ -44,36 +27,26 @@ cmake -S . -B build-aarch64 \
 cmake --build build-aarch64 -j
 ```
 
-## Bare-metal MCU static library
-
-`CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a static archive and
-defines `CCSDS_MCU` publicly. Host-only configuration parsing and command-line
-executables are excluded.
-
-The MCU library still contains the protocol-facing C++17 API, including:
-
-- `ccsds::Packet` and `ccsds::Manager`;
-- `ccsds::MissionProfile`;
-- PUS-A/PUS-C TC/TM codecs;
-- CUC time support;
-- `ccsds::Result` error handling;
-- `ccsds::Validator`, `ValidationCode`, and fixed-capacity `ValidationReport`.
-
-The structured report uses `std::array` and performs no dynamic allocation
-itself. The MCU build does not require RTTI or exceptions.
-
-### Prerequisites
+Generate a package:
 
 ```bash
-sudo apt update
-sudo apt install -y \
-  gcc-arm-none-eabi \
-  binutils-arm-none-eabi \
-  libnewlib-arm-none-eabi \
-  libstdc++-arm-none-eabi-newlib
+./package.sh -p DEB -t cmake/toolchains/aarch64-linux-gnu.cmake
 ```
 
-### Package a Cortex-M7 archive
+## Bare-metal Cortex-M static library
+
+`CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a static archive and defines `CCSDS_MCU` publicly. Host-side configuration parsing and command-line executables are excluded.
+
+The MCU library retains:
+
+- `ccsds::Packet` and `ccsds::Manager`;
+- PUS-A/PUS-C TC/TM codecs and tailoring types;
+- numeric CUC time;
+- `ccsds::Result` / `ccsds::Error`;
+- raw-buffer adapters;
+- `ccsds::Validator`, `ValidationCode`, and fixed-capacity `ValidationReport`.
+
+A typical Cortex-M7 package build is:
 
 ```bash
 ./package.sh \
@@ -82,10 +55,7 @@ sudo apt install -y \
   -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 ```
 
-`package.sh -m` forwards the flags to `CCSDSPACK_MCU_FLAGS`, so the flags apply
-to the library itself as well as the MCU compile/link probe.
-
-### Build only the static library
+Direct CMake configuration uses `CCSDSPACK_MCU_FLAGS`:
 
 ```bash
 cmake -S . -B build-mcu \
@@ -93,47 +63,22 @@ cmake -S . -B build-mcu \
   -DCCSDSPACK_BUILD_MCU=ON \
   -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-none-eabi.cmake \
   -DCCSDSPACK_MCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
-
 cmake --build build-mcu -j
 ```
 
-`CCSDSPACK_MCU_FLAGS` is the current CMake cache variable for target-specific
-MCU flags. Older documentation referring to `MCU_FLAGS` should not be used for
-direct CMake configuration.
+The fixed-capacity/no-allocation guarantee applies to `ValidationReport`; Packet, Manager, PUS, and parsing internals continue to use their documented C++ containers and ownership model.
 
-## Using the Validator on bare metal
+## Package script
 
-Validation uses the same API as a hosted build:
-
-```cpp
-ccsds::Validator validator;
-const auto report = validator.validate(packet);
-
-if (report.failed(ccsds::ValidationCode::PusDirection)) {
-  // mission-specific fault handling
-}
-```
-
-There is no dependency on `ccsds::Config`, file I/O, iostreams, exceptions, or
-RTTI in the Validator API. The packet types themselves retain their existing
-C++ containers and ownership model; the fixed-capacity statement applies to the
-`ValidationReport`, not to every object in the library.
-
-## `package.sh` reference
+`package.sh` supports:
 
 - `-p, --package-type`: `DEB`, `RPM`, `TGZ`, or `MCU`;
 - `-t, --toolchain`: CMake toolchain file;
-- `-m, --mcu-flags`: additional flags forwarded to the MCU library and probe;
-- `-h, --help`: command usage.
+- `-m, --mcu-flags`: flags forwarded to the MCU library and compile/link probe;
+- `-h, --help`: usage.
 
 Artifacts are written under `packages/`.
 
-## Release validation
+## Validation boundary
 
-Cross-compilation proves that a target can be built; it is not a substitute for
-execution on the target. v2 release acceptance records arm64 installed-package
-execution and representative Cortex-M7 hardware execution separately under the
-release-validation issue.
-
-Historical v1.2 Raspberry Pi and STM32 results remain useful regression evidence
-but are not silently treated as v2 hardware acceptance.
+Cross-compilation proves build/link compatibility for the target ABI. Release acceptance records native arm64 execution and representative Cortex-M7 hardware execution separately.

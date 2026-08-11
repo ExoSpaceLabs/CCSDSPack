@@ -7,20 +7,15 @@ SPDX-License-Identifier: Apache-2.0
 
 [Main README](../README.md) | [PUS tailoring](MISSION_TAILORING.md) | [CLI](CLI.md)
 
-CCSDSPack configuration files use one typed entry per line:
+Hosted CCSDSPack configuration files use one typed entry per line:
 
 ```ini
 <key>:<type>=<value>
 ```
 
-Lines beginning with `#` are comments. The host-only parser is `ccsds::Config`.
-Configuration parsing is excluded from `CCSDS_MCU`; bare-metal applications
-construct `ccsds::Packet`, concrete secondary headers, and optional PUS tailoring
-directly in C++17.
+Lines beginning with `#` are comments. The parser is `ccsds::Config`; configuration parsing is excluded from `CCSDS_MCU` builds.
 
-There is no `MissionProfile` configuration layer. Generic packet policy belongs
-to `Packet`; a concrete PUS selector identifies revision and direction; optional
-PUS fields configure only that header's tailoring or packet-specific values.
+The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring.
 
 ## Value types
 
@@ -30,14 +25,10 @@ PUS fields configure only that header's tailoring or packet-specific values.
 | `int` | Signed 32-bit decimal or hexadecimal integer |
 | `uint` | Unsigned 64-bit decimal or hexadecimal integer |
 | `float` | Floating-point value |
-| `string` | Text, optionally enclosed in double quotes |
-| `bytes` | Comma-separated octets such as `[0x01, 2, 255]` |
+| `string` | Text, optionally quoted |
+| `bytes` | Comma-separated octets, e.g. `[0x01, 2, 255]` |
 
-Use `uint` for PUS identifiers, counters, and numeric CUC values.
-
-## Generic packet configuration
-
-A generic packet without a directional secondary header can be configured as:
+## Generic Packet configuration
 
 ```ini
 ccsds_packet_error_control:string=crc16
@@ -49,37 +40,28 @@ ccsds_segmented:bool=false
 define_secondary_header:bool=false
 ```
 
-| Key | Type | Required | Constraint |
-|---|---|---:|---|
-| `ccsds_packet_error_control` | string | optional | `crc16` or `none`; default `crc16` |
-| `data_field_size` | int | optional | Packet Data Field content capacity, `0..65535` |
-| `ccsds_version_number` | int | yes | `0` |
-| `ccsds_type` | bool | for direction-neutral packets | `false` TM, `true` TC |
-| `ccsds_APID` | int | yes | `0..2047`; `2047` is the Idle Packet APID |
-| `ccsds_segmented` | bool | yes | Initial segmented/unsegmented template state |
-| `define_secondary_header` | bool | optional | Defaults to `false` |
-| `secondary_header_type` | string | when enabled | Canonical PUS selector or registered custom type |
-| `application_data` | bytes | optional | Initial application or Idle Packet data |
+| Key | Required | Constraint |
+|---|---:|---|
+| `ccsds_packet_error_control` | optional | `crc16` or `none`; default `crc16` |
+| `data_field_size` | optional | content capacity `0..65535` |
+| `ccsds_version_number` | yes | `0` |
+| `ccsds_type` | for direction-neutral packets | `false` TM, `true` TC |
+| `ccsds_APID` | yes | `0..2047` |
+| `ccsds_segmented` | yes | initial segmented/unsegmented template state |
+| `define_secondary_header` | optional | default `false` |
+| `secondary_header_type` | when enabled | canonical PUS selector or registered custom type |
+| `application_data` | optional | initial application or Idle Packet data |
 
-The CCSDS secondary-header flag is derived from whether a secondary header is
-actually installed. It is not a second configuration source of truth.
-
-`data_field_size` is a capacity setting. Packet Data Length is calculated during
-serialization from the bytes actually present.
-
-CLI framing keys such as `sync_pattern_enable`, optional `sync_pattern`, and
-`validation_enable` remain tool-level settings rather than Packet wire fields.
+The Secondary Header Flag is derived from the installed secondary-header object. `data_field_size` is capacity; Packet Data Length is calculated from the actual serialized content.
 
 ## PUS identity
 
-A PUS configuration selects one concrete standards-facing secondary-header type:
+A PUS configuration selects one concrete header:
 
 ```ini
 define_secondary_header:bool=true
 secondary_header_type:string=PUS:revC:TC
 ```
-
-The selector itself defines revision and direction:
 
 | Selector | Concrete class | Direction |
 |---|---|---|
@@ -88,48 +70,41 @@ The selector itself defines revision and direction:
 | `PUS:revC:TC` | `ccsds::pus::rev_c::TcHeader` | Telecommand |
 | `PUS:revC:TM` | `ccsds::pus::rev_c::TmHeader` | Telemetry |
 
-`ccsds_type` is therefore optional for these directional PUS headers. If supplied,
-it must agree with the concrete header direction. `Packet::setSecondaryHeader()`
-synchronizes Packet Type and the secondary-header flag from the installed header.
+For a directional PUS header, `ccsds_type` may be omitted. If supplied, it must agree with the concrete direction.
 
-Common PUS packet fields are:
+Common packet fields:
 
-| Key | Type | Constraint |
-|---|---|---|
-| `secondary_header_spare_octets` | int | Optional, `0..255`; encoded spares are zero |
-| `pus_service_type` | uint | `0..255` |
-| `pus_service_subtype` | uint | `0..255` |
+| Key | Constraint |
+|---|---|
+| `secondary_header_spare_octets` | optional `0..255`, encoded as zero bytes |
+| `pus_service_type` | `0..255` |
+| `pus_service_subtype` | `0..255` |
 
 ## Telecommand fields
 
-| Key | Type | Applies to | Constraint |
-|---|---|---|---|
-| `pus_source_id_octets` | int | PUS-A TC | Optional tailoring: `0`, `1`, `2`, or `4` |
-| `pus_acknowledgement_flags` | uint | PUS-A/C TC | Four-bit field, `0..15` |
-| `pus_source_id` | uint | PUS-A/C TC | Must fit the active width |
+| Key | Applies to | Constraint |
+|---|---|---|
+| `pus_source_id_octets` | PUS-A TC | `0`, `1`, `2`, or `4` |
+| `pus_acknowledgement_flags` | PUS-A/C TC | `0..15` |
+| `pus_source_id` | PUS-A/C TC | must fit active width |
 
-PUS-C TC source ID width is fixed at two octets by the supported PUS-C layout and
-normally is not configured. If the width key is supplied for compatibility, the
-loader accepts only `2`.
+PUS-C TC source ID width is fixed at two octets.
 
 ## Telemetry fields
 
-| Key | Type | Applies to | Constraint |
-|---|---|---|---|
-| `pus_destination_id_octets` | int | PUS-A TM | Optional tailoring: `0`, `1`, `2`, or `4` |
-| `pus_a_tm_packet_subcounter_present` | bool | PUS-A TM | Optional packet-subcounter tailoring |
-| `pus_packet_subcounter` | uint | PUS-A TM | Required when the subcounter is enabled; `0..255` |
-| `pus_message_type_counter` | uint | PUS-C TM | `0..65535` |
-| `pus_time_reference_status` | uint | PUS-C TM | Four-bit field, `0..15` |
-| `pus_destination_id` | uint | PUS-A/C TM | Must fit the active width |
-| `pus_time_format` | string | PUS-A/C TM | `none` or `cuc` |
+| Key | Applies to | Constraint |
+|---|---|---|
+| `pus_destination_id_octets` | PUS-A TM | `0`, `1`, `2`, or `4` |
+| `pus_a_tm_packet_subcounter_present` | PUS-A TM | optional boolean tailoring |
+| `pus_packet_subcounter` | PUS-A TM | `0..255` when present |
+| `pus_message_type_counter` | PUS-C TM | `0..65535` |
+| `pus_time_reference_status` | PUS-C TM | `0..15` |
+| `pus_destination_id` | PUS-A/C TM | must fit active width |
+| `pus_time_format` | PUS-A/C TM | `none` or `cuc` |
 
-PUS-C TM destination ID width is fixed at two octets. As with PUS-C TC, an
-explicit width key is unnecessary and, if present, must equal `2`.
+PUS-C TM destination ID width is fixed at two octets.
 
 ## CUC telemetry time
-
-The default TM tailoring has no timestamp. To enable a numeric basic CUC field:
 
 ```ini
 pus_time_format:string=cuc
@@ -141,56 +116,23 @@ pus_time_coarse:uint=0x01020304
 pus_time_fine:uint=0xA0B0
 ```
 
-| Key | Type | Constraint |
-|---|---|---|
-| `pus_time_epoch` | string | `ccsds-1958-tai` or `agency-defined` |
-| `pus_time_p_field` | string | `implicit` or `explicit` |
-| `pus_time_coarse_octets` | int | `1..4` |
-| `pus_time_fine_octets` | int | `0..3` |
-| `pus_time_coarse` | uint | Counter fitting the selected coarse width |
-| `pus_time_fine` | uint | Counter fitting the selected fine width |
+| Key | Constraint |
+|---|---|
+| `pus_time_epoch` | `ccsds-1958-tai` or `agency-defined` |
+| `pus_time_p_field` | `implicit` or `explicit` |
+| `pus_time_coarse_octets` | `1..4` |
+| `pus_time_fine_octets` | `0..3` |
+| `pus_time_coarse` | must fit configured coarse width |
+| `pus_time_fine` | must fit configured fine width |
 
-For an explicit P-field, the codec writes and verifies the one-octet basic CUC
-preamble. For an implicit P-field, the wire contains only the coarse and fine
-T-field counters.
+## Packet error control
 
-Complete executable configurations are committed in
-[`example/config`](../example/config), including PUS-C TM examples with and
-without a CUC time field.
-
-## Packet error control ownership
-
-`ccsds_packet_error_control` configures the enclosing CCSDS Packet regardless of
-whether the packet has no secondary header, a custom header, or a PUS header.
-There is no PUS-specific second CRC setting. In `crc16` mode the optional
-CCSDSPack CRC16 trailer is appended at the packet level.
-
-## Validation ownership
-
-Configuration constructs a Packet and, when requested, a concrete secondary
-header. Runtime validation then checks the resulting object graph rather than a
-parallel profile:
-
-- Packet Version Number, Packet Data Length, Packet Type and PEC;
-- secondary-header presence and direction;
-- PUS concrete revision/direction and tailoring;
-- identifiers, reserved/spare fields, optional counters and CUC values;
-- Manager template Packet Identification, PEC, and secondary-header contract.
-
-See [VALIDATION.md](VALIDATION.md).
+`ccsds_packet_error_control` configures the enclosing Packet independently of the selected secondary-header type. In `crc16` mode the CCSDSPack CRC16 trailer is appended at Packet level.
 
 ## Idle Packets
 
-APID `0x7FF` is reserved for Idle Packets. A valid Idle Packet configuration has
-no secondary header and supplies non-empty mission-defined `application_data`.
-CCSDSPack validates the structural rules but not the mission-specific fill pattern.
+APID `0x7FF` identifies Idle Packets. A valid Idle Packet configuration has no secondary header and provides non-empty mission-defined `application_data`. CCSDSPack validates the structure, not the fill pattern.
 
-## Removed configuration concepts
+Complete configurations are maintained under [`example/config`](../example/config).
 
-The runtime/configuration design no longer uses `mission_profile`, `pus_revision`,
-or `pus_direction`; the concrete PUS selector carries PUS identity. The older
-`pus_version`, `pus_event_id`, `pus_time_code`, and
-`secondary_header_type=PusA|PusB|PusC` forms are also obsolete and are not part
-of the v2 configuration schema.
-
-See [MIGRATION_V1_TO_V2.md](MIGRATION_V1_TO_V2.md).
+Upgrade-specific configuration-key mapping is documented in [MIGRATION_V1_TO_V2.md](MIGRATION_V1_TO_V2.md).
