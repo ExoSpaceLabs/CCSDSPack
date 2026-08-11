@@ -38,6 +38,20 @@ UML generation is currently **manual-only** and is not a v2.0.0 CI/release gate.
 
 The v2 implementation retains the validated v1.2 six-octet CCSDS primary-header and Packet Data Field behaviour and adds explicit mission profiles, standards-oriented PUS-A/PUS-C secondary headers, CUC time support, checked finalization, and structured validation.
 
+The Packet Data Field contains optional secondary-header bytes, mission application data, and, when enabled, the optional CCSDSPack CRC16 trailer.
+
+### CCSDSPack packet layout
+
+The following diagram represents the generic Space Packet wire layout.
+
+![CCSDSPack Space Packet layout](docs/imgs/ccsdsPacket.drawio.png)
+
+When the optional CCSDSPack CRC16 profile is enabled, the final two Packet Data Field octets are reserved for the CRC trailer. CCSDS 133.0-B-2 does not define this trailer as a third top-level Space Packet structural field.
+
+Detailed scope, limitations, and migration behavior are documented in the [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md).
+
+### Primary-header rules
+
 CCSDSPack v2 enforces:
 
 - Packet Version Number `000`;
@@ -49,7 +63,13 @@ CCSDSPack v2 enforces:
 - explicit packet-error-control selection;
 - explicit PUS revision/direction/profile consistency.
 
+CCSDSPack uses Packet Sequence Count semantics for both telemetry and telecommand packets. The optional telecommand Packet Name interpretation is not implemented.
+
+### Packet size
+
 The Packet Data Field can contain 1 through 65,536 octets, giving a total serialized packet size of 7 through 65,542 octets.
+
+Profiles requiring a two-octet CRC trailer have a practical minimum serialized packet size of 8 octets.
 
 Use:
 
@@ -58,6 +78,25 @@ std::size_t packetSize = packet.getSerializedSize();
 ```
 
 for the complete size range of an already constructed packet.
+
+The legacy `getFullPacketLength()` API returns `std::uint16_t` and saturates at `UINT16_MAX` rather than wrapping.
+
+### Packet error control
+
+`PacketErrorControlMode` supports:
+
+- `PacketErrorControlMode::CRC16`, the existing v1 default;
+- `PacketErrorControlMode::None`.
+
+In CRC16 mode, CCSDSPack reserves the final two Packet Data Field octets for CRC-16/CCITT-FALSE and includes those octets in Packet Data Length.
+
+The receiver must configure the expected mode before parsing.
+
+### Library architecture
+
+The following diagram shows the main relationships between the user application, `ccsds::Manager`, `ccsds::Packet`, primary-header handling, Packet Data Field handling, secondary-header creation, serialization, validation, CRC16, and utility functions.
+
+![CCSDSPack library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
 
 ### Raw transport buffers
 
