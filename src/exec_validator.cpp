@@ -31,10 +31,9 @@ void printHelp() {
     << "  -v, --verbose                          Print every performed validation check\n"
     << "  -p, --print-packets                    Print packets that parse successfully\n"
     << "  -h, --help                             Show this help message\n\n"
-    << "Packet parsing and protocol/profile checks are performed by the CCSDSPack\n"
-    << "library. Checks include the CCSDS version and packet boundary, sequence\n"
-    << "continuity, template identity/profile matching, and PUS revision/direction,\n"
-    << "identifier, reserved/spare, optional-field, and CUC timestamp checks.\n";
+    << "The configured Packet template is also the secondary-header parsing schema.\n"
+    << "PUS revision/direction come from the concrete PUS header type; optional PUS\n"
+    << "tailoring comes from that header. Packet error control remains packet-level.\n";
 }
 
 int printError(const ccsds::Error &error) {
@@ -105,7 +104,7 @@ void emitValidationReport(const ccsds::ValidationReport &validation,
   for (const auto &check : validation) {
     if (!verbose && check.passed) continue;
     std::ostringstream line;
-    line << "  [REPORT] " << std::left << std::setw(31)
+    line << "  [REPORT] " << std::left << std::setw(37)
          << ccsds::validationCodeName(check.code)
          << " : " << (check.passed ? "PASSED" : "FAILED") << '\n';
     report << line.str();
@@ -113,40 +112,27 @@ void emitValidationReport(const ccsds::ValidationReport &validation,
   }
 }
 
-void emitParseFailure(const ccsds::Error &error, const bool pusProfile) {
+void emitParseFailure(const ccsds::Error &error, const bool pusHeaderExpected) {
   const auto &message = error.message();
-  if (pusProfile) {
-    std::cout << "  [REPORT] PUS secondary header             : FAILED\n";
+  if (pusHeaderExpected) {
+    std::cout << "  [REPORT] PUS secondary header                  : FAILED\n";
   } else if (message.find("packet version") != std::string::npos) {
-    std::cout << "  [REPORT] CCSDS version                    : FAILED\n";
+    std::cout << "  [REPORT] CCSDS version                         : FAILED\n";
   } else {
-    std::cout << "  [REPORT] Packet parse                     : FAILED\n";
+    std::cout << "  [REPORT] Packet parse                          : FAILED\n";
   }
   std::cerr << "  " << message << std::endl;
 }
 
-ccsds::ResultBool configurePacketForParsing(ccsds::Packet &packet,
-                                            const ValidatorSettings &settings) {
-  if (settings.hasTemplate) {
-    FORWARD_RESULT(packet.setMissionProfile(
-      settings.templatePacket.getMissionProfile()));
-  } else {
-    auto profile = packet.getMissionProfile();
-    profile.packetErrorControl = settings.mode;
-    FORWARD_RESULT(packet.setMissionProfile(profile));
-  }
+ccsds::Packet parserPacket(const ValidatorSettings &settings) {
+  ccsds::Packet packet = settings.hasTemplate ? settings.templatePacket : ccsds::Packet{};
   packet.setPacketErrorControlMode(settings.mode);
-  return true;
+  return packet;
 }
 
-ccsds::Result<std::size_t> parsePacket(ccsds::Packet &packet,
-                                       const std::vector<std::uint8_t> &packetBytes) {
-  const auto &profile = packet.getMissionProfile();
-  if (profile.pusEnabled) {
-    return packet.deserializeBounded(
-      packetBytes, ccsds::pus::selector(profile.pusRevision, profile.direction));
-  }
-  return packet.deserializeBounded(packetBytes);
+bool expectsPusHeader(const ccsds::Packet &packet) {
+  const auto header = packet.getSecondaryHeader();
+  return header && header->isPusHeader();
 }
 
 } // namespace
@@ -196,7 +182,7 @@ int main(const int argc, char *argv[]) {
                                                 settings.syncPattern,
                                                 true);
   if (!layoutResult) {
-    std::cout << "  [REPORT] Packet Data Length              : FAILED\n";
+    std::cout << "  [REPORT] Packet Data Length                   : FAILED\n";
     std::cerr << "  " << layoutResult.error().message() << std::endl;
     customConsole(appName, "Packets validation [FAILED]");
     return PACKET_VALIDATION_FAILED;
@@ -204,7 +190,7 @@ int main(const int argc, char *argv[]) {
   const PacketStreamLayout layout = layoutResult.value();
 
   if (layout.packets.empty()) {
-    std::cout << "  [REPORT] Packet Data Length              : FAILED\n";
+    std::cout << "  [REPORT] Packet Data Length                   : FAILED\n";
     std::cerr << "  Input does not contain a complete CCSDS packet" << std::endl;
     customConsole(appName, "Packets validation [FAILED]");
     return PACKET_VALIDATION_FAILED;
@@ -229,15 +215,13 @@ int main(const int argc, char *argv[]) {
     packetReport << "[ CCSDS VALIDATOR ] Packet " << index + 1U << '\n';
     if (verbose) std::cout << packetReport.str();
 
-    ccsds::Packet packet;
-    const auto configured = configurePacketForParsing(packet, settings);
-    if (!configured) return printError(configured.error());
-
-    const auto parsed = parsePacket(packet, packetBytes);
+    ccsds::Packet packet = parserPacket(settings);
+    const bool pusExpected = expectsPusHeader(packet);
+    const auto parsed = packet.deserializeBounded(packetBytes);
     if (!parsed) {
       overallResult = false;
       failedPackets.push_back(index + 1U);
-      emitParseFailure(parsed.error(), packet.getMissionProfile().pusEnabled);
+      emitParseFailure(parsed.error(), pusExpected);
       continue;
     }
 
@@ -255,7 +239,7 @@ int main(const int argc, char *argv[]) {
   const std::size_t trailingBytes = inputBytes.size() - layout.consumedBytes;
   if (trailingBytes != 0U) {
     overallResult = false;
-    std::cout << "  [REPORT] Packet Data Length              : FAILED\n";
+    std::cout << "  [REPORT] Packet Data Length                   : FAILED\n";
     std::cerr << "  " << trailingBytes
               << " trailing byte(s) do not form a complete packet" << std::endl;
   }
