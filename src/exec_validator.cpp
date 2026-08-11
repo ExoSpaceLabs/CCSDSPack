@@ -225,7 +225,12 @@ int main(const int argc, char *argv[]) {
     if (!parsed) {
       overallResult = false;
       failedPackets.push_back(index + 1U);
-      std::cout << "  [REPORT] Packet parse                     : FAILED\n";
+      const auto &profile = packet.getMissionProfile();
+      if (profile.pusEnabled) {
+        std::cout << "  [REPORT] PUS secondary header             : FAILED\n";
+      } else {
+        std::cout << "  [REPORT] Packet parse                     : FAILED\n";
+      }
       std::cerr << "  " << parsed.error().message() << std::endl;
       continue;
     }
