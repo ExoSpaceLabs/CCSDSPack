@@ -1,9 +1,6 @@
 # Migrating CCSDSPack v1 to v2
 
-CCSDSPack v2 intentionally breaks source compatibility. It removes
-project-specific formats that could be mistaken for ECSS PUS revisions and
-makes packet finalization, mission tailoring, validation, and time encoding
-explicit.
+CCSDSPack v2 intentionally breaks source compatibility. It removes project-specific formats that could be mistaken for ECSS PUS revisions and makes packet finalization, mission tailoring, validation, and time encoding explicit.
 
 ## Namespace migration
 
@@ -17,8 +14,7 @@ CCSDS::Packet packet;
 ccsds::Packet packet;
 ```
 
-There is no compatibility alias. CMake package and target names remain
-`CCSDSPack` and `ccsdspack::CCSDSPack`.
+There is no compatibility alias. CMake package and target names remain `CCSDSPack` and `ccsdspack::CCSDSPack`.
 
 Standards-defined PUS codecs use revision namespaces:
 
@@ -29,9 +25,7 @@ Standards-defined PUS codecs use revision namespaces:
 | `PusC` | `ccsds::pus::rev_c::TcHeader` or `ccsds::pus::rev_c::TmHeader` |
 | mixed factory | `ccsds::SecondaryHeaderFactory` for custom types plus fixed `ccsds::pus::SecondaryHeaderFactory` |
 
-The canonical string selectors remain `PUS:revA:TC`, `PUS:revA:TM`,
-`PUS:revC:TC`, and `PUS:revC:TM`. Custom registration cannot claim the reserved
-`PUS:` prefix.
+The canonical string selectors remain `PUS:revA:TC`, `PUS:revA:TM`, `PUS:revC:TC`, and `PUS:revC:TM`. Custom registration cannot claim the reserved `PUS:` prefix.
 
 ## Secondary-header API naming
 
@@ -45,13 +39,11 @@ The canonical string selectors remain `PUS:revA:TC`, `PUS:revA:TM`,
 | `getDataFieldHeaderFlag()` | `getSecondaryHeaderFlag()` |
 | `setDataFieldHeaderFlag(...)` | `setSecondaryHeaderFlag(...)` |
 
-The configuration key is `ccsds_secondary_header_flag`; the former
-`ccsds_data_field_header_flag` is rejected.
+The configuration key is `ccsds_secondary_header_flag`; the former `ccsds_data_field_header_flag` is rejected.
 
 ## Checked serialization
 
-v1 used an empty byte vector as the only finalization-failure signal. v2 returns
-the existing exception-free result types:
+v1 used an empty byte vector as the only finalization-failure signal. v2 returns the existing exception-free result types:
 
 | v1 API | v2 API |
 |---|---|
@@ -71,11 +63,7 @@ send(wire.value());
 
 ## Validator migration
 
-The v1/v1.2 Validator exposed a boolean result and a positional six-element
-`std::vector<bool>` report. Code had to know that, for example, one index meant
-CRC and another meant sequence continuity.
-
-v2 replaces those positional report semantics with named checks:
+The v1/v1.2 Validator exposed a boolean result and a positional six-element `std::vector<bool>` report. v2 replaces those positional report semantics with named checks:
 
 ```cpp
 ccsds::Validator validator;
@@ -100,18 +88,52 @@ if (report.failed(ccsds::ValidationCode::PusDirection)) {
 - contains only checks that were actually performed;
 - can be iterated or queried with `contains()`, `passed()`, and `failed()`.
 
-`ccsds::Validator::validate()` does not mutate the packet, mission profile, or
-secondary header. The Validator still maintains its own sequence-stream state.
-Call `clear()` before reusing it for an unrelated sequence stream.
+`ccsds::Validator::validate()` does not mutate the packet, mission profile, or secondary header. The Validator still maintains its own sequence-stream state. Call `clear()` before reusing it for an unrelated sequence stream.
 
-The `ccsds_validator` executable now delegates packet/profile validation to the
-library Validator instead of keeping an independent copy of the validation
-rules. See [VALIDATION.md](VALIDATION.md).
+The `ccsds_validator` executable now delegates packet/profile validation to the library Validator instead of keeping an independent copy of the validation rules. See [VALIDATION.md](VALIDATION.md).
+
+## Raw-buffer and embedded integration
+
+The v2 vector API remains supported. New code that already receives data into fixed, DMA, UART, SpaceWire, TCP, or driver-owned buffers can use the additive pointer-plus-size API instead of constructing a vector at the call site.
+
+Determine a complete packet size from only the six-byte primary header:
+
+```cpp
+const auto declared = ccsds::buffer::declaredPacketSize(header, 6U);
+if (!declared) return declared.error().code();
+```
+
+Parse an externally owned receive buffer:
+
+```cpp
+const auto consumed = ccsds::buffer::deserializeBounded(
+  packet, rxBuffer, receivedBytes);
+```
+
+Manager also accepts raw application and stream buffers:
+
+```cpp
+manager.setApplicationData(payload, payloadSize);
+manager.addPacketFromBuffer(packetBytes, packetSize);
+manager.load(streamBytes, streamSize);
+```
+
+Read-only code can avoid copying Manager state:
+
+```cpp
+const ccsds::Manager &view = manager;
+const auto &packetTemplate = view.getTemplateReference();
+const auto &packets = view.getPacketsReference();
+const auto &validator = view.getValidatorReference();
+```
+
+`ccsds::errorCodeName()` complements `validationCodeName()` with an allocation-free symbolic label for `ErrorCode`.
+
+These additions do not require existing vector-based code to migrate. In v2.0.0 the raw adapters still bridge through vector-backed internals, so they establish a transport-facing API for later zero-copy/heap-free work rather than claiming that work is already complete. See [RAW_BUFFERS.md](RAW_BUFFERS.md).
 
 ## PUS construction and numeric time
 
-Raw timestamp byte vectors are replaced by a numeric CUC value plus an explicit
-wire profile:
+Raw timestamp byte vectors are replaced by a numeric CUC value plus an explicit wire profile:
 
 ```cpp
 auto profile = ccsds::pus::makeProfile(
@@ -149,8 +171,7 @@ if (!profileResult) return profileResult.error().code();
 const auto consumed = decoded.deserializeBounded(wire.value(), "PUS:revC:TM");
 ```
 
-The parser does not infer revision, direction, identifier widths, time layout,
-epoch, P-field policy, or packet error control from remaining bytes.
+The parser does not infer revision, direction, identifier widths, time layout, epoch, P-field policy, or packet error control from remaining bytes.
 
 ## Configuration migration
 
@@ -161,23 +182,15 @@ mission_profile:string=generic
 ccsds_packet_error_control:string=crc16
 ```
 
-PUS profiles additionally declare exact `pus_revision`, `pus_direction`, the
-canonical `secondary_header_type`, identifier widths, revision-specific fields,
-and `pus_time_*` values for CUC telemetry. Packet, Manager, encoder, decoder, and
-validator all use this same profile.
+PUS profiles additionally declare exact `pus_revision`, `pus_direction`, the canonical `secondary_header_type`, identifier widths, revision-specific fields, and `pus_time_*` values for CUC telemetry. Packet, Manager, encoder, decoder, and validator all use this same profile.
 
-Legacy `pus_version`, `pus_event_id`, `pus_time_code`, and
-`secondary_header_type=PusA|PusB|PusC` values fail with a migration error.
-Complete v2 profiles are in [`example/config`](../example/config).
+Legacy `pus_version`, `pus_event_id`, `pus_time_code`, and `secondary_header_type=PusA|PusB|PusC` values fail with a migration error. Complete v2 profiles are in [`example/config`](../example/config).
 
 ## Hosted versus bare-metal use
 
-The public protocol library remains C++17. `ccsds::Packet`, `ccsds::Manager`,
-mission profiles, PUS codecs, CUC time, Result types, and the structured Validator
-are built into the MCU static library.
+The public protocol library remains C++17. `ccsds::Packet`, `ccsds::Manager`, mission profiles, PUS codecs, CUC time, Result types, raw-buffer adapters, and the structured Validator are built into the MCU static library.
 
-`ccsds::Config` and the command-line executables are host-side conveniences and
-are excluded when `CCSDSPACK_BUILD_MCU=ON` defines `CCSDS_MCU`.
+`ccsds::Config` and the command-line executables are host-side conveniences and are excluded when `CCSDSPACK_BUILD_MCU=ON` defines `CCSDS_MCU`.
 
 A typical MCU build can use:
 
@@ -185,14 +198,10 @@ A typical MCU build can use:
 -fno-exceptions -fno-rtti
 ```
 
-without changing the Validator API.
+without changing the Validator or raw-buffer API.
 
 ## Wire-format impact
 
-The removed classes encoded project-specific layouts. Existing legacy packet
-bytes must be regenerated with a selected revision, direction, mission profile,
-and time layout; renaming a class or selector is insufficient.
+The removed classes encoded project-specific layouts. Existing legacy packet bytes must be regenerated with a selected revision, direction, mission profile, and time layout; renaming a class or selector is insufficient.
 
-The generic Packet Data Length, CRC coverage, bounded parsing, APID-width, and
-sequence corrections were already part of v1.2.0. They are retained by v2 and
-should not be presented as new v1.2-to-v2 wire-format breaks.
+The generic Packet Data Length, CRC coverage, bounded parsing, APID-width, and sequence corrections were already part of v1.2.0. They are retained by v2 and should not be presented as new v1.2-to-v2 wire-format breaks.
