@@ -4,7 +4,7 @@ CCSDSPack installs three host-side command-line programs:
 
 - `ccsds_encoder` converts application bytes into one or more CCSDS Space Packets;
 - `ccsds_decoder` consumes complete adjacent packets and reassembles application bytes;
-- `ccsds_validator` reports packet-wire, identifier, and sequence-stream failures.
+- `ccsds_validator` reports parser, packet, profile, and sequence-stream failures.
 
 All tools load the same explicit v2 mission profile used by `ccsds::Packet` and
 `ccsds::Manager`.
@@ -71,18 +71,35 @@ Without external framing, an arbitrary suffix that happens to form a syntactical
 ccsds_validator --input packets.bin --config template.cfg --verbose
 ```
 
-The validator reports these checks separately:
+The executable does not maintain a second protocol-validator implementation.
+It uses `ccsds::Packet` for bounded parsing and `ccsds::Validator` for the
+structured object/profile checks described in [VALIDATION.md](VALIDATION.md).
 
-- Packet Data Length and packet boundary;
-- CRC16, or `NOT CHECKED` in `none` mode;
-- CCSDS packet version;
-- APID when a template config is supplied;
-- packet type and secondary-header flag when a template config is supplied;
-- PUS secondary-header structure and profile consistency for PUS templates;
-- sequence-flag state;
-- sequence-count continuity, including rollover from 16383 to 0.
+The library report can include named checks for:
 
-`--print-packets` prints packets which pass the parse-time length, CRC, and version checks. The process returns exit code `18` when any packet or trailing stream bytes fail validation.
+- primary-header validity and Packet Version Number;
+- Packet Data Length;
+- CRC16 when the configured profile enables it;
+- secondary-header presence;
+- sequence-flag state and modulo-16384 sequence-count continuity;
+- Packet Identification, segmentation class, and mission-profile equality when a template is supplied;
+- PUS revision, direction, and CCSDS Packet Type consistency;
+- PUS profile and secondary-header size;
+- version/reserved and spare fields;
+- telecommand acknowledgement flags and source ID;
+- telemetry destination ID;
+- PUS-A TM packet subcounter policy;
+- PUS-C TM time-reference status;
+- configured CUC timestamp validity.
+
+Only checks that are actually performed are emitted by the structured report. In
+`none` mode there is no `Crc16` report entry.
+
+Malformed wire input can fail during bounded parsing before a structured
+`ValidationReport` exists. PUS parse failures are reported as `PUS secondary
+header : FAILED`; generic parse failures are reported as packet-parse failures.
+
+`--print-packets` prints packets that parse successfully. The process returns exit code `18` when any packet or trailing stream bytes fail parsing or validation.
 
 ## Configuration
 
@@ -99,3 +116,7 @@ values are case-insensitive. PUS profiles additionally declare their canonical
 selector, revision, direction, identifiers, and time policy. See
 [CONFIG.md](CONFIG.md) and the runnable profiles in
 [`example/config`](../example/config).
+
+The command-line programs and `ccsds::Config` are hosted-only components. The
+underlying Packet, MissionProfile, PUS, time, and Validator APIs remain available
+in the C++17 `CCSDS_MCU` static-library build.
