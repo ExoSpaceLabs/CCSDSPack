@@ -8,13 +8,8 @@
 #include <string>
 
 int main() {
-  ccsds::MissionProfile profile;
-  profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
-
   ccsds::Packet packetTemplate;
-  const auto profileResult = packetTemplate.setMissionProfile(profile);
-  if (!profileResult) return profileResult.error().code();
-
+  packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
   const auto headerResult = packetTemplate.setPrimaryHeader(ccsds::PrimaryHeader{
     0, 0, 0, 0x155, ccsds::UNSEGMENTED, 0, 0
   });
@@ -55,8 +50,11 @@ int main() {
     if (reconstructed.value()[i] != payload[i]) return 4;
   }
 
+  if (receiver.getPacketsReference().front().getPacketErrorControlMode()
+      != ccsds::PacketErrorControlMode::None) return 5;
+
   if (std::string(ccsds::errorCodeName(ccsds::ErrorCode::INVALID_DATA))
-      != "INVALID_DATA") return 5;
+      != "INVALID_DATA") return 6;
 
   return 0;
 }
