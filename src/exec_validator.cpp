@@ -32,7 +32,7 @@ void printHelp() {
     << "  -p, --print-packets                    Print packets that parse successfully\n"
     << "  -h, --help                             Show this help message\n\n"
     << "Packet parsing and protocol/profile checks are performed by the CCSDSPack\n"
-    << "library. Structured validation covers generic CCSDS coherence, sequence\n"
+    << "library. Checks include the CCSDS version and packet boundary, sequence\n"
     << "continuity, template identity/profile matching, and PUS revision/direction,\n"
     << "identifier, reserved/spare, optional-field, and CUC timestamp checks.\n";
 }
@@ -111,6 +111,18 @@ void emitValidationReport(const ccsds::ValidationReport &validation,
     report << line.str();
     std::cout << line.str();
   }
+}
+
+void emitParseFailure(const ccsds::Error &error, const bool pusProfile) {
+  const auto &message = error.message();
+  if (pusProfile) {
+    std::cout << "  [REPORT] PUS secondary header             : FAILED\n";
+  } else if (message.find("packet version") != std::string::npos) {
+    std::cout << "  [REPORT] CCSDS version                    : FAILED\n";
+  } else {
+    std::cout << "  [REPORT] Packet parse                     : FAILED\n";
+  }
+  std::cerr << "  " << message << std::endl;
 }
 
 ccsds::ResultBool configurePacketForParsing(ccsds::Packet &packet,
@@ -225,13 +237,7 @@ int main(const int argc, char *argv[]) {
     if (!parsed) {
       overallResult = false;
       failedPackets.push_back(index + 1U);
-      const auto &profile = packet.getMissionProfile();
-      if (profile.pusEnabled) {
-        std::cout << "  [REPORT] PUS secondary header             : FAILED\n";
-      } else {
-        std::cout << "  [REPORT] Packet parse                     : FAILED\n";
-      }
-      std::cerr << "  " << parsed.error().message() << std::endl;
+      emitParseFailure(parsed.error(), packet.getMissionProfile().pusEnabled);
       continue;
     }
 
