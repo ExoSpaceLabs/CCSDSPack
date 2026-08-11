@@ -38,9 +38,7 @@ namespace {
     packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     if (!packet.setPrimaryHeader(
           ccsds::PrimaryHeader{0, 0, 0, apid, flags, count, dataLength})
-        || !packet.setApplicationData(data)) {
-      return {};
-    }
+        || !packet.setApplicationData(data)) return {};
     packet.setUpdatePacketEnable(false);
     return packet;
   }
@@ -54,13 +52,12 @@ namespace {
     return validator;
   }
 
-  ccsds::Packet pusCTcPacket(ccsds::MissionProfile profile) {
+  ccsds::Packet pusCTcPacket() {
     ccsds::Packet packet;
     if (!packet.setPrimaryHeader(
-          ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U})) return {};
-    if (!packet.setMissionProfile(profile)) return {};
+          ccsds::PrimaryHeader{0U, 1U, 0U, 42U, ccsds::UNSEGMENTED, 0U, 0U})) return {};
     if (!packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TcHeader>(
-          profile, 17U, 1U, 0x1234U, 0x09U))) return {};
+          17U, 1U, 0x1234U, 0x09U))) return {};
     if (!packet.setApplicationData({0xAAU})) return {};
     if (!packet.serialize()) return {};
     packet.setUpdatePacketEnable(false);
@@ -69,23 +66,20 @@ namespace {
 
   class MalformedPusCTcHeader final : public ccsds::pus::TcSecondaryHeader {
   public:
-    explicit MalformedPusCTcHeader(ccsds::MissionProfile profile)
-      : TcSecondaryHeader(profile, 17U, 1U, 0x1234U, 0x09U) {}
+    MalformedPusCTcHeader()
+      : TcSecondaryHeader(2U, 1U, 17U, 1U, 0x1234U, 0x09U) {}
 
+    [[nodiscard]] ccsds::pus::Revision getRevision() const noexcept override {
+      return ccsds::pus::Revision::C;
+    }
     [[nodiscard]] ccsds::ResultBool deserialize(
         const std::vector<std::uint8_t> &data) override {
       (void)data;
       return true;
     }
-
     [[nodiscard]] std::uint16_t getSize() const override { return tcSize(); }
-
     [[nodiscard]] std::vector<std::uint8_t> serialize() const override {
-      std::vector<std::uint8_t> bytes{
-        0x39U, 17U, 1U, 0x12U, 0x34U
-      };
-      bytes.insert(bytes.end(), m_profile.secondaryHeaderSpareOctets, 0xFFU);
-      return bytes;
+      return {0x39U, 17U, 1U, 0x12U, 0x34U, 0xFFU};
     }
   };
 }
@@ -119,8 +113,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
   tester->unitTest("Validator rejects continuation without an open segmented sequence.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
-    const auto report = validator.validate(
-      finalizedPacket(1, ccsds::CONTINUING_SEGMENT, 7));
+    const auto report = validator.validate(finalizedPacket(1, ccsds::CONTINUING_SEGMENT, 7));
     return !report.valid()
            && report.failed(ccsds::ValidationCode::SequenceFlags)
            && report.passed(ccsds::ValidationCode::SequenceCount);
@@ -167,8 +160,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
                                         {1, 2, 3}, ccsds::PacketErrorControlMode::CRC16,
                                         0, 1, 0);
     auto validator = validatorWithTemplate(templatePacket, false, true);
-    const auto report = validator.validate(packet);
-    return report.failed(ccsds::ValidationCode::PacketIdentifier);
+    return validator.validate(packet).failed(ccsds::ValidationCode::PacketIdentifier);
   });
 
   tester->unitTest("Validator rejects segmented state against an unsegmented template.", [] {
@@ -178,7 +170,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return validator.validate(packet).failed(ccsds::ValidationCode::SegmentationClass);
   });
 
-  tester->unitTest("Validator accepts packets without packet error control.", [] {
+  tester->unitTest("Validator accepts a packet without packet error control.", [] {
     auto packet = finalizedPacket(1, ccsds::UNSEGMENTED, 9, {1, 2, 3},
                                   ccsds::PacketErrorControlMode::None);
     ccsds::Validator validator;
@@ -195,6 +187,7 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
            && report.contains(ccsds::ValidationCode::PacketDataLength)
            && report.contains(ccsds::ValidationCode::Crc16)
            && report.contains(ccsds::ValidationCode::PacketIdentifier)
+           && report.contains(ccsds::ValidationCode::TemplatePacketErrorControl)
            && report.size() <= ccsds::ValidationReport::Capacity;
   });
 
@@ -217,43 +210,60 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
            && report.passed(ccsds::ValidationCode::PacketDataLength);
   });
 
-  tester->unitTest("Validator compares mission profiles explicitly.", [] {
+  tester->unitTest("Validator compares packet error control separately from secondary-header tailoring.", [] {
     auto templatePacket = rawPacketWithoutCRC(1, ccsds::UNSEGMENTED, 0, 2);
     auto packet = templatePacket;
-    ccsds::MissionProfile profile;
-    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
-    TEST_VOID(packet.setMissionProfile(profile));
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::CRC16);
     auto validator = validatorWithTemplate(templatePacket, false, false);
-    return validator.validate(packet).failed(
-      ccsds::ValidationCode::TemplateMissionProfile);
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::TemplatePacketErrorControl)
+           && report.passed(ccsds::ValidationCode::TemplateSecondaryHeader);
   });
 
-  tester->unitTest("Validator reports PUS Packet Type and packet-error-control mismatches.", [] {
-    auto profile = ccsds::pus::makeProfile(
-      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
-    auto packet = pusCTcPacket(profile);
+  tester->unitTest("Validator compares PUS tailoring through the template header contract.", [] {
+    ccsds::pus::rev_c::TmTailoring timed;
+    timed.timestampPresent = true;
+    timed.cuc = {ccsds::time::Epoch::Ccsds1958Tai,
+                 ccsds::time::PFieldMode::Implicit, 4U, 0U};
+
+    ccsds::Packet templatePacket;
+    templatePacket.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    TEST_VOID(templatePacket.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 0U, 0U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(templatePacket.setSecondaryHeader(
+      std::make_shared<ccsds::pus::rev_c::TmHeader>(timed)));
+
+    ccsds::Packet packet;
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    TEST_VOID(packet.setPrimaryHeader(
+      ccsds::PrimaryHeader{0U, 0U, 0U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TmHeader>()));
+
+    auto validator = validatorWithTemplate(templatePacket, false, false);
+    return validator.validate(packet).failed(ccsds::ValidationCode::TemplateSecondaryHeader);
+  });
+
+  tester->unitTest("Validator reports PUS Packet Type mismatch without a profile PEC concept.", [] {
+    auto packet = pusCTcPacket();
     packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packet.getPrimaryHeader().setType(0U));
 
     ccsds::Validator validator;
     const auto report = validator.validate(packet);
-    return report.failed(ccsds::ValidationCode::PacketErrorControlProfile)
+    return report.failed(ccsds::ValidationCode::SecondaryHeaderDirection)
            && report.failed(ccsds::ValidationCode::PusPacketType)
            && report.passed(ccsds::ValidationCode::PusRevision)
-           && report.passed(ccsds::ValidationCode::PusDirection);
+           && report.passed(ccsds::ValidationCode::PusDirection)
+           && !report.contains(ccsds::ValidationCode::Crc16);
   });
 
   tester->unitTest("Validator distinguishes invalid PUS acknowledgement and source-ID fields.", [] {
-    auto profile = ccsds::pus::makeProfile(
-      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
-    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
-
     ccsds::Packet packet;
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packet.setPrimaryHeader(
-      ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
-    TEST_VOID(packet.setMissionProfile(profile));
+      ccsds::PrimaryHeader{0U, 1U, 0U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TcHeader>(
-      profile, 17U, 1U, 0x10000U, 0x10U)));
+      17U, 1U, 0x10000U, 0x10U)));
     TEST_VOID(packet.setApplicationData({0xAAU}));
 
     ccsds::Validator validator;
@@ -264,16 +274,11 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Validator distinguishes PUS reserved bits and spare-field failures.", [] {
-    auto profile = ccsds::pus::makeProfile(
-      ccsds::pus::Revision::C, ccsds::pus::Direction::Telecommand);
-    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
-    profile.secondaryHeaderSpareOctets = 1U;
-
     ccsds::Packet packet;
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packet.setPrimaryHeader(
-      ccsds::PrimaryHeader{0U, 1U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
-    TEST_VOID(packet.setMissionProfile(profile));
-    TEST_VOID(packet.setSecondaryHeader(std::make_shared<MalformedPusCTcHeader>(profile)));
+      ccsds::PrimaryHeader{0U, 1U, 0U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<MalformedPusCTcHeader>()));
     TEST_VOID(packet.setApplicationData({0xAAU}));
 
     ccsds::Validator validator;
@@ -283,30 +288,22 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
   });
 
   tester->unitTest("Validator distinguishes disabled PUS-A TM subcounter state.", [] {
-    auto profile = ccsds::pus::makeProfile(
-      ccsds::pus::Revision::A, ccsds::pus::Direction::Telemetry);
-    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
-
     ccsds::Packet packet;
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packet.setPrimaryHeader(
-      ccsds::PrimaryHeader{0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
-    TEST_VOID(packet.setMissionProfile(profile));
+      ccsds::PrimaryHeader{0U, 0U, 0U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_a::TmHeader>(
-      profile, 3U, 25U, 7U, 0U)));
+      3U, 25U, 7U, 0U)));
     TEST_VOID(packet.setApplicationData({0xAAU}));
 
     ccsds::Validator validator;
-    return validator.validate(packet).failed(
-      ccsds::ValidationCode::PusPacketSubcounter);
+    return validator.validate(packet).failed(ccsds::ValidationCode::PusPacketSubcounter);
   });
 
   tester->unitTest("Validator distinguishes an overflowing PUS TM CUC timestamp.", [] {
-    auto profile = ccsds::pus::makeProfile(
-      ccsds::pus::Revision::C, ccsds::pus::Direction::Telemetry);
-    profile.packetErrorControl = ccsds::PacketErrorControlMode::None;
-    profile.telemetryTimestampPresent = true;
-    profile.telemetryTimeCode = ccsds::time::Format::Cuc;
-    profile.telemetryCuc = {
+    ccsds::pus::rev_c::TmTailoring tailoring;
+    tailoring.timestampPresent = true;
+    tailoring.cuc = {
       ccsds::time::Epoch::Ccsds1958Tai,
       ccsds::time::PFieldMode::Implicit,
       4U,
@@ -314,11 +311,11 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     };
 
     ccsds::Packet packet;
+    packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
     TEST_VOID(packet.setPrimaryHeader(
-      ccsds::PrimaryHeader{0U, 0U, 1U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
-    TEST_VOID(packet.setMissionProfile(profile));
+      ccsds::PrimaryHeader{0U, 0U, 0U, 42U, ccsds::UNSEGMENTED, 0U, 0U}));
     TEST_VOID(packet.setSecondaryHeader(std::make_shared<ccsds::pus::rev_c::TmHeader>(
-      profile, 3U, 25U, 1U, 0x1234U, 0U,
+      tailoring, 3U, 25U, 1U, 0x1234U, 0U,
       ccsds::time::CucTime{0x100000000ULL, 0U})));
     TEST_VOID(packet.setApplicationData({0xAAU}));
 
