@@ -40,6 +40,7 @@ namespace ccsds {
     PusAcknowledgement,
     PusSourceId,
     PusDestinationId,
+    PusPacketSubcounter,
     PusTimeReferenceStatus,
     PusTimestamp
   };
