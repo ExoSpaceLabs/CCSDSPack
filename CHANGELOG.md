@@ -9,6 +9,42 @@ All notable changes to CCSDSPack are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project uses semantic versioning for its public package versions.
 
+## [Unreleased] - v2.0.0
+
+### Added
+
+- Standards-oriented PUS-A and PUS-C TC/TM secondary-header codecs under `ccsds::pus::rev_a` and `ccsds::pus::rev_c`.
+- Explicit `ccsds::MissionProfile` selection and validation for generic CCSDS and PUS revision/direction profiles.
+- Numeric basic CCSDS CUC time with explicit epoch, P-field, coarse-width, and fine-width policy.
+- Fixed-capacity `ccsds::ValidationReport` and named `ccsds::ValidationCode` checks for generic CCSDS, templates, mission profiles, and supported PUS fields.
+- Standalone installed-package examples and complete generic/PUS configuration profiles.
+
+### Changed
+
+- Public C++ namespace changes from `CCSDS` to `ccsds`.
+- Packet finalization and serialization APIs return checked Result types rather than hiding failure behind empty buffers.
+- Public secondary-header API uses `SecondaryHeader` terminology instead of the previous `DataFieldHeader` naming.
+- `ccsds::Validator::validate()` returns a structured named report instead of a positional six-element boolean report.
+- `ccsds_validator` delegates protocol/profile checks to the library Validator.
+- PUS packet configuration requires explicit revision, TC/TM direction, canonical selector, identifier widths, packet error control, and applicable CUC policy.
+- The bare-metal package path forwards `-m` flags through `CCSDSPACK_MCU_FLAGS` to the library and consumer probe.
+
+### Removed
+
+- Legacy project-specific `PusA`, `PusB`, and `PusC` classes.
+- `PusServices` and automatic registration of legacy pseudo-PUS formats.
+- Automatic UML generation as a v2.0.0 CI/release gate. The workflow remains available manually through `workflow_dispatch`.
+
+### Compatibility
+
+v2.0.0 is a breaking source/API and PUS-layout release. The corrected generic Space Packet wire behavior delivered in v1.2.0 is retained and is not reclassified as a new v2 wire break.
+
+The project remains C++17. The protocol-facing Validator, MissionProfile, PUS, CUC, Packet, Manager, and Result APIs remain available in the `CCSDS_MCU` static-library build and are compatible with builds that disable exceptions and RTTI.
+
+### Validation status
+
+Current development evidence includes 108 passing hosted native tests, Linux/Windows hosted builds, Doxygen, representative generic/PUS CLI integration, local ASan/UBSan runs, and an ARM compile/link consumer probe that exercises the structured Validator and a PUS-C telecommand path. Final v2 release gates remain tracked by the v2 milestone.
+
 ## [1.2.0] - 2026-08-02
 
 ### Added
