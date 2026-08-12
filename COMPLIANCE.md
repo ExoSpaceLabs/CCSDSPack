@@ -37,17 +37,33 @@ The optional CRC-16/CCITT-FALSE trailer is a CCSDSPack packet-level convention e
 
 `ccsds::Validator` reports named `ValidationCode` checks without mutating the Packet or secondary header being inspected. `ValidationReport` stores performed checks in fixed `std::array` storage and performs no dynamic allocation itself.
 
+The release evidence traces all 26 public validation codes to direct malformed fixtures, applicable template/sequence failures, or an explicitly documented positive-only classification check. PUS-C TC acknowledgement encoding is independently checked for all 16 four-bit combinations defined by ECSS-E-ST-70-41C clause 7.4.4.1.
+
 `CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a C++17 static archive and excludes host-only configuration and CLI components. MCU builds can disable exceptions and RTTI. The complete Packet/Manager implementation is not claimed to be heap-free.
+
+## Robustness evidence
+
+The release CI contains dedicated Clang AddressSanitizer and UndefinedBehaviorSanitizer jobs running the complete native regression/conformance suite. A separate bounded libFuzzer smoke gate exercises:
+
+- primary-header / declared packet-size inspection;
+- generic pointer-plus-size bounded Packet parsing;
+- typed PUS-A and PUS-C TC/TM parsing with valid optional tailoring combinations;
+- CUC configuration and decode/encode behavior.
+
+The fuzz gate runs under ASan+UBSan with bounded input size, per-input timeout, and RSS. It is memory-safety and robustness evidence, not a claim of exhaustive input-space proof, zero-copy parsing, or globally allocation-free behavior.
 
 ## Evidence
 
-The current integration candidate is covered by 125 native regression/conformance tests, independent fixed byte vectors, negative parser/PUS tests, Linux and Windows hosted CI, Doxygen, CLI integration, installed-package consumers and examples, Ubuntu 22.04 package/cross-build generation, and a Cortex-M compile/link probe exercising the public embedded API.
+The current release candidate is covered by **132 native regression/conformance tests**, independent fixed byte vectors, the complete PUS-C TC acknowledgement matrix, the complete structured-validation evidence matrix, Linux and Windows hosted CI, Doxygen, CLI integration, installed-package consumers and examples, Ubuntu 22.04 package/cross-build generation, a Cortex-M compile/link probe, dedicated ASan and UBSan regression jobs, and bounded four-target libFuzzer smoke CI.
 
-Fresh arm64 execution, physical STM32 execution, dedicated sanitizer/fuzz CI, and final release-publication checks remain release gates until recorded under the v2.0.0 milestone.
+Fresh native arm64 execution, physical STM32 execution, and final release-publication checks remain release gates until recorded under the v2.0.0 milestone.
 
 Detailed scope and traceability are maintained in:
 
 - [CCSDS compliance matrix](CCSDS_COMPLIANCE.md);
 - [Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md);
 - [PUS tailoring](docs/MISSION_TAILORING.md);
-- [Structured validation](docs/VALIDATION.md).
+- [PUS-C independent evidence](docs/PUS_C_EVIDENCE.md);
+- [Structured validation](docs/VALIDATION.md);
+- [Structured validation evidence](docs/VALIDATION_EVIDENCE.md);
+- [Robustness validation](docs/ROBUSTNESS.md).
