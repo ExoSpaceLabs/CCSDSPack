@@ -1,0 +1,102 @@
+name: Robustness
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  sanitizer:
+    name: sanitizer-${{ matrix.sanitizer.name }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer:
+          - name: asan
+            flags: -fsanitize=address -fno-omit-frame-pointer
+          - name: ubsan
+            flags: -fsanitize=undefined -fno-omit-frame-pointer
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake make
+
+      - name: Configure sanitizer build
+        run: |
+          cmake -S . -B build-robustness-${{ matrix.sanitizer.name }} \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DENABLE_ENCODER=OFF \
+            -DENABLE_DECODER=OFF \
+            -DENABLE_VALIDATOR=OFF \
+            -DCMAKE_CXX_FLAGS="${{ matrix.sanitizer.flags }}" \
+            -DCMAKE_SHARED_LINKER_FLAGS="${{ matrix.sanitizer.flags }}" \
+            -DCMAKE_EXE_LINKER_FLAGS="${{ matrix.sanitizer.flags }}"
+
+      - name: Build sanitizer target
+        run: cmake --build build-robustness-${{ matrix.sanitizer.name }} -- -j2
+
+      - name: Run native regression suite under sanitizer
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1:strict_string_checks=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: ./bin/CCSDSPack_tester
+
+  fuzz-smoke:
+    name: fuzz-smoke-clang
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake make
+
+      - name: Configure bounded fuzz build
+        run: |
+          cmake -S . -B build-fuzz \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DENABLE_TESTER=OFF \
+            -DENABLE_ENCODER=OFF \
+            -DENABLE_DECODER=OFF \
+            -DENABLE_VALIDATOR=OFF \
+            -DCCSDSPACK_ENABLE_FUZZING=ON \
+            -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+            -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
+
+      - name: Build fuzz targets
+        run: cmake --build build-fuzz -- -j2
+
+      - name: Run bounded fuzz smoke suite
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          for target in \
+            ccsdspack_fuzz_declared_packet_size \
+            ccsdspack_fuzz_packet \
+            ccsdspack_fuzz_pus \
+            ccsdspack_fuzz_cuc; do
+            echo "Running ${target}"
+            "./build-fuzz/fuzz/${target}" \
+              -runs=2500 \
+              -max_len=4096 \
+              -timeout=5 \
+              -rss_limit_mb=512
+          done
