@@ -1,14 +1,20 @@
 # STM32H755 hardware-validation integration
 
-The shared CCSDSPack MCU validation core is board-independent and lives in:
+CCSDSPack uses one board-independent release acceptance core for both native arm64 and physical Cortex-M7 validation:
 
 ```text
-CM7/Inc/ccsdspack_mcu_test.h
+test/package_tester/hardware/ccsdspack_hardware_test.h
+```
+
+The STM32 wrapper remains available at:
+
+```text
+test/package_tester/stm32h7xx/CM7/Inc/ccsdspack_mcu_test.h
 ```
 
 The committed STM32CubeIDE example under `STM32CubeIDE/CM7` is an **STM32H745ZITx / NUCLEO-H745ZI-Q** board harness. Its startup assembly, linker script, device define, and generated CubeIDE metadata must not be reused for an STM32H755 image.
 
-For v2.0.0 release validation, integrate the shared test header into a native **STM32H755ZITx / NUCLEO-H755ZI-Q CM7** project.
+For v2.0.0 release validation, integrate the shared acceptance header into a native **STM32H755ZITx / NUCLEO-H755ZI-Q CM7** project. The same `CCSDSPackHardwareTest::run()` implementation is executed natively by `aarch64_validate.sh`, so the two real-target runs exercise the same protocol/API acceptance logic.
 
 ## H755 project requirements
 
@@ -36,32 +42,47 @@ The application uses C++17, `CCSDS_MCU`, the installed public headers, `libccsds
 
 ## Execute the shared validation core
 
-After board initialization:
+Add `test/package_tester/hardware` to the application include path and call the same acceptance function used on arm64:
+
+```cpp
+#include "ccsdspack_hardware_test.h"
+
+const int result = CCSDSPackHardwareTest::run();
+```
+
+A successful release run should report through UART/debugger:
+
+```text
+CCSDSPACK_HARDWARE_TEST:PASS
+```
+
+The compatibility wrapper can also be used from the in-repository STM32 example:
 
 ```cpp
 #include "ccsdspack_mcu_test.h"
-
 const int result = CCSDSPackMcuTest::run();
 ```
 
-A successful release run reports:
+## Shared acceptance coverage
 
-```text
-CCSDSPACK_MCU_TEST:PASS
-```
-
-The shared v2 validation core exercises:
+The exact same acceptance core used on native arm64 and STM32 CM7 exercises:
 
 - generic Packet construction and exact CRC16 vector generation;
 - Manager Packet-template and automatic sequence-count behavior;
-- bounded parsing and consumed-byte reporting;
+- packet-level PEC with CRC16 and `None`;
 - structured Validator report checks;
-- PUS-C telecommand construction, intrinsic direction/Packet Type, serialization, and named PUS validation checks;
-- CRC-disabled Packet generation/parsing;
-- Packet Version Number rejection;
-- Idle Packet constraints.
+- PUS-C telecommand construction, intrinsic direction/Packet Type, serialization, typed parsing, and named PUS validation checks;
+- Packet Version Number rejection and Idle Packet constraints;
+- **raw application-data ingestion through `Manager::setApplicationData(const uint8_t*, size_t)`**;
+- **six-byte framing through `ccsds::buffer::declaredPacketSize()`**;
+- **pointer-plus-size bounded generic Packet parsing with exact consumed-byte checks**;
+- **truncated raw-buffer rejection**;
+- **typed PUS-C raw-buffer parsing**;
+- **raw Manager stream loading and application-data reconstruction**.
 
-The generic arm-none-eabi package build also compiles the shared core through `CM7/Src/ccsdspack_mcu_compile_probe.cpp`. Compile/link success proves API and ABI compatibility only; physical H755 execution remains a separate release gate.
+This means the physical H755 run and native arm64 run both explicitly validate the transport-facing raw-buffer APIs rather than relying only on hosted unit tests or compile/link probes.
+
+The generic arm-none-eabi package build compiles the same core through `CM7/Src/ccsdspack_mcu_compile_probe.cpp`. Compile/link success proves API and ABI compatibility only; physical H755 execution remains a separate release gate.
 
 ## Board-specific responsibilities
 
@@ -76,6 +97,8 @@ Record:
 3. CCSDSPack commit/package SHA;
 4. CM7 compile/link success;
 5. flash/reset success;
-6. UART or debugger result `CCSDSPACK_MCU_TEST:PASS`;
+6. UART or debugger result `CCSDSPACK_HARDWARE_TEST:PASS`;
 7. final ELF flash/RAM/heap/stack usage;
 8. absence of HardFault, MemManage, BusFault, or allocation failure during the run.
+
+For arm64, retain the complete output from `test/package_tester/aarch64_validate.sh`; its final successful run includes `CCSDSPACK_HARDWARE_TEST:PASS` followed by `CCSDSPACK_AARCH64_TEST:PASS`.
