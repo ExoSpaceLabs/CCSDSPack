@@ -24,6 +24,14 @@ All notable changes to CCSDSPack are documented in this file. Upgrade-specific v
 - `ccsds::buffer::declaredPacketSize()` and pointer-plus-size Packet/Manager adapters.
 - Typed PUS vector/raw parsing and runtime canonical selectors.
 - Allocation-free symbolic `errorCodeName()` / `validationCodeName()` labels.
+- Independent PUS-C TC acknowledgement evidence for all 16 four-bit flag combinations.
+- Release traceability across all 26 public `ValidationCode` entries.
+
+### Robustness
+
+- Dedicated Clang AddressSanitizer and UndefinedBehaviorSanitizer jobs run the complete native regression/conformance suite.
+- Bounded libFuzzer smoke targets cover primary-header/declared-size inspection, generic Packet parsing, typed PUS-A/PUS-C parsing, and CUC decode/encode behavior under ASan+UBSan.
+- Fuzz CI applies bounded input count, input length, timeout, and RSS limits and asserts consumed-size / CUC round-trip invariants.
 
 ### Integration
 
@@ -35,9 +43,11 @@ All notable changes to CCSDSPack are documented in this file. Upgrade-specific v
 
 ### Validation status
 
-- 125 native regression/conformance tests on the current integration candidate.
-- Local ASan and UBSan runs completed.
-- Final sanitizer/fuzz CI, PUS-C vector traceability, negative-vector approval, arm64 execution, STM32 execution, and release-publication verification remain v2.0.0 release gates.
+- **132/132 native regression/conformance tests** on the current integration candidate.
+- Independent PUS-C acknowledgement vector/source traceability complete.
+- Structured negative-validation evidence matrix complete.
+- Dedicated ASan, UBSan, and bounded four-target fuzz CI passing.
+- Fresh native arm64 execution, physical STM32H755 execution, publication-workflow correction/verification, and final release promotion remain v2.0.0 release gates.
 
 ## [1.2.0] - 2026-08-02
 
