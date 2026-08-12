@@ -4,7 +4,7 @@
 
 CCSDSPack v2.0.0 provides a standards-oriented C++17 Space Packet library with explicit packet policy, PUS-A/PUS-C secondary-header codecs, numeric CUC time, structured validation, transport-facing buffer APIs, and hosted/bare-metal integration.
 
-The implementation architecture is stable for release hardening. Remaining work is conformance evidence, target validation, CI hardening, and publication rather than API redesign.
+The implementation architecture and conformance/robustness evidence are stable. Remaining work is target validation, publication hardening, and final release approval rather than API redesign.
 
 ## Implemented product scope
 
@@ -21,26 +21,27 @@ The implementation architecture is stable for release hardening. Remaining work 
 
 ## Current integration evidence
 
-- 125 native tests;
+- **132/132 native tests**;
 - Ubuntu 22.04, Ubuntu 24.04, Ubuntu latest, and Windows hosted CI;
 - Doxygen and CLI integration;
 - installed shared-library consumer and examples;
 - Ubuntu 22.04 package/cross-build generation;
 - Cortex-M compile/link probe;
-- local ASan and UBSan execution.
+- independent PUS-C TC acknowledgement vectors for all 16 flag combinations;
+- complete 26-code structured validation evidence matrix;
+- dedicated Clang ASan and UBSan native-suite CI;
+- bounded four-target libFuzzer smoke CI under ASan+UBSan.
 
 ## Release-hardening sequence
 
-1. Complete and approve the PUS-C acknowledgement vector/traceability matrix (#74).
-2. Complete the final structured negative-vector matrix (#76).
-3. Add dedicated sanitizer and bounded fuzz smoke CI (#77).
-4. Record fresh native arm64 v2 installed-package execution (#87).
-5. Record fresh physical STM32H755 v2 PUS/Validator/raw-buffer execution (#87).
-6. Reconcile final compliance evidence and release notes (#87/#88).
-7. Close completed parent implementation/conformance issues once their child evidence is complete.
-8. Promote the approved `develop` release candidate to `main`.
-9. Run final `main` CI, tag `v2.0.0`, publish packages, and verify release artifacts (#88).
+1. Record fresh native arm64 v2 installed-package/API execution (#87).
+2. Record fresh physical STM32H755 v2 PUS/Validator/raw-buffer execution (#87).
+3. Correct release publication metadata and version-derived artifact naming, then verify tag-only GitHub Release/GHCR behavior (#87/#88).
+4. Add the fresh target/publication results to final compliance evidence and approve release notes (#88).
+5. Close completed parent integration issues once #87 acceptance is complete.
+6. Promote the approved `develop` release candidate to `main`.
+7. Run final `main` CI, tag `v2.0.0`, publish packages, and verify release artifacts (#88).
 
-Branch promotion uses reviewed GitHub pull requests and the repository path `v2.0.0-dev -> develop -> main -> tag v2.0.0`. Individual PRs are the source of truth for promotion status.
+Feature work branches from `develop` and returns through reviewed pull requests. `develop` is the integration/release-candidate branch; `main` is promoted only after the release-hardening gates are complete.
 
 UML generation remains a manual diagnostic/documentation utility and is not a v2.0.0 release gate.
