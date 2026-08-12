@@ -1,7 +1,7 @@
 # CCSDSPack v2.0.0 release notes — draft
 
 > [!IMPORTANT]
-> These release notes describe the current v2.0.0 release candidate. Tagging remains blocked until the remaining fuzz/sanitizer, vector-traceability, arm64, STM32, and publication gates are complete.
+> These release notes describe the current v2.0.0 release candidate. Tagging remains blocked until fresh native arm64 execution, physical STM32 validation, publication-workflow correction, and final release approval are complete.
 
 ## Summary
 
@@ -39,6 +39,8 @@ Direction-specific tailoring structs expose optional wire-layout choices. PUS-C 
 
 PUS parsing supports preinstalled-header schemas, typed `Packet::deserialize<HeaderT>()`, typed raw-buffer parsing, and canonical runtime selectors.
 
+Independent PUS-C TC evidence covers every valid four-bit acknowledgement combination `0x0` through `0xF` using literal expected secondary-header bytes derived from ECSS-E-ST-70-41C clause 7.4.4.1. Source derivation and vectors are recorded in `docs/PUS_C_EVIDENCE.md`.
+
 ## Numeric CUC time
 
 The basic CUC codec supports numeric coarse/fine counters, CCSDS-1958 or agency-defined epoch metadata, implicit/explicit basic P-field policy, 1–4 coarse octets, and 0–3 fine octets with overflow and P-field validation.
@@ -49,6 +51,8 @@ The basic CUC codec supports numeric coarse/fine counters, CCSDS-1958 or agency-
 
 The report itself uses fixed `std::array` storage and performs no dynamic allocation. Validator remains available in `CCSDS_MCU` builds and does not require RTTI or exceptions.
 
+All 26 public `ValidationCode` entries are traced to direct malformed fixtures, applicable template/sequence-state failures, or an explicitly documented positive-only classification check in `docs/VALIDATION_EVIDENCE.md`.
+
 ## Raw transport interfaces
 
 Vector APIs and pointer-plus-size transport APIs coexist. `ccsds::buffer::declaredPacketSize()` determines a complete packet boundary from the six-byte primary header, and bounded raw parsers support generic and typed PUS input. Manager provides raw application-data, packet, and stream overloads plus const-reference inspection APIs.
@@ -58,6 +62,19 @@ The v2.0.0 raw adapters currently bridge through vector-backed internals and the
 ## Manager
 
 One `ccsds::Manager` represents one Packet Identification and one sequence stream. Its Packet template carries Packet Identification, packet-level PEC, concrete secondary-header type, and optional PUS tailoring. Manager provides segmentation, sequence assignment, stream serialization/parsing, transactional loading, and application-data reassembly.
+
+## Robustness
+
+The release candidate runs the complete native regression/conformance suite in dedicated Clang AddressSanitizer and UndefinedBehaviorSanitizer CI jobs.
+
+A separate bounded libFuzzer smoke gate runs under ASan+UBSan and exercises:
+
+- six-byte primary-header / declared packet-size inspection;
+- generic pointer-plus-size bounded Packet parsing;
+- typed PUS-A and PUS-C TC/TM parsing with valid optional tailoring combinations;
+- CUC configuration and decode/encode behavior.
+
+The fuzz smoke gate uses bounded generated-input count, maximum input size, per-input timeout, and RSS. It provides repeatable robustness evidence without claiming exhaustive input-space proof or allocation-free parsing.
 
 ## Hosted integration
 
@@ -73,17 +90,20 @@ No global heap-free claim is made for Packet/Manager/PUS storage.
 
 The current candidate includes:
 
-- 125 passing native regression/conformance tests;
+- **132/132 native regression/conformance tests**;
+- complete independent PUS-C TC acknowledgement-vector evidence;
+- a traceable matrix covering all 26 public structured-validation codes;
+- dedicated Clang ASan and UBSan regression CI;
+- bounded four-target libFuzzer smoke CI under ASan+UBSan;
 - Linux Ubuntu 22.04, Ubuntu 24.04, and Ubuntu latest integration;
 - Windows latest integration;
 - Doxygen;
 - CLI integration;
 - installed shared-library consumer and standalone examples;
 - Ubuntu 22.04 package/cross-build generation;
-- Cortex-M compile/link coverage of the embedded public API;
-- local ASan and UBSan runs.
+- Cortex-M compile/link coverage of the embedded public API.
 
-Remaining release gates are tracked in the v2.0.0 milestone and release-readiness documents.
+Remaining release gates are fresh native arm64 execution, physical STM32H755 execution, publication-workflow correction/verification, final compliance approval, and final `develop -> main -> v2.0.0` release control.
 
 ## Migration
 
@@ -92,7 +112,7 @@ Upgrade-specific source, configuration, CLI, package/SOVERSION, and wire-format 
 ## Release control
 
 ```text
-v2.0.0-dev -> develop -> main -> tag v2.0.0
+develop -> main -> tag v2.0.0
 ```
 
 The `v2.0.0` tag is created only from an approved `main` commit after all release gates pass.

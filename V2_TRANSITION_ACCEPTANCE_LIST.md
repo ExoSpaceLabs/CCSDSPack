@@ -23,10 +23,11 @@ This checklist tracks substantive release evidence for the implemented v2.0.0 de
 - [x] Structured `ValidationReport` uses named checks and fixed storage.
 - [x] Sequence validation handles segmentation and modulo-16384 continuity.
 - [x] Validator is available in `CCSDS_MCU` with no RTTI/exception requirement.
+- [x] All 26 public `ValidationCode` entries are mapped to release evidence.
 
 ## Current integration evidence
 
-- [x] 125 native tests pass on the integration candidate.
+- [x] **132/132 native tests** pass on the evidence-hardening candidate.
 - [x] Linux Ubuntu 22.04/24.04/latest hosted gates pass.
 - [x] Windows latest hosted gate passes.
 - [x] Doxygen passes.
@@ -35,18 +36,21 @@ This checklist tracks substantive release evidence for the implemented v2.0.0 de
 - [x] Installed-package examples pass on Linux and Windows.
 - [x] Ubuntu 22.04 native/package/cross-build generation passes.
 - [x] Cortex-M compile/link probe covers Packet, PUS, raw-buffer, and Validator APIs.
-- [x] Local ASan and UBSan runs have passed.
+- [x] Dedicated Clang ASan CI passes the complete native suite.
+- [x] Dedicated Clang UBSan CI passes the complete native suite.
+- [x] Bounded four-target libFuzzer smoke CI passes under ASan+UBSan.
+- [x] Complete PUS-C TC acknowledgement matrix `0x0..0xF` is independently fixed and traced to ECSS-E-ST-70-41C clause 7.4.4.1.
+- [x] Final structured negative-validation evidence matrix is documented.
 - [x] v1.2-to-v2 migration guide is consolidated against the final API.
 - [x] Current-facing documentation describes the final v2 model without migration history.
 
 ## Remaining release gates
 
-- [ ] Dedicated sanitizer/fuzz CI jobs pass.
-- [ ] Final PUS-C acknowledgement-vector matrix and traceability are approved.
-- [ ] Final structured negative-vector coverage is approved.
 - [ ] Fresh native arm64 v2 package/API execution is recorded.
 - [ ] Fresh physical STM32H755 v2 PUS/Validator/raw-buffer execution is recorded.
-- [ ] Final compliance evidence includes the completed vector/fuzz/hardware results.
+- [ ] Release workflow uses the v2 release notes and version-neutral artifact naming where intended.
+- [ ] Tag-only GitHub Release / GHCR publication behavior is verified.
+- [ ] Final compliance evidence includes the fresh arm64/STM32/publication results.
 - [ ] Final release notes are approved after all gates pass.
 - [ ] Approved `develop` is promoted to `main` after release-hardening gates are complete.
 - [ ] Final `main` CI passes.

@@ -47,6 +47,14 @@ Telecommand coverage includes PUS version 2, acknowledgement bits, service type/
 
 Telemetry coverage includes PUS version 2, four-bit time-reference status, service type/subtype, two-octet message-type counter, fixed two-octet destination ID, optional numeric CUC timestamp, and spare fields.
 
+### Independent TC acknowledgement evidence
+
+ECSS-E-ST-70-41C clause 7.4.4.1 defines the TC secondary-header first octet as four PUS-version bits followed by four independently selectable acknowledgement bits. PUS-C requires version 2. The acknowledgement bits request successful acceptance, start, progress, and completion reports respectively.
+
+`test/src/testGroupEvidence.cpp` contains literal independent expected bytes for all 16 valid acknowledgement combinations. With service type `0x11`, subtype `0x01`, and source ID `0x1234`, the vectors run from `20 11 01 12 34` for ACK `0x0` through `2F 11 01 12 34` for ACK `0xF`. Each literal vector is checked against serialization and then independently decoded.
+
+The source derivation and complete table are maintained in `docs/PUS_C_EVIDENCE.md`.
+
 ## Numeric CUC subset
 
 The CUC codec supports:
@@ -71,8 +79,18 @@ Packet error control is validated independently of PUS tailoring. `PacketErrorCo
 
 Validation is read-only with respect to the Packet and secondary header. The Validator owns only its sequence-stream validation state.
 
+All 26 public `ValidationCode` entries are traced in `docs/VALIDATION_EVIDENCE.md`. Direct fixtures added for release hardening cover previously implicit primary-header, Packet Version, secondary-header presence, PUS revision/direction/tailoring, TM destination ID, and PUS-C time-reference status failures. `PusHeader` is documented as a positive classification entry rather than given a contrived impossible failure fixture.
+
+## Robustness
+
+The release CI runs the complete native suite under dedicated Clang AddressSanitizer and UndefinedBehaviorSanitizer jobs. Four bounded libFuzzer targets run with ASan+UBSan for declared-size/primary-header inspection, generic Packet parsing, typed PUS-A/PUS-C parsing, and CUC decode/encode behavior.
+
+The fuzz smoke gate limits generated-input count, input length, per-input timeout, and RSS. This provides repeatable crash, over-read, undefined-behavior, timeout, and bounded-resource evidence. It does not imply that the vector-backed v2 object model is zero-copy or globally heap-free. Detailed settings and assertions are in `docs/ROBUSTNESS.md`.
+
 ## Evidence
 
-The current integration candidate has 125 native tests covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, and structured validation. CLI integration covers generic and representative PUS streams and malformed PUS input. Linux/Windows CI, Doxygen, installed-package examples/consumer, package generation, and the Cortex-M compile/link probe provide integration evidence.
+The current release candidate has **132/132 native regression/conformance tests** covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, structured validation, the complete PUS-C acknowledgement matrix, and the final named negative-validation matrix.
 
-Dedicated fuzz/sanitizer CI and fresh physical arm64/STM32 execution remain release-level acceptance gates.
+CLI integration covers generic and representative PUS streams and malformed PUS input. Linux/Windows CI, Doxygen, installed-package examples/consumer, Ubuntu 22.04 package/cross-build generation, and the Cortex-M compile/link probe provide integration evidence. Dedicated ASan, UBSan, and bounded four-target libFuzzer CI provide automated robustness evidence.
+
+Fresh native arm64 execution and fresh physical STM32 execution remain release-level acceptance gates.
