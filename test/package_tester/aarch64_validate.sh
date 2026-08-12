@@ -8,8 +8,9 @@ Usage:
 
 Run this script from a CCSDSPack source checkout on an aarch64/arm64 Linux
 system, such as a 64-bit Raspberry Pi OS installation. It installs the package,
-runs the installed regression tester and CLI integration suite, then builds and
-runs an external CMake consumer against the installed package metadata.
+runs the installed regression tester and CLI integration suite, builds the
+external installed-package consumer, and executes the same board-independent
+hardware acceptance core used by the STM32 validation image.
 
 Run the script as a normal user. Package installation still requires elevation,
 so the script invokes sudo for dpkg -i and runs the tests unprivileged.
@@ -127,9 +128,6 @@ fi
 validation_work_dir="$(mktemp -d "${TMPDIR:-/tmp}/ccsdspack-aarch64-validation.XXXXXX")"
 trap 'rm -rf "${validation_work_dir}"' EXIT
 
-# CCSDSPack_tester expects test-only fixtures under ./test_resources and also
-# creates temporary files there. Copy the installed fixtures into a writable
-# work directory so the tester remains unprivileged and /bin stays untouched.
 cp -R "${test_resources}" "${validation_work_dir}/test_resources"
 
 echo "Running installed native regression tester"
@@ -153,5 +151,18 @@ cmake \
   -DCCSDSPack_DIR="${cmake_dir}"
 cmake --build "${consumer_build}" -- -j"$(nproc)"
 ctest --test-dir "${consumer_build}" --output-on-failure
+
+echo "Running shared hardware acceptance suite natively on arm64"
+hardware_build="${repo_root}/build/aarch64-hardware-acceptance"
+rm -rf "${hardware_build}"
+cmake \
+  -S "${repo_root}/test/package_tester/hardware" \
+  -B "${hardware_build}" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCCSDSPack_DIR="${cmake_dir}"
+cmake --build "${hardware_build}" -- -j"$(nproc)"
+ctest --test-dir "${hardware_build}" --output-on-failure
+
+"${hardware_build}/ccsdspack_hardware_acceptance"
 
 echo "CCSDSPACK_AARCH64_TEST:PASS"
