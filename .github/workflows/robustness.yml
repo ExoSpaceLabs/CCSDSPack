@@ -51,7 +51,9 @@ jobs:
         env:
           ASAN_OPTIONS: detect_leaks=1:halt_on_error=1:strict_string_checks=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: ./bin/CCSDSPack_tester
+        run: |
+          cd bin
+          ./CCSDSPack_tester
 
   fuzz-smoke:
     name: fuzz-smoke-clang
