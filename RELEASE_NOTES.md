@@ -1,7 +1,7 @@
 # CCSDSPack v2.0.0 release notes — draft
 
 > [!IMPORTANT]
-> These release notes describe the current v2.0.0 release candidate. Tagging remains blocked until fresh native arm64 execution, physical STM32 validation, publication-workflow correction, and final release approval are complete.
+> These release notes describe the current v2.0.0 release candidate. Tagging remains blocked until fresh native arm64 execution, physical STM32 validation, publication verification, and final release approval are complete.
 
 ## Summary
 
@@ -80,6 +80,8 @@ The fuzz smoke gate uses bounded generated-input count, maximum input size, per-
 
 Hosted builds provide encoder, decoder, validator, and regression-test executables; typed configuration files; an installed CMake package; standalone `find_package()` examples; Linux/Windows CI; Doxygen; and DEB/RPM/TGZ packaging support.
 
+Tag builds use this file as the GitHub Release description, upload generated `ccsdspack*` packages, and publish tag-specific plus `latest` GHCR images.
+
 ## Bare-metal integration
 
 `CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a C++17 static archive and excludes host-only configuration/CLI components. Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, and Validator remain available. Builds can use `-fno-exceptions -fno-rtti`.
@@ -103,7 +105,7 @@ The current candidate includes:
 - Ubuntu 22.04 package/cross-build generation;
 - Cortex-M compile/link coverage of the embedded public API.
 
-Remaining release gates are fresh native arm64 execution, physical STM32H755 execution, publication-workflow correction/verification, final compliance approval, and final `develop -> main -> v2.0.0` release control.
+Remaining release gates are fresh native arm64 execution, physical STM32H755 execution, publication verification, final compliance approval, and final `develop -> main -> v2.0.0` release control.
 
 ## Migration
 

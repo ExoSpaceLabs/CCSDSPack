@@ -4,7 +4,7 @@
 
 CCSDSPack v2.0.0 provides a standards-oriented C++17 Space Packet library with explicit packet policy, PUS-A/PUS-C secondary-header codecs, numeric CUC time, structured validation, transport-facing buffer APIs, and hosted/bare-metal integration.
 
-The implementation architecture and conformance/robustness evidence are stable. Remaining work is target validation, publication hardening, and final release approval rather than API redesign.
+The implementation architecture and conformance/robustness evidence are stable. Remaining work is target validation, publication verification, and final release approval rather than API redesign.
 
 ## Implemented product scope
 
@@ -30,15 +30,19 @@ The implementation architecture and conformance/robustness evidence are stable. 
 - independent PUS-C TC acknowledgement vectors for all 16 flag combinations;
 - complete 26-code structured validation evidence matrix;
 - dedicated Clang ASan and UBSan native-suite CI;
-- bounded four-target libFuzzer smoke CI under ASan+UBSan.
+- bounded four-target libFuzzer smoke CI under ASan+UBSan;
+- active hosted workflows target only `main` and `develop`;
+- tag publication uses the current root `RELEASE_NOTES.md`;
+- v1.2 standalone release notes are not carried forward in the v2 tree;
+- hardware-validation CI artifact naming is version-neutral.
 
 ## Release-hardening sequence
 
 1. Record fresh native arm64 v2 installed-package/API execution (#87).
 2. Record fresh physical STM32H755 v2 PUS/Validator/raw-buffer execution (#87).
-3. Correct release publication metadata and version-derived artifact naming, then verify tag-only GitHub Release/GHCR behavior (#87/#88).
+3. Verify tag-only GitHub Release/GHCR publication behavior (#87/#88).
 4. Add the fresh target/publication results to final compliance evidence and approve release notes (#88).
-5. Close completed parent integration issues once #87 acceptance is complete.
+5. Close completed parent integration issue #78 once #87 acceptance is complete.
 6. Promote the approved `develop` release candidate to `main`.
 7. Run final `main` CI, tag `v2.0.0`, publish packages, and verify release artifacts (#88).
 

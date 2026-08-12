@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main, develop, v2.0.0-dev]
+    branches: [main, develop]
 
 jobs:
   docs:

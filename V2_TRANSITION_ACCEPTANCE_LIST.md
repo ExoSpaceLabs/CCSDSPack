@@ -41,6 +41,9 @@ This checklist tracks substantive release evidence for the implemented v2.0.0 de
 - [x] Bounded four-target libFuzzer smoke CI passes under ASan+UBSan.
 - [x] Complete PUS-C TC acknowledgement matrix `0x0..0xF` is independently fixed and traced to ECSS-E-ST-70-41C clause 7.4.4.1.
 - [x] Final structured negative-validation evidence matrix is documented.
+- [x] Active hosted workflows target only `main` and `develop`; the retired v2 staging branch is no longer referenced.
+- [x] Tag publication uses the current root `RELEASE_NOTES.md` and no v1.2 release-note file is carried in the v2 tree.
+- [x] Hardware-validation CI artifact naming is version-neutral.
 - [x] v1.2-to-v2 migration guide is consolidated against the final API.
 - [x] Current-facing documentation describes the final v2 model without migration history.
 
@@ -48,7 +51,6 @@ This checklist tracks substantive release evidence for the implemented v2.0.0 de
 
 - [ ] Fresh native arm64 v2 package/API execution is recorded.
 - [ ] Fresh physical STM32H755 v2 PUS/Validator/raw-buffer execution is recorded.
-- [ ] Release workflow uses the v2 release notes and version-neutral artifact naming where intended.
 - [ ] Tag-only GitHub Release / GHCR publication behavior is verified.
 - [ ] Final compliance evidence includes the fresh arm64/STM32/publication results.
 - [ ] Final release notes are approved after all gates pass.
