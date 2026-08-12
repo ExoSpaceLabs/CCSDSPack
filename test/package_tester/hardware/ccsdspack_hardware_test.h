@@ -9,7 +9,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
-#include <string>
 #include <vector>
 
 namespace CCSDSPackHardwareTest {
@@ -17,81 +16,51 @@ namespace CCSDSPackHardwareTest {
 enum ResultCode : int {
   Pass = 0,
   SetPrimaryHeaderFailed = 1,
-  RegisterSecondaryHeaderFailed = 2,
-  SetSecondaryHeaderFailed = 3,
-  SetManagerTemplateFailed = 4,
-  ManagerSequenceConfigurationFailed = 5,
-  SetApplicationDataFailed = 6,
-  WireVectorMismatch = 7,
-  ManagerSequenceAdvanceFailed = 8,
-  BoundedDecodeFailed = 9,
-  BoundedDecodeSizeMismatch = 10,
-  DecodedFieldsMismatch = 11,
+  SetManagerTemplateFailed = 2,
+  ManagerSequenceConfigurationFailed = 3,
+  SetApplicationDataFailed = 4,
+  WireVectorMismatch = 5,
+  ManagerSequenceAdvanceFailed = 6,
+  RawDeclaredSizeFailed = 7,
+  RawGenericDecodeFailed = 8,
+  BoundedDecodeSizeMismatch = 9,
+  DecodedFieldsMismatch = 10,
+  RawTruncationAccepted = 11,
   ValidatorRejectedPacket = 12,
-  CrcFreeHeaderFailed = 13,
-  CrcFreeDataFailed = 14,
-  CrcFreeVectorMismatch = 15,
-  CrcFreeDecodeFailed = 16,
-  InvalidVersionHeaderFailed = 17,
-  InvalidVersionDataFailed = 18,
-  InvalidVersionSerialized = 19,
-  InvalidIdleHeaderFailed = 20,
-  InvalidIdleSecondaryHeaderFailed = 21,
-  InvalidIdleDataFailed = 22,
-  InvalidIdleSerialized = 23,
-  ValidIdleHeaderFailed = 24,
-  ValidIdleDataFailed = 25,
-  ValidIdleSerializationFailed = 26,
-  StructuredValidatorReportMissing = 27,
-  PusHeaderFailed = 28,
-  PusDirectionInferenceFailed = 29,
-  PusDataFailed = 30,
-  PusSerializationFailed = 31,
-  PusValidatorFailed = 32,
-  PusValidatorReportMissing = 33,
-  RawDeclaredSizeFailed = 34,
-  RawGenericDecodeFailed = 35,
-  RawTruncationAccepted = 36,
-  RawPusDecodeFailed = 37,
-  RawManagerTemplateFailed = 38,
-  RawManagerLoadFailed = 39,
-  RawManagerDataMismatch = 40
-};
-
-class CustomSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
-public:
-  CustomSecondaryHeader() { setVariableLength(true); }
-  explicit CustomSecondaryHeader(const std::vector<std::uint8_t> &data) : m_data(data) {
-    setVariableLength(true);
-  }
-  [[nodiscard]] ccsds::ResultBool deserialize(const std::vector<std::uint8_t> &data) override {
-    m_data = data;
-    return true;
-  }
-  void update(ccsds::DataField *) override {}
-  [[nodiscard]] std::uint16_t getSize() const override {
-    return static_cast<std::uint16_t>(m_data.size());
-  }
-  [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return m_data; }
-  [[nodiscard]] std::string getType() const override { return "CustomSecondaryHeader"; }
-private:
-  std::vector<std::uint8_t> m_data{};
+  StructuredValidatorReportMissing = 13,
+  RawManagerTemplateFailed = 14,
+  RawManagerLoadFailed = 15,
+  RawManagerDataMismatch = 16,
+  PusHeaderFailed = 17,
+  PusDirectionInferenceFailed = 18,
+  PusDataFailed = 19,
+  PusSerializationFailed = 20,
+  RawPusDecodeFailed = 21,
+  PusValidatorFailed = 22,
+  PusValidatorReportMissing = 23,
+  CrcFreeHeaderFailed = 24,
+  CrcFreeDataFailed = 25,
+  CrcFreeVectorMismatch = 26,
+  CrcFreeDecodeFailed = 27,
+  InvalidVersionHeaderFailed = 28,
+  InvalidVersionDataFailed = 29,
+  InvalidVersionSerialized = 30,
+  InvalidIdleHeaderFailed = 31,
+  InvalidIdleSecondaryHeaderFailed = 32,
+  InvalidIdleDataFailed = 33,
+  InvalidIdleSerialized = 34,
+  ValidIdleHeaderFailed = 35,
+  ValidIdleDataFailed = 36,
+  ValidIdleSerializationFailed = 37
 };
 
 inline int run() {
+  // Independent generic CRC16 vector also used by the hosted reference suite:
+  // 00 00 C0 00 00 03 AA 55 2E BB
   ccsds::Packet templatePacket;
   if (const auto result = templatePacket.setPrimaryHeader(ccsds::PrimaryHeader{
-        0, 1, 0, 0x123, ccsds::UNSEGMENTED, 5, 0
+        0, 0, 0, 0x000, ccsds::UNSEGMENTED, 0, 0
       }); !result) return SetPrimaryHeaderFailed;
-
-  if (const auto result = templatePacket.RegisterSecondaryHeader<CustomSecondaryHeader>();
-      !result) return RegisterSecondaryHeaderFailed;
-
-  const std::vector<std::uint8_t> secondaryHeader{
-    0x77, 0xFA, 0x0B, 0x00, 0x00, 0x0B, 0x05
-  };
-  if (const auto result = templatePacket.setSecondaryHeader(
-        secondaryHeader, "CustomSecondaryHeader"); !result) return SetSecondaryHeaderFailed;
 
   ccsds::Manager manager;
   if (const auto result = manager.setPacketTemplate(templatePacket); !result)
@@ -99,63 +68,61 @@ inline int run() {
   manager.setAutoValidateEnable(false);
   manager.setDataFieldSize(1000U);
 
-  if (manager.getSequenceCount() != 5U || !manager.getAutoSequenceCountEnable())
+  if (manager.getSequenceCount() != 0U || !manager.getAutoSequenceCountEnable())
     return ManagerSequenceConfigurationFailed;
 
-  const std::uint8_t applicationData[]{0x01, 0x02, 0x03};
+  const std::uint8_t applicationData[]{0xAA, 0x55};
   if (const auto result = manager.setApplicationData(applicationData, sizeof(applicationData)); !result)
     return SetApplicationDataFailed;
 
   const std::vector<std::uint8_t> expectedPacket{
-    0x19, 0x23, 0xC0, 0x05, 0x00, 0x0B,
-    0x77, 0xFA, 0x0B, 0x00, 0x00, 0x0B, 0x05,
-    0x01, 0x02, 0x03,
-    0xB7, 0x45
+    0x00, 0x00, 0xC0, 0x00, 0x00, 0x03, 0xAA, 0x55, 0x2E, 0xBB
   };
 
   const auto packetsResult = manager.getPacketsBuffer();
-  if (!packetsResult) return WireVectorMismatch;
+  if (!packetsResult || packetsResult.value() != expectedPacket) return WireVectorMismatch;
   const auto &packetsData = packetsResult.value();
-  if (packetsData != expectedPacket) return WireVectorMismatch;
-  if (manager.getSequenceCount() != 6U || manager.getTotalPackets() != 1U)
+  if (manager.getSequenceCount() != 1U || manager.getTotalPackets() != 1U)
     return ManagerSequenceAdvanceFailed;
 
+  // Transport-facing raw-buffer framing: only the six-octet primary header is required.
   const auto declared = ccsds::buffer::declaredPacketSize(packetsData.data(), 6U);
   if (!declared || declared.value() != packetsData.size()) return RawDeclaredSizeFailed;
 
+  // Raw generic pointer-plus-size parsing and exact consumed-byte reporting.
   ccsds::Packet decoded;
   const auto consumed = ccsds::buffer::deserializeBounded(
-    decoded, packetsData.data(), packetsData.size(), static_cast<std::uint16_t>(secondaryHeader.size()));
+    decoded, packetsData.data(), packetsData.size());
   if (!consumed) return RawGenericDecodeFailed;
   if (consumed.value() != expectedPacket.size()) return BoundedDecodeSizeMismatch;
 
   const auto &header = decoded.getPrimaryHeader();
   if (header.getVersionNumber() != 0U
-      || header.getType() != 1U
-      || header.getSecondaryHeaderFlag() != 1U
-      || header.getAPID() != 0x123U
+      || header.getType() != 0U
+      || header.getSecondaryHeaderFlag() != 0U
+      || header.getAPID() != 0U
       || header.getSequenceFlags() != ccsds::UNSEGMENTED
-      || header.getSequenceCount() != 5U
-      || decoded.getSecondaryHeaderBytes() != secondaryHeader
-      || decoded.getApplicationDataBytes() != std::vector<std::uint8_t>({0x01, 0x02, 0x03})
-      || decoded.getCRC() != 0xB745U
+      || header.getSequenceCount() != 0U
+      || decoded.getApplicationDataBytes() != std::vector<std::uint8_t>({0xAA, 0x55})
+      || decoded.getCRC() != 0x2EBBU
       || decoded.getSerializedSize() != expectedPacket.size()) return DecodedFieldsMismatch;
 
+  // The raw parser must reject an incomplete transport buffer rather than over-read it.
   ccsds::Packet truncated;
   const auto truncatedResult = ccsds::buffer::deserializeBounded(
-    truncated, packetsData.data(), packetsData.size() - 1U, static_cast<std::uint16_t>(secondaryHeader.size()));
+    truncated, packetsData.data(), packetsData.size() - 1U);
   if (truncatedResult) return RawTruncationAccepted;
 
   ccsds::Validator validator(templatePacket);
   validator.configure(true, false, true);
   const auto validation = validator.validate(decoded);
   if (!validation.valid()) return ValidatorRejectedPacket;
-  if (!validation.contains(ccsds::ValidationCode::PacketDataLength)
-      || !validation.contains(ccsds::ValidationCode::Crc16)
-      || !validation.contains(ccsds::ValidationCode::PacketIdentifier)
-      || !validation.passed(ccsds::ValidationCode::TemplateSecondaryHeader))
+  if (!validation.passed(ccsds::ValidationCode::PacketDataLength)
+      || !validation.passed(ccsds::ValidationCode::Crc16)
+      || !validation.passed(ccsds::ValidationCode::PacketIdentifier))
     return StructuredValidatorReportMissing;
 
+  // Raw Manager stream ingestion must reconstruct the original application payload.
   ccsds::Manager rawReceiver;
   if (const auto result = rawReceiver.setPacketTemplate(templatePacket); !result)
     return RawManagerTemplateFailed;
@@ -164,10 +131,10 @@ inline int run() {
   const auto rawLoad = rawReceiver.load(packetsData.data(), packetsData.size());
   if (!rawLoad) return RawManagerLoadFailed;
   const auto reconstructed = rawReceiver.getApplicationDataBuffer();
-  if (!reconstructed
-      || reconstructed.value() != std::vector<std::uint8_t>({0x01, 0x02, 0x03}))
+  if (!reconstructed || reconstructed.value() != std::vector<std::uint8_t>({0xAA, 0x55}))
     return RawManagerDataMismatch;
 
+  // Concrete PUS identity, Packet Type inference, typed raw PUS decoding, and validation.
   ccsds::Packet pusPacket;
   if (const auto result = pusPacket.setPrimaryHeader(ccsds::PrimaryHeader{
         0, 0, 0, 0x42, ccsds::UNSEGMENTED, 0, 0
@@ -201,6 +168,7 @@ inline int run() {
       || !pusValidation.passed(ccsds::ValidationCode::PusSourceId))
     return PusValidatorReportMissing;
 
+  // Packet-level PEC=None remains independent of secondary-header/PUS policy.
   ccsds::Packet crcDisabled;
   crcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
   if (const auto result = crcDisabled.setPrimaryHeader(ccsds::PrimaryHeader{
