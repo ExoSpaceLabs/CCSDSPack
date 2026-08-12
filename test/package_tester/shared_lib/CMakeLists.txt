@@ -17,5 +17,16 @@ find_package(CCSDSPack 2.0.0 EXACT CONFIG REQUIRED)
 add_executable(hello_ccsds src/main.cpp)
 target_link_libraries(hello_ccsds PRIVATE ccsdspack::CCSDSPack)
 
+add_executable(
+    ccsdspack_hardware_acceptance
+    ../hardware/main.cpp)
+target_include_directories(
+    ccsdspack_hardware_acceptance
+    PRIVATE ../hardware)
+target_link_libraries(
+    ccsdspack_hardware_acceptance
+    PRIVATE ccsdspack::CCSDSPack)
+
 enable_testing()
 add_test(NAME installed_shared_library_consumer COMMAND hello_ccsds)
+add_test(NAME shared_hardware_acceptance COMMAND ccsdspack_hardware_acceptance)
