@@ -14,7 +14,7 @@ This page records physical-target and native-target release evidence for CCSDSPa
 | Target | Status | Required marker |
 |---|---|---|
 | Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
-| STM32H755ZITx / NUCLEO-H755ZI-Q CM7 | Pending | `CCSDSPACK_HARDWARE_TEST:PASS` |
+| NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
 ## Raspberry Pi 5 v2 validation record
 
@@ -85,6 +85,74 @@ Installed release surfaces confirmed by the package include:
 
 ### Acceptance
 
-This run satisfies the v2.0.0 release gate requiring fresh native arm64 installed-package/API execution against the final `develop` hardware-acceptance baseline. It establishes execution on the tested Raspberry Pi 5 / Debian 13.5 arm64 environment for the exact source commit and package hash recorded above.
+This run satisfies the v2.0.0 release gate requiring fresh native arm64 installed-package/API execution against the v2 hardware-acceptance baseline.
 
-The remaining physical-target hardware gate is execution of the same shared acceptance body on NUCLEO-H755ZI-Q / STM32H755 CM7, together with the required target identity and memory/fault evidence.
+## NUCLEO-H755ZI-Q Cortex-M7 validation record
+
+Validation date: **2026-08-31**
+
+### Platform and compatibility basis
+
+- Physical board: **NUCLEO-H755ZI-Q**
+- Execution core: Cortex-M7
+- ST-Link V3 virtual COM interface used for the runtime result
+- UART: 115200 baud, 8 data bits, no parity, 1 stop bit
+
+The STM32CubeH7 distribution documents that all projects under `Projects/NUCLEO-H745ZI-Q` are fully compatible with the NUCLEO-H755ZI-Q board. The release validation therefore uses the ST-provided H745/H755-compatible project configuration rather than treating H745-generated project names as evidence of a different physical target. H755-only cryptographic functionality is outside CCSDSPack's scope.
+
+Official ST compatibility note:
+
+`https://github.com/STMicroelectronics/STM32CubeH7/blob/master/Projects/NUCLEO-H755ZI-Q/readme.txt`
+
+### Candidate and package
+
+- Release-candidate source commit: `3cd3ddd67be09b7ad7f3d52360b2f3c858b1fee3`
+- Compiler: `arm-none-eabi-g++ 10.3.1 20210621 (release)`
+- Package: `ccsdspack-v2.0.0-Generic-arm.tar.gz`
+- Package SHA-256: `dec18a45f6d34198fd621e39b2669893f0155134a0106782c4574fb16393223b`
+- Installed `libccsdspack.a` SHA-256: `e53f37b37e87a0e841d33475102594d56215f1502c0137016b1a453f744994eb`
+
+The package was rebuilt from a clean detached worktree using the explicit MCU flag path after PR #130 fixed `-m/--mcu-flags` parsing:
+
+```bash
+./package.sh \
+  -t cmake/toolchains/arm-none-eabi.cmake \
+  -p MCU \
+  -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+```
+
+The resulting archive was `elf32-littlearm`, architecture `armv7e-m`. The installed middleware archive hash was checked against the archive extracted from the package and matched exactly.
+
+### Application build
+
+The CM7 application compiled as C++17 with `CCSDS_MCU`, `-fno-exceptions`, `-fno-rtti`, `-fno-use-cxa-atexit`, Cortex-M7, `fpv5-d16`, hard-float ABI, and linked the installed `libccsdspack.a`.
+
+Final linked ELF size:
+
+```text
+   text    data     bss     dec     hex
+ 100124     112    2056  102292   18f94
+```
+
+### Runtime result
+
+After flashing the CM7 image onto the physical NUCLEO-H755ZI-Q and opening the ST-Link virtual COM port, the board reported:
+
+```text
+CCSDSPack CM7 hardware validation
+Running shared Packet, PEC, PUS, Validator, raw-buffer, Manager, PVN, and Idle acceptance...
+CCSDSPACK_HARDWARE_TEST:PASS
+Reset the board to run the validation again.
+```
+
+The shared acceptance body therefore completed generic Packet/CRC, Manager sequence behavior, packet-level PEC CRC16/None, structured Validator checks, PUS-C telecommand construction/parsing/validation, bounded raw-buffer framing/parsing, truncation rejection, raw Manager reconstruction, Packet Version Number rejection, and Idle Packet constraints on the physical Cortex-M7 target.
+
+No HardFault, MemManage, BusFault, allocation-failure, or test-failure marker was observed before the PASS result.
+
+### Acceptance
+
+This run satisfies the v2.0.0 physical Cortex-M7 execution gate for the tested NUCLEO-H755ZI-Q board and exact source/package/library identities recorded above.
+
+## Release status
+
+Fresh native arm64 and physical Cortex-M7 execution gates are complete. Remaining v2.0.0 gates are release/publication control: final evidence/release-note approval, `develop -> main`, final `main` CI, tag creation, and verification of the tag-produced GitHub Release, packages, and GHCR images.

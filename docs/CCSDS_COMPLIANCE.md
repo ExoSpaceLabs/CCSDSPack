@@ -93,4 +93,9 @@ The current release candidate has **132/132 native regression/conformance tests*
 
 CLI integration covers generic and representative PUS streams and malformed PUS input. Linux/Windows CI, Doxygen, installed-package examples/consumer, Ubuntu 22.04 package/cross-build generation, and the Cortex-M compile/link probe provide integration evidence. Dedicated ASan, UBSan, and bounded four-target libFuzzer CI provide automated robustness evidence.
 
-Fresh native arm64 execution and fresh physical STM32 execution remain release-level acceptance gates.
+Fresh real-target execution is also recorded in `docs/V2_HARDWARE_VALIDATION.md`:
+
+- Raspberry Pi 5 / native arm64 installed-package validation completed with `CCSDSPACK_HARDWARE_TEST:PASS` and `CCSDSPACK_AARCH64_TEST:PASS`;
+- physical NUCLEO-H755ZI-Q / Cortex-M7 execution completed with `CCSDSPACK_HARDWARE_TEST:PASS` using the same board-independent acceptance core.
+
+The remaining release-level evidence concerns publication control: final `main` CI, tag-only GitHub Release/GHCR execution, and verification of the artifacts produced from the approved `v2.0.0` tag.

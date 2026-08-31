@@ -1,7 +1,7 @@
 # CCSDSPack v2.0.0 release notes — draft
 
 > [!IMPORTANT]
-> These release notes describe the current v2.0.0 release candidate. Tagging remains blocked until fresh native arm64 execution, physical STM32 validation, publication verification, and final release approval are complete.
+> These release notes describe the current v2.0.0 release candidate. Native arm64 and physical Cortex-M7 execution are complete. Tagging remains blocked until final publication-path verification, release approval, `develop -> main` promotion, and final `main` CI are complete.
 
 ## Summary
 
@@ -86,6 +86,8 @@ Tag builds use this file as the GitHub Release description, upload generated `cc
 
 `CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a C++17 static archive and excludes host-only configuration/CLI components. Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, and Validator remain available. Builds can use `-fno-exceptions -fno-rtti`.
 
+The explicit `package.sh -m/--mcu-flags` path now parses space-delimited MCU compiler flags correctly before forwarding them to CMake target compile options.
+
 No global heap-free claim is made for Packet/Manager/PUS storage.
 
 ## Validation status
@@ -103,9 +105,13 @@ The current candidate includes:
 - CLI integration;
 - installed shared-library consumer and standalone examples;
 - Ubuntu 22.04 package/cross-build generation;
-- Cortex-M compile/link coverage of the embedded public API.
+- Cortex-M compile/link coverage of the embedded public API;
+- fresh Raspberry Pi 5 / native arm64 installed-package execution with `CCSDSPACK_HARDWARE_TEST:PASS` and `CCSDSPACK_AARCH64_TEST:PASS`;
+- fresh physical NUCLEO-H755ZI-Q / Cortex-M7 execution with `CCSDSPACK_HARDWARE_TEST:PASS`.
 
-Remaining release gates are fresh native arm64 execution, physical STM32H755 execution, publication verification, final compliance approval, and final `develop -> main -> v2.0.0` release control.
+The physical Cortex-M7 validation used ST's documented NUCLEO-H745ZI-Q project compatibility for the NUCLEO-H755ZI-Q board and the v2.0.0 MCU archive built from release-candidate commit `3cd3ddd67be09b7ad7f3d52360b2f3c858b1fee3`. Exact package/library hashes and ELF usage are recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+
+Remaining release gates are final publication-path verification, compliance/release-note approval, and final `develop -> main -> v2.0.0` release control.
 
 ## Migration
 
@@ -117,4 +123,4 @@ Upgrade-specific source, configuration, CLI, package/SOVERSION, and wire-format 
 develop -> main -> tag v2.0.0
 ```
 
-The `v2.0.0` tag is created only from an approved `main` commit after all release gates pass.
+The `v2.0.0` tag is created only from an approved `main` commit after all pre-tag release gates pass. Tag-produced GitHub Release assets, packages, and GHCR images are then verified against that tag.
