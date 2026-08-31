@@ -1,7 +1,7 @@
-# CCSDSPack v2.0.0 release notes — draft
+# CCSDSPack v2.0.0
 
 > [!IMPORTANT]
-> These release notes describe the current v2.0.0 release candidate. Native arm64 and physical Cortex-M7 execution are complete. Tagging remains blocked until final publication-path verification, release approval, `develop -> main` promotion, and final `main` CI are complete.
+> These release notes describe the approved CCSDSPack v2.0.0 release. Native arm64 and physical Cortex-M7 execution are complete, the validated `develop` candidate has been promoted to `main`, and the tag is created only after final `main` CI succeeds. Tag-produced GitHub Release assets, packages, and GHCR images are verified after publication.
 
 ## Summary
 
@@ -65,7 +65,7 @@ One `ccsds::Manager` represents one Packet Identification and one sequence strea
 
 ## Robustness
 
-The release candidate runs the complete native regression/conformance suite in dedicated Clang AddressSanitizer and UndefinedBehaviorSanitizer CI jobs.
+The release runs the complete native regression/conformance suite in dedicated Clang AddressSanitizer and UndefinedBehaviorSanitizer CI jobs.
 
 A separate bounded libFuzzer smoke gate runs under ASan+UBSan and exercises:
 
@@ -86,13 +86,13 @@ Tag builds use this file as the GitHub Release description, upload generated `cc
 
 `CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a C++17 static archive and excludes host-only configuration/CLI components. Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, and Validator remain available. Builds can use `-fno-exceptions -fno-rtti`.
 
-The explicit `package.sh -m/--mcu-flags` path now parses space-delimited MCU compiler flags correctly before forwarding them to CMake target compile options.
+The explicit `package.sh -m/--mcu-flags` path parses space-delimited MCU compiler flags correctly before forwarding them to CMake target compile options.
 
 No global heap-free claim is made for Packet/Manager/PUS storage.
 
 ## Validation status
 
-The current candidate includes:
+The v2.0.0 release evidence includes:
 
 - **132/132 native regression/conformance tests**;
 - complete independent PUS-C TC acknowledgement-vector evidence;
@@ -111,7 +111,7 @@ The current candidate includes:
 
 The physical Cortex-M7 validation used ST's documented NUCLEO-H745ZI-Q project compatibility for the NUCLEO-H755ZI-Q board and the v2.0.0 MCU archive built from release-candidate commit `3cd3ddd67be09b7ad7f3d52360b2f3c858b1fee3`. Exact package/library hashes and ELF usage are recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
-Remaining release gates are final publication-path verification, compliance/release-note approval, and final `develop -> main -> v2.0.0` release control.
+The final release-control sequence is `develop -> main -> v2.0.0`. Publication verification is performed against the artifacts produced by the tag workflow.
 
 ## Migration
 
@@ -123,4 +123,4 @@ Upgrade-specific source, configuration, CLI, package/SOVERSION, and wire-format 
 develop -> main -> tag v2.0.0
 ```
 
-The `v2.0.0` tag is created only from an approved `main` commit after all pre-tag release gates pass. Tag-produced GitHub Release assets, packages, and GHCR images are then verified against that tag.
+The `v2.0.0` tag is created from the approved `main` commit after final `main` CI passes. The tag workflow then publishes the GitHub Release assets and exact-tag GHCR image, which are verified against the tagged commit.
