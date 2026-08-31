@@ -73,11 +73,20 @@ target_include_directories(${LIB_NAME}
 target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
 
 if(CCSDSPACK_BUILD_MCU)
+    set(CCSDSPACK_MCU_COMPILE_FLAGS "")
+    if(CCSDSPACK_MCU_FLAGS)
+        separate_arguments(
+            CCSDSPACK_MCU_COMPILE_FLAGS
+            UNIX_COMMAND
+            "${CCSDSPACK_MCU_FLAGS}"
+        )
+    endif()
+
     target_compile_options(${LIB_NAME} PRIVATE
         -Os
         -ffunction-sections
         -fdata-sections
-        ${CCSDSPACK_MCU_FLAGS}
+        ${CCSDSPACK_MCU_COMPILE_FLAGS}
     )
     target_link_options(${LIB_NAME} PRIVATE -Wl,--gc-sections)
     target_compile_definitions(${LIB_NAME} PUBLIC CCSDS_MCU)
