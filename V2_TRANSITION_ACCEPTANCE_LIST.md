@@ -49,10 +49,10 @@ This checklist tracks substantive release evidence for the implemented v2.0.0 de
 
 ## Remaining release gates
 
-- [ ] Fresh native arm64 v2 package/API execution is recorded.
-- [ ] Fresh physical STM32H755 v2 PUS/Validator/raw-buffer execution is recorded.
-- [ ] Tag-only GitHub Release / GHCR publication behavior is verified.
-- [ ] Final compliance evidence includes the fresh arm64/STM32/publication results.
+- [x] Fresh native arm64 v2 package/API execution is recorded.
+- [x] Fresh physical NUCLEO-H755ZI-Q / Cortex-M7 PUS/Validator/raw-buffer execution is recorded.
+- [ ] Tag-only GitHub Release / GHCR publication behavior is verified on the final release path.
+- [ ] Final compliance evidence includes publication results in addition to the recorded arm64/STM32 results.
 - [ ] Final release notes are approved after all gates pass.
 - [ ] Approved `develop` is promoted to `main` after release-hardening gates are complete.
 - [ ] Final `main` CI passes.
