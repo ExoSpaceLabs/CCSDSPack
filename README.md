@@ -9,6 +9,8 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
 
+**[API Documentation](https://exospacelabs.github.io/CCSDSPack/html/)** · [Documentation index](docs/README.md)
+
 **CCSDSPack** is a C++17 library for constructing, serializing, parsing, managing, and validating CCSDS Space Packet protocol data units. It provides a compact packet-oriented API for hosted applications and embedded systems while keeping packet identity, secondary-header layout, error control, and stream validation explicit.
 
 The v2.0.0 implementation targets:
@@ -242,6 +244,7 @@ See [Command-line tools](docs/CLI.md).
 
 ## Documentation
 
+- [Generated API documentation (Doxygen)](https://exospacelabs.github.io/CCSDSPack/html/)
 - [Documentation index](docs/README.md)
 - [Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
 - [Compliance statement](COMPLIANCE.md)
