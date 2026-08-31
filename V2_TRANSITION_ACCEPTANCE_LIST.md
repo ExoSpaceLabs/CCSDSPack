@@ -47,14 +47,27 @@ This checklist tracks substantive release evidence for the implemented v2.0.0 de
 - [x] v1.2-to-v2 migration guide is consolidated against the final API.
 - [x] Current-facing documentation describes the final v2 model without migration history.
 
-## Remaining release gates
+## Release gates
 
 - [x] Fresh native arm64 v2 package/API execution is recorded.
 - [x] Fresh physical NUCLEO-H755ZI-Q / Cortex-M7 PUS/Validator/raw-buffer execution is recorded.
-- [ ] Tag-only GitHub Release / GHCR publication behavior is verified on the final release path.
-- [ ] Final compliance evidence includes publication results in addition to the recorded arm64/STM32 results.
-- [ ] Final release notes are approved after all gates pass.
-- [ ] Approved `develop` is promoted to `main` after release-hardening gates are complete.
-- [ ] Final `main` CI passes.
-- [ ] `v2.0.0` is tagged from the approved `main` commit.
-- [ ] Published release packages/artifacts are verified.
+- [x] Tag-only GitHub Release / GHCR publication behavior is verified on the final release path.
+- [x] Final compliance evidence includes publication results in addition to the recorded arm64/STM32 results.
+- [x] Final release notes are approved after all pre-tag gates pass.
+- [x] Approved `develop` is promoted to `main` after release-hardening gates are complete.
+- [x] Final `main` CI passes.
+- [x] `v2.0.0` is tagged from the approved `main` commit.
+- [x] Published release packages/artifacts are verified.
+
+## Publication record
+
+The annotated `v2.0.0` tag resolves to approved `main` commit `c2f318c330c564429bcc565a8acbff22728b2851`.
+
+The canonical tag publication workflow completed successfully and published:
+
+- `ccsdspack-v2.0.0-Linux-x86_64.deb`, SHA-256 `779841b9f5705af56bcac2a6cb014261ff30711642a0334e0a3ad9bb1f86e22f`;
+- `ccsdspack-v2.0.0-Linux-arm64.deb`, SHA-256 `8e31a2a2d8f80c2604f4457e9388d66a49f79a228c8d65603542a4e5e9d5bdb3`;
+- `ccsdspack-v2.0.0-Generic-arm.tar.gz`, SHA-256 `1d4d3fdab567b8f52f34a532af37917913ba2be7c1bacf3dec0dd098cdb457ae`;
+- GHCR images `ghcr.io/exospacelabs/ccsdspack:v2.0.0` and `ghcr.io/exospacelabs/ccsdspack:latest`.
+
+GitHub Release creation, release-asset upload, GHCR login, exact-tag image build, and both image pushes completed successfully in the release workflow.
