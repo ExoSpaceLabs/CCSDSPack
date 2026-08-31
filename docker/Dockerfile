@@ -1,27 +1,27 @@
 FROM ubuntu:22.04
 
+# Exact release tag to install, for example v2.0.0.
+ARG CCSDSPACK_TAG
+
 # Prevent interactive prompts during package install
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install required tools
 RUN apt-get update && apt-get install -y \
-    wget \
     curl \
     dpkg \
     ca-certificates \
  && rm -rf /var/lib/apt/lists/*
 
-# Fetch latest CCSDSPack release .deb from GitHub
-RUN LATEST_DEB_URL=$(curl -s https://api.github.com/repos/ExoSpaceLabs/CCSDSPack/releases/latest \
-    | grep browser_download_url \
-    | grep '\Linux-x86_64.deb' \
-    | cut -d '"' -f 4) \
- && echo "Downloading $LATEST_DEB_URL" \
- && curl -L -o /tmp/ccsdspack.deb "$LATEST_DEB_URL" \
- && dpkg -i /tmp/ccsdspack.deb || apt-get -f install -y \
+# Install the x86_64 package produced by the exact tag being published.
+RUN test -n "${CCSDSPACK_TAG}" \
+ && DEB_URL="https://github.com/ExoSpaceLabs/CCSDSPack/releases/download/${CCSDSPACK_TAG}/ccsdspack-${CCSDSPACK_TAG}-Linux-x86_64.deb" \
+ && echo "Downloading ${DEB_URL}" \
+ && curl -fL -o /tmp/ccsdspack.deb "${DEB_URL}" \
+ && (dpkg -i /tmp/ccsdspack.deb || (apt-get update && apt-get -f install -y)) \
  && rm /tmp/ccsdspack.deb
 
-# Verify installation works
+# Verify the installed tagged package works.
 RUN cd /usr/bin && ./CCSDSPack_tester
 
 WORKDIR /usr/bin
