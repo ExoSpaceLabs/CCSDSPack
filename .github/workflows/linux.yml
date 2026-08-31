@@ -11,6 +11,10 @@ on:
       - main
       - develop
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build-and-test:
     strategy:
@@ -73,7 +77,7 @@ jobs:
         if: failure() && steps.cli_integration.outcome == 'failure'
         uses: actions/upload-artifact@v4
         with:
-          name: linux-cli-log-${{ matrix.os }}-${{ github.sha }}
+          name: linux-cli-log-${{ github.sha }}
           path: cli_integration.log
           if-no-files-found: error
 
@@ -168,7 +172,11 @@ jobs:
       - name: Build Docker image
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
         run: |
-          docker build -t ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }} -t ghcr.io/exospacelabs/ccsdspack:latest -f docker/Dockerfile docker
+          docker build \
+            --build-arg CCSDSPACK_TAG=${{ github.ref_name }} \
+            -t ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }} \
+            -t ghcr.io/exospacelabs/ccsdspack:latest \
+            -f docker/Dockerfile docker
 
       - name: Push Docker image
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
