@@ -1,0 +1,7 @@
+<map id="ccsds::Manager::syncSequenceCountFromPacket" name="ccsds::Manager::syncSequenceCountFromPacket">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,37,229,77"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#a7cd06fe6866be997b08e4a71574c5213" title=" " alt="" coords="286,5,474,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="229,41,272,36,273,41,230,46"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Header.html#a2044a112899f863bb1d59d2b1ad84783" title="Returns the stored 14&#45;bit sequence count." alt="" coords="277,69,483,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,68,264,73,263,78,229,74"/>
+</map>

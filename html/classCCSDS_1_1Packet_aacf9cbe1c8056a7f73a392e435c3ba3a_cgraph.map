@@ -1,9 +1,0 @@
-<map id="CCSDS::Packet::getSerializedSize" name="CCSDS::Packet::getSerializedSize">
-<area shape="rect" id="Node000001" title="Returns the exact current serialized size without finalizing the packet." alt="" coords="5,45,241,70"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1DataField.html#afc8ba83b11ef4f7156a01b3d2fb4c1b8" title="Returns stored secondary&#45;header plus application&#45;data bytes." alt="" coords="289,5,485,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,42,275,36,276,41,229,47"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#abadc44c1c0fa6ad89434176a31e0722c" title="Returns the reserved trailer size: two bytes for CRC16, otherwise zero." alt="" coords="294,69,481,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="229,67,281,74,280,79,228,73"/>
-<area shape="rect" id="Node000004" href="$classCCSDS_1_1Packet.html#a1864e47a2388bf4d05c0840223ffc50c" title="Returns the configured mission&#45;profile CRC trailer mode." alt="" coords="533,69,720,109"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="481,87,520,87,520,92,481,92"/>
-</map>

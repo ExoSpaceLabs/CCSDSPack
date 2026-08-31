@@ -1,0 +1,20 @@
+<map id="ccsds::Manager" name="ccsds::Manager">
+<area shape="rect" id="Node000001" title="Generates, stores, parses, and validates one CCSDS packet&#45;identifier stream." alt="" coords="198,372,321,397"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html" title="Owns, serializes, and parses one CCSDS Space Packet PDU." alt="" coords="241,196,349,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="312,233,317,245,329,298,327,322,316,349,304,364,289,374,286,370,301,360,312,347,322,321,324,298,311,246,307,235"/>
+<area shape="rect" id="Node000008" href="$classccsds_1_1Validator.html" title="Validates packet coherence, concrete secondary&#45;header contracts, and one sequence stream." alt="" coords="125,284,249,309"/>
+<area shape="poly" id="edge8_Node000008_Node000002" title=" " alt="" coords="229,221,208,231,191,247,185,265,187,284,182,284,180,264,186,244,205,227,227,216"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Header.html" title="Validated in&#45;memory representation of a CCSDS Space Packet primary header." alt="" coords="85,108,199,133"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="151,146,157,159,166,170,202,190,241,201,240,206,200,195,163,174,153,162,146,148"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1DataField.html" title=" " alt="" coords="227,108,355,133"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="295,147,297,195,292,196,290,147"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1SecondaryHeaderFactory.html" title="Direction&#45;neutral extension registry for mission&#45;specific secondary headers." alt="" coords="55,13,283,38"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="165,51,165,68,171,82,192,95,228,106,227,111,190,100,167,86,160,69,160,51"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1pus_1_1SecondaryHeaderFactory.html" title="Fixed, non&#45;extensible registry for standards&#45;defined PUS codecs." alt="" coords="307,5,519,45"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="391,58,361,86,320,110,317,106,358,82,387,54"/>
+<area shape="rect" id="Node000007" href="$structccsds_1_1CRC16Config.html" title="Parameters for the optional CCSDSPack packet&#45;level CRC16 trailer." alt="" coords="380,108,531,133"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="432,144,385,174,330,198,328,194,382,170,429,139"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="208,318,251,370,247,373,204,322"/>
+<area shape="rect" id="Node000009" href="$classccsds_1_1ValidationReport.html" title="Fixed&#45;capacity structured validation result with no dynamic allocation." alt="" coords="5,196,180,221"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="91,235,92,247,96,259,110,272,127,281,125,286,107,276,92,261,86,249,85,235"/>
+</map>

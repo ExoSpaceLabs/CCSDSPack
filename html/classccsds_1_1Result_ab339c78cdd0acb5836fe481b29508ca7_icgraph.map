@@ -1,0 +1,11 @@
+<map id="ccsds::Result::error" name="ccsds::Result::error">
+<area shape="rect" id="Node000001" title=" " alt="" coords="343,63,489,88"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#a47940e39235d5b522be6f7fbd25d4c4d" title="Typed parse convenience using a default&#45;constructed or explicitly tailored secondary&#45;header prototype..." alt="" coords="108,5,295,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="354,62,249,33,250,28,355,56"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#af7fc722b2fd1ab79ce5f48933d104005" title="Typed bounded parse returning the number of consumed bytes." alt="" coords="108,55,295,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="329,78,295,78,295,73,329,73"/>
+<area shape="rect" id="Node000004" href="$exec__utils_8cpp.html#a5070bfd1c922310cc50c919e321048e4" title="Scans adjacent packets using each encoded Packet Data Length boundary." alt="" coords="122,120,281,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="355,94,250,123,249,117,354,89"/>
+<area shape="rect" id="Node000005" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,120,60,145"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="108,135,60,135,60,130,108,130"/>
+</map>

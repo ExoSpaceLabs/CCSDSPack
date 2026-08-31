@@ -1,5 +1,0 @@
-<map id="CCSDS::DataField" name="CCSDS::DataField">
-<area shape="rect" id="Node000001" title="Owns the optional secondary header and application&#45;data bytes of one packet." alt="" coords="55,93,191,119"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1SecondaryHeaderFactory.html" title="Registers secondary&#45;header prototypes by type name and returns their shared instances." alt="" coords="5,5,241,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,45,126,93,121,93,121,45"/>
-</map>

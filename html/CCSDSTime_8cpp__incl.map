@@ -1,0 +1,21 @@
+<map id="src/CCSDSTime.cpp" name="src/CCSDSTime.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="187,5,336,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="206,79,317,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,31,264,65,259,65,259,31"/>
+<area shape="rect" id="Node000003" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="154,152,273,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,106,231,142,226,139,251,103"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,225,72,251"/>
+<area shape="poly" id="edge9_Node000002_Node000004" title=" " alt="" coords="236,106,192,127,144,154,100,187,63,218,59,214,96,182,141,150,189,122,233,102"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="377,225,439,251"/>
+<area shape="poly" id="edge10_Node000002_Node000007" title=" " alt="" coords="273,102,339,175,384,214,380,218,335,179,269,106"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="349,152,419,177"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="282,102,354,143,351,147,280,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="186,180,81,222,79,218,184,175"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="96,225,155,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="201,179,152,219,149,214,198,175"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="179,225,247,251"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="216,178,216,212,211,212,211,178"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="246,175,364,218,363,223,244,180"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="272,225,352,251"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="231,175,286,215,283,219,228,180"/>
+</map>

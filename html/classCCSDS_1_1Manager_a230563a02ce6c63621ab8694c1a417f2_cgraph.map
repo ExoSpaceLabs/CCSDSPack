@@ -1,5 +1,0 @@
-<map id="CCSDS::Manager::packetIdentifier" name="CCSDS::Manager::packetIdentifier">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,13,245,38"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#ad667850d2d8b9447a043baeaa686cc9a" title="Returns mutable access to the owned primary Header." alt="" coords="293,5,489,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,23,280,23,280,28,246,28"/>
-</map>

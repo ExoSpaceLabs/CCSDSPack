@@ -1,0 +1,19 @@
+<map id="ccsds::Manager::readTemplate" name="ccsds::Manager::readTemplate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,225,129"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#af42069ed073c0ac5f1c4e6c0f0233fae" title="Parses one packet." alt="" coords="301,5,487,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,102,197,71,272,39,301,31,302,36,274,45,200,75,140,106"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#aae818e04ef6d7bbc81073028b9d35c93" title=" " alt="" coords="273,55,515,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,101,308,80,308,85,188,107"/>
+<area shape="rect" id="Node000007" href="$namespaceccsds.html#a2c080b9180c136c266cde489de8827c9" title="Reads an entire binary file into memory." alt="" coords="314,104,474,129"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="225,114,300,114,300,119,225,119"/>
+<area shape="rect" id="Node000008" href="$classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222" title=" " alt="" coords="303,154,485,194"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="178,127,290,150,289,155,177,132"/>
+<area shape="rect" id="Node000009" href="$namespaceccsds.html#a21328cc3b8992e714043a03abfa1221d" title="Tests whether a string ends with an exact suffix." alt="" coords="312,219,476,244"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="136,127,196,165,274,204,303,213,301,218,272,208,193,170,133,132"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1Config.html#a6f3e475a7201bee9da581cff8a28b22d" title="Loads and replaces configuration values from a file." alt="" coords="563,55,705,80"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="515,65,549,65,549,70,515,70"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1Config.html#adad989efb9684e77cdac68eded30e2b5" title="Parses a bracketed comma&#45;separated byte vector." alt="" coords="753,29,941,55"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="705,56,739,52,740,57,706,62"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1Config.html#af7969d823ea03ca0fa75da721f91f327" title="Splits one configuration line into key, type, and raw value fields." alt="" coords="758,79,937,104"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="706,73,745,77,744,82,705,78"/>
+</map>

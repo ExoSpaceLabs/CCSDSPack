@@ -1,0 +1,7 @@
+<map id="ccsds::pus::sameTailoring" name="ccsds::pus::sameTailoring">
+<area shape="rect" id="Node000001" title="Returns true when two PUS headers use the same identity and wire&#45;layout tailoring." alt="" coords="5,49,193,74"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1pus_1_1TcSecondaryHeader.html#ae8afc619ff4ab0a6be56a172cf65492c" title=" " alt="" coords="241,5,467,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,46,227,41,228,46,190,51"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#a188c2970a4ee1ec76692b7e0f5bf3ad6" title=" " alt="" coords="247,70,461,125"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="190,71,233,78,233,83,189,77"/>
+</map>

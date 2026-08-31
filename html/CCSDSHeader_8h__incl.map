@@ -1,15 +1,17 @@
 <map id="inc/CCSDSHeader.h" name="inc/CCSDSHeader.h">
-<area shape="rect" id="Node000001" title="Defines CCSDS Space Packet primary&#45;header fields, validation, and serialization." alt="" coords="129,5,275,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="143,79,261,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,31,205,65,199,65,199,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,152,68,177"/>
-<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="190,33,133,81,61,145,58,141,130,77,186,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="289,152,355,177"/>
-<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="221,29,248,50,276,77,298,108,314,138,309,141,293,111,272,80,245,54,218,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="92,152,160,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="192,106,150,144,147,141,188,102"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="176,106,77,149,75,144,174,102"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="223,102,292,142,289,147,220,106"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="185,152,265,177"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="208,104,219,138,214,140,203,105"/>
+<area shape="rect" id="Node000001" title="Defines CCSDS Space Packet primary&#45;header fields, validation, and serialization." alt="" coords="140,5,287,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="154,79,273,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="216,31,216,65,211,65,211,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,72,177"/>
+<area shape="poly" id="edge7_Node000001_Node000003" title=" " alt="" coords="201,33,65,145,61,141,197,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="377,152,439,177"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="231,29,383,141,380,146,227,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,106,81,149,79,144,184,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="96,152,155,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="201,106,152,145,149,141,198,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="179,152,247,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="216,104,216,138,211,138,211,104"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="246,102,364,145,363,150,244,107"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="272,152,352,177"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="231,102,286,142,283,146,228,106"/>
 </map>

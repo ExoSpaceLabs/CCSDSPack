@@ -1,0 +1,12 @@
+<map id="ccsds::Packet::getSerializedSize" name="ccsds::Packet::getSerializedSize">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,45,233,70"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1DataField.html#a765dcfcfb8e1e5c6fc23f82c14307fda" title=" " alt="" coords="281,5,469,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,42,267,36,268,41,221,47"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#aa76e477304e8f1f26026066c9d3cf158" title=" " alt="" coords="286,69,465,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="221,67,273,74,272,79,221,73"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1Packet.html#af42069ed073c0ac5f1c4e6c0f0233fae" title="Parses one packet." alt="" coords="744,77,931,102"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="465,84,517,83,696,83,730,83,730,89,696,88,517,88,465,89"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1Packet.html#a01d30e042073dfd113a7138d4b1f2812" title=" " alt="" coords="517,97,696,137"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="465,98,504,102,503,108,465,103"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="696,104,730,100,731,105,696,109"/>
+</map>

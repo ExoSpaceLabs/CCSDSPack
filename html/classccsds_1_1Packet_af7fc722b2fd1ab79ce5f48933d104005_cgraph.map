@@ -1,0 +1,9 @@
+<map id="ccsds::Packet::deserializeBounded" name="ccsds::Packet::deserializeBounded">
+<area shape="rect" id="Node000001" title="Typed bounded parse returning the number of consumed bytes." alt="" coords="5,47,192,87"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#af42069ed073c0ac5f1c4e6c0f0233fae" title="Parses one packet." alt="" coords="240,5,427,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,45,258,31,259,36,193,50"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Result.html#ab339c78cdd0acb5836fe481b29508ca7" title=" " alt="" coords="260,55,407,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,65,246,65,246,70,192,70"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1Result.html#a93e9734a3c996ed877655cf7fe966c5b" title=" " alt="" coords="258,104,409,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="193,84,259,98,258,104,191,90"/>
+</map>

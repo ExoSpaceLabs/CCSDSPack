@@ -1,0 +1,5 @@
+<map id="ccsds::Manager::read" name="ccsds::Manager::read">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,165,31"/>
+<area shape="rect" id="Node000002" href="$namespaceccsds.html#a2c080b9180c136c266cde489de8827c9" title="Reads an entire binary file into memory." alt="" coords="213,5,373,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,15,199,15,199,21,165,21"/>
+</map>

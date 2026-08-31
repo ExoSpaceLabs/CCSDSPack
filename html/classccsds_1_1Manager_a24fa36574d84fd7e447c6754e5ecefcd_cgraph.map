@@ -1,0 +1,9 @@
+<map id="ccsds::Manager::addPacketFromBuffer" name="ccsds::Manager::addPacketFromBuffer">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,27,203,67"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Manager.html#a7b741b9b9b47c35d673b7587504c2c39" title=" " alt="" coords="251,27,448,67"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,45,237,45,237,50,203,50"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#af42069ed073c0ac5f1c4e6c0f0233fae" title="Parses one packet." alt="" coords="496,5,683,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="448,33,482,28,483,34,449,38"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1Packet.html#a58a5887310662d7e6881160ddb5e23b0" title="Selects packet&#45;level error control independently of PUS/custom headers." alt="" coords="500,55,679,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="449,56,487,61,486,66,448,61"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="ccsds::pus::TmSecondaryHeader::parseTmTail" name="ccsds::pus::TmSecondaryHeader::parseTmTail">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,22,239,62"/>
+<area shape="rect" id="Node000002" href="$namespaceccsds_1_1time.html#a3cce2a1b7a8e23395986491427d82560" title="Decodes one complete CUC value using the declared layout." alt="" coords="287,55,461,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,51,273,55,273,60,239,56"/>
+<area shape="rect" id="Node000003" href="$namespaceccsds_1_1time.html#a41fa7647a28435a835b06cf7f7db0980" title="Returns the encoded P&#45;field plus T&#45;field size." alt="" coords="509,5,696,31"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="239,34,496,21,496,26,239,39"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="433,52,529,31,530,36,434,57"/>
+<area shape="rect" id="Node000004" href="$namespaceccsds_1_1time.html#a7d330b98edceb2a95bd23475a70deb71" title="Validates the supported basic CUC layout." alt="" coords="524,55,681,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="461,65,510,65,510,70,461,70"/>
+</map>

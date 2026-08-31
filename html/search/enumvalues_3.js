@@ -1,11 +1,6 @@
 var searchData=
 [
-  ['idle_0',['IDLE',['../namespaceCCSDS.html#afd4da14f7c5ee0543c25cbef501f593cabb9fa8d6b3d717b4ac70ecf0f8b36d1e',1,'CCSDS']]],
-  ['invalid_1',['INVALID',['../namespaceCCSDS.html#afd4da14f7c5ee0543c25cbef501f593ca3e6385c635b18074135ecd843b2000f0',1,'CCSDS']]],
-  ['invalid_5fapplication_5fdata_2',['INVALID_APPLICATION_DATA',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a4d38dca1932048b0f89f6aaf056773f8',1,'CCSDS']]],
-  ['invalid_5fchecksum_3',['INVALID_CHECKSUM',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a4502c8c3e93b036414b9a1dd44307d1d',1,'CCSDS']]],
-  ['invalid_5fdata_4',['INVALID_DATA',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5b715c6917d6a363d9eafe6c2529cb31',1,'CCSDS']]],
-  ['invalid_5fheader_5fdata_5',['INVALID_HEADER_DATA',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a5db5729b5037f809dd65a8043574158f',1,'CCSDS']]],
-  ['invalid_5finput_5fdata_6',['INVALID_INPUT_DATA',['../exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787aaaff534fb57ef36310899691d5a6e32f8',1,'exec_utils.h']]],
-  ['invalid_5fsecondary_5fheader_5fdata_7',['INVALID_SECONDARY_HEADER_DATA',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57ae184b937a1380440837ec5aef1e0df4f',1,'CCSDS']]]
+  ['file_5fread_5ferror_0',['FILE_READ_ERROR',['../namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a4fe7236888b62944e08d6e4231490ba0',1,'ccsds']]],
+  ['file_5fwrite_5ferror_1',['FILE_WRITE_ERROR',['../namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a1f69969a7197e6845f68aeb2871cd75c',1,'ccsds']]],
+  ['first_5fsegment_2',['FIRST_SEGMENT',['../namespaceccsds.html#a556724e0442ee92b4ab53c50841158adac8fbed983da3c08528c07274ab31cc64',1,'ccsds']]]
 ];

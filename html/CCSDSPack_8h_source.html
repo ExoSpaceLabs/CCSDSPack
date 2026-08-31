@@ -85,36 +85,46 @@ $(document).ready(function() { init_codefold(0); });
 <a href="CCSDSPack_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">// Copyright 2025-2026 ExoSpaceLabs</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// SPDX-License-Identifier: Apache-2.0</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#ifndef CCSDSPACK_H</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#define CCSDSPACK_H</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSDataField_8h.html">CCSDSDataField.h</a>&quot;</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSHeader_8h.html">CCSDSHeader.h</a>&quot;</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSManager_8h.html">CCSDSManager.h</a>&quot;</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSPacket_8h.html">CCSDSPacket.h</a>&quot;</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSResult_8h.html">CCSDSResult.h</a>&quot;</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSSecondaryHeaderAbstract_8h.html">CCSDSSecondaryHeaderAbstract.h</a>&quot;</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSSecondaryHeaderFactory_8h.html">CCSDSSecondaryHeaderFactory.h</a>&quot;</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSUtils_8h.html">CCSDSUtils.h</a>&quot;</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSValidator_8h.html">CCSDSValidator.h</a>&quot;</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#include &quot;<a class="code" href="PusServices_8h.html">PusServices.h</a>&quot;</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="preprocessor">#ifndef CCSDS_MCU</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="preprocessor">  #include &quot;<a class="code" href="CCSDSConfig_8h.html">CCSDSConfig.h</a>&quot;</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span><span class="preprocessor">#endif </span><span class="comment">// CCSDSPACK_H</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#ifndef CCSDSPACK_H</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#define CCSDSPACK_H</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSDataField_8h.html">CCSDSDataField.h</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSHeader_8h.html">CCSDSHeader.h</a>&quot;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSManager_8h.html">CCSDSManager.h</a>&quot;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSPacket_8h.html">CCSDSPacket.h</a>&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSPacketTypes_8h.html">CCSDSPacketTypes.h</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSTime_8h.html">CCSDSTime.h</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSResult_8h.html">CCSDSResult.h</a>&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSSecondaryHeaderAbstract_8h.html">CCSDSSecondaryHeaderAbstract.h</a>&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSSecondaryHeaderFactory_8h.html">CCSDSSecondaryHeaderFactory.h</a>&quot;</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSUtils_8h.html">CCSDSUtils.h</a>&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSValidator_8h.html">CCSDSValidator.h</a>&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="CCSDSBuffer_8h.html">CCSDSBuffer.h</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="PusTailoring_8h.html">PusTailoring.h</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="preprocessor">#include &quot;<a class="code" href="PusSecondaryHeaderFactory_8h.html">PusSecondaryHeaderFactory.h</a>&quot;</span></div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#include &quot;<a class="code" href="PusSecondaryHeaders_8h.html">PusSecondaryHeaders.h</a>&quot;</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="preprocessor">#ifndef CCSDS_MCU</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">  #include &quot;<a class="code" href="CCSDSConfig_8h.html">CCSDSConfig.h</a>&quot;</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="preprocessor">#endif </span><span class="comment">// CCSDSPACK_H</span></div>
+<div class="ttc" id="aCCSDSBuffer_8h_html"><div class="ttname"><a href="CCSDSBuffer_8h.html">CCSDSBuffer.h</a></div><div class="ttdoc">Raw pointer-plus-size adapters for Packet and Manager APIs.</div></div>
 <div class="ttc" id="aCCSDSConfig_8h_html"><div class="ttname"><a href="CCSDSConfig_8h.html">CCSDSConfig.h</a></div><div class="ttdoc">Defines the host-only parser for CCSDSPack key:type=value configuration files.</div></div>
 <div class="ttc" id="aCCSDSDataField_8h_html"><div class="ttname"><a href="CCSDSDataField_8h.html">CCSDSDataField.h</a></div><div class="ttdoc">Defines storage and secondary-header handling for a CCSDS packet data field.</div></div>
 <div class="ttc" id="aCCSDSHeader_8h_html"><div class="ttname"><a href="CCSDSHeader_8h.html">CCSDSHeader.h</a></div><div class="ttdoc">Defines CCSDS Space Packet primary-header fields, validation, and serialization.</div></div>
-<div class="ttc" id="aCCSDSManager_8h_html"><div class="ttname"><a href="CCSDSManager_8h.html">CCSDSManager.h</a></div><div class="ttdoc">Defines the single-stream CCSDS packet Manager.</div></div>
-<div class="ttc" id="aCCSDSPacket_8h_html"><div class="ttname"><a href="CCSDSPacket_8h.html">CCSDSPacket.h</a></div><div class="ttdoc">Defines the CCSDS 133.0-B-2 EC2 Space Packet PDU container and mission-profile CRC trailer.</div></div>
+<div class="ttc" id="aCCSDSManager_8h_html"><div class="ttname"><a href="CCSDSManager_8h.html">CCSDSManager.h</a></div></div>
+<div class="ttc" id="aCCSDSPacketTypes_8h_html"><div class="ttname"><a href="CCSDSPacketTypes_8h.html">CCSDSPacketTypes.h</a></div></div>
+<div class="ttc" id="aCCSDSPacket_8h_html"><div class="ttname"><a href="CCSDSPacket_8h.html">CCSDSPacket.h</a></div><div class="ttdoc">CCSDS 133.0-B-2 Space Packet container, parsing, and packet-level error control.</div></div>
 <div class="ttc" id="aCCSDSResult_8h_html"><div class="ttname"><a href="CCSDSResult_8h.html">CCSDSResult.h</a></div><div class="ttdoc">Defines non-throwing result/error types and propagation helpers used by CCSDSPack.</div></div>
 <div class="ttc" id="aCCSDSSecondaryHeaderAbstract_8h_html"><div class="ttname"><a href="CCSDSSecondaryHeaderAbstract_8h.html">CCSDSSecondaryHeaderAbstract.h</a></div><div class="ttdoc">Defines the extension interface and raw-buffer implementation for packet secondary headers.</div></div>
-<div class="ttc" id="aCCSDSSecondaryHeaderFactory_8h_html"><div class="ttname"><a href="CCSDSSecondaryHeaderFactory_8h.html">CCSDSSecondaryHeaderFactory.h</a></div><div class="ttdoc">Defines the per-DataField registry used to look up secondary-header implementations.</div></div>
+<div class="ttc" id="aCCSDSSecondaryHeaderFactory_8h_html"><div class="ttname"><a href="CCSDSSecondaryHeaderFactory_8h.html">CCSDSSecondaryHeaderFactory.h</a></div></div>
+<div class="ttc" id="aCCSDSTime_8h_html"><div class="ttname"><a href="CCSDSTime_8h.html">CCSDSTime.h</a></div><div class="ttdoc">Defines numeric CCSDS Unsegmented Time Code support.</div></div>
 <div class="ttc" id="aCCSDSUtils_8h_html"><div class="ttname"><a href="CCSDSUtils_8h.html">CCSDSUtils.h</a></div><div class="ttdoc">Declares CRC, diagnostic formatting, and binary file helper functions.</div></div>
-<div class="ttc" id="aCCSDSValidator_8h_html"><div class="ttname"><a href="CCSDSValidator_8h.html">CCSDSValidator.h</a></div><div class="ttdoc">Defines stateful CCSDS packet coherence, sequence, and template validation.</div></div>
-<div class="ttc" id="aPusServices_8h_html"><div class="ttname"><a href="PusServices_8h.html">PusServices.h</a></div><div class="ttdoc">Defines legacy project-specific secondary-header formats retained for v1 compatibility.</div></div>
+<div class="ttc" id="aCCSDSValidator_8h_html"><div class="ttname"><a href="CCSDSValidator_8h.html">CCSDSValidator.h</a></div></div>
+<div class="ttc" id="aPusSecondaryHeaderFactory_8h_html"><div class="ttname"><a href="PusSecondaryHeaderFactory_8h.html">PusSecondaryHeaderFactory.h</a></div></div>
+<div class="ttc" id="aPusSecondaryHeaders_8h_html"><div class="ttname"><a href="PusSecondaryHeaders_8h.html">PusSecondaryHeaders.h</a></div><div class="ttdoc">Defines standards-oriented PUS-A and PUS-C TC/TM secondary headers.</div></div>
+<div class="ttc" id="aPusTailoring_8h_html"><div class="ttname"><a href="PusTailoring_8h.html">PusTailoring.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

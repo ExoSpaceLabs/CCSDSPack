@@ -1,0 +1,11 @@
+<map id="ccsds::Packet::RegisterSecondaryHeader" name="ccsds::Packet::RegisterSecondaryHeader">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,27,244,67"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#af42069ed073c0ac5f1c4e6c0f0233fae" title="Parses one packet." alt="" coords="294,5,481,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,31,280,27,281,33,245,37"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1DataField.html#a48b6bc9ca7aa58c91311a4a4b59dac05" title=" " alt="" coords="292,55,483,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="244,57,279,61,278,66,244,63"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1SecondaryHeaderFactory.html#a04fbdfd5b30afc919c78276dcd026d0d" title=" " alt="" coords="531,55,759,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="483,73,517,73,517,78,483,78"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1SecondaryHeaderFactory.html#a835c02056fea08506e15ac4237256432" title=" " alt="" coords="807,55,1035,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="759,73,793,73,793,78,759,78"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="ccsds::stringEndsWith" name="ccsds::stringEndsWith">
+<area shape="rect" id="Node000001" title="Tests whether a string ends with an exact suffix." alt="" coords="273,5,437,31"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Manager.html#a1ae9675ee3ba08504c160e66f86674c0" title=" " alt="" coords="5,5,225,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,21,225,21,225,15,260,15"/>
+</map>

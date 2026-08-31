@@ -1,0 +1,5 @@
+<map id="ccsds::pus::TmSecondaryHeader::tmTailSize" name="ccsds::pus::TmSecondaryHeader::tmTailSize">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,239,45"/>
+<area shape="rect" id="Node000002" href="$namespaceccsds_1_1time.html#a41fa7647a28435a835b06cf7f7db0980" title="Returns the encoded P&#45;field plus T&#45;field size." alt="" coords="287,13,473,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,23,273,23,273,28,239,28"/>
+</map>

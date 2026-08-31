@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['resultbool_0',['ResultBool',['../namespaceCCSDS.html#aafab5aae5faa725466d3291c716fdf5d',1,'CCSDS']]],
-  ['resultbuffer_1',['ResultBuffer',['../namespaceCCSDS.html#a4d93a055ba8dd9fd8fa306b8bb654485',1,'CCSDS']]]
+  ['resultbool_0',['ResultBool',['../namespaceccsds.html#a3522bba00b0c3c0e30a280b07475f37c',1,'ccsds']]],
+  ['resultbuffer_1',['ResultBuffer',['../namespaceccsds.html#a17515d0b199242d3cb0a40649865ea15',1,'ccsds']]]
 ];

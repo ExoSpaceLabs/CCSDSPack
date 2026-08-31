@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['finalxorvalue_0',['finalXorValue',['../structCCSDS_1_1CRC16Config.html#affa9e2c405d73edbdc9b59b567ecf4ad',1,'CCSDS::CRC16Config']]]
+  ['epoch_0',['epoch',['../structccsds_1_1time_1_1CucConfiguration.html#a858dd0c2cc6264a0289e09e357ccd8d0',1,'ccsds::time::CucConfiguration']]]
 ];

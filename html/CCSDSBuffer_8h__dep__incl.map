@@ -1,0 +1,11 @@
+<map id="inc/CCSDSBuffer.h" name="inc/CCSDSBuffer.h">
+<area shape="rect" id="Node000001" title="Raw pointer&#45;plus&#45;size adapters for Packet and Manager APIs." alt="" coords="200,5,339,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="204,79,335,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="272,44,272,79,267,79,267,44"/>
+<area shape="rect" id="Node000003" href="$exec__decoder_8cpp.html" title="Command&#45;line decoder for CCSDS Space Packet streams." alt="" coords="5,152,165,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="228,111,116,154,114,149,226,106"/>
+<area shape="rect" id="Node000004" href="$exec__encoder_8cpp.html" title="Command&#45;line encoder for CCSDS Space Packet streams." alt="" coords="189,152,349,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="272,118,272,152,267,152,267,118"/>
+<area shape="rect" id="Node000005" href="$exec__validator_8cpp.html" title="Command&#45;line validator for CCSDS Space Packet streams." alt="" coords="374,152,541,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="313,106,428,149,426,154,311,111"/>
+</map>

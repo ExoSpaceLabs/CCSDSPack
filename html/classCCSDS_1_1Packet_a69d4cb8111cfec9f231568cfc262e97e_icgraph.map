@@ -1,7 +1,0 @@
-<map id="CCSDS::Packet::loadFromConfig" name="CCSDS::Packet::loadFromConfig">
-<area shape="rect" id="Node000001" title="Loads packet construction settings from an already parsed Config." alt="" coords="280,42,507,67"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a8adf5ba17eb8041092bcd6c4f1f2b135" title="Loads and installs a template from an already parsed Config object." alt="" coords="5,5,232,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="266,44,232,40,233,35,267,38"/>
-<area shape="rect" id="Node000003" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="91,70,146,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="267,70,147,83,146,77,266,65"/>
-</map>

@@ -1,0 +1,7 @@
+<map id="ccsds::time::serialize" name="ccsds::time::serialize">
+<area shape="rect" id="Node000001" title="Encodes a numeric CUC value in network byte order." alt="" coords="5,31,164,56"/>
+<area shape="rect" id="Node000002" href="$namespaceccsds_1_1time.html#a41fa7647a28435a835b06cf7f7db0980" title="Returns the encoded P&#45;field plus T&#45;field size." alt="" coords="212,5,399,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,32,198,28,199,33,164,37"/>
+<area shape="rect" id="Node000003" href="$namespaceccsds_1_1time.html#a7d330b98edceb2a95bd23475a70deb71" title="Validates the supported basic CUC layout." alt="" coords="227,55,384,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,49,213,55,213,60,164,55"/>
+</map>

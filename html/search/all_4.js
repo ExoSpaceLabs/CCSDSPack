@@ -1,14 +1,19 @@
 var searchData=
 [
-  ['eheaderstatus_0',['EHeaderStatus',['../namespaceCCSDS.html#afd4da14f7c5ee0543c25cbef501f593c',1,'CCSDS']]],
-  ['error_1',['error',['../classCCSDS_1_1Error.html',1,'CCSDS::Error'],['../classCCSDS_1_1Result.html#a86d5488fa1a716043b07c8828cb5f456',1,'CCSDS::Result::error()'],['../classCCSDS_1_1Error.html#a8c3cf7cf0b85f3875a352f7670e320e3',1,'CCSDS::Error::Error()']]],
-  ['errorcode_2',['ErrorCode',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57',1,'CCSDS']]],
-  ['errorcodeexec_3',['ErrorCodeExec',['../exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787a',1,'exec_utils.h']]],
-  ['esequenceflag_4',['ESequenceFlag',['../namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178a',1,'CCSDS']]],
-  ['exec_5fdecoder_2ecpp_5',['exec_decoder.cpp',['../exec__decoder_8cpp.html',1,'']]],
-  ['exec_5fencoder_2ecpp_6',['exec_encoder.cpp',['../exec__encoder_8cpp.html',1,'']]],
-  ['exec_5futils_2ecpp_7',['exec_utils.cpp',['../exec__utils_8cpp.html',1,'']]],
-  ['exec_5futils_2eh_8',['exec_utils.h',['../exec__utils_8h.html',1,'']]],
-  ['exec_5fvalidator_2ecpp_9',['exec_validator.cpp',['../exec__validator_8cpp.html',1,'']]],
-  ['expectedsequencecount_10',['expectedSequenceCount',['../classCCSDS_1_1Validator.html#a131b46481463d5f612958d615ca14d7a',1,'CCSDS::Validator']]]
+  ['eheaderstatus_0',['EHeaderStatus',['../namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4be',1,'ccsds']]],
+  ['encodedsize_1',['encodedSize',['../namespaceccsds_1_1time.html#a41fa7647a28435a835b06cf7f7db0980',1,'ccsds::time']]],
+  ['end_2',['end',['../classccsds_1_1ValidationReport.html#a6cb7101f7c0e249f2e166de9c1e09ee2',1,'ccsds::ValidationReport']]],
+  ['epoch_3',['epoch',['../structccsds_1_1time_1_1CucConfiguration.html#a858dd0c2cc6264a0289e09e357ccd8d0',1,'ccsds::time::CucConfiguration::epoch'],['../namespaceccsds_1_1time.html#a60c48336004e4bf3674e6538fe0089c2',1,'ccsds::time::Epoch']]],
+  ['error_4',['error',['../classccsds_1_1Error.html',1,'ccsds::Error'],['../classccsds_1_1Result.html#ab339c78cdd0acb5836fe481b29508ca7',1,'ccsds::Result::error()'],['../classccsds_1_1Error.html#a8040942f4bc153d77172577e1ffb6048',1,'ccsds::Error::Error()']]],
+  ['errorcode_5',['ErrorCode',['../namespaceccsds.html#a425001da953127ea96fdf8d2e869c240',1,'ccsds']]],
+  ['errorcodeexec_6',['ErrorCodeExec',['../exec__utils_8h.html#abf0fbd73680f4d6117ec1fcdccf5787a',1,'exec_utils.h']]],
+  ['errorcodename_7',['errorCodeName',['../namespaceccsds.html#ae024e2d6e184ab3cfd0466f73e6f06ca',1,'ccsds']]],
+  ['esequenceflag_8',['ESequenceFlag',['../namespaceccsds.html#a556724e0442ee92b4ab53c50841158ad',1,'ccsds']]],
+  ['exec_5fdecoder_2ecpp_9',['exec_decoder.cpp',['../exec__decoder_8cpp.html',1,'']]],
+  ['exec_5fencoder_2ecpp_10',['exec_encoder.cpp',['../exec__encoder_8cpp.html',1,'']]],
+  ['exec_5futils_2ecpp_11',['exec_utils.cpp',['../exec__utils_8cpp.html',1,'']]],
+  ['exec_5futils_2eh_12',['exec_utils.h',['../exec__utils_8h.html',1,'']]],
+  ['exec_5fvalidator_2ecpp_13',['exec_validator.cpp',['../exec__validator_8cpp.html',1,'']]],
+  ['expectedsequencecount_14',['expectedSequenceCount',['../classccsds_1_1Validator.html#a7a6ce497bf695220e8a5deca25e92e13',1,'ccsds::Validator']]],
+  ['explicit_15',['Explicit',['../namespaceccsds_1_1time.html#a07fa77715991a89ec785bf1f1f76a69fa9d71760e2dd451db2df354d0fd29cd7f',1,'ccsds::time']]]
 ];

@@ -1,0 +1,17 @@
+<map id="ccsds::packetTypeForDirection" name="ccsds::packetTypeForDirection">
+<area shape="rect" id="Node000001" title="Converts a concrete direction to the CCSDS primary&#45;header Packet Type bit." alt="" coords="544,99,763,125"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#a559ddebb86c5fc881f34740229bfe196" title=" " alt="" coords="272,5,496,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="604,97,495,60,456,48,458,43,497,55,605,92"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#a129b598ca603b6c97eb85695ecbb5899" title=" " alt="" coords="275,70,493,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="530,101,493,97,494,92,531,96"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1Packet.html#a10056c4e3e4ccc29414a134ff5adb62f" title="Installs a secondary header and synchronizes flag/direction metadata." alt="" coords="282,120,486,160"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="531,127,487,132,486,127,530,122"/>
+<area shape="rect" id="Node000007" href="$classccsds_1_1Validator.html#acf8ff508437a8472f83313e023a4f799" title=" " alt="" coords="291,185,477,210"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="611,133,497,175,449,187,448,182,495,169,609,128"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1Manager.html#a195b476130d9f6bfec2c2352b40f6483" title=" " alt="" coords="5,35,224,75"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="261,73,224,69,225,63,262,67"/>
+<area shape="rect" id="Node000005" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="87,99,142,125"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="261,99,142,112,142,106,261,93"/>
+<area shape="rect" id="Node000008" href="$exec__validator_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="87,185,142,210"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="278,200,142,200,142,195,278,195"/>
+</map>

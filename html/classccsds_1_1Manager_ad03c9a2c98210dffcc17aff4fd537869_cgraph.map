@@ -1,0 +1,5 @@
+<map id="ccsds::Manager::write" name="ccsds::Manager::write">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,169,31"/>
+<area shape="rect" id="Node000002" href="$namespaceccsds.html#a48ecc2d23a052e8616b3de5b5e6b4909" title="Writes bytes to a binary file, replacing any existing content." alt="" coords="217,5,381,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,15,204,15,204,21,170,21"/>
+</map>

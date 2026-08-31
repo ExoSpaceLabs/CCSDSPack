@@ -1,0 +1,27 @@
+<map id="inc/PusTailoring.h" name="inc/PusTailoring.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="305,5,439,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSPacketTypes_8h.html" title=" " alt="" coords="5,79,163,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="326,33,144,78,143,73,325,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="220,225,287,251"/>
+<area shape="poly" id="edge14_Node000001_Node000003" title=" " alt="" coords="352,33,322,52,287,79,254,113,229,153,226,168,227,183,239,212,234,214,222,184,221,167,224,151,250,110,284,75,319,48,349,29"/>
+<area shape="rect" id="Node000004" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="435,152,554,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="389,29,415,50,442,77,465,108,484,138,480,141,461,111,438,80,412,54,386,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="628,225,687,251"/>
+<area shape="poly" id="edge15_Node000001_Node000005" title=" " alt="" coords="393,29,468,76,519,112,568,150,638,213,634,217,565,154,516,116,465,81,390,33"/>
+<area shape="rect" id="Node000009" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="317,79,427,104"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="375,31,375,65,369,65,369,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,102,183,175,230,214,227,218,180,179,95,106"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="457,180,301,225,300,220,455,175"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="522,175,619,217,617,222,520,180"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="535,225,603,251"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="508,175,549,214,545,218,505,179"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="343,225,406,251"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="477,180,408,220,405,216,474,175"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="431,225,511,251"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="493,179,481,213,476,211,488,177"/>
+<area shape="poly" id="edge12_Node000009_Node000003" title=" " alt="" coords="369,106,350,140,323,179,282,219,278,215,319,176,346,137,364,103"/>
+<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="393,102,464,143,462,147,390,106"/>
+<area shape="poly" id="edge13_Node000009_Node000007" title=" " alt="" coords="375,104,377,212,372,212,370,105"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="238,152,309,177"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="358,106,302,146,299,142,355,102"/>
+</map>

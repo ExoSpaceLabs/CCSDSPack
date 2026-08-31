@@ -1,0 +1,5 @@
+<map id="ccsds::directionForPacketType" name="ccsds::directionForPacketType">
+<area shape="rect" id="Node000001" title="Converts the CCSDS primary&#45;header Packet Type bit to a direction." alt="" coords="249,5,464,31"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#a0f707964e0ac4d1599745e2b9e43ea2f" title="Returns direction encoded by the CCSDS primary&#45;header Packet Type." alt="" coords="5,5,201,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,21,202,21,202,15,236,15"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="ccsds::pus::SecondaryHeaderFactory::clone" name="ccsds::pus::SecondaryHeaderFactory::clone">
+<area shape="rect" id="Node000001" title="Clones one concrete PUS header, retaining its tailoring and current values." alt="" coords="277,5,489,45"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#a559ddebb86c5fc881f34740229bfe196" title=" " alt="" coords="5,5,229,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,28,230,28,230,23,264,23"/>
+</map>

@@ -1,7 +1,0 @@
-<map id="CCSDS::Packet::deserializeBounded" name="CCSDS::Packet::deserializeBounded">
-<area shape="rect" id="Node000001" title="Parses exactly one packet and returns its declared serialized size." alt="" coords="220,23,415,63"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Manager.html#a762d4d0408c548379cc3da09ba7d2052" title="Transactionally parses and loads concatenated packet bytes." alt="" coords="5,5,172,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,34,172,30,173,25,206,28"/>
-<area shape="rect" id="Node000003" href="$exec__validator_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="61,55,116,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="206,58,117,67,116,62,206,52"/>
-</map>

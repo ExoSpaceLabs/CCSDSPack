@@ -1,9 +1,13 @@
 var searchData=
 [
-  ['file_5fread_5ferror_0',['FILE_READ_ERROR',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57a39e0479a35f4c44672ecbf797ca57a37',1,'CCSDS']]],
-  ['file_5fwrite_5ferror_1',['FILE_WRITE_ERROR',['../namespaceCCSDS.html#a13c33e7e0e38e05f2bc27d21a07ffd57adaec5753ff86c18492f1897c7ecf84f7',1,'CCSDS']]],
-  ['fileexists_2',['fileexists',['../CCSDSUtils_8h.html#a132eda413acdf67b79532c3b7f340e5c',1,'fileExists(const std::string &amp;fileName):&#160;CCSDSUtils.cpp'],['../CCSDSUtils_8cpp.html#a132eda413acdf67b79532c3b7f340e5c',1,'fileExists(const std::string &amp;fileName):&#160;CCSDSUtils.cpp']]],
-  ['finalxorvalue_3',['finalXorValue',['../structCCSDS_1_1CRC16Config.html#affa9e2c405d73edbdc9b59b567ecf4ad',1,'CCSDS::CRC16Config']]],
-  ['first_5fsegment_4',['FIRST_SEGMENT',['../namespaceCCSDS.html#aa1fd1c39afd9a4f5a182b9c504f4178aaf8d7b2eb95f980d09bf4ff0e8944b277',1,'CCSDS']]],
-  ['forward_5fresult_5',['FORWARD_RESULT',['../CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f',1,'CCSDSResult.h']]]
+  ['failed_0',['failed',['../classccsds_1_1ValidationReport.html#a7afe79c6cfb3235d35e22bd4f878fc8f',1,'ccsds::ValidationReport']]],
+  ['file_5fread_5ferror_1',['FILE_READ_ERROR',['../namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a4fe7236888b62944e08d6e4231490ba0',1,'ccsds']]],
+  ['file_5fwrite_5ferror_2',['FILE_WRITE_ERROR',['../namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a1f69969a7197e6845f68aeb2871cd75c',1,'ccsds']]],
+  ['fileexists_3',['fileExists',['../namespaceccsds.html#a9588fa1b4e37cbac2042781ae274e599',1,'ccsds']]],
+  ['finalxorvalue_4',['finalXorValue',['../structccsds_1_1CRC16Config.html#a5966652ee136122f880dce612d95b896',1,'ccsds::CRC16Config']]],
+  ['fine_5',['fine',['../structccsds_1_1time_1_1CucTime.html#a40ea49ac7be030d3cdfce417a8d0e652',1,'ccsds::time::CucTime']]],
+  ['fineoctets_6',['fineOctets',['../structccsds_1_1time_1_1CucConfiguration.html#af6412f558e91be12d68386a59e323278',1,'ccsds::time::CucConfiguration']]],
+  ['first_5fsegment_7',['FIRST_SEGMENT',['../namespaceccsds.html#a556724e0442ee92b4ab53c50841158adac8fbed983da3c08528c07274ab31cc64',1,'ccsds']]],
+  ['format_8',['Format',['../namespaceccsds_1_1time.html#a36273967f7eadab79901886f08e5aaf1',1,'ccsds::time']]],
+  ['forward_5fresult_9',['FORWARD_RESULT',['../CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f',1,'CCSDSResult.h']]]
 ];

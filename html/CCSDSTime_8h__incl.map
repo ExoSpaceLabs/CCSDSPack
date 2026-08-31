@@ -1,0 +1,19 @@
+<map id="inc/CCSDSTime.h" name="inc/CCSDSTime.h">
+<area shape="rect" id="Node000001" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="194,5,329,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="154,79,273,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,33,231,69,226,66,251,30"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,152,72,177"/>
+<area shape="poly" id="edge8_Node000001_Node000003" title=" " alt="" coords="236,33,192,54,144,81,100,113,63,145,59,141,96,109,141,76,189,49,233,28"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="377,152,439,177"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="273,29,339,102,384,141,380,145,335,106,269,33"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="349,79,419,104"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="282,28,354,69,351,74,280,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,106,81,149,79,144,184,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="96,152,155,177"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="201,106,152,145,149,141,198,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="179,152,247,177"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="216,104,216,138,211,138,211,104"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="246,102,364,145,363,150,244,107"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="272,152,352,177"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="231,102,286,142,283,146,228,106"/>
+</map>

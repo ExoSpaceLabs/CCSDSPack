@@ -1,0 +1,9 @@
+<map id="ccsds::Manager::addPacket" name="ccsds::Manager::addPacket">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,77,203,102"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Header.html#aec97755c66f8d2d0cbbdb5775c74348f" title="Returns NORMAL, IDLE, or INVALID for the current header state." alt="" coords="251,5,440,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,74,255,46,257,52,154,79"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#a7cd06fe6866be997b08e4a71574c5213" title=" " alt="" coords="251,69,439,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,87,238,87,238,92,203,92"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222" title=" " alt="" coords="254,133,437,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="154,100,257,127,255,132,152,105"/>
+</map>

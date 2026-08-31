@@ -1,0 +1,7 @@
+<map id="ccsds::DataField::RegisterSecondaryHeader" name="ccsds::DataField::RegisterSecondaryHeader">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,196,45"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1SecondaryHeaderFactory.html#a04fbdfd5b30afc919c78276dcd026d0d" title=" " alt="" coords="244,5,472,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,23,230,23,230,28,196,28"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1SecondaryHeaderFactory.html#a835c02056fea08506e15ac4237256432" title=" " alt="" coords="520,5,748,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="472,23,506,23,506,28,472,28"/>
+</map>

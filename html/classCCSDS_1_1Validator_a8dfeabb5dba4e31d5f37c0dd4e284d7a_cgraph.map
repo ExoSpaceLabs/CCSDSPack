@@ -1,7 +1,0 @@
-<map id="CCSDS::Validator::acceptSequence" name="CCSDS::Validator::acceptSequence">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,37,188,77"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Header.html#a9cf2da06f3bdb16fd02bcade045a2e68" title="Returns the stored 14&#45;bit sequence count." alt="" coords="236,5,449,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,43,222,38,223,44,189,48"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1Header.html#a8f92d94e9ebdac82669058c75188e770" title="Returns the stored 2&#45;bit sequence&#45;flags value." alt="" coords="236,69,449,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,67,223,71,222,76,188,72"/>
-</map>

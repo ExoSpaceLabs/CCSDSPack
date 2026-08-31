@@ -1,0 +1,16 @@
+<map id="ccsds::Packet::setPacketErrorControlMode" name="ccsds::Packet::setPacketErrorControlMode">
+<area shape="rect" id="Node000001" title="Selects packet&#45;level error control independently of PUS/custom headers." alt="" coords="513,92,692,132"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Manager.html#a7b741b9b9b47c35d673b7587504c2c39" title=" " alt="" coords="259,5,457,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="541,89,464,60,428,48,430,43,466,55,543,84"/>
+<area shape="rect" id="Node000004" href="$exec__utils_8cpp.html#a49f86e57c13cbb21467fad8d94cdfa06" title="Applies a CLI packet&#45;error&#45;control override to the packet and its profile." alt="" coords="251,70,465,95"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="500,102,464,98,465,93,500,97"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1Manager.html#aecf54b2d585fd70fc7f1834fa65b330d" title=" " alt="" coords="253,120,463,160"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="500,126,464,131,463,125,500,121"/>
+<area shape="rect" id="Node000007" href="$classccsds_1_1Manager.html#a173de7c2ce31dcbcec4ced96c417e07e" title=" " alt="" coords="25,155,183,181"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="556,141,513,160,466,175,392,185,316,188,245,186,183,181,184,176,245,181,316,183,391,180,465,169,511,155,554,136"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Manager.html#a24fa36574d84fd7e447c6754e5ecefcd" title=" " alt="" coords="5,5,203,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="246,28,203,28,203,23,246,23"/>
+<area shape="rect" id="Node000005" href="$exec__decoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="77,70,131,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="237,85,132,85,132,80,237,80"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="239,156,184,162,183,157,239,150"/>
+</map>

@@ -1,0 +1,21 @@
+<map id="ccsds::buffer::deserialize" name="ccsds::buffer::deserialize">
+<area shape="rect" id="Node000001" title=" " alt="" coords="289,226,472,251"/>
+<area shape="rect" id="Node000002" href="$namespaceccsds_1_1buffer.html#aa220b9a8aab91da0b8b47636724bc038" title=" " alt="" coords="34,5,213,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="365,215,345,180,317,138,282,95,240,60,212,45,214,40,243,55,285,92,321,134,350,177,369,212"/>
+<area shape="rect" id="Node000003" href="$namespaceccsds_1_1buffer.html#ac42fc6513c2b61eccf2bb6f3f6f893d1" title="Typed raw parse using HeaderT default tailoring or supplied constructor arguments." alt="" coords="32,70,215,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="360,217,310,161,277,133,240,109,213,98,215,93,243,104,280,129,314,158,364,213"/>
+<area shape="rect" id="Node000004" href="$namespaceccsds_1_1buffer.html#a5ca56f291d3e9f1ce8631e18f83b8c2c" title=" " alt="" coords="32,119,215,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="350,220,300,188,240,158,204,147,206,142,242,154,303,184,353,216"/>
+<area shape="rect" id="Node000005" href="$namespaceccsds_1_1buffer.html#a616e149b3aab89b88677f77ed7995715" title=" " alt="" coords="32,169,215,194"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="311,225,241,209,183,197,185,191,242,204,312,220"/>
+<area shape="rect" id="Node000006" href="$namespaceccsds_1_1buffer.html#ac9d8daa3ed2cd4cac966e858bce53968" title="Typed bounded raw parse using HeaderT as the secondary&#45;header schema." alt="" coords="32,219,215,259"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="275,241,215,241,215,236,275,236"/>
+<area shape="rect" id="Node000007" href="$namespaceccsds_1_1buffer.html#a63dcb7df2180452acc507bf5f2f37d14" title=" " alt="" coords="32,283,215,323"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="316,257,205,285,204,280,315,252"/>
+<area shape="rect" id="Node000008" href="$namespaceccsds_1_1buffer.html#aa3b0cea5a6737dfd36035d2080086aa0" title=" " alt="" coords="32,347,215,387"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="356,262,305,300,242,337,212,349,210,344,240,332,302,296,352,258"/>
+<area shape="rect" id="Node000009" href="$namespaceccsds_1_1buffer.html#a5950137aabaf923393e958ce863ac751" title=" " alt="" coords="53,411,193,437"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="368,265,319,333,283,370,243,401,219,412,194,419,193,414,217,407,240,396,280,366,315,330,363,262"/>
+<area shape="rect" id="Node000010" href="$namespaceccsds_1_1buffer.html#a9ea71bb32abdd3ba3408617952b7ec3d" title=" " alt="" coords="5,461,241,486"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="372,265,354,306,327,357,290,408,267,431,243,450,218,463,215,458,240,446,264,427,286,404,322,354,350,304,368,263"/>
+</map>

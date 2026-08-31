@@ -1,9 +1,0 @@
-<map id="CCSDS::DataField::clearContent" name="CCSDS::DataField::clearContent">
-<area shape="rect" id="Node000001" title=" " alt="" coords="248,63,475,88"/>
-<area shape="rect" id="Node000002" href="$classCCSDS_1_1Packet.html#a42dc613a59c93b2347be284f1f0811f6" title="Parses an already separated primary header and Packet Data Field." alt="" coords="5,5,200,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,62,160,33,161,28,290,57"/>
-<area shape="rect" id="Node000003" href="$classCCSDS_1_1Packet.html#a1984e0c66d6e507fc1a34bdd2d8f3b6f" title="Bounded parse with a registered secondary&#45;header type." alt="" coords="5,55,200,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,78,200,78,200,73,234,73"/>
-<area shape="rect" id="Node000004" href="$classCCSDS_1_1Packet.html#a1a0cfed754a8507666bc28e2098128a1" title="Bounded parse using an explicit opaque secondary&#45;header byte count." alt="" coords="5,119,200,159"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="296,94,185,122,184,117,295,89"/>
-</map>
