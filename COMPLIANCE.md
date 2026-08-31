@@ -54,9 +54,22 @@ The fuzz gate runs under ASan+UBSan with bounded input size, per-input timeout, 
 
 ## Evidence
 
-The current release candidate is covered by **132 native regression/conformance tests**, independent fixed byte vectors, the complete PUS-C TC acknowledgement matrix, the complete structured-validation evidence matrix, Linux and Windows hosted CI, Doxygen, CLI integration, installed-package consumers and examples, Ubuntu 22.04 package/cross-build generation, a Cortex-M compile/link probe, dedicated ASan and UBSan regression jobs, and bounded four-target libFuzzer smoke CI.
+The released v2.0.0 state is covered by **132 native regression/conformance tests**, independent fixed byte vectors, the complete PUS-C TC acknowledgement matrix, the complete structured-validation evidence matrix, Linux and Windows hosted CI, Doxygen, CLI integration, installed-package consumers and examples, Ubuntu 22.04 package/cross-build generation, a Cortex-M compile/link probe, dedicated ASan and UBSan regression jobs, and bounded four-target libFuzzer smoke CI.
 
-Fresh native arm64 execution, physical STM32 execution, and final release-publication checks remain release gates until recorded under the v2.0.0 milestone.
+Fresh real-target execution is recorded for both supported release-validation paths:
+
+- Raspberry Pi 5 / native arm64 installed-package execution with `CCSDSPACK_HARDWARE_TEST:PASS` and `CCSDSPACK_AARCH64_TEST:PASS`;
+- physical NUCLEO-H755ZI-Q / Cortex-M7 execution with `CCSDSPACK_HARDWARE_TEST:PASS` using ST's documented NUCLEO-H745ZI-Q project compatibility.
+
+The annotated `v2.0.0` tag resolves to approved `main` commit `c2f318c330c564429bcc565a8acbff22728b2851`. Final `main` Linux, Windows, Doxygen, and robustness workflows passed before the tag was cut.
+
+The tag publication workflow completed successfully and created the GitHub Release, uploaded the native x86_64 DEB, native arm64 DEB, and Cortex-M MCU archive, built the container from the exact `v2.0.0` release tag, and pushed both `ghcr.io/exospacelabs/ccsdspack:v2.0.0` and `ghcr.io/exospacelabs/ccsdspack:latest`.
+
+Published release-asset digests recorded by GitHub are:
+
+- `ccsdspack-v2.0.0-Linux-x86_64.deb`: SHA-256 `779841b9f5705af56bcac2a6cb014261ff30711642a0334e0a3ad9bb1f86e22f`;
+- `ccsdspack-v2.0.0-Linux-arm64.deb`: SHA-256 `8e31a2a2d8f80c2604f4457e9388d66a49f79a228c8d65603542a4e5e9d5bdb3`;
+- `ccsdspack-v2.0.0-Generic-arm.tar.gz`: SHA-256 `1d4d3fdab567b8f52f34a532af37917913ba2be7c1bacf3dec0dd098cdb457ae`.
 
 Detailed scope and traceability are maintained in:
 
@@ -66,4 +79,6 @@ Detailed scope and traceability are maintained in:
 - [PUS-C independent evidence](docs/PUS_C_EVIDENCE.md);
 - [Structured validation](docs/VALIDATION.md);
 - [Structured validation evidence](docs/VALIDATION_EVIDENCE.md);
-- [Robustness validation](docs/ROBUSTNESS.md).
+- [Robustness validation](docs/ROBUSTNESS.md);
+- [v2 hardware validation](docs/V2_HARDWARE_VALIDATION.md);
+- [v2 release acceptance list](V2_TRANSITION_ACCEPTANCE_LIST.md).
