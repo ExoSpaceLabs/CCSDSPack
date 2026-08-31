@@ -3,59 +3,103 @@
 
 #include "CCSDSConfig.h"
 #include <cstddef>
+#include <cerrno>
+#include <cstdlib>
 #include <iomanip>
 #include <algorithm>
 #include <charconv>
 
 #include <fstream>
+#include <utility>
 
 //###########################################################################
 #define VERBOSE 1
 
-CCSDS::ResultBool Config::load(const std::string &filename) {
+ccsds::ResultBool ccsds::Config::load(const std::string &filename) {
   std::ifstream file(filename);
-  RET_IF_ERR_MSG(!file.is_open(),CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Failed to open configuration file");
+  RET_IF_ERR_MSG(!file.is_open(),ccsds::ErrorCode::CONFIG_FILE_ERROR, "Failed to open configuration file");
 
+  std::unordered_map<std::string, ConfigValue> parsedValues;
   std::string line;
   while (std::getline(file, line)) {
     if (line.empty() || line.front() == '#') continue;
 
     auto [key, type, valueStr] = parseLine(line);
-    RET_IF_ERR_MSG(key.empty() || type.empty(),CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Failed to parse configuration file");
+    RET_IF_ERR_MSG(key.empty() || type.empty(),ccsds::ErrorCode::CONFIG_FILE_ERROR, "Failed to parse configuration file");
     ConfigValue value;
     if (type == "string") {
       value = valueStr;
-    } else if (type == "int") {
-      std::uint8_t base = 10;
-      if (valueStr.size() > 2 && valueStr.substr(0, 2) == "0x") {
-        valueStr = valueStr.substr(2);
-        base = 16;
+    } else if (type == "int" || type == "uint") {
+      const bool negative = !valueStr.empty() && valueStr.front() == '-';
+      std::string_view encoded{valueStr};
+      std::uint8_t base = 10U;
+      if (negative) encoded.remove_prefix(1U);
+      if (encoded.size() > 2U && encoded[0] == '0'
+          && (encoded[1] == 'x' || encoded[1] == 'X')) {
+        encoded.remove_prefix(2U);
+        base = 16U;
       }
-      value = std::stoi(valueStr, nullptr, base);
+      RET_IF_ERR_MSG(encoded.empty(), ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                     "Config: Invalid integer value for key: " + key);
+
+      std::uint64_t parsed{};
+      const auto conversion = std::from_chars(encoded.data(),
+                                               encoded.data() + encoded.size(),
+                                               parsed, base);
+      RET_IF_ERR_MSG(conversion.ec != std::errc{}
+                     || conversion.ptr != encoded.data() + encoded.size(),
+                     ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                     "Config: Invalid integer value for key: " + key);
+      if (type == "uint") {
+        RET_IF_ERR_MSG(negative, ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                       "Config: Unsigned value cannot be negative for key: " + key);
+        value = parsed;
+      } else {
+        constexpr auto positiveLimit = static_cast<std::uint64_t>(INT32_MAX);
+        constexpr auto negativeLimit = positiveLimit + 1U;
+        RET_IF_ERR_MSG((!negative && parsed > positiveLimit)
+                       || (negative && parsed > negativeLimit),
+                       ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                       "Config: Integer value is out of range for key: " + key);
+        value = negative ? static_cast<int>(-static_cast<std::int64_t>(parsed))
+                         : static_cast<int>(parsed);
+      }
     } else if (type == "float") {
-      value = std::stof(valueStr);
+      errno = 0;
+      char *end{};
+      const float parsed = std::strtof(valueStr.c_str(), &end);
+      RET_IF_ERR_MSG(errno == ERANGE || end == valueStr.c_str() || *end != '\0',
+                     ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                     "Config: Invalid float value for key: " + key);
+      value = parsed;
     } else if (type == "bool") {
-      value = (valueStr == "true" || valueStr == "1");
+      RET_IF_ERR_MSG(valueStr != "true" && valueStr != "false"
+                     && valueStr != "1" && valueStr != "0",
+                     ccsds::ErrorCode::CONFIG_FILE_ERROR,
+                     "Config: Invalid bool value for key: " + key);
+      value = valueStr == "true" || valueStr == "1";
     } else if (type == "bytes") {
       ASSIGN_CP( value, parseBytes(valueStr) );
     } else {
-      return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR, " unknown type: " + type};
+      return ccsds::Error{ccsds::ErrorCode::CONFIG_FILE_ERROR, " unknown type: " + type};
     }
 
-    values[key] = value;
+    parsedValues[key] = value;
   }
 
+  values = std::move(parsedValues);
   return true;
 }
 
-bool Config::isKey(const std::string &key) const {
+bool ccsds::Config::isKey(const std::string &key) const {
   if (values.find(key) != values.end()) {
     return true;
   }
   return false;
 }
 
-std::tuple<std::string, std::string, std::string> Config::parseLine(const std::string& line) {
+std::tuple<std::string, std::string, std::string> ccsds::Config::parseLine(
+    const std::string& line) {
   auto colonPos = line.find(':');
   auto equalPos = line.find('=');
 
@@ -72,10 +116,10 @@ std::tuple<std::string, std::string, std::string> Config::parseLine(const std::s
   return {key, type, value};
 }
 
-CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
+ccsds::ResultBuffer ccsds::Config::parseBytes(const std::string &valueStr) {
   std::vector<uint8_t> result{};
   RET_IF_ERR_MSG(valueStr.empty() || valueStr.front() != '[' || valueStr.back() != ']',
-                 CCSDS::ErrorCode::CONFIG_FILE_ERROR,
+                 ccsds::ErrorCode::CONFIG_FILE_ERROR,
                  "Config: Invalid buffer formatting []");
 
   if (valueStr == "[]" || valueStr == "[ ]") {
@@ -95,7 +139,7 @@ CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
 
     // Empty token after trimming is invalid (e.g., "[12, ,34]")
     if (token.empty()) {
-      return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: <empty>"};
+      return ccsds::Error{ccsds::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: <empty>"};
     }
 
     std::uint8_t base = 10;
@@ -106,19 +150,19 @@ CCSDS::ResultBuffer Config::parseBytes(const std::string &valueStr) {
       sv.remove_prefix(2);
       base = 16;
       if (sv.empty()) {
-        return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: 0x"};
+        return ccsds::Error{ccsds::ErrorCode::CONFIG_FILE_ERROR, "Invalid byte value: 0x"};
       }
     }
 
     // Parse without exceptions
-    std::uint8_t tmp = 0;
+    unsigned int tmp = 0U;
     const char* first = sv.data();
     const char* last  = sv.data() + sv.size();
     auto res = std::from_chars(first, last, tmp, base);
 
     // Valid if parsed ok, consumed all characters, and fits in a byte
     if (res.ec != std::errc{} || res.ptr != last || tmp > 0xFFu) {
-      return CCSDS::Error{CCSDS::ErrorCode::CONFIG_FILE_ERROR,
+      return ccsds::Error{ccsds::ErrorCode::CONFIG_FILE_ERROR,
                           std::string("Invalid byte value: ") + std::string(token)};
     }
     result.push_back(static_cast<uint8_t>(tmp));

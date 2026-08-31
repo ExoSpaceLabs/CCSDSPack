@@ -1,62 +1,38 @@
 # Command-line tools
 
-CCSDSPack installs three host-side command-line programs:
+CCSDSPack provides three host-side command-line programs:
 
 - `ccsds_encoder` converts application bytes into one or more CCSDS Space Packets;
-- `ccsds_decoder` consumes complete adjacent packets and reassembles application bytes;
-- `ccsds_validator` reports packet-wire, identifier, and sequence-stream failures.
+- `ccsds_decoder` parses adjacent packets and reassembles application bytes;
+- `ccsds_validator` reports parser, packet, secondary-header, template, and sequence-stream failures.
 
-All existing v1 options remain supported. Options introduced for v1.2.0 are additive.
+The tools build and use the same complete `ccsds::Packet` template used by `ccsds::Manager`.
 
 ## Packet error control
 
-All three programs accept:
+All three tools accept:
 
 ```text
 -e, --packet-error-control <crc16|none>
 ```
 
-The command-line value overrides `ccsds_packet_error_control` from the configuration file. When neither is provided, the v1-compatible default is `crc16`.
-
-The receiver cannot infer whether the final two packet-data-field bytes are a CRC. The decoder and validator must therefore be configured with the same mode used by the encoder.
+The command-line value overrides `ccsds_packet_error_control` from configuration. The selected mode applies to the enclosing Packet independently of its secondary-header type. Decoder and validator must use the mode expected by the packet stream.
 
 ## Encoder
 
 ```bash
-ccsds_encoder \
-  --input payload.bin \
-  --output packets.bin \
-  --config template.cfg
+ccsds_encoder --input payload.bin --output packets.bin --config template.cfg
 ```
 
-The encoder calculates Packet Data Length from the complete packet data field. In CRC16 mode, the two packet-error-control bytes contribute to the encoded length. CRC16 covers the serialized six-byte primary header followed by the secondary header and application data; it excludes the CRC bytes themselves.
-
-Generate CRC-free packets with an additive override:
-
-```bash
-ccsds_encoder -i payload.bin -o packets.bin -c template.cfg \
-  --packet-error-control none
-```
+Encoder calculates Packet Data Length from serialized content. In CRC16 mode, the two CRC bytes contribute to Packet Data Length and CRC coverage excludes the CRC bytes themselves.
 
 ## Decoder
 
 ```bash
-ccsds_decoder \
-  --input packets.bin \
-  --output payload.bin \
-  --config template.cfg
+ccsds_decoder --input packets.bin --output payload.bin --config template.cfg
 ```
 
-The decoder walks the stream using each packet's encoded Packet Data Length. Adjacent packets are decoded in order. A suffix that cannot form another complete packet is left unconsumed rather than appended to application data.
-
-Use `--trailing-output` to preserve that suffix:
-
-```bash
-ccsds_decoder -i framed-input.bin -o payload.bin -c template.cfg \
-  --trailing-output trailing.bin
-```
-
-Without external framing, an arbitrary suffix that happens to form a syntactically complete CCSDS header cannot be distinguished from another packet. Use a Manager synchronization marker or validate the complete stream when such ambiguity matters.
+Decoder walks adjacent packets using each encoded Packet Data Length. The template supplies packet PEC and the expected secondary-header schema/tailoring. A suffix that does not form a complete packet remains outside the decoded application data; `--trailing-output` can preserve it.
 
 ## Validator
 
@@ -64,25 +40,27 @@ Without external framing, an arbitrary suffix that happens to form a syntactical
 ccsds_validator --input packets.bin --config template.cfg --verbose
 ```
 
-The validator reports these checks separately:
+Validator uses bounded Packet parsing followed by `ccsds::Validator`. The template supplies Packet Identification, packet-level PEC, and secondary-header contract.
 
-- Packet Data Length and packet boundary;
-- CRC16, or `NOT CHECKED` in `none` mode;
-- CCSDS packet version;
-- APID when a template config is supplied;
-- packet type and secondary-header flag when a template config is supplied;
-- sequence-flag state;
-- sequence-count continuity, including rollover from 16383 to 0.
+Named checks can include primary-header/version, Packet Data Length, CRC16, secondary-header presence/direction, segmentation/sequence continuity, Packet Identification, template PEC/header equality, PUS revision/direction/tailoring, reserved/spare fields, TC acknowledgement/source ID, TM destination ID, PUS-A TM subcounter, PUS-C TM time-reference status, and CUC timestamp validity.
 
-`--print-packets` prints packets which pass the parse-time length, CRC, and version checks. The process returns exit code `18` when any packet or trailing stream bytes fail validation.
+Only checks actually performed appear in the report. Malformed wire input can fail during bounded parsing before a structured Packet report exists.
+
+`--print-packets` prints successfully parsed packets. Exit code `18` indicates packet/trailing-stream parsing or validation failure.
 
 ## Configuration
 
-The template configuration remains mandatory for the encoder and decoder and optional for the validator. The relevant v1.2 key is:
+Encoder and decoder require a Packet-template configuration. Validator can operate without a template for generic packets, while a template enables identifier, PEC, segmentation-class, and secondary-header contract checks.
+
+PUS identity is selected by a canonical concrete selector:
 
 ```ini
-# Optional. Omit for the legacy-compatible CRC16 default.
-ccsds_packet_error_control:string=crc16
+define_secondary_header:bool=true
+secondary_header_type:string=PUS:revC:TC
 ```
 
-Accepted values are `crc16` and `none`, case-insensitive in the CLI and accepted as `crc16`, `CRC16`, `none`, or `None` by the configuration loader.
+Optional PUS and CUC keys configure only fields/tailoring supported by that concrete header.
+
+See [CONFIG.md](CONFIG.md).
+
+The command-line tools and `ccsds::Config` are hosted-only. The underlying Packet, Manager, PUS, CUC, Result/Error, raw-buffer, and Validator APIs remain available in the C++17 `CCSDS_MCU` library.

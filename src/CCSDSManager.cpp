@@ -3,84 +3,102 @@
 
 #include "CCSDSManager.h"
 #include "CCSDSUtils.h"
+#include "PusSecondaryHeaders.h"
 #include <algorithm>
 #include <utility>
 
-void CCSDS::Manager::setSyncPattern(const std::uint32_t syncPattern) {
-  m_syncPattern = syncPattern;
+namespace {
+  bool sameSecondaryContract(const ccsds::Packet &lhs,
+                             const ccsds::Packet &rhs) noexcept {
+    const auto lhsHeader = lhs.getSecondaryHeader();
+    const auto rhsHeader = rhs.getSecondaryHeader();
+    if (static_cast<bool>(lhsHeader) != static_cast<bool>(rhsHeader)) return false;
+    if (!lhsHeader) return true;
+    if (lhsHeader->getType() != rhsHeader->getType()
+        || lhsHeader->getDirection() != rhsHeader->getDirection()
+        || lhsHeader->isPusHeader() != rhsHeader->isPusHeader()) {
+      return false;
+    }
+    if (!lhsHeader->isPusHeader()) return true;
+    return ccsds::pus::sameTailoring(
+      static_cast<const ccsds::pus::SecondaryHeader &>(*lhsHeader),
+      static_cast<const ccsds::pus::SecondaryHeader &>(*rhsHeader));
+  }
 }
 
-std::uint32_t CCSDS::Manager::getSyncPattern() const {
-  return m_syncPattern;
-}
+void ccsds::Manager::setSyncPattern(const std::uint32_t syncPattern) { m_syncPattern = syncPattern; }
+std::uint32_t ccsds::Manager::getSyncPattern() const { return m_syncPattern; }
+void ccsds::Manager::setSyncPatternEnable(const bool enable) { m_syncPattEnable = enable; }
+bool ccsds::Manager::getSyncPatternEnable() const { return m_syncPattEnable; }
 
-void CCSDS::Manager::setSyncPatternEnable(const bool enable) {
-  m_syncPattEnable = enable;
-}
-
-bool CCSDS::Manager::getSyncPatternEnable() const {
-  return m_syncPattEnable;
-}
-
-std::uint16_t CCSDS::Manager::packetIdentifier(const Packet &packet) {
+std::uint16_t ccsds::Manager::packetIdentifier(const Packet &packet) {
   const auto &header = packet.getPrimaryHeader();
   return static_cast<std::uint16_t>(
     (static_cast<std::uint16_t>(header.getVersionNumber()) << 13U)
     | (static_cast<std::uint16_t>(header.getType()) << 12U)
-    | (static_cast<std::uint16_t>(header.getDataFieldHeaderFlag()) << 11U)
+    | (static_cast<std::uint16_t>(header.getSecondaryHeaderFlag()) << 11U)
     | header.getAPID());
 }
 
-bool CCSDS::Manager::hasIdentifierBinding() const {
+bool ccsds::Manager::hasIdentifierBinding() const {
   return m_templateIsSet || !m_packets.empty();
 }
 
-std::uint16_t CCSDS::Manager::boundPacketIdentifier() const {
+std::uint16_t ccsds::Manager::boundPacketIdentifier() const {
   return m_templateIsSet ? packetIdentifier(m_templatePacket)
                          : packetIdentifier(m_packets.front());
 }
 
-CCSDS::ResultBool CCSDS::Manager::validatePacketIdentifier(const Packet &packet) const {
+ccsds::ResultBool ccsds::Manager::validatePacketIdentifier(const Packet &packet) const {
   if (!hasIdentifierBinding()) return true;
-  RET_IF_ERR_MSG(packetIdentifier(packet) != boundPacketIdentifier(),
+  const auto &bound = m_templateIsSet ? m_templatePacket : m_packets.front();
+  RET_IF_ERR_MSG(packetIdentifier(packet) != packetIdentifier(bound),
                  ErrorCode::INVALID_HEADER_DATA,
                  "Packet identifier does not match the Manager-bound stream identifier");
+  RET_IF_ERR_MSG(packet.getPacketErrorControlMode() != bound.getPacketErrorControlMode(),
+                 ErrorCode::INVALID_DATA,
+                 "Packet error-control mode does not match the Manager template");
+  RET_IF_ERR_MSG(!sameSecondaryContract(packet, bound),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Secondary-header type or tailoring does not match the Manager template");
   return true;
 }
 
-CCSDS::PacketErrorControlMode CCSDS::Manager::boundPacketErrorControlMode() const {
+ccsds::PacketErrorControlMode ccsds::Manager::boundPacketErrorControlMode() const {
   if (m_templateIsSet) return m_templatePacket.getPacketErrorControlMode();
   if (!m_packets.empty()) return m_packets.front().getPacketErrorControlMode();
   return PacketErrorControlMode::CRC16;
 }
 
-void CCSDS::Manager::advanceSequenceCount() {
+ccsds::Packet ccsds::Manager::boundParserPacket() const {
+  if (m_templateIsSet) return m_templatePacket;
+  if (!m_packets.empty()) return m_packets.front();
+  Packet packet;
+  packet.setPacketErrorControlMode(boundPacketErrorControlMode());
+  return packet;
+}
+
+void ccsds::Manager::advanceSequenceCount() {
   if (!getAutoSequenceCountEnable()) return;
   const auto next = static_cast<std::uint16_t>((getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | next;
 }
 
-void CCSDS::Manager::syncSequenceCountFromPacket(const Packet &packet) {
+void ccsds::Manager::syncSequenceCountFromPacket(const Packet &packet) {
   if (!getAutoSequenceCountEnable()) return;
   const auto next = static_cast<std::uint16_t>(
     (packet.getPrimaryHeader().getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | next;
 }
 
-CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
+ccsds::ResultBool ccsds::Manager::setPacketTemplate(Packet packet) {
   RET_IF_ERR_MSG(m_templateIsSet, ErrorCode::TEMPLATE_SET_FAILURE,
                  "Cannot set Template as it is already set, please clear Manager first");
   RET_IF_ERR_MSG(packet.getPrimaryHeader().getHeaderStatus() == INVALID,
                  ErrorCode::INVALID_HEADER_DATA, "Cannot set an invalid packet template");
-
-  packet.update();
-  RET_IF_ERR_MSG(packet.getPrimaryHeader().getHeaderStatus() == INVALID,
-                 ErrorCode::INVALID_HEADER_DATA, "Cannot finalize an invalid packet template");
-
   m_templatePacket = std::move(packet);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK)
-                    | (m_templatePacket.getPrimaryHeader().getSequenceCount()
-                       & SEQUENCE_COUNT_MASK);
+                    | (m_templatePacket.getPrimaryHeader().getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_templatePacket.setUpdatePacketEnable(false);
   m_validator.clear();
   m_validator.setTemplatePacket(m_templatePacket);
@@ -90,50 +108,42 @@ CCSDS::ResultBool CCSDS::Manager::setPacketTemplate(Packet packet) {
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Manager::loadTemplateConfigFile(const std::string &configPath) {
+ccsds::ResultBool ccsds::Manager::loadTemplateConfigFile(const std::string &configPath) {
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfigFile(configPath));
-  FORWARD_RESULT(setPacketTemplate(std::move(templatePacket)));
-  return true;
+  return setPacketTemplate(std::move(templatePacket));
 }
 
 #ifndef CCSDS_MCU
-CCSDS::ResultBool CCSDS::Manager::loadTemplateConfig(const Config &cfg) {
+ccsds::ResultBool ccsds::Manager::loadTemplateConfig(const ccsds::Config &cfg) {
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfig(cfg));
-  FORWARD_RESULT(setPacketTemplate(std::move(templatePacket)));
-  return true;
+  return setPacketTemplate(std::move(templatePacket));
 }
 #endif
 
-void CCSDS::Manager::setDataFieldSize(const std::uint16_t size) {
+void ccsds::Manager::setDataFieldSize(const std::uint16_t size) {
   m_templatePacket.setDataFieldSize(size);
 }
 
-std::uint16_t CCSDS::Manager::getDataFieldSize() const {
+std::uint16_t ccsds::Manager::getDataFieldSize() const {
   return m_templatePacket.getDataFieldMaximumSize();
 }
 
-void CCSDS::Manager::setAutoSequenceCountEnable(const bool enable) {
-  if (enable) {
-    m_sequenceCount &= static_cast<std::uint16_t>(~AUTO_SEQUENCE_DISABLED_MASK);
-  } else {
-    m_sequenceCount |= AUTO_SEQUENCE_DISABLED_MASK;
-  }
+void ccsds::Manager::setAutoSequenceCountEnable(const bool enable) {
+  if (enable) m_sequenceCount &= static_cast<std::uint16_t>(~AUTO_SEQUENCE_DISABLED_MASK);
+  else m_sequenceCount |= AUTO_SEQUENCE_DISABLED_MASK;
 }
 
-CCSDS::ResultBool CCSDS::Manager::setSequenceCount(const std::uint16_t count) {
+ccsds::ResultBool ccsds::Manager::setSequenceCount(const std::uint16_t count) {
   RET_IF_ERR_MSG(count > SEQUENCE_COUNT_MASK, ErrorCode::INVALID_HEADER_DATA,
                  "Unable to set Manager sequence count above 16383");
-  if (m_templateIsSet) {
-    FORWARD_RESULT(m_templatePacket.setSequenceCount(count));
-  }
+  if (m_templateIsSet) FORWARD_RESULT(m_templatePacket.setSequenceCount(count));
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | count;
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Manager::setApplicationData(
-    const std::vector<std::uint8_t> &data) {
+ccsds::ResultBool ccsds::Manager::setApplicationData(const std::vector<std::uint8_t> &data) {
   RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA,
                  "Cannot set Application data, Provided data is empty");
   RET_IF_ERR_MSG(!m_templateIsSet, ErrorCode::INVALID_HEADER_DATA,
@@ -145,7 +155,6 @@ CCSDS::ResultBool CCSDS::Manager::setApplicationData(
   const auto maxBytesPerPacket = m_templatePacket.getDataFieldMaximumSize();
   RET_IF_ERR_MSG(maxBytesPerPacket == 0U, ErrorCode::INVALID_APPLICATION_DATA,
                  "Cannot segment application data into a zero-sized packet data field");
-
   const auto packetCount =
     (data.size() + static_cast<std::size_t>(maxBytesPerPacket) - 1U)
     / static_cast<std::size_t>(maxBytesPerPacket);
@@ -153,7 +162,6 @@ CCSDS::ResultBool CCSDS::Manager::setApplicationData(
   std::vector<Packet> generated;
   generated.reserve(packetCount);
   auto nextCount = getSequenceCount();
-
   std::size_t offset = 0U;
   for (std::size_t index = 0U; index < packetCount; ++index) {
     Packet packet = m_templatePacket;
@@ -161,68 +169,52 @@ CCSDS::ResultBool CCSDS::Manager::setApplicationData(
     const std::vector<std::uint8_t> chunk(
       data.begin() + static_cast<std::ptrdiff_t>(offset),
       data.begin() + static_cast<std::ptrdiff_t>(offset + bytes));
-
     ESequenceFlag flags = UNSEGMENTED;
     if (packetCount > 1U) {
       if (index == 0U) flags = FIRST_SEGMENT;
       else if (index + 1U == packetCount) flags = LAST_SEGMENT;
       else flags = CONTINUING_SEGMENT;
     }
-
     packet.setSequenceFlags(flags);
     FORWARD_RESULT(packet.setSequenceCount(nextCount));
     FORWARD_RESULT(packet.setApplicationData(chunk));
     packet.setUpdatePacketEnable(m_updateEnable);
     generated.push_back(std::move(packet));
-
-    if (getAutoSequenceCountEnable()) {
-      nextCount = static_cast<std::uint16_t>((nextCount + 1U) & SEQUENCE_COUNT_MASK);
-    }
+    if (getAutoSequenceCountEnable()) nextCount = static_cast<std::uint16_t>((nextCount + 1U) & SEQUENCE_COUNT_MASK);
     offset += bytes;
   }
-
   m_packets = std::move(generated);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | nextCount;
   return true;
 }
 
-void CCSDS::Manager::setAutoUpdateEnable(const bool enable) {
+void ccsds::Manager::setAutoUpdateEnable(const bool enable) {
   m_updateEnable = enable;
   for (auto &packet : m_packets) packet.setUpdatePacketEnable(enable);
 }
 
-void CCSDS::Manager::setAutoValidateEnable(const bool enable) {
-  m_validateEnable = enable;
-}
+void ccsds::Manager::setAutoValidateEnable(const bool enable) { m_validateEnable = enable; }
 
-CCSDS::ResultBuffer CCSDS::Manager::getPacketTemplate() {
+ccsds::ResultBuffer ccsds::Manager::getPacketTemplate() {
   auto packet = m_templatePacket;
-  const auto data = packet.serialize();
-  RET_IF_ERR_MSG(data.empty(), ErrorCode::NO_DATA,
-                 "Cannot get Packet template data, data is empty");
-  return data;
+  packet.setUpdatePacketEnable(true);
+  return packet.serialize();
 }
 
-CCSDS::ResultBuffer CCSDS::Manager::getPacketBufferAtIndex(const std::uint16_t index) {
+ccsds::ResultBuffer ccsds::Manager::getPacketBufferAtIndex(const std::uint16_t index) {
   RET_IF_ERR_MSG(index >= m_packets.size(), ErrorCode::INVALID_DATA,
                  "Cannot get packet, index is out of bounds");
-
   auto packet = m_packets[index];
   if (m_validateEnable) {
-    packet.update();
-    const std::string errorMessage =
-      "Validation failure for packet at index " + std::to_string(index);
+    const auto updateResult = packet.update();
+    if (!updateResult) return updateResult.error();
     RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
-                   errorMessage);
+                   "Validation failure for packet at index " + std::to_string(index));
   }
-
-  const auto packetBuffer = packet.serialize();
-  RET_IF_ERR_MSG(packetBuffer.empty(), ErrorCode::INVALID_HEADER_DATA,
-                 "Cannot serialize packet with an invalid header");
-  return packetBuffer;
+  return packet.serialize();
 }
 
-std::vector<std::uint8_t> CCSDS::Manager::getPacketsBuffer() const {
+ccsds::ResultBuffer ccsds::Manager::getPacketsBuffer() const {
   std::vector<std::uint8_t> buffer;
   for (auto packet : m_packets) {
     if (m_syncPattEnable) {
@@ -231,25 +223,21 @@ std::vector<std::uint8_t> CCSDS::Manager::getPacketsBuffer() const {
       buffer.push_back(static_cast<std::uint8_t>((m_syncPattern >> 8U) & 0xFFU));
       buffer.push_back(static_cast<std::uint8_t>(m_syncPattern & 0xFFU));
     }
-
-    const auto packetBuffer = packet.serialize();
-    if (packetBuffer.empty()) return {};
+    std::vector<std::uint8_t> packetBuffer;
+    ASSIGN_MV(packetBuffer, packet.serialize());
     buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());
   }
   return buffer;
 }
 
-CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() {
+ccsds::ResultBuffer ccsds::Manager::getApplicationDataBuffer() {
   RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA,
                  "Cannot get Application data, no packets have been set.");
   std::vector<std::uint8_t> data;
-
   for (std::size_t index = 0U; index < m_packets.size(); ++index) {
     if (m_validateEnable) {
-      const std::string errorMessage =
-        "Validation failure for packet at index " + std::to_string(index);
-      RET_IF_ERR_MSG(!m_validator.validate(m_packets[index]),
-                     ErrorCode::VALIDATION_FAILURE, errorMessage);
+      RET_IF_ERR_MSG(!m_validator.validate(m_packets[index]), ErrorCode::VALIDATION_FAILURE,
+                     "Validation failure for packet at index " + std::to_string(index));
     }
     const auto applicationData = m_packets[index].getApplicationDataBytes();
     data.insert(data.end(), applicationData.begin(), applicationData.end());
@@ -257,71 +245,52 @@ CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBuffer() {
   return data;
 }
 
-CCSDS::ResultBuffer CCSDS::Manager::getApplicationDataBufferAtIndex(
-    const std::uint16_t index) {
+ccsds::ResultBuffer ccsds::Manager::getApplicationDataBufferAtIndex(const std::uint16_t index) {
   RET_IF_ERR_MSG(index >= m_packets.size(), ErrorCode::INVALID_DATA,
                  "Cannot get Application data, index is out of bounds");
   return m_packets[index].getApplicationDataBytes();
 }
 
-std::uint16_t CCSDS::Manager::getTotalPackets() const {
-  return static_cast<std::uint16_t>(m_packets.size());
-}
+std::uint16_t ccsds::Manager::getTotalPackets() const { return static_cast<std::uint16_t>(m_packets.size()); }
+std::vector<ccsds::Packet> ccsds::Manager::getPackets() { return m_packets; }
+std::vector<ccsds::Packet> ccsds::Manager::getPackets() const { return m_packets; }
 
-std::vector<CCSDS::Packet> CCSDS::Manager::getPackets() {
-  return m_packets;
-}
-
-std::vector<CCSDS::Packet> CCSDS::Manager::getPackets() const {
-  return m_packets;
-}
-
-CCSDS::ResultBool CCSDS::Manager::addPacket(Packet packet) {
+ccsds::ResultBool ccsds::Manager::addPacket(Packet packet) {
   RET_IF_ERR_MSG(packet.getPrimaryHeader().getHeaderStatus() == INVALID,
                  ErrorCode::INVALID_HEADER_DATA,
                  "Cannot add packet with an invalid primary header");
   FORWARD_RESULT(validatePacketIdentifier(packet));
-
   if (m_validateEnable && !m_updateEnable) {
     auto validator = m_validator;
-    if (!m_templateIsSet && m_packets.empty()) {
-      validator.configure(true, true, false);
-    }
+    if (!m_templateIsSet && m_packets.empty()) validator.configure(true, true, false);
     RET_IF_ERR_MSG(!validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
                    "packet is not valid");
     m_validator = std::move(validator);
   }
-
   packet.setUpdatePacketEnable(m_updateEnable);
   m_packets.push_back(std::move(packet));
   syncSequenceCountFromPacket(m_packets.back());
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Manager::addPacketFromBuffer(
+ccsds::ResultBool ccsds::Manager::addPacketFromBuffer(
     const std::vector<std::uint8_t> &packetBuffer) {
-  Packet packet;
+  Packet packet = boundParserPacket();
   packet.setPacketErrorControlMode(boundPacketErrorControlMode());
   FORWARD_RESULT(packet.deserialize(packetBuffer));
-  FORWARD_RESULT(addPacket(std::move(packet)));
-  return true;
+  return addPacket(std::move(packet));
 }
 
-CCSDS::ResultBool CCSDS::Manager::load(const std::vector<Packet> &packets) {
+ccsds::ResultBool ccsds::Manager::load(const std::vector<Packet> &packets) {
   Manager staged = *this;
-  for (const auto &packet : packets) {
-    const auto result = staged.addPacket(packet);
-    if (!result) return result.error();
-  }
+  for (const auto &packet : packets) FORWARD_RESULT(staged.addPacket(packet));
   *this = std::move(staged);
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Manager::load(
-    const std::vector<std::uint8_t> &packetsBuffer) {
+ccsds::ResultBool ccsds::Manager::load(const std::vector<std::uint8_t> &packetsBuffer) {
   RET_IF_ERR_MSG(packetsBuffer.size() < 7U, ErrorCode::INVALID_DATA,
                  "invalid packet buffer size");
-
   Manager staged = *this;
   std::size_t offset{0U};
   while (offset < packetsBuffer.size()) {
@@ -337,43 +306,34 @@ CCSDS::ResultBool CCSDS::Manager::load(
                      "Sync Pattern mismatch.");
       offset += 4U;
     }
-
     RET_IF_ERR_MSG(packetsBuffer.size() - offset < 6U, ErrorCode::INVALID_DATA,
                    "Truncated CCSDS primary header.");
-
     const std::vector<std::uint8_t> remaining(
-      packetsBuffer.begin() + static_cast<std::ptrdiff_t>(offset),
-      packetsBuffer.end());
-    Packet packet;
+      packetsBuffer.begin() + static_cast<std::ptrdiff_t>(offset), packetsBuffer.end());
+    Packet packet = staged.boundParserPacket();
     packet.setPacketErrorControlMode(staged.boundPacketErrorControlMode());
     std::size_t consumed{};
     ASSIGN_CP(consumed, packet.deserializeBounded(remaining));
-    const auto addResult = staged.addPacket(std::move(packet));
-    if (!addResult) return addResult.error();
+    FORWARD_RESULT(staged.addPacket(std::move(packet)));
     offset += consumed;
   }
-
   *this = std::move(staged);
   return true;
 }
 
-CCSDS::ResultBool CCSDS::Manager::read(const std::string &binaryFile) {
+ccsds::ResultBool ccsds::Manager::read(const std::string &binaryFile) {
   std::vector<std::uint8_t> buffer;
   ASSIGN_CP(buffer, readBinaryFile(binaryFile));
-  FORWARD_RESULT(load(buffer));
-  return true;
+  return load(buffer);
 }
 
-CCSDS::ResultBool CCSDS::Manager::write(const std::string &binaryFile) const {
-  const auto buffer = getPacketsBuffer();
-  RET_IF_ERR_MSG(!m_packets.empty() && buffer.empty(),
-                 ErrorCode::INVALID_HEADER_DATA,
-                 "Cannot write packet stream containing an invalid header");
-  FORWARD_RESULT(writeBinaryFile(buffer, binaryFile));
-  return true;
+ccsds::ResultBool ccsds::Manager::write(const std::string &binaryFile) const {
+  std::vector<std::uint8_t> buffer;
+  ASSIGN_MV(buffer, getPacketsBuffer());
+  return writeBinaryFile(buffer, binaryFile);
 }
 
-CCSDS::ResultBool CCSDS::Manager::readTemplate(const std::string &filename) {
+ccsds::ResultBool ccsds::Manager::readTemplate(const std::string &filename) {
   Packet templatePacket;
   templatePacket.setUpdatePacketEnable(false);
   if (stringEndsWith(filename, ".bin")) {
@@ -386,11 +346,10 @@ CCSDS::ResultBool CCSDS::Manager::readTemplate(const std::string &filename) {
     return Error{INVALID_DATA,
                  "Cannot load template, invalid file provided [supported extensions [.bin, .cfg]]"};
   }
-  FORWARD_RESULT(setPacketTemplate(std::move(templatePacket)));
-  return true;
+  return setPacketTemplate(std::move(templatePacket));
 }
 
-void CCSDS::Manager::clear() {
+void ccsds::Manager::clear() {
   m_packets.clear();
   m_templateIsSet = false;
   m_templatePacket = {};
@@ -398,7 +357,7 @@ void CCSDS::Manager::clear() {
   m_validator.clear();
 }
 
-void CCSDS::Manager::clearPackets() {
+void ccsds::Manager::clearPackets() {
   m_packets.clear();
   m_sequenceCount &= AUTO_SEQUENCE_DISABLED_MASK;
   m_validator.clear();

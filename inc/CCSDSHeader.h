@@ -12,7 +12,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace CCSDS {
+namespace ccsds {
   /** @brief Reserved 11-bit APID value identifying an idle Space Packet. */
   inline constexpr std::uint16_t IDLE_APID = 0x07FFU;
 
@@ -54,9 +54,9 @@ namespace CCSDS {
    * packet-data-field size including optional packet error-control bytes.
    */
   struct PrimaryHeader {
-    std::uint8_t versionNumber{};       ///< 3-bit protocol version; v1.2 parsing supports value 0.
+    std::uint8_t versionNumber{};       ///< 3-bit protocol version; Space Packet parsing supports value 0.
     std::uint8_t type{};                ///< 1-bit packet type.
-    std::uint8_t dataFieldHeaderFlag{}; ///< 1-bit secondary-header presence flag.
+    std::uint8_t secondaryHeaderFlag{}; ///< 1-bit secondary-header presence flag.
     std::uint16_t APID{};               ///< 11-bit Application Process Identifier.
     std::uint8_t sequenceFlags{};       ///< 2-bit ESequenceFlag value.
     std::uint16_t sequenceCount{};      ///< 14-bit stream sequence count.
@@ -66,7 +66,7 @@ namespace CCSDS {
      * @brief Constructs a field structure from explicit values.
      * @param versionNumber_value Protocol version.
      * @param type_value Packet type.
-     * @param dataFieldHeaderFlag_value Secondary-header flag.
+     * @param secondaryHeaderFlag_value Secondary-header flag.
      * @param APID_value Application Process Identifier.
      * @param sequenceFlag_value Sequence flags.
      * @param sequenceCount_value Sequence count.
@@ -74,14 +74,14 @@ namespace CCSDS {
      */
     PrimaryHeader(const std::uint8_t versionNumber_value,
                   const std::uint8_t type_value,
-                  const std::uint8_t dataFieldHeaderFlag_value,
+                  const std::uint8_t secondaryHeaderFlag_value,
                   const std::uint16_t APID_value,
                   const std::uint8_t sequenceFlag_value,
                   const std::uint16_t sequenceCount_value,
                   const std::uint16_t dataLength_value)
       : versionNumber(versionNumber_value),
         type(type_value),
-        dataFieldHeaderFlag(dataFieldHeaderFlag_value),
+        secondaryHeaderFlag(secondaryHeaderFlag_value),
         APID(APID_value),
         sequenceFlags(sequenceFlag_value),
         sequenceCount(sequenceCount_value),
@@ -99,9 +99,9 @@ namespace CCSDS {
    * so ignored errors cannot silently produce truncated wire values.
    *
    * @code{.cpp}
-   * CCSDS::Header header;
+   * ccsds::Header header;
    * header.setAPID(0x123);
-   * header.setSequenceFlags(CCSDS::UNSEGMENTED);
+   * header.setSequenceFlags(ccsds::UNSEGMENTED);
    * header.setSequenceCount(42);
    * const auto bytes = header.serialize();
    * @endcode
@@ -116,7 +116,7 @@ namespace CCSDS {
     /** @brief Returns the stored 1-bit packet type. */
     [[nodiscard]] std::uint8_t getType() const { return m_type; }
     /** @brief Returns the stored 1-bit secondary-header presence flag. */
-    [[nodiscard]] std::uint8_t getDataFieldHeaderFlag() const { return m_dataFieldHeaderFlag; }
+    [[nodiscard]] std::uint8_t getSecondaryHeaderFlag() const { return m_secondaryHeaderFlag; }
     /** @brief Returns the stored 11-bit Application Process Identifier. */
     [[nodiscard]] std::uint16_t getAPID() const { return m_APID; }
     /** @brief Returns the stored 2-bit sequence-flags value. */
@@ -164,7 +164,7 @@ namespace CCSDS {
      * @param value Value 0 or 1.
      * @return Success, or INVALID_HEADER_DATA for any other value.
      */
-    [[nodiscard]] ResultBool setDataFieldHeaderFlag(const std::uint8_t &value);
+    [[nodiscard]] ResultBool setSecondaryHeaderFlag(const std::uint8_t &value);
 
     /**
      * @brief Sets the 11-bit Application Process Identifier.
@@ -221,7 +221,7 @@ namespace CCSDS {
 
     std::uint8_t m_versionNumber{};
     std::uint8_t m_type{};
-    std::uint8_t m_dataFieldHeaderFlag{};
+    std::uint8_t m_secondaryHeaderFlag{};
     std::uint16_t m_APID{};
     std::uint8_t m_sequenceFlags{UNSEGMENTED};
     std::uint16_t m_sequenceCount{};

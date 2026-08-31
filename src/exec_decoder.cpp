@@ -32,7 +32,7 @@ void printHelpDecoder() {
     << "can be saved with --trailing-output. Use ccsds_validator for strict stream checks.\n";
 }
 
-int printError(const CCSDS::Error &error) {
+int printError(const ccsds::Error &error) {
   std::cerr << "[ Error " << static_cast<unsigned>(error.code()) << " ]: "
             << error.message() << std::endl;
   return static_cast<int>(error.code());
@@ -44,10 +44,10 @@ struct DecoderConfig {
   std::uint32_t syncPattern{0x1ACFFC1DU};
 };
 
-CCSDS::Result<DecoderConfig> readDecoderConfig(const Config &cfg) {
+ccsds::Result<DecoderConfig> readDecoderConfig(const ccsds::Config &cfg) {
   DecoderConfig settings;
   RET_IF_ERR_MSG(!cfg.isKey("validation_enable"),
-                 static_cast<CCSDS::ErrorCode>(CONFIG_MISSING_PARAMETER),
+                 static_cast<ccsds::ErrorCode>(CONFIG_MISSING_PARAMETER),
                  "Config: Missing bool field: validation_enable");
   ASSIGN_CP(settings.validationEnable, cfg.get<bool>("validation_enable"));
 
@@ -85,10 +85,10 @@ int main(const int argc, char *argv[]) {
   }
 
   const auto requirePath = [&](const char *key, const char *description)
-      -> CCSDS::Result<std::string> {
+      -> ccsds::Result<std::string> {
     const auto it = args.find(key);
     if (it == args.end() || it->second.empty()) {
-      return CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+      return ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                           std::string(description) + " must be specified"};
     }
     return it->second;
@@ -108,22 +108,22 @@ int main(const int argc, char *argv[]) {
     output = result.value();
   }
   {
-    auto result = requirePath("config", "Config file");
+    auto result = requirePath("config", "Configuration file");
     if (!result) { printHelpDecoder(); return printError(result.error()); }
     configFile = result.value();
   }
 
-  if (!fileExists(input)) {
-    return printError(CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+  if (!ccsds::fileExists(input)) {
+    return printError(ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                                    "Input file does not exist: " + input});
   }
-  if (!fileExists(configFile)) {
-    return printError(CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
-                                   "Config file does not exist: " + configFile});
+  if (!ccsds::fileExists(configFile)) {
+    return printError(ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
+                                   "Configuration file does not exist: " + configFile});
   }
 
   customConsole(appName, "reading CCSDS configuration file: " + configFile);
-  Config cfg;
+  ccsds::Config cfg;
   if (const auto result = cfg.load(configFile); !result) return printError(result.error());
 
   DecoderConfig settings;
@@ -133,17 +133,18 @@ int main(const int argc, char *argv[]) {
     settings = result.value();
   }
 
-  CCSDS::Packet templatePacket;
+  ccsds::Packet templatePacket;
   if (const auto result = templatePacket.loadFromConfig(cfg); !result) {
     return printError(result.error());
   }
   if (const auto it = args.find("packet-error-control"); it != args.end()) {
     const auto result = parsePacketErrorControlMode(it->second);
     if (!result) return printError(result.error());
-    templatePacket.setPacketErrorControlMode(result.value());
+    if (const auto applied = applyPacketErrorControlMode(templatePacket, result.value());
+        !applied) return printError(applied.error());
   }
 
-  CCSDS::Manager manager;
+  ccsds::Manager manager;
   if (const auto result = manager.setPacketTemplate(std::move(templatePacket)); !result) {
     return printError(result.error());
   }
@@ -154,7 +155,7 @@ int main(const int argc, char *argv[]) {
   std::vector<std::uint8_t> inputBytes;
   customConsole(appName, "reading data from " + input);
   {
-    const auto result = readBinaryFile(input);
+    const auto result = ccsds::readBinaryFile(input);
     if (!result) return printError(result.error());
     inputBytes = result.value();
   }
@@ -167,7 +168,7 @@ int main(const int argc, char *argv[]) {
     layout = result.value();
   }
   if (layout.packets.empty()) {
-    return printError(CCSDS::Error{static_cast<CCSDS::ErrorCode>(INVALID_INPUT_DATA),
+    return printError(ccsds::Error{static_cast<ccsds::ErrorCode>(INVALID_INPUT_DATA),
                                    "Input does not begin with a complete CCSDS packet"});
   }
 
@@ -193,12 +194,12 @@ int main(const int argc, char *argv[]) {
                     + " trailing byte(s) unconsumed", "WARN");
   }
   if (const auto it = args.find("trailing-output"); it != args.end()) {
-    if (const auto result = writeBinaryFile(trailing, it->second); !result) {
+    if (const auto result = ccsds::writeBinaryFile(trailing, it->second); !result) {
       return printError(result.error());
     }
   }
 
-  if (args["verbose"] == "true") printPackets(manager);
+  if (args["verbose"] == "true") ccsds::printPackets(manager);
 
   manager.setAutoValidateEnable(settings.validationEnable);
   std::vector<std::uint8_t> outputData;
@@ -209,7 +210,7 @@ int main(const int argc, char *argv[]) {
   }
 
   customConsole(appName, "writing data to " + output);
-  if (const auto result = writeBinaryFile(outputData, output); !result) {
+  if (const auto result = ccsds::writeBinaryFile(outputData, output); !result) {
     return printError(result.error());
   }
 

@@ -5,57 +5,66 @@ SPDX-License-Identifier: Apache-2.0
 
 # Packet processing flow
 
-[Documentation index](README.md) | [Examples](EXAMPLES.md) | [v1.2 profile](CCSDS_133_0_B_2_PROFILE.md)
+CCSDSPack exposes three cooperating levels:
 
-CCSDSPack exposes two main levels:
-
-- `CCSDS::Packet` represents exactly one CCSDS Space Packet PDU;
-- `CCSDS::Manager` generates or consumes a stream whose packets share one complete Packet Identification value.
+- `ccsds::Packet` represents one CCSDS Space Packet PDU;
+- `ccsds::Manager` generates or consumes one Packet Identification/sequence stream;
+- `ccsds::Validator` performs read-only object and sequence-stream checks.
 
 ## Construct one packet
 
 1. Create a `Packet`.
 2. Assign a version-0 `PrimaryHeader`.
-3. Configure the Packet Data Field capacity and packet-error-control mode.
-4. Add an optional secondary header and application data.
-5. Call `serialize()`.
+3. Configure packet-level error control and data-field capacity as required.
+4. Install an optional secondary header and application data.
+5. Call `serialize()` and check the returned `ResultBuffer`.
 
-`serialize()` finalizes Packet Data Length, the stored sequence count, and the optional CCSDSPack CRC16 trailer. Inspection getters do not perform hidden finalization.
+`serialize()` performs checked finalization, including Packet Data Length and optional CRC16 generation. `update()` performs checked finalization without returning wire bytes. Inspection getters do not finalize hidden state.
 
-## Generate a packet stream
+## Generate a stream
 
-1. Create a valid packet template.
-2. Construct a `Manager` from the template or call `setPacketTemplate()`.
-3. Set the per-packet data capacity with `setDataFieldSize()`.
-4. Call `setApplicationData()` with the complete payload.
-5. Retrieve adjacent packet bytes with `getPacketsBuffer()` or persist them with `write()`.
+1. Construct a complete Packet template.
+2. Install it with `Manager::setPacketTemplate()`.
+3. Set the per-packet content capacity with `setDataFieldSize()` when segmentation is required.
+4. Submit the application payload with `setApplicationData()`.
+5. Retrieve adjacent packets with `getPacketsBuffer()` or persist them with `write()`.
 
-The Manager assigns `UNSEGMENTED` for one generated packet or `FIRST_SEGMENT`, `CONTINUING_SEGMENT`, and `LAST_SEGMENT` for a segmented sequence. Automatic Packet Sequence Count advances once per generated packet and wraps modulo 16384.
+Manager emits `UNSEGMENTED` for a single packet or `FIRST_SEGMENT`, zero or more `CONTINUING_SEGMENT`, and `LAST_SEGMENT` for a segmented payload. Automatic sequence count advances per generated packet and wraps modulo 16384.
 
-A Manager binds one complete Packet Identification value:
+A Manager binds one complete Packet Identification:
 
 ```text
 Packet Version Number + Packet Type + Secondary Header Flag + APID
 ```
 
-Applications handling multiple identifiers use separate Manager instances or independent Packet objects.
-
 ## Parse one packet
 
-1. Configure the receiving `Packet` with the expected packet-error-control mode.
-2. Call `deserializeBounded()` on a buffer beginning with a packet.
-3. Use the returned byte count to locate the next packet or preserve unrelated trailing bytes.
+1. Configure the Packet-level error-control mode expected by the wire stream.
+2. Supply any secondary-header schema by preinstalling a header, using a typed parser, or using a runtime selector.
+3. Call `deserializeBounded()`.
+4. Use the returned byte count to locate the next packet.
 
-The parser derives the exact boundary from Packet Data Length, rejects truncation, validates the configured CRC16 trailer when enabled, and commits decoded state only after validation succeeds.
+The parser derives the exact packet boundary from Packet Data Length, rejects truncation, validates CRC16 when enabled, parses the supplied secondary-header schema, and commits state only after all parsing checks succeed.
 
-## Parse a packet stream
+## Validate packet state
 
-A configured Manager can call `load()` or `read()` to parse adjacent packets transactionally. The operation rejects malformed framing, truncated packets, CRC failures, and mixed Packet Identification values without partially appending the failed input.
+```cpp
+ccsds::Validator validator;
+const auto report = validator.validate(packet);
+```
 
-The optional Manager synchronization pattern is project-specific stream framing. It is not part of the CCSDS Space Packet PDU.
+Named checks provide packet, template, PUS, and sequence diagnostics. Validation does not mutate the Packet or secondary header.
+
+## Parse a stream with Manager
+
+A configured Manager uses its complete Packet template to parse adjacent packets transactionally. `load()` and `read()` reject malformed framing, truncation, CRC failures, secondary-header contract violations, and mixed Packet Identification values without partially appending a failed input batch.
+
+For explicit sequence validation, one Validator instance should be used per sequence stream. `clear()` resets it for a new stream.
 
 ## Reassemble application data
 
-After packets are loaded, call `getApplicationDataBuffer()` and check the returned `ResultBuffer`. The Manager concatenates application data in stored packet order.
+`getApplicationDataBuffer()` concatenates stored application data in packet order and returns a checked `ResultBuffer`.
 
-See [Examples](EXAMPLES.md) for complete source snippets.
+The optional Manager synchronization pattern is external stream framing and is not part of the CCSDS Space Packet PDU.
+
+See [Examples](EXAMPLES.md) and [Structured validation](VALIDATION.md).

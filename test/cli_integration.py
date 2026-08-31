@@ -39,20 +39,33 @@ def replace_crc(packet: bytearray) -> None:
     packet[-1] = value & 0xFF
 
 
+def reference_packet(packet_type: int, apid: int, secondary: bytes, payload: bytes) -> bytes:
+    """Construct one independent version-0, unsegmented, CRC16 Space Packet vector."""
+    packet_id = (packet_type << 12) | (int(bool(secondary)) << 11) | apid
+    sequence = 0xC000
+    data_length = len(secondary) + len(payload) + 2 - 1
+    without_crc = (
+        packet_id.to_bytes(2, "big")
+        + sequence.to_bytes(2, "big")
+        + data_length.to_bytes(2, "big")
+        + secondary
+        + payload
+    )
+    return without_crc + crc16(without_crc).to_bytes(2, "big")
+
+
 def packet_config(apid: int, data_field_size: int = 2, *, pec: str | None = None) -> str:
     lines = [
+        f"ccsds_packet_error_control:string={pec or 'crc16'}",
         f"data_field_size:int={data_field_size}",
         "sync_pattern_enable:bool=false",
         "validation_enable:bool=true",
         "ccsds_version_number:int=0",
         "ccsds_type:bool=false",
-        "ccsds_data_field_header_flag:bool=false",
         f"ccsds_APID:int={apid}",
         "ccsds_segmented:bool=false",
         "define_secondary_header:bool=false",
     ]
-    if pec is not None:
-        lines.append(f"ccsds_packet_error_control:string={pec}")
     return "\n".join(lines) + "\n"
 
 
@@ -90,6 +103,7 @@ def main() -> int:
     decoder = executable(args.bin_dir.resolve(), "ccsds_decoder")
     validator = executable(args.bin_dir.resolve(), "ccsds_validator")
     resources = args.resources.resolve()
+    example_configs = Path(__file__).resolve().parents[1] / "example" / "config"
 
     golden_crc = read_hex(resources / "ccsds_golden_no_secondary_crc16.hex")
     golden_none = read_hex(resources / "ccsds_golden_no_crc.hex")
@@ -166,7 +180,7 @@ def main() -> int:
         apid_path = temp / "apid-mismatch.bin"
         apid_path.write_bytes(golden_crc)
         result = run([str(validator), "-i", str(apid_path), "-c", str(config1)], expected=18)
-        assert_contains(result, "APID")
+        assert_contains(result, "Packet Identification")
 
         sequence_bad = bytearray(golden_rollover)
         second = 9
@@ -180,12 +194,51 @@ def main() -> int:
         result = run([str(validator), "-i", str(sequence_path), "-c", str(config1)], expected=18)
         assert_contains(result, "Sequence count")
 
+        profile_vectors = {
+            "generic": reference_packet(0, 42, b"", payload.read_bytes()),
+            "pus_a_tc": reference_packet(1, 42, bytes([0x19, 17, 1, 0x42]), payload.read_bytes()),
+            "pus_a_tm": reference_packet(0, 42, bytes([0x10, 3, 25, 7, 0x42]), payload.read_bytes()),
+            "pus_c_tc": reference_packet(1, 42, bytes([0x29, 17, 1, 0x12, 0x34]), payload.read_bytes()),
+            "pus_c_tm_no_time": reference_packet(0, 42, bytes([0x20, 3, 25, 0, 7, 0x12, 0x34]), payload.read_bytes()),
+            "pus_c_tm": reference_packet(
+                0, 42,
+                bytes([0x22, 3, 25, 0, 7, 0x12, 0x34, 0x1E, 1, 2, 3, 4, 0xA0, 0xB0]),
+                payload.read_bytes(),
+            ),
+        }
+        for profile_name, expected_wire in profile_vectors.items():
+            profile = example_configs / f"{profile_name}.cfg"
+            profile_wire = temp / f"{profile_name}.bin"
+            profile_output = temp / f"{profile_name}-decoded.bin"
+            run([str(encoder), "-i", str(payload), "-o", str(profile_wire), "-c", str(profile)])
+            assert profile_wire.read_bytes() == expected_wire, (
+                f"{profile_name} encoder differs from the independent vector"
+            )
+            run([str(decoder), "-i", str(profile_wire), "-o", str(profile_output), "-c", str(profile)])
+            assert profile_output.read_bytes() == payload.read_bytes(), f"{profile_name} CLI round trip failed"
+            validation = run([str(validator), "-i", str(profile_wire), "-c", str(profile), "-v"])
+            if profile_name.startswith("pus_"):
+                assert_contains(validation, "PUS secondary header")
+
+        pus_c_tm = example_configs / "pus_c_tm.cfg"
+        pus_wire = temp / "pus-c-tm.bin"
+        run([str(encoder), "-i", str(payload), "-o", str(pus_wire), "-c", str(pus_c_tm)])
+        invalid_pus = bytearray(pus_wire.read_bytes())
+        invalid_pus[6] = (invalid_pus[6] & 0x0F) | 0x30
+        replace_crc(invalid_pus)
+        invalid_pus_path = temp / "pus-version-bad.bin"
+        invalid_pus_path.write_bytes(invalid_pus)
+        result = run([
+            str(validator), "-i", str(invalid_pus_path), "-c", str(pus_c_tm), "-v",
+        ], expected=18)
+        assert_contains(result, "PUS secondary header")
+
         help_result = run([str(encoder), "--help"])
         assert_contains(help_result, "--packet-error-control")
         help_result = run([str(decoder), "--help"])
         assert_contains(help_result, "--trailing-output")
         help_result = run([str(validator), "--help"])
-        assert_contains(help_result, "CCSDS version")
+        assert_contains(help_result, "Packet template")
 
     print("CCSDSPack CLI integration tests passed")
     return 0

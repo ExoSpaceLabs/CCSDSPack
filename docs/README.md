@@ -5,39 +5,42 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack documentation
 
-[Main README](../README.md) | [v1.2 compliance statement](../COMPLIANCE.md) | [CCSDS compliance matrix](../CCSDS_COMPLIANCE.md)
+CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and managing CCSDS Space Packet PDUs with optional PUS-A/PUS-C secondary headers, numeric CUC time, packet-level CRC16, and hosted/embedded integration.
 
-CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and managing CCSDS Space Packet PDUs. Start with the examples, then use the profile and API reference for protocol details.
+## Core documentation
 
-## Start here
+- [Main README](../README.md): project overview, design, primary APIs, build, and integration model.
+- [Examples](EXAMPLES.md): packet construction, PUS, Manager, validation, raw buffers, and configuration examples.
+- [Space Packet PDU profile](CCSDS_133_0_B_2_PROFILE.md): supported CCSDS packet behavior and scope boundary.
+- [PUS tailoring](MISSION_TAILORING.md): concrete PUS identities, optional layout choices, and numeric CUC time.
+- [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
+- [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size interfaces.
+- [Packet processing flow](FLOW.md): Packet, Manager, parsing, validation, and reassembly lifecycle.
 
-- [Examples](EXAMPLES.md): current C++17 construction, segmentation, file I/O, parsing, CRC-free operation, and configuration examples.
-- [Configuration reference](CONFIG.md): packet-template and command-line configuration keys.
-- [Command-line tools](CLI.md): encoder, decoder, validator, packet-error-control modes, and exit behaviour.
-- [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/): installed public types and functions.
+## Hosted integration
 
-## Compliance and behaviour
-
-- [Concise v1.2 compliance statement](../COMPLIANCE.md): the supported release claim and its explicit boundary.
-- [CCSDS Space Packet compliance matrix](../CCSDS_COMPLIANCE.md): clause-level traceability, PICS scope classification, implementation references, and evidence.
-- [CCSDS 133.0-B-2 EC2 Space Packet PDU profile](CCSDS_133_0_B_2_PROFILE.md): detailed protocol scope, packet rules, limitations, and evidence.
-- [v1.2 current behaviour](V1_2_CURRENT_BEHAVIOUR.md): implementation behaviour and compatibility notes.
-- [Packet processing flow](FLOW.md): packet and Manager lifecycle from construction through parsing.
-
-## Integration and delivery
-
-- [Packages](PACKAGES.md): native packages and CMake package consumption.
-- [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md): accepted Raspberry Pi arm64 and STM32H755 CM7 evidence.
-- [STM32H755 validation procedure](V1_2_STM32_VALIDATION_STEPS.md): exact build, flash, UART, and acceptance steps used for the MCU release gate.
+- [Configuration reference](CONFIG.md): host-side Packet-template configuration schema.
+- [Command-line tools](CLI.md): encoder, decoder, validator, and exit behavior.
+- [Executable overview](EXECUTABLES.md): hosted executable set and build controls.
+- [Packages](PACKAGES.md): native packages and installed CMake consumption.
 - [Cross-build guide](CROSSBUILD.md): aarch64 Linux and bare-metal Cortex-M builds.
-- [Legacy cross-compilation notes](CROSSCOMPILE.md): older environment-specific guidance retained for reference.
-- [Container image](../docker/README.md): Docker build and runtime usage.
+- [Error and Result handling](ERROR.md): exception-free operation errors and structured validation diagnostics.
+- [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/): public headers and API details.
 
-## Reference
+## Compliance
 
-- [Error and Result handling](ERROR.md): exception-free result types and error categories.
-- [Executable overview](EXECUTABLES.md): compatibility entry point for the canonical CLI reference.
+- [Concise compliance statement](../COMPLIANCE.md)
+- [Detailed CCSDS Space Packet compliance matrix](../CCSDS_COMPLIANCE.md)
+- [PUS/CUC compliance baseline](CCSDS_COMPLIANCE.md)
 
-## Internal project notes
+## Migration and historical references
 
-`PRIV_HELPER.md` documents the repository's historical GitFlow helper commands. It is maintainer guidance, not part of the public library API or compliance claim.
+Upgrade-specific source, configuration, package, CLI, and wire-format guidance is maintained exclusively in [Migrating CCSDSPack v1 to v2](MIGRATION_V1_TO_V2.md).
+
+Historical v1.2 behavior and hardware evidence remain available in the `V1_2_*` documents for release archaeology and regression reference; they do not define the v2 API.
+
+`CROSSCOMPILE.md` is a compatibility pointer to the maintained cross-build guide. `PRIV_HELPER.md` contains maintainer workflow notes rather than public API documentation.
+
+## Diagrams
+
+The maintained packet-layout and architecture diagrams are embedded in the main README. UML generation is manual-only and is not a v2.0.0 release gate.

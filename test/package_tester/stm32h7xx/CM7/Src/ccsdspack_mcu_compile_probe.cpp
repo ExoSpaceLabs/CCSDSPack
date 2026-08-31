@@ -3,9 +3,8 @@
 
 #include "ccsdspack_mcu_test.h"
 
-// This target is compiled, but not executed, by the generic arm-none-eabi build.
-// It catches public-header, CCSDS_MCU, C++17, and consumer API regressions before
-// the same validation core is built and run inside the STM32CubeIDE application.
+// Compiled and relocatably linked by the generic arm-none-eabi package build.
+// The exact same acceptance body is then executed on the physical STM32H755.
 extern "C" int ccsdspack_mcu_compile_probe() {
   return CCSDSPackMcuTest::run();
 }

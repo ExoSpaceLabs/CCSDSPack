@@ -5,77 +5,33 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDS 133.0-B-2 EC2 Space Packet PDU profile
 
-[Main README](../README.md) | [Compliance statement](../COMPLIANCE.md) | [Clause-level matrix](../CCSDS_COMPLIANCE.md)
+[Main README](../README.md) | [Compliance matrix](../CCSDS_COMPLIANCE.md) | [Structured validation](VALIDATION.md)
 
 ## Normative baseline
 
-CCSDSPack v1.2 targets the Space Packet Protocol packet data unit defined by:
+CCSDSPack v2.0.0 targets **CCSDS 133.0-B-2, Issue 2, June 2020, including Editorial Change 2 of September 2024** for its supported Space Packet PDU profile.
 
-- **CCSDS 133.0-B-2, Issue 2, June 2020**;
-- including **Editorial Change 2, September 2024**.
+The claim covers packet construction, checked serialization, bounded transactional parsing, inspection, sequence-count handling, segmentation support, structured validation, and Manager stream handling for the implemented PDU profile. It does not claim a complete Space Packet Protocol entity, complete abstract service interfaces, transfer frames, routing, COP-1, CFDP, or a completed PICS.
 
-Editorial Change 2 changes document presentation only. It does not alter the Space Packet wire format or protocol semantics.
+## Primary header
 
-## Conformity claim
+CCSDSPack implements the fixed six-octet primary header:
 
-The supported claim is:
-
-> CCSDSPack v1.2 implements a CCSDS 133.0-B-2 EC2 Space Packet PDU profile.
-
-This claim covers construction, serialization, bounded parsing, validation, sequence-count handling, and stream management for CCSDS Space Packet PDUs.
-
-It does **not** claim implementation of the complete CCSDS Space Packet Protocol entity, including:
-
-- the abstract Packet Service interface;
-- the abstract Octet String Service interface;
-- all sending and receiving procedures;
-- all managed parameters;
-- a completed Protocol Implementation Conformance Statement (PICS);
-- transfer frames, Attached Synchronization Markers, CFDP, or other CCSDS protocol layers.
-
-This boundary is intentional and appropriate for a packet PDU library. Complete abstract services, lower-layer transfer, routing, and system-wide managed behavior belong to a larger flight or ground protocol entity when that system requires them.
-
-`CCSDS::Manager` may prepend a configurable synchronization pattern around packet streams. That pattern is a CCSDSPack container convenience and is not part of a CCSDS Space Packet.
-
-## Primary header profile
-
-CCSDSPack uses the fixed six-octet primary header with:
-
-- Packet Version Number: 3 bits;
-- Packet Type: 1 bit;
+- Packet Version Number: 3 bits, required to be `000`;
+- Packet Type: 1 bit, telemetry `0` or telecommand `1`;
 - Secondary Header Flag: 1 bit;
 - APID: 11 bits;
 - Sequence Flags: 2 bits;
 - Packet Sequence Count: 14 bits;
 - Packet Data Length: 16 bits.
 
-### Packet Version Number
+A directional secondary header exposes `ccsds::PacketDirection`. Installing such a header synchronizes Packet Type with the header direction. Direction-neutral custom headers leave Packet Type under caller control.
 
-A serialized or parsed Space Packet must encode Packet Version Number `000`.
+## APID and Idle Packets
 
-`CCSDS::Header` remains a low-level three-bit field container for source compatibility and future protocol work. `CCSDS::Packet` is the Space Packet profile gate and refuses to serialize non-zero versions. Configuration files also require:
+The complete APID range `0..2047` is supported. APID `0x7FF` identifies an Idle Packet. A valid Idle Packet has no secondary header and contains at least one octet of mission-defined idle user data. CCSDSPack validates these structural conditions but does not define the mission fill pattern.
 
-```ini
-ccsds_version_number:int=0
-```
-
-### Packet Type
-
-Both telemetry (`0`) and telecommand (`1`) packet types are supported.
-
-### APID and Idle Packets
-
-The complete 11-bit APID range is supported. APID `0x7FF` is reserved for Idle Packets.
-
-A serializable or accepted Idle Packet must:
-
-- encode Secondary Header Flag `0`;
-- contain no secondary-header object;
-- carry at least one octet of mission-defined idle user data.
-
-CCSDSPack validates these structural rules but does not validate the mission-specific idle fill pattern.
-
-### Sequence control
+## Sequence control
 
 Sequence Flags use the CCSDS values:
 
@@ -86,15 +42,11 @@ Sequence Flags use the CCSDS values:
 | `10` | last segment |
 | `11` | unsegmented packet |
 
-The Manager uses one modulo-16384 Packet Sequence Count stream per bound Packet Identification value. Automatic mode advances once for every generated packet, including unsegmented packets.
-
-CCSDSPack uses **Packet Sequence Count semantics for both telemetry and telecommand packets**. The optional telecommand Packet Name interpretation is not implemented.
-
-Manual sequence mode is an expert override. Applications using manual counts are responsible for continuity.
+Manager automatic sequencing advances once per generated packet and wraps modulo 16384. Validator can independently check legal segmentation transitions and sequence-count continuity for one sequence stream.
 
 ## Packet Data Length and size
 
-Packet Data Length is encoded as:
+Packet Data Length is:
 
 ```text
 number of octets following the six-octet primary header - 1
@@ -106,112 +58,72 @@ Therefore:
 total packet size = 6 + Packet Data Length + 1
 ```
 
-The representable Packet Data Field range is 1 through 65,536 octets, giving a total packet-size range of 7 through 65,542 octets.
-
-Use:
-
-```cpp
-std::size_t CCSDS::Packet::getSerializedSize() const;
-```
-
-for the complete range. The legacy `getFullPacketLength()` returns `std::uint16_t` and saturates at `UINT16_MAX` rather than wrapping when the exact packet size is larger.
+The Packet Data Field range is 1 through 65,536 octets, giving a total packet range of 7 through 65,542 octets. `Packet::getSerializedSize()` reports the exact complete size as `std::size_t`.
 
 ## Secondary headers
 
-CCSDS 133.0-B-2 permits optional secondary-header information. CCSDSPack supports:
+CCSDSPack supports:
 
 - opaque `BufferHeader` bytes;
-- user-registered secondary-header classes;
-- legacy project-specific `PusA`, `PusB`, and `PusC` classes.
+- user-registered custom secondary-header classes;
+- `ccsds::pus::rev_a::TcHeader` and `TmHeader`;
+- `ccsds::pus::rev_c::TcHeader` and `TmHeader`.
 
-The bundled `PusA`, `PusB`, and `PusC` names are retained for v1 compatibility. Their layouts are not claimed to implement an official ECSS Packet Utilisation Standard revision.
+Concrete PUS types own revision and direction. Optional wire-layout choices are held by direction-specific tailoring structs. PUS-C TC source ID and TM destination ID are fixed at two octets; PUS-A exposes the applicable optional identifier widths.
 
-The `PusC` byte sequence described as a time-code field is not automatically a conformant CCSDS time code. Mission software must select and validate any required time-code format separately.
+See [PUS tailoring](MISSION_TAILORING.md).
 
-## CCSDSPack CRC16 mission profile
+## Packet error control
 
-CCSDS 133.0-B-2 defines a Space Packet as:
+CCSDS 133.0-B-2 defines the Space Packet as the Primary Header plus Packet Data Field; it does not define a third standardized packet error-control field.
 
-```text
-Packet Primary Header + Packet Data Field
-```
+CCSDSPack therefore treats error control as explicit Packet-level policy:
 
-It does not define a third standardized packet error-control field.
+- `PacketErrorControlMode::None`: no trailer is reserved;
+- `PacketErrorControlMode::CRC16`: the final two Packet Data Field octets contain CRC-16/CCITT-FALSE.
 
-When `PacketErrorControlMode::CRC16` is selected, CCSDSPack reserves the **final two octets of the Packet Data Field** for a mission-profile CRC-16/CCITT-FALSE trailer. Those two octets:
+In CRC16 mode the trailer contributes to Packet Data Length, is encoded most-significant byte first, and is excluded from its own CRC calculation. The CRC covers the six-byte primary header, secondary-header bytes, and application data. Parsing validates the selected CRC mode transactionally.
 
-- are included in Packet Data Length;
-- are serialized most-significant byte first;
-- are excluded from their own CRC calculation;
-- are validated during parsing.
-
-The CRC input is:
-
-```text
-six-octet Packet Primary Header
-+ optional secondary-header bytes
-+ application-data bytes
-```
-
-`PacketErrorControlMode::None` reserves no trailer octets. CRC16 remains the default for existing v1 construction and configuration paths.
-
-## Parsing profile
+## Bounded parsing
 
 `deserializeBounded()`:
 
-- validates the six-octet primary header before copying the body;
-- rejects non-zero Packet Version Numbers;
-- derives the exact boundary from Packet Data Length;
-- rejects truncated packet bodies;
-- validates the configured CRC trailer when enabled;
+- validates the six-byte primary header and Packet Version Number;
+- derives the exact packet boundary from Packet Data Length;
+- rejects truncated bodies;
+- validates CRC16 when enabled;
+- parses the supplied secondary-header schema;
 - returns the number of consumed octets;
-- leaves later concatenated packets or unrelated trailing bytes unconsumed;
-- commits parsed state only after validation succeeds.
+- does not absorb following packets or unrelated trailing bytes;
+- commits decoded state only after the operation succeeds.
 
-The receiving application must configure whether the stream uses the CRC16 profile. The mode is not inferred from packet bytes.
+For PUS, the schema can be supplied by a preinstalled concrete header, typed `Packet::deserialize<HeaderT>()`, a typed raw-buffer overload, or a canonical runtime selector.
 
-## Manager profile
+## Manager stream model
 
-One `CCSDS::Manager` represents one complete Packet Identification value and one sequence-count stream.
-
-The bound identifier contains:
+One `ccsds::Manager` represents one complete Packet Identification value and one Packet Sequence Count stream. Its Packet template carries:
 
 - Packet Version Number;
 - Packet Type;
-- Secondary Header Flag;
-- APID.
+- Secondary Header Flag/secondary-header object;
+- APID;
+- packet-level error-control mode;
+- concrete secondary-header type and optional tailoring.
 
-Sequence Flags, Packet Sequence Count, and Packet Data Length are excluded because they vary within the stream.
+Sequence Flags, Packet Sequence Count, Packet Data Length, and application data vary across generated packets. Applications managing multiple identifiers use multiple Manager instances or independent Packet objects.
 
-Applications managing multiple identifiers use multiple Manager instances or independent Packet objects. Within one managed data path, one APID should have one sequence-count authority.
+The optional Manager synchronization pattern is external stream framing and is not part of the CCSDS Space Packet PDU.
 
-## Compatibility with releases before v1.2
+## Structured validation
 
-The public v1 source API remains available, but corrected wire behavior may be incompatible with packets generated by earlier versions. In particular, v1.2 corrects:
+`ccsds::Validator` returns a fixed-capacity `ValidationReport` containing named checks. Generic checks cover primary-header/version, Packet Data Length, CRC16 when enabled, secondary-header presence/direction, segmentation, sequence continuity, Packet Identification, template PEC, and template secondary-header contract.
 
-- Packet Data Length to use `N - 1`;
-- inclusion of the optional CRC trailer in Packet Data Length;
-- CRC coverage from the first primary-header octet;
-- exact packet-boundary parsing;
-- sequence-count advancement and rollover;
-- full Packet Identification enforcement;
-- Packet Version Number and Idle Packet profile validation.
+PUS checks cover concrete revision/direction, Packet Type, tailoring, encoded size, reserved/version bits, spare fields, acknowledgement/source ID, destination ID, PUS-A TM packet subcounter state, PUS-C TM time-reference status, and active CUC timestamp fit.
 
-Stored or transmitted pre-v1.2 packets should be regenerated or migrated with an explicit compatibility tool. They should not be assumed to parse under the corrected profile.
+See [VALIDATION.md](VALIDATION.md).
 
 ## Conformance evidence
 
-The profile is exercised by:
+The current integration candidate is exercised by 125 native tests, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux/Windows CI, Doxygen, package/cross-build generation, and a Cortex-M compile/link probe.
 
-- independent Python-generated byte vectors committed under `test/test_resources`;
-- packet encode/decode and maximum-size tests;
-- malformed length, CRC, version, identifier, and sequence tests;
-- dedicated Idle Packet and PDU-profile tests;
-- the installed shared-library consumer under `test/package_tester/shared_lib`;
-- Linux and Windows CI builds and execution;
-- native Raspberry Pi 5 arm64 execution with `CCSDSPACK_AARCH64_TEST:PASS`;
-- STM32 Cortex-M7 build, link, flash, startup, and execution with `CCSDSPACK_MCU_TEST:PASS` reported twice.
-
-The clause-to-code-to-test mapping is recorded in [CCSDS_COMPLIANCE.md](../CCSDS_COMPLIANCE.md). Hardware details and reproduction procedures are recorded in [V1_2_HARDWARE_VALIDATION.md](V1_2_HARDWARE_VALIDATION.md) and [V1_2_STM32_VALIDATION_STEPS.md](V1_2_STM32_VALIDATION_STEPS.md).
-
-All supported Space Packet PDU implementation and hardware-validation gates are complete. This evidence does not expand the claim to a complete protocol entity or qualify every platform, compiler, memory layout, mission profile, or operating condition.
+Physical arm64 and STM32 execution and dedicated fuzz/sanitizer CI remain separate v2.0.0 release-acceptance gates until recorded.

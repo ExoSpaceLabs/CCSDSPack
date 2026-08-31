@@ -10,7 +10,7 @@
 #include <iostream>
 #include <sstream>
 
-CCSDS::ResultBool parseArguments(
+ccsds::ResultBool parseArguments(
     const std::int32_t argc,
     char *argv[],
     std::unordered_map<std::string, std::string> &allowedMap,
@@ -26,7 +26,7 @@ CCSDS::ResultBool parseArguments(
   for (std::int32_t i = 1; i < argc; ++i) {
     const std::string current = argv[i];
     if (current.rfind("--", 0) != 0 && current.rfind('-', 0) != 0) {
-      return CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+      return ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                           "Unknown argument: " + current};
     }
 
@@ -36,13 +36,13 @@ CCSDS::ResultBool parseArguments(
     } else {
       const std::string shortKey = current.substr(1);
       RET_IF_ERR_MSG(allowedShortKeys.find(shortKey) == allowedShortKeys.end(),
-                     static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+                     static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                      "Unknown argument: -" + shortKey);
       key = allowedMap.at(shortKey);
     }
 
     RET_IF_ERR_MSG(allowedKeys.find(key) == allowedKeys.end(),
-                   static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+                   static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                    "Unknown argument: --" + key);
 
     if (booleanArgs.find(key) != booleanArgs.end()) {
@@ -51,14 +51,14 @@ CCSDS::ResultBool parseArguments(
     }
 
     RET_IF_ERR_MSG(i + 1 >= argc,
-                   static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+                   static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                    "Missing value for argument: --" + key);
     outArgs[key] = argv[++i];
   }
   return true;
 }
 
-CCSDS::Result<CCSDS::PacketErrorControlMode>
+ccsds::Result<ccsds::PacketErrorControlMode>
 parsePacketErrorControlMode(const std::string &value) {
   std::string normalized = value;
   std::transform(normalized.begin(), normalized.end(), normalized.begin(),
@@ -66,17 +66,25 @@ parsePacketErrorControlMode(const std::string &value) {
                    return static_cast<char>(std::tolower(c));
                  });
 
-  if (normalized == "crc16") return CCSDS::PacketErrorControlMode::CRC16;
-  if (normalized == "none") return CCSDS::PacketErrorControlMode::None;
-  return CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+  if (normalized == "crc16") return ccsds::PacketErrorControlMode::CRC16;
+  if (normalized == "none") return ccsds::PacketErrorControlMode::None;
+  return ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                       "Packet error control must be 'crc16' or 'none'"};
 }
 
-const char *packetErrorControlModeName(const CCSDS::PacketErrorControlMode mode) {
-  return mode == CCSDS::PacketErrorControlMode::CRC16 ? "crc16" : "none";
+const char *packetErrorControlModeName(const ccsds::PacketErrorControlMode mode) {
+  return mode == ccsds::PacketErrorControlMode::CRC16 ? "crc16" : "none";
 }
 
-CCSDS::Result<PacketStreamLayout>
+ccsds::ResultBool applyPacketErrorControlMode(
+    ccsds::Packet &packet, const ccsds::PacketErrorControlMode mode) {
+  // Packet error control is a generic CCSDS Packet policy. PUS secondary headers
+  // carry no independent CRC/PEC setting in the v2 API.
+  packet.setPacketErrorControlMode(mode);
+  return true;
+}
+
+ccsds::Result<PacketStreamLayout>
 inspectPacketStream(const std::vector<std::uint8_t> &data,
                     const bool syncPatternEnable,
                     const std::uint32_t syncPattern,
@@ -94,7 +102,7 @@ inspectPacketStream(const std::vector<std::uint8_t> &data,
     if (syncPatternEnable) {
       if (data.size() - offset < 4U) {
         if (leaveTrailing(frameOffset)) break;
-        return CCSDS::Error{CCSDS::ErrorCode::INVALID_DATA,
+        return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
                             "Truncated packet synchronization marker at byte "
                               + std::to_string(frameOffset)};
       }
@@ -106,7 +114,7 @@ inspectPacketStream(const std::vector<std::uint8_t> &data,
         | static_cast<std::uint32_t>(data[offset + 3U]);
       if (encoded != syncPattern) {
         if (leaveTrailing(frameOffset)) break;
-        return CCSDS::Error{CCSDS::ErrorCode::INVALID_DATA,
+        return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
                             "Packet synchronization marker mismatch at byte "
                               + std::to_string(frameOffset)};
       }
@@ -118,7 +126,7 @@ inspectPacketStream(const std::vector<std::uint8_t> &data,
         offset = frameOffset;
         break;
       }
-      return CCSDS::Error{CCSDS::ErrorCode::INVALID_HEADER_DATA,
+      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
                           "Truncated CCSDS primary header at byte "
                             + std::to_string(offset)};
     }
@@ -126,7 +134,7 @@ inspectPacketStream(const std::vector<std::uint8_t> &data,
     const std::vector<std::uint8_t> headerBytes(
       data.begin() + static_cast<std::ptrdiff_t>(offset),
       data.begin() + static_cast<std::ptrdiff_t>(offset + 6U));
-    CCSDS::Header header;
+    ccsds::Header header;
     const auto headerResult = header.deserialize(headerBytes);
     if (!headerResult) {
       if (leaveTrailing(frameOffset)) {
@@ -143,7 +151,7 @@ inspectPacketStream(const std::vector<std::uint8_t> &data,
         offset = frameOffset;
         break;
       }
-      return CCSDS::Error{CCSDS::ErrorCode::INVALID_DATA,
+      return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
                           "Packet Data Length declares "
                             + std::to_string(packetSize)
                             + " bytes at offset " + std::to_string(offset)

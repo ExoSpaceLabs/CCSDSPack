@@ -1,34 +1,40 @@
 # STM32H755 hardware-validation integration
 
-The committed STM32CubeIDE example under `STM32CubeIDE/CM7` targets the
-**STM32H745ZITx / NUCLEO-H745ZI-Q**. Do not reuse its startup assembly, linker
-script, device define, or generated CubeIDE metadata for an STM32H755 image.
-
-The CCSDSPack validation logic itself is board-independent and lives in:
+CCSDSPack uses one board-independent release acceptance core for both native arm64 and physical Cortex-M7 validation:
 
 ```text
-CM7/Inc/ccsdspack_mcu_test.h
+test/package_tester/hardware/ccsdspack_hardware_test.h
 ```
 
-Use that header from a native **STM32H755ZITx / NUCLEO-H755ZI-Q CM7** project.
+The STM32 wrapper remains available at:
 
-## Required H755 project setup
+```text
+test/package_tester/stm32h7xx/CM7/Inc/ccsdspack_mcu_test.h
+```
 
-Create or use a working STM32H755 CM7 project generated for the exact board and
-retain its own:
+The committed STM32CubeIDE example under `STM32CubeIDE/CM7` uses the STM32CubeH7 **NUCLEO-H745ZI-Q** project configuration. ST documents all projects under `Projects/NUCLEO-H745ZI-Q` as fully compatible with the **NUCLEO-H755ZI-Q** board, so the H745 startup/linker/device names used by that project are valid for the non-cryptographic CCSDSPack H755 validation path.
 
-- `startup_stm32h755xx.s` startup implementation;
-- STM32H755 system file and HAL configuration;
-- STM32H755 linker script and memory layout;
+Official ST compatibility note:
+
+`https://github.com/STMicroelectronics/STM32CubeH7/blob/master/Projects/NUCLEO-H755ZI-Q/readme.txt`
+
+The H755-specific cryptographic capability called out by ST is outside CCSDSPack's scope.
+
+For v2.0.0 release validation, execute the shared acceptance core on a physical **NUCLEO-H755ZI-Q / Cortex-M7** using the ST-supported H745/H755-compatible project configuration. The same `CCSDSPackHardwareTest::run()` implementation is executed natively by `aarch64_validate.sh`, so the two real-target runs exercise the same protocol/API acceptance logic.
+
+## Board-project requirements
+
+The STM32 project remains responsible for:
+
+- startup implementation and linker/memory layout supplied by the ST-compatible board project;
+- device/system and HAL configuration;
 - CM4/CM7 boot coordination;
-- board-specific clock and power setup;
+- board clock, power, cache, and MPU setup;
 - ST-Link virtual COM UART configuration.
 
-Do not copy `STM32H745ZITX_FLASH.ld` into the H755 project.
+## CCSDSPack build
 
-## CCSDSPack build compatibility
-
-Build the archive using the same ABI as the H755 CM7 application:
+Build the archive with the same ABI as the Cortex-M7 application:
 
 ```bash
 ./package.sh \
@@ -37,61 +43,67 @@ Build the archive using the same ABI as the H755 CM7 application:
   -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 ```
 
-The application configuration must use:
+The application uses C++17, `CCSDS_MCU`, the installed public headers, `libccsdspack.a`, and matching CPU/FPU/float-ABI flags.
 
-- C++17;
-- `CCSDS_MCU`;
-- `-fno-exceptions`;
-- `-fno-rtti`;
-- the same `-mcpu`, `-mfpu`, `-mfloat-abi`, and Thumb settings as the archive;
-- the installed package headers;
-- `libccsdspack.a`, linked as `ccsdspack`.
+## Execute the shared validation core
 
-## Calling the validation core
+Add `test/package_tester/hardware` to the application include path and call the same acceptance function used on arm64:
 
-After the H755 project has completed HAL, clock, memory, UART, and LED
-initialization, run:
+```cpp
+#include "ccsdspack_hardware_test.h"
+
+const int result = CCSDSPackHardwareTest::run();
+```
+
+A successful release run should report through UART/debugger:
+
+```text
+CCSDSPACK_HARDWARE_TEST:PASS
+```
+
+The compatibility wrapper can also be used from the in-repository STM32 example:
 
 ```cpp
 #include "ccsdspack_mcu_test.h"
-
 const int result = CCSDSPackMcuTest::run();
 ```
 
-Report the result deterministically over UART, debugger memory, or LEDs. The
-release gate expects the equivalent of:
+## Shared acceptance coverage
 
-```text
-CCSDSPACK_MCU_TEST:PASS
-```
+The exact same acceptance core used on native arm64 and STM32 CM7 exercises:
 
-A non-zero value is one of the documented failure codes in `readme.txt`.
+- generic Packet construction and exact CRC16 vector generation;
+- Manager Packet-template and automatic sequence-count behavior;
+- packet-level PEC with CRC16 and `None`;
+- structured Validator report checks;
+- PUS-C telecommand construction, intrinsic direction/Packet Type, serialization, typed parsing, and named PUS validation checks;
+- Packet Version Number rejection and Idle Packet constraints;
+- **raw application-data ingestion through `Manager::setApplicationData(const uint8_t*, size_t)`**;
+- **six-byte framing through `ccsds::buffer::declaredPacketSize()`**;
+- **pointer-plus-size bounded generic Packet parsing with exact consumed-byte checks**;
+- **truncated raw-buffer rejection**;
+- **typed PUS-C raw-buffer parsing**;
+- **raw Manager stream loading and application-data reconstruction**.
 
-## What remains board-specific
+This means the physical H755 run and native arm64 run both explicitly validate the transport-facing raw-buffer APIs rather than relying only on hosted unit tests or compile/link probes.
 
-The shared validation core does not configure:
+The generic arm-none-eabi package build compiles the same core through `CM7/Src/ccsdspack_mcu_compile_probe.cpp`. Compile/link success proves API and ABI compatibility only; physical NUCLEO-H755ZI-Q execution remains a separate release gate.
 
-- clocks or voltage scaling;
-- MPU/cache regions;
-- UART pins and peripheral clocks;
-- CM4/CM7 boot synchronization;
-- the linker script, heap, or stack;
-- fault handlers or watchdog behavior.
+## Board-specific responsibilities
 
-Those must remain native to the H755 project. This separation is intentional:
-the same packet test is compiled in CI and executed on hardware, while the board
-project remains responsible for proving its own startup, runtime, and memory
-configuration.
+The shared test does not configure clocks, voltage scaling, MPU/cache regions, UART, dual-core synchronization, linker layout, heap/stack, fault handlers, or watchdog behavior. Those remain properties of the STM32 board project and must be validated there.
 
-## H755 release evidence
+## Required release evidence
 
-Record at least:
+Record:
 
-1. exact NUCLEO-H755ZI-Q board and STM32H755 device revision;
+1. physical NUCLEO-H755ZI-Q board identity and, when available, MCU revision information reported by the programmer/debugger;
 2. arm-none-eabi compiler version;
-3. archive/package commit SHA;
-4. CM7 compile and link success;
-5. flash and reset success;
-6. UART or debugger result `CCSDSPACK_MCU_TEST:PASS`;
-7. final ELF flash/RAM/heap/stack usage;
-8. absence of HardFault, MemManage, BusFault, or allocation failure during the test.
+3. CCSDSPack commit/package SHA;
+4. CM7 compile/link success;
+5. flash/reset success;
+6. UART or debugger result `CCSDSPACK_HARDWARE_TEST:PASS`;
+7. final ELF flash/RAM usage and relevant heap/stack configuration;
+8. absence of HardFault, MemManage, BusFault, or allocation failure during the run.
+
+For arm64, retain the complete output from `test/package_tester/aarch64_validate.sh`; its final successful run includes `CCSDSPACK_HARDWARE_TEST:PASS` followed by `CCSDSPACK_AARCH64_TEST:PASS`.

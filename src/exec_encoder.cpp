@@ -28,16 +28,16 @@ void printHelp() {
     << "  -h, --help                            Show this help message\n\n"
     << "The configuration file defines the packet template, data-field capacity,\n"
     << "and optional synchronization marker. Packet Data Length and CRC16 are\n"
-    << "calculated by the v1.2 packet serializer.\n";
+    << "calculated by the packet serializer.\n";
 }
 
-int printError(const CCSDS::Error &error) {
+int printError(const ccsds::Error &error) {
   std::cerr << "[ Error " << static_cast<unsigned>(error.code()) << " ]: "
             << error.message() << std::endl;
   return static_cast<int>(error.code());
 }
 
-CCSDS::ResultBool configureManagerFraming(CCSDS::Manager &manager, const Config &cfg) {
+ccsds::ResultBool configureManagerFraming(ccsds::Manager &manager, const ccsds::Config &cfg) {
   if (!cfg.isKey("sync_pattern_enable")) return true;
 
   bool enabled{};
@@ -73,10 +73,10 @@ int main(const int argc, char *argv[]) {
   }
 
   const auto requirePath = [&](const char *key, const char *description)
-      -> CCSDS::Result<std::string> {
+      -> ccsds::Result<std::string> {
     const auto it = args.find(key);
     if (it == args.end() || it->second.empty()) {
-      return CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+      return ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                           std::string(description) + " must be specified"};
     }
     return it->second;
@@ -96,25 +96,25 @@ int main(const int argc, char *argv[]) {
     output = result.value();
   }
   {
-    auto result = requirePath("config", "Config file");
+    auto result = requirePath("config", "Configuration file");
     if (!result) { printHelp(); return printError(result.error()); }
     configFile = result.value();
   }
 
-  if (!fileExists(input)) {
-    return printError(CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
+  if (!ccsds::fileExists(input)) {
+    return printError(ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
                                    "Input file does not exist: " + input});
   }
-  if (!fileExists(configFile)) {
-    return printError(CCSDS::Error{static_cast<CCSDS::ErrorCode>(ARG_PARSE_ERROR),
-                                   "Config file does not exist: " + configFile});
+  if (!ccsds::fileExists(configFile)) {
+    return printError(ccsds::Error{static_cast<ccsds::ErrorCode>(ARG_PARSE_ERROR),
+                                   "Configuration file does not exist: " + configFile});
   }
 
   customConsole(appName, "reading CCSDS configuration file: " + configFile);
-  Config cfg;
+  ccsds::Config cfg;
   if (const auto result = cfg.load(configFile); !result) return printError(result.error());
 
-  CCSDS::Packet templatePacket;
+  ccsds::Packet templatePacket;
   if (const auto result = templatePacket.loadFromConfig(cfg); !result) {
     return printError(result.error());
   }
@@ -122,10 +122,11 @@ int main(const int argc, char *argv[]) {
   if (const auto it = args.find("packet-error-control"); it != args.end()) {
     const auto result = parsePacketErrorControlMode(it->second);
     if (!result) return printError(result.error());
-    templatePacket.setPacketErrorControlMode(result.value());
+    if (const auto applied = applyPacketErrorControlMode(templatePacket, result.value());
+        !applied) return printError(applied.error());
   }
 
-  CCSDS::Manager manager;
+  ccsds::Manager manager;
   if (const auto result = manager.setPacketTemplate(std::move(templatePacket)); !result) {
     return printError(result.error());
   }
@@ -140,15 +141,15 @@ int main(const int argc, char *argv[]) {
   std::vector<std::uint8_t> inputBytes;
   customConsole(appName, "reading data from " + input);
   {
-    const auto result = readBinaryFile(input);
+    const auto result = ccsds::readBinaryFile(input);
     if (!result) return printError(result.error());
     inputBytes = result.value();
   }
 
-  if (manager.getTemplate().getPrimaryHeader().getSequenceFlags() == CCSDS::UNSEGMENTED
+  if (manager.getTemplate().getPrimaryHeader().getSequenceFlags() == ccsds::UNSEGMENTED
       && inputBytes.size() > manager.getDataFieldSize()) {
-    return printError(CCSDS::Error{
-      static_cast<CCSDS::ErrorCode>(INVALID_INPUT_DATA),
+    return printError(ccsds::Error{
+      static_cast<ccsds::ErrorCode>(INVALID_INPUT_DATA),
       "Input contains " + std::to_string(inputBytes.size())
         + " bytes, exceeding the unsegmented packet capacity of "
         + std::to_string(manager.getDataFieldSize())});
@@ -159,16 +160,13 @@ int main(const int argc, char *argv[]) {
     return printError(result.error());
   }
 
-  if (args["verbose"] == "true") printPackets(manager);
+  if (args["verbose"] == "true") ccsds::printPackets(manager);
 
   const auto packets = manager.getPacketsBuffer();
-  if (!manager.getPackets().empty() && packets.empty()) {
-    return printError(CCSDS::Error{CCSDS::ErrorCode::INVALID_HEADER_DATA,
-                                   "Unable to serialize generated packet stream"});
-  }
+  if (!packets) return printError(packets.error());
 
   customConsole(appName, "writing data to " + output);
-  if (const auto result = writeBinaryFile(packets, output); !result) {
+  if (const auto result = ccsds::writeBinaryFile(packets.value(), output); !result) {
     return printError(result.error());
   }
 

@@ -1,10 +1,10 @@
 # Packages
 
-[Documentation index](README.md) | [Cross-build guide](CROSSBUILD.md) | [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md)
+[Documentation index](README.md) | [Cross-build guide](CROSSBUILD.md)
 
-## Linux packages
+## Package generation
 
-`package.sh` configures the project, builds it, and invokes CPack. Run the build as a normal user:
+`package.sh` configures, builds, and invokes CPack:
 
 ```bash
 ./package.sh -p DEB
@@ -12,100 +12,59 @@
 
 Supported options:
 
-- `-p` or `--package-type`: package type, one of `DEB`, `RPM`, `TGZ`, or `MCU`; default is `DEB`.
-- `-t` or `--toolchain`: optional CMake toolchain file for cross-builds.
-- `-m` or `--mcu-flags`: additional MCU compiler flags when producing an `MCU` package.
-- `--help`: show command usage and examples.
+- `-p` / `--package-type`: `DEB`, `RPM`, `TGZ`, or `MCU`;
+- `-t` / `--toolchain`: optional CMake toolchain file;
+- `-m` / `--mcu-flags`: additional MCU compiler flags forwarded to the library and compile/link probe;
+- `--help`: usage.
 
-Successful packages are written under `packages/`.
+Artifacts are written under `packages/`. Package generation should run as a normal user; elevated privileges are only needed for system installation/removal.
 
-Do not build with `sudo`. Root privileges are only required when installing or removing a system package. Building as root can leave root-owned files in the repository checkout.
+## Installed CMake package
 
-### RPM prerequisite
-
-```bash
-sudo apt-get update
-sudo apt-get install -y rpm
-rpmbuild --version
+```cmake
+find_package(CCSDSPack 2.0 CONFIG REQUIRED)
+target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
+target_compile_features(my_app PRIVATE cxx_std_17)
 ```
 
-## Installing a DEB
+Consumers that require the exact release can use:
 
-System package installation requires root permissions:
+```cmake
+find_package(CCSDSPack 2.0.0 EXACT CONFIG REQUIRED)
+```
+
+The installed package exports the C++17 library API, including Packet, Manager, PUS codecs/tailoring, CUC time, raw-buffer adapters, Result/Error, and structured Validator.
+
+## Linux packages
+
+Example DEB installation:
 
 ```bash
 sudo dpkg -i packages/ccsdspack-v<version>-Linux-<architecture>.deb
 ```
 
-Inspect the installed package:
+Packages that include `CCSDSPack_tester` also install its `test_resources` fixtures. These fixtures are regression-test inputs and are not runtime dependencies of the library or CLI tools.
 
-```bash
-dpkg -s ccsdspack
-dpkg -L ccsdspack
-```
+## arm64 validation
 
-Remove it with:
-
-```bash
-sudo dpkg --remove ccsdspack
-```
-
-## Installed test fixtures
-
-Packages that include `CCSDSPack_tester` also install a sibling `test_resources` directory under the executable installation directory. The tester uses relative `test_resources/...` paths for committed fixtures and temporary file-I/O round trips.
-
-These resources belong only to the regression tester. They are not a dependency of:
-
-- `libccsdspack`;
-- `ccsds_encoder`;
-- `ccsds_decoder`;
-- `ccsds_validator`;
-- applications linking `ccsdspack::CCSDSPack`.
-
-Applications must not treat the installed test resources as public runtime data or API assets.
-
-## CMake package consumption
-
-After installation, use the exported CMake package:
-
-```cmake
-find_package(CCSDSPack CONFIG REQUIRED)
-target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
-```
-
-A release consumer can require the exact version:
-
-```cmake
-find_package(CCSDSPack 1.2.0 EXACT CONFIG REQUIRED)
-```
-
-## Raspberry Pi arm64 validation
-
-On a native 64-bit Raspberry Pi system, run the complete installed-package validation from a checkout matching the package candidate:
+A native 64-bit Raspberry Pi or equivalent arm64 target can validate an installed DEB with:
 
 ```bash
 ARM64_DEB="$(find ./packages -type f -name '*arm64*.deb' -print -quit)"
-
 bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
   2>&1 | tee ~/ccsdspack-aarch64-validation.log
 ```
 
-Launch the script as a normal user. It invokes `sudo dpkg -i` because package installation requires root permissions. It then copies the installed test-only fixtures into a writable temporary directory, preserves their expected relative layout, and runs the tester unprivileged without writing into `/bin`.
-
-The required final marker is:
+Successful release evidence ends with:
 
 ```text
 CCSDSPACK_AARCH64_TEST:PASS
 ```
 
-The recorded v1.2 Raspberry Pi 5 result and complete reproduction procedure are in [v1.2 hardware validation](V1_2_HARDWARE_VALIDATION.md).
+## Bare-metal package
 
-## Cross-builds and bare metal
+The MCU path uses `CCSDSPACK_BUILD_MCU=ON`, C++17, and optional `CCSDSPACK_MCU_FLAGS`. It contains the protocol library and excludes hosted configuration/CLI components.
 
-For aarch64 Linux cross-compilation and bare-metal Cortex-M packaging, see the [Cross-build guide](CROSSBUILD.md). It documents toolchain prerequisites and `package.sh` examples.
+The STM32H7 reference harness is under `test/package_tester/stm32h7xx/`. Physical execution is recorded separately from cross-build/compile-link evidence.
 
-The STM32H745 reference harness and STM32H755-native integration guidance are under:
-
-```text
-test/package_tester/stm32h7xx/
-```
+See [CROSSBUILD.md](CROSSBUILD.md).

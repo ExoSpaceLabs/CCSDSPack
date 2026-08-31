@@ -90,7 +90,7 @@ if [[ $use_toolchain -eq 1 ]]; then
       cmake -S .. -B . \
         -DCMAKE_BUILD_TYPE=Release \
         -DCCSDSPACK_BUILD_MCU=ON \
-        -DMCU_FLAGS="${mcu_flags}" \
+        -DCCSDSPACK_MCU_FLAGS="${mcu_flags}" \
         -DCMAKE_TOOLCHAIN_FILE="${toolchain}"
     fi
   else

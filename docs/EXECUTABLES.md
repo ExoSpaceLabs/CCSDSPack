@@ -5,16 +5,14 @@ SPDX-License-Identifier: Apache-2.0
 
 # Executables
 
-[Documentation index](README.md) | [Canonical CLI reference](CLI.md)
+CCSDSPack hosted builds provide:
 
-CCSDSPack provides these host-side executables:
+- `ccsds_encoder`: application data to adjacent Space Packets;
+- `ccsds_decoder`: adjacent Space Packets to reassembled application data;
+- `ccsds_validator`: bounded parsing plus structured packet/template/PUS validation;
+- `CCSDSPack_tester`: native regression and conformance tests.
 
-- `ccsds_encoder`: converts application bytes into one or more adjacent Space Packets;
-- `ccsds_decoder`: parses adjacent Space Packets and reassembles application bytes;
-- `ccsds_validator`: reports packet, identifier, CRC-profile, and sequence-stream failures;
-- `CCSDSPack_tester`: runs the native regression and conformance test suite.
-
-The authoritative option, packet-error-control, trailing-byte, validation, and exit-code documentation is maintained in [CLI.md](CLI.md). This page remains as a stable compatibility entry point for older links.
+The canonical command-line option and behavior reference is [CLI.md](CLI.md).
 
 ## Build controls
 
@@ -27,7 +25,7 @@ cmake -S . -B build \
 cmake --build build
 ```
 
-The executable location depends on the selected generator and platform. The default project layout places native binaries under the configured build output's `bin` directory.
+These executables are host-side components and are excluded when `CCSDSPACK_BUILD_MCU=ON`. The MCU static library retains Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer, and structured Validator APIs.
 
 ## Typical flow
 
@@ -37,12 +35,12 @@ ccsds_validator -i packets.bin -c template.cfg --verbose
 ccsds_decoder -i packets.bin -o recovered.bin -c template.cfg
 ```
 
-The encoder and decoder require a template configuration. The validator can operate without one, but a template enables Packet Identification checks. All tools must use the same `crc16` or `none` packet-error-control profile as the packet stream.
+All tools use the same packet-error-control mode expected by the stream. A Validator template enables Packet Identification, segmentation class, PEC, and secondary-header contract checks.
 
-Run the installed or built test executable with:
+Run the regression/conformance suite with:
 
 ```bash
 CCSDSPack_tester
 ```
 
-A non-zero process status indicates a failed command or test.
+A non-zero process status indicates a failed operation or test.

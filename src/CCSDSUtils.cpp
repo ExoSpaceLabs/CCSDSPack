@@ -16,6 +16,7 @@
 //###########################################################################
 #define VERBOSE 1
 
+namespace ccsds {
 
 uint16_t crc16(
   const std::vector<std::uint8_t> &data, const std::uint16_t polynomial, const std::uint16_t initialValue,
@@ -71,12 +72,14 @@ std::string getBitsSpaces(const std::int32_t num) {
 #ifndef CCSDS_MCU
 void printBufferData(const std::vector<std::uint8_t> &buffer, const std::int32_t limitBytes) {
   std::cout << "[ ";
-  if (buffer.size() > limitBytes) {
-    for (size_t i= 0 ; i < static_cast<int>(limitBytes / 2); i++) {
+  const auto limit = limitBytes > 0 ? static_cast<std::size_t>(limitBytes) : 0U;
+  const auto half = limit / 2U;
+  if (buffer.size() > limit) {
+    for (std::size_t i = 0U; i < half; ++i) {
       std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(buffer[i]) << " ";
     }
     std::cout << "... ";
-    for (size_t i = buffer.size() - static_cast<int>(limitBytes / 2) ; i < buffer.size(); i++) {
+    for (std::size_t i = buffer.size() - half; i < buffer.size(); ++i) {
       std::cout << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(buffer[i]) << " ";
     }
   } else {
@@ -87,21 +90,21 @@ void printBufferData(const std::vector<std::uint8_t> &buffer, const std::int32_t
   std::cout << "]" << std::endl;
 }
 
-void printData(CCSDS::DataField dataField) {
-  const auto dataFieldHeader = dataField.getDataFieldHeaderBytes();
+void printData(ccsds::DataField dataField) {
+  const auto secondaryHeader = dataField.getSecondaryHeaderBytes();
   auto applicationData = dataField.getApplicationData();
-  const std::uint16_t maxSize = (applicationData.size() > dataFieldHeader.size())
+  const std::uint16_t maxSize = (applicationData.size() > secondaryHeader.size())
                              ? applicationData.size()
-                             : dataFieldHeader.size();
+                             : secondaryHeader.size();
 
-  std::cout << " [CCSDS DATA] Data Field Length              : " << applicationData.size() + dataFieldHeader.size() << " bytes" << std::endl;
-  std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << (dataField.getDataFieldHeaderFlag()
+  std::cout << " [CCSDS DATA] Data Field Length              : " << applicationData.size() + secondaryHeader.size() << " bytes" << std::endl;
+  std::cout << " [CCSDS DATA] Secondary Header Present       : [ " << (dataField.getSecondaryHeaderFlag()
                                                                          ? "True"
                                                                          : "False") << " ]" << std::endl;
-  if (!dataFieldHeader.empty()) {
+  if (!secondaryHeader.empty()) {
     std::cout << " [CCSDS DATA] Secondary Header         [Hex] : " << getBitsSpaces(
-    (maxSize - static_cast<std::uint16_t>(dataFieldHeader.size())) * 4);
-    printBufferData(dataFieldHeader);
+    (maxSize - static_cast<std::uint16_t>(secondaryHeader.size())) * 4);
+    printBufferData(secondaryHeader);
   }
 
   std::cout << " [CCSDS DATA] Application Data         [Hex] : ";
@@ -109,7 +112,7 @@ void printData(CCSDS::DataField dataField) {
   std::cout << std::endl;
 }
 
-void printHeader(CCSDS::Header &header) {
+void printHeader(ccsds::Header &header) {
   std::cout << " [CCSDS HEADER] Full Primary Header    [Hex] : [ " << getBitsSpaces(17 - 12) << "0x" << std::hex <<
       header.getFullHeader() << " ]" << std::endl;
   std::cout << std::endl;
@@ -122,9 +125,9 @@ void printHeader(CCSDS::Header &header) {
       getBinaryString(header.getType(), 1) << " ]";
   std::cout << " - [Dec] : "<< std::dec << static_cast<int>( header.getType()) << std::endl;
 
-  std::cout << " [CCSDS HEADER] Data Field Header Flag       : [ " << getBitsSpaces(19 - 4) << getBinaryString(
-  header.getDataFieldHeaderFlag(), 1) << " ]";
-  std::cout << " -       : " << (header.getDataFieldHeaderFlag() ? "True" : "False")  << std::endl;
+  std::cout << " [CCSDS HEADER] Secondary Header Flag       : [ " << getBitsSpaces(19 - 4) << getBinaryString(
+  header.getSecondaryHeaderFlag(), 1) << " ]";
+  std::cout << " -       : " << (header.getSecondaryHeaderFlag() ? "True" : "False")  << std::endl;
 
   std::cout << " [CCSDS HEADER] APID                         : [ " << getBitsSpaces(17 - 12) <<
     getBinaryString(header.getAPID(), 11) << " ]";
@@ -163,14 +166,14 @@ void printHeader(CCSDS::Header &header) {
 }
 
 
-CCSDS::ResultBool printPrimaryHeader(CCSDS::Packet &packet) {
-  CCSDS::Header header;
+ccsds::ResultBool printPrimaryHeader(ccsds::Packet &packet) {
+  ccsds::Header header;
   FORWARD_RESULT(header.deserialize({packet.getPrimaryHeaderBytes()}));
   printHeader(header);
   return true;
 }
 
-void printDataField(CCSDS::Packet &packet) {
+void printDataField(ccsds::Packet &packet) {
   auto dataField = packet.getDataField();
 
   printData(dataField);
@@ -179,12 +182,12 @@ void printDataField(CCSDS::Packet &packet) {
 
 }
 
-void printPacket(CCSDS::Packet &packet) {
+void printPacket(ccsds::Packet &packet) {
   printPrimaryHeader(packet);
   printDataField(packet);
 }
 
-void printPackets(CCSDS::Manager& manager) {
+void printPackets(ccsds::Manager& manager) {
   std::cout << "[ CCSDS Manager ] Number of Packets    : " << manager.getTotalPackets() << std::endl;
   std::cout << "[ CCSDS Manager ] Sync Pattern Enabled : " << (manager.getSyncPatternEnable() ? "True" : "False") << std::endl;
   std::cout << "[ CCSDS Manager ] Sync Pattern         : 0x" << std::hex << manager.getSyncPattern() << std::dec << std::endl;
@@ -199,31 +202,36 @@ void printPackets(CCSDS::Manager& manager) {
     std::cout << "[ CCSDS Manager ] Printing Packet [ " << idx << " ]:" << std::endl;
     std::cout << "[ CCSDS Manager ] Packet Length : " << packet.getFullPacketLength() << " bytes" << std::endl;
     std::cout << "[ CCSDS Manager ] Data ";
-    printBufferData(packet.serialize(), 20);
+    const auto serialized = packet.serialize();
+    if (serialized) {
+      printBufferData(serialized.value(), 20);
+    } else {
+      std::cout << "[ Error ]: " << serialized.error().message() << std::endl;
+    }
     printPacket(packet);
     idx++;
   }
 }
 
-CCSDS::ResultBool writeBinaryFile(const std::vector<std::uint8_t>& data, const std::string& filename) {
-  RET_IF_ERR_MSG(filename.empty(),CCSDS::ErrorCode::FILE_WRITE_ERROR, "No filename provided");
-  RET_IF_ERR_MSG(data.empty(),CCSDS::ErrorCode::FILE_WRITE_ERROR, "No data provided");
+ccsds::ResultBool writeBinaryFile(const std::vector<std::uint8_t>& data, const std::string& filename) {
+  RET_IF_ERR_MSG(filename.empty(),ccsds::ErrorCode::FILE_WRITE_ERROR, "No filename provided");
+  RET_IF_ERR_MSG(data.empty(),ccsds::ErrorCode::FILE_WRITE_ERROR, "No data provided");
   std::ofstream out(filename, std::ios::binary);
 
-  RET_IF_ERR_MSG(!out,CCSDS::ErrorCode::FILE_WRITE_ERROR, "Failed to open file for writing");
+  RET_IF_ERR_MSG(!out,ccsds::ErrorCode::FILE_WRITE_ERROR, "Failed to open file for writing");
 
   // Write the entire vector data to the file in one go
   out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
-  RET_IF_ERR_MSG(!out,CCSDS::ErrorCode::FILE_WRITE_ERROR, "Failed to write the data to the file");
+  RET_IF_ERR_MSG(!out,ccsds::ErrorCode::FILE_WRITE_ERROR, "Failed to write the data to the file");
 
   return true;
 }
 
-CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
-  RET_IF_ERR_MSG(filename.empty(),CCSDS::ErrorCode::FILE_READ_ERROR, "No filename provided");
+ccsds::ResultBuffer readBinaryFile(const std::string& filename) {
+  RET_IF_ERR_MSG(filename.empty(),ccsds::ErrorCode::FILE_READ_ERROR, "No filename provided");
 
   std::ifstream in(filename, std::ios::binary | std::ios::ate);
-  RET_IF_ERR_MSG(!in,CCSDS::ErrorCode::FILE_READ_ERROR, "Failed to open file for reading");
+  RET_IF_ERR_MSG(!in,ccsds::ErrorCode::FILE_READ_ERROR, "Failed to open file for reading");
 
   // Get the file size using the 'ate' flag (seeks to the end automatically)
   const std::streamsize size = in.tellg();
@@ -233,7 +241,7 @@ CCSDS::ResultBuffer readBinaryFile(const std::string& filename) {
   std::vector<std::uint8_t> data(size);
   in.read(reinterpret_cast<char*>(data.data()), size);
 
-  RET_IF_ERR_MSG(!in,CCSDS::ErrorCode::FILE_READ_ERROR, "Failed to read the entire file");
+  RET_IF_ERR_MSG(!in,ccsds::ErrorCode::FILE_READ_ERROR, "Failed to read the entire file");
   return data;
 }
 
@@ -245,3 +253,4 @@ bool fileExists(const std::string &fileName) {
   return false;
 }
 #endif
+} // namespace ccsds
