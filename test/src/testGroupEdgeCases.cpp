@@ -240,14 +240,18 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
       return false;
     }
 
+    ccsds::Packet fresh;
+    TEST_VOID(fresh.setApplicationData({0xAA, 0x55}));
     std::vector<std::uint8_t> small(expected.size() - 1U, 0U);
-    const auto tooSmall = packet.serialize(small.data(), small.size());
-    if (tooSmall || tooSmall.error().code() != ccsds::INVALID_DATA) {
+    const auto tooSmall = fresh.serialize(small.data(), small.size());
+    if (tooSmall || tooSmall.error().code() != ccsds::INVALID_DATA
+        || fresh.getPrimaryHeader().getDataLength() != 0U) {
       return false;
     }
 
-    const auto nullOutput = packet.serialize(nullptr, expected.size());
-    return !nullOutput && nullOutput.error().code() == ccsds::NULL_POINTER;
+    const auto nullOutput = fresh.serialize(nullptr, expected.size());
+    return !nullOutput && nullOutput.error().code() == ccsds::NULL_POINTER
+           && fresh.getPrimaryHeader().getDataLength() == 0U;
   });
 
   tester->unitTest("Packet Data Length excludes absent packet error control", []() {
