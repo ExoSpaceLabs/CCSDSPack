@@ -85,6 +85,12 @@ int ccsds_validation_report_passed(const ccsds_validation_report_t *report,
     return 0;
 }
 
+int ccsds_validation_report_failed(const ccsds_validation_report_t *report,
+                                   const ccsds_validation_code_t code) {
+    return ccsds_validation_report_contains(report, code)
+        && !ccsds_validation_report_passed(report, code);
+}
+
 const char *ccsds_validation_code_name(const ccsds_validation_code_t code) {
     switch (code) {
         case CCSDS_VALIDATION_PRIMARY_HEADER: return "CCSDS primary header";
