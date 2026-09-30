@@ -139,6 +139,26 @@ jobs:
           LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
             ./example/build_examples.sh all "$PWD/build/install"
 
+      - name: Build packet performance baseline (latest only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          cmake -S . -B build -DCCSDSPACK_BUILD_BENCHMARKS=ON
+          cmake --build build --target CCSDSPack_packet_benchmark -- -j
+
+      - name: Run packet performance baseline (latest only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          ./build/bin/CCSDSPack_packet_benchmark | tee packet-performance-baseline.csv
+
+      - name: Upload packet performance baseline (latest only)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccsdspack-performance-${{ github.sha }}
+          path: packet-performance-baseline.csv
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Install cross and packaging deps (22.04 only)
         if: matrix.os == 'ubuntu-22.04'
         run: |
