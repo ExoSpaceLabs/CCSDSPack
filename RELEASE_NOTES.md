@@ -1,126 +1,165 @@
-# CCSDSPack v2.0.0
+# CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These release notes describe the approved CCSDSPack v2.0.0 release. Native arm64 and physical Cortex-M7 execution are complete, the validated `develop` candidate has been promoted to `main`, and the tag is created only after final `main` CI succeeds. Tag-produced GitHub Release assets, packages, and GHCR images are verified after publication.
+> These notes describe the v2.1.0 release candidate. Hosted CI, cross-builds, package consumers, performance comparison, and Cortex-M7 compile/link evidence are complete. Fresh native arm64 and physical Cortex-M7 execution must still be rerun against the final candidate before the release is promoted to `main` and tagged.
 
 ## Summary
 
-CCSDSPack v2.0.0 is a C++17 Space Packet library focused on deterministic packet construction, bounded parsing, explicit packet policy, standards-oriented PUS secondary headers, structured validation, and practical hosted/embedded integration.
+CCSDSPack v2.1.0 introduces an authoritative **C11 protocol core** while preserving the established **C++17 Packet/Manager API** as the ownership and convenience layer.
 
-The release provides a single Packet-centered ownership model: generic CCSDS state and packet error control belong to `ccsds::Packet`, concrete secondary headers own their wire layout, and `ccsds::Manager` uses a complete Packet template as its stream contract.
+The release is additive within the v2 line. Existing C++ applications keep the v2 API, while C applications can now link the protocol core directly without requiring a C++ compiler or runtime.
+
+The migration also removes several avoidable copies and allocations from the existing C++ paths rather than merely adding a parallel C API.
+
+## C11 protocol core
+
+The installed `ccsdspack::c` target provides caller-owned, allocation-free low-level APIs for:
+
+- raw buffer/view types and explicit big/little byte-order helpers;
+- CRC16;
+- CCSDS primary-header validation, encoding, decoding, and declared packet sizing;
+- zero-copy packet inspection and bounded packet-stream walking;
+- packet finalization and caller-buffer encoding;
+- numeric CUC time;
+- PUS-A/PUS-C TC/TM codecs and tailoring validation;
+- structured validation and sequence/segmentation state;
+- segmentation planning and sequence generation;
+- receive-side application-data reassembly.
+
+The core can be configured and built with `CCSDSPACK_BUILD_CPP=OFF` and `CXX=/bin/false`. CI verifies that the C-only test/consumer does not depend on `libstdc++`.
+
+## C++17 compatibility layer
+
+The existing `ccsdspack::CCSDSPack` target remains available.
+
+The public C++ ownership model is unchanged:
+
+- `ccsds::Packet` owns packet state;
+- concrete secondary-header objects own their layout/state;
+- `ccsds::Manager` owns packet streams and application-data workflows;
+- `Result<T>`, vectors, shared pointers, configuration support, and hosted tools remain available.
+
+Protocol mechanics progressively delegate to the C core. In particular:
+
+- raw bounded parsing is pointer-native;
+- primary-header, CRC, CUC and PUS wire codecs delegate to C;
+- Validator packet/template/PUS coherence uses the C validation engine;
+- Manager segmentation, reassembly, and stream walking use C primitives;
+- Packet finalization/encoding uses caller-buffer C APIs;
+- packet serialization no longer builds a combined secondary-header/application-data temporary.
+
+## Endianness
+
+The C core exposes explicit byte-order load/store helpers for big- and little-endian wire fields. CCSDS/PUS/CUC standards-defined wire fields remain encoded in their required network/big-endian form; the generic byte helpers allow non-CCSDS integrations to select byte order explicitly without host-endian assumptions.
+
+## Performance versus v2.0 main
+
+Matched Release builds were compared back-to-back on the same Ubuntu 24.04 GitHub Actions runner using v2.0 `main` commit `4e198ae4c7f730737d78c1ea2f71ec3ce42ca7eb` and the v2.1 candidate after PR #154.
+
+Representative results:
+
+- C++ owning raw parse allocations: **9/11 -> 3** allocations per operation;
+- allocated bytes per parse: approximately **50–83% lower** across the measured range;
+- no-CRC C++ parse: **1.6x to 4.8x faster** across 64 B to 32 KiB packets in the matched run;
+- CRC-enabled C++ parse: **1.02x to 1.19x faster**, with checksum scanning dominating large packets;
+- vector-returning cached serialization: **3 -> 1 allocation**;
+- forced re-finalization serialization: **4/6 -> 1 allocation** depending on PEC mode;
+- the low-level C packet view remains **0 allocations** and **0 transport-adapter bridge copies**.
+
+Exact methodology, packet sizes, timings and allocation counts are recorded in `docs/PERFORMANCE.md`.
+
+## Cortex-M7 footprint
+
+The same v2.0 MCU compile-probe source was linked against both implementations with Cortex-M7 hard-float flags, `-Os`, function/data sections, no RTTI, and no exceptions.
+
+With section garbage collection rooted at the probe entry point:
+
+- v2.0 main retained text: **36,238 bytes**;
+- v2.1 retained text: **40,166 bytes**;
+- delta: **+3,928 bytes (+10.8%)**;
+- data/bss in the relocatable comparison: **0/0** for both.
+
+The symbol review shows the increase is distributed across the newly retained C packet/PUS/CUC/validation/stream primitives rather than one obvious duplicate implementation. Physical STM32 ELF size remains a release-candidate validation item.
 
 ## Standards scope
 
+The standards scope is unchanged from v2.0.0:
+
 - CCSDS 133.0-B-2 Issue 2, including Editorial Change 2, for the supported Space Packet PDU profile;
-- ECSS-E-70-41A for supported PUS-A TC/TM secondary-header layouts;
-- ECSS-E-ST-70-41C for supported PUS-C TC/TM secondary-header layouts;
+- ECSS-E-70-41A for supported PUS-A TC/TM layouts;
+- ECSS-E-ST-70-41C for supported PUS-C TC/TM layouts;
 - CCSDS 301.0-B-4 for the supported basic numeric CUC subset.
 
-The release does not claim complete PUS services, transfer frames, COP-1, CFDP, a complete CCSDS protocol entity, UTC/leap-second conversion, or mission time correlation.
+The release does not claim complete PUS services, transfer frames, COP-1, CFDP, UTC/leap-second conversion, or mission time correlation.
 
-## Space Packet behavior
+## Validation and robustness
 
-The packet layer provides:
+The existing v2 regression/conformance suite remains the C++ compatibility gate.
 
-- version-0 six-octet primary headers;
-- full 11-bit APID support and Idle Packet structural validation;
-- exact Packet Data Length calculation;
-- bounded transactional parsing with consumed-byte reporting;
-- modulo-16384 sequence handling and segmentation support;
-- checked `Result`-based finalization and serialization;
-- optional packet-level CRC-16/CCITT-FALSE or no packet error-control trailer;
-- custom, opaque, and standards PUS secondary headers.
+v2.1 additionally runs:
 
-## PUS secondary headers
-
-PUS-A/PUS-C TC/TM identity is represented by concrete types under `ccsds::pus::rev_a` and `ccsds::pus::rev_c`. Direction is intrinsic to `TcHeader` or `TmHeader`, and installing a directional header synchronizes the CCSDS Packet Type.
-
-Direction-specific tailoring structs expose optional wire-layout choices. PUS-C TC source ID and TM destination ID remain fixed at two octets. PUS-A exposes supported optional identifier widths and the optional telemetry packet subcounter.
-
-PUS parsing supports preinstalled-header schemas, typed `Packet::deserialize<HeaderT>()`, typed raw-buffer parsing, and canonical runtime selectors.
-
-Independent PUS-C TC evidence covers every valid four-bit acknowledgement combination `0x0` through `0xF` using literal expected secondary-header bytes derived from ECSS-E-ST-70-41C clause 7.4.4.1. Source derivation and vectors are recorded in `docs/PUS_C_EVIDENCE.md`.
-
-## Numeric CUC time
-
-The basic CUC codec supports numeric coarse/fine counters, CCSDS-1958 or agency-defined epoch metadata, implicit/explicit basic P-field policy, 1–4 coarse octets, and 0–3 fine octets with overflow and P-field validation.
-
-## Structured validation
-
-`ccsds::Validator` returns a fixed-capacity `ValidationReport` with named checks for generic packet structure, sequence state, Packet-template contracts, PUS fields/tailoring, and active CUC timestamp state.
-
-The report itself uses fixed `std::array` storage and performs no dynamic allocation. Validator remains available in `CCSDS_MCU` builds and does not require RTTI or exceptions.
-
-All 26 public `ValidationCode` entries are traced to direct malformed fixtures, applicable template/sequence-state failures, or an explicitly documented positive-only classification check in `docs/VALIDATION_EVIDENCE.md`.
-
-## Raw transport interfaces
-
-Vector APIs and pointer-plus-size transport APIs coexist. `ccsds::buffer::declaredPacketSize()` determines a complete packet boundary from the six-byte primary header, and bounded raw parsers support generic and typed PUS input. Manager provides raw application-data, packet, and stream overloads plus const-reference inspection APIs.
-
-The v2.0.0 raw adapters currently bridge through vector-backed internals and therefore do not constitute a zero-copy or globally heap-free implementation.
-
-## Manager
-
-One `ccsds::Manager` represents one Packet Identification and one sequence stream. Its Packet template carries Packet Identification, packet-level PEC, concrete secondary-header type, and optional PUS tailoring. Manager provides segmentation, sequence assignment, stream serialization/parsing, transactional loading, and application-data reassembly.
-
-## Robustness
-
-The release runs the complete native regression/conformance suite in dedicated Clang AddressSanitizer and UndefinedBehaviorSanitizer CI jobs.
-
-A separate bounded libFuzzer smoke gate runs under ASan+UBSan and exercises:
-
-- six-byte primary-header / declared packet-size inspection;
-- generic pointer-plus-size bounded Packet parsing;
-- typed PUS-A and PUS-C TC/TM parsing with valid optional tailoring combinations;
-- CUC configuration and decode/encode behavior.
-
-The fuzz smoke gate uses bounded generated-input count, maximum input size, per-input timeout, and RSS. It provides repeatable robustness evidence without claiming exhaustive input-space proof or allocation-free parsing.
-
-## Hosted integration
-
-Hosted builds provide encoder, decoder, validator, and regression-test executables; typed configuration files; an installed CMake package; standalone `find_package()` examples; Linux/Windows CI; Doxygen; and DEB/RPM/TGZ packaging support.
-
-Tag builds use this file as the GitHub Release description, upload generated `ccsdspack*` packages, and publish tag-specific plus `latest` GHCR images.
-
-## Bare-metal integration
-
-`CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a C++17 static archive and excludes host-only configuration/CLI components. Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, and Validator remain available. Builds can use `-fno-exceptions -fno-rtti`.
-
-The explicit `package.sh -m/--mcu-flags` path parses space-delimited MCU compiler flags correctly before forwarding them to CMake target compile options.
-
-No global heap-free claim is made for Packet/Manager/PUS storage.
-
-## Validation status
-
-The v2.0.0 release evidence includes:
-
-- **132/132 native regression/conformance tests**;
-- complete independent PUS-C TC acknowledgement-vector evidence;
-- a traceable matrix covering all 26 public structured-validation codes;
-- dedicated Clang ASan and UBSan regression CI;
-- bounded four-target libFuzzer smoke CI under ASan+UBSan;
-- Linux Ubuntu 22.04, Ubuntu 24.04, and Ubuntu latest integration;
-- Windows latest integration;
+- native C11 core regression tests;
+- a true C-only configuration with no C++ compiler;
+- installed pure-C package consumer;
+- installed C++ package consumer and examples;
+- Linux Ubuntu 22.04/24.04/latest;
+- Windows latest;
 - Doxygen;
-- CLI integration;
-- installed shared-library consumer and standalone examples;
-- Ubuntu 22.04 package/cross-build generation;
-- Cortex-M compile/link coverage of the embedded public API;
-- fresh Raspberry Pi 5 / native arm64 installed-package execution with `CCSDSPACK_HARDWARE_TEST:PASS` and `CCSDSPACK_AARCH64_TEST:PASS`;
-- fresh physical NUCLEO-H755ZI-Q / Cortex-M7 execution with `CCSDSPACK_HARDWARE_TEST:PASS`.
+- Clang ASan and UBSan;
+- bounded libFuzzer smoke tests;
+- native and cross-package generation;
+- Cortex-M7 compile/link probe;
+- aarch64 package generation;
+- non-gating parse and serialization performance artifacts.
 
-The physical Cortex-M7 validation used ST's documented NUCLEO-H745ZI-Q project compatibility for the NUCLEO-H755ZI-Q board and the v2.0.0 MCU archive built from release-candidate commit `3cd3ddd67be09b7ad7f3d52360b2f3c858b1fee3`. Exact package/library hashes and ELF usage are recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+## Build and installed targets
 
-The final release-control sequence is `develop -> main -> v2.0.0`. Publication verification is performed against the artifacts produced by the tag workflow.
+Default source build:
 
-## Migration
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+```
 
-Upgrade-specific source, configuration, CLI, package/SOVERSION, and wire-format guidance is maintained in [`docs/MIGRATION_V1_TO_V2.md`](docs/MIGRATION_V1_TO_V2.md).
+Pure C11 core:
+
+```bash
+CC=gcc CXX=/bin/false cmake -S . -B build-c \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCCSDSPACK_BUILD_CPP=OFF \
+  -DCCSDSPACK_BUILD_C_TESTS=ON
+cmake --build build-c
+```
+
+Installed CMake targets:
+
+```cmake
+find_package(CCSDSPack 2.1 CONFIG REQUIRED)
+
+# Pure C11 protocol core
+target_link_libraries(c_app PRIVATE ccsdspack::c)
+
+# Established C++17 API
+target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
+```
+
+## Remaining release-candidate gates
+
+Before tagging v2.1.0:
+
+1. merge the final evidence/documentation PR into `develop`;
+2. generate fresh v2.1 arm64 and MCU packages from the exact candidate commit;
+3. rerun Raspberry Pi 5/native arm64 installed-package acceptance;
+4. rerun NUCLEO-H755ZI-Q/Cortex-M7 physical acceptance and record final ELF text/data/bss;
+5. promote the accepted `develop` commit to `main`;
+6. require final `main` CI to pass;
+7. create tag `v2.1.0`;
+8. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
 
 ## Release control
 
 ```text
-develop -> main -> tag v2.0.0
+develop -> physical/native hardware acceptance -> main -> tag v2.1.0
 ```
 
-The `v2.0.0` tag is created from the approved `main` commit after final `main` CI passes. The tag workflow then publishes the GitHub Release assets and exact-tag GHCR image, which are verified against the tagged commit.
+Publication evidence is recorded only after the tag workflow completes.
