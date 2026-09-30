@@ -72,6 +72,7 @@ set(C_CORE_SOURCES
     "${SOURCE_DIR}/c/pus_tm.c"
     "${SOURCE_DIR}/c/reassembly.c"
     "${SOURCE_DIR}/c/segmentation.c"
+    "${SOURCE_DIR}/c/stream.c"
 )
 
 if(CCSDSPACK_BUILD_MCU)

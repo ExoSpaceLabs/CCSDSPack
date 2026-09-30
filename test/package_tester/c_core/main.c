@@ -242,6 +242,36 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t stream_bytes[] = {
+            0x00U, 0x01U, 0xC0U, 0x01U, 0x00U, 0x01U, 0xAAU, 0xBBU,
+            0x00U, 0x01U, 0xC0U, 0x02U, 0x00U, 0x00U, 0xCCU
+        };
+        ccsds_packet_stream_t stream;
+        ccsds_packet_view_t view;
+        size_t frame_consumed = 0U;
+
+        if (ccsds_packet_stream_init(
+              &stream, stream_bytes, sizeof(stream_bytes),
+              CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+              0, 0U) != CCSDS_STATUS_OK) {
+            return 31;
+        }
+        if (ccsds_packet_stream_next(&stream, &view, &frame_consumed)
+            != CCSDS_STATUS_OK
+            || frame_consumed != 8U
+            || view.primary_header.sequence_count != 1U) {
+            return 32;
+        }
+        if (ccsds_packet_stream_next(&stream, &view, &frame_consumed)
+            != CCSDS_STATUS_OK
+            || frame_consumed != 7U
+            || view.primary_header.sequence_count != 2U
+            || ccsds_packet_stream_remaining(&stream) != 0U) {
+            return 33;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }

@@ -5,9 +5,9 @@
  * @file CCSDSBuffer.h
  * @brief Raw pointer-plus-size adapters for Packet and Manager APIs.
  *
- * The vector APIs remain the convenience surface. Raw adapters currently bridge to
- * vector-backed storage internally so the signatures can later become zero-copy or
- * heap-free without changing callers.
+ * The vector APIs remain the convenience surface. Raw packet adapters may still
+ * materialize owning Packet storage, while Manager stream loading walks caller memory
+ * directly through the C stream core and copies only each packet being owned.
  */
 #ifndef CCSDS_BUFFER_H
 #define CCSDS_BUFFER_H
@@ -149,11 +149,7 @@ namespace ccsds::buffer {
 
   [[nodiscard]] inline ResultBool load(
       Manager &manager, const std::uint8_t *data, const std::size_t size) {
-    RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
-                   "Cannot load packet stream: raw buffer pointer is null.");
-    RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
-                   "Cannot load packet stream: raw buffer is empty.");
-    return manager.load(std::vector<std::uint8_t>(data, data + size));
+    return manager.load(data, size);
   }
 
 } // namespace ccsds::buffer

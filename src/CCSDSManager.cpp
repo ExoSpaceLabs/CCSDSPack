@@ -5,6 +5,7 @@
 #include "CCSDSUtils.h"
 #include "PusSecondaryHeaders.h"
 #include "ccsdspack/c/reassembly.h"
+#include "ccsdspack/c/stream.h"
 #include <algorithm>
 #include <limits>
 #include <utility>
@@ -325,35 +326,53 @@ ccsds::ResultBool ccsds::Manager::load(const std::vector<Packet> &packets) {
   return true;
 }
 
-ccsds::ResultBool ccsds::Manager::load(const std::vector<std::uint8_t> &packetsBuffer) {
+ccsds::ResultBool ccsds::Manager::load(
+    const std::vector<std::uint8_t> &packetsBuffer) {
   RET_IF_ERR_MSG(packetsBuffer.size() < 7U, ErrorCode::INVALID_DATA,
                  "invalid packet buffer size");
+  return load(packetsBuffer.data(), packetsBuffer.size());
+}
+
+ccsds::ResultBool ccsds::Manager::load(
+    const std::uint8_t *data, const std::size_t size) {
+  RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
+                 "Cannot load packet stream, raw buffer pointer is null");
+  RET_IF_ERR_MSG(size < 7U, ErrorCode::INVALID_DATA,
+                 "invalid packet buffer size");
+
   Manager staged = *this;
-  std::size_t offset{0U};
-  while (offset < packetsBuffer.size()) {
-    if (staged.m_syncPattEnable) {
-      RET_IF_ERR_MSG(packetsBuffer.size() - offset < 4U, ErrorCode::INVALID_DATA,
-                     "Truncated sync pattern.");
-      const std::uint32_t value =
-        (static_cast<std::uint32_t>(packetsBuffer[offset]) << 24U)
-        | (static_cast<std::uint32_t>(packetsBuffer[offset + 1U]) << 16U)
-        | (static_cast<std::uint32_t>(packetsBuffer[offset + 2U]) << 8U)
-        | static_cast<std::uint32_t>(packetsBuffer[offset + 3U]);
-      RET_IF_ERR_MSG(value != staged.m_syncPattern, ErrorCode::INVALID_DATA,
-                     "Sync Pattern mismatch.");
-      offset += 4U;
-    }
-    RET_IF_ERR_MSG(packetsBuffer.size() - offset < 6U, ErrorCode::INVALID_DATA,
-                   "Truncated CCSDS primary header.");
-    const std::vector<std::uint8_t> remaining(
-      packetsBuffer.begin() + static_cast<std::ptrdiff_t>(offset), packetsBuffer.end());
+  ccsds_packet_stream_t stream{};
+  const auto initStatus = ccsds_packet_stream_init(
+    &stream, data, size,
+    CCSDS_PACKET_ERROR_CONTROL_NONE,
+    nullptr,
+    staged.m_syncPattEnable ? 1 : 0,
+    staged.m_syncPattern);
+  RET_IF_ERR_MSG(initStatus != CCSDS_STATUS_OK,
+                 static_cast<ErrorCode>(initStatus),
+                 "Cannot initialize CCSDS packet stream.");
+
+  while (ccsds_packet_stream_remaining(&stream) != 0U) {
+    ccsds_packet_view_t view{};
+    std::size_t frameConsumed = 0U;
+    const auto streamStatus =
+      ccsds_packet_stream_next(&stream, &view, &frameConsumed);
+    (void)frameConsumed;
+    RET_IF_ERR_MSG(streamStatus != CCSDS_STATUS_OK,
+                   static_cast<ErrorCode>(streamStatus),
+                   "Cannot parse next CCSDS packet from stream.");
+
     Packet packet = staged.boundParserPacket();
     packet.setPacketErrorControlMode(staged.boundPacketErrorControlMode());
+    const std::vector<std::uint8_t> packetBytes(
+      view.packet.data, view.packet.data + view.packet.size);
     std::size_t consumed{};
-    ASSIGN_CP(consumed, packet.deserializeBounded(remaining));
+    ASSIGN_CP(consumed, packet.deserializeBounded(packetBytes));
+    RET_IF_ERR_MSG(consumed != view.packet.size, ErrorCode::INVALID_DATA,
+                   "Parsed packet size differs from stream framing.");
     FORWARD_RESULT(staged.addPacket(std::move(packet)));
-    offset += consumed;
   }
+
   *this = std::move(staged);
   return true;
 }
