@@ -65,6 +65,6 @@ CCSDSPACK_AARCH64_TEST:PASS
 
 The MCU path uses `CCSDSPACK_BUILD_MCU=ON` and optional `CCSDSPACK_MCU_FLAGS`. It builds the C11 core and, when `CCSDSPACK_BUILD_CPP=ON`, the compatible C++17 static library while excluding hosted configuration/CLI components.
 
-The STM32H7 reference harness is under `test/package_tester/stm32h7xx/`. Physical execution is recorded separately from cross-build/compile-link evidence.
+The NUCLEO-H755ZI-Q reference harness is under `test/package_tester/stm32h755_das/`. It final-links the generated MCU package against pinned DAS, uses CMSIS headers only, and executes through OpenOCD with machine-readable UART evidence.
 
 See [CROSSBUILD.md](CROSSBUILD.md).
