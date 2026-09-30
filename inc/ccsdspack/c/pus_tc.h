@@ -7,6 +7,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include "error.h"
+#include "pus.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,9 +31,6 @@ typedef struct ccsds_pus_a_tc_tailoring {
 typedef struct ccsds_pus_c_tc_tailoring {
     uint8_t secondary_header_spare_octets;
 } ccsds_pus_c_tc_tailoring_t;
-
-/** @brief Returns non-zero for the supported PUS-A identifier widths 0, 1, 2, or 4. */
-int ccsds_pus_identifier_width_is_valid(uint8_t octets);
 
 /** @brief Validates PUS-A TC tailoring. */
 ccsds_status_t ccsds_pus_a_tc_validate_tailoring(
