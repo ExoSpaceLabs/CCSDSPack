@@ -9,6 +9,7 @@
 #include "crc.h"
 #include "cuc.h"
 #include "error.h"
+#include "packet_encode.h"
 #include "packet_view.h"
 #include "primary_header.h"
 #include "reassembly.h"

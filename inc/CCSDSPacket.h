@@ -244,6 +244,8 @@ namespace ccsds {
       std::size_t size,
       const std::shared_ptr<SecondaryHeaderAbstract> &prototype,
       std::int32_t customHeaderSize = -1);
+    [[nodiscard]] ResultBool finalizeSerializedDataField(
+      const std::vector<std::uint8_t> &dataField);
 
     static constexpr std::uint16_t SEQUENCE_COUNT_MASK = 0x3FFFU;
     static constexpr std::uint16_t PACKET_ERROR_CONTROL_DISABLED_MASK = 0x8000U;
