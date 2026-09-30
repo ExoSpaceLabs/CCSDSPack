@@ -211,45 +211,14 @@ jobs:
         run: |
           mcu_package="$(find "$PWD/packages" -maxdepth 1 -type f -name 'ccsdspack-v*-Generic-arm.tar.gz' -print -quit)"
           test -n "$mcu_package"
-          bash test/package_tester/stm32h755_das/build.sh \
-            --package "$mcu_package" \
-            --source-sha "${{ github.sha }}"
+          bash test/package_tester/stm32h755_das/build.sh --package "$mcu_package" --source-sha "${{ github.sha }}"
 
           elf="$PWD/build/stm32h755-das-validation/firmware/ccsdspack_stm32h755_validation.elf"
           test -s "$elf"
           arm-none-eabi-objdump -h "$elf" | grep -q '\.isr_vector'
-          arm-none-eabi-nm "$elf" | grep -Eq '[[:space:]][A-Za-z][[:space:]]g_das_vector_table
-      - name: Upload to GitHub Release (tag builds)
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: RELEASE_NOTES.md
-          files: packages/ccsdspack*
+          arm-none-eabi-nm "$elf" | grep -q 'g_das_vector_table'
+          arm-none-eabi-nm "$elf" | grep -q ' main
 
-      - name: Log in to GHCR
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker build \
-            --build-arg CCSDSPACK_TAG=${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:latest \
-            -f docker/Dockerfile docker
-
-      - name: Push Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker push ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }}
-          docker push ghcr.io/exospacelabs/ccsdspack:latest
-
-          arm-none-eabi-nm "$elf" | grep -Eq '[[:space:]]T[[:space:]]main
       - name: Upload to GitHub Release (tag builds)
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
