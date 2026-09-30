@@ -1075,6 +1075,118 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t tc_bytes[] = {0x1AU, 0x11U, 0x02U, 0x55U, 0x00U};
+        ccsds_validation_report_t report;
+        ccsds_pus_coherence_input_t pus = {
+            1U,
+            CCSDS_PACKET_DIRECTION_TELECOMMAND,
+            1U,
+            1U,
+            {tc_bytes, sizeof(tc_bytes)},
+            sizeof(tc_bytes),
+            1U,
+            0x0AU,
+            1U,
+            0x55U,
+            0U,
+            0U,
+            1U,
+            0U,
+            0U,
+            0U
+        };
+
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("pus-coherence-tc",
+            ccsds_validate_pus_coherence(&pus, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_valid(&report)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PUS_ACKNOWLEDGEMENT)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PUS_SOURCE_ID)) {
+            fprintf(stderr, "pus-coherence-tc: report mismatch\n");
+            failed = 1;
+        }
+
+        {
+            static const uint8_t bad_version[] = {0x2AU, 0x11U, 0x02U, 0x55U, 0x00U};
+            pus.serialized.data = bad_version;
+            ccsds_validation_report_reset(&report);
+            failed |= expect_status("pus-coherence-bad-version",
+                ccsds_validate_pus_coherence(&pus, &report),
+                CCSDS_STATUS_OK);
+            if (!ccsds_validation_report_failed(
+                  &report, CCSDS_VALIDATION_PUS_RESERVED_BITS)) {
+                fprintf(stderr, "pus-coherence-bad-version: expected reserved failure\n");
+                failed = 1;
+            }
+        }
+
+        pus.serialized.data = tc_bytes;
+        pus.identifier_octets = 0U;
+        pus.identifier_value = 1U;
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("pus-coherence-source-overflow",
+            ccsds_validate_pus_coherence(&pus, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_failed(
+              &report, CCSDS_VALIDATION_PUS_SOURCE_ID)) {
+            fprintf(stderr, "pus-coherence-source-overflow: expected source failure\n");
+            failed = 1;
+        }
+    }
+
+    {
+        static const uint8_t tm_bytes[] = {
+            0x20U, 0x11U, 0x02U, 0x00U, 0x01U, 0x12U, 0x34U
+        };
+        ccsds_validation_report_t report;
+        ccsds_pus_coherence_input_t pus = {
+            2U,
+            CCSDS_PACKET_DIRECTION_TELEMETRY,
+            0U,
+            1U,
+            {tm_bytes, sizeof(tm_bytes)},
+            sizeof(tm_bytes),
+            0U,
+            0U,
+            2U,
+            0x1234U,
+            0U,
+            0U,
+            1U,
+            0U,
+            0U,
+            0U
+        };
+
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("pus-coherence-tm",
+            ccsds_validate_pus_coherence(&pus, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_valid(&report)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PUS_TIMESTAMP)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PUS_TIME_REFERENCE_STATUS)) {
+            fprintf(stderr, "pus-coherence-tm: report mismatch\n");
+            failed = 1;
+        }
+
+        pus.time_reference_status = 0x10U;
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("pus-coherence-time-reference",
+            ccsds_validate_pus_coherence(&pus, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_failed(
+              &report, CCSDS_VALIDATION_PUS_TIME_REFERENCE_STATUS)) {
+            fprintf(stderr, "pus-coherence-time-reference: expected failure\n");
+            failed = 1;
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
