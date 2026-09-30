@@ -106,7 +106,7 @@ ccsds_status_t ccsds_pus_a_tc_decode(
     if (size != expected) return CCSDS_STATUS_PUS_SIZE_MISMATCH;
     if (data == NULL) return CCSDS_STATUS_NULL_POINTER;
     if ((data[0] & 0xF0U) != 0x10U) return CCSDS_STATUS_PUS_INVALID_VERSION;
-    if (!ccsds_pus_spare_is_zero(data, size, tailoring->secondary_header_spare_octets)) {
+    if (!ccsds_pus_ccsds_pus_spare_is_zero(data, size, tailoring->secondary_header_spare_octets)) {
         return CCSDS_STATUS_PUS_NONZERO_SPARE;
     }
 
