@@ -198,6 +198,76 @@ int main(void) {
         }
     }
 
+    {
+        uint8_t packet[13] = {
+            0x01U, 0x23U, 0xC0U, 0x2AU, 0x00U, 0x04U,
+            0xAAU, 0xBBU, 0xCCU, 0x00U, 0x00U,
+            0xDEU, 0xADU
+        };
+        ccsds_packet_view_t view;
+        uint16_t packet_crc = 0U;
+
+        failed |= expect_status("packet-view-crc-build",
+            ccsds_crc16_ccitt_false(packet, 9U, &packet_crc),
+            CCSDS_STATUS_OK);
+        ccsds_store_be16(packet + 9U, packet_crc);
+
+        failed |= expect_status("packet-view-crc",
+            ccsds_packet_view_parse(packet, sizeof(packet),
+                                    CCSDS_PACKET_ERROR_CONTROL_CRC16,
+                                    NULL, &view),
+            CCSDS_STATUS_OK);
+        if (view.consumed != 11U
+            || view.packet.data != packet
+            || view.packet.size != 11U
+            || view.body.data != packet + 6U
+            || view.body.size != 5U
+            || view.data_field.data != packet + 6U
+            || view.data_field.size != 3U
+            || view.packet_error_control.data != packet + 9U
+            || view.packet_error_control.size != 2U
+            || view.received_crc16 != packet_crc
+            || view.primary_header.apid != 0x0123U
+            || view.primary_header.sequence_count != 0x002AU) {
+            fprintf(stderr, "packet-view-crc: zero-copy view mismatch\n");
+            failed = 1;
+        }
+
+        packet[7] ^= 0x01U;
+        failed |= expect_status("packet-view-crc-mismatch",
+            ccsds_packet_view_parse(packet, 11U,
+                                    CCSDS_PACKET_ERROR_CONTROL_CRC16,
+                                    NULL, &view),
+            CCSDS_STATUS_INVALID_CHECKSUM);
+        packet[7] ^= 0x01U;
+
+        failed |= expect_status("packet-view-truncated",
+            ccsds_packet_view_parse(packet, 10U,
+                                    CCSDS_PACKET_ERROR_CONTROL_CRC16,
+                                    NULL, &view),
+            CCSDS_STATUS_INVALID_DATA);
+
+        {
+            uint8_t no_pec[10] = {
+                0x01U, 0x23U, 0xC0U, 0x2AU, 0x00U, 0x03U,
+                0x10U, 0x20U, 0x30U, 0x40U
+            };
+            failed |= expect_status("packet-view-no-pec",
+                ccsds_packet_view_parse(no_pec, sizeof(no_pec),
+                                        CCSDS_PACKET_ERROR_CONTROL_NONE,
+                                        NULL, &view),
+                CCSDS_STATUS_OK);
+            if (view.consumed != sizeof(no_pec)
+                || view.data_field.data != no_pec + 6U
+                || view.data_field.size != 4U
+                || view.packet_error_control.data != NULL
+                || view.packet_error_control.size != 0U) {
+                fprintf(stderr, "packet-view-no-pec: view mismatch\n");
+                failed = 1;
+            }
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
