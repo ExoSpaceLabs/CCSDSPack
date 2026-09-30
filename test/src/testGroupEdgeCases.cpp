@@ -227,6 +227,29 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     return serialized == expected && packet.getPrimaryHeader().getDataLength() == 3U;
   });
 
+  tester->unitTest("Packet serializes directly into caller-owned storage", []() {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setApplicationData({0xAA, 0x55}));
+
+    const std::vector<std::uint8_t> expected{
+      0x00, 0x00, 0xC0, 0x00, 0x00, 0x03, 0xAA, 0x55, 0x2E, 0xBB
+    };
+    std::vector<std::uint8_t> output(expected.size(), 0U);
+    const auto written = packet.serialize(output.data(), output.size());
+    if (!written || written.value() != expected.size() || output != expected) {
+      return false;
+    }
+
+    std::vector<std::uint8_t> small(expected.size() - 1U, 0U);
+    const auto tooSmall = packet.serialize(small.data(), small.size());
+    if (tooSmall || tooSmall.error().code() != ccsds::INVALID_DATA) {
+      return false;
+    }
+
+    const auto nullOutput = packet.serialize(nullptr, expected.size());
+    return !nullOutput && nullOutput.error().code() == ccsds::NULL_POINTER;
+  });
+
   tester->unitTest("Packet Data Length excludes absent packet error control", []() {
     ccsds::Packet packet;
     packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
