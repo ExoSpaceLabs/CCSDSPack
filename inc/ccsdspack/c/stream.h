@@ -9,6 +9,8 @@
 #include "error.h"
 #include "packet_view.h"
 
+#define CCSDS_PACKET_STREAM_SYNC_SIZE ((size_t)4U)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,6 +30,20 @@ typedef struct ccsds_packet_stream {
     ccsds_crc16_config_t crc_config;
     uint8_t sync_enabled;
 } ccsds_packet_stream_t;
+
+/** @brief Returns the stream-frame prefix size for the selected sync policy. */
+size_t ccsds_packet_stream_prefix_size(int sync_enabled);
+
+/**
+ * @brief Writes the optional four-octet big-endian synchronization prefix.
+ *
+ * When sync is disabled, zero bytes are written and output may be NULL.
+ */
+ccsds_status_t ccsds_packet_stream_write_prefix(int sync_enabled,
+                                                uint32_t sync_pattern,
+                                                uint8_t *output,
+                                                size_t capacity,
+                                                size_t *written_out);
 
 /**
  * @brief Initializes a packet-stream cursor over caller-owned storage.
