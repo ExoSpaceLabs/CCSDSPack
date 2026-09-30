@@ -1286,6 +1286,23 @@ int main(void) {
         }
 
         {
+            uint8_t in_place[sizeof(expected_no_crc)] = {0xAAU, 0x55U};
+            written = 0U;
+            failed |= expect_status("packet-encode-in-place",
+                ccsds_packet_encode(
+                    &packet_header,
+                    (ccsds_buffer_view_t){in_place, sizeof(application)},
+                    CCSDS_PACKET_ERROR_CONTROL_NONE, 0U,
+                    in_place, sizeof(in_place), &written),
+                CCSDS_STATUS_OK);
+            if (written != sizeof(expected_no_crc)
+                || memcmp(in_place, expected_no_crc, sizeof(expected_no_crc)) != 0) {
+                fprintf(stderr, "packet-encode-in-place: wire vector mismatch\n");
+                failed = 1;
+            }
+        }
+
+        {
             const ccsds_primary_header_t before = packet_header;
             uint16_t untouched_crc = 0x1234U;
             size_t untouched_size = 99U;
