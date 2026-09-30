@@ -23,11 +23,28 @@ set(CMAKE_ASM_COMPILER ${ARM_NONE_EABI_GCC})
 set(CMAKE_AR           ${ARM_NONE_EABI_AR})
 set(CMAKE_RANLIB       ${ARM_NONE_EABI_RANLIB})
 
-# Defaults; override with -DMCU_FLAGS="..."
+# Defaults; override with -DMCU_FLAGS="...".
+#
+# MCU_FLAGS is kept as the compatibility input used by existing package/build
+# commands. Some historically supplied options are C++-only, so derive a
+# language-neutral variant before feeding the C/ASM compiler and final linker.
 if(NOT DEFINED MCU_FLAGS)
   set(MCU_FLAGS "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard")
 endif()
-set(CMAKE_C_FLAGS_INIT   "${MCU_FLAGS}")
+
+set(MCU_COMMON_FLAGS "${MCU_FLAGS}")
+foreach(_cxx_only_flag
+    "-fno-exceptions"
+    "-fexceptions"
+    "-fno-rtti"
+    "-frtti"
+    "-fno-threadsafe-statics")
+  string(REPLACE "${_cxx_only_flag}" "" MCU_COMMON_FLAGS "${MCU_COMMON_FLAGS}")
+endforeach()
+string(REGEX REPLACE "[ \t]+" " " MCU_COMMON_FLAGS "${MCU_COMMON_FLAGS}")
+string(STRIP "${MCU_COMMON_FLAGS}" MCU_COMMON_FLAGS)
+
+set(CMAKE_C_FLAGS_INIT   "${MCU_COMMON_FLAGS}")
 set(CMAKE_CXX_FLAGS_INIT "${MCU_FLAGS}")
-set(CMAKE_ASM_FLAGS_INIT "${MCU_FLAGS} -x assembler-with-cpp")
-set(CMAKE_EXE_LINKER_FLAGS_INIT "${MCU_FLAGS}")
+set(CMAKE_ASM_FLAGS_INIT "${MCU_COMMON_FLAGS} -x assembler-with-cpp")
+set(CMAKE_EXE_LINKER_FLAGS_INIT "${MCU_COMMON_FLAGS}")
