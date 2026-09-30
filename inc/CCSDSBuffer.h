@@ -5,9 +5,9 @@
  * @file CCSDSBuffer.h
  * @brief Raw pointer-plus-size adapters for Packet and Manager APIs.
  *
- * The vector APIs remain the convenience surface. Raw packet adapters may still
- * materialize owning Packet storage, while Manager stream loading walks caller memory
- * directly through the C stream core and copies only each packet being owned.
+ * The vector APIs remain the convenience surface. Raw Packet and Manager adapters
+ * delegate directly to pointer-native parsing paths; ownership copies occur only
+ * when parsed fields are committed into the owning C++ objects.
  */
 #ifndef CCSDS_BUFFER_H
 #define CCSDS_BUFFER_H
@@ -49,7 +49,7 @@ namespace ccsds::buffer {
                    "Cannot deserialize packet: raw buffer pointer is null.");
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
-    return packet.deserialize(std::vector<std::uint8_t>(data, data + size));
+    return packet.deserialize(data, size);
   }
 
   [[nodiscard]] inline Result<std::size_t> deserializeBounded(
@@ -58,7 +58,7 @@ namespace ccsds::buffer {
                    "Cannot deserialize packet: raw buffer pointer is null.");
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
-    return packet.deserializeBounded(std::vector<std::uint8_t>(data, data + size));
+    return packet.deserializeBounded(data, size);
   }
 
   /** @brief Typed raw parse using HeaderT default tailoring or supplied constructor arguments. */
@@ -70,7 +70,7 @@ namespace ccsds::buffer {
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
     return packet.template deserialize<HeaderT>(
-      std::vector<std::uint8_t>(data, data + size), std::forward<Args>(args)...);
+      data, size, std::forward<Args>(args)...);
   }
 
   /** @brief Typed bounded raw parse using HeaderT as the secondary-header schema. */
@@ -82,7 +82,7 @@ namespace ccsds::buffer {
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
     return packet.template deserializeBounded<HeaderT>(
-      std::vector<std::uint8_t>(data, data + size), std::forward<Args>(args)...);
+      data, size, std::forward<Args>(args)...);
   }
 
   [[nodiscard]] inline ResultBool deserialize(
@@ -92,8 +92,7 @@ namespace ccsds::buffer {
                    "Cannot deserialize packet: raw buffer pointer is null.");
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
-    return packet.deserialize(std::vector<std::uint8_t>(data, data + size),
-                              headerType, headerSize);
+    return packet.deserialize(data, size, headerType, headerSize);
   }
 
   [[nodiscard]] inline Result<std::size_t> deserializeBounded(
@@ -103,8 +102,7 @@ namespace ccsds::buffer {
                    "Cannot deserialize packet: raw buffer pointer is null.");
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
-    return packet.deserializeBounded(std::vector<std::uint8_t>(data, data + size),
-                                     headerType, headerSize);
+    return packet.deserializeBounded(data, size, headerType, headerSize);
   }
 
   [[nodiscard]] inline ResultBool deserialize(
@@ -114,8 +112,7 @@ namespace ccsds::buffer {
                    "Cannot deserialize packet: raw buffer pointer is null.");
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
-    return packet.deserialize(std::vector<std::uint8_t>(data, data + size),
-                              headerDataSizeBytes);
+    return packet.deserialize(data, size, headerDataSizeBytes);
   }
 
   [[nodiscard]] inline Result<std::size_t> deserializeBounded(
@@ -125,8 +122,7 @@ namespace ccsds::buffer {
                    "Cannot deserialize packet: raw buffer pointer is null.");
     RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
                    "Cannot deserialize packet: raw buffer is empty.");
-    return packet.deserializeBounded(std::vector<std::uint8_t>(data, data + size),
-                                     headerDataSizeBytes);
+    return packet.deserializeBounded(data, size, headerDataSizeBytes);
   }
 
   [[nodiscard]] inline ResultBool setApplicationData(
