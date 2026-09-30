@@ -37,7 +37,8 @@ ccsds_status_t ccsds_packet_finalize(ccsds_primary_header_t *header,
  * @brief Encodes an already-finalized packet into caller-owned storage.
  *
  * The function validates Packet Data Length against data_field plus the selected
- * packet error-control trailer. No allocation or hidden copy occurs.
+ * packet error-control trailer. No allocation occurs. The data-field view may
+ * overlap the destination buffer, allowing safe in-place assembly.
  */
 ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
                                    ccsds_buffer_view_t data_field,
