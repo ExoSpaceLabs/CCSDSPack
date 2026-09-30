@@ -1187,6 +1187,123 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t part1[] = {'1', '2', '3', '4'};
+        static const uint8_t part2[] = {'5', '6', '7', '8', '9'};
+        uint16_t state = CCSDS_CRC16_CCITT_FALSE_INITIAL;
+
+        failed |= expect_status("crc-incremental-part1",
+            ccsds_crc16_update(&state, part1, sizeof(part1),
+                               CCSDS_CRC16_CCITT_FALSE_POLYNOMIAL),
+            CCSDS_STATUS_OK);
+        failed |= expect_status("crc-incremental-part2",
+            ccsds_crc16_update(&state, part2, sizeof(part2),
+                               CCSDS_CRC16_CCITT_FALSE_POLYNOMIAL),
+            CCSDS_STATUS_OK);
+        state = (uint16_t)(state ^ CCSDS_CRC16_CCITT_FALSE_FINAL_XOR);
+        if (state != 0x29B1U) {
+            fprintf(stderr, "crc-incremental: expected 0x29B1, got 0x%04X\n",
+                    (unsigned)state);
+            failed = 1;
+        }
+    }
+
+    {
+        static const uint8_t application[] = {0xAAU, 0x55U};
+        static const uint8_t expected_packet[] = {
+            0x00U, 0x00U, 0xC0U, 0x00U, 0x00U, 0x03U,
+            0xAAU, 0x55U, 0x2EU, 0xBBU
+        };
+        static const uint8_t expected_no_crc[] = {
+            0x00U, 0x00U, 0xC0U, 0x00U, 0x00U, 0x01U,
+            0xAAU, 0x55U
+        };
+        ccsds_primary_header_t packet_header = {
+            0U, 0U, 0U, 0U, 3U, 0U, 0U
+        };
+        const ccsds_buffer_view_t data_field = {
+            application, sizeof(application)
+        };
+        uint8_t output[sizeof(expected_packet)] = {0U};
+        uint16_t packet_crc = 0U;
+        size_t serialized_size = 0U;
+        size_t written = 0U;
+
+        failed |= expect_status("packet-finalize-crc",
+            ccsds_packet_finalize(
+                &packet_header, 0U, data_field,
+                CCSDS_PACKET_ERROR_CONTROL_CRC16, NULL,
+                &packet_crc, &serialized_size),
+            CCSDS_STATUS_OK);
+        if (packet_header.data_length != 3U
+            || packet_header.sequence_count != 0U
+            || packet_crc != 0x2EBBU
+            || serialized_size != sizeof(expected_packet)) {
+            fprintf(stderr, "packet-finalize-crc: finalized state mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("packet-encode-crc",
+            ccsds_packet_encode(
+                &packet_header, data_field,
+                CCSDS_PACKET_ERROR_CONTROL_CRC16, packet_crc,
+                output, sizeof(output), &written),
+            CCSDS_STATUS_OK);
+        if (written != sizeof(expected_packet)
+            || memcmp(output, expected_packet, sizeof(expected_packet)) != 0) {
+            fprintf(stderr, "packet-encode-crc: wire vector mismatch\n");
+            failed = 1;
+        }
+
+        packet_header.data_length = 0U;
+        packet_crc = 0xFFFFU;
+        serialized_size = 0U;
+        failed |= expect_status("packet-finalize-no-crc",
+            ccsds_packet_finalize(
+                &packet_header, 0U, data_field,
+                CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+                &packet_crc, &serialized_size),
+            CCSDS_STATUS_OK);
+        if (packet_header.data_length != 1U
+            || packet_crc != 0U
+            || serialized_size != sizeof(expected_no_crc)) {
+            fprintf(stderr, "packet-finalize-no-crc: finalized state mismatch\n");
+            failed = 1;
+        }
+
+        memset(output, 0, sizeof(output));
+        written = 0U;
+        failed |= expect_status("packet-encode-no-crc",
+            ccsds_packet_encode(
+                &packet_header, data_field,
+                CCSDS_PACKET_ERROR_CONTROL_NONE, packet_crc,
+                output, sizeof(output), &written),
+            CCSDS_STATUS_OK);
+        if (written != sizeof(expected_no_crc)
+            || memcmp(output, expected_no_crc, sizeof(expected_no_crc)) != 0) {
+            fprintf(stderr, "packet-encode-no-crc: wire vector mismatch\n");
+            failed = 1;
+        }
+
+        {
+            const ccsds_primary_header_t before = packet_header;
+            uint16_t untouched_crc = 0x1234U;
+            size_t untouched_size = 99U;
+            failed |= expect_status("packet-finalize-invalid-sequence",
+                ccsds_packet_finalize(
+                    &packet_header, 0x4000U, data_field,
+                    CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+                    &untouched_crc, &untouched_size),
+                CCSDS_STATUS_INVALID_HEADER_DATA);
+            if (memcmp(&packet_header, &before, sizeof(before)) != 0
+                || untouched_crc != 0x1234U
+                || untouched_size != 99U) {
+                fprintf(stderr, "packet-finalize-invalid-sequence: transaction mismatch\n");
+                failed = 1;
+            }
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
