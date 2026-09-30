@@ -80,6 +80,40 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t expected[] = {0x2FU, 0x11U, 0x01U, 0x12U, 0x34U};
+        const ccsds_pus_c_tc_tailoring_t tailoring = {0U};
+        const ccsds_pus_tc_fields_t fields = {
+            0x0FU, 17U, 1U, UINT32_C(0x1234)
+        };
+        ccsds_pus_tc_fields_t decoded = {0U, 0U, 0U, 0U};
+        uint8_t encoded[sizeof(expected)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_pus_c_tc_encode(&fields, &tailoring,
+                                  encoded, sizeof(encoded), &written)
+            != CCSDS_STATUS_OK) {
+            return 11;
+        }
+        if (written != sizeof(expected)) {
+            return 12;
+        }
+        for (size_t index = 0U; index < sizeof(expected); ++index) {
+            if (encoded[index] != expected[index]) {
+                return 13;
+            }
+        }
+        if (ccsds_pus_c_tc_decode(encoded, sizeof(encoded),
+                                  &tailoring, &decoded)
+            != CCSDS_STATUS_OK) {
+            return 14;
+        }
+        if (decoded.source_id != fields.source_id
+            || decoded.acknowledgement_flags != fields.acknowledgement_flags) {
+            return 15;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }
