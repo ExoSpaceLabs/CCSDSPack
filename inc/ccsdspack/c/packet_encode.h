@@ -39,6 +39,10 @@ ccsds_status_t ccsds_packet_finalize(ccsds_primary_header_t *header,
  * The function validates Packet Data Length against data_field plus the selected
  * packet error-control trailer. No allocation occurs. The data-field view may
  * overlap the destination buffer, allowing safe in-place assembly.
+ *
+ * When CRC16 is enabled, crc16 is emitted exactly as supplied. The encoder does
+ * not recompute finalization state; callers that changed header or data bytes
+ * must call ccsds_packet_finalize() first.
  */
 ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
                                    ccsds_buffer_view_t data_field,
