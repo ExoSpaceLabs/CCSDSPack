@@ -296,9 +296,11 @@ namespace {
 #endif
 }
 
-ccsds::ResultBool ccsds::Packet::finalizeSerializedDataField(
-    const std::vector<std::uint8_t> &dataField) {
-  const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
+ccsds::ResultBool ccsds::Packet::finalizeDataFieldParts(
+    const std::vector<std::uint8_t> &secondaryHeader,
+    const ccsds_buffer_view_t applicationData) {
+  const auto dataFieldSize = secondaryHeader.size() + applicationData.size;
+  const auto packetDataFieldSize = dataFieldSize + getPacketErrorControlSize();
   constexpr auto maximumPacketDataFieldSize =
     static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
 
@@ -308,14 +310,17 @@ ccsds::ResultBool ccsds::Packet::finalizeSerializedDataField(
                  "Cannot finalize packet: Packet Data Field exceeds the CCSDS length field.");
 
   auto coreHeader = toCoreHeader(m_primaryHeader);
-  const ccsds_buffer_view_t coreDataField{
-    dataField.empty() ? nullptr : dataField.data(),
-    dataField.size()
+  const ccsds_packet_data_parts_t coreDataField{
+    {
+      secondaryHeader.empty() ? nullptr : secondaryHeader.data(),
+      secondaryHeader.size()
+    },
+    applicationData
   };
   const auto coreCrc = toCoreCrcConfig(m_CRC16Config);
   std::uint16_t crc = 0U;
   std::size_t serializedSize = 0U;
-  const auto status = ccsds_packet_finalize(
+  const auto status = ccsds_packet_finalize_parts(
     &coreHeader,
     static_cast<std::uint16_t>(m_sequenceCounter & SEQUENCE_COUNT_MASK),
     coreDataField,
@@ -342,9 +347,20 @@ ccsds::ResultBool ccsds::Packet::update() {
   FORWARD_RESULT(validatePacketForSerialization(m_primaryHeader, m_dataField));
   if (m_updateStatus || !m_enableUpdatePacket) return true;
 
-  std::vector<std::uint8_t> dataField;
-  ASSIGN_MV(dataField, m_dataField.serialize());
-  FORWARD_RESULT(finalizeSerializedDataField(dataField));
+  m_dataField.update();
+  const auto secondaryHeader = m_dataField.getSecondaryHeaderBytes();
+  const auto secondary = m_dataField.getSecondaryHeader();
+  RET_IF_ERR_MSG(secondary && secondaryHeader.size() != secondary->getSize(),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Secondary header serialization failed or returned an unexpected size.");
+  RET_IF_ERR_MSG(secondaryHeader.size()
+                   + m_dataField.getApplicationDataView().size
+                   > m_dataField.getDataFieldAbsoluteBytesSize(),
+                 ErrorCode::INVALID_DATA,
+                 "Serialized packet data field exceeds its configured capacity.");
+
+  FORWARD_RESULT(finalizeDataFieldParts(
+    secondaryHeader, m_dataField.getApplicationDataView()));
   m_updateStatus = true;
   return true;
 }
@@ -546,14 +562,25 @@ ccsds::Result<std::size_t> ccsds::Packet::serialize(
   RET_IF_ERR_MSG(capacity < expectedCapacity, ErrorCode::INVALID_DATA,
                  "Cannot serialize packet: output buffer is too small.");
 
-  std::vector<std::uint8_t> dataField;
-  ASSIGN_MV(dataField, m_dataField.serialize());
+  m_dataField.update();
+  const auto secondaryHeader = m_dataField.getSecondaryHeaderBytes();
+  const auto secondary = m_dataField.getSecondaryHeader();
+  RET_IF_ERR_MSG(secondary && secondaryHeader.size() != secondary->getSize(),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Secondary header serialization failed or returned an unexpected size.");
+  const auto applicationData = m_dataField.getApplicationDataView();
+  RET_IF_ERR_MSG(secondaryHeader.size() + applicationData.size
+                   > m_dataField.getDataFieldAbsoluteBytesSize(),
+                 ErrorCode::INVALID_DATA,
+                 "Serialized packet data field exceeds its configured capacity.");
+
   if (!m_updateStatus && m_enableUpdatePacket) {
-    FORWARD_RESULT(finalizeSerializedDataField(dataField));
+    FORWARD_RESULT(finalizeDataFieldParts(secondaryHeader, applicationData));
     m_updateStatus = true;
   }
 
-  const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
+  const auto dataFieldSize = secondaryHeader.size() + applicationData.size;
+  const auto packetDataFieldSize = dataFieldSize + getPacketErrorControlSize();
   constexpr auto maximumPacketDataFieldSize =
     static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
   RET_IF_ERR_MSG(packetDataFieldSize == 0U, ErrorCode::INVALID_DATA,
@@ -570,12 +597,15 @@ ccsds::Result<std::size_t> ccsds::Packet::serialize(
                  "Cannot serialize packet: finalized size differs from the expected size.");
 
   const auto coreHeader = toCoreHeader(m_primaryHeader);
-  const ccsds_buffer_view_t coreDataField{
-    dataField.empty() ? nullptr : dataField.data(),
-    dataField.size()
+  const ccsds_packet_data_parts_t coreDataField{
+    {
+      secondaryHeader.empty() ? nullptr : secondaryHeader.data(),
+      secondaryHeader.size()
+    },
+    applicationData
   };
   std::size_t written = 0U;
-  const auto status = ccsds_packet_encode(
+  const auto status = ccsds_packet_encode_parts(
     &coreHeader,
     coreDataField,
     toCoreErrorControl(getPacketErrorControlMode()),

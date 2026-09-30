@@ -23,22 +23,31 @@ static ccsds_status_t packet_error_control_size(
 
 static ccsds_status_t validate_packet_data_field(
     const ccsds_primary_header_t *header,
-    const ccsds_buffer_view_t data_field,
+    const ccsds_packet_data_parts_t data_field,
     const size_t pec_size,
     size_t *packet_data_field_size_out) {
+    size_t data_field_size;
     size_t packet_data_field_size;
 
     if (header == NULL || packet_data_field_size_out == NULL) {
         return CCSDS_STATUS_NULL_POINTER;
     }
-    if (data_field.data == NULL && data_field.size != 0U) {
+    if ((data_field.first.data == NULL && data_field.first.size != 0U)
+        || (data_field.second.data == NULL && data_field.second.size != 0U)) {
         return CCSDS_STATUS_NULL_POINTER;
     }
-    if (data_field.size > (size_t)UINT16_MAX + (size_t)1U - pec_size) {
+    if (data_field.first.size > (size_t)UINT16_MAX + (size_t)1U
+        || data_field.second.size > (size_t)UINT16_MAX + (size_t)1U
+        || data_field.second.size
+             > (size_t)UINT16_MAX + (size_t)1U - data_field.first.size) {
+        return CCSDS_STATUS_INVALID_DATA;
+    }
+    data_field_size = data_field.first.size + data_field.second.size;
+    if (data_field_size > (size_t)UINT16_MAX + (size_t)1U - pec_size) {
         return CCSDS_STATUS_INVALID_DATA;
     }
 
-    packet_data_field_size = data_field.size + pec_size;
+    packet_data_field_size = data_field_size + pec_size;
     if (packet_data_field_size == 0U
         || packet_data_field_size > (size_t)UINT16_MAX + (size_t)1U) {
         return CCSDS_STATUS_INVALID_DATA;
@@ -51,7 +60,7 @@ static ccsds_status_t validate_packet_data_field(
         if (header->secondary_header_flag != 0U) {
             return CCSDS_STATUS_INVALID_HEADER_DATA;
         }
-        if (data_field.size == 0U) {
+        if (data_field_size == 0U) {
             return CCSDS_STATUS_INVALID_DATA;
         }
     }
@@ -60,13 +69,14 @@ static ccsds_status_t validate_packet_data_field(
     return CCSDS_STATUS_OK;
 }
 
-ccsds_status_t ccsds_packet_finalize(ccsds_primary_header_t *header,
-                                     const uint16_t sequence_count,
-                                     const ccsds_buffer_view_t data_field,
-                                     const ccsds_packet_error_control_t error_control,
-                                     const ccsds_crc16_config_t *crc_config,
-                                     uint16_t *crc_out,
-                                     size_t *serialized_size_out) {
+ccsds_status_t ccsds_packet_finalize_parts(
+    ccsds_primary_header_t *header,
+    const uint16_t sequence_count,
+    const ccsds_packet_data_parts_t data_field,
+    const ccsds_packet_error_control_t error_control,
+    const ccsds_crc16_config_t *crc_config,
+    uint16_t *crc_out,
+    size_t *serialized_size_out) {
     ccsds_primary_header_t staged;
     ccsds_crc16_config_t config;
     uint8_t header_bytes[CCSDS_PRIMARY_HEADER_SIZE];
@@ -109,7 +119,10 @@ ccsds_status_t ccsds_packet_finalize(ccsds_primary_header_t *header,
             &crc_state, header_bytes, sizeof(header_bytes), config.polynomial);
         if (status != CCSDS_STATUS_OK) return status;
         status = ccsds_crc16_update(
-            &crc_state, data_field.data, data_field.size, config.polynomial);
+            &crc_state, data_field.first.data, data_field.first.size, config.polynomial);
+        if (status != CCSDS_STATUS_OK) return status;
+        status = ccsds_crc16_update(
+            &crc_state, data_field.second.data, data_field.second.size, config.polynomial);
         if (status != CCSDS_STATUS_OK) return status;
         crc = (uint16_t)(crc_state ^ config.final_xor_value);
     }
@@ -120,13 +133,14 @@ ccsds_status_t ccsds_packet_finalize(ccsds_primary_header_t *header,
     return CCSDS_STATUS_OK;
 }
 
-ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
-                                   const ccsds_buffer_view_t data_field,
-                                   const ccsds_packet_error_control_t error_control,
-                                   const uint16_t crc16,
-                                   uint8_t *output,
-                                   const size_t capacity,
-                                   size_t *written_out) {
+ccsds_status_t ccsds_packet_encode_parts(
+    const ccsds_primary_header_t *header,
+    const ccsds_packet_data_parts_t data_field,
+    const ccsds_packet_error_control_t error_control,
+    const uint16_t crc16,
+    uint8_t *output,
+    const size_t capacity,
+    size_t *written_out) {
     size_t pec_size;
     size_t packet_data_field_size;
     size_t required;
@@ -152,10 +166,15 @@ ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
     if (capacity < required) return CCSDS_STATUS_BUFFER_TOO_SMALL;
     if (output == NULL) return CCSDS_STATUS_NULL_POINTER;
 
-    if (data_field.size != 0U) {
+    if (data_field.first.size != 0U) {
         memmove(output + CCSDS_PRIMARY_HEADER_SIZE,
-                data_field.data,
-                data_field.size);
+                data_field.first.data,
+                data_field.first.size);
+    }
+    if (data_field.second.size != 0U) {
+        memmove(output + CCSDS_PRIMARY_HEADER_SIZE + data_field.first.size,
+                data_field.second.data,
+                data_field.second.size);
     }
 
     status = ccsds_primary_header_encode(header, output, capacity);
@@ -163,9 +182,43 @@ ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
 
     if (pec_size != 0U) {
         ccsds_store_be16(
-            output + CCSDS_PRIMARY_HEADER_SIZE + data_field.size, crc16);
+            output + CCSDS_PRIMARY_HEADER_SIZE
+              + data_field.first.size + data_field.second.size,
+            crc16);
     }
 
     *written_out = required;
     return CCSDS_STATUS_OK;
+}
+
+
+ccsds_status_t ccsds_packet_finalize(ccsds_primary_header_t *header,
+                                     const uint16_t sequence_count,
+                                     const ccsds_buffer_view_t data_field,
+                                     const ccsds_packet_error_control_t error_control,
+                                     const ccsds_crc16_config_t *crc_config,
+                                     uint16_t *crc_out,
+                                     size_t *serialized_size_out) {
+    const ccsds_packet_data_parts_t parts = {
+        data_field,
+        {NULL, 0U}
+    };
+    return ccsds_packet_finalize_parts(
+        header, sequence_count, parts, error_control, crc_config,
+        crc_out, serialized_size_out);
+}
+
+ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
+                                   const ccsds_buffer_view_t data_field,
+                                   const ccsds_packet_error_control_t error_control,
+                                   const uint16_t crc16,
+                                   uint8_t *output,
+                                   const size_t capacity,
+                                   size_t *written_out) {
+    const ccsds_packet_data_parts_t parts = {
+        data_field,
+        {NULL, 0U}
+    };
+    return ccsds_packet_encode_parts(
+        header, parts, error_control, crc16, output, capacity, written_out);
 }
