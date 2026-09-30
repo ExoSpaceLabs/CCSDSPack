@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "CCSDSUtils.h"
+#include "ccsdspack/c/crc.h"
 #include <cstddef>
 #include <iomanip>
 
@@ -21,22 +22,10 @@ namespace ccsds {
 uint16_t crc16(
   const std::vector<std::uint8_t> &data, const std::uint16_t polynomial, const std::uint16_t initialValue,
   const std::uint16_t finalXorValue) {
-  std::uint16_t crc = initialValue;
-
-  for (const auto &byte: data) {
-    crc ^= static_cast<std::uint16_t>(byte) << 8; // Align byte with MSB of 16-bit CRC
-    for (std::int32_t i = 0; i < 8; ++i) {
-      // Process each bit
-      if (crc & 0x8000) {
-        // Check if MSB is set
-        crc = (crc << 1) ^ polynomial; // Shift and XOR with polynomial
-      } else {
-        crc = crc << 1; // Shift only
-      }
-    }
-  }
-
-  return crc ^ finalXorValue; // Apply final XOR
+  std::uint16_t crc = 0U;
+  const auto status = ccsds_crc16_compute(
+    data.data(), data.size(), polynomial, initialValue, finalXorValue, &crc);
+  return status == CCSDS_STATUS_OK ? crc : 0U;
 }
 
 bool stringEndsWith(const std::string& str, const std::string& suffix) {
