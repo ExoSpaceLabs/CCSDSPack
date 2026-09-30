@@ -5,7 +5,9 @@
 #define CCSDSPACK_C_CCSDSPACK_H
 
 #include "buffer.h"
+#include "bytes.h"
 #include "crc.h"
+#include "cuc.h"
 #include "error.h"
 #include "primary_header.h"
 

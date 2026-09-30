@@ -64,6 +64,7 @@ endif()
 set(C_CORE_SOURCES
     "${SOURCE_DIR}/c/error.c"
     "${SOURCE_DIR}/c/crc.c"
+    "${SOURCE_DIR}/c/cuc.c"
     "${SOURCE_DIR}/c/primary_header.c"
 )
 

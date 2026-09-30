@@ -25,6 +25,36 @@ int main(void) {
         return 4;
     }
 
+    {
+        static const uint8_t expected[] = {
+            0x1FU, 0x01U, 0x02U, 0x03U, 0x04U, 0xA0U, 0xB0U, 0xC0U
+        };
+        const ccsds_cuc_config_t config = {
+            CCSDS_CUC_EPOCH_CCSDS_1958_TAI,
+            CCSDS_CUC_PFIELD_EXPLICIT,
+            4U,
+            3U
+        };
+        const ccsds_cuc_time_t value = {
+            UINT64_C(0x01020304), UINT64_C(0xA0B0C0)
+        };
+        uint8_t encoded[sizeof(expected)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_cuc_encode(&value, &config, encoded, sizeof(encoded), &written)
+            != CCSDS_STATUS_OK) {
+            return 5;
+        }
+        if (written != sizeof(expected)) {
+            return 6;
+        }
+        for (size_t index = 0U; index < sizeof(expected); ++index) {
+            if (encoded[index] != expected[index]) {
+                return 7;
+            }
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }
