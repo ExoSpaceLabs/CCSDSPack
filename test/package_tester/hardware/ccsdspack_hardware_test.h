@@ -54,7 +54,58 @@ enum ResultCode : int {
   ValidIdleSerializationFailed = 37
 };
 
-inline int run() {
+using Reporter = void (*)(const char *message);
+
+inline const char *resultName(const int result) {
+  switch (result) {
+    case Pass: return "PASS";
+    case SetPrimaryHeaderFailed: return "SetPrimaryHeaderFailed";
+    case SetManagerTemplateFailed: return "SetManagerTemplateFailed";
+    case ManagerSequenceConfigurationFailed: return "ManagerSequenceConfigurationFailed";
+    case SetApplicationDataFailed: return "SetApplicationDataFailed";
+    case WireVectorMismatch: return "WireVectorMismatch";
+    case ManagerSequenceAdvanceFailed: return "ManagerSequenceAdvanceFailed";
+    case RawDeclaredSizeFailed: return "RawDeclaredSizeFailed";
+    case RawGenericDecodeFailed: return "RawGenericDecodeFailed";
+    case BoundedDecodeSizeMismatch: return "BoundedDecodeSizeMismatch";
+    case DecodedFieldsMismatch: return "DecodedFieldsMismatch";
+    case RawTruncationAccepted: return "RawTruncationAccepted";
+    case ValidatorRejectedPacket: return "ValidatorRejectedPacket";
+    case StructuredValidatorReportMissing: return "StructuredValidatorReportMissing";
+    case RawManagerTemplateFailed: return "RawManagerTemplateFailed";
+    case RawManagerLoadFailed: return "RawManagerLoadFailed";
+    case RawManagerDataMismatch: return "RawManagerDataMismatch";
+    case PusHeaderFailed: return "PusHeaderFailed";
+    case PusDirectionInferenceFailed: return "PusDirectionInferenceFailed";
+    case PusDataFailed: return "PusDataFailed";
+    case PusSerializationFailed: return "PusSerializationFailed";
+    case RawPusDecodeFailed: return "RawPusDecodeFailed";
+    case PusValidatorFailed: return "PusValidatorFailed";
+    case PusValidatorReportMissing: return "PusValidatorReportMissing";
+    case CrcFreeHeaderFailed: return "CrcFreeHeaderFailed";
+    case CrcFreeDataFailed: return "CrcFreeDataFailed";
+    case CrcFreeVectorMismatch: return "CrcFreeVectorMismatch";
+    case CrcFreeDecodeFailed: return "CrcFreeDecodeFailed";
+    case InvalidVersionHeaderFailed: return "InvalidVersionHeaderFailed";
+    case InvalidVersionDataFailed: return "InvalidVersionDataFailed";
+    case InvalidVersionSerialized: return "InvalidVersionSerialized";
+    case InvalidIdleHeaderFailed: return "InvalidIdleHeaderFailed";
+    case InvalidIdleSecondaryHeaderFailed: return "InvalidIdleSecondaryHeaderFailed";
+    case InvalidIdleDataFailed: return "InvalidIdleDataFailed";
+    case InvalidIdleSerialized: return "InvalidIdleSerialized";
+    case ValidIdleHeaderFailed: return "ValidIdleHeaderFailed";
+    case ValidIdleDataFailed: return "ValidIdleDataFailed";
+    case ValidIdleSerializationFailed: return "ValidIdleSerializationFailed";
+    default: return "UnknownResult";
+  }
+}
+
+inline void report(const Reporter reporter, const char *message) {
+  if (reporter != nullptr) reporter(message);
+}
+
+inline int run(const Reporter reporter = nullptr) {
+  report(reporter, "TEST:generic_packet:BEGIN");
   // Independent generic CRC16 vector also used by the hosted reference suite:
   // 00 00 C0 00 00 03 AA 55 2E BB
   ccsds::Packet templatePacket;
@@ -106,7 +157,9 @@ inline int run() {
       || decoded.getApplicationDataBytes() != std::vector<std::uint8_t>({0xAA, 0x55})
       || decoded.getCRC() != 0x2EBBU
       || decoded.getSerializedSize() != expectedPacket.size()) return DecodedFieldsMismatch;
+  report(reporter, "TEST:generic_packet:PASS");
 
+  report(reporter, "TEST:raw_truncation_and_validator:BEGIN");
   // The raw parser must reject an incomplete transport buffer rather than over-read it.
   ccsds::Packet truncated;
   const auto truncatedResult = ccsds::buffer::deserializeBounded(
@@ -121,7 +174,9 @@ inline int run() {
       || !validation.passed(ccsds::ValidationCode::Crc16)
       || !validation.passed(ccsds::ValidationCode::PacketIdentifier))
     return StructuredValidatorReportMissing;
+  report(reporter, "TEST:raw_truncation_and_validator:PASS");
 
+  report(reporter, "TEST:manager_raw_stream:BEGIN");
   // Raw Manager stream ingestion must reconstruct the original application payload.
   ccsds::Manager rawReceiver;
   if (const auto result = rawReceiver.setPacketTemplate(templatePacket); !result)
@@ -133,7 +188,9 @@ inline int run() {
   const auto reconstructed = rawReceiver.getApplicationDataBuffer();
   if (!reconstructed || reconstructed.value() != std::vector<std::uint8_t>({0xAA, 0x55}))
     return RawManagerDataMismatch;
+  report(reporter, "TEST:manager_raw_stream:PASS");
 
+  report(reporter, "TEST:pus_c_tc:BEGIN");
   // Concrete PUS identity, Packet Type inference, typed raw PUS decoding, and validation.
   ccsds::Packet pusPacket;
   if (const auto result = pusPacket.setPrimaryHeader(ccsds::PrimaryHeader{
@@ -167,7 +224,9 @@ inline int run() {
       || !pusValidation.passed(ccsds::ValidationCode::PusAcknowledgement)
       || !pusValidation.passed(ccsds::ValidationCode::PusSourceId))
     return PusValidatorReportMissing;
+  report(reporter, "TEST:pus_c_tc:PASS");
 
+  report(reporter, "TEST:pec_none:BEGIN");
   // Packet-level PEC=None remains independent of secondary-header/PUS policy.
   ccsds::Packet crcDisabled;
   crcDisabled.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
@@ -193,7 +252,9 @@ inline int run() {
       || decodedCrcDisabled.getPrimaryHeader().getSequenceCount() != 7U
       || decodedCrcDisabled.getApplicationDataBytes() != std::vector<std::uint8_t>({0xAA, 0x55})
       || decodedCrcDisabled.getCRC() != 0U) return CrcFreeDecodeFailed;
+  report(reporter, "TEST:pec_none:PASS");
 
+  report(reporter, "TEST:invalid_pvn:BEGIN");
   ccsds::Packet invalidVersion;
   if (const auto result = invalidVersion.setPrimaryHeader(ccsds::PrimaryHeader{
         1, 0, 0, 1, ccsds::UNSEGMENTED, 0, 0
@@ -201,7 +262,9 @@ inline int run() {
   if (const auto result = invalidVersion.setApplicationData({0x01}); !result)
     return InvalidVersionDataFailed;
   if (invalidVersion.serialize()) return InvalidVersionSerialized;
+  report(reporter, "TEST:invalid_pvn:PASS");
 
+  report(reporter, "TEST:idle_packet_rules:BEGIN");
   ccsds::Packet invalidIdle;
   if (const auto result = invalidIdle.setPrimaryHeader(ccsds::PrimaryHeader{
         0, 0, 0, ccsds::IDLE_APID, ccsds::UNSEGMENTED, 0, 0
@@ -221,6 +284,8 @@ inline int run() {
   const auto validIdleResult = validIdle.serialize();
   if (!validIdleResult || validIdle.getSerializedSize() != validIdleResult.value().size())
     return ValidIdleSerializationFailed;
+  report(reporter, "TEST:idle_packet_rules:PASS");
+  report(reporter, "TEST:all:PASS");
 
   return Pass;
 }
