@@ -208,6 +208,40 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t first[] = {0xAAU, 0xBBU};
+        static const uint8_t last[] = {0xCCU};
+        static const uint8_t expected[] = {0xAAU, 0xBBU, 0xCCU};
+        ccsds_reassembly_state_t state;
+        ccsds_primary_header_t h = {
+            0U, 0U, 0U, 42U, CCSDS_SEQUENCE_FIRST, 10U, 0U
+        };
+        uint8_t output[sizeof(expected)] = {0U};
+        size_t written = 0U;
+        int complete = 0;
+
+        ccsds_reassembly_reset(&state, 1);
+        if (ccsds_reassembly_accept(
+              &state, &h, (ccsds_buffer_view_t){first, sizeof(first)},
+              output, sizeof(output), &written, &complete)
+            != CCSDS_STATUS_OK || complete != 0) {
+            return 28;
+        }
+
+        h.sequence_flags = CCSDS_SEQUENCE_LAST;
+        h.sequence_count = 11U;
+        if (ccsds_reassembly_accept(
+              &state, &h, (ccsds_buffer_view_t){last, sizeof(last)},
+              output, sizeof(output), &written, &complete)
+            != CCSDS_STATUS_OK || complete == 0) {
+            return 29;
+        }
+        if (state.written != sizeof(expected)
+            || memcmp(output, expected, sizeof(expected)) != 0) {
+            return 30;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }

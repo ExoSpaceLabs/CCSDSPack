@@ -11,6 +11,7 @@
 #include "error.h"
 #include "packet_view.h"
 #include "primary_header.h"
+#include "reassembly.h"
 #include "segmentation.h"
 #include "validation.h"
 #include "pus.h"

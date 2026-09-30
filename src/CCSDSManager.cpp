@@ -4,7 +4,9 @@
 #include "CCSDSManager.h"
 #include "CCSDSUtils.h"
 #include "PusSecondaryHeaders.h"
+#include "ccsdspack/c/reassembly.h"
 #include <algorithm>
+#include <limits>
 #include <utility>
 
 namespace {
@@ -230,15 +232,53 @@ ccsds::ResultBuffer ccsds::Manager::getPacketsBuffer() const {
 ccsds::ResultBuffer ccsds::Manager::getApplicationDataBuffer() {
   RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA,
                  "Cannot get Application data, no packets have been set.");
-  std::vector<std::uint8_t> data;
+
+  std::size_t totalSize = 0U;
+  for (const auto &packet : m_packets) {
+    const auto view = packet.getDataField().getApplicationDataView();
+    RET_IF_ERR_MSG(view.size > std::numeric_limits<std::size_t>::max() - totalSize,
+                   ErrorCode::INVALID_DATA,
+                   "Cannot reconstruct Application data: total size overflow.");
+    totalSize += view.size;
+  }
+
+  std::vector<std::uint8_t> data(totalSize);
+  ccsds_reassembly_state_t reassembly{};
+  ccsds_reassembly_reset(&reassembly, m_validateEnable ? 1 : 0);
+
   for (std::size_t index = 0U; index < m_packets.size(); ++index) {
+    const auto &packet = m_packets[index];
     if (m_validateEnable) {
-      RET_IF_ERR_MSG(!m_validator.validate(m_packets[index]), ErrorCode::VALIDATION_FAILURE,
+      RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
                      "Validation failure for packet at index " + std::to_string(index));
     }
-    const auto applicationData = m_packets[index].getApplicationDataBytes();
-    data.insert(data.end(), applicationData.begin(), applicationData.end());
+
+    const auto &header = packet.getPrimaryHeader();
+    const ccsds_primary_header_t coreHeader{
+      header.getVersionNumber(),
+      header.getType(),
+      header.getSecondaryHeaderFlag(),
+      header.getAPID(),
+      header.getSequenceFlags(),
+      header.getSequenceCount(),
+      header.getDataLength()
+    };
+    const auto applicationData = packet.getDataField().getApplicationDataView();
+    std::size_t writtenNow = 0U;
+    int complete = 0;
+    const auto status = ccsds_reassembly_accept(
+      &reassembly, &coreHeader, applicationData,
+      data.empty() ? nullptr : data.data(), data.size(),
+      &writtenNow, &complete);
+    (void)writtenNow;
+    (void)complete;
+    RET_IF_ERR_MSG(status != CCSDS_STATUS_OK, ErrorCode::VALIDATION_FAILURE,
+                   "Application-data reassembly failed at packet index "
+                   + std::to_string(index));
   }
+
+  RET_IF_ERR_MSG(reassembly.written != data.size(), ErrorCode::INVALID_DATA,
+                 "Application-data reassembly produced an unexpected size.");
   return data;
 }
 

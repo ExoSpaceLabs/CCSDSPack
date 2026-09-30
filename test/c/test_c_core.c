@@ -727,6 +727,109 @@ int main(void) {
             CCSDS_STATUS_INVALID_DATA);
     }
 
+    {
+        static const uint8_t first_data[] = {0x10U, 0x11U};
+        static const uint8_t middle_data[] = {0x20U, 0x21U};
+        static const uint8_t last_data[] = {0x30U};
+        static const uint8_t expected[] = {0x10U, 0x11U, 0x20U, 0x21U, 0x30U};
+        ccsds_reassembly_state_t state;
+        ccsds_primary_header_t segment = {
+            0U, 0U, 0U, 42U, CCSDS_SEQUENCE_FIRST, 100U, 0U
+        };
+        uint8_t output[sizeof(expected) + 1U] = {0U};
+        size_t written_now = 0U;
+        int complete = 0;
+
+        ccsds_reassembly_reset(&state, 1);
+        failed |= expect_status("reassembly-first",
+            ccsds_reassembly_accept(
+                &state, &segment,
+                (ccsds_buffer_view_t){first_data, sizeof(first_data)},
+                output, sizeof(output), &written_now, &complete),
+            CCSDS_STATUS_OK);
+        if (written_now != sizeof(first_data) || complete != 0 || state.written != 2U) {
+            fprintf(stderr, "reassembly-first: state mismatch\n");
+            failed = 1;
+        }
+
+        segment.sequence_flags = CCSDS_SEQUENCE_CONTINUING;
+        segment.sequence_count = 101U;
+        failed |= expect_status("reassembly-continuing",
+            ccsds_reassembly_accept(
+                &state, &segment,
+                (ccsds_buffer_view_t){middle_data, sizeof(middle_data)},
+                output, sizeof(output), &written_now, &complete),
+            CCSDS_STATUS_OK);
+
+        segment.sequence_flags = CCSDS_SEQUENCE_LAST;
+        segment.sequence_count = 102U;
+        failed |= expect_status("reassembly-last",
+            ccsds_reassembly_accept(
+                &state, &segment,
+                (ccsds_buffer_view_t){last_data, sizeof(last_data)},
+                output, sizeof(output), &written_now, &complete),
+            CCSDS_STATUS_OK);
+        if (complete == 0 || state.written != sizeof(expected)
+            || memcmp(output, expected, sizeof(expected)) != 0) {
+            fprintf(stderr, "reassembly-last: output mismatch\n");
+            failed = 1;
+        }
+
+        {
+            const size_t before = state.written;
+            const uint8_t before_output = output[0];
+            segment.sequence_flags = CCSDS_SEQUENCE_CONTINUING;
+            segment.sequence_count = 105U;
+            failed |= expect_status("reassembly-invalid-sequence",
+                ccsds_reassembly_accept(
+                    &state, &segment,
+                    (ccsds_buffer_view_t){last_data, sizeof(last_data)},
+                    output, sizeof(output), &written_now, &complete),
+                CCSDS_STATUS_VALIDATION_FAILURE);
+            if (state.written != before || output[0] != before_output) {
+                fprintf(stderr, "reassembly-invalid-sequence: state was modified\n");
+                failed = 1;
+            }
+        }
+
+        {
+            ccsds_reassembly_state_t unchecked;
+            uint8_t unchecked_output[2] = {0U};
+            ccsds_reassembly_reset(&unchecked, 0);
+            segment.sequence_flags = CCSDS_SEQUENCE_CONTINUING;
+            segment.sequence_count = 999U;
+            failed |= expect_status("reassembly-validation-disabled",
+                ccsds_reassembly_accept(
+                    &unchecked, &segment,
+                    (ccsds_buffer_view_t){first_data, sizeof(first_data)},
+                    unchecked_output, sizeof(unchecked_output),
+                    &written_now, &complete),
+                CCSDS_STATUS_OK);
+            if (memcmp(unchecked_output, first_data, sizeof(first_data)) != 0) {
+                fprintf(stderr, "reassembly-validation-disabled: copy mismatch\n");
+                failed = 1;
+            }
+        }
+
+        {
+            ccsds_reassembly_state_t small;
+            uint8_t small_output[1] = {0xEEU};
+            ccsds_reassembly_reset(&small, 0);
+            segment.sequence_flags = CCSDS_SEQUENCE_UNSEGMENTED;
+            failed |= expect_status("reassembly-small-output",
+                ccsds_reassembly_accept(
+                    &small, &segment,
+                    (ccsds_buffer_view_t){first_data, sizeof(first_data)},
+                    small_output, sizeof(small_output),
+                    &written_now, &complete),
+                CCSDS_STATUS_BUFFER_TOO_SMALL);
+            if (small.written != 0U || small_output[0] != 0xEEU) {
+                fprintf(stderr, "reassembly-small-output: transaction mismatch\n");
+                failed = 1;
+            }
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
