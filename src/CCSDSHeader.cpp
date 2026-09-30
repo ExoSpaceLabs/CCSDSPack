@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "CCSDSHeader.h"
+#include "ccsdspack/c/primary_header.h"
 
 void ccsds::Header::refreshStatus() {
   m_status = m_APID == IDLE_APID ? IDLE : NORMAL;
@@ -72,36 +73,47 @@ void ccsds::Header::setDataLength(const std::uint16_t &value) {
 }
 
 ccsds::ResultBool ccsds::Header::deserialize(const std::vector<std::uint8_t> &data) {
-  if (data.size() != 6U) {
+  if (data.size() != CCSDS_PRIMARY_HEADER_SIZE) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Invalid Header Data provided: size != 6");
   }
 
-  std::uint64_t headerData = 0;
-  for (std::uint8_t i = 0; i < 6; ++i) {
-    headerData |= static_cast<std::uint64_t>(data[i]) << (40 - i * 8);
+  ccsds_primary_header_t decoded{};
+  const auto status = ccsds_primary_header_decode(data.data(), data.size(), &decoded);
+  if (status != CCSDS_STATUS_OK) {
+    m_status = INVALID;
+    return Error(INVALID_HEADER_DATA, "Invalid Header Data provided.");
   }
-  FORWARD_RESULT(setData(headerData));
+
+  FORWARD_RESULT(setData(PrimaryHeader{
+    decoded.version_number,
+    decoded.type,
+    decoded.secondary_header_flag,
+    decoded.apid,
+    decoded.sequence_flags,
+    decoded.sequence_count,
+    decoded.data_length
+  }));
   return true;
 }
 
 ccsds::ResultBool ccsds::Header::setData(const std::uint64_t &data) {
-  if (data > 0xFFFFFFFFFFFFULL) {
+  ccsds_primary_header_t decoded{};
+  const auto status = ccsds_primary_header_unpack(data, &decoded);
+  if (status != CCSDS_STATUS_OK) {
     m_status = INVALID;
     return Error(INVALID_HEADER_DATA, "Input data exceeds expected bit size for version or size.");
   }
 
-  m_dataLength = static_cast<std::uint16_t>(data & 0xFFFFU);
-  m_packetSequenceControl = static_cast<std::uint16_t>((data >> 16) & 0xFFFFU);
-  m_packetIdentificationAndVersion = static_cast<std::uint16_t>((data >> 32) & 0xFFFFU);
-
-  m_versionNumber = static_cast<std::uint8_t>(m_packetIdentificationAndVersion >> 13);
-  m_type = static_cast<std::uint8_t>((m_packetIdentificationAndVersion >> 12) & 0x01U);
-  m_secondaryHeaderFlag = static_cast<std::uint8_t>((m_packetIdentificationAndVersion >> 11) & 0x01U);
-  m_APID = m_packetIdentificationAndVersion & 0x07FFU;
-  m_sequenceFlags = static_cast<std::uint8_t>(m_packetSequenceControl >> 14);
-  m_sequenceCount = m_packetSequenceControl & 0x3FFFU;
-  refreshStatus();
+  FORWARD_RESULT(setData(PrimaryHeader{
+    decoded.version_number,
+    decoded.type,
+    decoded.secondary_header_flag,
+    decoded.apid,
+    decoded.sequence_flags,
+    decoded.sequence_count,
+    decoded.data_length
+  }));
   return true;
 }
 
@@ -114,22 +126,20 @@ std::vector<std::uint8_t> ccsds::Header::serialize() const {
     return {};
   }
 
-  const auto packetSequenceControl = static_cast<std::uint16_t>(
-    (static_cast<std::uint16_t>(m_sequenceFlags) << 14U) | m_sequenceCount);
-  const auto packetIdentificationAndVersion = static_cast<std::uint16_t>(
-    (static_cast<std::uint16_t>(m_versionNumber) << 13U)
-    | (static_cast<std::uint16_t>(m_type) << 12U)
-    | (static_cast<std::uint16_t>(m_secondaryHeaderFlag) << 11U)
-    | m_APID);
-
-  return {
-    static_cast<std::uint8_t>(packetIdentificationAndVersion >> 8U),
-    static_cast<std::uint8_t>(packetIdentificationAndVersion & 0xFFU),
-    static_cast<std::uint8_t>(packetSequenceControl >> 8U),
-    static_cast<std::uint8_t>(packetSequenceControl & 0xFFU),
-    static_cast<std::uint8_t>(m_dataLength >> 8U),
-    static_cast<std::uint8_t>(m_dataLength & 0xFFU),
+  const ccsds_primary_header_t header{
+    m_versionNumber,
+    m_type,
+    m_secondaryHeaderFlag,
+    m_APID,
+    m_sequenceFlags,
+    m_sequenceCount,
+    m_dataLength
   };
+  std::uint8_t bytes[CCSDS_PRIMARY_HEADER_SIZE]{};
+  if (ccsds_primary_header_encode(&header, bytes, sizeof(bytes)) != CCSDS_STATUS_OK) {
+    return {};
+  }
+  return std::vector<std::uint8_t>(bytes, bytes + CCSDS_PRIMARY_HEADER_SIZE);
 }
 
 std::uint64_t ccsds::Header::getFullHeader() {
@@ -140,16 +150,18 @@ std::uint64_t ccsds::Header::getFullHeader() const {
   if (m_status == INVALID) {
     return 0U;
   }
-  const auto packetSequenceControl = static_cast<std::uint16_t>(
-    (static_cast<std::uint16_t>(m_sequenceFlags) << 14U) | m_sequenceCount);
-  const auto packetIdentificationAndVersion = static_cast<std::uint16_t>(
-    (static_cast<std::uint16_t>(m_versionNumber) << 13U)
-    | (static_cast<std::uint16_t>(m_type) << 12U)
-    | (static_cast<std::uint16_t>(m_secondaryHeaderFlag) << 11U)
-    | m_APID);
-  return (static_cast<std::uint64_t>(packetIdentificationAndVersion) << 32U)
-         | (static_cast<std::uint32_t>(packetSequenceControl) << 16U)
-         | m_dataLength;
+
+  const ccsds_primary_header_t header{
+    m_versionNumber,
+    m_type,
+    m_secondaryHeaderFlag,
+    m_APID,
+    m_sequenceFlags,
+    m_sequenceCount,
+    m_dataLength
+  };
+  std::uint64_t packed = 0U;
+  return ccsds_primary_header_pack(&header, &packed) == CCSDS_STATUS_OK ? packed : 0U;
 }
 
 ccsds::ResultBool ccsds::Header::setData(const PrimaryHeader &data) {

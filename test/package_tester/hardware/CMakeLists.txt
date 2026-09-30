@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(CCSDSPack 2.0.0 EXACT CONFIG REQUIRED)
+find_package(CCSDSPack 2.1.0 EXACT CONFIG REQUIRED)
 
 add_executable(ccsdspack_hardware_acceptance main.cpp)
 target_include_directories(ccsdspack_hardware_acceptance PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

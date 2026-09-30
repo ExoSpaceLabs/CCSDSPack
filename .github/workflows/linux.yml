@@ -31,7 +31,7 @@ jobs:
       - name: Install base build deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake make g++
+          sudo apt-get install -y cmake make gcc g++
 
       - name: Configure and build (native x86_64)
         run: |
@@ -43,7 +43,26 @@ jobs:
       - name: Verify build artifacts
         run: |
           ls -l lib/
+          ls -l build/lib/
           ls -l bin/
+          ls -l build/bin/
+
+      - name: Run C11 core tests
+        run: |
+          ctest --test-dir build --output-on-failure -R '^ccsdspack_c_core$'
+
+      - name: Build and run C11 core without a C++ compiler
+        run: |
+          CC=gcc CXX=/bin/false cmake -S . -B build-c-only \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCCSDSPACK_BUILD_CPP=OFF \
+            -DCCSDSPACK_BUILD_C_TESTS=ON
+          cmake --build build-c-only -- -j
+          ctest --test-dir build-c-only --output-on-failure
+          if ldd build-c-only/bin/CCSDSPack_c_core_test | grep -q 'libstdc++'; then
+            echo "C-only core unexpectedly depends on libstdc++" >&2
+            exit 1
+          fi
 
       - name: Run tests (native)
         shell: bash
@@ -85,6 +104,19 @@ jobs:
       - name: Install shared library package
         run: |
           cmake --install build --prefix "$PWD/build/install"
+
+      - name: Configure installed C11 core consumer
+        run: |
+          CC=gcc CXX=/bin/false cmake -S test/package_tester/c_core \
+            -B build/package_tester/c_core \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/install"
+
+      - name: Build and run installed C11 core consumer
+        run: |
+          cmake --build build/package_tester/c_core -- -j
+          LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
+            ctest --test-dir build/package_tester/c_core --output-on-failure
 
       - name: Configure installed shared-library consumer
         run: |

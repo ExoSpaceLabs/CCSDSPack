@@ -15,6 +15,7 @@
 #include "CCSDSManager.h"
 #include "CCSDSPacket.h"
 #include "CCSDSResult.h"
+#include "ccsdspack/c/primary_header.h"
 #include <cstddef>
 #include <cstdint>
 #include <string>
@@ -27,14 +28,14 @@ namespace ccsds::buffer {
       const std::uint8_t *data, const std::size_t size) {
     RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
                    "Cannot inspect packet size: raw buffer pointer is null.");
-    RET_IF_ERR_MSG(size < 6U, ErrorCode::INVALID_HEADER_DATA,
+    RET_IF_ERR_MSG(size < CCSDS_PRIMARY_HEADER_SIZE, ErrorCode::INVALID_HEADER_DATA,
                    "Cannot inspect packet size: at least six primary-header bytes are required.");
-    const auto version = static_cast<std::uint8_t>((data[0] >> 5U) & 0x07U);
-    RET_IF_ERR_MSG(version != 0U, ErrorCode::INVALID_HEADER_DATA,
+
+    std::size_t declaredSize = 0U;
+    const auto status = ccsds_packet_declared_size(data, size, &declaredSize);
+    RET_IF_ERR_MSG(status != CCSDS_STATUS_OK, ErrorCode::INVALID_HEADER_DATA,
                    "Cannot inspect packet size: unsupported CCSDS packet version.");
-    const auto encodedLength = static_cast<std::uint16_t>(
-      (static_cast<std::uint16_t>(data[4]) << 8U) | static_cast<std::uint16_t>(data[5]));
-    return 6U + static_cast<std::size_t>(encodedLength) + 1U;
+    return declaredSize;
   }
 
   [[nodiscard]] inline Result<std::size_t> declaredPacketSize(
