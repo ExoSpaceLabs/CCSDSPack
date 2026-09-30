@@ -18,6 +18,7 @@
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "CCSDSSecondaryHeaderFactory.h"
 #include "PusSecondaryHeaderFactory.h"
+#include "ccsdspack/c/buffer.h"
 
 namespace ccsds {
   class DataField {
@@ -71,6 +72,13 @@ namespace ccsds {
     [[nodiscard]] ResultBuffer serialize();
     std::vector<std::uint8_t> getApplicationData();
     [[nodiscard]] std::vector<std::uint8_t> getApplicationData() const;
+    /** @brief Non-owning view into the internally owned application-data bytes. */
+    [[nodiscard]] ccsds_buffer_view_t getApplicationDataView() const noexcept {
+      return {
+        m_applicationData.empty() ? nullptr : m_applicationData.data(),
+        m_applicationData.size()
+      };
+    }
 
     [[nodiscard]] bool getSecondaryHeaderAutoUpdateStatus() const {
       return m_enableSecondaryHeaderUpdate;
