@@ -122,8 +122,8 @@ if [[ "${package_type^^}" == "MCU" ]]; then
     -fdata-sections \
     "${mcu_flag_array[@]}" \
     -I../inc \
-    -I../test/package_tester/stm32h7xx/CM7/Inc \
-    -c ../test/package_tester/stm32h7xx/CM7/Src/ccsdspack_mcu_compile_probe.cpp \
+    -I../test/package_tester/hardware \
+    -c ../test/package_tester/hardware/ccsdspack_mcu_compile_probe.cpp \
     -o ccsdspack_mcu_compile_probe.o
 
   mcu_archive="$(find ../lib . -name libccsdspack.a -type f -print -quit)"
