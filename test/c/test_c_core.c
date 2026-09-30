@@ -948,6 +948,133 @@ int main(void) {
         }
     }
 
+    {
+        ccsds_sequence_validator_t sequence = {0U};
+        ccsds_validation_report_t report;
+        ccsds_packet_coherence_input_t input = {
+            {0U, 1U, 1U, 42U, CCSDS_SEQUENCE_UNSEGMENTED, 7U, 2U},
+            9U,
+            1U,
+            1U,
+            CCSDS_PACKET_DIRECTION_TELECOMMAND,
+            1U,
+            1U
+        };
+        ccsds_template_coherence_input_t template_input = {
+            {0U, 1U, 1U, 42U, CCSDS_SEQUENCE_UNSEGMENTED, 0U, 0U},
+            1U,
+            1U,
+            1U
+        };
+
+        ccsds_sequence_validator_reset(&sequence);
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("coherence-valid",
+            ccsds_validate_packet_coherence(&input, &sequence, 1, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_valid(&report)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PRIMARY_HEADER)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PACKET_VERSION)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PACKET_DATA_LENGTH)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_CRC16)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_SECONDARY_HEADER_PRESENCE)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_SECONDARY_HEADER_DIRECTION)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_SEQUENCE_FLAGS)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_SEQUENCE_COUNT)) {
+            fprintf(stderr, "coherence-valid: expected all generic checks to pass\n");
+            failed = 1;
+        }
+
+        input.header.version_number = 1U;
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("coherence-version",
+            ccsds_validate_packet_coherence(&input, &sequence, 1, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_failed(
+                &report, CCSDS_VALIDATION_PACKET_VERSION)) {
+            fprintf(stderr, "coherence-version: version check did not fail\n");
+            failed = 1;
+        }
+        input.header.version_number = 0U;
+
+        input.secondary_direction = CCSDS_PACKET_DIRECTION_TELEMETRY;
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("coherence-direction",
+            ccsds_validate_packet_coherence(&input, &sequence, 1, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_failed(
+                &report, CCSDS_VALIDATION_SECONDARY_HEADER_DIRECTION)) {
+            fprintf(stderr, "coherence-direction: direction check did not fail\n");
+            failed = 1;
+        }
+        input.secondary_direction = CCSDS_PACKET_DIRECTION_TELECOMMAND;
+
+        {
+            ccsds_primary_header_t accepted = input.header;
+            accepted.sequence_count = 7U;
+            failed |= expect_status("coherence-sequence-seed",
+                ccsds_sequence_validator_accept(&sequence, &accepted),
+                CCSDS_STATUS_OK);
+            input.header.sequence_count = 9U;
+            ccsds_validation_report_reset(&report);
+            failed |= expect_status("coherence-sequence-count",
+                ccsds_validate_packet_coherence(&input, &sequence, 1, &report),
+                CCSDS_STATUS_OK);
+            if (!ccsds_validation_report_failed(
+                    &report, CCSDS_VALIDATION_SEQUENCE_COUNT)) {
+                fprintf(stderr, "coherence-sequence-count: discontinuity not reported\n");
+                failed = 1;
+            }
+            input.header.sequence_count = 8U;
+        }
+
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("template-valid",
+            ccsds_validate_template_coherence(
+                &input.header, &template_input, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_valid(&report)) {
+            fprintf(stderr, "template-valid: expected all template checks to pass\n");
+            failed = 1;
+        }
+
+        template_input.header.sequence_flags = CCSDS_SEQUENCE_FIRST;
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("template-segmentation",
+            ccsds_validate_template_coherence(
+                &input.header, &template_input, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_failed(
+                &report, CCSDS_VALIDATION_SEGMENTATION_CLASS)) {
+            fprintf(stderr, "template-segmentation: class mismatch not reported\n");
+            failed = 1;
+        }
+
+        template_input.header.sequence_flags = CCSDS_SEQUENCE_UNSEGMENTED;
+        template_input.packet_error_control_equal = 0U;
+        template_input.secondary_contract_equal = 0U;
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("template-contracts",
+            ccsds_validate_template_coherence(
+                &input.header, &template_input, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_failed(
+                &report, CCSDS_VALIDATION_TEMPLATE_PACKET_ERROR_CONTROL)
+            || !ccsds_validation_report_failed(
+                 &report, CCSDS_VALIDATION_TEMPLATE_SECONDARY_HEADER)) {
+            fprintf(stderr, "template-contracts: adapter equality mismatch not reported\n");
+            failed = 1;
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
