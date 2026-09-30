@@ -5,6 +5,7 @@
 #include "CCSDSDataField.h"
 #include "CCSDSUtils.h"
 #include "PusSecondaryHeaders.h"
+#include "ccsdspack/c/packet_view.h"
 #include <algorithm>
 #include <limits>
 #include <utility>
@@ -19,6 +20,72 @@ namespace {
     std::vector<std::uint8_t> dataField{};
     std::uint16_t receivedCRC{};
   };
+
+  struct ParsedPacketView {
+    ccsds::Header header{};
+    ccsds_buffer_view_t dataField{};
+    std::uint16_t receivedCRC{};
+    std::size_t packetSize{};
+  };
+
+  ccsds::Error packetViewError(const ccsds_status_t status) {
+    const auto code = status <= CCSDS_STATUS_CONFIG_FILE_ERROR
+      ? static_cast<ccsds::ErrorCode>(status)
+      : ccsds::ErrorCode::UNKNOWN_ERROR;
+    return ccsds::Error{
+      code,
+      std::string("Cannot deserialize packet: C packet-view validation failed: ")
+        + ccsds_status_name(status)
+    };
+  }
+
+  ccsds::Result<ParsedPacketView> validatePacketView(
+      const std::uint8_t *data,
+      const std::size_t size,
+      const ccsds::PacketErrorControlMode mode,
+      const ccsds::CRC16Config &crcConfig) {
+    if (data == nullptr) {
+      return ccsds::Error{ccsds::ErrorCode::NULL_POINTER,
+                          "Cannot deserialize packet: raw buffer pointer is null."};
+    }
+    if (size < CCSDS_PRIMARY_HEADER_SIZE) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
+                          "Cannot deserialize packet: truncated CCSDS primary header."};
+    }
+
+    const ccsds_crc16_config_t coreCrc{
+      crcConfig.polynomial,
+      crcConfig.initialValue,
+      crcConfig.finalXorValue
+    };
+    ccsds_packet_view_t view{};
+    const auto status = ccsds_packet_view_parse(
+      data,
+      size,
+      mode == ccsds::PacketErrorControlMode::CRC16
+        ? CCSDS_PACKET_ERROR_CONTROL_CRC16
+        : CCSDS_PACKET_ERROR_CONTROL_NONE,
+      &coreCrc,
+      &view);
+    if (status != CCSDS_STATUS_OK) return packetViewError(status);
+
+    ParsedPacketView parsed;
+    const ccsds::PrimaryHeader header{
+      view.primary_header.version_number,
+      view.primary_header.type,
+      view.primary_header.secondary_header_flag,
+      view.primary_header.apid,
+      view.primary_header.sequence_flags,
+      view.primary_header.sequence_count,
+      view.primary_header.data_length
+    };
+    const auto headerResult = parsed.header.setData(header);
+    if (!headerResult) return headerResult.error();
+    parsed.dataField = view.data_field;
+    parsed.receivedCRC = view.received_crc16;
+    parsed.packetSize = view.consumed;
+    return parsed;
+  }
 
   ccsds::ResultBool validatePacketForSerialization(
       const ccsds::Header &header,
