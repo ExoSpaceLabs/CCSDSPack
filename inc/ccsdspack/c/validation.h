@@ -97,7 +97,16 @@ typedef struct ccsds_packet_coherence_input {
 } ccsds_packet_coherence_input_t;
 
 
-/** @brief Plain PUS coherence facts consumed by the C validator. */
+/**
+ * @brief Plain PUS coherence facts consumed by the C validator.
+ *
+ * revision uses the public PUS revision values 1 (A) and 2 (C). direction uses
+ * CCSDS_PACKET_DIRECTION_* values and packet_type is the CCSDS primary-header
+ * Packet Type bit. serialized aliases the exact secondary-header bytes.
+ *
+ * The adapter supplies object-state facts that cannot be reconstructed from
+ * bytes alone, while the C validator owns the actual report decisions.
+ */
 typedef struct ccsds_pus_coherence_input {
     uint8_t revision;
     uint8_t direction;
