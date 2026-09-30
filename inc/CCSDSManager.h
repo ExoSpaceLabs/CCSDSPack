@@ -99,13 +99,7 @@ namespace ccsds {
 
     [[nodiscard]] ResultBool load(const std::vector<Packet> &packets);
     [[nodiscard]] ResultBool load(const std::vector<std::uint8_t> &packetsBuffer);
-    [[nodiscard]] ResultBool load(const std::uint8_t *data, const std::size_t size) {
-      RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
-                     "Cannot load packet stream, raw buffer pointer is null");
-      RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
-                     "Cannot load packet stream, raw buffer is empty");
-      return load(std::vector<std::uint8_t>(data, data + size));
-    }
+    [[nodiscard]] ResultBool load(const std::uint8_t *data, std::size_t size);
 
     [[nodiscard]] ResultBool read(const std::string &binaryFile);
     [[nodiscard]] ResultBool write(const std::string &binaryFile) const;
