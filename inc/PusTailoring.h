@@ -8,6 +8,7 @@
 #include "CCSDSResult.h"
 #include "CCSDSTime.h"
 #include "ccsdspack/c/pus_tc.h"
+#include "ccsdspack/c/pus_tm.h"
 #include <cstdint>
 #include <string>
 
@@ -81,18 +82,29 @@ namespace ccsds::pus {
   }
 
   [[nodiscard]] inline ResultBool validateTailoring(const rev_a::TmTailoring &tailoring) {
-    RET_IF_ERR_MSG(!validIdentifierWidth(tailoring.destinationIdOctets),
+    const ccsds_pus_a_tm_tailoring_t core{
+      tailoring.destinationIdOctets,
+      static_cast<std::uint8_t>(tailoring.packetSubcounterPresent ? 1U : 0U),
+      static_cast<std::uint8_t>(tailoring.timestampPresent ? 1U : 0U),
+      {
+        static_cast<ccsds_cuc_epoch_t>(tailoring.cuc.epoch),
+        static_cast<ccsds_cuc_pfield_mode_t>(tailoring.cuc.pField),
+        tailoring.cuc.coarseOctets,
+        tailoring.cuc.fineOctets
+      },
+      tailoring.secondaryHeaderSpareOctets
+    };
+    const auto status = ccsds_pus_a_tm_validate_tailoring(&core);
+    RET_IF_ERR_MSG(status == CCSDS_STATUS_PUS_INVALID_IDENTIFIER_WIDTH,
                    ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "PUS-A TM destination-ID width must be 0, 1, 2, or 4 octets.");
-    if (tailoring.timestampPresent) {
+    RET_IF_ERR_MSG(status == CCSDS_STATUS_PUS_DISABLED_TIME_CONFIG,
+                   ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Disabled PUS-A TM time requires an empty CUC configuration.");
+    if (status != CCSDS_STATUS_OK) {
       FORWARD_RESULT(time::validate(tailoring.cuc));
-    } else {
-      RET_IF_ERR_MSG(tailoring.cuc.epoch != time::Epoch::Unspecified
-                     || tailoring.cuc.pField != time::PFieldMode::Implicit
-                     || tailoring.cuc.coarseOctets != 0U
-                     || tailoring.cuc.fineOctets != 0U,
-                     ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                     "Disabled PUS-A TM time requires an empty CUC configuration.");
+      return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Invalid PUS-A TM tailoring."};
     }
     return true;
   }
@@ -102,15 +114,24 @@ namespace ccsds::pus {
   }
 
   [[nodiscard]] inline ResultBool validateTailoring(const rev_c::TmTailoring &tailoring) {
-    if (tailoring.timestampPresent) {
+    const ccsds_pus_c_tm_tailoring_t core{
+      static_cast<std::uint8_t>(tailoring.timestampPresent ? 1U : 0U),
+      {
+        static_cast<ccsds_cuc_epoch_t>(tailoring.cuc.epoch),
+        static_cast<ccsds_cuc_pfield_mode_t>(tailoring.cuc.pField),
+        tailoring.cuc.coarseOctets,
+        tailoring.cuc.fineOctets
+      },
+      tailoring.secondaryHeaderSpareOctets
+    };
+    const auto status = ccsds_pus_c_tm_validate_tailoring(&core);
+    RET_IF_ERR_MSG(status == CCSDS_STATUS_PUS_DISABLED_TIME_CONFIG,
+                   ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Disabled PUS-C TM time requires an empty CUC configuration.");
+    if (status != CCSDS_STATUS_OK) {
       FORWARD_RESULT(time::validate(tailoring.cuc));
-    } else {
-      RET_IF_ERR_MSG(tailoring.cuc.epoch != time::Epoch::Unspecified
-                     || tailoring.cuc.pField != time::PFieldMode::Implicit
-                     || tailoring.cuc.coarseOctets != 0U
-                     || tailoring.cuc.fineOctets != 0U,
-                     ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                     "Disabled PUS-C TM time requires an empty CUC configuration.");
+      return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                   "Invalid PUS-C TM tailoring."};
     }
     return true;
   }
