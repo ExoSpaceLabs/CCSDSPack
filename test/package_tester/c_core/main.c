@@ -336,6 +336,39 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t data[] = {0xAAU, 0x55U};
+        static const uint8_t expected[] = {
+            0x00U, 0x00U, 0xC0U, 0x00U, 0x00U, 0x03U,
+            0xAAU, 0x55U, 0x2EU, 0xBBU
+        };
+        ccsds_primary_header_t h = {
+            0U, 0U, 0U, 0U, 3U, 0U, 0U
+        };
+        uint8_t output[sizeof(expected)] = {0U};
+        uint16_t crc = 0U;
+        size_t serialized = 0U;
+        size_t written = 0U;
+
+        if (ccsds_packet_finalize(
+              &h, 0U, (ccsds_buffer_view_t){data, sizeof(data)},
+              CCSDS_PACKET_ERROR_CONTROL_CRC16, NULL,
+              &crc, &serialized) != CCSDS_STATUS_OK) {
+            return 37;
+        }
+        if (ccsds_packet_encode(
+              &h, (ccsds_buffer_view_t){data, sizeof(data)},
+              CCSDS_PACKET_ERROR_CONTROL_CRC16, crc,
+              output, sizeof(output), &written) != CCSDS_STATUS_OK) {
+            return 38;
+        }
+        if (serialized != sizeof(expected)
+            || written != sizeof(expected)
+            || memcmp(output, expected, sizeof(expected)) != 0) {
+            return 39;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }
