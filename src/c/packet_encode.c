@@ -152,14 +152,14 @@ ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
     if (capacity < required) return CCSDS_STATUS_BUFFER_TOO_SMALL;
     if (output == NULL) return CCSDS_STATUS_NULL_POINTER;
 
-    status = ccsds_primary_header_encode(header, output, capacity);
-    if (status != CCSDS_STATUS_OK) return status;
-
     if (data_field.size != 0U) {
         memmove(output + CCSDS_PRIMARY_HEADER_SIZE,
                 data_field.data,
                 data_field.size);
     }
+
+    status = ccsds_primary_header_encode(header, output, capacity);
+    if (status != CCSDS_STATUS_OK) return status;
 
     if (pec_size != 0U) {
         ccsds_store_be16(
