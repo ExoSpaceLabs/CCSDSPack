@@ -4,12 +4,6 @@
 #include "ccsdspack/c/pus_tc.h"
 #include "ccsdspack/c/bytes.h"
 
-static int identifier_fits(const uint32_t value, const uint8_t octets) {
-    if (octets == 0U) return value == 0U;
-    if (octets >= 4U) return 1;
-    return value < (UINT32_C(1) << ((uint32_t)octets * UINT32_C(8)));
-}
-
 static ccsds_status_t validate_fields(const ccsds_pus_tc_fields_t *fields,
                                       const uint8_t source_id_octets) {
     if (fields == NULL) {
@@ -18,20 +12,10 @@ static ccsds_status_t validate_fields(const ccsds_pus_tc_fields_t *fields,
     if (fields->acknowledgement_flags > 0x0FU) {
         return CCSDS_STATUS_PUS_INVALID_ACK_FLAGS;
     }
-    if (!identifier_fits(fields->source_id, source_id_octets)) {
+    if (!ccsds_pus_identifier_fits(fields->source_id, source_id_octets)) {
         return CCSDS_STATUS_PUS_IDENTIFIER_OVERFLOW;
     }
     return CCSDS_STATUS_OK;
-}
-
-static int spare_is_zero(const uint8_t *data, const size_t size,
-                         const uint8_t spare_octets) {
-    size_t index;
-    if ((size_t)spare_octets > size) return 0;
-    for (index = size - (size_t)spare_octets; index < size; ++index) {
-        if (data[index] != 0U) return 0;
-    }
-    return 1;
 }
 
 static void write_spare(uint8_t *output, const size_t offset,
@@ -40,10 +24,6 @@ static void write_spare(uint8_t *output, const size_t offset,
     for (index = 0U; index < spare_octets; ++index) {
         output[offset + (size_t)index] = 0U;
     }
-}
-
-int ccsds_pus_identifier_width_is_valid(const uint8_t octets) {
-    return octets == 0U || octets == 1U || octets == 2U || octets == 4U;
 }
 
 ccsds_status_t ccsds_pus_a_tc_validate_tailoring(
@@ -126,7 +106,7 @@ ccsds_status_t ccsds_pus_a_tc_decode(
     if (size != expected) return CCSDS_STATUS_PUS_SIZE_MISMATCH;
     if (data == NULL) return CCSDS_STATUS_NULL_POINTER;
     if ((data[0] & 0xF0U) != 0x10U) return CCSDS_STATUS_PUS_INVALID_VERSION;
-    if (!spare_is_zero(data, size, tailoring->secondary_header_spare_octets)) {
+    if (!ccsds_pus_spare_is_zero(data, size, tailoring->secondary_header_spare_octets)) {
         return CCSDS_STATUS_PUS_NONZERO_SPARE;
     }
 
