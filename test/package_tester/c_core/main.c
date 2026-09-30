@@ -307,6 +307,35 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t tc[] = {0x2FU, 0x11U, 0x01U, 0x12U, 0x34U};
+        ccsds_validation_report_t report;
+        const ccsds_pus_coherence_input_t pus = {
+            2U,
+            CCSDS_PACKET_DIRECTION_TELECOMMAND,
+            1U,
+            1U,
+            {tc, sizeof(tc)},
+            sizeof(tc),
+            0U,
+            0x0FU,
+            2U,
+            0x1234U,
+            0U,
+            0U,
+            1U,
+            0U,
+            0U,
+            0U
+        };
+
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validate_pus_coherence(&pus, &report) != CCSDS_STATUS_OK
+            || !ccsds_validation_report_valid(&report)) {
+            return 36;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }

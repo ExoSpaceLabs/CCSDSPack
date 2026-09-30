@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "ccsdspack/c/validation.h"
+#include "ccsdspack/c/pus.h"
 
 void ccsds_validation_report_reset(ccsds_validation_report_t *report) {
     size_t index;
@@ -279,6 +280,104 @@ ccsds_status_t ccsds_validate_packet_coherence(
             CCSDS_VALIDATION_SEQUENCE_COUNT,
             ccsds_sequence_count_valid(sequence, input->header.sequence_count));
         if (status != CCSDS_STATUS_OK) return status;
+    }
+
+    return CCSDS_STATUS_OK;
+}
+
+
+ccsds_status_t ccsds_validate_pus_coherence(
+    const ccsds_pus_coherence_input_t *input,
+    ccsds_validation_report_t *report) {
+    ccsds_status_t status;
+    int revision_valid;
+    int direction_is_valid;
+    int size_valid;
+    int reserved_valid = 0;
+
+    if (input == NULL || report == NULL) return CCSDS_STATUS_NULL_POINTER;
+
+    status = set_check(report, CCSDS_VALIDATION_PUS_HEADER, 1);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    revision_valid = input->revision == 1U || input->revision == 2U;
+    direction_is_valid = direction_valid(input->direction);
+
+    status = set_check(report, CCSDS_VALIDATION_PUS_REVISION, revision_valid);
+    if (status != CCSDS_STATUS_OK) return status;
+    status = set_check(report, CCSDS_VALIDATION_PUS_DIRECTION, direction_is_valid);
+    if (status != CCSDS_STATUS_OK) return status;
+    status = set_check(
+        report, CCSDS_VALIDATION_PUS_PACKET_TYPE,
+        direction_is_valid
+        && input->packet_type == packet_type_for_direction(input->direction));
+    if (status != CCSDS_STATUS_OK) return status;
+    status = set_check(report, CCSDS_VALIDATION_PUS_TAILORING,
+                       input->tailoring_valid != 0U);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    size_valid = input->serialized.data != NULL
+        && input->serialized.size != 0U
+        && input->serialized.size == input->expected_size;
+    status = set_check(report, CCSDS_VALIDATION_PUS_SECONDARY_HEADER_SIZE,
+                       size_valid);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    if (size_valid) {
+        if (input->revision == 1U
+            && input->direction == CCSDS_PACKET_DIRECTION_TELECOMMAND) {
+            reserved_valid = (input->serialized.data[0] & 0x80U) == 0U
+                && ((input->serialized.data[0] >> 4U) & 0x07U) == 1U;
+        } else if (input->revision == 1U
+                   && input->direction == CCSDS_PACKET_DIRECTION_TELEMETRY) {
+            reserved_valid = input->serialized.data[0] == 0x10U;
+        } else if (input->revision == 2U) {
+            reserved_valid = (input->serialized.data[0] >> 4U) == 2U;
+        }
+    }
+    status = set_check(report, CCSDS_VALIDATION_PUS_RESERVED_BITS,
+                       size_valid && reserved_valid);
+    if (status != CCSDS_STATUS_OK) return status;
+    status = set_check(
+        report, CCSDS_VALIDATION_PUS_SPARE_FIELDS,
+        size_valid && ccsds_pus_spare_is_zero(
+            input->serialized.data, input->serialized.size, input->spare_octets));
+    if (status != CCSDS_STATUS_OK) return status;
+
+    if (input->direction == CCSDS_PACKET_DIRECTION_TELECOMMAND) {
+        status = set_check(report, CCSDS_VALIDATION_PUS_ACKNOWLEDGEMENT,
+                           input->acknowledgement_flags <= 0x0FU);
+        if (status != CCSDS_STATUS_OK) return status;
+        return set_check(
+            report, CCSDS_VALIDATION_PUS_SOURCE_ID,
+            ccsds_pus_identifier_fits(
+                input->identifier_value, input->identifier_octets));
+    }
+
+    if (input->direction == CCSDS_PACKET_DIRECTION_TELEMETRY) {
+        status = set_check(
+            report, CCSDS_VALIDATION_PUS_DESTINATION_ID,
+            ccsds_pus_identifier_fits(
+                input->identifier_value, input->identifier_octets));
+        if (status != CCSDS_STATUS_OK) return status;
+        status = set_check(
+            report, CCSDS_VALIDATION_PUS_TIMESTAMP,
+            input->timestamp_present != 0U
+                ? input->timestamp_valid != 0U
+                : input->timestamp_zero_when_absent != 0U);
+        if (status != CCSDS_STATUS_OK) return status;
+
+        if (input->revision == 1U) {
+            return set_check(
+                report, CCSDS_VALIDATION_PUS_PACKET_SUBCOUNTER,
+                input->packet_subcounter_present != 0U
+                || input->packet_subcounter == 0U);
+        }
+        if (input->revision == 2U) {
+            return set_check(
+                report, CCSDS_VALIDATION_PUS_TIME_REFERENCE_STATUS,
+                input->time_reference_status <= 0x0FU);
+        }
     }
 
     return CCSDS_STATUS_OK;

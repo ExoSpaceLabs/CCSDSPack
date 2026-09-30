@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include "error.h"
 #include "primary_header.h"
+#include "buffer.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -95,6 +96,36 @@ typedef struct ccsds_packet_coherence_input {
     uint8_t crc_valid;
 } ccsds_packet_coherence_input_t;
 
+
+/**
+ * @brief Plain PUS coherence facts consumed by the C validator.
+ *
+ * revision uses the public PUS revision values 1 (A) and 2 (C). direction uses
+ * CCSDS_PACKET_DIRECTION_* values and packet_type is the CCSDS primary-header
+ * Packet Type bit. serialized aliases the exact secondary-header bytes.
+ *
+ * The adapter supplies object-state facts that cannot be reconstructed from
+ * bytes alone, while the C validator owns the actual report decisions.
+ */
+typedef struct ccsds_pus_coherence_input {
+    uint8_t revision;
+    uint8_t direction;
+    uint8_t packet_type;
+    uint8_t tailoring_valid;
+    ccsds_buffer_view_t serialized;
+    size_t expected_size;
+    uint8_t spare_octets;
+    uint8_t acknowledgement_flags;
+    uint8_t identifier_octets;
+    uint32_t identifier_value;
+    uint8_t timestamp_present;
+    uint8_t timestamp_valid;
+    uint8_t timestamp_zero_when_absent;
+    uint8_t packet_subcounter_present;
+    uint8_t packet_subcounter;
+    uint8_t time_reference_status;
+} ccsds_pus_coherence_input_t;
+
 /** @brief Template-comparison facts whose object-specific equality is supplied by the adapter. */
 typedef struct ccsds_template_coherence_input {
     ccsds_primary_header_t header;
@@ -153,6 +184,12 @@ ccsds_status_t ccsds_validate_packet_coherence(
     const ccsds_packet_coherence_input_t *input,
     const ccsds_sequence_validator_t *sequence,
     int validate_sequence_count,
+    ccsds_validation_report_t *report);
+
+
+/** @brief Populates PUS-specific validation checks into a fixed C report. */
+ccsds_status_t ccsds_validate_pus_coherence(
+    const ccsds_pus_coherence_input_t *input,
     ccsds_validation_report_t *report);
 
 /** @brief Populates generic template-comparison checks into a fixed C report. */
