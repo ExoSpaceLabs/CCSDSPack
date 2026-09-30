@@ -124,27 +124,6 @@ namespace {
     return true;
   }
 
-  ccsds::Result<std::size_t> declaredPacketSize(const std::vector<std::uint8_t> &data) {
-    if (data.size() < 6U) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: truncated CCSDS primary header."};
-    }
-    const std::vector<std::uint8_t> headerData(data.begin(), data.begin() + 6);
-    ccsds::Header header;
-    const auto headerResult = header.deserialize(headerData);
-    if (!headerResult) return headerResult.error();
-    if (header.getVersionNumber() != 0U) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: unsupported CCSDS packet version."};
-    }
-    const auto packetSize = 6U + static_cast<std::size_t>(header.getDataLength()) + 1U;
-    if (data.size() < packetSize) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
-                          "Cannot deserialize packet: truncated packet body."};
-    }
-    return packetSize;
-  }
-
   ccsds::Result<ParsedPacket> validatePacketBytes(
       const std::vector<std::uint8_t> &headerData,
       const std::vector<std::uint8_t> &packetData,
