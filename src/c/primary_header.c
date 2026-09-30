@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "ccsdspack/c/primary_header.h"
+#include "ccsdspack/c/bytes.h"
 
 ccsds_status_t ccsds_primary_header_validate(const ccsds_primary_header_t *header) {
     if (header == NULL) {
@@ -31,8 +32,8 @@ ccsds_status_t ccsds_primary_header_decode(const uint8_t *data,
         return CCSDS_STATUS_INVALID_HEADER_DATA;
     }
 
-    packet_id = (uint16_t)(((uint16_t)data[0] << 8U) | (uint16_t)data[1]);
-    sequence = (uint16_t)(((uint16_t)data[2] << 8U) | (uint16_t)data[3]);
+    packet_id = ccsds_load_be16(data);
+    sequence = ccsds_load_be16(data + 2U);
 
     header_out->version_number = (uint8_t)((packet_id >> 13U) & 0x07U);
     header_out->type = (uint8_t)((packet_id >> 12U) & 0x01U);
@@ -40,7 +41,7 @@ ccsds_status_t ccsds_primary_header_decode(const uint8_t *data,
     header_out->apid = (uint16_t)(packet_id & 0x07FFU);
     header_out->sequence_flags = (uint8_t)((sequence >> 14U) & 0x03U);
     header_out->sequence_count = (uint16_t)(sequence & CCSDS_SEQUENCE_COUNT_MAX);
-    header_out->data_length = (uint16_t)(((uint16_t)data[4] << 8U) | (uint16_t)data[5]);
+    header_out->data_length = ccsds_load_be16(data + 4U);
 
     return CCSDS_STATUS_OK;
 }
@@ -71,12 +72,9 @@ ccsds_status_t ccsds_primary_header_encode(const ccsds_primary_header_t *header,
     sequence = (uint16_t)(((uint16_t)header->sequence_flags << 14U)
             | header->sequence_count);
 
-    data_out[0] = (uint8_t)(packet_id >> 8U);
-    data_out[1] = (uint8_t)(packet_id & 0xFFU);
-    data_out[2] = (uint8_t)(sequence >> 8U);
-    data_out[3] = (uint8_t)(sequence & 0xFFU);
-    data_out[4] = (uint8_t)(header->data_length >> 8U);
-    data_out[5] = (uint8_t)(header->data_length & 0xFFU);
+    ccsds_store_be16(data_out, packet_id);
+    ccsds_store_be16(data_out + 2U, sequence);
+    ccsds_store_be16(data_out + 4U, header->data_length);
 
     return CCSDS_STATUS_OK;
 }
@@ -95,12 +93,7 @@ ccsds_status_t ccsds_primary_header_pack(const ccsds_primary_header_t *header,
         return status;
     }
 
-    *packed_out = ((uint64_t)bytes[0] << 40U)
-                | ((uint64_t)bytes[1] << 32U)
-                | ((uint64_t)bytes[2] << 24U)
-                | ((uint64_t)bytes[3] << 16U)
-                | ((uint64_t)bytes[4] << 8U)
-                | (uint64_t)bytes[5];
+    *packed_out = ccsds_load_be_uint(bytes, (uint8_t)CCSDS_PRIMARY_HEADER_SIZE);
     return CCSDS_STATUS_OK;
 }
 
@@ -115,12 +108,7 @@ ccsds_status_t ccsds_primary_header_unpack(const uint64_t packed,
         return CCSDS_STATUS_INVALID_HEADER_DATA;
     }
 
-    bytes[0] = (uint8_t)(packed >> 40U);
-    bytes[1] = (uint8_t)(packed >> 32U);
-    bytes[2] = (uint8_t)(packed >> 24U);
-    bytes[3] = (uint8_t)(packed >> 16U);
-    bytes[4] = (uint8_t)(packed >> 8U);
-    bytes[5] = (uint8_t)packed;
+    ccsds_store_be_uint(bytes, (uint8_t)CCSDS_PRIMARY_HEADER_SIZE, packed);
 
     return ccsds_primary_header_decode(bytes, sizeof(bytes), header_out);
 }
