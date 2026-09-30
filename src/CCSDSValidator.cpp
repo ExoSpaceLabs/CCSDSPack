@@ -25,8 +25,9 @@ namespace {
       case ccsds::PacketDirection::Telecommand:
         return CCSDS_PACKET_DIRECTION_TELECOMMAND;
       case ccsds::PacketDirection::Unspecified:
-      default:
         return CCSDS_PACKET_DIRECTION_UNSPECIFIED;
+      default:
+        return 0xFFU;
     }
   }
 
