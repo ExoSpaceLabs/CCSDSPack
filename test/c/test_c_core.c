@@ -372,6 +372,177 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t expected_a_tm[] = {
+            0x10U, 0x03U, 0x19U, 0x44U, 0x7EU,
+            0x01U, 0x02U, 0x03U, 0x04U, 0x00U
+        };
+        static const uint8_t expected_c_tm[] = {
+            0x23U, 0x03U, 0x19U, 0x12U, 0x34U, 0xABU, 0xCDU
+        };
+        static const uint8_t expected_c_tm_time[] = {
+            0x25U, 0x05U, 0x01U, 0x00U, 0x07U, 0x01U, 0x02U,
+            0x11U, 0x22U, 0x33U, 0x44U, 0x00U
+        };
+        const ccsds_cuc_config_t implicit_4_0 = {
+            CCSDS_CUC_EPOCH_CCSDS_1958_TAI,
+            CCSDS_CUC_PFIELD_IMPLICIT,
+            4U,
+            0U
+        };
+        const ccsds_pus_a_tm_tailoring_t tailoring_a_tm = {
+            1U, 1U, 1U, implicit_4_0, 1U
+        };
+        const ccsds_pus_c_tm_tailoring_t tailoring_c_tm = {
+            0U,
+            {CCSDS_CUC_EPOCH_UNSPECIFIED, CCSDS_CUC_PFIELD_IMPLICIT, 0U, 0U},
+            0U
+        };
+        const ccsds_pus_c_tm_tailoring_t tailoring_c_tm_time = {
+            1U, implicit_4_0, 1U
+        };
+        const ccsds_pus_a_tm_fields_t fields_a_tm = {
+            3U, 25U, 0x44U, UINT32_C(0x7E),
+            {UINT64_C(0x01020304), UINT64_C(0)}
+        };
+        const ccsds_pus_c_tm_fields_t fields_c_tm = {
+            3U, 3U, 25U, 0x1234U, UINT32_C(0xABCD),
+            {UINT64_C(0), UINT64_C(0)}
+        };
+        const ccsds_pus_c_tm_fields_t fields_c_tm_time = {
+            5U, 5U, 1U, 7U, UINT32_C(0x0102),
+            {UINT64_C(0x11223344), UINT64_C(0)}
+        };
+        ccsds_pus_a_tm_fields_t decoded_a_tm = {0};
+        ccsds_pus_c_tm_fields_t decoded_c_tm = {0};
+        uint8_t tm_bytes[16] = {0U};
+        size_t tm_written = 0U;
+
+        failed |= expect_status("pus-a-tm-encode",
+            ccsds_pus_a_tm_encode(&fields_a_tm, &tailoring_a_tm,
+                                  tm_bytes, sizeof(tm_bytes), &tm_written),
+            CCSDS_STATUS_OK);
+        if (tm_written != sizeof(expected_a_tm)
+            || memcmp(tm_bytes, expected_a_tm, sizeof(expected_a_tm)) != 0) {
+            fprintf(stderr, "pus-a-tm-encode: wire vector mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("pus-a-tm-decode",
+            ccsds_pus_a_tm_decode(expected_a_tm, sizeof(expected_a_tm),
+                                  &tailoring_a_tm, &decoded_a_tm),
+            CCSDS_STATUS_OK);
+        if (decoded_a_tm.service_type != fields_a_tm.service_type
+            || decoded_a_tm.service_subtype != fields_a_tm.service_subtype
+            || decoded_a_tm.packet_subcounter != fields_a_tm.packet_subcounter
+            || decoded_a_tm.destination_id != fields_a_tm.destination_id
+            || decoded_a_tm.timestamp.coarse != fields_a_tm.timestamp.coarse
+            || decoded_a_tm.timestamp.fine != fields_a_tm.timestamp.fine) {
+            fprintf(stderr, "pus-a-tm-decode: field mismatch\n");
+            failed = 1;
+        }
+
+        memset(tm_bytes, 0, sizeof(tm_bytes));
+        tm_written = 0U;
+        failed |= expect_status("pus-c-tm-encode",
+            ccsds_pus_c_tm_encode(&fields_c_tm, &tailoring_c_tm,
+                                  tm_bytes, sizeof(tm_bytes), &tm_written),
+            CCSDS_STATUS_OK);
+        if (tm_written != sizeof(expected_c_tm)
+            || memcmp(tm_bytes, expected_c_tm, sizeof(expected_c_tm)) != 0) {
+            fprintf(stderr, "pus-c-tm-encode: wire vector mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("pus-c-tm-decode",
+            ccsds_pus_c_tm_decode(expected_c_tm, sizeof(expected_c_tm),
+                                  &tailoring_c_tm, &decoded_c_tm),
+            CCSDS_STATUS_OK);
+        if (decoded_c_tm.time_reference_status != fields_c_tm.time_reference_status
+            || decoded_c_tm.service_type != fields_c_tm.service_type
+            || decoded_c_tm.service_subtype != fields_c_tm.service_subtype
+            || decoded_c_tm.message_type_counter != fields_c_tm.message_type_counter
+            || decoded_c_tm.destination_id != fields_c_tm.destination_id) {
+            fprintf(stderr, "pus-c-tm-decode: field mismatch\n");
+            failed = 1;
+        }
+
+        memset(tm_bytes, 0, sizeof(tm_bytes));
+        tm_written = 0U;
+        failed |= expect_status("pus-c-tm-time-encode",
+            ccsds_pus_c_tm_encode(&fields_c_tm_time, &tailoring_c_tm_time,
+                                  tm_bytes, sizeof(tm_bytes), &tm_written),
+            CCSDS_STATUS_OK);
+        if (tm_written != sizeof(expected_c_tm_time)
+            || memcmp(tm_bytes, expected_c_tm_time, sizeof(expected_c_tm_time)) != 0) {
+            fprintf(stderr, "pus-c-tm-time-encode: wire vector mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("pus-c-tm-time-decode",
+            ccsds_pus_c_tm_decode(expected_c_tm_time, sizeof(expected_c_tm_time),
+                                  &tailoring_c_tm_time, &decoded_c_tm),
+            CCSDS_STATUS_OK);
+        if (decoded_c_tm.timestamp.coarse != fields_c_tm_time.timestamp.coarse
+            || decoded_c_tm.timestamp.fine != fields_c_tm_time.timestamp.fine) {
+            fprintf(stderr, "pus-c-tm-time-decode: timestamp mismatch\n");
+            failed = 1;
+        }
+
+        {
+            ccsds_pus_a_tm_tailoring_t invalid_width = tailoring_a_tm;
+            invalid_width.destination_id_octets = 3U;
+            failed |= expect_status("pus-a-tm-invalid-width",
+                ccsds_pus_a_tm_validate_tailoring(&invalid_width),
+                CCSDS_STATUS_PUS_INVALID_IDENTIFIER_WIDTH);
+        }
+
+        {
+            ccsds_pus_c_tm_tailoring_t disabled_with_cuc = tailoring_c_tm;
+            disabled_with_cuc.cuc = implicit_4_0;
+            failed |= expect_status("pus-c-tm-disabled-time-config",
+                ccsds_pus_c_tm_validate_tailoring(&disabled_with_cuc),
+                CCSDS_STATUS_PUS_DISABLED_TIME_CONFIG);
+        }
+
+        {
+            ccsds_pus_c_tm_fields_t invalid_status = fields_c_tm;
+            invalid_status.time_reference_status = 0x10U;
+            failed |= expect_status("pus-c-tm-invalid-time-reference",
+                ccsds_pus_c_tm_encode(&invalid_status, &tailoring_c_tm,
+                                      tm_bytes, sizeof(tm_bytes), &tm_written),
+                CCSDS_STATUS_PUS_INVALID_TIME_REFERENCE_STATUS);
+        }
+
+        {
+            ccsds_pus_a_tm_fields_t overflow = fields_a_tm;
+            overflow.destination_id = UINT32_C(0x100);
+            failed |= expect_status("pus-a-tm-destination-overflow",
+                ccsds_pus_a_tm_encode(&overflow, &tailoring_a_tm,
+                                      tm_bytes, sizeof(tm_bytes), &tm_written),
+                CCSDS_STATUS_PUS_IDENTIFIER_OVERFLOW);
+        }
+
+        {
+            uint8_t nonzero_spare[sizeof(expected_c_tm_time)];
+            memcpy(nonzero_spare, expected_c_tm_time, sizeof(nonzero_spare));
+            nonzero_spare[sizeof(nonzero_spare) - 1U] = 1U;
+            failed |= expect_status("pus-c-tm-nonzero-spare",
+                ccsds_pus_c_tm_decode(nonzero_spare, sizeof(nonzero_spare),
+                                      &tailoring_c_tm_time, &decoded_c_tm),
+                CCSDS_STATUS_PUS_NONZERO_SPARE);
+        }
+
+        {
+            ccsds_pus_a_tm_fields_t time_overflow = fields_a_tm;
+            time_overflow.timestamp.coarse = UINT64_C(0x100000000);
+            failed |= expect_status("pus-a-tm-time-overflow",
+                ccsds_pus_a_tm_encode(&time_overflow, &tailoring_a_tm,
+                                      tm_bytes, sizeof(tm_bytes), &tm_written),
+                CCSDS_STATUS_CUC_COARSE_OVERFLOW);
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);

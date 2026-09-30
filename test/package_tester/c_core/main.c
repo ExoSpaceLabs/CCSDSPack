@@ -114,6 +114,48 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t expected[] = {
+            0x23U, 0x03U, 0x19U, 0x12U, 0x34U, 0xABU, 0xCDU
+        };
+        const ccsds_pus_c_tm_tailoring_t tailoring = {
+            0U,
+            {CCSDS_CUC_EPOCH_UNSPECIFIED, CCSDS_CUC_PFIELD_IMPLICIT, 0U, 0U},
+            0U
+        };
+        const ccsds_pus_c_tm_fields_t fields = {
+            3U, 3U, 25U, 0x1234U, UINT32_C(0xABCD),
+            {UINT64_C(0), UINT64_C(0)}
+        };
+        ccsds_pus_c_tm_fields_t decoded = {0};
+        uint8_t encoded[sizeof(expected)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_pus_c_tm_encode(&fields, &tailoring,
+                                  encoded, sizeof(encoded), &written)
+            != CCSDS_STATUS_OK) {
+            return 16;
+        }
+        if (written != sizeof(expected)) {
+            return 17;
+        }
+        for (size_t index = 0U; index < sizeof(expected); ++index) {
+            if (encoded[index] != expected[index]) {
+                return 18;
+            }
+        }
+        if (ccsds_pus_c_tm_decode(encoded, sizeof(encoded),
+                                  &tailoring, &decoded)
+            != CCSDS_STATUS_OK) {
+            return 19;
+        }
+        if (decoded.message_type_counter != fields.message_type_counter
+            || decoded.destination_id != fields.destination_id
+            || decoded.time_reference_status != fields.time_reference_status) {
+            return 20;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }
