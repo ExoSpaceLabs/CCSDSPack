@@ -328,6 +328,8 @@ ccsds::ResultBool ccsds::Manager::load(const std::vector<Packet> &packets) {
 
 ccsds::ResultBool ccsds::Manager::load(
     const std::vector<std::uint8_t> &packetsBuffer) {
+  RET_IF_ERR_MSG(packetsBuffer.size() < 7U, ErrorCode::INVALID_DATA,
+                 "invalid packet buffer size");
   return load(packetsBuffer.data(), packetsBuffer.size());
 }
 
