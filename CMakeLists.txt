@@ -70,6 +70,7 @@ set(C_CORE_SOURCES
     "${SOURCE_DIR}/c/pus_tc.c"
     "${SOURCE_DIR}/c/validation.c"
     "${SOURCE_DIR}/c/pus_tm.c"
+    "${SOURCE_DIR}/c/segmentation.c"
 )
 
 if(CCSDSPACK_BUILD_MCU)
