@@ -218,49 +218,7 @@ jobs:
           elf="$PWD/build/stm32h755-das-validation/firmware/ccsdspack_stm32h755_validation.elf"
           test -s "$elf"
           arm-none-eabi-objdump -h "$elf" | grep -q '\.isr_vector'
-          arm-none-eabi-nm "$elf" | grep -Eq '[[:space:]][A-Za-z][[:space:]]g_das_vector_table        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: RELEASE_NOTES.md
-          files: packages/ccsdspack*
-
-      - name: Log in to GHCR
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker build \
-            --build-arg CCSDSPACK_TAG=${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:latest \
-            -f docker/Dockerfile docker
-
-      - name: Push Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker push ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }}
-          docker push ghcr.io/exospacelabs/ccsdspack:latest
-
-          arm-none-eabi-nm "$elf" | grep -q 'ccsdspack_mcu_compile_probe\|main'
-          cat "$PWD/build/stm32h755-das-validation/firmware/size-and-identity.txt"
-
-      - name: Upload hardware validation packages
-        if: matrix.os == 'ubuntu-22.04'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ccsdspack-hardware-${{ github.sha }}
-          path: |
-            packages/*.deb
-            packages/*.tar.gz
-          if-no-files-found: error
-          retention-days: 14
-
+          arm-none-eabi-nm "$elf" | grep -Eq '[[:space:]][A-Za-z][[:space:]]g_das_vector_table
       - name: Upload to GitHub Release (tag builds)
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
@@ -291,49 +249,7 @@ jobs:
           docker push ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }}
           docker push ghcr.io/exospacelabs/ccsdspack:latest
 
-          arm-none-eabi-nm "$elf" | grep -q '[[:space:]]main        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: RELEASE_NOTES.md
-          files: packages/ccsdspack*
-
-      - name: Log in to GHCR
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker build \
-            --build-arg CCSDSPACK_TAG=${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:latest \
-            -f docker/Dockerfile docker
-
-      - name: Push Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker push ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }}
-          docker push ghcr.io/exospacelabs/ccsdspack:latest
-
-          arm-none-eabi-nm "$elf" | grep -q 'ccsdspack_mcu_compile_probe\|main'
-          cat "$PWD/build/stm32h755-das-validation/firmware/size-and-identity.txt"
-
-      - name: Upload hardware validation packages
-        if: matrix.os == 'ubuntu-22.04'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ccsdspack-hardware-${{ github.sha }}
-          path: |
-            packages/*.deb
-            packages/*.tar.gz
-          if-no-files-found: error
-          retention-days: 14
-
+          arm-none-eabi-nm "$elf" | grep -Eq '[[:space:]]T[[:space:]]main
       - name: Upload to GitHub Release (tag builds)
         if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
@@ -377,50 +293,6 @@ jobs:
             build/stm32h755-das-validation/firmware/ccsdspack_stm32h755_validation.elf
             build/stm32h755-das-validation/firmware/ccsdspack_stm32h755_validation.map
             build/stm32h755-das-validation/firmware/size-and-identity.txt
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload to GitHub Release (tag builds)
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: RELEASE_NOTES.md
-          files: packages/ccsdspack*
-
-      - name: Log in to GHCR
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker build \
-            --build-arg CCSDSPACK_TAG=${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:latest \
-            -f docker/Dockerfile docker
-
-      - name: Push Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker push ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }}
-          docker push ghcr.io/exospacelabs/ccsdspack:latest
-
-          arm-none-eabi-nm "$elf" | grep -q 'ccsdspack_mcu_compile_probe\|main'
-          cat "$PWD/build/stm32h755-das-validation/firmware/size-and-identity.txt"
-
-      - name: Upload hardware validation packages
-        if: matrix.os == 'ubuntu-22.04'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ccsdspack-hardware-${{ github.sha }}
-          path: |
-            packages/*.deb
-            packages/*.tar.gz
           if-no-files-found: error
           retention-days: 14
 
