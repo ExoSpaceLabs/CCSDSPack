@@ -49,160 +49,7 @@ jobs:
 
       - name: Run C11 core tests
         run: |
-          ctest --test-dir build --output-on-failure -R '^ccsdspack_c_core
-      - name: Run tests (native)
-        shell: bash
-        run: |
-          set +e
-          cd bin
-          ./CCSDSPack_tester 2>&1 | tee CCSDSPack_tester.log
-          status=${PIPESTATUS[0]}
-          exit "$status"
-
-      - name: Upload native test failure log
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-test-log-${{ matrix.os }}-${{ github.sha }}
-          path: bin/CCSDSPack_tester.log
-          if-no-files-found: error
-
-      - name: Run CLI integration tests
-        id: cli_integration
-        shell: bash
-        run: |
-          set +e
-          python3 test/cli_integration.py \
-            --bin-dir "$PWD/bin" \
-            --resources "$PWD/test/test_resources" \
-            2>&1 | tee cli_integration.log
-          status=${PIPESTATUS[0]}
-          exit "$status"
-
-      - name: Upload CLI integration failure log
-        if: failure() && steps.cli_integration.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-cli-log-${{ github.sha }}
-          path: cli_integration.log
-          if-no-files-found: error
-
-      - name: Install shared library package
-        run: |
-          cmake --install build --prefix "$PWD/build/install"
-
-      - name: Configure installed C11 core consumer
-        run: |
-          CC=gcc CXX=/bin/false cmake -S test/package_tester/c_core \
-            -B build/package_tester/c_core \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_PREFIX_PATH="$PWD/build/install"
-
-      - name: Build and run installed C11 core consumer
-        run: |
-          cmake --build build/package_tester/c_core -- -j
-          LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
-            ctest --test-dir build/package_tester/c_core --output-on-failure
-
-      - name: Configure installed shared-library consumer
-        run: |
-          cmake -S test/package_tester/shared_lib \
-            -B build/package_tester/shared_lib \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_PREFIX_PATH="$PWD/build/install"
-
-      - name: Build installed shared-library consumer
-        run: |
-          cmake --build build/package_tester/shared_lib -- -j
-
-      - name: Run installed shared-library consumer
-        run: |
-          LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
-            ctest --test-dir build/package_tester/shared_lib --output-on-failure
-
-      - name: Build and run installed-package examples
-        run: |
-          LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
-            ./example/build_examples.sh all "$PWD/build/install"
-
-      - name: Install cross and packaging deps (22.04 only)
-        if: matrix.os == 'ubuntu-22.04'
-        run: |
-          ./install-aarch-cross-build-deps.sh
-          ./install-arm-none-cross-build-deps.sh
-          sudo apt-get update && sudo apt-get install -y rpm
-
-      - name: Cleanup and generate packages (22.04 only)
-        id: packaging
-        if: matrix.os == 'ubuntu-22.04'
-        shell: bash
-        run: |
-          set +e
-          {
-            mkdir -p build packages
-            rm -rf bin/* build/*
-            ./package.sh -p DEB
-
-            rm -rf bin/* build/*
-            ./package.sh -t cmake/toolchains/arm-none-eabi.cmake -p MCU -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
-
-            rm -rf bin/* build/*
-            ./package.sh -t cmake/toolchains/aarch64-linux-gnu.cmake -p DEB
-
-            ls -la packages
-          } 2>&1 | tee packaging.log
-          status=${PIPESTATUS[0]}
-          exit "$status"
-
-      - name: Upload packaging failure log
-        if: failure() && matrix.os == 'ubuntu-22.04' && steps.packaging.outcome == 'failure'
-        uses: actions/upload-artifact@v4
-        with:
-          name: linux-packaging-log-${{ github.sha }}
-          path: packaging.log
-          if-no-files-found: error
-
-      - name: Upload hardware validation packages
-        if: matrix.os == 'ubuntu-22.04'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ccsdspack-hardware-${{ github.sha }}
-          path: |
-            packages/*.deb
-            packages/*.tar.gz
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload to GitHub Release (tag builds)
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: softprops/action-gh-release@v2
-        with:
-          body_path: RELEASE_NOTES.md
-          files: packages/ccsdspack*
-
-      - name: Log in to GHCR
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker build \
-            --build-arg CCSDSPACK_TAG=${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }} \
-            -t ghcr.io/exospacelabs/ccsdspack:latest \
-            -f docker/Dockerfile docker
-
-      - name: Push Docker image
-        if: matrix.os == 'ubuntu-22.04' && startsWith(github.ref, 'refs/tags/v')
-        run: |
-          docker push ghcr.io/exospacelabs/ccsdspack:${{ github.ref_name }}
-          docker push ghcr.io/exospacelabs/ccsdspack:latest
-
+          ctest --test-dir build --output-on-failure -R '^ccsdspack_c_core$'
 
       - name: Build and run C11 core without a C++ compiler
         run: |
@@ -257,6 +104,19 @@ jobs:
       - name: Install shared library package
         run: |
           cmake --install build --prefix "$PWD/build/install"
+
+      - name: Configure installed C11 core consumer
+        run: |
+          CC=gcc CXX=/bin/false cmake -S test/package_tester/c_core \
+            -B build/package_tester/c_core \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_PREFIX_PATH="$PWD/build/install"
+
+      - name: Build and run installed C11 core consumer
+        run: |
+          cmake --build build/package_tester/c_core -- -j
+          LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
+            ctest --test-dir build/package_tester/c_core --output-on-failure
 
       - name: Configure installed shared-library consumer
         run: |
