@@ -736,7 +736,7 @@ int main(void) {
         ccsds_primary_header_t segment = {
             0U, 0U, 0U, 42U, CCSDS_SEQUENCE_FIRST, 100U, 0U
         };
-        uint8_t output[sizeof(expected)] = {0U};
+        uint8_t output[sizeof(expected) + 1U] = {0U};
         size_t written_now = 0U;
         int complete = 0;
 
