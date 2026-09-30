@@ -2,7 +2,7 @@
 
 [Documentation index](README.md) | [Packages](PACKAGES.md) | [Structured validation](VALIDATION.md)
 
-CCSDSPack is a C++17 library with supported build paths for native hosted systems, aarch64 Linux targets, and bare-metal ARM Cortex-M consumers.
+CCSDSPack v2.1 has a C11 protocol core with an optional C++17 ownership/convenience layer and supports native hosted systems, aarch64 Linux targets, and bare-metal ARM Cortex-M consumers.
 
 ## aarch64 Linux
 
@@ -35,9 +35,9 @@ Generate a package:
 
 ## Bare-metal Cortex-M static library
 
-`CCSDSPACK_BUILD_MCU=ON` builds the protocol library as a static archive and defines `CCSDS_MCU` publicly. Host-side configuration parsing and command-line executables are excluded.
+`CCSDSPACK_BUILD_MCU=ON` builds static protocol libraries and defines `CCSDS_MCU` publicly. The C11 core is always available; the compatible C++17 archive is included when `CCSDSPACK_BUILD_CPP=ON`. Host-side configuration parsing and command-line executables are excluded.
 
-The MCU library retains:
+The C11 MCU core retains allocation-free wire primitives, packet views, PUS codecs, CUC, validation, segmentation/reassembly, and stream framing. With the default C++ layer enabled, the MCU library also retains:
 
 - `ccsds::Packet` and `ccsds::Manager`;
 - PUS-A/PUS-C TC/TM codecs and tailoring types;
