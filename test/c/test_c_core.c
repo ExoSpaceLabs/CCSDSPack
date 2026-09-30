@@ -268,6 +268,110 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t expected_a[] = {0x1AU, 0x11U, 0x02U, 0x55U, 0x00U};
+        static const uint8_t expected_c[] = {0x2FU, 0x11U, 0x01U, 0x12U, 0x34U};
+        const ccsds_pus_a_tc_tailoring_t tailoring_a = {1U, 1U};
+        const ccsds_pus_c_tc_tailoring_t tailoring_c = {0U};
+        const ccsds_pus_tc_fields_t fields_a = {0x0AU, 17U, 2U, UINT32_C(0x55)};
+        const ccsds_pus_tc_fields_t fields_c = {0x0FU, 17U, 1U, UINT32_C(0x1234)};
+        ccsds_pus_tc_fields_t decoded_tc = {0U, 0U, 0U, 0U};
+        uint8_t pus_bytes[8] = {0U};
+        size_t pus_written = 0U;
+
+        failed |= expect_status("pus-a-tc-encode",
+            ccsds_pus_a_tc_encode(&fields_a, &tailoring_a,
+                                  pus_bytes, sizeof(pus_bytes), &pus_written),
+            CCSDS_STATUS_OK);
+        if (pus_written != sizeof(expected_a)
+            || memcmp(pus_bytes, expected_a, sizeof(expected_a)) != 0) {
+            fprintf(stderr, "pus-a-tc-encode: wire vector mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("pus-a-tc-decode",
+            ccsds_pus_a_tc_decode(expected_a, sizeof(expected_a),
+                                  &tailoring_a, &decoded_tc),
+            CCSDS_STATUS_OK);
+        if (decoded_tc.acknowledgement_flags != fields_a.acknowledgement_flags
+            || decoded_tc.service_type != fields_a.service_type
+            || decoded_tc.service_subtype != fields_a.service_subtype
+            || decoded_tc.source_id != fields_a.source_id) {
+            fprintf(stderr, "pus-a-tc-decode: field mismatch\n");
+            failed = 1;
+        }
+
+        memset(pus_bytes, 0, sizeof(pus_bytes));
+        pus_written = 0U;
+        failed |= expect_status("pus-c-tc-encode",
+            ccsds_pus_c_tc_encode(&fields_c, &tailoring_c,
+                                  pus_bytes, sizeof(pus_bytes), &pus_written),
+            CCSDS_STATUS_OK);
+        if (pus_written != sizeof(expected_c)
+            || memcmp(pus_bytes, expected_c, sizeof(expected_c)) != 0) {
+            fprintf(stderr, "pus-c-tc-encode: wire vector mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("pus-c-tc-decode",
+            ccsds_pus_c_tc_decode(expected_c, sizeof(expected_c),
+                                  &tailoring_c, &decoded_tc),
+            CCSDS_STATUS_OK);
+        if (decoded_tc.acknowledgement_flags != fields_c.acknowledgement_flags
+            || decoded_tc.service_type != fields_c.service_type
+            || decoded_tc.service_subtype != fields_c.service_subtype
+            || decoded_tc.source_id != fields_c.source_id) {
+            fprintf(stderr, "pus-c-tc-decode: field mismatch\n");
+            failed = 1;
+        }
+
+        {
+            ccsds_pus_a_tc_tailoring_t invalid_width = {3U, 0U};
+            failed |= expect_status("pus-a-tc-invalid-width",
+                ccsds_pus_a_tc_validate_tailoring(&invalid_width),
+                CCSDS_STATUS_PUS_INVALID_IDENTIFIER_WIDTH);
+        }
+
+        {
+            const ccsds_pus_a_tc_tailoring_t one_octet = {1U, 0U};
+            ccsds_pus_tc_fields_t overflow = fields_a;
+            overflow.source_id = UINT32_C(0x100);
+            failed |= expect_status("pus-a-tc-source-overflow",
+                ccsds_pus_a_tc_encode(&overflow, &one_octet,
+                                      pus_bytes, sizeof(pus_bytes), &pus_written),
+                CCSDS_STATUS_PUS_IDENTIFIER_OVERFLOW);
+        }
+
+        {
+            uint8_t invalid_version[sizeof(expected_a)];
+            memcpy(invalid_version, expected_a, sizeof(expected_a));
+            invalid_version[0] = 0x2AU;
+            failed |= expect_status("pus-a-tc-invalid-version",
+                ccsds_pus_a_tc_decode(invalid_version, sizeof(invalid_version),
+                                      &tailoring_a, &decoded_tc),
+                CCSDS_STATUS_PUS_INVALID_VERSION);
+        }
+
+        {
+            uint8_t nonzero_spare[sizeof(expected_a)];
+            memcpy(nonzero_spare, expected_a, sizeof(expected_a));
+            nonzero_spare[sizeof(nonzero_spare) - 1U] = 1U;
+            failed |= expect_status("pus-a-tc-nonzero-spare",
+                ccsds_pus_a_tc_decode(nonzero_spare, sizeof(nonzero_spare),
+                                      &tailoring_a, &decoded_tc),
+                CCSDS_STATUS_PUS_NONZERO_SPARE);
+        }
+
+        {
+            ccsds_pus_tc_fields_t invalid_ack = fields_c;
+            invalid_ack.acknowledgement_flags = 0x10U;
+            failed |= expect_status("pus-c-tc-invalid-ack",
+                ccsds_pus_c_tc_encode(&invalid_ack, &tailoring_c,
+                                      pus_bytes, sizeof(pus_bytes), &pus_written),
+                CCSDS_STATUS_PUS_INVALID_ACK_FLAGS);
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);

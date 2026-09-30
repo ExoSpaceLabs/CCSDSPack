@@ -7,6 +7,7 @@
 #include "CCSDSPacketTypes.h"
 #include "CCSDSResult.h"
 #include "CCSDSTime.h"
+#include "ccsdspack/c/pus_tc.h"
 #include <cstdint>
 #include <string>
 
@@ -69,7 +70,11 @@ namespace ccsds::pus {
   }
 
   [[nodiscard]] inline ResultBool validateTailoring(const rev_a::TcTailoring &tailoring) {
-    RET_IF_ERR_MSG(!validIdentifierWidth(tailoring.sourceIdOctets),
+    const ccsds_pus_a_tc_tailoring_t core{
+      tailoring.sourceIdOctets,
+      tailoring.secondaryHeaderSpareOctets
+    };
+    RET_IF_ERR_MSG(ccsds_pus_a_tc_validate_tailoring(&core) != CCSDS_STATUS_OK,
                    ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "PUS-A TC source-ID width must be 0, 1, 2, or 4 octets.");
     return true;

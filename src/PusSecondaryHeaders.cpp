@@ -2,9 +2,36 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include "PusSecondaryHeaders.h"
+#include "ccsdspack/c/pus_tc.h"
 #include <utility>
 
 namespace {
+  ccsds::Error pusTcDecodeError(const ccsds_status_t status, const bool revisionA) {
+    using ccsds::Error;
+    using ccsds::ErrorCode;
+    switch (status) {
+      case CCSDS_STATUS_PUS_INVALID_IDENTIFIER_WIDTH:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "PUS-A TC source-ID width must be 0, 1, 2, or 4 octets.");
+      case CCSDS_STATUS_PUS_SIZE_MISMATCH:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     revisionA ? "PUS-A TC secondary-header size mismatch."
+                               : "PUS-C TC secondary-header size mismatch.");
+      case CCSDS_STATUS_PUS_INVALID_VERSION:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     revisionA ? "PUS-A TC reserved bit or version is invalid."
+                               : "PUS-C TC version is invalid.");
+      case CCSDS_STATUS_PUS_NONZERO_SPARE:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "PUS TC secondary-header spare octets must be zero.");
+      case CCSDS_STATUS_NULL_POINTER:
+        return Error(ErrorCode::NULL_POINTER, "PUS TC core received a null pointer.");
+      default:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "PUS TC secondary-header decoding failed.");
+    }
+  }
+
 #ifndef CCSDS_MCU
   ccsds::Result<std::uint64_t> requiredUnsigned(const ccsds::Config &config,
                                                 const char *key,
@@ -351,22 +378,41 @@ ccsds::pus::rev_a::TcHeader::TcHeader(
 
 ccsds::ResultBool ccsds::pus::rev_a::TcHeader::deserialize(
     const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateTailoring(getTailoring()));
-  RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-A TC secondary-header size mismatch.");
-  RET_IF_ERR_MSG((data[0] & 0x80U) != 0U || ((data[0] >> 4U) & 0x07U) != 1U,
-                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-A TC reserved bit or version is invalid.");
-  FORWARD_RESULT(parseTcBody(data, 1U));
-  m_acknowledgementFlags = data[0] & 0x0FU;
+  const ccsds_pus_a_tc_tailoring_t tailoring{
+    m_sourceIdOctets,
+    m_secondaryHeaderSpareOctets
+  };
+  ccsds_pus_tc_fields_t fields{};
+  const auto status = ccsds_pus_a_tc_decode(
+    data.data(), data.size(), &tailoring, &fields);
+  if (status != CCSDS_STATUS_OK) return pusTcDecodeError(status, true);
+
+  m_acknowledgementFlags = fields.acknowledgement_flags;
+  m_serviceType = fields.service_type;
+  m_serviceSubtype = fields.service_subtype;
+  m_sourceId = fields.source_id;
   return true;
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_a::TcHeader::serialize() const {
-  if (!validateTailoring(getTailoring()) || m_acknowledgementFlags > 0x0FU
-      || !identifierFits(m_sourceId, m_sourceIdOctets)) return {};
-  std::vector<std::uint8_t> bytes{static_cast<std::uint8_t>(0x10U | m_acknowledgementFlags)};
-  appendTcBody(bytes);
+  const ccsds_pus_a_tc_tailoring_t tailoring{
+    m_sourceIdOctets,
+    m_secondaryHeaderSpareOctets
+  };
+  const ccsds_pus_tc_fields_t fields{
+    m_acknowledgementFlags,
+    m_serviceType,
+    m_serviceSubtype,
+    m_sourceId
+  };
+  std::vector<std::uint8_t> bytes(ccsds_pus_a_tc_encoded_size(&tailoring));
+  std::size_t written = 0U;
+  if (bytes.empty()
+      || ccsds_pus_a_tc_encode(&fields, &tailoring, bytes.data(), bytes.size(), &written)
+           != CCSDS_STATUS_OK
+      || written != bytes.size()) {
+    return {};
+  }
   return bytes;
 }
 
@@ -462,21 +508,35 @@ ccsds::pus::rev_c::TcHeader::TcHeader(
 
 ccsds::ResultBool ccsds::pus::rev_c::TcHeader::deserialize(
     const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateTailoring(getTailoring()));
-  RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-C TC secondary-header size mismatch.");
-  RET_IF_ERR_MSG((data[0] >> 4U) != 2U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-C TC version is invalid.");
-  FORWARD_RESULT(parseTcBody(data, 1U));
-  m_acknowledgementFlags = data[0] & 0x0FU;
+  const ccsds_pus_c_tc_tailoring_t tailoring{m_secondaryHeaderSpareOctets};
+  ccsds_pus_tc_fields_t fields{};
+  const auto status = ccsds_pus_c_tc_decode(
+    data.data(), data.size(), &tailoring, &fields);
+  if (status != CCSDS_STATUS_OK) return pusTcDecodeError(status, false);
+
+  m_acknowledgementFlags = fields.acknowledgement_flags;
+  m_serviceType = fields.service_type;
+  m_serviceSubtype = fields.service_subtype;
+  m_sourceId = fields.source_id;
   return true;
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_c::TcHeader::serialize() const {
-  if (!validateTailoring(getTailoring()) || m_acknowledgementFlags > 0x0FU
-      || !identifierFits(m_sourceId, 2U)) return {};
-  std::vector<std::uint8_t> bytes{static_cast<std::uint8_t>(0x20U | m_acknowledgementFlags)};
-  appendTcBody(bytes);
+  const ccsds_pus_c_tc_tailoring_t tailoring{m_secondaryHeaderSpareOctets};
+  const ccsds_pus_tc_fields_t fields{
+    m_acknowledgementFlags,
+    m_serviceType,
+    m_serviceSubtype,
+    m_sourceId
+  };
+  std::vector<std::uint8_t> bytes(ccsds_pus_c_tc_encoded_size(&tailoring));
+  std::size_t written = 0U;
+  if (bytes.empty()
+      || ccsds_pus_c_tc_encode(&fields, &tailoring, bytes.data(), bytes.size(), &written)
+           != CCSDS_STATUS_OK
+      || written != bytes.size()) {
+    return {};
+  }
   return bytes;
 }
 
