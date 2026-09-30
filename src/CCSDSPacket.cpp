@@ -562,14 +562,25 @@ ccsds::Result<std::size_t> ccsds::Packet::serialize(
   RET_IF_ERR_MSG(capacity < expectedCapacity, ErrorCode::INVALID_DATA,
                  "Cannot serialize packet: output buffer is too small.");
 
-  std::vector<std::uint8_t> dataField;
-  ASSIGN_MV(dataField, m_dataField.serialize());
+  m_dataField.update();
+  const auto secondaryHeader = m_dataField.getSecondaryHeaderBytes();
+  const auto secondary = m_dataField.getSecondaryHeader();
+  RET_IF_ERR_MSG(secondary && secondaryHeader.size() != secondary->getSize(),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Secondary header serialization failed or returned an unexpected size.");
+  const auto applicationData = m_dataField.getApplicationDataView();
+  RET_IF_ERR_MSG(secondaryHeader.size() + applicationData.size
+                   > m_dataField.getDataFieldAbsoluteBytesSize(),
+                 ErrorCode::INVALID_DATA,
+                 "Serialized packet data field exceeds its configured capacity.");
+
   if (!m_updateStatus && m_enableUpdatePacket) {
-    FORWARD_RESULT(finalizeSerializedDataField(dataField));
+    FORWARD_RESULT(finalizeDataFieldParts(secondaryHeader, applicationData));
     m_updateStatus = true;
   }
 
-  const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
+  const auto dataFieldSize = secondaryHeader.size() + applicationData.size;
+  const auto packetDataFieldSize = dataFieldSize + getPacketErrorControlSize();
   constexpr auto maximumPacketDataFieldSize =
     static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
   RET_IF_ERR_MSG(packetDataFieldSize == 0U, ErrorCode::INVALID_DATA,
@@ -586,12 +597,15 @@ ccsds::Result<std::size_t> ccsds::Packet::serialize(
                  "Cannot serialize packet: finalized size differs from the expected size.");
 
   const auto coreHeader = toCoreHeader(m_primaryHeader);
-  const ccsds_buffer_view_t coreDataField{
-    dataField.empty() ? nullptr : dataField.data(),
-    dataField.size()
+  const ccsds_packet_data_parts_t coreDataField{
+    {
+      secondaryHeader.empty() ? nullptr : secondaryHeader.data(),
+      secondaryHeader.size()
+    },
+    applicationData
   };
   std::size_t written = 0U;
-  const auto status = ccsds_packet_encode(
+  const auto status = ccsds_packet_encode_parts(
     &coreHeader,
     coreDataField,
     toCoreErrorControl(getPacketErrorControlMode()),
