@@ -15,6 +15,7 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 - [PUS tailoring](MISSION_TAILORING.md): concrete PUS identities, optional layout choices, and numeric CUC time.
 - [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
 - [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size interfaces.
+- [Performance baseline](PERFORMANCE.md): C zero-copy versus C++ owning parse methodology and hosted evidence.
 - [Packet processing flow](FLOW.md): Packet, Manager, parsing, validation, and reassembly lifecycle.
 
 ## Hosted integration
