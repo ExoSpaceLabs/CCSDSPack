@@ -24,7 +24,7 @@ jobs:
       - name: Checkout current v2.1
         uses: actions/checkout@v4
         with:
-          ref: 8afa3784a585e790e3b9d2f082ed0ca3a79fdfb9
+          ref: e87c292d86aaf21dad5a15480d7c52825fc648db
           path: v21-src
 
       - name: Build main
@@ -53,19 +53,94 @@ jobs:
             -Wl,-rpath,"$PWD/v21-src/lib" \
             -Wl,-rpath,"$PWD/v21-build/lib" -o benchmark-v21
 
-      - name: Run comparison
+      - name: Build identical serialization benchmark against main
         run: |
-          ./benchmark-main main | tee main.csv
-          ./benchmark-v21 v2.1 | tee v21.csv
+          g++ -std=c++17 -O3 test/performance/main_vs_v21_serialization_benchmark.cpp \
+            -Imain-src/inc -Lmain-src/lib -lccsdspack \
+            -Wl,-rpath,"$PWD/main-src/lib" -o serialize-main
+
+      - name: Build identical serialization benchmark against v2.1
+        run: |
+          g++ -std=c++17 -O3 test/performance/main_vs_v21_serialization_benchmark.cpp \
+            -Iv21-src/inc -Lv21-src/lib -Lv21-build/lib \
+            -lccsdspack -lccsdspack_c \
+            -Wl,-rpath,"$PWD/v21-src/lib" \
+            -Wl,-rpath,"$PWD/v21-build/lib" -o serialize-v21
+
+      - name: Run parse comparison
+        run: |
+          ./benchmark-main main | tee main-parse.csv
+          ./benchmark-v21 v2.1 | tee v21-parse.csv
           {
-            head -n 1 main.csv
-            tail -n +2 main.csv
-            tail -n +2 v21.csv
-          } > main-vs-v21.csv
-          cat main-vs-v21.csv
+            head -n 1 main-parse.csv
+            tail -n +2 main-parse.csv
+            tail -n +2 v21-parse.csv
+          } > main-vs-v21-parse.csv
+          cat main-vs-v21-parse.csv
+
+      - name: Run serialization comparison
+        run: |
+          ./serialize-main main | tee main-serialize.csv
+          ./serialize-v21 v2.1 | tee v21-serialize.csv
+          {
+            head -n 1 main-serialize.csv
+            tail -n +2 main-serialize.csv
+            tail -n +2 v21-serialize.csv
+          } > main-vs-v21-serialization.csv
+          cat main-vs-v21-serialization.csv
+
+      - name: Install Cortex-M7 toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi \
+            libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
+
+      - name: Build main Cortex-M7 library
+        run: |
+          cmake -S main-src -B main-mcu \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCCSDSPACK_BUILD_MCU=ON \
+            -DCCSDSPACK_MCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard" \
+            -DCMAKE_TOOLCHAIN_FILE="$PWD/main-src/cmake/toolchains/arm-none-eabi.cmake"
+          cmake --build main-mcu -- -j
+
+      - name: Build v2.1 Cortex-M7 library
+        run: |
+          cmake -S v21-src -B v21-mcu \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCCSDSPACK_BUILD_MCU=ON \
+            -DCCSDSPACK_MCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard" \
+            -DCMAKE_TOOLCHAIN_FILE="$PWD/v21-src/cmake/toolchains/arm-none-eabi.cmake"
+          cmake --build v21-mcu -- -j
+
+      - name: Link identical Cortex-M7 consumer against both
+        run: |
+          FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+          arm-none-eabi-g++ -std=gnu++17 -DCCSDS_MCU -Os -ffunction-sections -fdata-sections \
+            $FLAGS -Imain-src/inc -Imain-src/test/package_tester/stm32h7xx/CM7/Inc \
+            -c main-src/test/package_tester/stm32h7xx/CM7/Src/ccsdspack_mcu_compile_probe.cpp \
+            -o main-probe.o
+          arm-none-eabi-g++ -r $FLAGS main-probe.o main-src/lib/libccsdspack.a \
+            -o main-linked.o
+
+          arm-none-eabi-g++ -std=gnu++17 -DCCSDS_MCU -Os -ffunction-sections -fdata-sections \
+            $FLAGS -Iv21-src/inc -Imain-src/test/package_tester/stm32h7xx/CM7/Inc \
+            -c main-src/test/package_tester/stm32h7xx/CM7/Src/ccsdspack_mcu_compile_probe.cpp \
+            -o v21-probe.o
+          arm-none-eabi-g++ -r $FLAGS v21-probe.o v21-src/lib/libccsdspack.a \
+            -o v21-linked.o
+
+          {
+            echo "variant,text,data,bss,dec,hex"
+            arm-none-eabi-size main-linked.o | tail -n 1 | awk '{print "main," $1 "," $2 "," $3 "," $4 "," $5}'
+            arm-none-eabi-size v21-linked.o | tail -n 1 | awk '{print "v2.1," $1 "," $2 "," $3 "," $4 "," $5}'
+          } | tee main-vs-v21-mcu-size.csv
 
       - name: Upload comparison
         uses: actions/upload-artifact@v4
         with:
           name: main-vs-v21-performance
-          path: main-vs-v21.csv
+          path: |
+            main-vs-v21-parse.csv
+            main-vs-v21-serialization.csv
+            main-vs-v21-mcu-size.csv
