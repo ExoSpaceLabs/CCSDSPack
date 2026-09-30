@@ -272,6 +272,41 @@ int main(void) {
         }
     }
 
+    {
+        ccsds_sequence_validator_t sequence = {0U};
+        ccsds_validation_report_t report;
+        const ccsds_packet_coherence_input_t input = {
+            {0U, 1U, 1U, 42U, CCSDS_SEQUENCE_UNSEGMENTED, 7U, 2U},
+            9U,
+            1U,
+            1U,
+            CCSDS_PACKET_DIRECTION_TELECOMMAND,
+            1U,
+            1U
+        };
+        const ccsds_template_coherence_input_t template_input = {
+            {0U, 1U, 1U, 42U, CCSDS_SEQUENCE_UNSEGMENTED, 0U, 0U},
+            1U,
+            1U,
+            1U
+        };
+
+        ccsds_sequence_validator_reset(&sequence);
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validate_packet_coherence(
+              &input, &sequence, 1, &report) != CCSDS_STATUS_OK
+            || !ccsds_validation_report_valid(&report)) {
+            return 34;
+        }
+
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validate_template_coherence(
+              &input.header, &template_input, &report) != CCSDS_STATUS_OK
+            || !ccsds_validation_report_valid(&report)) {
+            return 35;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }

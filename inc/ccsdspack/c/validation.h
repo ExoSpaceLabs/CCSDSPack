@@ -71,6 +71,38 @@ typedef struct ccsds_sequence_validator {
     uint16_t state;
 } ccsds_sequence_validator_t;
 
+enum {
+    CCSDS_PACKET_DIRECTION_UNSPECIFIED = 0U,
+    CCSDS_PACKET_DIRECTION_TELEMETRY = 1U,
+    CCSDS_PACKET_DIRECTION_TELECOMMAND = 2U
+};
+
+/**
+ * @brief Plain generic packet-coherence facts consumed by the C validator.
+ *
+ * primary_header_state_valid carries ownership-layer invalid state that cannot
+ * be reconstructed from retained field values alone. secondary_direction uses
+ * CCSDS_PACKET_DIRECTION_* constants. crc_checked controls whether the CRC16
+ * validation code is included in the report.
+ */
+typedef struct ccsds_packet_coherence_input {
+    ccsds_primary_header_t header;
+    size_t serialized_size;
+    uint8_t primary_header_state_valid;
+    uint8_t secondary_header_present;
+    uint8_t secondary_direction;
+    uint8_t crc_checked;
+    uint8_t crc_valid;
+} ccsds_packet_coherence_input_t;
+
+/** @brief Template-comparison facts whose object-specific equality is supplied by the adapter. */
+typedef struct ccsds_template_coherence_input {
+    ccsds_primary_header_t header;
+    uint8_t primary_header_state_valid;
+    uint8_t packet_error_control_equal;
+    uint8_t secondary_contract_equal;
+} ccsds_template_coherence_input_t;
+
 void ccsds_validation_report_reset(ccsds_validation_report_t *report);
 ccsds_status_t ccsds_validation_report_set(ccsds_validation_report_t *report,
                                            ccsds_validation_code_t code,
@@ -79,6 +111,8 @@ int ccsds_validation_report_valid(const ccsds_validation_report_t *report);
 int ccsds_validation_report_contains(const ccsds_validation_report_t *report,
                                      ccsds_validation_code_t code);
 int ccsds_validation_report_passed(const ccsds_validation_report_t *report,
+                                   ccsds_validation_code_t code);
+int ccsds_validation_report_failed(const ccsds_validation_report_t *report,
                                    ccsds_validation_code_t code);
 const char *ccsds_validation_code_name(ccsds_validation_code_t code);
 
@@ -107,6 +141,25 @@ int ccsds_sequence_count_valid(const ccsds_sequence_validator_t *validator,
  */
 ccsds_status_t ccsds_sequence_validator_accept(ccsds_sequence_validator_t *validator,
                                                const ccsds_primary_header_t *header);
+
+/**
+ * @brief Populates generic packet-coherence checks into a fixed C report.
+ *
+ * Sequence state is inspected but never advanced. This lets higher-level
+ * validation append PUS/template checks before deciding whether to accept the
+ * packet into the sequence stream.
+ */
+ccsds_status_t ccsds_validate_packet_coherence(
+    const ccsds_packet_coherence_input_t *input,
+    const ccsds_sequence_validator_t *sequence,
+    int validate_sequence_count,
+    ccsds_validation_report_t *report);
+
+/** @brief Populates generic template-comparison checks into a fixed C report. */
+ccsds_status_t ccsds_validate_template_coherence(
+    const ccsds_primary_header_t *packet_header,
+    const ccsds_template_coherence_input_t *template_input,
+    ccsds_validation_report_t *report);
 
 #ifdef __cplusplus
 }
