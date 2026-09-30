@@ -112,6 +112,8 @@ int ccsds_validation_report_contains(const ccsds_validation_report_t *report,
                                      ccsds_validation_code_t code);
 int ccsds_validation_report_passed(const ccsds_validation_report_t *report,
                                    ccsds_validation_code_t code);
+int ccsds_validation_report_failed(const ccsds_validation_report_t *report,
+                                   ccsds_validation_code_t code);
 const char *ccsds_validation_code_name(ccsds_validation_code_t code);
 
 void ccsds_sequence_validator_reset(ccsds_sequence_validator_t *validator);
