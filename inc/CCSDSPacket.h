@@ -197,6 +197,9 @@ namespace ccsds {
     }
 
     [[nodiscard]] ResultBuffer serialize();
+    /** @brief Serializes directly into caller-owned storage and returns bytes written. */
+    [[nodiscard]] Result<std::size_t> serialize(std::uint8_t *output,
+                                                std::size_t capacity);
 
     std::vector<std::uint8_t> getPrimaryHeaderBytes();
     [[nodiscard]] std::vector<std::uint8_t> getPrimaryHeaderBytes() const;

@@ -536,8 +536,15 @@ std::vector<std::uint8_t> ccsds::Packet::getFullDataFieldBytes() const {
   return data;
 }
 
-ccsds::ResultBuffer ccsds::Packet::serialize() {
+ccsds::Result<std::size_t> ccsds::Packet::serialize(
+    std::uint8_t *output, const std::size_t capacity) {
   FORWARD_RESULT(validatePacketForSerialization(m_primaryHeader, m_dataField));
+
+  const auto expectedCapacity = getSerializedSize();
+  RET_IF_ERR_MSG(output == nullptr, ErrorCode::NULL_POINTER,
+                 "Cannot serialize packet: output buffer pointer is null.");
+  RET_IF_ERR_MSG(capacity < expectedCapacity, ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet: output buffer is too small.");
 
   std::vector<std::uint8_t> dataField;
   ASSIGN_MV(dataField, m_dataField.serialize());
@@ -558,27 +565,37 @@ ccsds::ResultBuffer ccsds::Packet::serialize() {
                  ErrorCode::INVALID_DATA,
                  "Cannot serialize packet: Packet Data Length does not match the finalized data field.");
 
+  const auto required = CCSDS_PRIMARY_HEADER_SIZE + packetDataFieldSize;
+  RET_IF_ERR_MSG(required != expectedCapacity, ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet: finalized size differs from the expected size.");
+
   const auto coreHeader = toCoreHeader(m_primaryHeader);
   const ccsds_buffer_view_t coreDataField{
     dataField.empty() ? nullptr : dataField.data(),
     dataField.size()
   };
-  std::vector<std::uint8_t> packet(
-    CCSDS_PRIMARY_HEADER_SIZE + packetDataFieldSize);
   std::size_t written = 0U;
   const auto status = ccsds_packet_encode(
     &coreHeader,
     coreDataField,
     toCoreErrorControl(getPacketErrorControlMode()),
     m_CRC16,
-    packet.data(),
-    packet.size(),
+    output,
+    capacity,
     &written);
   if (status != CCSDS_STATUS_OK) {
     return packetCoreError(status, "Cannot serialize packet");
   }
-  RET_IF_ERR_MSG(written != packet.size(), ErrorCode::INVALID_DATA,
+  RET_IF_ERR_MSG(written != required, ErrorCode::INVALID_DATA,
                  "Cannot serialize packet: C core returned an unexpected packet size.");
+  return written;
+}
+
+ccsds::ResultBuffer ccsds::Packet::serialize() {
+  std::vector<std::uint8_t> packet(getSerializedSize());
+  auto written = serialize(packet.data(), packet.size());
+  if (!written) return written.error();
+  packet.resize(written.value());
   return packet;
 }
 

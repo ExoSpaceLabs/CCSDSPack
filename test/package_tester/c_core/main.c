@@ -369,6 +369,22 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t expected_sync[] = {0x1AU, 0xCFU, 0xFCU, 0x1DU};
+        uint8_t prefix[sizeof(expected_sync)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_packet_stream_write_prefix(
+              1, 0x1ACFFC1DU, prefix, sizeof(prefix), &written)
+            != CCSDS_STATUS_OK) {
+            return 40;
+        }
+        if (written != sizeof(expected_sync)
+            || memcmp(prefix, expected_sync, sizeof(expected_sync)) != 0) {
+            return 41;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }

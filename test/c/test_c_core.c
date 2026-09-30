@@ -845,6 +845,39 @@ int main(void) {
         ccsds_packet_view_t view;
         size_t frame_consumed = 0U;
 
+        {
+            static const uint8_t expected_sync[] = {0x1AU, 0xCFU, 0xFCU, 0x1DU};
+            uint8_t prefix[4] = {0U};
+            size_t prefix_written = 99U;
+
+            if (ccsds_packet_stream_prefix_size(0) != 0U
+                || ccsds_packet_stream_prefix_size(1) != sizeof(expected_sync)) {
+                fprintf(stderr, "stream-prefix-size: mismatch\n");
+                failed = 1;
+            }
+            failed |= expect_status("stream-prefix-disabled",
+                ccsds_packet_stream_write_prefix(
+                    0, 0x1ACFFC1DU, NULL, 0U, &prefix_written),
+                CCSDS_STATUS_OK);
+            if (prefix_written != 0U) {
+                fprintf(stderr, "stream-prefix-disabled: expected zero bytes\n");
+                failed = 1;
+            }
+            failed |= expect_status("stream-prefix-enabled",
+                ccsds_packet_stream_write_prefix(
+                    1, 0x1ACFFC1DU, prefix, sizeof(prefix), &prefix_written),
+                CCSDS_STATUS_OK);
+            if (prefix_written != sizeof(expected_sync)
+                || memcmp(prefix, expected_sync, sizeof(expected_sync)) != 0) {
+                fprintf(stderr, "stream-prefix-enabled: wire mismatch\n");
+                failed = 1;
+            }
+            failed |= expect_status("stream-prefix-small",
+                ccsds_packet_stream_write_prefix(
+                    1, 0x1ACFFC1DU, prefix, sizeof(prefix) - 1U, &prefix_written),
+                CCSDS_STATUS_BUFFER_TOO_SMALL);
+        }
+
         failed |= expect_status("stream-init",
             ccsds_packet_stream_init(
                 &stream, stream_bytes, sizeof(stream_bytes),

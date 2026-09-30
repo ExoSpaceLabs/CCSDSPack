@@ -215,18 +215,42 @@ ccsds::ResultBuffer ccsds::Manager::getPacketBufferAtIndex(const std::uint16_t i
 }
 
 ccsds::ResultBuffer ccsds::Manager::getPacketsBuffer() const {
-  std::vector<std::uint8_t> buffer;
-  for (auto packet : m_packets) {
-    if (m_syncPattEnable) {
-      buffer.push_back(static_cast<std::uint8_t>((m_syncPattern >> 24U) & 0xFFU));
-      buffer.push_back(static_cast<std::uint8_t>((m_syncPattern >> 16U) & 0xFFU));
-      buffer.push_back(static_cast<std::uint8_t>((m_syncPattern >> 8U) & 0xFFU));
-      buffer.push_back(static_cast<std::uint8_t>(m_syncPattern & 0xFFU));
-    }
-    std::vector<std::uint8_t> packetBuffer;
-    ASSIGN_MV(packetBuffer, packet.serialize());
-    buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());
+  const auto prefixSize = ccsds_packet_stream_prefix_size(m_syncPattEnable ? 1 : 0);
+  std::size_t totalSize = 0U;
+  for (const auto &packet : m_packets) {
+    const auto packetSize = packet.getSerializedSize();
+    RET_IF_ERR_MSG(packetSize > std::numeric_limits<std::size_t>::max() - prefixSize,
+                   ErrorCode::INVALID_DATA,
+                   "Cannot serialize packet stream: frame size overflow.");
+    const auto frameSize = prefixSize + packetSize;
+    RET_IF_ERR_MSG(frameSize > std::numeric_limits<std::size_t>::max() - totalSize,
+                   ErrorCode::INVALID_DATA,
+                   "Cannot serialize packet stream: total size overflow.");
+    totalSize += frameSize;
   }
+
+  std::vector<std::uint8_t> buffer(totalSize);
+  std::size_t offset = 0U;
+  for (auto packet : m_packets) {
+    std::size_t prefixWritten = 0U;
+    const auto prefixStatus = ccsds_packet_stream_write_prefix(
+      m_syncPattEnable ? 1 : 0,
+      m_syncPattern,
+      buffer.empty() ? nullptr : buffer.data() + offset,
+      buffer.size() - offset,
+      &prefixWritten);
+    RET_IF_ERR_MSG(prefixStatus != CCSDS_STATUS_OK, ErrorCode::INVALID_DATA,
+                   "Cannot serialize packet stream synchronization prefix.");
+    offset += prefixWritten;
+
+    const auto written = packet.serialize(
+      buffer.data() + offset, buffer.size() - offset);
+    if (!written) return written.error();
+    offset += written.value();
+  }
+
+  RET_IF_ERR_MSG(offset != buffer.size(), ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet stream: unexpected final size.");
   return buffer;
 }
 
