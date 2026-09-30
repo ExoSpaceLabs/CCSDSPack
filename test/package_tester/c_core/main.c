@@ -156,6 +156,37 @@ int main(void) {
         }
     }
 
+    {
+        ccsds_validation_report_t report;
+        ccsds_sequence_validator_t sequence = {0U};
+        ccsds_primary_header_t sequence_header = {
+            0U, 0U, 0U, 42U, 3U, CCSDS_SEQUENCE_COUNT_MAX, 0U
+        };
+
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validation_report_set(
+              &report, CCSDS_VALIDATION_PRIMARY_HEADER, 1)
+            != CCSDS_STATUS_OK) {
+            return 21;
+        }
+        if (!ccsds_validation_report_valid(&report)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PRIMARY_HEADER)) {
+            return 22;
+        }
+        if (ccsds_sequence_validator_accept(&sequence, &sequence_header)
+            != CCSDS_STATUS_OK) {
+            return 23;
+        }
+        if (ccsds_sequence_validator_expected_count(&sequence) != 0U
+            || !ccsds_sequence_count_valid(&sequence, 0U)
+            || strcmp(ccsds_validation_code_name(
+                        CCSDS_VALIDATION_PUS_TIMESTAMP),
+                      "PUS CUC timestamp") != 0) {
+            return 24;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }
