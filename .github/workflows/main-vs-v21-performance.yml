@@ -122,6 +122,8 @@ jobs:
             -o main-probe.o
           arm-none-eabi-g++ -r $FLAGS main-probe.o main-src/lib/libccsdspack.a \
             -o main-linked.o
+          arm-none-eabi-g++ -r $FLAGS -Wl,--gc-sections,-u,ccsdspack_mcu_compile_probe \
+            main-probe.o main-src/lib/libccsdspack.a -o main-linked-gc.o
 
           arm-none-eabi-g++ -std=gnu++17 -DCCSDS_MCU -Os -ffunction-sections -fdata-sections \
             $FLAGS -Iv21-src/inc -Imain-src/test/package_tester/stm32h7xx/CM7/Inc \
@@ -129,11 +131,15 @@ jobs:
             -o v21-probe.o
           arm-none-eabi-g++ -r $FLAGS v21-probe.o v21-src/lib/libccsdspack.a \
             -o v21-linked.o
+          arm-none-eabi-g++ -r $FLAGS -Wl,--gc-sections,-u,ccsdspack_mcu_compile_probe \
+            v21-probe.o v21-src/lib/libccsdspack.a -o v21-linked-gc.o
 
           {
             echo "variant,text,data,bss,dec,hex"
-            arm-none-eabi-size main-linked.o | tail -n 1 | awk '{print "main," $1 "," $2 "," $3 "," $4 "," $5}'
-            arm-none-eabi-size v21-linked.o | tail -n 1 | awk '{print "v2.1," $1 "," $2 "," $3 "," $4 "," $5}'
+            arm-none-eabi-size main-linked.o | tail -n 1 | awk '{print "main-no-gc," $1 "," $2 "," $3 "," $4 "," $5}'
+            arm-none-eabi-size v21-linked.o | tail -n 1 | awk '{print "v2.1-no-gc," $1 "," $2 "," $3 "," $4 "," $5}'
+            arm-none-eabi-size main-linked-gc.o | tail -n 1 | awk '{print "main-gc," $1 "," $2 "," $3 "," $4 "," $5}'
+            arm-none-eabi-size v21-linked-gc.o | tail -n 1 | awk '{print "v2.1-gc," $1 "," $2 "," $3 "," $4 "," $5}'
           } | tee main-vs-v21-mcu-size.csv
 
       - name: Upload comparison
