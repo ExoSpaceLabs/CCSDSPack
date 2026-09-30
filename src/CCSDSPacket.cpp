@@ -29,6 +29,13 @@ namespace {
   };
 
   ccsds::Error packetViewError(const ccsds_status_t status) {
+    if (status == CCSDS_STATUS_INVALID_CHECKSUM) {
+      return ccsds::Error{
+        ccsds::ErrorCode::INVALID_CHECKSUM,
+        "Cannot deserialize packet: CRC16 packet error-control mismatch."
+      };
+    }
+
     const auto code = status <= CCSDS_STATUS_CONFIG_FILE_ERROR
       ? static_cast<ccsds::ErrorCode>(status)
       : ccsds::ErrorCode::UNKNOWN_ERROR;
@@ -51,6 +58,50 @@ namespace {
     if (data == nullptr) {
       return ccsds::Error{ccsds::ErrorCode::NULL_POINTER,
                           "Cannot deserialize packet: raw buffer pointer is null."};
+    }
+
+    ccsds_primary_header_t coreHeader{};
+    const auto headerStatus =
+      ccsds_primary_header_decode(data, size, &coreHeader);
+    if (headerStatus != CCSDS_STATUS_OK) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
+                          "Cannot deserialize packet: invalid CCSDS primary header."};
+    }
+    if (coreHeader.version_number != 0U) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
+                          "Cannot deserialize packet: unsupported CCSDS packet version."};
+    }
+
+    const auto packetSize =
+      CCSDS_PRIMARY_HEADER_SIZE + static_cast<std::size_t>(coreHeader.data_length) + 1U;
+    if (size < packetSize) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
+                          "Cannot deserialize packet: truncated packet body for Packet Data Length."};
+    }
+
+    const auto bodySize = packetSize - CCSDS_PRIMARY_HEADER_SIZE;
+    const auto pecSize =
+      mode == ccsds::PacketErrorControlMode::CRC16 ? std::size_t{2U} : std::size_t{0U};
+    if (bodySize < pecSize) {
+      return ccsds::Error{
+        ccsds::ErrorCode::INVALID_DATA,
+        "Cannot deserialize packet: CRC16 mode requires two packet error-control bytes."
+      };
+    }
+    const auto dataFieldSize = bodySize - pecSize;
+    if (coreHeader.apid == CCSDS_IDLE_APID) {
+      if (coreHeader.secondary_header_flag != 0U) {
+        return ccsds::Error{
+          ccsds::ErrorCode::INVALID_HEADER_DATA,
+          "Cannot deserialize Idle Packet: secondary-header flag must be zero."
+        };
+      }
+      if (dataFieldSize == 0U) {
+        return ccsds::Error{
+          ccsds::ErrorCode::INVALID_DATA,
+          "Cannot deserialize Idle Packet: mission-defined idle user data is required."
+        };
+      }
     }
 
     const ccsds_crc16_config_t coreCrc{
