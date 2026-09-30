@@ -61,7 +61,7 @@ ccsds_status_t ccsds_cuc_encode(const ccsds_cuc_time_t *value,
     size_t required;
     ccsds_status_t status;
 
-    if (value == NULL || config == NULL || output == NULL || written_out == NULL) {
+    if (value == NULL || config == NULL || written_out == NULL) {
         return CCSDS_STATUS_NULL_POINTER;
     }
 
@@ -79,6 +79,9 @@ ccsds_status_t ccsds_cuc_encode(const ccsds_cuc_time_t *value,
     required = ccsds_cuc_encoded_size(config);
     if (capacity < required) {
         return CCSDS_STATUS_BUFFER_TOO_SMALL;
+    }
+    if (output == NULL) {
+        return CCSDS_STATUS_NULL_POINTER;
     }
 
     if (config->pfield_mode == CCSDS_CUC_PFIELD_EXPLICIT) {
