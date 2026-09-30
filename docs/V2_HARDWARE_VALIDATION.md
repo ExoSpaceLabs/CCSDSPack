@@ -42,28 +42,35 @@ CCSDSPACK_AARCH64_TEST:PASS
 
 ### NUCLEO-H755ZI-Q / Cortex-M7 rerun
 
-Generate the MCU package from the same candidate commit:
+The v2.1 candidate no longer uses the historical CubeIDE/HAL project. Hardware validation is a standalone DAS + OpenOCD flow under:
+
+`test/package_tester/stm32h755_das/`
+
+Build the exact MCU package artifact:
 
 ```bash
-./package.sh \
-  -t cmake/toolchains/arm-none-eabi.cmake \
-  -p MCU \
-  -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+test/package_tester/stm32h755_das/build.sh \
+  --package packages/ccsdspack-v2.1.0-Generic-arm.tar.gz \
+  --source-sha "$(git rev-parse HEAD)"
 ```
 
-Use the existing STM32H7 reference harness under `test/package_tester/stm32h7xx/`, link the generated candidate `libccsdspack.a`, build the CM7 image, and record the final ELF size with:
+Then flash, reset, and capture the ST-LINK VCP UART evidence:
 
 ```bash
-arm-none-eabi-size <final-cm7-elf>
+test/package_tester/stm32h755_das/run.sh
 ```
 
-After flashing, the required runtime marker is:
+The harness uses `Inczert/device-abstraction-stack` for startup/vector ownership, clocks, semantic board resources and UART. STM32CubeH7 contributes CMSIS headers only; no HAL/LL or IDE-generated project is built.
+
+Required UART marker:
 
 ```text
 CCSDSPACK_HARDWARE_TEST:PASS
 ```
 
-Record the exact candidate SHA, MCU package SHA-256, installed archive SHA-256, compiler version, final ELF text/data/bss, and runtime log in this page before release promotion.
+The UART log also records version, candidate SHA, package/library SHA-256, pinned DAS SHA, target/core, compiler, effective clock/UART rate, test-section progress, heap use, result code/name, and fault markers.
+
+Record the final ELF `text/data/bss` from `size-and-identity.txt` together with the complete UART log before release promotion.
 
 ### Pre-hardware footprint evidence
 
