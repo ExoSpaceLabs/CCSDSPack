@@ -68,6 +68,7 @@ set(C_CORE_SOURCES
     "${SOURCE_DIR}/c/packet_view.c"
     "${SOURCE_DIR}/c/primary_header.c"
     "${SOURCE_DIR}/c/pus_tc.c"
+    "${SOURCE_DIR}/c/validation.c"
     "${SOURCE_DIR}/c/pus_tm.c"
 )
 
