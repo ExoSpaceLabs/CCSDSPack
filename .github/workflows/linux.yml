@@ -78,8 +78,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: linux-test-log-${{ matrix.os }}-${{ github.sha }}
-          path: bin/CCSDSPack_tester.log
-          if-no-files-found: error
+          path: |
+            bin/CCSDSPack_tester.log
+            build/Testing/Temporary/LastTest.log
+          if-no-files-found: warn
 
       - name: Run CLI integration tests
         id: cli_integration
