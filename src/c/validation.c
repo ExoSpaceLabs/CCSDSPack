@@ -183,3 +183,148 @@ ccsds_status_t ccsds_sequence_validator_accept(ccsds_sequence_validator_t *valid
     validator->state = state;
     return CCSDS_STATUS_OK;
 }
+
+
+static ccsds_status_t set_check(ccsds_validation_report_t *report,
+                                const ccsds_validation_code_t code,
+                                const int passed) {
+    return ccsds_validation_report_set(report, code, passed);
+}
+
+static int direction_valid(const uint8_t direction) {
+    return direction == CCSDS_PACKET_DIRECTION_TELEMETRY
+        || direction == CCSDS_PACKET_DIRECTION_TELECOMMAND;
+}
+
+static uint8_t packet_type_for_direction(const uint8_t direction) {
+    return direction == CCSDS_PACKET_DIRECTION_TELECOMMAND ? 1U : 0U;
+}
+
+ccsds_status_t ccsds_validate_packet_coherence(
+    const ccsds_packet_coherence_input_t *input,
+    const ccsds_sequence_validator_t *sequence,
+    const int validate_sequence_count,
+    ccsds_validation_report_t *report) {
+    ccsds_status_t status;
+    size_t packet_data_field_size;
+    int primary_valid;
+    int sequence_flags_valid;
+
+    if (input == NULL || sequence == NULL || report == NULL) {
+        return CCSDS_STATUS_NULL_POINTER;
+    }
+
+    primary_valid =
+        input->primary_header_state_valid != 0U
+        && ccsds_primary_header_validate(&input->header) == CCSDS_STATUS_OK;
+    status = set_check(report, CCSDS_VALIDATION_PRIMARY_HEADER, primary_valid);
+    if (status != CCSDS_STATUS_OK || !primary_valid) {
+        return status;
+    }
+
+    status = set_check(report, CCSDS_VALIDATION_PACKET_VERSION,
+                       input->header.version_number == 0U);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    packet_data_field_size =
+        input->serialized_size >= CCSDS_PRIMARY_HEADER_SIZE
+        ? input->serialized_size - CCSDS_PRIMARY_HEADER_SIZE
+        : 0U;
+    status = set_check(
+        report,
+        CCSDS_VALIDATION_PACKET_DATA_LENGTH,
+        packet_data_field_size > 0U
+        && (size_t)input->header.data_length == packet_data_field_size - 1U);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    if (input->crc_checked != 0U) {
+        status = set_check(report, CCSDS_VALIDATION_CRC16,
+                           input->crc_valid != 0U);
+        if (status != CCSDS_STATUS_OK) return status;
+    }
+
+    status = set_check(
+        report,
+        CCSDS_VALIDATION_SECONDARY_HEADER_PRESENCE,
+        (input->header.secondary_header_flag != 0U)
+          == (input->secondary_header_present != 0U));
+    if (status != CCSDS_STATUS_OK) return status;
+
+    if (input->secondary_header_present != 0U
+        && input->secondary_direction != CCSDS_PACKET_DIRECTION_UNSPECIFIED) {
+        status = set_check(
+            report,
+            CCSDS_VALIDATION_SECONDARY_HEADER_DIRECTION,
+            direction_valid(input->secondary_direction)
+            && input->header.type
+                 == packet_type_for_direction(input->secondary_direction));
+        if (status != CCSDS_STATUS_OK) return status;
+    }
+
+    sequence_flags_valid = ccsds_sequence_flags_valid(
+        sequence, input->header.sequence_flags);
+    status = set_check(report, CCSDS_VALIDATION_SEQUENCE_FLAGS,
+                       sequence_flags_valid);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    if (validate_sequence_count != 0) {
+        status = set_check(
+            report,
+            CCSDS_VALIDATION_SEQUENCE_COUNT,
+            ccsds_sequence_count_valid(sequence, input->header.sequence_count));
+        if (status != CCSDS_STATUS_OK) return status;
+    }
+
+    return CCSDS_STATUS_OK;
+}
+
+ccsds_status_t ccsds_validate_template_coherence(
+    const ccsds_primary_header_t *packet_header,
+    const ccsds_template_coherence_input_t *template_input,
+    ccsds_validation_report_t *report) {
+    ccsds_status_t status;
+    int template_header_valid;
+    int packet_identifier_valid;
+    int segmentation_class_valid = 0;
+
+    if (packet_header == NULL || template_input == NULL || report == NULL) {
+        return CCSDS_STATUS_NULL_POINTER;
+    }
+
+    template_header_valid =
+        template_input->primary_header_state_valid != 0U
+        && ccsds_primary_header_validate(&template_input->header)
+             == CCSDS_STATUS_OK;
+
+    packet_identifier_valid =
+        template_header_valid
+        && template_input->header.version_number == packet_header->version_number
+        && template_input->header.type == packet_header->type
+        && template_input->header.secondary_header_flag
+             == packet_header->secondary_header_flag
+        && template_input->header.apid == packet_header->apid;
+    status = set_check(report, CCSDS_VALIDATION_PACKET_IDENTIFIER,
+                       packet_identifier_valid);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    if (template_header_valid) {
+        segmentation_class_valid =
+            template_input->header.sequence_flags == 3U
+            ? packet_header->sequence_flags == 3U
+            : packet_header->sequence_flags != 3U;
+    }
+    status = set_check(report, CCSDS_VALIDATION_SEGMENTATION_CLASS,
+                       segmentation_class_valid);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    status = set_check(
+        report,
+        CCSDS_VALIDATION_TEMPLATE_PACKET_ERROR_CONTROL,
+        template_input->packet_error_control_equal != 0U);
+    if (status != CCSDS_STATUS_OK) return status;
+
+    return set_check(
+        report,
+        CCSDS_VALIDATION_TEMPLATE_SECONDARY_HEADER,
+        template_input->secondary_contract_equal != 0U);
+}
