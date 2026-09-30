@@ -44,6 +44,19 @@ jobs:
           echo "Listing contents of build/bin/"
           Get-ChildItem -Path build/bin/
 
+      - name: Run C11 core tests
+        run: |
+          ctest --test-dir build --output-on-failure -R "^ccsdspack_c_core$"
+
+      - name: Build and run C11-only core
+        shell: pwsh
+        run: |
+          cmake -S . -B build-c-only -G "MinGW Makefiles" `
+            -DCCSDSPACK_BUILD_CPP=OFF `
+            -DCCSDSPACK_BUILD_C_TESTS=ON
+          cmake --build build-c-only --
+          ctest --test-dir build-c-only --output-on-failure
+
       - name: Run tests
         shell: pwsh
         run: |
@@ -82,6 +95,23 @@ jobs:
         run: |
           $installPrefix = Join-Path $PWD "build/install"
           cmake --install build --prefix $installPrefix
+
+      - name: Configure installed C11 core consumer
+        shell: pwsh
+        run: |
+          $installPrefix = Join-Path $PWD "build/install"
+          cmake -S test/package_tester/c_core `
+            -B build/package_tester/c_core `
+            -G "MinGW Makefiles" `
+            "-DCMAKE_PREFIX_PATH=$installPrefix"
+
+      - name: Build and run installed C11 core consumer
+        shell: pwsh
+        run: |
+          $installPrefix = Join-Path $PWD "build/install"
+          cmake --build build/package_tester/c_core --
+          $env:PATH = "$(Join-Path $installPrefix 'bin');$env:PATH"
+          ctest --test-dir build/package_tester/c_core --output-on-failure
 
       - name: Configure installed shared-library consumer
         shell: pwsh
