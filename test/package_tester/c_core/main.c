@@ -188,6 +188,26 @@ int main(void) {
         }
     }
 
+    {
+        ccsds_segment_plan_t plan;
+        size_t count = 0U;
+
+        if (ccsds_segmentation_packet_count(40U, 16U, &count)
+            != CCSDS_STATUS_OK || count != 3U) {
+            return 25;
+        }
+        if (ccsds_segmentation_plan(40U, 16U, 2U, 0x3FFFU, 1, &plan)
+            != CCSDS_STATUS_OK) {
+            return 26;
+        }
+        if (plan.offset != 32U || plan.size != 8U
+            || plan.sequence_flags != CCSDS_SEQUENCE_LAST
+            || plan.sequence_count != 1U
+            || ccsds_sequence_after_packets(0x3FFFU, 3U, 1) != 2U) {
+            return 27;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }
