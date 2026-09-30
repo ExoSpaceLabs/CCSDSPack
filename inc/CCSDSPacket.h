@@ -100,20 +100,35 @@ namespace ccsds {
      * the parsing prototype, including any optional tailoring.
      */
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data);
+    [[nodiscard]] ResultBool deserialize(const std::uint8_t *data, std::size_t size);
 
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data,
                                          const std::string &headerType,
                                          std::int32_t headerSize = -1);
+    [[nodiscard]] ResultBool deserialize(const std::uint8_t *data, std::size_t size,
+                                         const std::string &headerType,
+                                         std::int32_t headerSize = -1);
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data,
+                                         std::uint16_t headerDataSizeBytes);
+    [[nodiscard]] ResultBool deserialize(const std::uint8_t *data, std::size_t size,
                                          std::uint16_t headerDataSizeBytes);
     [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &headerData,
                                          const std::vector<std::uint8_t> &data);
 
     [[nodiscard]] Result<std::size_t> deserializeBounded(const std::vector<std::uint8_t> &data);
+    [[nodiscard]] Result<std::size_t> deserializeBounded(const std::uint8_t *data,
+                                                         std::size_t size);
     [[nodiscard]] Result<std::size_t> deserializeBounded(const std::vector<std::uint8_t> &data,
                                                          const std::string &headerType,
                                                          std::int32_t headerSize = -1);
+    [[nodiscard]] Result<std::size_t> deserializeBounded(const std::uint8_t *data,
+                                                         std::size_t size,
+                                                         const std::string &headerType,
+                                                         std::int32_t headerSize = -1);
     [[nodiscard]] Result<std::size_t> deserializeBounded(const std::vector<std::uint8_t> &data,
+                                                         std::uint16_t headerDataSizeBytes);
+    [[nodiscard]] Result<std::size_t> deserializeBounded(const std::uint8_t *data,
+                                                         std::size_t size,
                                                          std::uint16_t headerDataSizeBytes);
 
     /**
@@ -128,6 +143,32 @@ namespace ccsds {
       const auto result = deserializeBounded<HeaderT>(data, std::forward<Args>(args)...);
       if (!result) return result.error();
       return true;
+    }
+
+    template <typename HeaderT, typename... Args>
+    [[nodiscard]] ResultBool deserialize(const std::uint8_t *data,
+                                         const std::size_t size,
+                                         Args&&... args) {
+      const auto result = deserializeBounded<HeaderT>(
+        data, size, std::forward<Args>(args)...);
+      if (!result) return result.error();
+      return true;
+    }
+
+    /** @brief Typed bounded raw parse returning the number of consumed bytes. */
+    template <typename HeaderT, typename... Args>
+    [[nodiscard]] Result<std::size_t> deserializeBounded(
+        const std::uint8_t *data, const std::size_t size, Args&&... args) {
+      static_assert(std::is_base_of<SecondaryHeaderAbstract, HeaderT>::value,
+                    "HeaderT must derive from ccsds::SecondaryHeaderAbstract");
+      Packet staged = *this;
+      auto header = std::make_shared<HeaderT>(std::forward<Args>(args)...);
+      const auto attach = staged.setSecondaryHeader(header);
+      if (!attach) return attach.error();
+      const auto parsed = staged.deserializeBounded(data, size);
+      if (!parsed) return parsed.error();
+      *this = std::move(staged);
+      return parsed.value();
     }
 
     /** @brief Typed bounded parse returning the number of consumed bytes. */
@@ -199,7 +240,8 @@ namespace ccsds {
 
   private:
     [[nodiscard]] Result<std::size_t> deserializeBoundedWithSecondaryHeader(
-      const std::vector<std::uint8_t> &data,
+      const std::uint8_t *data,
+      std::size_t size,
       const std::shared_ptr<SecondaryHeaderAbstract> &prototype,
       std::int32_t customHeaderSize = -1);
 
