@@ -48,8 +48,10 @@ jobs:
       - name: Build identical benchmark against v2.1
         run: |
           g++ -std=c++17 -O3 test/performance/main_vs_v21_benchmark.cpp \
-            -Iv21-src/inc -Lv21-src/lib -lccsdspack -lccsdspack_c \
-            -Wl,-rpath,"$PWD/v21-src/lib" -o benchmark-v21
+            -Iv21-src/inc -Lv21-src/lib -Lv21-build/lib \
+            -lccsdspack -lccsdspack_c \
+            -Wl,-rpath,"$PWD/v21-src/lib" \
+            -Wl,-rpath,"$PWD/v21-build/lib" -o benchmark-v21
 
       - name: Run comparison
         run: |
