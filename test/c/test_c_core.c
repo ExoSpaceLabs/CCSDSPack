@@ -1354,6 +1354,51 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t first[] = {0xAAU};
+        static const uint8_t second[] = {0x55U};
+        static const uint8_t expected[] = {
+            0x00U, 0x00U, 0xC0U, 0x00U, 0x00U, 0x03U,
+            0xAAU, 0x55U, 0x2EU, 0xBBU
+        };
+        ccsds_primary_header_t split_header = {
+            0U, 0U, 0U, 0U, 3U, 0U, 0U
+        };
+        const ccsds_packet_data_parts_t parts = {
+            {first, sizeof(first)},
+            {second, sizeof(second)}
+        };
+        uint8_t output[sizeof(expected)] = {0U};
+        uint16_t crc16 = 0U;
+        size_t serialized_size = 0U;
+        size_t written = 0U;
+
+        failed |= expect_status("packet-finalize-parts",
+            ccsds_packet_finalize_parts(
+                &split_header, 0U, parts,
+                CCSDS_PACKET_ERROR_CONTROL_CRC16, NULL,
+                &crc16, &serialized_size),
+            CCSDS_STATUS_OK);
+        if (split_header.data_length != 3U
+            || crc16 != 0x2EBBU
+            || serialized_size != sizeof(expected)) {
+            fprintf(stderr, "packet-finalize-parts: finalized state mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("packet-encode-parts",
+            ccsds_packet_encode_parts(
+                &split_header, parts,
+                CCSDS_PACKET_ERROR_CONTROL_CRC16, crc16,
+                output, sizeof(output), &written),
+            CCSDS_STATUS_OK);
+        if (written != sizeof(expected)
+            || memcmp(output, expected, sizeof(expected)) != 0) {
+            fprintf(stderr, "packet-encode-parts: wire vector mismatch\n");
+            failed = 1;
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
