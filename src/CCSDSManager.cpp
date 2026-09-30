@@ -78,16 +78,9 @@ ccsds::Packet ccsds::Manager::boundParserPacket() const {
   return packet;
 }
 
-void ccsds::Manager::advanceSequenceCount() {
-  if (!getAutoSequenceCountEnable()) return;
-  const auto next = static_cast<std::uint16_t>((getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
-  m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | next;
-}
-
 void ccsds::Manager::syncSequenceCountFromPacket(const Packet &packet) {
   if (!getAutoSequenceCountEnable()) return;
-  const auto next = static_cast<std::uint16_t>(
-    (packet.getPrimaryHeader().getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
+  const auto next = ccsds_sequence_next(packet.getPrimaryHeader().getSequenceCount());
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | next;
 }
 
@@ -98,7 +91,7 @@ ccsds::ResultBool ccsds::Manager::setPacketTemplate(Packet packet) {
                  ErrorCode::INVALID_HEADER_DATA, "Cannot set an invalid packet template");
   m_templatePacket = std::move(packet);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK)
-                    | (m_templatePacket.getPrimaryHeader().getSequenceCount() & SEQUENCE_COUNT_MASK);
+                    | (m_templatePacket.getPrimaryHeader().getSequenceCount() & CCSDS_SEQUENCE_COUNT_MAX);
   m_templatePacket.setUpdatePacketEnable(false);
   m_validator.clear();
   m_validator.setTemplatePacket(m_templatePacket);
@@ -136,7 +129,7 @@ void ccsds::Manager::setAutoSequenceCountEnable(const bool enable) {
 }
 
 ccsds::ResultBool ccsds::Manager::setSequenceCount(const std::uint16_t count) {
-  RET_IF_ERR_MSG(count > SEQUENCE_COUNT_MASK, ErrorCode::INVALID_HEADER_DATA,
+  RET_IF_ERR_MSG(count > CCSDS_SEQUENCE_COUNT_MAX, ErrorCode::INVALID_HEADER_DATA,
                  "Unable to set Manager sequence count above 16383");
   if (m_templateIsSet) FORWARD_RESULT(m_templatePacket.setSequenceCount(count));
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | count;
@@ -155,35 +148,39 @@ ccsds::ResultBool ccsds::Manager::setApplicationData(const std::vector<std::uint
   const auto maxBytesPerPacket = m_templatePacket.getDataFieldMaximumSize();
   RET_IF_ERR_MSG(maxBytesPerPacket == 0U, ErrorCode::INVALID_APPLICATION_DATA,
                  "Cannot segment application data into a zero-sized packet data field");
-  const auto packetCount =
-    (data.size() + static_cast<std::size_t>(maxBytesPerPacket) - 1U)
-    / static_cast<std::size_t>(maxBytesPerPacket);
+  std::size_t packetCount{};
+  const auto countStatus = ccsds_segmentation_packet_count(
+    data.size(), static_cast<std::size_t>(maxBytesPerPacket), &packetCount);
+  RET_IF_ERR_MSG(countStatus != CCSDS_STATUS_OK, ErrorCode::INVALID_APPLICATION_DATA,
+                 "Cannot plan CCSDS application-data segmentation");
 
   std::vector<Packet> generated;
   generated.reserve(packetCount);
-  auto nextCount = getSequenceCount();
-  std::size_t offset = 0U;
+  const auto startCount = getSequenceCount();
+  const bool autoSequence = getAutoSequenceCountEnable();
+
   for (std::size_t index = 0U; index < packetCount; ++index) {
+    ccsds_segment_plan_t plan{};
+    const auto planStatus = ccsds_segmentation_plan(
+      data.size(), static_cast<std::size_t>(maxBytesPerPacket), index,
+      startCount, autoSequence ? 1 : 0, &plan);
+    RET_IF_ERR_MSG(planStatus != CCSDS_STATUS_OK, ErrorCode::INVALID_APPLICATION_DATA,
+                   "Cannot plan CCSDS application-data segment");
+
     Packet packet = m_templatePacket;
-    const auto bytes = std::min<std::size_t>(maxBytesPerPacket, data.size() - offset);
     const std::vector<std::uint8_t> chunk(
-      data.begin() + static_cast<std::ptrdiff_t>(offset),
-      data.begin() + static_cast<std::ptrdiff_t>(offset + bytes));
-    ESequenceFlag flags = UNSEGMENTED;
-    if (packetCount > 1U) {
-      if (index == 0U) flags = FIRST_SEGMENT;
-      else if (index + 1U == packetCount) flags = LAST_SEGMENT;
-      else flags = CONTINUING_SEGMENT;
-    }
-    packet.setSequenceFlags(flags);
-    FORWARD_RESULT(packet.setSequenceCount(nextCount));
+      data.begin() + static_cast<std::ptrdiff_t>(plan.offset),
+      data.begin() + static_cast<std::ptrdiff_t>(plan.offset + plan.size));
+    packet.setSequenceFlags(static_cast<ESequenceFlag>(plan.sequence_flags));
+    FORWARD_RESULT(packet.setSequenceCount(plan.sequence_count));
     FORWARD_RESULT(packet.setApplicationData(chunk));
     packet.setUpdatePacketEnable(m_updateEnable);
     generated.push_back(std::move(packet));
-    if (getAutoSequenceCountEnable()) nextCount = static_cast<std::uint16_t>((nextCount + 1U) & SEQUENCE_COUNT_MASK);
-    offset += bytes;
   }
+
   m_packets = std::move(generated);
+  const auto nextCount = ccsds_sequence_after_packets(
+    startCount, packetCount, autoSequence ? 1 : 0);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | nextCount;
   return true;
 }
