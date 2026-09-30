@@ -25,13 +25,18 @@ set(DAS_BUILD_LINK_TESTS OFF CACHE BOOL "" FORCE)
 set(DAS_USE_DEFAULT_VECTOR_TABLE ON CACHE BOOL "" FORCE)
 set(STM32_CUBE_H7_DIR "${STM32_CUBE_H7_DIR}" CACHE PATH "" FORCE)
 
-FetchContent_Declare(
-    das
-    GIT_REPOSITORY https://github.com/Inczert/device-abstraction-stack.git
-    GIT_TAG ${CCSDSPACK_DAS_REF}
-    GIT_SHALLOW FALSE
-)
-FetchContent_MakeAvailable(das)
+set(CCSDSPACK_DAS_SOURCE_DIR "" CACHE PATH "Optional pinned DAS source checkout")
+if(CCSDSPACK_DAS_SOURCE_DIR)
+    add_subdirectory("${CCSDSPACK_DAS_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/das")
+else()
+    FetchContent_Declare(
+        das
+        GIT_REPOSITORY https://github.com/Inczert/device-abstraction-stack.git
+        GIT_TAG ${CCSDSPACK_DAS_REF}
+        GIT_SHALLOW FALSE
+    )
+    FetchContent_MakeAvailable(das)
+endif()
 
 configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/validation_build_info.h.in"
