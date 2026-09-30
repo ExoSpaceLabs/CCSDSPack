@@ -45,15 +45,66 @@ int main(void) {
     }
 
     {
+        static const uint8_t expected_be16[] = {0xABU, 0xCDU};
+        static const uint8_t expected_le16[] = {0xCDU, 0xABU};
+        static const uint8_t expected_be48[] = {
+            0x01U, 0x02U, 0x03U, 0x04U, 0x05U, 0x06U
+        };
+        static const uint8_t expected_le48[] = {
+            0x06U, 0x05U, 0x04U, 0x03U, 0x02U, 0x01U
+        };
         uint8_t bytes[8] = {0U};
-        ccsds_store_be16(bytes, 0xABCDU);
-        if (ccsds_load_be16(bytes) != 0xABCDU) {
-            fprintf(stderr, "bytes: 16-bit roundtrip mismatch\n");
+
+        if (!ccsds_byte_order_is_valid(CCSDS_BYTE_ORDER_BIG)
+            || !ccsds_byte_order_is_valid(CCSDS_BYTE_ORDER_LITTLE)
+            || ccsds_byte_order_is_valid((ccsds_byte_order_t)2)) {
+            fprintf(stderr, "bytes: byte-order validation mismatch\n");
             failed = 1;
         }
-        ccsds_store_be_uint(bytes, 6U, UINT64_C(0x010203040506));
-        if (ccsds_load_be_uint(bytes, 6U) != UINT64_C(0x010203040506)) {
-            fprintf(stderr, "bytes: generic roundtrip mismatch\n");
+
+        ccsds_store_u16(bytes, 0xABCDU, CCSDS_BYTE_ORDER_BIG);
+        if (memcmp(bytes, expected_be16, sizeof(expected_be16)) != 0
+            || ccsds_load_u16(bytes, CCSDS_BYTE_ORDER_BIG) != 0xABCDU) {
+            fprintf(stderr, "bytes: explicit big-endian 16-bit mismatch\n");
+            failed = 1;
+        }
+
+        ccsds_store_u16(bytes, 0xABCDU, CCSDS_BYTE_ORDER_LITTLE);
+        if (memcmp(bytes, expected_le16, sizeof(expected_le16)) != 0
+            || ccsds_load_u16(bytes, CCSDS_BYTE_ORDER_LITTLE) != 0xABCDU) {
+            fprintf(stderr, "bytes: explicit little-endian 16-bit mismatch\n");
+            failed = 1;
+        }
+
+        ccsds_store_uint(bytes, 6U, UINT64_C(0x010203040506),
+                         CCSDS_BYTE_ORDER_BIG);
+        if (memcmp(bytes, expected_be48, sizeof(expected_be48)) != 0
+            || ccsds_load_uint(bytes, 6U, CCSDS_BYTE_ORDER_BIG)
+               != UINT64_C(0x010203040506)) {
+            fprintf(stderr, "bytes: explicit big-endian generic mismatch\n");
+            failed = 1;
+        }
+
+        ccsds_store_uint(bytes, 6U, UINT64_C(0x010203040506),
+                         CCSDS_BYTE_ORDER_LITTLE);
+        if (memcmp(bytes, expected_le48, sizeof(expected_le48)) != 0
+            || ccsds_load_uint(bytes, 6U, CCSDS_BYTE_ORDER_LITTLE)
+               != UINT64_C(0x010203040506)) {
+            fprintf(stderr, "bytes: explicit little-endian generic mismatch\n");
+            failed = 1;
+        }
+
+        ccsds_store_be16(bytes, 0xABCDU);
+        if (ccsds_load_be16(bytes) != 0xABCDU
+            || memcmp(bytes, expected_be16, sizeof(expected_be16)) != 0) {
+            fprintf(stderr, "bytes: BE compatibility wrapper mismatch\n");
+            failed = 1;
+        }
+
+        ccsds_store_le16(bytes, 0xABCDU);
+        if (ccsds_load_le16(bytes) != 0xABCDU
+            || memcmp(bytes, expected_le16, sizeof(expected_le16)) != 0) {
+            fprintf(stderr, "bytes: LE compatibility wrapper mismatch\n");
             failed = 1;
         }
     }
