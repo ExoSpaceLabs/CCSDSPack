@@ -142,6 +142,11 @@ jobs:
             arm-none-eabi-size v21-linked-gc.o | tail -n 1 | awk '{print "v2.1-gc," $1 "," $2 "," $3 "," $4 "," $5}'
           } | tee main-vs-v21-mcu-size.csv
 
+          echo "=== main GC symbols ==="
+          arm-none-eabi-nm -S --size-sort -C main-linked-gc.o | tail -n 50
+          echo "=== v2.1 GC symbols ==="
+          arm-none-eabi-nm -S --size-sort -C v21-linked-gc.o | tail -n 70
+
       - name: Upload comparison
         uses: actions/upload-artifact@v4
         with:
