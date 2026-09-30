@@ -153,6 +153,32 @@ void testGroupBuffer(TestManager *tester, const std::string &description) {
               == ccsds::PacketErrorControlMode::None;
   });
 
+  tester->unitTest("Raw Packet parser preserves custom CRC configuration", []() {
+    ccsds::Packet outgoing;
+    outgoing.setCrcConfig(0x1021U, 0x1D0FU, 0xFFFFU);
+    TEST_VOID(outgoing.setPrimaryHeader(ccsds::PrimaryHeader{
+      0, 0, 0, 0x222, ccsds::UNSEGMENTED, 17, 0
+    }));
+    TEST_VOID(outgoing.setApplicationData({0x10U, 0x20U, 0x30U, 0x40U}));
+
+    std::vector<std::uint8_t> wire;
+    TEST_RET(wire, outgoing.serialize());
+
+    ccsds::Packet incoming;
+    incoming.setCrcConfig(0x1021U, 0x1D0FU, 0xFFFFU);
+    std::size_t consumed{};
+    TEST_RET(consumed, incoming.deserializeBounded(wire.data(), wire.size()));
+    if (consumed != wire.size()
+        || incoming.getApplicationDataBytes()
+           != std::vector<std::uint8_t>({0x10U, 0x20U, 0x30U, 0x40U})) {
+      return false;
+    }
+
+    ccsds::Packet wrongConfig;
+    const auto wrong = wrongConfig.deserializeBounded(wire.data(), wire.size());
+    return !wrong && wrong.error().code() == ccsds::ErrorCode::INVALID_CHECKSUM;
+  });
+
   tester->unitTest("Const Manager reference accessors avoid packet/template copies", []() {
     ccsds::Packet packetTemplate;
     packetTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
