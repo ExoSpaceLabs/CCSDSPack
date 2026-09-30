@@ -33,6 +33,9 @@ ccsds_status_t ccsds_reassembly_accept(ccsds_reassembly_state_t *state,
     if (application_data.size != 0U && application_data.data == NULL) {
         return CCSDS_STATUS_NULL_POINTER;
     }
+    if (ccsds_primary_header_validate(header) != CCSDS_STATUS_OK) {
+        return CCSDS_STATUS_INVALID_HEADER_DATA;
+    }
     if (state->written > capacity) {
         return CCSDS_STATUS_INVALID_DATA;
     }
