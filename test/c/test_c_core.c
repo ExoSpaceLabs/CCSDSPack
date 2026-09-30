@@ -639,6 +639,94 @@ int main(void) {
         }
     }
 
+    {
+        size_t packet_count = 0U;
+        ccsds_segment_plan_t plan;
+
+        failed |= expect_status("segment-count-single",
+            ccsds_segmentation_packet_count(10U, 16U, &packet_count),
+            CCSDS_STATUS_OK);
+        if (packet_count != 1U) {
+            fprintf(stderr, "segment-count-single: expected 1\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("segment-plan-single",
+            ccsds_segmentation_plan(10U, 16U, 0U, 7U, 1, &plan),
+            CCSDS_STATUS_OK);
+        if (plan.packet_count != 1U
+            || plan.offset != 0U
+            || plan.size != 10U
+            || plan.sequence_flags != CCSDS_SEQUENCE_UNSEGMENTED
+            || plan.sequence_count != 7U) {
+            fprintf(stderr, "segment-plan-single: plan mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("segment-count-multi",
+            ccsds_segmentation_packet_count(40U, 16U, &packet_count),
+            CCSDS_STATUS_OK);
+        if (packet_count != 3U) {
+            fprintf(stderr, "segment-count-multi: expected 3\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("segment-plan-first",
+            ccsds_segmentation_plan(40U, 16U, 0U, 0x3FFFU, 1, &plan),
+            CCSDS_STATUS_OK);
+        if (plan.offset != 0U || plan.size != 16U
+            || plan.sequence_flags != CCSDS_SEQUENCE_FIRST
+            || plan.sequence_count != 0x3FFFU) {
+            fprintf(stderr, "segment-plan-first: plan mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("segment-plan-middle",
+            ccsds_segmentation_plan(40U, 16U, 1U, 0x3FFFU, 1, &plan),
+            CCSDS_STATUS_OK);
+        if (plan.offset != 16U || plan.size != 16U
+            || plan.sequence_flags != CCSDS_SEQUENCE_CONTINUING
+            || plan.sequence_count != 0U) {
+            fprintf(stderr, "segment-plan-middle: plan mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("segment-plan-last",
+            ccsds_segmentation_plan(40U, 16U, 2U, 0x3FFFU, 1, &plan),
+            CCSDS_STATUS_OK);
+        if (plan.offset != 32U || plan.size != 8U
+            || plan.sequence_flags != CCSDS_SEQUENCE_LAST
+            || plan.sequence_count != 1U) {
+            fprintf(stderr, "segment-plan-last: plan mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("segment-plan-manual-sequence",
+            ccsds_segmentation_plan(40U, 16U, 2U, 123U, 0, &plan),
+            CCSDS_STATUS_OK);
+        if (plan.sequence_count != 123U
+            || ccsds_sequence_after_packets(123U, 3U, 0) != 123U) {
+            fprintf(stderr, "segment-plan-manual-sequence: count mismatch\n");
+            failed = 1;
+        }
+
+        if (ccsds_sequence_after_packets(0x3FFFU, 3U, 1) != 2U
+            || ccsds_sequence_next(0x3FFFU) != 0U) {
+            fprintf(stderr, "segment-sequence-rollover: count mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("segment-empty",
+            ccsds_segmentation_packet_count(0U, 16U, &packet_count),
+            CCSDS_STATUS_NO_DATA);
+        failed |= expect_status("segment-zero-capacity",
+            ccsds_segmentation_packet_count(10U, 0U, &packet_count),
+            CCSDS_STATUS_INVALID_APPLICATION_DATA);
+        failed |= expect_status("segment-index-range",
+            ccsds_segmentation_plan(40U, 16U, 3U, 0U, 1, &plan),
+            CCSDS_STATUS_INVALID_DATA);
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
