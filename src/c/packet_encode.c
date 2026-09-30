@@ -156,9 +156,9 @@ ccsds_status_t ccsds_packet_encode(const ccsds_primary_header_t *header,
     if (status != CCSDS_STATUS_OK) return status;
 
     if (data_field.size != 0U) {
-        memcpy(output + CCSDS_PRIMARY_HEADER_SIZE,
-               data_field.data,
-               data_field.size);
+        memmove(output + CCSDS_PRIMARY_HEADER_SIZE,
+                data_field.data,
+                data_field.size);
     }
 
     if (pec_size != 0U) {
