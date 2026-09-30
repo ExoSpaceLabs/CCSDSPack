@@ -64,6 +64,9 @@ std::size_t ccsds::time::encodedSize(const CucConfiguration &configuration) {
 ccsds::ResultBuffer ccsds::time::serialize(const CucTime &value,
                                            const CucConfiguration &configuration) {
   const auto coreConfig = toCoreConfig(configuration);
+  const auto validation = ccsds_cuc_validate(&coreConfig);
+  if (validation != CCSDS_STATUS_OK) return cucError(validation);
+
   const ccsds_cuc_time_t coreValue{value.coarse, value.fine};
   std::vector<std::uint8_t> output(ccsds_cuc_encoded_size(&coreConfig));
   std::size_t written = 0U;
