@@ -109,6 +109,7 @@ v2.1 additionally runs:
 - bounded libFuzzer smoke tests;
 - native and cross-package generation;
 - Cortex-M7 compile/link probe;
+- standalone NUCLEO-H755ZI-Q DAS/OpenOCD final-ELF cross-build against the generated MCU package;
 - aarch64 package generation;
 - non-gating parse and serialization performance artifacts.
 
@@ -150,7 +151,7 @@ Before tagging v2.1.0:
 1. merge the final evidence/documentation PR into `develop`;
 2. generate fresh v2.1 arm64 and MCU packages from the exact candidate commit;
 3. rerun Raspberry Pi 5/native arm64 installed-package acceptance;
-4. rerun NUCLEO-H755ZI-Q/Cortex-M7 physical acceptance and record final ELF text/data/bss;
+4. rerun NUCLEO-H755ZI-Q/Cortex-M7 physical acceptance through the DAS/OpenOCD UART harness and record final ELF text/data/bss;
 5. promote the accepted `develop` commit to `main`;
 6. require final `main` CI to pass;
 7. create tag `v2.1.0`;
