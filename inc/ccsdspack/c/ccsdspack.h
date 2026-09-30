@@ -11,6 +11,7 @@
 #include "error.h"
 #include "packet_view.h"
 #include "primary_header.h"
+#include "pus.h"
 #include "pus_tc.h"
 
 #endif // CCSDSPACK_C_CCSDSPACK_H
