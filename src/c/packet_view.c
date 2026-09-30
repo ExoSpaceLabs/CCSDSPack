@@ -10,6 +10,7 @@ ccsds_status_t ccsds_packet_view_parse(const uint8_t *data,
                                        const ccsds_crc16_config_t *crc_config,
                                        ccsds_packet_view_t *view_out) {
     ccsds_primary_header_t header;
+    ccsds_packet_view_t view = {0};
     ccsds_crc16_config_t config;
     size_t packet_size;
     size_t body_size;
@@ -59,34 +60,35 @@ ccsds_status_t ccsds_packet_view_parse(const uint8_t *data,
             return status;
         }
 
-        view_out->received_crc16 = ccsds_load_be16(data + packet_size - pec_size);
-        if (calculated_crc != view_out->received_crc16) {
+        view.received_crc16 = ccsds_load_be16(data + packet_size - pec_size);
+        if (calculated_crc != view.received_crc16) {
             return CCSDS_STATUS_INVALID_CHECKSUM;
         }
     } else {
-        view_out->received_crc16 = 0U;
+        view.received_crc16 = 0U;
     }
 
-    view_out->primary_header = header;
-    view_out->packet.data = data;
-    view_out->packet.size = packet_size;
-    view_out->body.data = data + CCSDS_PRIMARY_HEADER_SIZE;
-    view_out->body.size = body_size;
-    view_out->data_field.data = data + CCSDS_PRIMARY_HEADER_SIZE;
-    view_out->data_field.size = body_size - pec_size;
-    view_out->packet_error_control.data =
+    view.primary_header = header;
+    view.packet.data = data;
+    view.packet.size = packet_size;
+    view.body.data = data + CCSDS_PRIMARY_HEADER_SIZE;
+    view.body.size = body_size;
+    view.data_field.data = data + CCSDS_PRIMARY_HEADER_SIZE;
+    view.data_field.size = body_size - pec_size;
+    view.packet_error_control.data =
         pec_size == 0U ? NULL : data + packet_size - pec_size;
-    view_out->packet_error_control.size = pec_size;
-    view_out->consumed = packet_size;
+    view.packet_error_control.size = pec_size;
+    view.consumed = packet_size;
 
     if (header.apid == CCSDS_IDLE_APID) {
         if (header.secondary_header_flag != 0U) {
             return CCSDS_STATUS_INVALID_HEADER_DATA;
         }
-        if (view_out->data_field.size == 0U) {
+        if (view.data_field.size == 0U) {
             return CCSDS_STATUS_INVALID_DATA;
         }
     }
 
+    *view_out = view;
     return CCSDS_STATUS_OK;
 }
