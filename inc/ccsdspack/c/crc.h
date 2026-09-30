@@ -17,6 +17,18 @@ extern "C" {
 #define CCSDS_CRC16_CCITT_FALSE_FINAL_XOR  ((uint16_t)0x0000U)
 
 /**
+ * @brief Updates an unfinalized MSB-first CRC16 state over caller-owned bytes.
+ *
+ * The caller supplies the current state (typically the configured initial value).
+ * No final XOR is applied, allowing multiple discontiguous buffers to be covered
+ * without concatenating or copying them.
+ */
+ccsds_status_t ccsds_crc16_update(uint16_t *state,
+                                  const uint8_t *data,
+                                  size_t size,
+                                  uint16_t polynomial);
+
+/**
  * @brief Computes an MSB-first 16-bit CRC over caller-owned bytes.
  *
  * data may be NULL only when size is zero. No allocation or copying occurs.
