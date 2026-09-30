@@ -63,7 +63,7 @@ ccsds_status_t ccsds_packet_stream_next(ccsds_packet_stream_t *stream,
         if (stream->size - packet_offset < 4U) {
             return CCSDS_STATUS_INVALID_DATA;
         }
-        if (ccsds_load_be32(stream->data + packet_offset) != stream->sync_pattern) {
+        if ((uint32_t)ccsds_load_be_uint(stream->data + packet_offset, 4U) != stream->sync_pattern) {
             return CCSDS_STATUS_INVALID_DATA;
         }
         packet_offset += 4U;
