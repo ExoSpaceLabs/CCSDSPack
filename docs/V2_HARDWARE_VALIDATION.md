@@ -3,11 +3,79 @@ Copyright 2025-2026 ExoSpaceLabs
 SPDX-License-Identifier: Apache-2.0
 -->
 
-# CCSDSPack v2.0.0 hardware validation
+# CCSDSPack v2 hardware validation
 
 [Documentation index](README.md) | [Packages](PACKAGES.md) | [Release acceptance](../V2_TRANSITION_ACCEPTANCE_LIST.md)
 
 This page records physical-target and native-target release evidence for CCSDSPack v2.0.0. Hardware execution complements hosted CI and package/cross-build evidence; it does not extend the documented compliance scope beyond the supported CCSDS Space Packet PDU, PUS, CUC, and mission-tailoring profiles.
+
+
+## v2.1.0 release-candidate validation
+
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API, so fresh physical/native execution is required before tagging.
+
+| Target | v2.1 status | Required marker |
+|---|---|---|
+| Raspberry Pi 5, native arm64 Linux | **PENDING** | `CCSDSPACK_AARCH64_TEST:PASS` |
+| NUCLEO-H755ZI-Q, Cortex-M7 | **PENDING** | `CCSDSPACK_HARDWARE_TEST:PASS` |
+
+Use the exact accepted `develop` commit after the final v2.1 hardening PR is merged. Record that source SHA and the generated package/library hashes here before promotion to `main`.
+
+### Raspberry Pi 5 / arm64 rerun
+
+Build the native package from a fresh checkout of the candidate:
+
+```bash
+git checkout develop
+git pull --ff-only
+./package.sh -p DEB
+ARM64_DEB="$(find ./packages -type f -name '*arm64*.deb' -o -name '*aarch64*.deb' | head -n 1)"
+bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
+  2>&1 | tee ~/ccsdspack-v2.1-aarch64-validation.log
+```
+
+Acceptance requires the installed regression/CLI/package-consumer checks to pass and the final marker:
+
+```text
+CCSDSPACK_AARCH64_TEST:PASS
+```
+
+### NUCLEO-H755ZI-Q / Cortex-M7 rerun
+
+Generate the MCU package from the same candidate commit:
+
+```bash
+./package.sh \
+  -t cmake/toolchains/arm-none-eabi.cmake \
+  -p MCU \
+  -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+```
+
+Use the existing STM32H7 reference harness under `test/package_tester/stm32h7xx/`, link the generated candidate `libccsdspack.a`, build the CM7 image, and record the final ELF size with:
+
+```bash
+arm-none-eabi-size <final-cm7-elf>
+```
+
+After flashing, the required runtime marker is:
+
+```text
+CCSDSPACK_HARDWARE_TEST:PASS
+```
+
+Record the exact candidate SHA, MCU package SHA-256, installed archive SHA-256, compiler version, final ELF text/data/bss, and runtime log in this page before release promotion.
+
+### Pre-hardware footprint evidence
+
+A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2.0 public hardware probe for both implementations. With section garbage collection, retained text is:
+
+- v2.0 main: **36,238 bytes**;
+- v2.1 candidate: **40,166 bytes**;
+- delta: **+3,928 bytes (+10.8%)**.
+
+This is compile/link evidence only. The physical STM32 ELF remains authoritative for the release-candidate footprint record.
+
+---
 
 ## Status
 
