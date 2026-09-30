@@ -198,7 +198,7 @@ void runCase(const std::size_t packetSize, const bool crcEnabled) {
     << cppSample.ns_per_op << ','
     << cppSample.allocations_per_op << ','
     << cppSample.allocated_bytes_per_op << ','
-    << packetSize << '\n';
+    << 0U << '\n';
 }
 } // namespace
 
@@ -236,7 +236,7 @@ int main() {
   std::cout << "CCSDSPACK_PERFORMANCE_BASELINE_V1\n";
   std::cout
     << "path,pec,packet_bytes,iterations,ns_per_op,allocations_per_op,"
-       "allocated_bytes_per_op,mandatory_input_copy_bytes_per_op\n";
+       "allocated_bytes_per_op,raw_adapter_bridge_copy_bytes_per_op\n";
 
   try {
     for (const bool crcEnabled : {false, true}) {
