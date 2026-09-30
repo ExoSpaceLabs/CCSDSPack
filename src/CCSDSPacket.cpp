@@ -5,6 +5,7 @@
 #include "CCSDSDataField.h"
 #include "CCSDSUtils.h"
 #include "PusSecondaryHeaders.h"
+#include "ccsdspack/c/packet_encode.h"
 #include "ccsdspack/c/packet_view.h"
 #include <algorithm>
 #include <limits>
@@ -27,6 +28,52 @@ namespace {
     std::uint16_t receivedCRC{};
     std::size_t packetSize{};
   };
+
+  ccsds_primary_header_t toCoreHeader(const ccsds::Header &header) noexcept {
+    return {
+      header.getVersionNumber(),
+      header.getType(),
+      header.getSecondaryHeaderFlag(),
+      header.getAPID(),
+      header.getSequenceFlags(),
+      header.getSequenceCount(),
+      header.getDataLength()
+    };
+  }
+
+  ccsds_packet_error_control_t toCoreErrorControl(
+      const ccsds::PacketErrorControlMode mode) noexcept {
+    return mode == ccsds::PacketErrorControlMode::CRC16
+      ? CCSDS_PACKET_ERROR_CONTROL_CRC16
+      : CCSDS_PACKET_ERROR_CONTROL_NONE;
+  }
+
+  ccsds_crc16_config_t toCoreCrcConfig(const ccsds::CRC16Config &config) noexcept {
+    return {config.polynomial, config.initialValue, config.finalXorValue};
+  }
+
+  ccsds::Error packetCoreError(const ccsds_status_t status,
+                               const char *action) {
+    ccsds::ErrorCode code = ccsds::ErrorCode::UNKNOWN_ERROR;
+    switch (status) {
+      case CCSDS_STATUS_INVALID_HEADER_DATA:
+        code = ccsds::ErrorCode::INVALID_HEADER_DATA;
+        break;
+      case CCSDS_STATUS_INVALID_DATA:
+      case CCSDS_STATUS_BUFFER_TOO_SMALL:
+        code = ccsds::ErrorCode::INVALID_DATA;
+        break;
+      case CCSDS_STATUS_NULL_POINTER:
+        code = ccsds::ErrorCode::NULL_POINTER;
+        break;
+      default:
+        break;
+    }
+    return ccsds::Error{
+      code,
+      std::string(action) + ": " + ccsds_status_name(status)
+    };
+  }
 
   ccsds::Error packetViewError(const ccsds_status_t status) {
     if (status == CCSDS_STATUS_INVALID_CHECKSUM) {
@@ -249,12 +296,8 @@ namespace {
 #endif
 }
 
-ccsds::ResultBool ccsds::Packet::update() {
-  FORWARD_RESULT(validatePacketForSerialization(m_primaryHeader, m_dataField));
-  if (m_updateStatus || !m_enableUpdatePacket) return true;
-
-  std::vector<std::uint8_t> dataField;
-  ASSIGN_MV(dataField, m_dataField.serialize());
+ccsds::ResultBool ccsds::Packet::finalizeSerializedDataField(
+    const std::vector<std::uint8_t> &dataField) {
   const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
   constexpr auto maximumPacketDataFieldSize =
     static_cast<std::size_t>(std::numeric_limits<std::uint16_t>::max()) + 1U;
@@ -264,19 +307,44 @@ ccsds::ResultBool ccsds::Packet::update() {
   RET_IF_ERR_MSG(packetDataFieldSize > maximumPacketDataFieldSize, ErrorCode::INVALID_DATA,
                  "Cannot finalize packet: Packet Data Field exceeds the CCSDS length field.");
 
-  m_primaryHeader.setDataLength(static_cast<std::uint16_t>(packetDataFieldSize - 1U));
-  FORWARD_RESULT(m_primaryHeader.setSequenceCount(m_sequenceCounter & SEQUENCE_COUNT_MASK));
-
-  if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
-    auto crcInput = static_cast<const Header &>(m_primaryHeader).serialize();
-    RET_IF_ERR_MSG(crcInput.size() != 6U, ErrorCode::INVALID_HEADER_DATA,
-                   "Cannot finalize packet: primary-header serialization failed.");
-    crcInput.insert(crcInput.end(), dataField.begin(), dataField.end());
-    m_CRC16 = ccsds::crc16(crcInput, m_CRC16Config.polynomial,
-                           m_CRC16Config.initialValue, m_CRC16Config.finalXorValue);
-  } else {
-    m_CRC16 = 0U;
+  auto coreHeader = toCoreHeader(m_primaryHeader);
+  const ccsds_buffer_view_t coreDataField{
+    dataField.empty() ? nullptr : dataField.data(),
+    dataField.size()
+  };
+  const auto coreCrc = toCoreCrcConfig(m_CRC16Config);
+  std::uint16_t crc = 0U;
+  std::size_t serializedSize = 0U;
+  const auto status = ccsds_packet_finalize(
+    &coreHeader,
+    static_cast<std::uint16_t>(m_sequenceCounter & SEQUENCE_COUNT_MASK),
+    coreDataField,
+    toCoreErrorControl(getPacketErrorControlMode()),
+    &coreCrc,
+    &crc,
+    &serializedSize);
+  if (status != CCSDS_STATUS_OK) {
+    return packetCoreError(status, "Cannot finalize packet");
   }
+
+  RET_IF_ERR_MSG(serializedSize
+                   != CCSDS_PRIMARY_HEADER_SIZE + packetDataFieldSize,
+                 ErrorCode::INVALID_DATA,
+                 "Cannot finalize packet: C core returned an unexpected packet size.");
+
+  m_primaryHeader.setDataLength(coreHeader.data_length);
+  FORWARD_RESULT(m_primaryHeader.setSequenceCount(coreHeader.sequence_count));
+  m_CRC16 = crc;
+  return true;
+}
+
+ccsds::ResultBool ccsds::Packet::update() {
+  FORWARD_RESULT(validatePacketForSerialization(m_primaryHeader, m_dataField));
+  if (m_updateStatus || !m_enableUpdatePacket) return true;
+
+  std::vector<std::uint8_t> dataField;
+  ASSIGN_MV(dataField, m_dataField.serialize());
+  FORWARD_RESULT(finalizeSerializedDataField(dataField));
   m_updateStatus = true;
   return true;
 }
@@ -469,13 +537,14 @@ std::vector<std::uint8_t> ccsds::Packet::getFullDataFieldBytes() const {
 }
 
 ccsds::ResultBuffer ccsds::Packet::serialize() {
-  const auto updateResult = update();
-  if (!updateResult) return updateResult.error();
-  const auto header = static_cast<const Header &>(m_primaryHeader).serialize();
-  RET_IF_ERR_MSG(header.size() != 6U, ErrorCode::INVALID_HEADER_DATA,
-                 "Cannot serialize packet: primary-header serialization failed.");
+  FORWARD_RESULT(validatePacketForSerialization(m_primaryHeader, m_dataField));
+
   std::vector<std::uint8_t> dataField;
   ASSIGN_MV(dataField, m_dataField.serialize());
+  if (!m_updateStatus && m_enableUpdatePacket) {
+    FORWARD_RESULT(finalizeSerializedDataField(dataField));
+    m_updateStatus = true;
+  }
 
   const auto packetDataFieldSize = dataField.size() + getPacketErrorControlSize();
   constexpr auto maximumPacketDataFieldSize =
@@ -489,14 +558,27 @@ ccsds::ResultBuffer ccsds::Packet::serialize() {
                  ErrorCode::INVALID_DATA,
                  "Cannot serialize packet: Packet Data Length does not match the finalized data field.");
 
-  std::vector<std::uint8_t> packet;
-  packet.reserve(header.size() + dataField.size() + getPacketErrorControlSize());
-  packet.insert(packet.end(), header.begin(), header.end());
-  packet.insert(packet.end(), dataField.begin(), dataField.end());
-  if (getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
-    packet.push_back(static_cast<std::uint8_t>((m_CRC16 >> 8U) & 0xFFU));
-    packet.push_back(static_cast<std::uint8_t>(m_CRC16 & 0xFFU));
+  const auto coreHeader = toCoreHeader(m_primaryHeader);
+  const ccsds_buffer_view_t coreDataField{
+    dataField.empty() ? nullptr : dataField.data(),
+    dataField.size()
+  };
+  std::vector<std::uint8_t> packet(
+    CCSDS_PRIMARY_HEADER_SIZE + packetDataFieldSize);
+  std::size_t written = 0U;
+  const auto status = ccsds_packet_encode(
+    &coreHeader,
+    coreDataField,
+    toCoreErrorControl(getPacketErrorControlMode()),
+    m_CRC16,
+    packet.data(),
+    packet.size(),
+    &written);
+  if (status != CCSDS_STATUS_OK) {
+    return packetCoreError(status, "Cannot serialize packet");
   }
+  RET_IF_ERR_MSG(written != packet.size(), ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet: C core returned an unexpected packet size.");
   return packet;
 }
 
