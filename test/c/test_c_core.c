@@ -830,6 +830,124 @@ int main(void) {
         }
     }
 
+    {
+        static const uint8_t stream_bytes[] = {
+            0x00U, 0x01U, 0xC0U, 0x01U, 0x00U, 0x01U, 0xAAU, 0xBBU,
+            0x00U, 0x01U, 0xC0U, 0x02U, 0x00U, 0x00U, 0xCCU
+        };
+        static const uint8_t framed_bytes[] = {
+            0x1AU, 0xCFU, 0xFCU, 0x1DU,
+            0x00U, 0x01U, 0xC0U, 0x01U, 0x00U, 0x01U, 0xAAU, 0xBBU,
+            0x1AU, 0xCFU, 0xFCU, 0x1DU,
+            0x00U, 0x01U, 0xC0U, 0x02U, 0x00U, 0x00U, 0xCCU
+        };
+        ccsds_packet_stream_t stream;
+        ccsds_packet_view_t view;
+        size_t frame_consumed = 0U;
+
+        failed |= expect_status("stream-init",
+            ccsds_packet_stream_init(
+                &stream, stream_bytes, sizeof(stream_bytes),
+                CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+                0, 0x1ACFFC1DU),
+            CCSDS_STATUS_OK);
+        if (ccsds_packet_stream_remaining(&stream) != sizeof(stream_bytes)) {
+            fprintf(stderr, "stream-init: remaining mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("stream-next-first",
+            ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+            CCSDS_STATUS_OK);
+        if (frame_consumed != 8U || view.consumed != 8U
+            || view.primary_header.sequence_count != 1U
+            || view.data_field.size != 2U
+            || view.data_field.data[0] != 0xAAU
+            || ccsds_packet_stream_remaining(&stream) != 7U) {
+            fprintf(stderr, "stream-next-first: view mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("stream-next-second",
+            ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+            CCSDS_STATUS_OK);
+        if (frame_consumed != 7U || view.consumed != 7U
+            || view.primary_header.sequence_count != 2U
+            || view.data_field.size != 1U
+            || view.data_field.data[0] != 0xCCU
+            || ccsds_packet_stream_remaining(&stream) != 0U) {
+            fprintf(stderr, "stream-next-second: view mismatch\n");
+            failed = 1;
+        }
+        failed |= expect_status("stream-end",
+            ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+            CCSDS_STATUS_NO_DATA);
+
+        failed |= expect_status("stream-sync-init",
+            ccsds_packet_stream_init(
+                &stream, framed_bytes, sizeof(framed_bytes),
+                CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+                1, 0x1ACFFC1DU),
+            CCSDS_STATUS_OK);
+        failed |= expect_status("stream-sync-first",
+            ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+            CCSDS_STATUS_OK);
+        if (frame_consumed != 12U || view.packet.data != framed_bytes + 4U) {
+            fprintf(stderr, "stream-sync-first: framing mismatch\n");
+            failed = 1;
+        }
+        failed |= expect_status("stream-sync-second",
+            ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+            CCSDS_STATUS_OK);
+        if (frame_consumed != 11U || ccsds_packet_stream_remaining(&stream) != 0U) {
+            fprintf(stderr, "stream-sync-second: framing mismatch\n");
+            failed = 1;
+        }
+
+        {
+            uint8_t bad_sync[sizeof(framed_bytes)];
+            size_t before;
+            memcpy(bad_sync, framed_bytes, sizeof(framed_bytes));
+            bad_sync[0] ^= 0x01U;
+            failed |= expect_status("stream-bad-sync-init",
+                ccsds_packet_stream_init(
+                    &stream, bad_sync, sizeof(bad_sync),
+                    CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+                    1, 0x1ACFFC1DU),
+                CCSDS_STATUS_OK);
+            before = stream.offset;
+            failed |= expect_status("stream-bad-sync",
+                ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+                CCSDS_STATUS_INVALID_DATA);
+            if (stream.offset != before) {
+                fprintf(stderr, "stream-bad-sync: cursor advanced on failure\n");
+                failed = 1;
+            }
+        }
+
+        {
+            const size_t truncated_size = sizeof(stream_bytes) - 1U;
+            size_t before;
+            failed |= expect_status("stream-truncated-init",
+                ccsds_packet_stream_init(
+                    &stream, stream_bytes, truncated_size,
+                    CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+                    0, 0U),
+                CCSDS_STATUS_OK);
+            failed |= expect_status("stream-truncated-first",
+                ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+                CCSDS_STATUS_OK);
+            before = stream.offset;
+            failed |= expect_status("stream-truncated-second",
+                ccsds_packet_stream_next(&stream, &view, &frame_consumed),
+                CCSDS_STATUS_INVALID_DATA);
+            if (stream.offset != before) {
+                fprintf(stderr, "stream-truncated-second: cursor advanced on failure\n");
+                failed = 1;
+            }
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);
