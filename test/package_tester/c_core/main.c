@@ -55,6 +55,31 @@ int main(void) {
         }
     }
 
+    {
+        uint8_t packet[11] = {
+            0x01U, 0x23U, 0xC0U, 0x2AU, 0x00U, 0x04U,
+            0xAAU, 0xBBU, 0xCCU, 0x00U, 0x00U
+        };
+        ccsds_packet_view_t view;
+        uint16_t crc = 0U;
+
+        if (ccsds_crc16_ccitt_false(packet, 9U, &crc) != CCSDS_STATUS_OK) {
+            return 8;
+        }
+        ccsds_store_be16(packet + 9U, crc);
+        if (ccsds_packet_view_parse(packet, sizeof(packet),
+                                    CCSDS_PACKET_ERROR_CONTROL_CRC16,
+                                    NULL, &view) != CCSDS_STATUS_OK) {
+            return 9;
+        }
+        if (view.packet.data != packet
+            || view.data_field.data != packet + 6U
+            || view.data_field.size != 3U
+            || view.consumed != sizeof(packet)) {
+            return 10;
+        }
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }

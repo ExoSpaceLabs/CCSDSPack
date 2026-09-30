@@ -9,6 +9,7 @@
 #include "crc.h"
 #include "cuc.h"
 #include "error.h"
+#include "packet_view.h"
 #include "primary_header.h"
 
 #endif // CCSDSPACK_C_CCSDSPACK_H
