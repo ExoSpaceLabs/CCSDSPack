@@ -141,23 +141,30 @@ jobs:
           LD_LIBRARY_PATH="$PWD/build/install/lib:$PWD/build/install/lib64:${LD_LIBRARY_PATH:-}" \
             ./example/build_examples.sh all "$PWD/build/install"
 
-      - name: Build packet performance baseline (latest only)
+      - name: Build performance baselines (latest only)
         if: matrix.os == 'ubuntu-latest'
         run: |
           cmake -S . -B build -DCCSDSPACK_BUILD_BENCHMARKS=ON
-          cmake --build build --target CCSDSPack_packet_benchmark -- -j
+          cmake --build build --target \
+            CCSDSPack_packet_benchmark \
+            CCSDSPack_packet_serialize_benchmark -- -j
 
-      - name: Run packet performance baseline (latest only)
+      - name: Run performance baselines (latest only)
         if: matrix.os == 'ubuntu-latest'
         run: |
-          ./build/bin/CCSDSPack_packet_benchmark | tee packet-performance-baseline.csv
+          ./build/bin/CCSDSPack_packet_benchmark \
+            | tee packet-performance-baseline.csv
+          ./build/bin/CCSDSPack_packet_serialize_benchmark v2.1 \
+            | tee packet-serialization-performance.csv
 
-      - name: Upload packet performance baseline (latest only)
+      - name: Upload performance baselines (latest only)
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: ccsdspack-performance-${{ github.sha }}
-          path: packet-performance-baseline.csv
+          path: |
+            packet-performance-baseline.csv
+            packet-serialization-performance.csv
           if-no-files-found: error
           retention-days: 30
 

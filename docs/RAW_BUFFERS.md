@@ -11,7 +11,7 @@ CCSDSPack supports both `std::vector<std::uint8_t>` interfaces and pointer-plus-
 
 ## Implementation boundary
 
-The v2.0.0 raw entry points currently bridge through vector-backed parsing internally. Callers can therefore pass transport-owned memory directly, while the implementation makes no zero-copy or globally heap-free claim.
+In v2.1.0, bounded raw packet parsing is pointer-native. The C packet view validates framing, declared length, optional CRC16, and packet policy directly over caller-owned input; the C++ `Packet` adapter then copies only state it must own. Manager stream walking also operates over non-owning C views rather than materializing the unconsumed tail on every packet.
 
 ## Declared packet size
 
@@ -89,7 +89,7 @@ References remain owned by Manager and must not outlive it.
 
 ## Bare-metal use
 
-Raw-buffer APIs are available under `CCSDS_MCU` and add no RTTI or exception requirement. The Cortex-M compile/link probe exercises declared-size inspection, generic raw bounded parsing, typed raw PUS parsing, and structured validation. Physical execution remains a separate release-validation gate.
+Raw-buffer APIs are available under `CCSDS_MCU` and add no RTTI or exception requirement. The pure-C core can also be built without a C++ compiler. The Cortex-M compile/link probe exercises declared-size inspection, generic raw bounded parsing, typed raw PUS parsing, structured validation, and the shared C wire primitives. Physical execution remains a separate release-validation gate.
 
 ## Examples
 
