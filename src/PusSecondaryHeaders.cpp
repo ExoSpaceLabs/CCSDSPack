@@ -3,6 +3,7 @@
 
 #include "PusSecondaryHeaders.h"
 #include "ccsdspack/c/pus_tc.h"
+#include "ccsdspack/c/pus_tm.h"
 #include <utility>
 
 namespace {
@@ -29,6 +30,35 @@ namespace {
       default:
         return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                      "PUS TC secondary-header decoding failed.");
+    }
+  }
+
+  ccsds::Error pusTmDecodeError(const ccsds_status_t status, const bool revisionA) {
+    using ccsds::Error;
+    using ccsds::ErrorCode;
+    switch (status) {
+      case CCSDS_STATUS_PUS_SIZE_MISMATCH:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     revisionA ? "PUS-A TM secondary-header size mismatch."
+                               : "PUS-C TM secondary-header size mismatch.");
+      case CCSDS_STATUS_PUS_INVALID_VERSION:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     revisionA ? "PUS-A TM reserved bits or version are invalid."
+                               : "PUS-C TM version is invalid.");
+      case CCSDS_STATUS_PUS_NONZERO_SPARE:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "PUS TM secondary-header spare octets must be zero.");
+      case CCSDS_STATUS_CUC_PFIELD_MISMATCH:
+        return Error(ErrorCode::INVALID_DATA,
+                     "CUC P-field does not match the configured epoch or widths.");
+      case CCSDS_STATUS_CUC_SIZE_MISMATCH:
+        return Error(ErrorCode::INVALID_DATA,
+                     "CUC encoded size does not match the configured layout.");
+      case CCSDS_STATUS_NULL_POINTER:
+        return Error(ErrorCode::NULL_POINTER, "PUS TM core received a null pointer.");
+      default:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "PUS TM secondary-header decoding failed.");
     }
   }
 
@@ -444,25 +474,60 @@ std::uint16_t ccsds::pus::rev_a::TmHeader::getSize() const {
 ccsds::ResultBool ccsds::pus::rev_a::TmHeader::deserialize(
     const std::vector<std::uint8_t> &data) {
   FORWARD_RESULT(validateTailoring(getTailoring()));
-  RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-A TM secondary-header size mismatch.");
-  RET_IF_ERR_MSG(data[0] != 0x10U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-A TM reserved bits or version are invalid.");
-  const auto subcounterOffset = 3U;
-  const auto tailOffset = subcounterOffset + (m_packetSubcounterPresent ? 1U : 0U);
-  FORWARD_RESULT(parseTmTail(data, tailOffset));
-  m_serviceType = data[1];
-  m_serviceSubtype = data[2];
-  m_packetSubcounter = m_packetSubcounterPresent ? data[subcounterOffset] : 0U;
+  const ccsds_pus_a_tm_tailoring_t tailoring{
+    m_destinationIdOctets,
+    static_cast<std::uint8_t>(m_packetSubcounterPresent ? 1U : 0U),
+    static_cast<std::uint8_t>(m_timestampPresent ? 1U : 0U),
+    {
+      static_cast<ccsds_cuc_epoch_t>(m_cuc.epoch),
+      static_cast<ccsds_cuc_pfield_mode_t>(m_cuc.pField),
+      m_cuc.coarseOctets,
+      m_cuc.fineOctets
+    },
+    m_secondaryHeaderSpareOctets
+  };
+  ccsds_pus_a_tm_fields_t fields{};
+  const auto status = ccsds_pus_a_tm_decode(
+    data.data(), data.size(), &tailoring, &fields);
+  if (status != CCSDS_STATUS_OK) return pusTmDecodeError(status, true);
+
+  m_serviceType = fields.service_type;
+  m_serviceSubtype = fields.service_subtype;
+  m_packetSubcounter = fields.packet_subcounter;
+  m_destinationId = fields.destination_id;
+  m_timestamp = {fields.timestamp.coarse, fields.timestamp.fine};
   return true;
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_a::TmHeader::serialize() const {
-  if (!validateTailoring(getTailoring())
-      || !identifierFits(m_destinationId, m_destinationIdOctets)) return {};
-  std::vector<std::uint8_t> bytes{0x10U, m_serviceType, m_serviceSubtype};
-  if (m_packetSubcounterPresent) bytes.push_back(m_packetSubcounter);
-  if (!appendTmTail(bytes)) return {};
+  if (!validateTailoring(getTailoring())) return {};
+  const ccsds_pus_a_tm_tailoring_t tailoring{
+    m_destinationIdOctets,
+    static_cast<std::uint8_t>(m_packetSubcounterPresent ? 1U : 0U),
+    static_cast<std::uint8_t>(m_timestampPresent ? 1U : 0U),
+    {
+      static_cast<ccsds_cuc_epoch_t>(m_cuc.epoch),
+      static_cast<ccsds_cuc_pfield_mode_t>(m_cuc.pField),
+      m_cuc.coarseOctets,
+      m_cuc.fineOctets
+    },
+    m_secondaryHeaderSpareOctets
+  };
+  const ccsds_pus_a_tm_fields_t fields{
+    m_serviceType,
+    m_serviceSubtype,
+    m_packetSubcounter,
+    m_destinationId,
+    {m_timestamp.coarse, m_timestamp.fine}
+  };
+  std::vector<std::uint8_t> bytes(ccsds_pus_a_tm_encoded_size(&tailoring));
+  std::size_t written = 0U;
+  if (bytes.empty()
+      || ccsds_pus_a_tm_encode(&fields, &tailoring, bytes.data(), bytes.size(), &written)
+           != CCSDS_STATUS_OK
+      || written != bytes.size()) {
+    return {};
+  }
   return bytes;
 }
 
@@ -575,29 +640,58 @@ std::uint16_t ccsds::pus::rev_c::TmHeader::getSize() const {
 ccsds::ResultBool ccsds::pus::rev_c::TmHeader::deserialize(
     const std::vector<std::uint8_t> &data) {
   FORWARD_RESULT(validateTailoring(getTailoring()));
-  RET_IF_ERR_MSG(data.size() != getSize(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-C TM secondary-header size mismatch.");
-  RET_IF_ERR_MSG((data[0] >> 4U) != 2U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
-                 "PUS-C TM version is invalid.");
-  FORWARD_RESULT(parseTmTail(data, 5U));
-  m_timeReferenceStatus = data[0] & 0x0FU;
-  m_serviceType = data[1];
-  m_serviceSubtype = data[2];
-  m_messageTypeCounter = static_cast<std::uint16_t>(
-    (static_cast<std::uint16_t>(data[3]) << 8U) | data[4]);
+  const ccsds_pus_c_tm_tailoring_t tailoring{
+    static_cast<std::uint8_t>(m_timestampPresent ? 1U : 0U),
+    {
+      static_cast<ccsds_cuc_epoch_t>(m_cuc.epoch),
+      static_cast<ccsds_cuc_pfield_mode_t>(m_cuc.pField),
+      m_cuc.coarseOctets,
+      m_cuc.fineOctets
+    },
+    m_secondaryHeaderSpareOctets
+  };
+  ccsds_pus_c_tm_fields_t fields{};
+  const auto status = ccsds_pus_c_tm_decode(
+    data.data(), data.size(), &tailoring, &fields);
+  if (status != CCSDS_STATUS_OK) return pusTmDecodeError(status, false);
+
+  m_timeReferenceStatus = fields.time_reference_status;
+  m_serviceType = fields.service_type;
+  m_serviceSubtype = fields.service_subtype;
+  m_messageTypeCounter = fields.message_type_counter;
+  m_destinationId = fields.destination_id;
+  m_timestamp = {fields.timestamp.coarse, fields.timestamp.fine};
   return true;
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_c::TmHeader::serialize() const {
-  if (!validateTailoring(getTailoring()) || m_timeReferenceStatus > 0x0FU
-      || !identifierFits(m_destinationId, 2U)) return {};
-  std::vector<std::uint8_t> bytes{
-    static_cast<std::uint8_t>(0x20U | m_timeReferenceStatus),
-    m_serviceType, m_serviceSubtype,
-    static_cast<std::uint8_t>(m_messageTypeCounter >> 8U),
-    static_cast<std::uint8_t>(m_messageTypeCounter & 0xFFU)
+  if (!validateTailoring(getTailoring())) return {};
+  const ccsds_pus_c_tm_tailoring_t tailoring{
+    static_cast<std::uint8_t>(m_timestampPresent ? 1U : 0U),
+    {
+      static_cast<ccsds_cuc_epoch_t>(m_cuc.epoch),
+      static_cast<ccsds_cuc_pfield_mode_t>(m_cuc.pField),
+      m_cuc.coarseOctets,
+      m_cuc.fineOctets
+    },
+    m_secondaryHeaderSpareOctets
   };
-  if (!appendTmTail(bytes)) return {};
+  const ccsds_pus_c_tm_fields_t fields{
+    m_timeReferenceStatus,
+    m_serviceType,
+    m_serviceSubtype,
+    m_messageTypeCounter,
+    m_destinationId,
+    {m_timestamp.coarse, m_timestamp.fine}
+  };
+  std::vector<std::uint8_t> bytes(ccsds_pus_c_tm_encoded_size(&tailoring));
+  std::size_t written = 0U;
+  if (bytes.empty()
+      || ccsds_pus_c_tm_encode(&fields, &tailoring, bytes.data(), bytes.size(), &written)
+           != CCSDS_STATUS_OK
+      || written != bytes.size()) {
+    return {};
+  }
   return bytes;
 }
 
