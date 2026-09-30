@@ -253,6 +253,7 @@ See [Command-line tools](docs/CLI.md).
 - [Structured validation](docs/VALIDATION.md)
 - [Configuration](docs/CONFIG.md)
 - [Raw-buffer APIs](docs/RAW_BUFFERS.md)
+- [Performance baseline](docs/PERFORMANCE.md)
 - [Examples](docs/EXAMPLES.md)
 - [Packages and cross-builds](docs/PACKAGES.md)
 - [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md)
