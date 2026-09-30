@@ -4,6 +4,31 @@
 #include "ccsdspack/c/stream.h"
 #include "ccsdspack/c/bytes.h"
 
+size_t ccsds_packet_stream_prefix_size(const int sync_enabled) {
+    return sync_enabled != 0 ? CCSDS_PACKET_STREAM_SYNC_SIZE : 0U;
+}
+
+ccsds_status_t ccsds_packet_stream_write_prefix(const int sync_enabled,
+                                                const uint32_t sync_pattern,
+                                                uint8_t *output,
+                                                const size_t capacity,
+                                                size_t *written_out) {
+    const size_t required = ccsds_packet_stream_prefix_size(sync_enabled);
+
+    if (written_out == NULL) return CCSDS_STATUS_NULL_POINTER;
+    if (capacity < required) return CCSDS_STATUS_BUFFER_TOO_SMALL;
+    if (required == 0U) {
+        *written_out = 0U;
+        return CCSDS_STATUS_OK;
+    }
+    if (output == NULL) return CCSDS_STATUS_NULL_POINTER;
+
+    ccsds_store_be_uint(output, (uint8_t)CCSDS_PACKET_STREAM_SYNC_SIZE,
+                        (uint64_t)sync_pattern);
+    *written_out = required;
+    return CCSDS_STATUS_OK;
+}
+
 ccsds_status_t ccsds_packet_stream_init(ccsds_packet_stream_t *stream,
                                         const uint8_t *data,
                                         const size_t size,
