@@ -11,6 +11,7 @@
 #include "error.h"
 #include "packet_view.h"
 #include "primary_header.h"
+#include "validation.h"
 #include "pus.h"
 #include "pus_tc.h"
 #include "pus_tm.h"

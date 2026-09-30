@@ -543,6 +543,102 @@ int main(void) {
         }
     }
 
+    {
+        ccsds_validation_report_t report;
+        ccsds_sequence_validator_t sequence = {0U};
+        ccsds_primary_header_t sequence_header = {
+            0U, 0U, 0U, 1U, 3U, 5U, 0U
+        };
+        ccsds_validation_code_t code;
+
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("validation-report-set-pass",
+            ccsds_validation_report_set(&report,
+                                        CCSDS_VALIDATION_PRIMARY_HEADER, 1),
+            CCSDS_STATUS_OK);
+        failed |= expect_status("validation-report-set-fail",
+            ccsds_validation_report_set(&report,
+                                        CCSDS_VALIDATION_PRIMARY_HEADER, 0),
+            CCSDS_STATUS_OK);
+        if (report.size != 1U
+            || ccsds_validation_report_valid(&report)
+            || !ccsds_validation_report_contains(
+                 &report, CCSDS_VALIDATION_PRIMARY_HEADER)
+            || ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PRIMARY_HEADER)) {
+            fprintf(stderr, "validation-report: AND/lookup semantics mismatch\n");
+            failed = 1;
+        }
+
+        for (code = 0U; code < CCSDS_VALIDATION_CODE_COUNT; ++code) {
+            const char *name = ccsds_validation_code_name(code);
+            if (name == NULL || strcmp(name, "Unknown validation check") == 0) {
+                fprintf(stderr, "validation-code-name: missing code %u\n",
+                        (unsigned)code);
+                failed = 1;
+            }
+        }
+
+        if (!ccsds_sequence_flags_valid(&sequence, 3U)
+            || !ccsds_sequence_flags_valid(&sequence, 1U)
+            || ccsds_sequence_flags_valid(&sequence, 0U)
+            || ccsds_sequence_flags_valid(&sequence, 2U)
+            || !ccsds_sequence_count_valid(&sequence, 5U)) {
+            fprintf(stderr, "sequence-initial: state mismatch\n");
+            failed = 1;
+        }
+
+        failed |= expect_status("sequence-accept-unsegmented",
+            ccsds_sequence_validator_accept(&sequence, &sequence_header),
+            CCSDS_STATUS_OK);
+        if (!ccsds_sequence_validator_initialized(&sequence)
+            || ccsds_sequence_validator_segment_open(&sequence)
+            || ccsds_sequence_validator_expected_count(&sequence) != 6U
+            || !ccsds_sequence_count_valid(&sequence, 6U)
+            || ccsds_sequence_count_valid(&sequence, 7U)) {
+            fprintf(stderr, "sequence-unsegmented: state mismatch\n");
+            failed = 1;
+        }
+
+        ccsds_sequence_validator_reset(&sequence);
+        sequence_header.sequence_flags = 1U;
+        sequence_header.sequence_count = 10U;
+        failed |= expect_status("sequence-accept-first",
+            ccsds_sequence_validator_accept(&sequence, &sequence_header),
+            CCSDS_STATUS_OK);
+        if (!ccsds_sequence_validator_segment_open(&sequence)
+            || !ccsds_sequence_flags_valid(&sequence, 0U)
+            || !ccsds_sequence_flags_valid(&sequence, 2U)
+            || ccsds_sequence_flags_valid(&sequence, 3U)
+            || !ccsds_sequence_count_valid(&sequence, 11U)) {
+            fprintf(stderr, "sequence-first: state mismatch\n");
+            failed = 1;
+        }
+
+        sequence_header.sequence_flags = 2U;
+        sequence_header.sequence_count = 11U;
+        failed |= expect_status("sequence-accept-last",
+            ccsds_sequence_validator_accept(&sequence, &sequence_header),
+            CCSDS_STATUS_OK);
+        if (ccsds_sequence_validator_segment_open(&sequence)
+            || ccsds_sequence_validator_expected_count(&sequence) != 12U) {
+            fprintf(stderr, "sequence-last: state mismatch\n");
+            failed = 1;
+        }
+
+        ccsds_sequence_validator_reset(&sequence);
+        sequence_header.sequence_flags = 3U;
+        sequence_header.sequence_count = CCSDS_SEQUENCE_COUNT_MAX;
+        failed |= expect_status("sequence-rollover",
+            ccsds_sequence_validator_accept(&sequence, &sequence_header),
+            CCSDS_STATUS_OK);
+        if (ccsds_sequence_validator_expected_count(&sequence) != 0U
+            || !ccsds_sequence_count_valid(&sequence, 0U)) {
+            fprintf(stderr, "sequence-rollover: expected zero\n");
+            failed = 1;
+        }
+    }
+
     failed |= expect_status("encode",
         ccsds_primary_header_encode(&header, encoded, sizeof(encoded)),
         CCSDS_STATUS_OK);

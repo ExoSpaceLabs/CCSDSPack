@@ -83,35 +83,7 @@ namespace {
 }
 
 const char *ccsds::validationCodeName(const ValidationCode code) noexcept {
-  switch (code) {
-    case ValidationCode::PrimaryHeader: return "CCSDS primary header";
-    case ValidationCode::PacketVersion: return "CCSDS packet version";
-    case ValidationCode::PacketDataLength: return "Packet Data Length";
-    case ValidationCode::Crc16: return "CRC16";
-    case ValidationCode::SecondaryHeaderPresence: return "Secondary-header presence";
-    case ValidationCode::SecondaryHeaderDirection: return "Secondary-header direction / Packet Type";
-    case ValidationCode::SequenceFlags: return "Sequence flags";
-    case ValidationCode::SequenceCount: return "Sequence count";
-    case ValidationCode::PacketIdentifier: return "Packet Identification";
-    case ValidationCode::SegmentationClass: return "Segmentation class";
-    case ValidationCode::TemplatePacketErrorControl: return "Template packet error control";
-    case ValidationCode::TemplateSecondaryHeader: return "Template secondary-header contract";
-    case ValidationCode::PusHeader: return "PUS secondary header";
-    case ValidationCode::PusRevision: return "PUS revision";
-    case ValidationCode::PusDirection: return "PUS direction";
-    case ValidationCode::PusPacketType: return "PUS direction / Packet Type";
-    case ValidationCode::PusTailoring: return "PUS tailoring";
-    case ValidationCode::PusSecondaryHeaderSize: return "PUS secondary-header size";
-    case ValidationCode::PusReservedBits: return "PUS reserved/version bits";
-    case ValidationCode::PusSpareFields: return "PUS spare fields";
-    case ValidationCode::PusAcknowledgement: return "PUS acknowledgement flags";
-    case ValidationCode::PusSourceId: return "PUS source ID";
-    case ValidationCode::PusDestinationId: return "PUS destination ID";
-    case ValidationCode::PusPacketSubcounter: return "PUS-A packet subcounter";
-    case ValidationCode::PusTimeReferenceStatus: return "PUS-C time-reference status";
-    case ValidationCode::PusTimestamp: return "PUS CUC timestamp";
-  }
-  return "Unknown validation check";
+  return ccsds_validation_code_name(static_cast<ccsds_validation_code_t>(code));
 }
 
 void ccsds::Validator::configure(const bool validatePacketCoherence,
@@ -123,11 +95,16 @@ void ccsds::Validator::configure(const bool validatePacketCoherence,
 }
 
 void ccsds::Validator::acceptSequence(const Header &header) noexcept {
-  const auto next = static_cast<std::uint16_t>((header.getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
-  auto state = static_cast<std::uint16_t>(SEQUENCE_INITIALIZED_MASK | next);
-  if (header.getSequenceFlags() == FIRST_SEGMENT
-      || header.getSequenceFlags() == CONTINUING_SEGMENT) state |= SEGMENT_OPEN_MASK;
-  m_sequenceCounter = state;
+  const ccsds_primary_header_t coreHeader{
+    header.getVersionNumber(),
+    header.getType(),
+    header.getSecondaryHeaderFlag(),
+    header.getAPID(),
+    header.getSequenceFlags(),
+    header.getSequenceCount(),
+    header.getDataLength()
+  };
+  (void)ccsds_sequence_validator_accept(&m_sequenceState, &coreHeader);
 }
 
 ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
@@ -215,19 +192,12 @@ ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
       }
     }
 
-    const auto flags = static_cast<ESequenceFlag>(header.getSequenceFlags());
-    const bool open = segmentOpen();
-    switch (flags) {
-      case UNSEGMENTED:
-      case FIRST_SEGMENT: sequenceFlagsValid = !open; break;
-      case CONTINUING_SEGMENT:
-      case LAST_SEGMENT: sequenceFlagsValid = open; break;
-      default: sequenceFlagsValid = false; break;
-    }
+    sequenceFlagsValid = ccsds_sequence_flags_valid(
+      &m_sequenceState, header.getSequenceFlags()) != 0;
     setCheck(ValidationCode::SequenceFlags, sequenceFlagsValid);
     if (m_validateSequenceCount) {
-      sequenceCountValid = !sequenceInitialized()
-                           || header.getSequenceCount() == expectedSequenceCount();
+      sequenceCountValid = ccsds_sequence_count_valid(
+        &m_sequenceState, header.getSequenceCount()) != 0;
       setCheck(ValidationCode::SequenceCount, sequenceCountValid);
     }
   }
@@ -261,7 +231,7 @@ ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
 }
 
 void ccsds::Validator::clear() {
-  m_sequenceCounter = 0U;
+  ccsds_sequence_validator_reset(&m_sequenceState);
   m_report = {};
   m_templatePacket = {};
   m_templatePacket.setUpdatePacketEnable(false);
