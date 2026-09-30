@@ -15,6 +15,43 @@
 extern "C" {
 #endif
 
+
+/** @brief Two non-owning packet-data-field spans for scatter/gather encoding. */
+typedef struct ccsds_packet_data_parts {
+    ccsds_buffer_view_t first;
+    ccsds_buffer_view_t second;
+} ccsds_packet_data_parts_t;
+
+/**
+ * @brief Finalizes one packet directly over two caller-owned data-field spans.
+ *
+ * The spans are logically concatenated in first,second order. No allocation or
+ * aggregation copy occurs. Existing single-span finalization delegates here.
+ */
+ccsds_status_t ccsds_packet_finalize_parts(
+    ccsds_primary_header_t *header,
+    uint16_t sequence_count,
+    ccsds_packet_data_parts_t data_field,
+    ccsds_packet_error_control_t error_control,
+    const ccsds_crc16_config_t *crc_config,
+    uint16_t *crc_out,
+    size_t *serialized_size_out);
+
+/**
+ * @brief Encodes one finalized packet from two logical data-field spans.
+ *
+ * first is written before second. No temporary aggregate data-field buffer is
+ * required. Existing single-span encoding delegates here.
+ */
+ccsds_status_t ccsds_packet_encode_parts(
+    const ccsds_primary_header_t *header,
+    ccsds_packet_data_parts_t data_field,
+    ccsds_packet_error_control_t error_control,
+    uint16_t crc16,
+    uint8_t *output,
+    size_t capacity,
+    size_t *written_out);
+
 /**
  * @brief Finalizes one CCSDS Space Packet header and optional packet CRC.
  *
