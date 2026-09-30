@@ -364,10 +364,8 @@ ccsds::ResultBool ccsds::Manager::load(
 
     Packet packet = staged.boundParserPacket();
     packet.setPacketErrorControlMode(staged.boundPacketErrorControlMode());
-    const std::vector<std::uint8_t> packetBytes(
-      view.packet.data, view.packet.data + view.packet.size);
     std::size_t consumed{};
-    ASSIGN_CP(consumed, packet.deserializeBounded(packetBytes));
+    ASSIGN_CP(consumed, packet.deserializeBounded(view.packet.data, view.packet.size));
     RET_IF_ERR_MSG(consumed != view.packet.size, ErrorCode::INVALID_DATA,
                    "Parsed packet size differs from stream framing.");
     FORWARD_RESULT(staged.addPacket(std::move(packet)));

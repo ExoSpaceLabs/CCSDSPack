@@ -5,6 +5,7 @@
 #include "CCSDSDataField.h"
 #include "CCSDSUtils.h"
 #include "PusSecondaryHeaders.h"
+#include "ccsdspack/c/packet_view.h"
 #include <algorithm>
 #include <limits>
 #include <utility>
@@ -19,6 +20,123 @@ namespace {
     std::vector<std::uint8_t> dataField{};
     std::uint16_t receivedCRC{};
   };
+
+  struct ParsedPacketView {
+    ccsds::Header header{};
+    ccsds_buffer_view_t dataField{};
+    std::uint16_t receivedCRC{};
+    std::size_t packetSize{};
+  };
+
+  ccsds::Error packetViewError(const ccsds_status_t status) {
+    if (status == CCSDS_STATUS_INVALID_CHECKSUM) {
+      return ccsds::Error{
+        ccsds::ErrorCode::INVALID_CHECKSUM,
+        "Cannot deserialize packet: CRC16 packet error-control mismatch."
+      };
+    }
+
+    const auto code = status <= CCSDS_STATUS_CONFIG_FILE_ERROR
+      ? static_cast<ccsds::ErrorCode>(status)
+      : ccsds::ErrorCode::UNKNOWN_ERROR;
+    return ccsds::Error{
+      code,
+      std::string("Cannot deserialize packet: C packet-view validation failed: ")
+        + ccsds_status_name(status)
+    };
+  }
+
+  ccsds::Result<ParsedPacketView> validatePacketView(
+      const std::uint8_t *data,
+      const std::size_t size,
+      const ccsds::PacketErrorControlMode mode,
+      const ccsds::CRC16Config &crcConfig) {
+    if (size < CCSDS_PRIMARY_HEADER_SIZE) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
+                          "Cannot deserialize packet: truncated CCSDS primary header."};
+    }
+    if (data == nullptr) {
+      return ccsds::Error{ccsds::ErrorCode::NULL_POINTER,
+                          "Cannot deserialize packet: raw buffer pointer is null."};
+    }
+
+    ccsds_primary_header_t coreHeader{};
+    const auto headerStatus =
+      ccsds_primary_header_decode(data, size, &coreHeader);
+    if (headerStatus != CCSDS_STATUS_OK) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
+                          "Cannot deserialize packet: invalid CCSDS primary header."};
+    }
+    if (coreHeader.version_number != 0U) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
+                          "Cannot deserialize packet: unsupported CCSDS packet version."};
+    }
+
+    const auto packetSize =
+      CCSDS_PRIMARY_HEADER_SIZE + static_cast<std::size_t>(coreHeader.data_length) + 1U;
+    if (size < packetSize) {
+      return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
+                          "Cannot deserialize packet: truncated packet body for Packet Data Length."};
+    }
+
+    const auto bodySize = packetSize - CCSDS_PRIMARY_HEADER_SIZE;
+    const auto pecSize =
+      mode == ccsds::PacketErrorControlMode::CRC16 ? std::size_t{2U} : std::size_t{0U};
+    if (bodySize < pecSize) {
+      return ccsds::Error{
+        ccsds::ErrorCode::INVALID_DATA,
+        "Cannot deserialize packet: CRC16 mode requires two packet error-control bytes."
+      };
+    }
+    const auto dataFieldSize = bodySize - pecSize;
+    if (coreHeader.apid == CCSDS_IDLE_APID) {
+      if (coreHeader.secondary_header_flag != 0U) {
+        return ccsds::Error{
+          ccsds::ErrorCode::INVALID_HEADER_DATA,
+          "Cannot deserialize Idle Packet: secondary-header flag must be zero."
+        };
+      }
+      if (dataFieldSize == 0U) {
+        return ccsds::Error{
+          ccsds::ErrorCode::INVALID_DATA,
+          "Cannot deserialize Idle Packet: mission-defined idle user data is required."
+        };
+      }
+    }
+
+    const ccsds_crc16_config_t coreCrc{
+      crcConfig.polynomial,
+      crcConfig.initialValue,
+      crcConfig.finalXorValue
+    };
+    ccsds_packet_view_t view{};
+    const auto status = ccsds_packet_view_parse(
+      data,
+      size,
+      mode == ccsds::PacketErrorControlMode::CRC16
+        ? CCSDS_PACKET_ERROR_CONTROL_CRC16
+        : CCSDS_PACKET_ERROR_CONTROL_NONE,
+      &coreCrc,
+      &view);
+    if (status != CCSDS_STATUS_OK) return packetViewError(status);
+
+    ParsedPacketView parsed;
+    const ccsds::PrimaryHeader header{
+      view.primary_header.version_number,
+      view.primary_header.type,
+      view.primary_header.secondary_header_flag,
+      view.primary_header.apid,
+      view.primary_header.sequence_flags,
+      view.primary_header.sequence_count,
+      view.primary_header.data_length
+    };
+    const auto headerResult = parsed.header.setData(header);
+    if (!headerResult) return headerResult.error();
+    parsed.dataField = view.data_field;
+    parsed.receivedCRC = view.received_crc16;
+    parsed.packetSize = view.consumed;
+    return parsed;
+  }
 
   ccsds::ResultBool validatePacketForSerialization(
       const ccsds::Header &header,
@@ -55,27 +173,6 @@ namespace {
                      "Cannot serialize packet: primary-header Packet Type differs from secondary-header direction.");
     }
     return true;
-  }
-
-  ccsds::Result<std::size_t> declaredPacketSize(const std::vector<std::uint8_t> &data) {
-    if (data.size() < 6U) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: truncated CCSDS primary header."};
-    }
-    const std::vector<std::uint8_t> headerData(data.begin(), data.begin() + 6);
-    ccsds::Header header;
-    const auto headerResult = header.deserialize(headerData);
-    if (!headerResult) return headerResult.error();
-    if (header.getVersionNumber() != 0U) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: unsupported CCSDS packet version."};
-    }
-    const auto packetSize = 6U + static_cast<std::size_t>(header.getDataLength()) + 1U;
-    if (data.size() < packetSize) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
-                          "Cannot deserialize packet: truncated packet body."};
-    }
-    return packetSize;
   }
 
   ccsds::Result<ParsedPacket> validatePacketBytes(
@@ -404,21 +501,17 @@ ccsds::ResultBuffer ccsds::Packet::serialize() {
 }
 
 ccsds::Result<std::size_t> ccsds::Packet::deserializeBoundedWithSecondaryHeader(
-    const std::vector<std::uint8_t> &data,
+    const std::uint8_t *data,
+    const std::size_t size,
     const std::shared_ptr<SecondaryHeaderAbstract> &prototype,
     const std::int32_t customHeaderSize) {
   RET_IF_ERR_MSG(!prototype, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: secondary-header prototype is null.");
 
-  std::size_t packetSize{};
-  ASSIGN_CP(packetSize, declaredPacketSize(data));
-  const std::vector<std::uint8_t> headerData(data.begin(), data.begin() + 6);
-  const std::vector<std::uint8_t> packetData(
-    data.begin() + 6, data.begin() + static_cast<std::ptrdiff_t>(packetSize));
-  const auto validated = validatePacketBytes(headerData, packetData,
-                                             getPacketErrorControlMode(), m_CRC16Config);
+  const auto validated =
+    validatePacketView(data, size, getPacketErrorControlMode(), m_CRC16Config);
   if (!validated) return validated.error();
-  auto parsed = validated.value();
+  const auto parsed = validated.value();
 
   RET_IF_ERR_MSG(parsed.header.getSecondaryHeaderFlag() == 0U,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
@@ -453,20 +546,25 @@ ccsds::Result<std::size_t> ccsds::Packet::deserializeBoundedWithSecondaryHeader(
       && customHeaderSize > 0) {
     secondaryHeaderSize = static_cast<std::size_t>(customHeaderSize);
   }
-  RET_IF_ERR_MSG(secondaryHeaderSize > parsed.dataField.size(),
+  RET_IF_ERR_MSG(secondaryHeaderSize > parsed.dataField.size,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: secondary header exceeds the packet data field.");
 
-  const std::vector<std::uint8_t> secondaryBytes(
-    parsed.dataField.begin(),
-    parsed.dataField.begin() + static_cast<std::ptrdiff_t>(secondaryHeaderSize));
+  std::vector<std::uint8_t> secondaryBytes;
+  if (secondaryHeaderSize != 0U) {
+    secondaryBytes.assign(parsed.dataField.data,
+                          parsed.dataField.data + secondaryHeaderSize);
+  }
   FORWARD_RESULT(secondaryHeader->deserialize(secondaryBytes));
   FORWARD_RESULT(parsedField.setSecondaryHeader(secondaryHeader));
 
-  const std::vector<std::uint8_t> applicationData(
-    parsed.dataField.begin() + static_cast<std::ptrdiff_t>(secondaryHeaderSize),
-    parsed.dataField.end());
-  FORWARD_RESULT(parsedField.setApplicationData(applicationData));
+  const auto applicationSize = parsed.dataField.size - secondaryHeaderSize;
+  if (applicationSize == 0U) {
+    FORWARD_RESULT(parsedField.setApplicationData(std::vector<std::uint8_t>{}));
+  } else {
+    FORWARD_RESULT(parsedField.setApplicationData(
+      parsed.dataField.data + secondaryHeaderSize, applicationSize));
+  }
 
   m_primaryHeader = parsed.header;
   m_dataField = std::move(parsedField);
@@ -474,28 +572,56 @@ ccsds::Result<std::size_t> ccsds::Packet::deserializeBoundedWithSecondaryHeader(
   m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
                       | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = true;
-  return packetSize;
+  return parsed.packetSize;
 }
 
 ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
     const std::vector<std::uint8_t> &data) {
+  return deserializeBounded(data.data(), data.size());
+}
+
+ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
+    const std::uint8_t *data, const std::size_t size) {
   if (const auto prototype = m_dataField.getSecondaryHeader()) {
-    return deserializeBoundedWithSecondaryHeader(data, prototype);
+    return deserializeBoundedWithSecondaryHeader(data, size, prototype);
   }
 
-  std::size_t packetSize{};
-  ASSIGN_CP(packetSize, declaredPacketSize(data));
-  const std::vector<std::uint8_t> headerData(data.begin(), data.begin() + 6);
-  const std::vector<std::uint8_t> packetData(
-    data.begin() + 6, data.begin() + static_cast<std::ptrdiff_t>(packetSize));
-  const auto parseResult = deserialize(headerData, packetData);
-  if (!parseResult) return parseResult.error();
-  return packetSize;
+  const auto validated =
+    validatePacketView(data, size, getPacketErrorControlMode(), m_CRC16Config);
+  if (!validated) return validated.error();
+  const auto parsed = validated.value();
+
+  RET_IF_ERR_MSG(parsed.header.getSecondaryHeaderFlag() != 0U,
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Packet declares a secondary header; install a parser or use a typed/explicit-size overload.");
+
+  DataField parsedField = m_dataField;
+  parsedField.clearContent();
+  if (parsed.dataField.size == 0U) {
+    FORWARD_RESULT(parsedField.setApplicationData(std::vector<std::uint8_t>{}));
+  } else {
+    FORWARD_RESULT(parsedField.setApplicationData(
+      parsed.dataField.data, parsed.dataField.size));
+  }
+
+  m_primaryHeader = parsed.header;
+  m_dataField = std::move(parsedField);
+  m_CRC16 = parsed.receivedCRC;
+  m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
+                      | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
+  m_updateStatus = true;
+  return parsed.packetSize;
 }
 
 ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
     const std::vector<std::uint8_t> &data, const std::string &headerType,
     const std::int32_t headerSize) {
+  return deserializeBounded(data.data(), data.size(), headerType, headerSize);
+}
+
+ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
+    const std::uint8_t *data, const std::size_t size,
+    const std::string &headerType, const std::int32_t headerSize) {
   RET_IF_ERR_MSG(headerType == "BufferHeader", ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: BufferHeader requires an explicit byte size.");
   const bool isPus = pus::SecondaryHeaderFactory::isPusSelector(headerType);
@@ -516,37 +642,44 @@ ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
   } else {
     prototype = m_dataField.getSecondaryHeaderFactory().create(headerType);
   }
-  return deserializeBoundedWithSecondaryHeader(data, prototype, headerSize);
+  return deserializeBoundedWithSecondaryHeader(data, size, prototype, headerSize);
 }
 
 ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
     const std::vector<std::uint8_t> &data, const std::uint16_t headerDataSizeBytes) {
-  std::size_t packetSize{};
-  ASSIGN_CP(packetSize, declaredPacketSize(data));
-  const std::vector<std::uint8_t> headerData(data.begin(), data.begin() + 6);
-  const std::vector<std::uint8_t> packetData(
-    data.begin() + 6, data.begin() + static_cast<std::ptrdiff_t>(packetSize));
-  const auto validated = validatePacketBytes(headerData, packetData,
-                                             getPacketErrorControlMode(), m_CRC16Config);
+  return deserializeBounded(data.data(), data.size(), headerDataSizeBytes);
+}
+
+ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
+    const std::uint8_t *data, const std::size_t size,
+    const std::uint16_t headerDataSizeBytes) {
+  const auto validated =
+    validatePacketView(data, size, getPacketErrorControlMode(), m_CRC16Config);
   if (!validated) return validated.error();
-  auto parsed = validated.value();
+  const auto parsed = validated.value();
+
   RET_IF_ERR_MSG(parsed.header.getSecondaryHeaderFlag() == 0U && headerDataSizeBytes != 0U,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize opaque secondary header: CCSDS flag is zero.");
-  RET_IF_ERR_MSG(static_cast<std::size_t>(headerDataSizeBytes) > parsed.dataField.size(),
+  RET_IF_ERR_MSG(static_cast<std::size_t>(headerDataSizeBytes) > parsed.dataField.size,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Cannot deserialize packet: secondary-header size exceeds the packet data field.");
 
   DataField parsedField = m_dataField;
   parsedField.clearContent();
-  const std::vector<std::uint8_t> secondaryBytes(
-    parsed.dataField.begin(),
-    parsed.dataField.begin() + static_cast<std::ptrdiff_t>(headerDataSizeBytes));
-  if (!secondaryBytes.empty()) FORWARD_RESULT(parsedField.setSecondaryHeader(secondaryBytes));
-  const std::vector<std::uint8_t> applicationData(
-    parsed.dataField.begin() + static_cast<std::ptrdiff_t>(headerDataSizeBytes),
-    parsed.dataField.end());
-  FORWARD_RESULT(parsedField.setApplicationData(applicationData));
+  if (headerDataSizeBytes != 0U) {
+    FORWARD_RESULT(parsedField.setSecondaryHeader(
+      parsed.dataField.data, static_cast<std::size_t>(headerDataSizeBytes)));
+  }
+
+  const auto applicationSize =
+    parsed.dataField.size - static_cast<std::size_t>(headerDataSizeBytes);
+  if (applicationSize == 0U) {
+    FORWARD_RESULT(parsedField.setApplicationData(std::vector<std::uint8_t>{}));
+  } else {
+    FORWARD_RESULT(parsedField.setApplicationData(
+      parsed.dataField.data + headerDataSizeBytes, applicationSize));
+  }
 
   m_primaryHeader = parsed.header;
   m_dataField = std::move(parsedField);
@@ -554,26 +687,46 @@ ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
   m_sequenceCounter = (m_sequenceCounter & PACKET_ERROR_CONTROL_DISABLED_MASK)
                       | (m_primaryHeader.getSequenceCount() & SEQUENCE_COUNT_MASK);
   m_updateStatus = true;
-  return packetSize;
+  return parsed.packetSize;
 }
 
 ccsds::ResultBool ccsds::Packet::deserialize(const std::vector<std::uint8_t> &data) {
-  const auto result = deserializeBounded(data);
+  return deserialize(data.data(), data.size());
+}
+
+ccsds::ResultBool ccsds::Packet::deserialize(
+    const std::uint8_t *data, const std::size_t size) {
+  const auto result = deserializeBounded(data, size);
   if (!result) return result.error();
   return true;
 }
 
-ccsds::ResultBool ccsds::Packet::deserialize(const std::vector<std::uint8_t> &data,
-                                              const std::string &headerType,
-                                              const std::int32_t headerSize) {
-  const auto result = deserializeBounded(data, headerType, headerSize);
+ccsds::ResultBool ccsds::Packet::deserialize(
+    const std::vector<std::uint8_t> &data,
+    const std::string &headerType,
+    const std::int32_t headerSize) {
+  return deserialize(data.data(), data.size(), headerType, headerSize);
+}
+
+ccsds::ResultBool ccsds::Packet::deserialize(
+    const std::uint8_t *data, const std::size_t size,
+    const std::string &headerType,
+    const std::int32_t headerSize) {
+  const auto result = deserializeBounded(data, size, headerType, headerSize);
   if (!result) return result.error();
   return true;
 }
 
-ccsds::ResultBool ccsds::Packet::deserialize(const std::vector<std::uint8_t> &data,
-                                              const std::uint16_t headerDataSizeBytes) {
-  const auto result = deserializeBounded(data, headerDataSizeBytes);
+ccsds::ResultBool ccsds::Packet::deserialize(
+    const std::vector<std::uint8_t> &data,
+    const std::uint16_t headerDataSizeBytes) {
+  return deserialize(data.data(), data.size(), headerDataSizeBytes);
+}
+
+ccsds::ResultBool ccsds::Packet::deserialize(
+    const std::uint8_t *data, const std::size_t size,
+    const std::uint16_t headerDataSizeBytes) {
+  const auto result = deserializeBounded(data, size, headerDataSizeBytes);
   if (!result) return result.error();
   return true;
 }
