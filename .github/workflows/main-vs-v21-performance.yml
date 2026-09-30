@@ -1,0 +1,69 @@
+name: Main vs v2.1 performance
+
+on:
+  push:
+    branches:
+      - benchmark/main-vs-v2.1
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout benchmark harness
+        uses: actions/checkout@v4
+
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: 4e198ae4c7f730737d78c1ea2f71ec3ce42ca7eb
+          path: main-src
+
+      - name: Checkout current v2.1
+        uses: actions/checkout@v4
+        with:
+          ref: 8afa3784a585e790e3b9d2f082ed0ca3a79fdfb9
+          path: v21-src
+
+      - name: Build main
+        run: |
+          cmake -S main-src -B main-build -DCMAKE_BUILD_TYPE=Release \
+            -DENABLE_TESTER=OFF -DENABLE_ENCODER=OFF -DENABLE_DECODER=OFF -DENABLE_VALIDATOR=OFF
+          cmake --build main-build -- -j
+
+      - name: Build current v2.1
+        run: |
+          cmake -S v21-src -B v21-build -DCMAKE_BUILD_TYPE=Release \
+            -DENABLE_TESTER=OFF -DENABLE_ENCODER=OFF -DENABLE_DECODER=OFF -DENABLE_VALIDATOR=OFF
+          cmake --build v21-build -- -j
+
+      - name: Build identical benchmark against main
+        run: |
+          g++ -std=c++17 -O3 test/performance/main_vs_v21_benchmark.cpp \
+            -Imain-src/inc -Lmain-src/lib -lccsdspack \
+            -Wl,-rpath,"$PWD/main-src/lib" -o benchmark-main
+
+      - name: Build identical benchmark against v2.1
+        run: |
+          g++ -std=c++17 -O3 test/performance/main_vs_v21_benchmark.cpp \
+            -Iv21-src/inc -Lv21-src/lib -lccsdspack -lccsdspack_c \
+            -Wl,-rpath,"$PWD/v21-src/lib" -o benchmark-v21
+
+      - name: Run comparison
+        run: |
+          ./benchmark-main main | tee main.csv
+          ./benchmark-v21 v2.1 | tee v21.csv
+          {
+            head -n 1 main.csv
+            tail -n +2 main.csv
+            tail -n +2 v21.csv
+          } > main-vs-v21.csv
+          cat main-vs-v21.csv
+
+      - name: Upload comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: main-vs-v21-performance
+          path: main-vs-v21.csv
