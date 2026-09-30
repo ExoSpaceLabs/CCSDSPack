@@ -1,17 +1,13 @@
 # Notice
 
-This project includes third-party files under:
+CCSDSPack does not vendor STM32CubeH7, STM32 HAL/LL, STM32CubeIDE projects, or
+Device Abstraction Stack source code.
 
-- `test/package_tester/stm32h7xx/`
+The NUCLEO-H755ZI-Q hardware-validation workflow uses pinned external source
+checkouts at build time:
 
-These files are based on STM32CubeH7 example code from STMicroelectronics
-(notably the UART wake-up example and related project files).
+- `Inczert/device-abstraction-stack` for platform/startup/UART support;
+- STMicroelectronics STM32CubeH7 and `cmsis-device-h7` for CMSIS headers only.
 
-License for this third-party subtree:
-
-- Copyright (c) 2018 STMicroelectronics.
-- Redistribution and use in source and binary forms, with or without modification, are permitted under the terms included in:
-  - `test/package_tester/stm32h7xx/LICENSE.md`
-
-The STMicroelectronics files are third-party components and are excluded from
-the ExoSpaceLabs copyright/SPDX header updates.
+Those external components remain governed by their own upstream licenses and
+are not redistributed as source files in this repository.
