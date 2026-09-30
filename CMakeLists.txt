@@ -91,17 +91,18 @@ if(CCSDSPACK_BUILD_MCU)
         -ffunction-sections
         -fdata-sections
     )
+    target_compile_definitions(${C_CORE_NAME} PUBLIC CCSDS_MCU)
     set_target_properties(${C_CORE_NAME} PROPERTIES
         POSITION_INDEPENDENT_CODE OFF
-        ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     )
 else()
     set_target_properties(${C_CORE_NAME} PROPERTIES
         VERSION ${MAJOR}.${MINOR}.${PATCH}
         SOVERSION ${MAJOR}
-        ARCHIVE_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
-        LIBRARY_OUTPUT_DIRECTORY ${LIBRARY_OUTPUT_DIR}
-        RUNTIME_OUTPUT_DIRECTORY ${BINARY_OUTPUT_DIR}
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
 endif()
 
@@ -128,11 +129,15 @@ if(CCSDSPACK_BUILD_CPP)
     endif()
 
     if(CCSDSPACK_BUILD_MCU)
-        add_library(${LIB_NAME} STATIC ${LIBRARY_SOURCES})
+        # Keep the established MCU C++ archive self-contained. The same C sources
+        # also build the standalone pure-C archive above, so implementations remain
+        # single-source while existing STM32 link lines continue to use libccsdspack.a.
+        add_library(${LIB_NAME} STATIC ${LIBRARY_SOURCES} ${C_CORE_SOURCES})
         add_library(ccsdspack::mcu ALIAS ${LIB_NAME})
     else()
         add_library(${LIB_NAME} SHARED ${LIBRARY_SOURCES})
         add_library(ccsdspack::core ALIAS ${LIB_NAME})
+        target_link_libraries(${LIB_NAME} PUBLIC ${C_CORE_NAME})
     endif()
 
     target_include_directories(${LIB_NAME}
@@ -141,7 +146,6 @@ if(CCSDSPACK_BUILD_CPP)
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     )
     target_compile_features(${LIB_NAME} PUBLIC cxx_std_17)
-    target_link_libraries(${LIB_NAME} PUBLIC ${C_CORE_NAME})
 
     if(CCSDSPACK_BUILD_MCU)
         set(CCSDSPACK_MCU_COMPILE_FLAGS "")
@@ -161,7 +165,6 @@ if(CCSDSPACK_BUILD_CPP)
         )
         target_link_options(${LIB_NAME} PRIVATE -Wl,--gc-sections)
         target_compile_definitions(${LIB_NAME} PUBLIC CCSDS_MCU)
-        target_compile_definitions(${C_CORE_NAME} PUBLIC CCSDS_MCU)
         set_target_properties(${LIB_NAME} PROPERTIES
             POSITION_INDEPENDENT_CODE OFF
             OUTPUT_NAME ccsdspack
