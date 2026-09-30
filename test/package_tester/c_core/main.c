@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 #include "ccsdspack/c/ccsdspack.h"
 
 int main(void) {
