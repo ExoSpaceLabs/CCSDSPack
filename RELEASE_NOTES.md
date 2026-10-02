@@ -109,8 +109,16 @@ v2.1 additionally runs:
 - bounded libFuzzer smoke tests;
 - native and cross-package generation;
 - Cortex-M7 compile/link probe;
+- standalone NUCLEO-H755ZI-Q DAS/OpenOCD firmware cross-build from the generated MCU package;
 - aarch64 package generation;
 - non-gating parse and serialization performance artifacts.
+
+The physical H755 release harness is independent of STM32CubeIDE, STM32 HAL,
+the Nucleo BSP and generated vendor IDE projects. DAS supplies startup, vector
+table, linker script, board clocking and the ST-LINK VCP UART; OpenOCD owns
+program/verify/reset. The target prints build/runtime identity, per-stage
+acceptance progress, symbolic failure information and fault markers over
+115200 8N1 UART.
 
 ## Build and installed targets
 
