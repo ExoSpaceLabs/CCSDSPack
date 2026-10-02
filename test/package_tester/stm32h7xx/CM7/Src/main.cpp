@@ -1,184 +1,196 @@
 // Copyright 2025-2026 ExoSpaceLabs
 // SPDX-License-Identifier: Apache-2.0
 
-/**
- * @file main.cpp
- * @brief STM32H745 CM7 harness for the shared CCSDSPack hardware acceptance core.
- *
- * UART and LEDs provide deterministic target results:
- * - `CCSDSPACK_HARDWARE_TEST:PASS` and LED2 on indicate success;
- * - `CCSDSPACK_HARDWARE_TEST:FAIL:<code>` and LED3 on identify the first failed stage.
- */
-
-#include "main.h"
 #include "ccsdspack_mcu_test.h"
 
-#include <cstdint>
-#include <cstdio>
-#include <cstring>
+#include <das/das.h>
 
-extern "C" {
-  UART_HandleTypeDef UartHandle{};
-}
+#include <cstddef>
+#include <cstdint>
+
+#ifndef CCSDSPACK_VALIDATION_SOURCE_SHA
+#define CCSDSPACK_VALIDATION_SOURCE_SHA "unknown"
+#endif
+#ifndef CCSDSPACK_VALIDATION_DAS_SHA
+#define CCSDSPACK_VALIDATION_DAS_SHA "unknown"
+#endif
+#ifndef CCSDSPACK_VALIDATION_PACKAGE_SHA256
+#define CCSDSPACK_VALIDATION_PACKAGE_SHA256 "unknown"
+#endif
 
 namespace {
-  constexpr std::uint32_t UART_TIMEOUT = HAL_MAX_DELAY;
-  bool uartReady{false};
-  bool ledsReady{false};
 
-  void MPU_Config();
-  void SystemClock_Config();
-  void CPU_CACHE_Enable();
-  [[noreturn]] void Error_Handler();
+das_uart_t g_console = DAS_UART_INVALID;
+bool g_console_ready = false;
+bool g_leds_ready = false;
 
-  void uartWrite(const char *text) {
-    if (!uartReady || text == nullptr) return;
-    const auto length = std::strlen(text);
-    HAL_UART_Transmit(&UartHandle,
-                      reinterpret_cast<std::uint8_t *>(const_cast<char *>(text)),
-                      static_cast<std::uint16_t>(length),
-                      UART_TIMEOUT);
+std::size_t textLength(const char *text) {
+  if (text == nullptr) return 0U;
+  std::size_t length = 0U;
+  while (text[length] != '\0') ++length;
+  return length;
+}
+
+void uartWrite(const char *text) {
+  if (!g_console_ready || text == nullptr) return;
+  const std::size_t length = textLength(text);
+  if (length == 0U) return;
+  (void)das_uart_write(
+      g_console,
+      reinterpret_cast<const std::uint8_t *>(text),
+      length);
+}
+
+void uartLine(const char *text) {
+  uartWrite(text);
+  uartWrite("\r\n");
+}
+
+void uartUnsigned(std::uint32_t value) {
+  char digits[11]{};
+  std::size_t count = 0U;
+  do {
+    digits[count++] = static_cast<char>('0' + (value % 10U));
+    value /= 10U;
+  } while (value != 0U && count < sizeof(digits));
+
+  while (count > 0U) {
+    const char digit[2]{digits[--count], '\0'};
+    uartWrite(digit);
+  }
+}
+
+void uartKeyValue(const char *key, const char *value) {
+  uartWrite(key);
+  uartWrite(":");
+  uartLine(value);
+}
+
+void uartKeyValueUnsigned(const char *key, std::uint32_t value) {
+  uartWrite(key);
+  uartWrite(":");
+  uartUnsigned(value);
+  uartWrite("\r\n");
+}
+
+void progressReporter(const char *message) {
+  uartLine(message);
+}
+
+[[noreturn]] void haltForever() {
+  for (;;) {
+    __asm volatile("wfi");
+  }
+}
+
+[[noreturn]] void fault(const char *name) {
+  if (g_leds_ready) {
+    (void)das_board_led_set(DAS_BOARD_LED_GREEN, false);
+    (void)das_board_led_set(DAS_BOARD_LED_YELLOW, false);
+    (void)das_board_led_set(DAS_BOARD_LED_RED, true);
+  }
+  uartWrite("FAULT:");
+  uartLine(name);
+  uartLine("CCSDSPACK_HARDWARE_TEST:FAULT");
+  if (g_console_ready) (void)das_uart_flush(g_console);
+  haltForever();
+}
+
+void printRuntimeInformation() {
+  std::uint32_t core_hz = 0U;
+  std::uint32_t baud_hz = 0U;
+
+  uartLine("=== CCSDSPack STM32H755 hardware validation ===");
+  uartKeyValue("BOARD", "NUCLEO-H755ZI-Q");
+  uartKeyValue("CORE", "Cortex-M7");
+  uartKeyValue("TRANSPORT", "DAS UART / ST-LINK VCP");
+  uartKeyValue("UART_FORMAT", "115200 8N1");
+  uartKeyValue("CCSDSPACK_SOURCE_SHA", CCSDSPACK_VALIDATION_SOURCE_SHA);
+  uartKeyValue("CCSDSPACK_PACKAGE_SHA256", CCSDSPACK_VALIDATION_PACKAGE_SHA256);
+  uartKeyValue("DAS_SHA", CCSDSPACK_VALIDATION_DAS_SHA);
+  uartKeyValue("COMPILER", __VERSION__);
+  uartKeyValueUnsigned("CPP_STANDARD", static_cast<std::uint32_t>(__cplusplus));
+
+  if (das_clock_get_core_frequency(&core_hz) == DAS_OK) {
+    uartKeyValueUnsigned("CORE_HZ", core_hz);
+  } else {
+    uartKeyValue("CORE_HZ", "unavailable");
   }
 
-  void reportTestResult(const int result) {
-    if (result == CCSDSPackMcuTest::Pass) {
-      BSP_LED_On(LED2);
-      uartWrite("CCSDSPACK_HARDWARE_TEST:PASS\r\n");
-      return;
-    }
-
-    BSP_LED_On(LED3);
-    char buffer[64]{};
-    std::snprintf(buffer, sizeof(buffer), "CCSDSPACK_HARDWARE_TEST:FAIL:%d\r\n", result);
-    uartWrite(buffer);
+  if (das_uart_get_baud_rate(g_console, &baud_hz) == DAS_OK) {
+    uartKeyValueUnsigned("UART_EFFECTIVE_BAUD", baud_hz);
+  } else {
+    uartKeyValue("UART_EFFECTIVE_BAUD", "unavailable");
   }
+
+  uartLine("ACCEPTANCE:Packet, Manager, CRC16, raw buffers, Validator, PUS-C, PVN, Idle");
+}
+
 } // namespace
+
+extern "C" [[noreturn]] void HardFault_Handler(void) {
+  fault("HardFault");
+}
+extern "C" [[noreturn]] void MemManage_Handler(void) {
+  fault("MemManage");
+}
+extern "C" [[noreturn]] void BusFault_Handler(void) {
+  fault("BusFault");
+}
+extern "C" [[noreturn]] void UsageFault_Handler(void) {
+  fault("UsageFault");
+}
 
 int main() {
-  std::int32_t timeout = 0xFFFF;
-
-  MPU_Config();
-  CPU_CACHE_Enable();
-
-  while ((__HAL_RCC_GET_FLAG(RCC_FLAG_D2CKRDY) != RESET) && (timeout-- > 0)) {
+  if (das_board_led_init_all(false) == DAS_OK) {
+    g_leds_ready = true;
+    (void)das_board_led_set(DAS_BOARD_LED_GREEN, true);
   }
-  if (timeout < 0) Error_Handler();
 
-  HAL_Init();
-  SystemClock_Config();
+  const das_uart_config_t uart_config = {
+      UINT32_C(115200),
+      DAS_UART_DATA_BITS_8,
+      DAS_UART_PARITY_NONE,
+      DAS_UART_STOP_BITS_1};
 
-  BSP_LED_Init(LED1);
-  BSP_LED_Init(LED2);
-  BSP_LED_Init(LED3);
-  ledsReady = true;
-  BSP_LED_Off(LED1);
-  BSP_LED_Off(LED2);
-  BSP_LED_Off(LED3);
-  BSP_LED_On(LED1);
-
-  UartHandle.Instance = USARTx;
-  UartHandle.Init.BaudRate = 115200;
-  UartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-  UartHandle.Init.StopBits = UART_STOPBITS_1;
-  UartHandle.Init.Parity = UART_PARITY_NONE;
-  UartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  UartHandle.Init.Mode = UART_MODE_TX_RX;
-  UartHandle.Init.ClockPrescaler = UART_PRESCALER_DIV1;
-  UartHandle.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  UartHandle.Init.OverSampling = UART_OVERSAMPLING_16;
-
-  if (HAL_UART_Init(&UartHandle) != HAL_OK
-      || HAL_UARTEx_SetTxFifoThreshold(&UartHandle, UART_TXFIFO_THRESHOLD_1_8) != HAL_OK
-      || HAL_UARTEx_SetRxFifoThreshold(&UartHandle, UART_RXFIFO_THRESHOLD_1_8) != HAL_OK
-      || HAL_UARTEx_DisableFifoMode(&UartHandle) != HAL_OK) {
-    Error_Handler();
-  }
-  uartReady = true;
-
-  uartWrite("\r\nCCSDSPack CM7 hardware validation\r\n");
-  uartWrite("Running shared Packet, PEC, PUS, Validator, raw-buffer, Manager, PVN, and Idle acceptance...\r\n");
-
-  const int result = CCSDSPackMcuTest::run();
-  reportTestResult(result);
-
-  uartWrite("Reset the board to run the validation again.\r\n");
-  BSP_LED_Off(LED1);
-  while (true) __WFI();
-}
-
-namespace {
-  void SystemClock_Config() {
-    RCC_ClkInitTypeDef clock{};
-    RCC_OscInitTypeDef oscillator{};
-
-    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-    while (!__HAL_PWR_GET_FLAG(PWR_FLAG_VOSRDY)) {
+  if (das_board_uart_init(
+          DAS_BOARD_UART_STLINK_VCP,
+          &uart_config,
+          &g_console) != DAS_OK ||
+      !das_uart_is_valid(g_console)) {
+    if (g_leds_ready) {
+      (void)das_board_led_set(DAS_BOARD_LED_GREEN, false);
+      (void)das_board_led_set(DAS_BOARD_LED_RED, true);
     }
-
-    oscillator.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-    oscillator.HSEState = RCC_HSE_BYPASS;
-    oscillator.HSIState = RCC_HSI_OFF;
-    oscillator.CSIState = RCC_CSI_OFF;
-    oscillator.PLL.PLLState = RCC_PLL_ON;
-    oscillator.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    oscillator.PLL.PLLM = 4;
-    oscillator.PLL.PLLN = 400;
-    oscillator.PLL.PLLFRACN = 0;
-    oscillator.PLL.PLLP = 2;
-    oscillator.PLL.PLLQ = 4;
-    oscillator.PLL.PLLR = 2;
-    oscillator.PLL.PLLVCOSEL = RCC_PLL1VCOWIDE;
-    oscillator.PLL.PLLRGE = RCC_PLL1VCIRANGE_1;
-    if (HAL_RCC_OscConfig(&oscillator) != HAL_OK) Error_Handler();
-
-    clock.ClockType = RCC_CLOCKTYPE_SYSCLK
-                      | RCC_CLOCKTYPE_HCLK
-                      | RCC_CLOCKTYPE_D1PCLK1
-                      | RCC_CLOCKTYPE_PCLK1
-                      | RCC_CLOCKTYPE_PCLK2
-                      | RCC_CLOCKTYPE_D3PCLK1;
-    clock.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-    clock.SYSCLKDivider = RCC_SYSCLK_DIV1;
-    clock.AHBCLKDivider = RCC_HCLK_DIV2;
-    clock.APB3CLKDivider = RCC_APB3_DIV2;
-    clock.APB1CLKDivider = RCC_APB1_DIV2;
-    clock.APB2CLKDivider = RCC_APB2_DIV2;
-    clock.APB4CLKDivider = RCC_APB4_DIV2;
-    if (HAL_RCC_ClockConfig(&clock, FLASH_LATENCY_4) != HAL_OK) Error_Handler();
+    haltForever();
   }
 
-  void CPU_CACHE_Enable() {
-    SCB_EnableICache();
-    SCB_EnableDCache();
+  g_console_ready = true;
+  printRuntimeInformation();
+  uartLine("CCSDSPACK_HARDWARE_TEST:BEGIN");
+
+  const int result = CCSDSPackMcuTest::run(progressReporter);
+  uartKeyValueUnsigned("RESULT_CODE", static_cast<std::uint32_t>(result));
+  uartKeyValue("RESULT_NAME", CCSDSPackMcuTest::resultCodeName(result));
+
+  if (result == CCSDSPackMcuTest::Pass) {
+    if (g_leds_ready) {
+      (void)das_board_led_set(DAS_BOARD_LED_GREEN, false);
+      (void)das_board_led_set(DAS_BOARD_LED_YELLOW, true);
+    }
+    uartLine("CCSDSPACK_HARDWARE_TEST:PASS");
+  } else {
+    if (g_leds_ready) {
+      (void)das_board_led_set(DAS_BOARD_LED_GREEN, false);
+      (void)das_board_led_set(DAS_BOARD_LED_RED, true);
+    }
+    uartWrite("CCSDSPACK_HARDWARE_TEST:FAIL:");
+    uartUnsigned(static_cast<std::uint32_t>(result));
+    uartWrite(":");
+    uartLine(CCSDSPackMcuTest::resultCodeName(result));
   }
 
-  [[noreturn]] void Error_Handler() {
-    if (ledsReady) BSP_LED_On(LED3);
-    if (uartReady) uartWrite("CCSDSPACK_HARDWARE_TEST:HAL_FAILURE\r\n");
-    while (true) __WFI();
-  }
-
-  void MPU_Config() {
-    MPU_Region_InitTypeDef region{};
-    HAL_MPU_Disable();
-    region.Enable = MPU_REGION_ENABLE;
-    region.BaseAddress = 0x00000000U;
-    region.Size = MPU_REGION_SIZE_4GB;
-    region.AccessPermission = MPU_REGION_NO_ACCESS;
-    region.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
-    region.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
-    region.IsShareable = MPU_ACCESS_SHAREABLE;
-    region.Number = MPU_REGION_NUMBER0;
-    region.TypeExtField = MPU_TEX_LEVEL0;
-    region.SubRegionDisable = 0x87;
-    region.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
-    HAL_MPU_ConfigRegion(&region);
-    HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
-  }
-} // namespace
-
-#ifdef USE_FULL_ASSERT
-extern "C" void assert_failed(std::uint8_t *, std::uint32_t) {
-  Error_Handler();
+  uartLine("CCSDSPACK_HARDWARE_TEST:END");
+  (void)das_uart_flush(g_console);
+  haltForever();
 }
-#endif
