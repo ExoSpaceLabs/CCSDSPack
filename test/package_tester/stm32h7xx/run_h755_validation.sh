@@ -137,7 +137,7 @@ test -f "$CCSDSPACK_PREFIX/lib/cmake/CCSDSPack/CCSDSPackConfig.cmake"
 LIBRARY_SHA="$(sha256sum "$CCSDSPACK_PREFIX/lib/libccsdspack.a" | awk '{print $1}')"
 printf 'libccsdspack.a SHA-256: %s\n' "$LIBRARY_SHA" | tee -a "$BUILD_ROOT/logs/metadata.log"
 
-MCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+MCU_FLAGS="-mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 TOOLCHAIN="$ROOT_DIR/cmake/toolchains/arm-none-eabi.cmake"
 DAS_INSTALL="$BUILD_ROOT/das-install"
 
