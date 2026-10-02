@@ -15,7 +15,7 @@ EOF
 
 if [[ $# -ne 1 ]]; then usage; exit 2; fi
 case "$(uname -m)" in aarch64|arm64) ;; *) echo "ERROR: native arm64 required" >&2; exit 3 ;; esac
-for tool in sudo dpkg dpkg-deb cmake python3 ctest g++ realpath mktemp cp; do
+for tool in sudo dpkg dpkg-deb cmake python3 ctest g++ realpath mktemp cp sed sha256sum; do
   command -v "${tool}" >/dev/null || { echo "ERROR: required command not found: ${tool}" >&2; exit 4; }
 done
 
@@ -24,11 +24,36 @@ repo_root="$(cd "${script_dir}/../.." && pwd)"
 package_path="$(realpath -m "$1")"
 [[ -f "${package_path}" ]] || { echo "ERROR: package not found: ${package_path}" >&2; exit 5; }
 
+source_version_component() {
+  local component="$1"
+  sed -nE "s/^[[:space:]]*set\\(${component}[[:space:]]+\"?([0-9]+)\"?\\).*/\\1/p" "${repo_root}/CMakeLists.txt"
+}
+
+source_major="$(source_version_component MAJOR)"
+source_minor="$(source_version_component MINOR)"
+source_patch="$(source_version_component PATCH)"
+if [[ -z "${source_major}" || -z "${source_minor}" || -z "${source_patch}" ]]; then
+  echo "ERROR: could not determine CCSDSPack source version from CMakeLists.txt" >&2
+  exit 6
+fi
+source_version="${source_major}.${source_minor}.${source_patch}"
+
 package_arch="$(dpkg-deb -f "${package_path}" Architecture)"
-[[ "${package_arch}" == "arm64" ]] || { echo "ERROR: package architecture is ${package_arch}, expected arm64" >&2; exit 6; }
+[[ "${package_arch}" == "arm64" ]] || { echo "ERROR: package architecture is ${package_arch}, expected arm64" >&2; exit 7; }
 package_version="$(dpkg-deb -f "${package_path}" Version)"
-[[ "${package_version}" == "2.0.0" ]] || { echo "ERROR: package version is ${package_version}, expected 2.0.0" >&2; exit 7; }
+[[ "${package_version}" == "${source_version}" ]] || {
+  echo "ERROR: package version is ${package_version}, expected source version ${source_version}" >&2
+  exit 8
+}
 package_name="$(dpkg-deb -f "${package_path}" Package)"
+package_sha256="$(sha256sum "${package_path}" | sed 's/[[:space:]].*$//')"
+
+echo "CCSDSPack source version: ${source_version}"
+echo "CCSDSPack package: ${package_name}"
+echo "CCSDSPack package version: ${package_version}"
+echo "CCSDSPack package architecture: ${package_arch}"
+echo "CCSDSPack package SHA-256: ${package_sha256}"
+
 sudo dpkg -i "${package_path}"
 
 mapfile -t installed_files < <(dpkg -L "${package_name}")
@@ -40,13 +65,13 @@ find_installed() {
   return 1
 }
 
-tester="$(find_installed '/CCSDSPack_tester$')" || exit 8
-encoder="$(find_installed '/ccsds_encoder$')" || exit 9
-decoder="$(find_installed '/ccsds_decoder$')" || exit 10
-validator="$(find_installed '/ccsds_validator$')" || exit 11
-cmake_config="$(find_installed '/cmake/CCSDSPack/CCSDSPackConfig.cmake$')" || exit 12
-test_resources="$(find_installed '/test_resources$')" || exit 13
-library_file="$(find_installed '/libccsdspack\.so(\.2(\.0\.0)?)?$' || true)"
+tester="$(find_installed '/CCSDSPack_tester$')" || exit 9
+encoder="$(find_installed '/ccsds_encoder$')" || exit 10
+decoder="$(find_installed '/ccsds_decoder$')" || exit 11
+validator="$(find_installed '/ccsds_validator$')" || exit 12
+cmake_config="$(find_installed '/cmake/CCSDSPack/CCSDSPackConfig.cmake$')" || exit 13
+test_resources="$(find_installed '/test_resources$')" || exit 14
+library_file="$(find_installed '/libccsdspack\.so(\.[0-9]+(\.[0-9]+){0,2})?$' || true)"
 bin_dir="$(dirname "${tester}")"
 cmake_dir="$(dirname "${cmake_config}")"
 if [[ -n "${library_file}" ]]; then export LD_LIBRARY_PATH="$(dirname "${library_file}"):${LD_LIBRARY_PATH:-}"; fi
