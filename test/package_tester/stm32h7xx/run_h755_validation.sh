@@ -134,6 +134,8 @@ CCSDSPACK_PREFIX="$(find "$BUILD_ROOT/package/extracted" -mindepth 1 -maxdepth 1
 }
 test -f "$CCSDSPACK_PREFIX/lib/libccsdspack.a"
 test -f "$CCSDSPACK_PREFIX/lib/cmake/CCSDSPack/CCSDSPackConfig.cmake"
+LIBRARY_SHA="$(sha256sum "$CCSDSPACK_PREFIX/lib/libccsdspack.a" | awk '{print $1}')"
+printf 'libccsdspack.a SHA-256: %s\n' "$LIBRARY_SHA" | tee -a "$BUILD_ROOT/logs/metadata.log"
 
 MCU_FLAGS="-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 TOOLCHAIN="$ROOT_DIR/cmake/toolchains/arm-none-eabi.cmake"
@@ -158,7 +160,8 @@ cmake -S "$HARNESS_DIR" -B "$BUILD_ROOT/firmware" \
   -DCMAKE_PREFIX_PATH="$CCSDSPACK_PREFIX;$DAS_INSTALL" \
   -DCCSDSPACK_VALIDATION_SOURCE_SHA="$SOURCE_SHA" \
   -DCCSDSPACK_VALIDATION_DAS_SHA="$DAS_COMMIT" \
-  -DCCSDSPACK_VALIDATION_PACKAGE_SHA256="$PACKAGE_SHA"
+  -DCCSDSPACK_VALIDATION_PACKAGE_SHA256="$PACKAGE_SHA" \
+  -DCCSDSPACK_VALIDATION_LIBRARY_SHA256="$LIBRARY_SHA"
 cmake --build "$BUILD_ROOT/firmware" --parallel
 
 ELF="$BUILD_ROOT/firmware/ccsdspack_h755_validation.elf"
@@ -250,6 +253,7 @@ echo
 echo "STM32H755 hardware validation: PASS"
 echo "CCSDSPack source SHA: $SOURCE_SHA"
 echo "CCSDSPack package SHA-256: $PACKAGE_SHA"
+echo "libccsdspack.a SHA-256: $LIBRARY_SHA"
 echo "DAS SHA: $DAS_COMMIT"
 echo "ELF: $ELF"
 echo "UART log: $UART_LOG"
