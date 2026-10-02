@@ -147,11 +147,11 @@ int main() {
     (void)das_board_led_set(DAS_BOARD_LED_GREEN, true);
   }
 
-  const das_uart_config_t uart_config = {
-      UINT32_C(115200),
-      DAS_UART_DATA_BITS_8,
-      DAS_UART_PARITY_NONE,
-      DAS_UART_STOP_BITS_1};
+  das_uart_config_t uart_config{};
+  uart_config.baud_rate = UINT32_C(115200);
+  uart_config.data_bits = DAS_UART_DATA_BITS_8;
+  uart_config.parity = DAS_UART_PARITY_NONE;
+  uart_config.stop_bits = DAS_UART_STOP_BITS_1;
 
   if (das_board_uart_init(
           DAS_BOARD_UART_STLINK_VCP,
