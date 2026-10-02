@@ -1,109 +1,237 @@
-# STM32H755 hardware-validation integration
+# STM32H755 hardware validation
 
-CCSDSPack uses one board-independent release acceptance core for both native arm64 and physical Cortex-M7 validation:
+CCSDSPack validates the physical Cortex-M7 target with a small standalone
+CMake/OpenOCD harness. The old STM32CubeIDE/HAL/BSP example project is not part
+of the validation path.
+
+The release test reuses the same board-independent acceptance body as native
+arm64:
 
 ```text
 test/package_tester/hardware/ccsdspack_hardware_test.h
 ```
 
-The STM32 wrapper remains available at:
+## Architecture
 
 ```text
-test/package_tester/stm32h7xx/CM7/Inc/ccsdspack_mcu_test.h
+CCSDSPack hardware acceptance
+        |
+        +-- CCSDSPack v2.1 C++17 API
+        |      |
+        |      +-- authoritative C11 protocol core
+        |
+        +-- DAS board support
+               |
+               +-- Cortex-M startup / vector table
+               +-- STM32H755 clock + device support
+               +-- NUCLEO-H755ZI-Q board resources
+               +-- linker script
+               +-- ST-LINK VCP UART
+
+host
+  |
+  +-- arm-none-eabi + CMake
+  +-- OpenOCD / ST-LINK
+  +-- serial capture, 115200 8N1
 ```
 
-The committed STM32CubeIDE example under `STM32CubeIDE/CM7` uses the STM32CubeH7 **NUCLEO-H745ZI-Q** project configuration. ST documents all projects under `Projects/NUCLEO-H745ZI-Q` as fully compatible with the **NUCLEO-H755ZI-Q** board, so the H745 startup/linker/device names used by that project are valid for the non-cryptographic CCSDSPack H755 validation path.
+There is no dependency on STM32CubeIDE, generated Eclipse projects, STM32 HAL,
+the Nucleo BSP, vendor IDE makefiles, or a CM4 companion image.
 
-Official ST compatibility note:
+DAS uses the NUCLEO-H755ZI-Q ST-LINK virtual COM route directly:
 
-`https://github.com/STMicroelectronics/STM32CubeH7/blob/master/Projects/NUCLEO-H755ZI-Q/readme.txt`
+```text
+DAS_BOARD_UART_STLINK_VCP
+PD8 TX / PD9 RX
+USART3 / AF7
+115200 8N1
+```
 
-The H755-specific cryptographic capability called out by ST is outside CCSDSPack's scope.
+The only STM32CubeH7 material fetched by the runner is the pinned CMSIS core
+and STM32H755 device-header subset required by DAS.
 
-For v2.0.0 release validation, execute the shared acceptance core on a physical **NUCLEO-H755ZI-Q / Cortex-M7** using the ST-supported H745/H755-compatible project configuration. The same `CCSDSPackHardwareTest::run()` implementation is executed natively by `aarch64_validate.sh`, so the two real-target runs exercise the same protocol/API acceptance logic.
+## Pinned dependencies
 
-## Board-project requirements
+The validation runner pins its target substrate rather than building against
+whatever happens to be installed on a workstation:
 
-The STM32 project remains responsible for:
+```text
+DAS
+b10fa1e8ceb021c406d0c15c7020c0114fe0469f
 
-- startup implementation and linker/memory layout supplied by the ST-compatible board project;
-- device/system and HAL configuration;
-- CM4/CM7 boot coordination;
-- board clock, power, cache, and MPU setup;
-- ST-Link virtual COM UART configuration.
+STM32CubeH7 CMSIS source
+f5c0b7a2b1f6eb26fde150f72edb2d7deb647066
+```
 
-## CCSDSPack build
+Those are the same DAS/STM32H7 baselines used by the SpWKit STM32H755 DAS
+integration.
 
-Build the archive with the same ABI as the Cortex-M7 application:
+## Build-only validation
+
+The hardware harness is itself cross-built in CI from the generated MCU
+package. This proves that the package links as a complete H755 firmware image,
+not merely as a relocatable probe.
 
 ```bash
-./package.sh \
-  -t cmake/toolchains/arm-none-eabi.cmake \
-  -p MCU \
-  -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+bash test/package_tester/stm32h7xx/run_h755_validation.sh \
+  --package /path/to/ccsdspack-v2.1.0-Generic-arm.tar.gz \
+  --source-sha <candidate-sha> \
+  --build-only
 ```
 
-The application uses C++17, `CCSDS_MCU`, the installed public headers, `libccsdspack.a`, and matching CPU/FPU/float-ABI flags.
-
-## Execute the shared validation core
-
-Add `test/package_tester/hardware` to the application include path and call the same acceptance function used on arm64:
-
-```cpp
-#include "ccsdspack_hardware_test.h"
-
-const int result = CCSDSPackHardwareTest::run();
-```
-
-A successful release run should report through UART/debugger:
+The build produces:
 
 ```text
+ccsdspack_h755_validation.elf
+ccsdspack_h755_validation.map
+logs/metadata.log
+logs/size.log
+logs/elf.sha256
+```
+
+The ELF is rejected if it retains an STM32 HAL or BSP dependency.
+
+## Physical validation
+
+Requirements:
+
+- NUCLEO-H755ZI-Q connected through ST-LINK;
+- ARM GNU bare-metal toolchain;
+- CMake and Git;
+- OpenOCD with ST-LINK support;
+- access to the ST-LINK virtual COM port;
+- the exact CCSDSPack MCU package generated for the candidate commit.
+
+Run:
+
+```bash
+bash test/package_tester/stm32h7xx/run_h755_validation.sh \
+  --package /path/to/ccsdspack-v2.1.0-Generic-arm.tar.gz \
+  --source-sha <candidate-sha>
+```
+
+The runner normally auto-detects the ST-LINK virtual COM device. It can be
+selected explicitly when several ACM devices are present:
+
+```bash
+bash test/package_tester/stm32h7xx/run_h755_validation.sh \
+  --package /path/to/ccsdspack-v2.1.0-Generic-arm.tar.gz \
+  --source-sha <candidate-sha> \
+  --uart /dev/ttyACM0
+```
+
+The runner:
+
+1. hashes the supplied CCSDSPack package;
+2. checks out the exact DAS revision;
+3. sparse-fetches only the required pinned STM32 CMSIS headers;
+4. builds and installs DAS for Cortex-M7;
+5. links the CCSDSPack validation ELF from the supplied MCU package;
+6. records ELF size and SHA-256;
+7. opens the ST-LINK VCP at 115200 8N1;
+8. programs and verifies the ELF using OpenOCD;
+9. releases the target;
+10. captures the full UART transcript;
+11. fails on FAIL/FAULT, timeout, or absence of the final PASS marker.
+
+## UART evidence
+
+UART is the authoritative human-readable hardware transcript. A successful run
+contains metadata before the protocol tests:
+
+```text
+=== CCSDSPack STM32H755 hardware validation ===
+BOARD:NUCLEO-H755ZI-Q
+CORE:Cortex-M7
+TRANSPORT:DAS UART / ST-LINK VCP
+UART_FORMAT:115200 8N1
+CCSDSPACK_SOURCE_SHA:<candidate-sha>
+CCSDSPACK_PACKAGE_SHA256:<package-sha256>
+DAS_SHA:b10fa1e8ceb021c406d0c15c7020c0114fe0469f
+COMPILER:<arm-none-eabi compiler version>
+CPP_STANDARD:201703
+CORE_HZ:<measured DAS core clock>
+UART_EFFECTIVE_BAUD:<effective DAS UART baud>
+ACCEPTANCE:Packet, Manager, CRC16, raw buffers, Validator, PUS-C, PVN, Idle
+CCSDSPACK_HARDWARE_TEST:BEGIN
+```
+
+Each major acceptance section then reports progress:
+
+```text
+TEST:BEGIN:generic-packet-manager
+TEST:PASS:generic-packet-manager
+TEST:BEGIN:raw-buffer-parse
+TEST:PASS:raw-buffer-parse
+TEST:BEGIN:structured-validator
+TEST:PASS:structured-validator
+TEST:BEGIN:raw-manager-reassembly
+TEST:PASS:raw-manager-reassembly
+TEST:BEGIN:pus-c-tc
+TEST:PASS:pus-c-tc
+TEST:BEGIN:pec-none
+TEST:PASS:pec-none
+TEST:BEGIN:packet-version-rejection
+TEST:PASS:packet-version-rejection
+TEST:BEGIN:idle-packet-policy
+TEST:PASS:idle-packet-policy
+TEST:PASS:all
+RESULT_CODE:0
+RESULT_NAME:Pass
 CCSDSPACK_HARDWARE_TEST:PASS
+CCSDSPACK_HARDWARE_TEST:END
 ```
 
-The compatibility wrapper can also be used from the in-repository STM32 example:
+Failures include both numeric and symbolic identity:
 
-```cpp
-#include "ccsdspack_mcu_test.h"
-const int result = CCSDSPackMcuTest::run();
+```text
+RESULT_CODE:<n>
+RESULT_NAME:<ResultCode name>
+CCSDSPACK_HARDWARE_TEST:FAIL:<n>:<ResultCode name>
 ```
 
-## Shared acceptance coverage
+Target faults are also emitted over UART before the core halts:
 
-The exact same acceptance core used on native arm64 and STM32 CM7 exercises:
+```text
+FAULT:HardFault
+CCSDSPACK_HARDWARE_TEST:FAULT
+```
+
+The same applies to MemManage, BusFault and UsageFault.
+
+## Shared protocol coverage
+
+The board-independent acceptance body exercises:
 
 - generic Packet construction and exact CRC16 vector generation;
 - Manager Packet-template and automatic sequence-count behavior;
 - packet-level PEC with CRC16 and `None`;
+- pointer-native declared-size and bounded parsing;
+- truncated raw-buffer rejection;
 - structured Validator report checks;
-- PUS-C telecommand construction, intrinsic direction/Packet Type, serialization, typed parsing, and named PUS validation checks;
-- Packet Version Number rejection and Idle Packet constraints;
-- **raw application-data ingestion through `Manager::setApplicationData(const uint8_t*, size_t)`**;
-- **six-byte framing through `ccsds::buffer::declaredPacketSize()`**;
-- **pointer-plus-size bounded generic Packet parsing with exact consumed-byte checks**;
-- **truncated raw-buffer rejection**;
-- **typed PUS-C raw-buffer parsing**;
-- **raw Manager stream loading and application-data reconstruction**.
+- raw Manager stream loading and application-data reconstruction;
+- PUS-C telecommand construction, serialization, typed parsing and validation;
+- Packet Version Number rejection;
+- Idle Packet constraints.
 
-This means the physical H755 run and native arm64 run both explicitly validate the transport-facing raw-buffer APIs rather than relying only on hosted unit tests or compile/link probes.
+The generic MCU package compile probe remains under
+`CM7/Src/ccsdspack_mcu_compile_probe.cpp` for package/ABI CI. Physical H755
+execution uses `CM7/Src/main.cpp` and is a separate release gate.
 
-The generic arm-none-eabi package build compiles the same core through `CM7/Src/ccsdspack_mcu_compile_probe.cpp`. Compile/link success proves API and ABI compatibility only; physical NUCLEO-H755ZI-Q execution remains a separate release gate.
+## Release evidence
 
-## Board-specific responsibilities
+Retain from every release-candidate hardware run:
 
-The shared test does not configure clocks, voltage scaling, MPU/cache regions, UART, dual-core synchronization, linker layout, heap/stack, fault handlers, or watchdog behavior. Those remain properties of the STM32 board project and must be validated there.
+1. exact CCSDSPack candidate SHA;
+2. exact MCU package filename and SHA-256;
+3. pinned DAS SHA;
+4. compiler identity printed by the target;
+5. final ELF SHA-256;
+6. final ELF `text/data/bss` size;
+7. complete UART transcript;
+8. OpenOCD program/verify log;
+9. final `CCSDSPACK_HARDWARE_TEST:PASS` marker;
+10. absence of FAIL/FAULT markers.
 
-## Required release evidence
-
-Record:
-
-1. physical NUCLEO-H755ZI-Q board identity and, when available, MCU revision information reported by the programmer/debugger;
-2. arm-none-eabi compiler version;
-3. CCSDSPack commit/package SHA;
-4. CM7 compile/link success;
-5. flash/reset success;
-6. UART or debugger result `CCSDSPACK_HARDWARE_TEST:PASS`;
-7. final ELF flash/RAM usage and relevant heap/stack configuration;
-8. absence of HardFault, MemManage, BusFault, or allocation failure during the run.
-
-For arm64, retain the complete output from `test/package_tester/aarch64_validate.sh`; its final successful run includes `CCSDSPACK_HARDWARE_TEST:PASS` followed by `CCSDSPACK_AARCH64_TEST:PASS`.
+A source, package, DAS pin, linker/startup, board-support, or validation-harness
+change creates a new hardware candidate and requires fresh physical evidence.
