@@ -211,6 +211,20 @@ jobs:
             --build-dir "$PWD/build/h755-validation-ci" \
             --build-only
 
+      - name: Upload H755 validation firmware evidence
+        if: matrix.os == 'ubuntu-22.04'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ccsdspack-h755-validation-${{ github.sha }}
+          path: |
+            build/h755-validation-ci/firmware/ccsdspack_h755_validation.elf
+            build/h755-validation-ci/firmware/ccsdspack_h755_validation.map
+            build/h755-validation-ci/logs/metadata.log
+            build/h755-validation-ci/logs/size.log
+            build/h755-validation-ci/logs/elf.sha256
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Upload packaging failure log
         if: failure() && matrix.os == 'ubuntu-22.04' && steps.packaging.outcome == 'failure'
         uses: actions/upload-artifact@v4
