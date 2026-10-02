@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-ROOT_DIR="$(cd "$(dirname "\${BASH_SOURCE[0]}")/../../.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 HARNESS_DIR="$ROOT_DIR/test/package_tester/stm32h7xx"
-BUILD_ROOT="\${CCSDSPACK_H755_BUILD_DIR:-$ROOT_DIR/build/h755-validation}"
-OPENOCD_SCRIPTS="\${OPENOCD_SCRIPTS:-/usr/share/openocd/scripts}"
-UART_TIMEOUT="\${CCSDSPACK_UART_TIMEOUT:-30}"
+BUILD_ROOT="${CCSDSPACK_H755_BUILD_DIR:-$ROOT_DIR/build/h755-validation}"
+OPENOCD_SCRIPTS="${OPENOCD_SCRIPTS:-/usr/share/openocd/scripts}"
+UART_TIMEOUT="${CCSDSPACK_UART_TIMEOUT:-30}"
 
 DAS_REPOSITORY="https://github.com/Inczert/device-abstraction-stack.git"
 DAS_COMMIT="b10fa1e8ceb021c406d0c15c7020c0114fe0469f"
@@ -214,7 +214,7 @@ UART_LOG="$BUILD_ROOT/logs/uart.log"
 OPENOCD_LOG="$BUILD_ROOT/logs/openocd.log"
 : > "$UART_LOG"
 
-timeout "\${UART_TIMEOUT}s" cat "$UART_DEVICE" > >(tee "$UART_LOG") &
+timeout "${UART_TIMEOUT}s" cat "$UART_DEVICE" > >(tee "$UART_LOG") &
 UART_PID=$!
 sleep 0.2
 
