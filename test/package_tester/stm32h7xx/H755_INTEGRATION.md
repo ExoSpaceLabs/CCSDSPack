@@ -147,6 +147,7 @@ TRANSPORT:DAS UART / ST-LINK VCP
 UART_FORMAT:115200 8N1
 CCSDSPACK_SOURCE_SHA:<candidate-sha>
 CCSDSPACK_PACKAGE_SHA256:<package-sha256>
+CCSDSPACK_LIBRARY_SHA256:<libccsdspack.a-sha256>
 DAS_SHA:b10fa1e8ceb021c406d0c15c7020c0114fe0469f
 COMPILER:<arm-none-eabi compiler version>
 CPP_STANDARD:201703
@@ -178,6 +179,8 @@ TEST:PASS:idle-packet-policy
 TEST:PASS:all
 RESULT_CODE:0
 RESULT_NAME:Pass
+HEAP_CAPACITY_BYTES:<linker-defined heap capacity>
+HEAP_PEAK_BYTES:<maximum heap break reached during acceptance>
 CCSDSPACK_HARDWARE_TEST:PASS
 CCSDSPACK_HARDWARE_TEST:END
 ```
@@ -224,14 +227,16 @@ Retain from every release-candidate hardware run:
 
 1. exact CCSDSPack candidate SHA;
 2. exact MCU package filename and SHA-256;
-3. pinned DAS SHA;
-4. compiler identity printed by the target;
-5. final ELF SHA-256;
-6. final ELF `text/data/bss` size;
-7. complete UART transcript;
-8. OpenOCD program/verify log;
-9. final `CCSDSPACK_HARDWARE_TEST:PASS` marker;
-10. absence of FAIL/FAULT markers.
+3. linked `libccsdspack.a` SHA-256;
+4. pinned DAS SHA;
+5. compiler identity printed by the target;
+6. target-reported core clock/effective UART baud and heap high-water mark;
+7. final ELF SHA-256;
+8. final ELF `text/data/bss` size;
+9. complete UART transcript;
+10. OpenOCD program/verify log;
+11. final `CCSDSPACK_HARDWARE_TEST:PASS` marker;
+12. absence of FAIL/FAULT markers.
 
 A source, package, DAS pin, linker/startup, board-support, or validation-harness
 change creates a new hardware candidate and requires fresh physical evidence.
