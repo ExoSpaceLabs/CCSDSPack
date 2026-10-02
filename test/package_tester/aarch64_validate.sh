@@ -15,7 +15,7 @@ EOF
 
 if [[ $# -ne 1 ]]; then usage; exit 2; fi
 case "$(uname -m)" in aarch64|arm64) ;; *) echo "ERROR: native arm64 required" >&2; exit 3 ;; esac
-for tool in sudo dpkg dpkg-deb cmake python3 ctest g++ realpath mktemp cp; do
+for tool in sudo dpkg dpkg-deb cmake python3 ctest g++ realpath mktemp cp sed sha256sum; do
   command -v "${tool}" >/dev/null || { echo "ERROR: required command not found: ${tool}" >&2; exit 4; }
 done
 
