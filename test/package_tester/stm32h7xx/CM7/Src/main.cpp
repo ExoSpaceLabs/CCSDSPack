@@ -9,12 +9,17 @@
 #include <cstdint>
 
 extern "C" void __libc_init_array(void);
+extern "C" std::size_t ccsdspack_h755_heap_capacity_bytes(void);
+extern "C" std::size_t ccsdspack_h755_heap_peak_bytes(void);
 
 #ifndef CCSDSPACK_VALIDATION_SOURCE_SHA
 #define CCSDSPACK_VALIDATION_SOURCE_SHA "unknown"
 #endif
 #ifndef CCSDSPACK_VALIDATION_DAS_SHA
 #define CCSDSPACK_VALIDATION_DAS_SHA "unknown"
+#endif
+#ifndef CCSDSPACK_VALIDATION_LIBRARY_SHA256
+#define CCSDSPACK_VALIDATION_LIBRARY_SHA256 "unknown"
 #endif
 #ifndef CCSDSPACK_VALIDATION_PACKAGE_SHA256
 #define CCSDSPACK_VALIDATION_PACKAGE_SHA256 "unknown"
@@ -109,6 +114,7 @@ void printRuntimeInformation() {
   uartKeyValue("UART_FORMAT", "115200 8N1");
   uartKeyValue("CCSDSPACK_SOURCE_SHA", CCSDSPACK_VALIDATION_SOURCE_SHA);
   uartKeyValue("CCSDSPACK_PACKAGE_SHA256", CCSDSPACK_VALIDATION_PACKAGE_SHA256);
+  uartKeyValue("CCSDSPACK_LIBRARY_SHA256", CCSDSPACK_VALIDATION_LIBRARY_SHA256);
   uartKeyValue("DAS_SHA", CCSDSPACK_VALIDATION_DAS_SHA);
   uartKeyValue("COMPILER", __VERSION__);
   uartKeyValueUnsigned("CPP_STANDARD", static_cast<std::uint32_t>(__cplusplus));
@@ -183,6 +189,12 @@ int main() {
   const int result = CCSDSPackMcuTest::run(progressReporter);
   uartKeyValueUnsigned("RESULT_CODE", static_cast<std::uint32_t>(result));
   uartKeyValue("RESULT_NAME", CCSDSPackMcuTest::resultCodeName(result));
+  uartKeyValueUnsigned(
+      "HEAP_CAPACITY_BYTES",
+      static_cast<std::uint32_t>(ccsdspack_h755_heap_capacity_bytes()));
+  uartKeyValueUnsigned(
+      "HEAP_PEAK_BYTES",
+      static_cast<std::uint32_t>(ccsdspack_h755_heap_peak_bytes()));
 
   if (result == CCSDSPackMcuTest::Pass) {
     if (g_leds_ready) {
