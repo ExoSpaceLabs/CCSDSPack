@@ -20,6 +20,8 @@ set(CCSDSPACK_VALIDATION_DAS_SHA "unknown" CACHE STRING
     "Pinned DAS commit linked into the test firmware")
 set(CCSDSPACK_VALIDATION_PACKAGE_SHA256 "unknown" CACHE STRING
     "SHA-256 of the tested CCSDSPack MCU package")
+set(CCSDSPACK_VALIDATION_LIBRARY_SHA256 "unknown" CACHE STRING
+    "SHA-256 of the linked libccsdspack.a")
 
 add_executable(ccsdspack_h755_validation
     CM7/Src/main.cpp
