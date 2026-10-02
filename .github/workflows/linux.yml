@@ -197,6 +197,20 @@ jobs:
           status=${PIPESTATUS[0]}
           exit "$status"
 
+      - name: Cross-build standalone H755 DAS validation firmware (22.04 only)
+        if: matrix.os == 'ubuntu-22.04'
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n test/package_tester/stm32h7xx/run_h755_validation.sh
+          MCU_PACKAGE="$(find packages -maxdepth 1 -type f -name 'ccsdspack-v*-Generic-arm.tar.gz' -print -quit)"
+          test -n "$MCU_PACKAGE"
+          bash test/package_tester/stm32h7xx/run_h755_validation.sh \
+            --package "$MCU_PACKAGE" \
+            --source-sha "${GITHUB_SHA}" \
+            --build-dir "$PWD/build/h755-validation-ci" \
+            --build-only
+
       - name: Upload packaging failure log
         if: failure() && matrix.os == 'ubuntu-22.04' && steps.packaging.outcome == 'failure'
         uses: actions/upload-artifact@v4
