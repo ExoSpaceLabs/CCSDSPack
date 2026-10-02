@@ -8,6 +8,8 @@
 #include <cstddef>
 #include <cstdint>
 
+extern "C" void __libc_init_array(void);
+
 #ifndef CCSDSPACK_VALIDATION_SOURCE_SHA
 #define CCSDSPACK_VALIDATION_SOURCE_SHA "unknown"
 #endif
@@ -142,6 +144,15 @@ extern "C" [[noreturn]] void UsageFault_Handler(void) {
 }
 
 int main() {
+  // DAS provides the freestanding C runtime. This executable owns the C++17
+  // init-array step so any linked static C++ objects are initialized exactly
+  // once before the acceptance code is entered.
+  __libc_init_array();
+
+  if (das_clock_set_frequency(UINT32_C(400000000)) != DAS_OK) {
+    haltForever();
+  }
+
   if (das_board_led_init_all(false) == DAS_OK) {
     g_leds_ready = true;
     (void)das_board_led_set(DAS_BOARD_LED_GREEN, true);
