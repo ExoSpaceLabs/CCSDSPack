@@ -42,6 +42,12 @@ CCSDSPACK_AARCH64_TEST:PASS
 
 ### NUCLEO-H755ZI-Q / Cortex-M7 rerun
 
+The v2.1 physical harness is a standalone CMake/OpenOCD application. It links
+the generated CCSDSPack MCU package with the pinned Device Abstraction Stack
+(DAS), which supplies Cortex-M startup/vector/linker support, board clocking and
+the ST-LINK VCP UART. It does **not** use STM32CubeIDE, STM32 HAL, the Nucleo
+BSP, generated vendor makefiles, or a CM4 companion project.
+
 Generate the MCU package from the same candidate commit:
 
 ```bash
@@ -51,19 +57,31 @@ Generate the MCU package from the same candidate commit:
   -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
 ```
 
-Use the existing STM32H7 reference harness under `test/package_tester/stm32h7xx/`, link the generated candidate `libccsdspack.a`, build the CM7 image, and record the final ELF size with:
+Execute the complete build/flash/UART acceptance flow with:
 
 ```bash
-arm-none-eabi-size <final-cm7-elf>
+bash test/package_tester/stm32h7xx/run_h755_validation.sh \
+  --package packages/ccsdspack-v2.1.0-Generic-arm.tar.gz \
+  --source-sha <candidate-sha>
 ```
 
-After flashing, the required runtime marker is:
+The runner pins DAS and the minimal STM32 CMSIS source revision, builds the
+standalone Cortex-M7 ELF, records its SHA-256 and `text/data/bss`, programs and
+verifies it through OpenOCD, captures the ST-LINK VCP at 115200 8N1, and fails
+unless the target emits:
 
 ```text
 CCSDSPACK_HARDWARE_TEST:PASS
 ```
 
-Record the exact candidate SHA, MCU package SHA-256, installed archive SHA-256, compiler version, final ELF text/data/bss, and runtime log in this page before release promotion.
+The UART transcript also contains candidate/package/DAS/compiler/runtime
+identity, per-section BEGIN/PASS markers, symbolic failure names, and explicit
+HardFault/MemManage/BusFault/UsageFault markers.
+
+Record the exact candidate SHA, MCU package SHA-256, linked ELF SHA-256,
+compiler version, final ELF text/data/bss, complete UART transcript, and
+OpenOCD program/verify log in this page before release promotion. See
+`test/package_tester/stm32h7xx/H755_INTEGRATION.md` for the full procedure.
 
 ### Pre-hardware footprint evidence
 
