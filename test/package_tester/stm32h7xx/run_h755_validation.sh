@@ -228,7 +228,7 @@ openocd -s "$OPENOCD_SCRIPTS" \
 
 deadline=$((SECONDS + UART_TIMEOUT))
 while (( SECONDS < deadline )); do
-  if grep -q '^CCSDSPACK_HARDWARE_TEST:PASS\r\?$' "$UART_LOG"; then
+  if grep -Fq 'CCSDSPACK_HARDWARE_TEST:PASS' "$UART_LOG"; then
     break
   fi
   if grep -Eq 'CCSDSPACK_HARDWARE_TEST:(FAIL|FAULT)' "$UART_LOG"; then
@@ -244,7 +244,7 @@ if grep -Eq 'CCSDSPACK_HARDWARE_TEST:(FAIL|FAULT)' "$UART_LOG"; then
   echo "STM32H755 hardware validation: FAIL"
   exit 1
 fi
-if ! grep -q '^CCSDSPACK_HARDWARE_TEST:PASS\r\?$' "$UART_LOG"; then
+if ! grep -Fq 'CCSDSPACK_HARDWARE_TEST:PASS' "$UART_LOG"; then
   echo "STM32H755 hardware validation: TIMEOUT/NO PASS MARKER"
   exit 1
 fi
