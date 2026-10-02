@@ -32,8 +32,8 @@ target_link_libraries(ccsdspack_h755_validation PRIVATE
     das::das)
 
 target_include_directories(ccsdspack_h755_validation PRIVATE
-    "\${CMAKE_CURRENT_SOURCE_DIR}/CM7/Inc"
-    "\${CMAKE_CURRENT_SOURCE_DIR}/../hardware")
+    "${CMAKE_CURRENT_SOURCE_DIR}/CM7/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../hardware")
 
 target_compile_features(ccsdspack_h755_validation PRIVATE
     c_std_11
@@ -41,9 +41,10 @@ target_compile_features(ccsdspack_h755_validation PRIVATE
 
 target_compile_definitions(ccsdspack_h755_validation PRIVATE
     CCSDS_MCU
-    CCSDSPACK_VALIDATION_SOURCE_SHA="\${CCSDSPACK_VALIDATION_SOURCE_SHA}"
-    CCSDSPACK_VALIDATION_DAS_SHA="\${CCSDSPACK_VALIDATION_DAS_SHA}"
-    CCSDSPACK_VALIDATION_PACKAGE_SHA256="\${CCSDSPACK_VALIDATION_PACKAGE_SHA256}")
+    CCSDSPACK_VALIDATION_SOURCE_SHA="${CCSDSPACK_VALIDATION_SOURCE_SHA}"
+    CCSDSPACK_VALIDATION_DAS_SHA="${CCSDSPACK_VALIDATION_DAS_SHA}"
+    CCSDSPACK_VALIDATION_PACKAGE_SHA256="${CCSDSPACK_VALIDATION_PACKAGE_SHA256}"
+    CCSDSPACK_VALIDATION_LIBRARY_SHA256="${CCSDSPACK_VALIDATION_LIBRARY_SHA256}")
 
 target_compile_options(ccsdspack_h755_validation PRIVATE
     -Wall
@@ -63,7 +64,7 @@ target_link_options(ccsdspack_h755_validation PRIVATE
     --specs=nosys.specs
     -Wl,--gc-sections
     -Wl,--unresolved-symbols=report-all
-    -Wl,-Map=\${CMAKE_CURRENT_BINARY_DIR}/ccsdspack_h755_validation.map)
+    -Wl,-Map=${CMAKE_CURRENT_BINARY_DIR}/ccsdspack_h755_validation.map)
 
 set_target_properties(ccsdspack_h755_validation PROPERTIES
     SUFFIX ".elf"
