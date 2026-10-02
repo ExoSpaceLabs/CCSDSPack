@@ -3,12 +3,13 @@
 
 #include "ccsdspack_mcu_test.h"
 
+extern "C" {
 #include <das/das.h>
+}
 
 #include <cstddef>
 #include <cstdint>
 
-extern "C" void __libc_init_array(void);
 extern "C" std::size_t ccsdspack_h755_heap_capacity_bytes(void);
 extern "C" std::size_t ccsdspack_h755_heap_peak_bytes(void);
 
@@ -150,11 +151,6 @@ extern "C" [[noreturn]] void UsageFault_Handler(void) {
 }
 
 int main() {
-  // DAS provides the freestanding C runtime. This executable owns the C++17
-  // init-array step so any linked static C++ objects are initialized exactly
-  // once before the acceptance code is entered.
-  __libc_init_array();
-
   if (das_clock_set_frequency(UINT32_C(400000000)) != DAS_OK) {
     haltForever();
   }
