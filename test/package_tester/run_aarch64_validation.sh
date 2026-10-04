@@ -107,7 +107,9 @@ echo "VALIDATION_LOG:${log_path}"
 
 echo
 echo "Cleaning previous native build/package output..."
-rm -rf "${repo_root}/build" "${repo_root}/packages"
+# Remove generated/ignored content without deleting tracked placeholders such as
+# build/.gitignore and packages/.gitignore.
+git clean -fdx -- "${repo_root}/build" "${repo_root}/packages"
 
 echo
 echo "Building native arm64 DEB package..."
