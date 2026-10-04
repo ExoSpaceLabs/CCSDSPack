@@ -54,6 +54,17 @@ void uartLine(const char *text) {
   uartWrite("\r\n");
 }
 
+void uartHex32(std::uint32_t value) {
+  static constexpr char hex[] = "0123456789ABCDEF";
+  char text[11]{'0', 'x'};
+  for (std::size_t index = 0U; index < 8U; ++index) {
+    const std::uint32_t shift = static_cast<std::uint32_t>((7U - index) * 4U);
+    text[2U + index] = hex[(value >> shift) & 0x0FU];
+  }
+  text[10] = '\0';
+  uartWrite(text);
+}
+
 void uartUnsigned(std::uint32_t value) {
   char digits[11]{};
   std::size_t count = 0U;
@@ -92,6 +103,13 @@ void progressReporter(const char *message) {
 }
 
 [[noreturn]] void fault(const char *name) {
+  constexpr std::uintptr_t shcsrAddress = UINT32_C(0xE000ED24);
+  constexpr std::uintptr_t cfsrAddress = UINT32_C(0xE000ED28);
+  constexpr std::uintptr_t hfsrAddress = UINT32_C(0xE000ED2C);
+  constexpr std::uintptr_t mmfarAddress = UINT32_C(0xE000ED34);
+  constexpr std::uintptr_t bfarAddress = UINT32_C(0xE000ED38);
+  constexpr std::uintptr_t cpacrAddress = UINT32_C(0xE000ED88);
+
   if (g_leds_ready) {
     (void)das_board_led_set(DAS_BOARD_LED_GREEN, false);
     (void)das_board_led_set(DAS_BOARD_LED_YELLOW, false);
@@ -99,6 +117,20 @@ void progressReporter(const char *message) {
   }
   uartWrite("FAULT:");
   uartLine(name);
+
+  const auto printFaultRegister = [](const char *name, std::uintptr_t address) {
+    uartWrite(name);
+    uartWrite(":");
+    uartHex32(*reinterpret_cast<volatile const std::uint32_t *>(address));
+    uartWrite("\r\n");
+  };
+
+  printFaultRegister("FAULT_SHCSR", shcsrAddress);
+  printFaultRegister("FAULT_CFSR", cfsrAddress);
+  printFaultRegister("FAULT_HFSR", hfsrAddress);
+  printFaultRegister("FAULT_MMFAR", mmfarAddress);
+  printFaultRegister("FAULT_BFAR", bfarAddress);
+  printFaultRegister("FAULT_CPACR", cpacrAddress);
   uartLine("CCSDSPACK_HARDWARE_TEST:FAULT");
   if (g_console_ready) (void)das_uart_flush(g_console);
   haltForever();

@@ -57,7 +57,7 @@ whatever happens to be installed on a workstation:
 
 ```text
 DAS
-b10fa1e8ceb021c406d0c15c7020c0114fe0469f
+4b768ef86b43652c94cc91b1c77e247fa37ebd8a
 
 STM32CubeH7 CMSIS source
 f5c0b7a2b1f6eb26fde150f72edb2d7deb647066
@@ -148,7 +148,7 @@ UART_FORMAT:115200 8N1
 CCSDSPACK_SOURCE_SHA:<candidate-sha>
 CCSDSPACK_PACKAGE_SHA256:<package-sha256>
 CCSDSPACK_LIBRARY_SHA256:<libccsdspack.a-sha256>
-DAS_SHA:b10fa1e8ceb021c406d0c15c7020c0114fe0469f
+DAS_SHA:4b768ef86b43652c94cc91b1c77e247fa37ebd8a
 COMPILER:<arm-none-eabi compiler version>
 CPP_STANDARD:201703
 CORE_HZ:<measured DAS core clock>
