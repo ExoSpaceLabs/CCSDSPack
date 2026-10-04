@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 
 [Documentation index](README.md) | [Packages](PACKAGES.md) | [Release acceptance](../V2_TRANSITION_ACCEPTANCE_LIST.md)
 
-This page records physical-target and native-target release evidence for CCSDSPack v2.0.0. Hardware execution complements hosted CI and package/cross-build evidence; it does not extend the documented compliance scope beyond the supported CCSDS Space Packet PDU, PUS, CUC, and mission-tailoring profiles.
+This page records physical-target and native-target release evidence for CCSDSPack v2 releases. Hardware execution complements hosted CI and package/cross-build evidence; it does not extend the documented compliance scope beyond the supported CCSDS Space Packet PDU, PUS, CUC, and mission-tailoring profiles.
 
 
 ## v2.1.0 release-candidate validation
@@ -16,8 +16,8 @@ v2.1.0 changes the implementation architecture substantially while preserving th
 
 | Target | v2.1 status | Required marker |
 |---|---|---|
-| Raspberry Pi 5, native arm64 Linux | **PENDING** | `CCSDSPACK_AARCH64_TEST:PASS` |
-| NUCLEO-H755ZI-Q, Cortex-M7 | **PENDING** | `CCSDSPACK_HARDWARE_TEST:PASS` |
+| Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
+| NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
 Use the exact accepted `develop` commit after the final v2.1 hardening PR is merged. Record that source SHA and the generated package/library hashes here before promotion to `main`.
 
@@ -97,6 +97,92 @@ Record the exact candidate SHA, MCU package SHA-256, linked ELF SHA-256,
 compiler version, final ELF text/data/bss, complete UART transcript, and
 OpenOCD program/verify log in this page before release promotion. See
 `test/package_tester/stm32h7xx/H755_INTEGRATION.md` for the full procedure.
+
+### v2.1.0 validation evidence
+
+Validation date: **2026-10-04**
+
+#### Raspberry Pi 5 / native arm64
+
+Platform and toolchain:
+
+- Board: Raspberry Pi 5 Model B Rev 1.0
+- Architecture: `aarch64`
+- Operating system: Debian GNU/Linux 13 (`trixie`)
+- Kernel: `6.18.34+rpt-rpi-2712`
+- GCC/G++: 14.2.0
+- CMake: 3.31.6
+- Python: 3.13.5
+
+Candidate and package identity:
+
+- Branch: `develop`
+- Source commit: `9f6fcbfda263d1737f50833a5af14c2b6f104799`
+- Source version: `2.1.0`
+- Package: `ccsdspack-v2.1.0-Linux-arm64.deb`
+- Package architecture: `arm64`
+- Package SHA-256: `41354b83ba50d73f1804969ba72628e2cdc8e2aa2d6551f207b79ccb0ec1517f`
+
+The one-command native runner rebuilt the DEB from a clean checkout, verified
+package identity, installed it, and completed the package-level validation.
+Results:
+
+- regression/conformance suite: **134 passed, 0 failed**;
+- CLI integration: **PASS**;
+- external installed-package CMake consumer: **1 passed, 0 failed**;
+- shared hardware acceptance: `CCSDSPACK_HARDWARE_TEST:PASS`;
+- native arm64 acceptance: `CCSDSPACK_AARCH64_TEST:PASS`.
+
+The run log is written by the runner to
+`~/ccsdspack-v2.1.0-aarch64-validation.log`.
+
+#### NUCLEO-H755ZI-Q / Cortex-M7
+
+Platform and runtime identity:
+
+- Physical board: NUCLEO-H755ZI-Q
+- Core: Cortex-M7
+- Transport: DAS UART through ST-LINK VCP
+- UART: 115200 8N1
+- Core clock: 400 MHz
+- Compiler: GNU Arm Embedded 10.3.1
+- C++ standard: C++17
+
+Candidate and dependency identity:
+
+- CCSDSPack source commit: `08cc587b41217e5d4ebc9dd31407c51fdb7de153`
+- MCU package SHA-256: `d8f920eab1528b4323670a52667fced2e9a3934ea7b352f66b140fdf399e6d54`
+- linked `libccsdspack.a` SHA-256: `4936e9e5fb1b29141797b993d983d7c5515c85fd3b60fc9188184a8b6d911ee5`
+- DAS revision: `4b768ef86b43652c94cc91b1c77e247fa37ebd8a`
+
+The standalone DAS/OpenOCD validation programmed and verified the target, then
+passed every runtime acceptance section:
+
+- generic Packet/Manager;
+- raw-buffer parsing;
+- structured Validator;
+- raw Manager reassembly;
+- PUS-C telecommand;
+- PEC-none operation;
+- Packet Version Number rejection;
+- Idle Packet policy.
+
+Final runtime result:
+
+```text
+TEST:PASS:all
+RESULT_CODE:0
+RESULT_NAME:Pass
+HEAP_CAPACITY_BYTES:507696
+HEAP_PEAK_BYTES:2996
+CCSDSPACK_HARDWARE_TEST:PASS
+CCSDSPACK_HARDWARE_TEST:END
+```
+
+The OpenOCD 0.11 target script still emits non-fatal STM32H7 DBGMCU
+`mem2array` examine warnings on this host, but flash programming and
+verification complete successfully and the firmware executes the full
+acceptance suite.
 
 ### Pre-hardware footprint evidence
 
