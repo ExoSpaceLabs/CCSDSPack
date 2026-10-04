@@ -8,7 +8,7 @@ OPENOCD_SCRIPTS="${OPENOCD_SCRIPTS:-/usr/share/openocd/scripts}"
 UART_TIMEOUT="${CCSDSPACK_UART_TIMEOUT:-30}"
 
 DAS_REPOSITORY="https://github.com/Inczert/device-abstraction-stack.git"
-DAS_COMMIT="45d93cc016909fd132cfcaffcab493119775574b"
+DAS_COMMIT="4b768ef86b43652c94cc91b1c77e247fa37ebd8a"
 STM32_CUBE_H7_REPOSITORY="https://github.com/STMicroelectronics/STM32CubeH7.git"
 STM32_CUBE_H7_COMMIT="f5c0b7a2b1f6eb26fde150f72edb2d7deb647066"
 
@@ -44,7 +44,7 @@ Environment:
                        UART result timeout in seconds (default 30).
 
 The runner pins:
-  DAS:       45d93cc016909fd132cfcaffcab493119775574b
+  DAS:       4b768ef86b43652c94cc91b1c77e247fa37ebd8a
   STM32CubeH7 CMSIS:
              f5c0b7a2b1f6eb26fde150f72edb2d7deb647066
 
