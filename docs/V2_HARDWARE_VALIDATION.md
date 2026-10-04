@@ -23,22 +23,37 @@ Use the exact accepted `develop` commit after the final v2.1 hardening PR is mer
 
 ### Raspberry Pi 5 / arm64 rerun
 
-Build the native package from a fresh checkout of the candidate:
+From a clean native arm64 checkout of the accepted candidate:
 
 ```bash
 git checkout develop
 git pull --ff-only
-./package.sh -p DEB
-ARM64_DEB="$(find ./packages -type f -name '*arm64*.deb' -o -name '*aarch64*.deb' | head -n 1)"
-bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
-  2>&1 | tee ~/ccsdspack-v2.1-aarch64-validation.log
+bash test/package_tester/run_aarch64_validation.sh
 ```
 
-Acceptance requires the installed regression/CLI/package-consumer checks to pass and the final marker:
+The top-level runner records the board, architecture, OS, kernel, compiler,
+CMake, Python, branch, source SHA, and source version; removes previous native
+build/package output; builds the DEB from scratch; validates package name,
+version, architecture, and SHA-256; then invokes `aarch64_validate.sh` for the
+installed regression suite, CLI integration, installed-package consumer, and
+shared hardware-acceptance body. The complete run is saved by default to
+`~/ccsdspack-v<version>-aarch64-validation.log`.
+
+The runner deliberately does not install missing host dependencies or update
+the source checkout. Those are preparation steps, not part of release
+qualification.
+
+Acceptance requires:
 
 ```text
+CCSDSPACK_HARDWARE_TEST:PASS
 CCSDSPACK_AARCH64_TEST:PASS
+CCSDSPACK_AARCH64_RUNNER:PASS
 ```
+
+`aarch64_validate.sh <package.deb>` remains available as the lower-level
+package validator when an already-built ARM64 package must be qualified
+directly.
 
 ### NUCLEO-H755ZI-Q / Cortex-M7 rerun
 
