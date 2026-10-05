@@ -1,6 +1,6 @@
 name: Generate UML Diagrams
 
-# UML generation is intentionally manual for v2.0.0 development. The diagrams
+# UML generation is intentionally manual for v2 development. The diagrams
 # are useful documentation aids, but regenerating them on every push/PR consumes
 # substantial CI time without contributing to the current release gates.
 # Re-enable push/pull_request triggers when diagram maintenance becomes useful.
@@ -12,10 +12,10 @@ permissions:
 
 jobs:
   generate-uml:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install dependencies
         run: |
