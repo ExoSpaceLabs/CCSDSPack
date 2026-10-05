@@ -74,7 +74,7 @@ void emit(const std::string &label,
             << std::fixed << std::setprecision(2)
             << sample.ns_per_op << ','
             << sample.allocations_per_op << ','
-            << sample.allocated_bytes_per_op << '\n';
+            << sample.allocated_bytes_per_op << std::endl;
 }
 
 template <typename Header>
@@ -87,7 +87,7 @@ void benchHeader(const std::string &label,
 
   const auto enc = measure(iterations, [&] {
     auto bytes = header.serialize();
-    if (bytes.empty()) std::abort();
+    if (bytes.empty()) throw std::runtime_error(name + " encode failed");
     g_sink += bytes.back();
   });
   emit(label, "pus_encode", name, iterations, enc);
@@ -95,7 +95,7 @@ void benchHeader(const std::string &label,
   Header parsed = header;
   const auto dec = measure(iterations, [&] {
     auto result = parsed.deserialize(encoded);
-    if (!result) std::abort();
+    if (!result) throw std::runtime_error("benchmark operation returned failure");
     g_sink += parsed.getServiceType();
   });
   emit(label, "pus_decode", name, iterations, dec);
@@ -160,14 +160,14 @@ void benchCuc(const std::string &label) {
 
   const auto enc = measure(iterations, [&] {
     auto result = ccsds::time::serialize(value, cfg);
-    if (!result) std::abort();
+    if (!result) throw std::runtime_error("benchmark operation returned failure");
     g_sink += result.value().back();
   });
   emit(label, "cuc_encode", "explicit_4_2", iterations, enc);
 
   const auto dec = measure(iterations, [&] {
     auto result = ccsds::time::deserialize(bytes, cfg);
-    if (!result) std::abort();
+    if (!result) throw std::runtime_error("benchmark operation returned failure");
     g_sink += static_cast<std::size_t>(result.value().coarse & 0xFFU);
   });
   emit(label, "cuc_decode", "explicit_4_2", iterations, dec);
@@ -202,7 +202,7 @@ void benchValidator(const std::string &label) {
 
   const auto sample = measure(iterations, [&] {
     const auto report = validator.validate(packet);
-    if (!report) std::abort();
+    if (!report) throw std::runtime_error("validator rejected valid benchmark packet");
     g_sink += report.size();
   });
   emit(label, "validator", "pus_c_tc_crc16_256", iterations, sample);
@@ -224,7 +224,7 @@ void benchManager(const std::string &label) {
   const auto segment = measure(iterations, [&] {
     generator.clearPackets();
     const auto result = generator.setApplicationData(payload);
-    if (!result) std::abort();
+    if (!result) throw std::runtime_error("benchmark operation returned failure");
     g_sink += generator.getTotalPackets();
   });
   emit(label, "manager_segment", "4096_to_256", iterations, segment);
@@ -243,7 +243,7 @@ void benchManager(const std::string &label) {
   const auto load = measure(iterations, [&] {
     receiver.clearPackets();
     const auto result = receiver.load(stream);
-    if (!result) std::abort();
+    if (!result) throw std::runtime_error("benchmark operation returned failure");
     g_sink += receiver.getTotalPackets();
   });
   emit(label, "manager_stream_load", "4096_from_256", iterations, load);
@@ -252,7 +252,8 @@ void benchManager(const std::string &label) {
   if (!receiver.load(stream)) throw std::runtime_error("manager load setup failed");
   const auto reassembly = measure(iterations, [&] {
     const auto result = receiver.getApplicationDataBuffer();
-    if (!result || result.value().size() != payload.size()) std::abort();
+    if (!result || result.value().size() != payload.size())
+      throw std::runtime_error("manager reassembly failed");
     g_sink += result.value().back();
   });
   emit(label, "manager_reassembly", "4096_from_256", iterations, reassembly);
