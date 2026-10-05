@@ -53,3 +53,30 @@ if(UNIX)
         BUILD_RPATH "${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib"
     )
 endif()
+
+
+set(CCSDSPACK_PROTOCOL_BENCHMARK "CCSDSPack_protocol_benchmark")
+
+add_executable(${CCSDSPACK_PROTOCOL_BENCHMARK}
+    "${CMAKE_SOURCE_DIR}/test/performance/protocol_benchmark.cpp"
+)
+
+target_include_directories(${CCSDSPACK_PROTOCOL_BENCHMARK}
+    PRIVATE
+        "${INCLUDE_DIR}"
+)
+
+target_link_libraries(${CCSDSPACK_PROTOCOL_BENCHMARK}
+    PRIVATE
+        ${LIB_NAME}
+)
+
+set_target_properties(${CCSDSPACK_PROTOCOL_BENCHMARK} PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+
+if(UNIX)
+    set_target_properties(${CCSDSPACK_PROTOCOL_BENCHMARK} PROPERTIES
+        BUILD_RPATH "${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib"
+    )
+endif()
