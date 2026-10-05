@@ -4,7 +4,10 @@
 #include "CCSDSManager.h"
 #include "CCSDSUtils.h"
 #include "PusSecondaryHeaders.h"
+#include "ccsdspack/c/reassembly.h"
+#include "ccsdspack/c/stream.h"
 #include <algorithm>
+#include <limits>
 #include <utility>
 
 namespace {
@@ -78,16 +81,9 @@ ccsds::Packet ccsds::Manager::boundParserPacket() const {
   return packet;
 }
 
-void ccsds::Manager::advanceSequenceCount() {
-  if (!getAutoSequenceCountEnable()) return;
-  const auto next = static_cast<std::uint16_t>((getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
-  m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | next;
-}
-
 void ccsds::Manager::syncSequenceCountFromPacket(const Packet &packet) {
   if (!getAutoSequenceCountEnable()) return;
-  const auto next = static_cast<std::uint16_t>(
-    (packet.getPrimaryHeader().getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
+  const auto next = ccsds_sequence_next(packet.getPrimaryHeader().getSequenceCount());
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | next;
 }
 
@@ -98,7 +94,7 @@ ccsds::ResultBool ccsds::Manager::setPacketTemplate(Packet packet) {
                  ErrorCode::INVALID_HEADER_DATA, "Cannot set an invalid packet template");
   m_templatePacket = std::move(packet);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK)
-                    | (m_templatePacket.getPrimaryHeader().getSequenceCount() & SEQUENCE_COUNT_MASK);
+                    | (m_templatePacket.getPrimaryHeader().getSequenceCount() & CCSDS_SEQUENCE_COUNT_MAX);
   m_templatePacket.setUpdatePacketEnable(false);
   m_validator.clear();
   m_validator.setTemplatePacket(m_templatePacket);
@@ -136,7 +132,7 @@ void ccsds::Manager::setAutoSequenceCountEnable(const bool enable) {
 }
 
 ccsds::ResultBool ccsds::Manager::setSequenceCount(const std::uint16_t count) {
-  RET_IF_ERR_MSG(count > SEQUENCE_COUNT_MASK, ErrorCode::INVALID_HEADER_DATA,
+  RET_IF_ERR_MSG(count > CCSDS_SEQUENCE_COUNT_MAX, ErrorCode::INVALID_HEADER_DATA,
                  "Unable to set Manager sequence count above 16383");
   if (m_templateIsSet) FORWARD_RESULT(m_templatePacket.setSequenceCount(count));
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | count;
@@ -155,35 +151,39 @@ ccsds::ResultBool ccsds::Manager::setApplicationData(const std::vector<std::uint
   const auto maxBytesPerPacket = m_templatePacket.getDataFieldMaximumSize();
   RET_IF_ERR_MSG(maxBytesPerPacket == 0U, ErrorCode::INVALID_APPLICATION_DATA,
                  "Cannot segment application data into a zero-sized packet data field");
-  const auto packetCount =
-    (data.size() + static_cast<std::size_t>(maxBytesPerPacket) - 1U)
-    / static_cast<std::size_t>(maxBytesPerPacket);
+  std::size_t packetCount{};
+  const auto countStatus = ccsds_segmentation_packet_count(
+    data.size(), static_cast<std::size_t>(maxBytesPerPacket), &packetCount);
+  RET_IF_ERR_MSG(countStatus != CCSDS_STATUS_OK, ErrorCode::INVALID_APPLICATION_DATA,
+                 "Cannot plan CCSDS application-data segmentation");
 
   std::vector<Packet> generated;
   generated.reserve(packetCount);
-  auto nextCount = getSequenceCount();
-  std::size_t offset = 0U;
+  const auto startCount = getSequenceCount();
+  const bool autoSequence = getAutoSequenceCountEnable();
+
   for (std::size_t index = 0U; index < packetCount; ++index) {
+    ccsds_segment_plan_t plan{};
+    const auto planStatus = ccsds_segmentation_plan(
+      data.size(), static_cast<std::size_t>(maxBytesPerPacket), index,
+      startCount, autoSequence ? 1 : 0, &plan);
+    RET_IF_ERR_MSG(planStatus != CCSDS_STATUS_OK, ErrorCode::INVALID_APPLICATION_DATA,
+                   "Cannot plan CCSDS application-data segment");
+
     Packet packet = m_templatePacket;
-    const auto bytes = std::min<std::size_t>(maxBytesPerPacket, data.size() - offset);
     const std::vector<std::uint8_t> chunk(
-      data.begin() + static_cast<std::ptrdiff_t>(offset),
-      data.begin() + static_cast<std::ptrdiff_t>(offset + bytes));
-    ESequenceFlag flags = UNSEGMENTED;
-    if (packetCount > 1U) {
-      if (index == 0U) flags = FIRST_SEGMENT;
-      else if (index + 1U == packetCount) flags = LAST_SEGMENT;
-      else flags = CONTINUING_SEGMENT;
-    }
-    packet.setSequenceFlags(flags);
-    FORWARD_RESULT(packet.setSequenceCount(nextCount));
+      data.begin() + static_cast<std::ptrdiff_t>(plan.offset),
+      data.begin() + static_cast<std::ptrdiff_t>(plan.offset + plan.size));
+    packet.setSequenceFlags(static_cast<ESequenceFlag>(plan.sequence_flags));
+    FORWARD_RESULT(packet.setSequenceCount(plan.sequence_count));
     FORWARD_RESULT(packet.setApplicationData(chunk));
     packet.setUpdatePacketEnable(m_updateEnable);
     generated.push_back(std::move(packet));
-    if (getAutoSequenceCountEnable()) nextCount = static_cast<std::uint16_t>((nextCount + 1U) & SEQUENCE_COUNT_MASK);
-    offset += bytes;
   }
+
   m_packets = std::move(generated);
+  const auto nextCount = ccsds_sequence_after_packets(
+    startCount, packetCount, autoSequence ? 1 : 0);
   m_sequenceCount = (m_sequenceCount & AUTO_SEQUENCE_DISABLED_MASK) | nextCount;
   return true;
 }
@@ -215,33 +215,95 @@ ccsds::ResultBuffer ccsds::Manager::getPacketBufferAtIndex(const std::uint16_t i
 }
 
 ccsds::ResultBuffer ccsds::Manager::getPacketsBuffer() const {
-  std::vector<std::uint8_t> buffer;
-  for (auto packet : m_packets) {
-    if (m_syncPattEnable) {
-      buffer.push_back(static_cast<std::uint8_t>((m_syncPattern >> 24U) & 0xFFU));
-      buffer.push_back(static_cast<std::uint8_t>((m_syncPattern >> 16U) & 0xFFU));
-      buffer.push_back(static_cast<std::uint8_t>((m_syncPattern >> 8U) & 0xFFU));
-      buffer.push_back(static_cast<std::uint8_t>(m_syncPattern & 0xFFU));
-    }
-    std::vector<std::uint8_t> packetBuffer;
-    ASSIGN_MV(packetBuffer, packet.serialize());
-    buffer.insert(buffer.end(), packetBuffer.begin(), packetBuffer.end());
+  const auto prefixSize = ccsds_packet_stream_prefix_size(m_syncPattEnable ? 1 : 0);
+  std::size_t totalSize = 0U;
+  for (const auto &packet : m_packets) {
+    const auto packetSize = packet.getSerializedSize();
+    RET_IF_ERR_MSG(packetSize > std::numeric_limits<std::size_t>::max() - prefixSize,
+                   ErrorCode::INVALID_DATA,
+                   "Cannot serialize packet stream: frame size overflow.");
+    const auto frameSize = prefixSize + packetSize;
+    RET_IF_ERR_MSG(frameSize > std::numeric_limits<std::size_t>::max() - totalSize,
+                   ErrorCode::INVALID_DATA,
+                   "Cannot serialize packet stream: total size overflow.");
+    totalSize += frameSize;
   }
+
+  std::vector<std::uint8_t> buffer(totalSize);
+  std::size_t offset = 0U;
+  for (auto packet : m_packets) {
+    std::size_t prefixWritten = 0U;
+    const auto prefixStatus = ccsds_packet_stream_write_prefix(
+      m_syncPattEnable ? 1 : 0,
+      m_syncPattern,
+      buffer.empty() ? nullptr : buffer.data() + offset,
+      buffer.size() - offset,
+      &prefixWritten);
+    RET_IF_ERR_MSG(prefixStatus != CCSDS_STATUS_OK, ErrorCode::INVALID_DATA,
+                   "Cannot serialize packet stream synchronization prefix.");
+    offset += prefixWritten;
+
+    const auto written = packet.serialize(
+      buffer.data() + offset, buffer.size() - offset);
+    if (!written) return written.error();
+    offset += written.value();
+  }
+
+  RET_IF_ERR_MSG(offset != buffer.size(), ErrorCode::INVALID_DATA,
+                 "Cannot serialize packet stream: unexpected final size.");
   return buffer;
 }
 
 ccsds::ResultBuffer ccsds::Manager::getApplicationDataBuffer() {
   RET_IF_ERR_MSG(m_packets.empty(), ErrorCode::NO_DATA,
                  "Cannot get Application data, no packets have been set.");
-  std::vector<std::uint8_t> data;
+
+  std::size_t totalSize = 0U;
+  for (const auto &packet : m_packets) {
+    const auto view = packet.getDataField().getApplicationDataView();
+    RET_IF_ERR_MSG(view.size > std::numeric_limits<std::size_t>::max() - totalSize,
+                   ErrorCode::INVALID_DATA,
+                   "Cannot reconstruct Application data: total size overflow.");
+    totalSize += view.size;
+  }
+
+  std::vector<std::uint8_t> data(totalSize);
+  ccsds_reassembly_state_t reassembly{};
+  ccsds_reassembly_reset(&reassembly, m_validateEnable ? 1 : 0);
+
   for (std::size_t index = 0U; index < m_packets.size(); ++index) {
+    const auto &packet = m_packets[index];
     if (m_validateEnable) {
-      RET_IF_ERR_MSG(!m_validator.validate(m_packets[index]), ErrorCode::VALIDATION_FAILURE,
+      RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
                      "Validation failure for packet at index " + std::to_string(index));
     }
-    const auto applicationData = m_packets[index].getApplicationDataBytes();
-    data.insert(data.end(), applicationData.begin(), applicationData.end());
+
+    const auto &header = packet.getPrimaryHeader();
+    const ccsds_primary_header_t coreHeader{
+      header.getVersionNumber(),
+      header.getType(),
+      header.getSecondaryHeaderFlag(),
+      header.getAPID(),
+      header.getSequenceFlags(),
+      header.getSequenceCount(),
+      header.getDataLength()
+    };
+    const auto applicationData = packet.getDataField().getApplicationDataView();
+    std::size_t writtenNow = 0U;
+    int complete = 0;
+    const auto status = ccsds_reassembly_accept(
+      &reassembly, &coreHeader, applicationData,
+      data.empty() ? nullptr : data.data(), data.size(),
+      &writtenNow, &complete);
+    (void)writtenNow;
+    (void)complete;
+    RET_IF_ERR_MSG(status != CCSDS_STATUS_OK, ErrorCode::VALIDATION_FAILURE,
+                   "Application-data reassembly failed at packet index "
+                   + std::to_string(index));
   }
+
+  RET_IF_ERR_MSG(reassembly.written != data.size(), ErrorCode::INVALID_DATA,
+                 "Application-data reassembly produced an unexpected size.");
   return data;
 }
 
@@ -288,35 +350,51 @@ ccsds::ResultBool ccsds::Manager::load(const std::vector<Packet> &packets) {
   return true;
 }
 
-ccsds::ResultBool ccsds::Manager::load(const std::vector<std::uint8_t> &packetsBuffer) {
+ccsds::ResultBool ccsds::Manager::load(
+    const std::vector<std::uint8_t> &packetsBuffer) {
   RET_IF_ERR_MSG(packetsBuffer.size() < 7U, ErrorCode::INVALID_DATA,
                  "invalid packet buffer size");
+  return load(packetsBuffer.data(), packetsBuffer.size());
+}
+
+ccsds::ResultBool ccsds::Manager::load(
+    const std::uint8_t *data, const std::size_t size) {
+  RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
+                 "Cannot load packet stream, raw buffer pointer is null");
+  RET_IF_ERR_MSG(size < 7U, ErrorCode::INVALID_DATA,
+                 "invalid packet buffer size");
+
   Manager staged = *this;
-  std::size_t offset{0U};
-  while (offset < packetsBuffer.size()) {
-    if (staged.m_syncPattEnable) {
-      RET_IF_ERR_MSG(packetsBuffer.size() - offset < 4U, ErrorCode::INVALID_DATA,
-                     "Truncated sync pattern.");
-      const std::uint32_t value =
-        (static_cast<std::uint32_t>(packetsBuffer[offset]) << 24U)
-        | (static_cast<std::uint32_t>(packetsBuffer[offset + 1U]) << 16U)
-        | (static_cast<std::uint32_t>(packetsBuffer[offset + 2U]) << 8U)
-        | static_cast<std::uint32_t>(packetsBuffer[offset + 3U]);
-      RET_IF_ERR_MSG(value != staged.m_syncPattern, ErrorCode::INVALID_DATA,
-                     "Sync Pattern mismatch.");
-      offset += 4U;
-    }
-    RET_IF_ERR_MSG(packetsBuffer.size() - offset < 6U, ErrorCode::INVALID_DATA,
-                   "Truncated CCSDS primary header.");
-    const std::vector<std::uint8_t> remaining(
-      packetsBuffer.begin() + static_cast<std::ptrdiff_t>(offset), packetsBuffer.end());
+  ccsds_packet_stream_t stream{};
+  const auto initStatus = ccsds_packet_stream_init(
+    &stream, data, size,
+    CCSDS_PACKET_ERROR_CONTROL_NONE,
+    nullptr,
+    staged.m_syncPattEnable ? 1 : 0,
+    staged.m_syncPattern);
+  RET_IF_ERR_MSG(initStatus != CCSDS_STATUS_OK,
+                 static_cast<ErrorCode>(initStatus),
+                 "Cannot initialize CCSDS packet stream.");
+
+  while (ccsds_packet_stream_remaining(&stream) != 0U) {
+    ccsds_packet_view_t view{};
+    std::size_t frameConsumed = 0U;
+    const auto streamStatus =
+      ccsds_packet_stream_next(&stream, &view, &frameConsumed);
+    (void)frameConsumed;
+    RET_IF_ERR_MSG(streamStatus != CCSDS_STATUS_OK,
+                   static_cast<ErrorCode>(streamStatus),
+                   "Cannot parse next CCSDS packet from stream.");
+
     Packet packet = staged.boundParserPacket();
     packet.setPacketErrorControlMode(staged.boundPacketErrorControlMode());
     std::size_t consumed{};
-    ASSIGN_CP(consumed, packet.deserializeBounded(remaining));
+    ASSIGN_CP(consumed, packet.deserializeBounded(view.packet.data, view.packet.size));
+    RET_IF_ERR_MSG(consumed != view.packet.size, ErrorCode::INVALID_DATA,
+                   "Parsed packet size differs from stream framing.");
     FORWARD_RESULT(staged.addPacket(std::move(packet)));
-    offset += consumed;
   }
+
   *this = std::move(staged);
   return true;
 }

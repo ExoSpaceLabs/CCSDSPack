@@ -2,7 +2,7 @@
 
 ## Normative source
 
-The v2.0.0 PUS-C telecommand evidence is traced to ECSS-E-ST-70-41C, 15 April 2016, clause 7.4.4.1.
+The v2.1.0 PUS-C telecommand evidence is traced to ECSS-E-ST-70-41C, 15 April 2016, clause 7.4.4.1.
 
 Figure 7-9 defines the telecommand packet secondary-header leading fields as:
 

@@ -12,6 +12,7 @@
 #include "CCSDSPacket.h"
 #include "CCSDSResult.h"
 #include "CCSDSValidator.h"
+#include "ccsdspack/c/segmentation.h"
 
 namespace ccsds {
 
@@ -29,7 +30,7 @@ namespace ccsds {
     explicit Manager(Packet packet) {
       m_templatePacket = std::move(packet);
       m_templateIsSet = true;
-      m_sequenceCount = m_templatePacket.getPrimaryHeader().getSequenceCount() & SEQUENCE_COUNT_MASK;
+      m_sequenceCount = m_templatePacket.getPrimaryHeader().getSequenceCount() & CCSDS_SEQUENCE_COUNT_MAX;
       m_templatePacket.setUpdatePacketEnable(false);
       m_validator.setTemplatePacket(m_templatePacket);
       m_validator.configure(true, true, true);
@@ -67,7 +68,7 @@ namespace ccsds {
     }
     [[nodiscard]] ResultBool setSequenceCount(std::uint16_t count);
     [[nodiscard]] std::uint16_t getSequenceCount() const {
-      return m_sequenceCount & SEQUENCE_COUNT_MASK;
+      return m_sequenceCount & CCSDS_SEQUENCE_COUNT_MAX;
     }
 
     [[nodiscard]] ResultBuffer getPacketTemplate();
@@ -98,13 +99,7 @@ namespace ccsds {
 
     [[nodiscard]] ResultBool load(const std::vector<Packet> &packets);
     [[nodiscard]] ResultBool load(const std::vector<std::uint8_t> &packetsBuffer);
-    [[nodiscard]] ResultBool load(const std::uint8_t *data, const std::size_t size) {
-      RET_IF_ERR_MSG(data == nullptr, ErrorCode::NULL_POINTER,
-                     "Cannot load packet stream, raw buffer pointer is null");
-      RET_IF_ERR_MSG(size == 0U, ErrorCode::INVALID_DATA,
-                     "Cannot load packet stream, raw buffer is empty");
-      return load(std::vector<std::uint8_t>(data, data + size));
-    }
+    [[nodiscard]] ResultBool load(const std::uint8_t *data, std::size_t size);
 
     [[nodiscard]] ResultBool read(const std::string &binaryFile);
     [[nodiscard]] ResultBool write(const std::string &binaryFile) const;
@@ -120,7 +115,6 @@ namespace ccsds {
     [[nodiscard]] const std::vector<Packet> &getPacketsReference() const noexcept { return m_packets; }
 
   private:
-    static constexpr std::uint16_t SEQUENCE_COUNT_MASK{0x3FFFU};
     static constexpr std::uint16_t AUTO_SEQUENCE_DISABLED_MASK{0x8000U};
 
     [[nodiscard]] static std::uint16_t packetIdentifier(const Packet &packet);
@@ -129,7 +123,6 @@ namespace ccsds {
     [[nodiscard]] ResultBool validatePacketIdentifier(const Packet &packet) const;
     [[nodiscard]] PacketErrorControlMode boundPacketErrorControlMode() const;
     [[nodiscard]] Packet boundParserPacket() const;
-    void advanceSequenceCount();
     void syncSequenceCountFromPacket(const Packet &packet);
 
     Packet m_templatePacket{};

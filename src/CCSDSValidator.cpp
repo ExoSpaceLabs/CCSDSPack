@@ -4,67 +4,93 @@
 #include "CCSDSValidator.h"
 #include "CCSDSUtils.h"
 #include "PusSecondaryHeaders.h"
+#include <array>
 
 namespace {
-  bool identifierFits(const std::uint32_t value, const std::uint8_t octets) noexcept {
-    if (octets == 0U) return value == 0U;
-    if (octets >= 4U) return true;
-    return value < (1UL << (octets * 8U));
+  ccsds_primary_header_t toCoreHeader(const ccsds::Header &header) noexcept {
+    return {
+      header.getVersionNumber(),
+      header.getType(),
+      header.getSecondaryHeaderFlag(),
+      header.getAPID(),
+      header.getSequenceFlags(),
+      header.getSequenceCount(),
+      header.getDataLength()
+    };
   }
 
-  bool validRevision(const ccsds::pus::Revision revision) noexcept {
-    return revision == ccsds::pus::Revision::A || revision == ccsds::pus::Revision::C;
-  }
-
-  bool validDirection(const ccsds::PacketDirection direction) noexcept {
-    return direction == ccsds::PacketDirection::Telecommand
-           || direction == ccsds::PacketDirection::Telemetry;
-  }
-
-  bool reservedBitsValid(const std::vector<std::uint8_t> &bytes,
-                         const ccsds::pus::Revision revision,
-                         const ccsds::PacketDirection direction) noexcept {
-    if (bytes.empty()) return false;
-    if (revision == ccsds::pus::Revision::A
-        && direction == ccsds::PacketDirection::Telecommand) {
-      return (bytes[0] & 0x80U) == 0U && ((bytes[0] >> 4U) & 0x07U) == 1U;
+  std::uint8_t toCoreDirection(const ccsds::PacketDirection direction) noexcept {
+    switch (direction) {
+      case ccsds::PacketDirection::Telemetry:
+        return CCSDS_PACKET_DIRECTION_TELEMETRY;
+      case ccsds::PacketDirection::Telecommand:
+        return CCSDS_PACKET_DIRECTION_TELECOMMAND;
+      case ccsds::PacketDirection::Unspecified:
+        return CCSDS_PACKET_DIRECTION_UNSPECIFIED;
+      default:
+        return 0xFFU;
     }
-    if (revision == ccsds::pus::Revision::A
-        && direction == ccsds::PacketDirection::Telemetry) {
-      return bytes[0] == 0x10U;
-    }
-    if (revision == ccsds::pus::Revision::C) return (bytes[0] >> 4U) == 2U;
-    return false;
   }
 
-  bool spareFieldsValid(const std::vector<std::uint8_t> &bytes,
-                        const std::uint8_t spareOctets) noexcept {
-    const auto spare = static_cast<std::size_t>(spareOctets);
-    if (spare > bytes.size()) return false;
-    for (std::size_t i = bytes.size() - spare; i < bytes.size(); ++i)
-      if (bytes[i] != 0U) return false;
-    return true;
+  ccsds_cuc_config_t toCoreCuc(const ccsds::time::CucConfiguration &cuc) noexcept {
+    return {
+      static_cast<ccsds_cuc_epoch_t>(cuc.epoch),
+      static_cast<ccsds_cuc_pfield_mode_t>(cuc.pField),
+      cuc.coarseOctets,
+      cuc.fineOctets
+    };
   }
 
-  bool cucIsEmpty(const ccsds::time::CucConfiguration &cuc) noexcept {
-    return cuc.epoch == ccsds::time::Epoch::Unspecified
-           && cuc.pField == ccsds::time::PFieldMode::Implicit
-           && cuc.coarseOctets == 0U && cuc.fineOctets == 0U;
+  bool coreTimestampValid(const ccsds::time::CucTime &timestamp,
+                          const ccsds::time::CucConfiguration &cuc) noexcept {
+    const auto config = toCoreCuc(cuc);
+    const ccsds_cuc_time_t value{timestamp.coarse, timestamp.fine};
+    std::array<std::uint8_t, 8U> bytes{};
+    std::size_t written = 0U;
+    return ccsds_cuc_encode(
+      &value, &config, bytes.data(), bytes.size(), &written) == CCSDS_STATUS_OK;
   }
 
-  bool pusTailoringValid(const ccsds::pus::SecondaryHeader &header) {
-    if (!validRevision(header.getRevision()) || !validDirection(header.getDirection())) return false;
+  bool coreTailoringValid(const ccsds::pus::SecondaryHeader &header) noexcept {
     if (header.getDirection() == ccsds::PacketDirection::Telecommand) {
       const auto &tc = static_cast<const ccsds::pus::TcSecondaryHeader &>(header);
-      if (!ccsds::pus::validIdentifierWidth(tc.getSourceIdOctets())) return false;
-      return header.getRevision() != ccsds::pus::Revision::C || tc.getSourceIdOctets() == 2U;
-    }
-    const auto &tm = static_cast<const ccsds::pus::TmSecondaryHeader &>(header);
-    if (!ccsds::pus::validIdentifierWidth(tm.getDestinationIdOctets())) return false;
-    if (header.getRevision() == ccsds::pus::Revision::C && tm.getDestinationIdOctets() != 2U)
+      if (header.getRevision() == ccsds::pus::Revision::A) {
+        const ccsds_pus_a_tc_tailoring_t tailoring{
+          tc.getSourceIdOctets(), header.getSecondaryHeaderSpareOctets()
+        };
+        return ccsds_pus_a_tc_validate_tailoring(&tailoring) == CCSDS_STATUS_OK;
+      }
+      if (header.getRevision() == ccsds::pus::Revision::C) {
+        return tc.getSourceIdOctets() == 2U;
+      }
       return false;
-    if (tm.timestampPresent()) return static_cast<bool>(ccsds::time::validate(tm.getCucConfiguration()));
-    return cucIsEmpty(tm.getCucConfiguration());
+    }
+
+    if (header.getDirection() == ccsds::PacketDirection::Telemetry) {
+      const auto &tm = static_cast<const ccsds::pus::TmSecondaryHeader &>(header);
+      if (header.getRevision() == ccsds::pus::Revision::A) {
+        const auto &aTm = static_cast<const ccsds::pus::rev_a::TmHeader &>(header);
+        const ccsds_pus_a_tm_tailoring_t tailoring{
+          tm.getDestinationIdOctets(),
+          static_cast<std::uint8_t>(aTm.packetSubcounterPresent() ? 1U : 0U),
+          static_cast<std::uint8_t>(tm.timestampPresent() ? 1U : 0U),
+          toCoreCuc(tm.getCucConfiguration()),
+          header.getSecondaryHeaderSpareOctets()
+        };
+        return ccsds_pus_a_tm_validate_tailoring(&tailoring) == CCSDS_STATUS_OK;
+      }
+      if (header.getRevision() == ccsds::pus::Revision::C) {
+        if (tm.getDestinationIdOctets() != 2U) return false;
+        const ccsds_pus_c_tm_tailoring_t tailoring{
+          static_cast<std::uint8_t>(tm.timestampPresent() ? 1U : 0U),
+          toCoreCuc(tm.getCucConfiguration()),
+          header.getSecondaryHeaderSpareOctets()
+        };
+        return ccsds_pus_c_tm_validate_tailoring(&tailoring) == CCSDS_STATUS_OK;
+      }
+    }
+
+    return false;
   }
 
   bool sameSecondaryContract(const ccsds::Packet &lhs, const ccsds::Packet &rhs) noexcept {
@@ -83,35 +109,7 @@ namespace {
 }
 
 const char *ccsds::validationCodeName(const ValidationCode code) noexcept {
-  switch (code) {
-    case ValidationCode::PrimaryHeader: return "CCSDS primary header";
-    case ValidationCode::PacketVersion: return "CCSDS packet version";
-    case ValidationCode::PacketDataLength: return "Packet Data Length";
-    case ValidationCode::Crc16: return "CRC16";
-    case ValidationCode::SecondaryHeaderPresence: return "Secondary-header presence";
-    case ValidationCode::SecondaryHeaderDirection: return "Secondary-header direction / Packet Type";
-    case ValidationCode::SequenceFlags: return "Sequence flags";
-    case ValidationCode::SequenceCount: return "Sequence count";
-    case ValidationCode::PacketIdentifier: return "Packet Identification";
-    case ValidationCode::SegmentationClass: return "Segmentation class";
-    case ValidationCode::TemplatePacketErrorControl: return "Template packet error control";
-    case ValidationCode::TemplateSecondaryHeader: return "Template secondary-header contract";
-    case ValidationCode::PusHeader: return "PUS secondary header";
-    case ValidationCode::PusRevision: return "PUS revision";
-    case ValidationCode::PusDirection: return "PUS direction";
-    case ValidationCode::PusPacketType: return "PUS direction / Packet Type";
-    case ValidationCode::PusTailoring: return "PUS tailoring";
-    case ValidationCode::PusSecondaryHeaderSize: return "PUS secondary-header size";
-    case ValidationCode::PusReservedBits: return "PUS reserved/version bits";
-    case ValidationCode::PusSpareFields: return "PUS spare fields";
-    case ValidationCode::PusAcknowledgement: return "PUS acknowledgement flags";
-    case ValidationCode::PusSourceId: return "PUS source ID";
-    case ValidationCode::PusDestinationId: return "PUS destination ID";
-    case ValidationCode::PusPacketSubcounter: return "PUS-A packet subcounter";
-    case ValidationCode::PusTimeReferenceStatus: return "PUS-C time-reference status";
-    case ValidationCode::PusTimestamp: return "PUS CUC timestamp";
-  }
-  return "Unknown validation check";
+  return ccsds_validation_code_name(static_cast<ccsds_validation_code_t>(code));
 }
 
 void ccsds::Validator::configure(const bool validatePacketCoherence,
@@ -123,145 +121,170 @@ void ccsds::Validator::configure(const bool validatePacketCoherence,
 }
 
 void ccsds::Validator::acceptSequence(const Header &header) noexcept {
-  const auto next = static_cast<std::uint16_t>((header.getSequenceCount() + 1U) & SEQUENCE_COUNT_MASK);
-  auto state = static_cast<std::uint16_t>(SEQUENCE_INITIALIZED_MASK | next);
-  if (header.getSequenceFlags() == FIRST_SEGMENT
-      || header.getSequenceFlags() == CONTINUING_SEGMENT) state |= SEGMENT_OPEN_MASK;
-  m_sequenceCounter = state;
+  const auto coreHeader = toCoreHeader(header);
+  (void)ccsds_sequence_validator_accept(&m_sequenceState, &coreHeader);
 }
 
 ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
   m_report = {};
   const auto &header = packet.getPrimaryHeader();
-  const auto headerData = header.serialize();
-  const bool primaryHeaderValid = header.getHeaderStatus() != INVALID && headerData.size() == 6U;
-  setCheck(ValidationCode::PrimaryHeader, primaryHeaderValid);
-  if (!primaryHeaderValid) return m_report;
+  const auto coreHeader = toCoreHeader(header);
+  const bool primaryHeaderValid =
+    header.getHeaderStatus() != INVALID
+    && ccsds_primary_header_validate(&coreHeader) == CCSDS_STATUS_OK;
 
-  bool sequenceFlagsValid{true};
-  bool sequenceCountValid{true};
-
-  if (m_validatePacketCoherence) {
-    setCheck(ValidationCode::PacketVersion, header.getVersionNumber() == 0U);
-    const auto serializedSize = packet.getSerializedSize();
-    const auto packetDataFieldSize = serializedSize >= 6U ? serializedSize - 6U : 0U;
-    setCheck(ValidationCode::PacketDataLength,
-             packetDataFieldSize > 0U && header.getDataLength() == packetDataFieldSize - 1U);
-
+  if (!m_validatePacketCoherence) {
+    setCheck(ValidationCode::PrimaryHeader, primaryHeaderValid);
+    if (!primaryHeaderValid) return m_report;
+  } else {
+    const auto secondary = packet.getSecondaryHeader();
+    bool crcValid{true};
     if (packet.getPacketErrorControlMode() == PacketErrorControlMode::CRC16) {
-      auto crcInput = headerData;
+      auto crcInput = header.serialize();
       const auto dataFieldBytes = packet.getFullDataFieldBytes();
       crcInput.insert(crcInput.end(), dataFieldBytes.begin(), dataFieldBytes.end());
       const CRC16Config crcConfig{};
       const auto calculatedCRC = ccsds::crc16(
         crcInput, crcConfig.polynomial, crcConfig.initialValue, crcConfig.finalXorValue);
-      setCheck(ValidationCode::Crc16, calculatedCRC == packet.getCRC());
+      crcValid = calculatedCRC == packet.getCRC();
     }
 
-    const auto secondary = packet.getSecondaryHeader();
-    const bool secondaryPresence =
-      (header.getSecondaryHeaderFlag() != 0U) == static_cast<bool>(secondary);
-    setCheck(ValidationCode::SecondaryHeaderPresence, secondaryPresence);
-
-    if (secondary && secondary->getDirection() != PacketDirection::Unspecified) {
-      setCheck(ValidationCode::SecondaryHeaderDirection,
-               header.getType() == packetTypeForDirection(secondary->getDirection()));
+    const ccsds_packet_coherence_input_t input{
+      coreHeader,
+      packet.getSerializedSize(),
+      static_cast<std::uint8_t>(header.getHeaderStatus() != INVALID),
+      static_cast<std::uint8_t>(static_cast<bool>(secondary)),
+      secondary ? toCoreDirection(secondary->getDirection())
+                : static_cast<std::uint8_t>(CCSDS_PACKET_DIRECTION_UNSPECIFIED),
+      static_cast<std::uint8_t>(
+        packet.getPacketErrorControlMode() == PacketErrorControlMode::CRC16),
+      static_cast<std::uint8_t>(crcValid)
+    };
+    ccsds_validation_report_t coreReport{};
+    ccsds_validation_report_reset(&coreReport);
+    const auto coreStatus = ccsds_validate_packet_coherence(
+      &input, &m_sequenceState, m_validateSequenceCount ? 1 : 0, &coreReport);
+    if (coreStatus != CCSDS_STATUS_OK) {
+      setCheck(ValidationCode::PrimaryHeader, false);
+      return m_report;
     }
+    for (std::size_t i = 0U; i < coreReport.size; ++i) {
+      setCheck(
+        static_cast<ValidationCode>(coreReport.checks[i].code),
+        coreReport.checks[i].passed != 0U);
+    }
+    if (!m_report.passed(ValidationCode::PrimaryHeader)) return m_report;
 
     if (secondary && secondary->isPusHeader()) {
-      setCheck(ValidationCode::PusHeader, true);
       const auto &pusHeader = static_cast<const pus::SecondaryHeader &>(*secondary);
-      const bool revisionValid = validRevision(pusHeader.getRevision());
-      const bool directionValid = validDirection(pusHeader.getDirection());
-      setCheck(ValidationCode::PusRevision, revisionValid);
-      setCheck(ValidationCode::PusDirection, directionValid);
-      setCheck(ValidationCode::PusPacketType,
-               directionValid
-               && header.getType() == packetTypeForDirection(pusHeader.getDirection()));
-      setCheck(ValidationCode::PusTailoring, pusTailoringValid(pusHeader));
-
       const auto bytes = secondary->serialize();
-      const bool sizeValid = !bytes.empty() && bytes.size() == secondary->getSize();
-      setCheck(ValidationCode::PusSecondaryHeaderSize, sizeValid);
-      setCheck(ValidationCode::PusReservedBits,
-               sizeValid && reservedBitsValid(bytes, pusHeader.getRevision(), pusHeader.getDirection()));
-      setCheck(ValidationCode::PusSpareFields,
-               sizeValid && spareFieldsValid(bytes, pusHeader.getSecondaryHeaderSpareOctets()));
+      ccsds_pus_coherence_input_t pusInput{
+        static_cast<std::uint8_t>(pusHeader.getRevision()),
+        toCoreDirection(pusHeader.getDirection()),
+        header.getType(),
+        static_cast<std::uint8_t>(coreTailoringValid(pusHeader)),
+        {
+          bytes.empty() ? nullptr : bytes.data(),
+          bytes.size()
+        },
+        secondary->getSize(),
+        pusHeader.getSecondaryHeaderSpareOctets(),
+        0U,
+        0U,
+        0U,
+        0U,
+        0U,
+        1U,
+        0U,
+        0U,
+        0U
+      };
 
       if (pusHeader.getDirection() == PacketDirection::Telecommand) {
         const auto &tc = static_cast<const pus::TcSecondaryHeader &>(pusHeader);
-        setCheck(ValidationCode::PusAcknowledgement, tc.getAcknowledgementFlags() <= 0x0FU);
-        setCheck(ValidationCode::PusSourceId,
-                 identifierFits(tc.getSourceId(), tc.getSourceIdOctets()));
+        pusInput.acknowledgement_flags = tc.getAcknowledgementFlags();
+        pusInput.identifier_octets = tc.getSourceIdOctets();
+        pusInput.identifier_value = tc.getSourceId();
       } else if (pusHeader.getDirection() == PacketDirection::Telemetry) {
         const auto &tm = static_cast<const pus::TmSecondaryHeader &>(pusHeader);
-        setCheck(ValidationCode::PusDestinationId,
-                 identifierFits(tm.getDestinationId(), tm.getDestinationIdOctets()));
-        if (tm.timestampPresent()) {
-          const auto timestamp = time::serialize(tm.getTimestamp(), tm.getCucConfiguration());
-          setCheck(ValidationCode::PusTimestamp, static_cast<bool>(timestamp));
-        } else {
-          setCheck(ValidationCode::PusTimestamp, tm.getTimestamp() == time::CucTime{});
-        }
+        pusInput.identifier_octets = tm.getDestinationIdOctets();
+        pusInput.identifier_value = tm.getDestinationId();
+        pusInput.timestamp_present =
+          static_cast<std::uint8_t>(tm.timestampPresent() ? 1U : 0U);
+        pusInput.timestamp_valid =
+          static_cast<std::uint8_t>(
+            tm.timestampPresent()
+            && coreTimestampValid(tm.getTimestamp(), tm.getCucConfiguration()));
+        pusInput.timestamp_zero_when_absent =
+          static_cast<std::uint8_t>(tm.getTimestamp() == time::CucTime{});
+
         if (pusHeader.getRevision() == pus::Revision::A) {
           const auto &aTm = static_cast<const pus::rev_a::TmHeader &>(pusHeader);
-          setCheck(ValidationCode::PusPacketSubcounter,
-                   aTm.packetSubcounterPresent() || aTm.getPacketSubcounter() == 0U);
+          pusInput.packet_subcounter_present =
+            static_cast<std::uint8_t>(aTm.packetSubcounterPresent() ? 1U : 0U);
+          pusInput.packet_subcounter = aTm.getPacketSubcounter();
         } else if (pusHeader.getRevision() == pus::Revision::C) {
           const auto &cTm = static_cast<const pus::rev_c::TmHeader &>(pusHeader);
-          setCheck(ValidationCode::PusTimeReferenceStatus,
-                   cTm.getTimeReferenceStatus() <= 0x0FU);
+          pusInput.time_reference_status = cTm.getTimeReferenceStatus();
         }
       }
-    }
 
-    const auto flags = static_cast<ESequenceFlag>(header.getSequenceFlags());
-    const bool open = segmentOpen();
-    switch (flags) {
-      case UNSEGMENTED:
-      case FIRST_SEGMENT: sequenceFlagsValid = !open; break;
-      case CONTINUING_SEGMENT:
-      case LAST_SEGMENT: sequenceFlagsValid = open; break;
-      default: sequenceFlagsValid = false; break;
-    }
-    setCheck(ValidationCode::SequenceFlags, sequenceFlagsValid);
-    if (m_validateSequenceCount) {
-      sequenceCountValid = !sequenceInitialized()
-                           || header.getSequenceCount() == expectedSequenceCount();
-      setCheck(ValidationCode::SequenceCount, sequenceCountValid);
+      ccsds_validation_report_t pusReport{};
+      ccsds_validation_report_reset(&pusReport);
+      const auto pusStatus = ccsds_validate_pus_coherence(&pusInput, &pusReport);
+      if (pusStatus != CCSDS_STATUS_OK) {
+        setCheck(ValidationCode::PusHeader, false);
+        return m_report;
+      }
+      for (std::size_t i = 0U; i < pusReport.size; ++i) {
+        setCheck(
+          static_cast<ValidationCode>(pusReport.checks[i].code),
+          pusReport.checks[i].passed != 0U);
+      }
     }
   }
 
   if (m_validateAgainstTemplate) {
     const auto &templateHeader = m_templatePacket.getPrimaryHeader();
-    const auto templateHeaderData = templateHeader.serialize();
-    const bool templateHeaderValid = templateHeader.getHeaderStatus() != INVALID
-                                     && templateHeaderData.size() == 6U;
-    setCheck(ValidationCode::PacketIdentifier,
-             templateHeaderValid && templateHeaderData[0] == headerData[0]
-             && templateHeaderData[1] == headerData[1]);
-    bool segmentationClassValid{false};
-    if (templateHeaderValid) {
-      segmentationClassValid = templateHeader.getSequenceFlags() == UNSEGMENTED
-        ? header.getSequenceFlags() == UNSEGMENTED
-        : header.getSequenceFlags() != UNSEGMENTED;
+    const ccsds_template_coherence_input_t templateInput{
+      toCoreHeader(templateHeader),
+      static_cast<std::uint8_t>(templateHeader.getHeaderStatus() != INVALID),
+      static_cast<std::uint8_t>(
+        m_templatePacket.getPacketErrorControlMode() == packet.getPacketErrorControlMode()),
+      static_cast<std::uint8_t>(sameSecondaryContract(m_templatePacket, packet))
+    };
+    ccsds_validation_report_t coreReport{};
+    ccsds_validation_report_reset(&coreReport);
+    const auto coreStatus = ccsds_validate_template_coherence(
+      &coreHeader, &templateInput, &coreReport);
+    if (coreStatus != CCSDS_STATUS_OK) {
+      setCheck(ValidationCode::PacketIdentifier, false);
+      return m_report;
     }
-    setCheck(ValidationCode::SegmentationClass, segmentationClassValid);
-    setCheck(ValidationCode::TemplatePacketErrorControl,
-             m_templatePacket.getPacketErrorControlMode() == packet.getPacketErrorControlMode());
-    setCheck(ValidationCode::TemplateSecondaryHeader,
-             sameSecondaryContract(m_templatePacket, packet));
+    for (std::size_t i = 0U; i < coreReport.size; ++i) {
+      setCheck(
+        static_cast<ValidationCode>(coreReport.checks[i].code),
+        coreReport.checks[i].passed != 0U);
+    }
   }
 
+  const bool sequenceFlagsValid =
+    !m_validatePacketCoherence
+    || m_report.passed(ValidationCode::SequenceFlags);
+  const bool sequenceCountValid =
+    !m_validatePacketCoherence
+    || !m_validateSequenceCount
+    || m_report.passed(ValidationCode::SequenceCount);
+
   if (m_validatePacketCoherence && sequenceFlagsValid
-      && (!m_validateSequenceCount || sequenceCountValid) && m_report.valid()) {
+      && sequenceCountValid && m_report.valid()) {
     acceptSequence(header);
   }
   return m_report;
 }
 
 void ccsds::Validator::clear() {
-  m_sequenceCounter = 0U;
+  ccsds_sequence_validator_reset(&m_sequenceState);
   m_report = {};
   m_templatePacket = {};
   m_templatePacket.setUpdatePacketEnable(false);

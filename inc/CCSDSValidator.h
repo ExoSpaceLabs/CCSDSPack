@@ -8,37 +8,38 @@
 #include <cstddef>
 #include <cstdint>
 #include "CCSDSPacket.h"
+#include "ccsdspack/c/validation.h"
 
 namespace ccsds {
 
   /** @brief Stable validation checks exposed by ccsds::Validator. */
   enum class ValidationCode : std::uint8_t {
-    PrimaryHeader = 0,
-    PacketVersion,
-    PacketDataLength,
-    Crc16,
-    SecondaryHeaderPresence,
-    SecondaryHeaderDirection,
-    SequenceFlags,
-    SequenceCount,
-    PacketIdentifier,
-    SegmentationClass,
-    TemplatePacketErrorControl,
-    TemplateSecondaryHeader,
-    PusHeader,
-    PusRevision,
-    PusDirection,
-    PusPacketType,
-    PusTailoring,
-    PusSecondaryHeaderSize,
-    PusReservedBits,
-    PusSpareFields,
-    PusAcknowledgement,
-    PusSourceId,
-    PusDestinationId,
-    PusPacketSubcounter,
-    PusTimeReferenceStatus,
-    PusTimestamp
+    PrimaryHeader = CCSDS_VALIDATION_PRIMARY_HEADER,
+    PacketVersion = CCSDS_VALIDATION_PACKET_VERSION,
+    PacketDataLength = CCSDS_VALIDATION_PACKET_DATA_LENGTH,
+    Crc16 = CCSDS_VALIDATION_CRC16,
+    SecondaryHeaderPresence = CCSDS_VALIDATION_SECONDARY_HEADER_PRESENCE,
+    SecondaryHeaderDirection = CCSDS_VALIDATION_SECONDARY_HEADER_DIRECTION,
+    SequenceFlags = CCSDS_VALIDATION_SEQUENCE_FLAGS,
+    SequenceCount = CCSDS_VALIDATION_SEQUENCE_COUNT,
+    PacketIdentifier = CCSDS_VALIDATION_PACKET_IDENTIFIER,
+    SegmentationClass = CCSDS_VALIDATION_SEGMENTATION_CLASS,
+    TemplatePacketErrorControl = CCSDS_VALIDATION_TEMPLATE_PACKET_ERROR_CONTROL,
+    TemplateSecondaryHeader = CCSDS_VALIDATION_TEMPLATE_SECONDARY_HEADER,
+    PusHeader = CCSDS_VALIDATION_PUS_HEADER,
+    PusRevision = CCSDS_VALIDATION_PUS_REVISION,
+    PusDirection = CCSDS_VALIDATION_PUS_DIRECTION,
+    PusPacketType = CCSDS_VALIDATION_PUS_PACKET_TYPE,
+    PusTailoring = CCSDS_VALIDATION_PUS_TAILORING,
+    PusSecondaryHeaderSize = CCSDS_VALIDATION_PUS_SECONDARY_HEADER_SIZE,
+    PusReservedBits = CCSDS_VALIDATION_PUS_RESERVED_BITS,
+    PusSpareFields = CCSDS_VALIDATION_PUS_SPARE_FIELDS,
+    PusAcknowledgement = CCSDS_VALIDATION_PUS_ACKNOWLEDGEMENT,
+    PusSourceId = CCSDS_VALIDATION_PUS_SOURCE_ID,
+    PusDestinationId = CCSDS_VALIDATION_PUS_DESTINATION_ID,
+    PusPacketSubcounter = CCSDS_VALIDATION_PUS_PACKET_SUBCOUNTER,
+    PusTimeReferenceStatus = CCSDS_VALIDATION_PUS_TIME_REFERENCE_STATUS,
+    PusTimestamp = CCSDS_VALIDATION_PUS_TIMESTAMP
   };
 
   [[nodiscard]] const char *validationCodeName(ValidationCode code) noexcept;
@@ -51,7 +52,7 @@ namespace ccsds {
   /** @brief Fixed-capacity structured validation result with no dynamic allocation. */
   class ValidationReport {
   public:
-    static constexpr std::size_t Capacity{32U};
+    static constexpr std::size_t Capacity{CCSDS_VALIDATION_REPORT_CAPACITY};
 
     [[nodiscard]] bool valid() const noexcept {
       for (std::size_t i = 0U; i < m_size; ++i) if (!m_checks[i].passed) return false;
@@ -110,19 +111,6 @@ namespace ccsds {
     void clear();
 
   private:
-    static constexpr std::uint16_t SEQUENCE_COUNT_MASK{0x3FFFU};
-    static constexpr std::uint16_t SEGMENT_OPEN_MASK{0x4000U};
-    static constexpr std::uint16_t SEQUENCE_INITIALIZED_MASK{0x8000U};
-
-    [[nodiscard]] bool sequenceInitialized() const noexcept {
-      return (m_sequenceCounter & SEQUENCE_INITIALIZED_MASK) != 0U;
-    }
-    [[nodiscard]] bool segmentOpen() const noexcept {
-      return (m_sequenceCounter & SEGMENT_OPEN_MASK) != 0U;
-    }
-    [[nodiscard]] std::uint16_t expectedSequenceCount() const noexcept {
-      return m_sequenceCounter & SEQUENCE_COUNT_MASK;
-    }
     void acceptSequence(const Header &header) noexcept;
     void setCheck(ValidationCode code, bool passed) noexcept { m_report.set(code, passed); }
 
@@ -130,7 +118,7 @@ namespace ccsds {
     bool m_validatePacketCoherence{true};
     bool m_validateAgainstTemplate{false};
     bool m_validateSequenceCount{true};
-    std::uint16_t m_sequenceCounter{0U};
+    ccsds_sequence_validator_t m_sequenceState{};
     ValidationReport m_report{};
   };
 } // namespace ccsds

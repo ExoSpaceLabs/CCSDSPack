@@ -1,0 +1,390 @@
+// Copyright 2025-2026 ExoSpaceLabs
+// SPDX-License-Identifier: Apache-2.0
+
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include "ccsdspack/c/ccsdspack.h"
+
+int main(void) {
+    static const uint8_t bytes[CCSDS_PRIMARY_HEADER_SIZE] = {
+        0x19U, 0x23U, 0xC0U, 0x2AU, 0x00U, 0x10U
+    };
+    ccsds_primary_header_t header;
+    size_t packet_size = 0U;
+
+    if (ccsds_primary_header_decode(bytes, sizeof(bytes), &header) != CCSDS_STATUS_OK) {
+        return 1;
+    }
+    if (header.apid != 0x0123U || header.sequence_count != 0x002AU) {
+        return 2;
+    }
+    if (ccsds_packet_declared_size(bytes, sizeof(bytes), &packet_size) != CCSDS_STATUS_OK) {
+        return 3;
+    }
+    if (packet_size != 23U) {
+        return 4;
+    }
+
+    {
+        static const uint8_t expected[] = {
+            0x1FU, 0x01U, 0x02U, 0x03U, 0x04U, 0xA0U, 0xB0U, 0xC0U
+        };
+        const ccsds_cuc_config_t config = {
+            CCSDS_CUC_EPOCH_CCSDS_1958_TAI,
+            CCSDS_CUC_PFIELD_EXPLICIT,
+            4U,
+            3U
+        };
+        const ccsds_cuc_time_t value = {
+            UINT64_C(0x01020304), UINT64_C(0xA0B0C0)
+        };
+        uint8_t encoded[sizeof(expected)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_cuc_encode(&value, &config, encoded, sizeof(encoded), &written)
+            != CCSDS_STATUS_OK) {
+            return 5;
+        }
+        if (written != sizeof(expected)) {
+            return 6;
+        }
+        for (size_t index = 0U; index < sizeof(expected); ++index) {
+            if (encoded[index] != expected[index]) {
+                return 7;
+            }
+        }
+    }
+
+    {
+        uint8_t packet[11] = {
+            0x01U, 0x23U, 0xC0U, 0x2AU, 0x00U, 0x04U,
+            0xAAU, 0xBBU, 0xCCU, 0x00U, 0x00U
+        };
+        ccsds_packet_view_t view;
+        uint16_t crc = 0U;
+
+        if (ccsds_crc16_ccitt_false(packet, 9U, &crc) != CCSDS_STATUS_OK) {
+            return 8;
+        }
+        ccsds_store_be16(packet + 9U, crc);
+        if (ccsds_packet_view_parse(packet, sizeof(packet),
+                                    CCSDS_PACKET_ERROR_CONTROL_CRC16,
+                                    NULL, &view) != CCSDS_STATUS_OK) {
+            return 9;
+        }
+        if (view.packet.data != packet
+            || view.data_field.data != packet + 6U
+            || view.data_field.size != 3U
+            || view.consumed != sizeof(packet)) {
+            return 10;
+        }
+    }
+
+    {
+        static const uint8_t expected[] = {0x2FU, 0x11U, 0x01U, 0x12U, 0x34U};
+        const ccsds_pus_c_tc_tailoring_t tailoring = {0U};
+        const ccsds_pus_tc_fields_t fields = {
+            0x0FU, 17U, 1U, UINT32_C(0x1234)
+        };
+        ccsds_pus_tc_fields_t decoded = {0U, 0U, 0U, 0U};
+        uint8_t encoded[sizeof(expected)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_pus_c_tc_encode(&fields, &tailoring,
+                                  encoded, sizeof(encoded), &written)
+            != CCSDS_STATUS_OK) {
+            return 11;
+        }
+        if (written != sizeof(expected)) {
+            return 12;
+        }
+        for (size_t index = 0U; index < sizeof(expected); ++index) {
+            if (encoded[index] != expected[index]) {
+                return 13;
+            }
+        }
+        if (ccsds_pus_c_tc_decode(encoded, sizeof(encoded),
+                                  &tailoring, &decoded)
+            != CCSDS_STATUS_OK) {
+            return 14;
+        }
+        if (decoded.source_id != fields.source_id
+            || decoded.acknowledgement_flags != fields.acknowledgement_flags) {
+            return 15;
+        }
+    }
+
+    {
+        static const uint8_t expected[] = {
+            0x23U, 0x03U, 0x19U, 0x12U, 0x34U, 0xABU, 0xCDU
+        };
+        const ccsds_pus_c_tm_tailoring_t tailoring = {
+            0U,
+            {CCSDS_CUC_EPOCH_UNSPECIFIED, CCSDS_CUC_PFIELD_IMPLICIT, 0U, 0U},
+            0U
+        };
+        const ccsds_pus_c_tm_fields_t fields = {
+            3U, 3U, 25U, 0x1234U, UINT32_C(0xABCD),
+            {UINT64_C(0), UINT64_C(0)}
+        };
+        ccsds_pus_c_tm_fields_t decoded = {0};
+        uint8_t encoded[sizeof(expected)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_pus_c_tm_encode(&fields, &tailoring,
+                                  encoded, sizeof(encoded), &written)
+            != CCSDS_STATUS_OK) {
+            return 16;
+        }
+        if (written != sizeof(expected)) {
+            return 17;
+        }
+        for (size_t index = 0U; index < sizeof(expected); ++index) {
+            if (encoded[index] != expected[index]) {
+                return 18;
+            }
+        }
+        if (ccsds_pus_c_tm_decode(encoded, sizeof(encoded),
+                                  &tailoring, &decoded)
+            != CCSDS_STATUS_OK) {
+            return 19;
+        }
+        if (decoded.message_type_counter != fields.message_type_counter
+            || decoded.destination_id != fields.destination_id
+            || decoded.time_reference_status != fields.time_reference_status) {
+            return 20;
+        }
+    }
+
+    {
+        ccsds_validation_report_t report;
+        ccsds_sequence_validator_t sequence = {0U};
+        ccsds_primary_header_t sequence_header = {
+            0U, 0U, 0U, 42U, 3U, CCSDS_SEQUENCE_COUNT_MAX, 0U
+        };
+
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validation_report_set(
+              &report, CCSDS_VALIDATION_PRIMARY_HEADER, 1)
+            != CCSDS_STATUS_OK) {
+            return 21;
+        }
+        if (!ccsds_validation_report_valid(&report)
+            || !ccsds_validation_report_passed(
+                 &report, CCSDS_VALIDATION_PRIMARY_HEADER)) {
+            return 22;
+        }
+        if (ccsds_sequence_validator_accept(&sequence, &sequence_header)
+            != CCSDS_STATUS_OK) {
+            return 23;
+        }
+        if (ccsds_sequence_validator_expected_count(&sequence) != 0U
+            || !ccsds_sequence_count_valid(&sequence, 0U)
+            || strcmp(ccsds_validation_code_name(
+                        CCSDS_VALIDATION_PUS_TIMESTAMP),
+                      "PUS CUC timestamp") != 0) {
+            return 24;
+        }
+    }
+
+    {
+        ccsds_segment_plan_t plan;
+        size_t count = 0U;
+
+        if (ccsds_segmentation_packet_count(40U, 16U, &count)
+            != CCSDS_STATUS_OK || count != 3U) {
+            return 25;
+        }
+        if (ccsds_segmentation_plan(40U, 16U, 2U, 0x3FFFU, 1, &plan)
+            != CCSDS_STATUS_OK) {
+            return 26;
+        }
+        if (plan.offset != 32U || plan.size != 8U
+            || plan.sequence_flags != CCSDS_SEQUENCE_LAST
+            || plan.sequence_count != 1U
+            || ccsds_sequence_after_packets(0x3FFFU, 3U, 1) != 2U) {
+            return 27;
+        }
+    }
+
+    {
+        static const uint8_t first[] = {0xAAU, 0xBBU};
+        static const uint8_t last[] = {0xCCU};
+        static const uint8_t expected[] = {0xAAU, 0xBBU, 0xCCU};
+        ccsds_reassembly_state_t state;
+        ccsds_primary_header_t h = {
+            0U, 0U, 0U, 42U, CCSDS_SEQUENCE_FIRST, 10U, 0U
+        };
+        uint8_t output[sizeof(expected)] = {0U};
+        size_t written = 0U;
+        int complete = 0;
+
+        ccsds_reassembly_reset(&state, 1);
+        if (ccsds_reassembly_accept(
+              &state, &h, (ccsds_buffer_view_t){first, sizeof(first)},
+              output, sizeof(output), &written, &complete)
+            != CCSDS_STATUS_OK || complete != 0) {
+            return 28;
+        }
+
+        h.sequence_flags = CCSDS_SEQUENCE_LAST;
+        h.sequence_count = 11U;
+        if (ccsds_reassembly_accept(
+              &state, &h, (ccsds_buffer_view_t){last, sizeof(last)},
+              output, sizeof(output), &written, &complete)
+            != CCSDS_STATUS_OK || complete == 0) {
+            return 29;
+        }
+        if (state.written != sizeof(expected)
+            || memcmp(output, expected, sizeof(expected)) != 0) {
+            return 30;
+        }
+    }
+
+    {
+        static const uint8_t stream_bytes[] = {
+            0x00U, 0x01U, 0xC0U, 0x01U, 0x00U, 0x01U, 0xAAU, 0xBBU,
+            0x00U, 0x01U, 0xC0U, 0x02U, 0x00U, 0x00U, 0xCCU
+        };
+        ccsds_packet_stream_t stream;
+        ccsds_packet_view_t view;
+        size_t frame_consumed = 0U;
+
+        if (ccsds_packet_stream_init(
+              &stream, stream_bytes, sizeof(stream_bytes),
+              CCSDS_PACKET_ERROR_CONTROL_NONE, NULL,
+              0, 0U) != CCSDS_STATUS_OK) {
+            return 31;
+        }
+        if (ccsds_packet_stream_next(&stream, &view, &frame_consumed)
+            != CCSDS_STATUS_OK
+            || frame_consumed != 8U
+            || view.primary_header.sequence_count != 1U) {
+            return 32;
+        }
+        if (ccsds_packet_stream_next(&stream, &view, &frame_consumed)
+            != CCSDS_STATUS_OK
+            || frame_consumed != 7U
+            || view.primary_header.sequence_count != 2U
+            || ccsds_packet_stream_remaining(&stream) != 0U) {
+            return 33;
+        }
+    }
+
+    {
+        ccsds_sequence_validator_t sequence = {0U};
+        ccsds_validation_report_t report;
+        const ccsds_packet_coherence_input_t input = {
+            {0U, 1U, 1U, 42U, CCSDS_SEQUENCE_UNSEGMENTED, 7U, 2U},
+            9U,
+            1U,
+            1U,
+            CCSDS_PACKET_DIRECTION_TELECOMMAND,
+            1U,
+            1U
+        };
+        const ccsds_template_coherence_input_t template_input = {
+            {0U, 1U, 1U, 42U, CCSDS_SEQUENCE_UNSEGMENTED, 0U, 0U},
+            1U,
+            1U,
+            1U
+        };
+
+        ccsds_sequence_validator_reset(&sequence);
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validate_packet_coherence(
+              &input, &sequence, 1, &report) != CCSDS_STATUS_OK
+            || !ccsds_validation_report_valid(&report)) {
+            return 34;
+        }
+
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validate_template_coherence(
+              &input.header, &template_input, &report) != CCSDS_STATUS_OK
+            || !ccsds_validation_report_valid(&report)) {
+            return 35;
+        }
+    }
+
+    {
+        static const uint8_t tc[] = {0x2FU, 0x11U, 0x01U, 0x12U, 0x34U};
+        ccsds_validation_report_t report;
+        const ccsds_pus_coherence_input_t pus = {
+            2U,
+            CCSDS_PACKET_DIRECTION_TELECOMMAND,
+            1U,
+            1U,
+            {tc, sizeof(tc)},
+            sizeof(tc),
+            0U,
+            0x0FU,
+            2U,
+            0x1234U,
+            0U,
+            0U,
+            1U,
+            0U,
+            0U,
+            0U
+        };
+
+        ccsds_validation_report_reset(&report);
+        if (ccsds_validate_pus_coherence(&pus, &report) != CCSDS_STATUS_OK
+            || !ccsds_validation_report_valid(&report)) {
+            return 36;
+        }
+    }
+
+    {
+        static const uint8_t data[] = {0xAAU, 0x55U};
+        static const uint8_t expected[] = {
+            0x00U, 0x00U, 0xC0U, 0x00U, 0x00U, 0x03U,
+            0xAAU, 0x55U, 0x2EU, 0xBBU
+        };
+        ccsds_primary_header_t h = {
+            0U, 0U, 0U, 0U, 3U, 0U, 0U
+        };
+        uint8_t output[sizeof(expected)] = {0U};
+        uint16_t crc = 0U;
+        size_t serialized = 0U;
+        size_t written = 0U;
+
+        if (ccsds_packet_finalize(
+              &h, 0U, (ccsds_buffer_view_t){data, sizeof(data)},
+              CCSDS_PACKET_ERROR_CONTROL_CRC16, NULL,
+              &crc, &serialized) != CCSDS_STATUS_OK) {
+            return 37;
+        }
+        if (ccsds_packet_encode(
+              &h, (ccsds_buffer_view_t){data, sizeof(data)},
+              CCSDS_PACKET_ERROR_CONTROL_CRC16, crc,
+              output, sizeof(output), &written) != CCSDS_STATUS_OK) {
+            return 38;
+        }
+        if (serialized != sizeof(expected)
+            || written != sizeof(expected)
+            || memcmp(output, expected, sizeof(expected)) != 0) {
+            return 39;
+        }
+    }
+
+    {
+        static const uint8_t expected_sync[] = {0x1AU, 0xCFU, 0xFCU, 0x1DU};
+        uint8_t prefix[sizeof(expected_sync)] = {0U};
+        size_t written = 0U;
+
+        if (ccsds_packet_stream_write_prefix(
+              1, 0x1ACFFC1DU, prefix, sizeof(prefix), &written)
+            != CCSDS_STATUS_OK) {
+            return 40;
+        }
+        if (written != sizeof(expected_sync)
+            || memcmp(prefix, expected_sync, sizeof(expected_sync)) != 0) {
+            return 41;
+        }
+    }
+
+    puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
+    return 0;
+}

@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack documentation
 
-CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and managing CCSDS Space Packet PDUs with optional PUS-A/PUS-C secondary headers, numeric CUC time, packet-level CRC16, and hosted/embedded integration.
+CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 ownership/convenience layer for creating, serializing, parsing, validating, and managing CCSDS Space Packet PDUs with PUS-A/PUS-C, numeric CUC time, packet-level CRC16, and hosted/embedded integration.
 
 ## Core documentation
 
@@ -15,6 +15,7 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 - [PUS tailoring](MISSION_TAILORING.md): concrete PUS identities, optional layout choices, and numeric CUC time.
 - [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
 - [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size interfaces.
+- [Performance baseline](PERFORMANCE.md): matched v2.0 `main` versus v2.1 parse/serialization evidence, C zero-copy behavior, allocation accounting, and MCU footprint.
 - [Packet processing flow](FLOW.md): Packet, Manager, parsing, validation, and reassembly lifecycle.
 
 ## Hosted integration
@@ -31,7 +32,7 @@ CCSDSPack is a C++17 library for creating, serializing, parsing, validating, and
 
 - [Concise compliance statement](../COMPLIANCE.md)
 - [Detailed CCSDS Space Packet compliance matrix](../CCSDS_COMPLIANCE.md)
-- [PUS/CUC compliance baseline](CCSDS_COMPLIANCE.md)
+- [PUS/CUC compliance baseline](PUS_CUC_COMPLIANCE.md)
 
 ## Migration and historical references
 
@@ -43,4 +44,4 @@ Historical v1.2 behavior and hardware evidence remain available in the `V1_2_*` 
 
 ## Diagrams
 
-The maintained packet-layout and architecture diagrams are embedded in the main README. UML generation is manual-only and is not a v2.0.0 release gate.
+The maintained packet-layout and architecture diagrams are embedded in the main README. UML generation is manual-only and is not a v2.1.0 release gate.

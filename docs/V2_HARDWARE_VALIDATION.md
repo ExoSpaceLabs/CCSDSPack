@@ -3,11 +3,198 @@ Copyright 2025-2026 ExoSpaceLabs
 SPDX-License-Identifier: Apache-2.0
 -->
 
-# CCSDSPack v2.0.0 hardware validation
+# CCSDSPack v2 hardware validation
 
 [Documentation index](README.md) | [Packages](PACKAGES.md) | [Release acceptance](../V2_TRANSITION_ACCEPTANCE_LIST.md)
 
-This page records physical-target and native-target release evidence for CCSDSPack v2.0.0. Hardware execution complements hosted CI and package/cross-build evidence; it does not extend the documented compliance scope beyond the supported CCSDS Space Packet PDU, PUS, CUC, and mission-tailoring profiles.
+This page records physical-target and native-target release evidence for CCSDSPack v2 releases. Hardware execution complements hosted CI and package/cross-build evidence; it does not extend the documented compliance scope beyond the supported CCSDS Space Packet PDU, PUS, CUC, and mission-tailoring profiles.
+
+
+## v2.1.0 release-candidate validation
+
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API, so fresh physical/native execution is required before tagging.
+
+| Target | v2.1 status | Required marker |
+|---|---|---|
+| Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
+| NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
+
+Use the exact accepted `develop` commit after the final v2.1 hardening PR is merged. Record that source SHA and the generated package/library hashes here before promotion to `main`.
+
+### Raspberry Pi 5 / arm64 rerun
+
+From a clean native arm64 checkout of the accepted candidate:
+
+```bash
+git checkout develop
+git pull --ff-only
+bash test/package_tester/run_aarch64_validation.sh
+```
+
+The top-level runner records the board, architecture, OS, kernel, compiler,
+CMake, Python, branch, source SHA, and source version; removes previous native
+build/package output; builds the DEB from scratch; validates package name,
+version, architecture, and SHA-256; then invokes `aarch64_validate.sh` for the
+installed regression suite, CLI integration, installed-package consumer, and
+shared hardware-acceptance body. The complete run is saved by default to
+`~/ccsdspack-v<version>-aarch64-validation.log`.
+
+The runner deliberately does not install missing host dependencies or update
+the source checkout. Those are preparation steps, not part of release
+qualification.
+
+Acceptance requires:
+
+```text
+CCSDSPACK_HARDWARE_TEST:PASS
+CCSDSPACK_AARCH64_TEST:PASS
+CCSDSPACK_AARCH64_RUNNER:PASS
+```
+
+`aarch64_validate.sh <package.deb>` remains available as the lower-level
+package validator when an already-built ARM64 package must be qualified
+directly.
+
+### NUCLEO-H755ZI-Q / Cortex-M7 rerun
+
+The v2.1 physical harness is a standalone CMake/OpenOCD application. It links
+the generated CCSDSPack MCU package with the pinned Device Abstraction Stack
+(DAS), which supplies Cortex-M startup/vector/linker support, board clocking and
+the ST-LINK VCP UART. It does **not** use STM32CubeIDE, STM32 HAL, the Nucleo
+BSP, generated vendor makefiles, or a CM4 companion project.
+
+Generate the MCU package from the same candidate commit:
+
+```bash
+./package.sh \
+  -t cmake/toolchains/arm-none-eabi.cmake \
+  -p MCU \
+  -m "-fno-exceptions -fno-rtti -mcpu=cortex-m7 -mthumb -mfpu=fpv5-d16 -mfloat-abi=hard"
+```
+
+Execute the complete build/flash/UART acceptance flow with:
+
+```bash
+bash test/package_tester/stm32h7xx/run_h755_validation.sh \
+  --package packages/ccsdspack-v2.1.0-Generic-arm.tar.gz \
+  --source-sha <candidate-sha>
+```
+
+The runner pins DAS and the minimal STM32 CMSIS source revision, builds the
+standalone Cortex-M7 ELF, records its SHA-256 and `text/data/bss`, programs and
+verifies it through OpenOCD, captures the ST-LINK VCP at 115200 8N1, and fails
+unless the target emits:
+
+```text
+CCSDSPACK_HARDWARE_TEST:PASS
+```
+
+The UART transcript also contains candidate/package/DAS/compiler/runtime
+identity, per-section BEGIN/PASS markers, symbolic failure names, and explicit
+HardFault/MemManage/BusFault/UsageFault markers.
+
+Record the exact candidate SHA, MCU package SHA-256, linked ELF SHA-256,
+compiler version, final ELF text/data/bss, complete UART transcript, and
+OpenOCD program/verify log in this page before release promotion. See
+`test/package_tester/stm32h7xx/H755_INTEGRATION.md` for the full procedure.
+
+### v2.1.0 validation evidence
+
+Validation date: **2026-10-04**
+
+#### Raspberry Pi 5 / native arm64
+
+Platform and toolchain:
+
+- Board: Raspberry Pi 5 Model B Rev 1.0
+- Architecture: `aarch64`
+- Operating system: Debian GNU/Linux 13 (`trixie`)
+- Kernel: `6.18.34+rpt-rpi-2712`
+- GCC/G++: 14.2.0
+- CMake: 3.31.6
+- Python: 3.13.5
+
+Candidate and package identity:
+
+- Branch: `develop`
+- Source commit: `9f6fcbfda263d1737f50833a5af14c2b6f104799`
+- Source version: `2.1.0`
+- Package: `ccsdspack-v2.1.0-Linux-arm64.deb`
+- Package architecture: `arm64`
+- Package SHA-256: `41354b83ba50d73f1804969ba72628e2cdc8e2aa2d6551f207b79ccb0ec1517f`
+
+The one-command native runner rebuilt the DEB from a clean checkout, verified
+package identity, installed it, and completed the package-level validation.
+Results:
+
+- regression/conformance suite: **134 passed, 0 failed**;
+- CLI integration: **PASS**;
+- external installed-package CMake consumer: **1 passed, 0 failed**;
+- shared hardware acceptance: `CCSDSPACK_HARDWARE_TEST:PASS`;
+- native arm64 acceptance: `CCSDSPACK_AARCH64_TEST:PASS`.
+
+The run log is written by the runner to
+`~/ccsdspack-v2.1.0-aarch64-validation.log`.
+
+#### NUCLEO-H755ZI-Q / Cortex-M7
+
+Platform and runtime identity:
+
+- Physical board: NUCLEO-H755ZI-Q
+- Core: Cortex-M7
+- Transport: DAS UART through ST-LINK VCP
+- UART: 115200 8N1
+- Core clock: 400 MHz
+- Compiler: GNU Arm Embedded 10.3.1
+- C++ standard: C++17
+
+Candidate and dependency identity:
+
+- CCSDSPack source commit: `08cc587b41217e5d4ebc9dd31407c51fdb7de153`
+- MCU package SHA-256: `d8f920eab1528b4323670a52667fced2e9a3934ea7b352f66b140fdf399e6d54`
+- linked `libccsdspack.a` SHA-256: `4936e9e5fb1b29141797b993d983d7c5515c85fd3b60fc9188184a8b6d911ee5`
+- DAS revision: `4b768ef86b43652c94cc91b1c77e247fa37ebd8a`
+
+The standalone DAS/OpenOCD validation programmed and verified the target, then
+passed every runtime acceptance section:
+
+- generic Packet/Manager;
+- raw-buffer parsing;
+- structured Validator;
+- raw Manager reassembly;
+- PUS-C telecommand;
+- PEC-none operation;
+- Packet Version Number rejection;
+- Idle Packet policy.
+
+Final runtime result:
+
+```text
+TEST:PASS:all
+RESULT_CODE:0
+RESULT_NAME:Pass
+HEAP_CAPACITY_BYTES:507696
+HEAP_PEAK_BYTES:2996
+CCSDSPACK_HARDWARE_TEST:PASS
+CCSDSPACK_HARDWARE_TEST:END
+```
+
+The OpenOCD 0.11 target script still emits non-fatal STM32H7 DBGMCU
+`mem2array` examine warnings on this host, but flash programming and
+verification complete successfully and the firmware executes the full
+acceptance suite.
+
+### Pre-hardware footprint evidence
+
+A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2.0 public hardware probe for both implementations. With section garbage collection, retained text is:
+
+- v2.0 main: **36,238 bytes**;
+- v2.1 candidate: **40,166 bytes**;
+- delta: **+3,928 bytes (+10.8%)**.
+
+This is compile/link evidence only. The physical STM32 ELF remains authoritative for the release-candidate footprint record.
+
+---
 
 ## Status
 

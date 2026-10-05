@@ -11,9 +11,9 @@ SPDX-License-Identifier: Apache-2.0
 
 **[API Documentation](https://exospacelabs.github.io/CCSDSPack/html/)** · [Documentation index](docs/README.md)
 
-**CCSDSPack** is a C++17 library for constructing, serializing, parsing, managing, and validating CCSDS Space Packet protocol data units. It provides a compact packet-oriented API for hosted applications and embedded systems while keeping packet identity, secondary-header layout, error control, and stream validation explicit.
+**CCSDSPack** is a layered CCSDS Space Packet library with an authoritative **C11 protocol core** and a compatible **C++17 ownership/convenience API**. The C core provides allocation-free wire primitives, packet views, PUS codecs, CUC time, validation, segmentation/reassembly, and stream framing; the established C++ API remains available for owned `Packet`/`Manager` workflows.
 
-The v2.0.0 implementation targets:
+The v2.1.0 implementation targets:
 
 - **CCSDS 133.0-B-2, Issue 2, including Editorial Change 2** for the supported Space Packet PDU profile;
 - **ECSS-E-70-41A** for supported PUS-A telecommand and telemetry secondary headers;
@@ -28,7 +28,7 @@ The implementation scope is intentionally packet-focused. Complete PUS services,
 |---|---|
 | ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=develop) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=develop) |
 
-CI covers Ubuntu 22.04, Ubuntu 24.04, Ubuntu latest, Windows latest, Doxygen, CLI integration, installed-package consumers, examples, and package/cross-build generation. UML generation is available manually and is not a release gate.
+CI covers explicit Ubuntu 22.04, 24.04, and 26.04 runners, Windows latest, Doxygen, CLI integration, installed-package consumers, examples, and package/cross-build generation. Release-critical Linux jobs avoid the moving `ubuntu-latest` alias. UML generation is available manually and is not a release gate.
 
 ## Why CCSDSPack
 
@@ -182,7 +182,7 @@ const auto consumed = ccsds::buffer::deserializeBounded(
   packet, rxBuffer, receivedBytes);
 ```
 
-Typed PUS raw parsing mirrors the vector API. The v2.0.0 implementation currently bridges these raw entry points through vector-backed parsing internally; it does not claim zero-copy or globally heap-free Packet/Manager storage.
+Typed PUS raw parsing mirrors the vector API. In v2.1.0, raw bounded parsing is pointer-native and delegates packet framing/CRC validation to the C core without first copying the complete input into a bridge `std::vector`. Owned `Packet`/`Manager` state may still allocate where ownership requires it.
 
 See [Raw-buffer APIs](docs/RAW_BUFFERS.md).
 
@@ -202,7 +202,7 @@ CCSDSPack represents the numeric time code. Calendar conversion, leap-second han
 
 ![CCSDSPack library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
 
-The protocol library is C++17 and supports hosted shared-library builds and bare-metal static-library builds. `CCSDSPACK_BUILD_MCU=ON` excludes host-only configuration and command-line components while retaining Packet, Manager, PUS codecs/tailoring, CUC time, Result/Error, raw-buffer adapters, and Validator.
+The protocol layer is C11. The established C++17 Packet/Manager API is built above that core by default. Hosted builds export both layers; `CCSDSPACK_BUILD_MCU=ON` produces bare-metal static libraries while excluding host-only configuration and command-line components.
 
 MCU builds can use `-fno-exceptions -fno-rtti`. The library as a whole is not described as heap-free; fixed-capacity/no-allocation claims apply specifically where documented, such as `ValidationReport`.
 
@@ -211,7 +211,8 @@ MCU builds can use `-fno-exceptions -fno-rtti`. The library as a whole is not de
 Requirements:
 
 - CMake 3.16 or newer;
-- a C++17 compiler.
+- a C11 compiler for the protocol core;
+- a C++17 compiler only when `CCSDSPACK_BUILD_CPP=ON` (the default).
 
 ```bash
 git clone https://github.com/ExoSpaceLabs/CCSDSPack.git
@@ -224,12 +225,30 @@ cmake --install build
 Installed consumers use the exported package:
 
 ```cmake
-find_package(CCSDSPack 2.0 CONFIG REQUIRED)
+find_package(CCSDSPack 2.1 CONFIG REQUIRED)
 target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
 target_compile_features(my_app PRIVATE cxx_std_17)
 ```
 
 Standalone `find_package()` examples are available under [`example/`](example/README.md).
+
+Pure-C consumers can build or link only the C11 core:
+
+```cmake
+find_package(CCSDSPack 2.1 CONFIG REQUIRED)
+target_link_libraries(my_c_app PRIVATE ccsdspack::c)
+```
+
+A C-only build does not require a C++ compiler:
+
+```bash
+CC=gcc CXX=/bin/false cmake -S . -B build-c \
+  -DCCSDSPACK_BUILD_CPP=OFF \
+  -DCCSDSPACK_BUILD_C_TESTS=ON
+cmake --build build-c
+```
+
+The umbrella C header is `<ccsdspack/c/ccsdspack.h>`. Low-level C APIs use caller-owned buffers/views and do not hide heap ownership.
 
 ## Command-line tools
 
@@ -249,10 +268,12 @@ See [Command-line tools](docs/CLI.md).
 - [Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
 - [Compliance statement](COMPLIANCE.md)
 - [Detailed CCSDS compliance matrix](CCSDS_COMPLIANCE.md)
+- [PUS/CUC compliance baseline](docs/PUS_CUC_COMPLIANCE.md)
 - [PUS tailoring](docs/MISSION_TAILORING.md)
 - [Structured validation](docs/VALIDATION.md)
 - [Configuration](docs/CONFIG.md)
 - [Raw-buffer APIs](docs/RAW_BUFFERS.md)
+- [Performance baseline](docs/PERFORMANCE.md)
 - [Examples](docs/EXAMPLES.md)
 - [Packages and cross-builds](docs/PACKAGES.md)
 - [v1 to v2 migration](docs/MIGRATION_V1_TO_V2.md)

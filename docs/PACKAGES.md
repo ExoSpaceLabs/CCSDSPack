@@ -22,7 +22,7 @@ Artifacts are written under `packages/`. Package generation should run as a norm
 ## Installed CMake package
 
 ```cmake
-find_package(CCSDSPack 2.0 CONFIG REQUIRED)
+find_package(CCSDSPack 2.1 CONFIG REQUIRED)
 target_link_libraries(my_app PRIVATE ccsdspack::CCSDSPack)
 target_compile_features(my_app PRIVATE cxx_std_17)
 ```
@@ -30,10 +30,10 @@ target_compile_features(my_app PRIVATE cxx_std_17)
 Consumers that require the exact release can use:
 
 ```cmake
-find_package(CCSDSPack 2.0.0 EXACT CONFIG REQUIRED)
+find_package(CCSDSPack 2.1.0 EXACT CONFIG REQUIRED)
 ```
 
-The installed package exports the C++17 library API, including Packet, Manager, PUS codecs/tailoring, CUC time, raw-buffer adapters, Result/Error, and structured Validator.
+The installed package exports both `ccsdspack::c` (the C11 protocol core) and `ccsdspack::CCSDSPack` (the established C++17 ownership/convenience layer). Pure-C consumers can link only `ccsdspack::c` and configure with `CCSDSPACK_BUILD_CPP=OFF` when building from source.
 
 ## Linux packages
 
@@ -63,7 +63,7 @@ CCSDSPACK_AARCH64_TEST:PASS
 
 ## Bare-metal package
 
-The MCU path uses `CCSDSPACK_BUILD_MCU=ON`, C++17, and optional `CCSDSPACK_MCU_FLAGS`. It contains the protocol library and excludes hosted configuration/CLI components.
+The MCU path uses `CCSDSPACK_BUILD_MCU=ON` and optional `CCSDSPACK_MCU_FLAGS`. It builds the C11 core and, when `CCSDSPACK_BUILD_CPP=ON`, the compatible C++17 static library while excluding hosted configuration/CLI components.
 
 The STM32H7 reference harness is under `test/package_tester/stm32h7xx/`. Physical execution is recorded separately from cross-build/compile-link evidence.
 

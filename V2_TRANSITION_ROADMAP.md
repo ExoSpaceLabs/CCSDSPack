@@ -1,51 +1,62 @@
-# CCSDSPack v2.0.0 release roadmap
+# CCSDSPack v2 line roadmap
 
-## Objective
+## Current direction
 
-CCSDSPack v2.0.0 provides a standards-oriented C++17 Space Packet library with explicit packet policy, PUS-A/PUS-C secondary-header codecs, numeric CUC time, structured validation, transport-facing buffer APIs, and hosted/bare-metal integration.
+CCSDSPack v2.1 keeps the v2 C++17 Packet/Manager API while moving protocol
+mechanics into an authoritative C11 core. The standards scope remains the same
+as v2.0: the documented CCSDS Space Packet PDU profile, supported PUS-A/PUS-C
+secondary-header layouts, and supported basic numeric CUC subset.
 
-The implementation architecture and conformance/robustness evidence are stable. Remaining work is target validation, publication verification, and final release approval rather than API redesign.
+This file records direction only. The authoritative release checklist is
+`V2_TRANSITION_ACCEPTANCE_LIST.md`; detailed performance, compliance, and
+hardware evidence live in their dedicated documents rather than being copied
+here.
 
-## Implemented product scope
+## v2.1 architecture
 
-- CCSDS 133.0-B-2 EC2 Space Packet PDU construction, checked serialization, bounded parsing, sequence handling, segmentation, and stream management;
-- PUS-A and PUS-C TC/TM concrete secondary-header types with intrinsic revision/direction;
-- direction-specific optional PUS tailoring and fixed PUS-C identifier widths;
-- numeric basic CUC with validated epoch/P-field/coarse/fine configuration;
-- generic Packet-level CRC16/none error-control policy;
-- complete Packet templates as the Manager generation/receive contract;
-- named fixed-capacity structured validation;
-- vector and pointer-plus-size transport interfaces;
-- installed CMake package, CLI tools, standalone examples, and package generation;
-- C++17 MCU static-library build compatible with `-fno-exceptions -fno-rtti`.
+- C11 caller-owned protocol core for packet/header/CRC/CUC/PUS/validation/stream primitives;
+- compatible C++17 ownership/convenience layer;
+- pure-C installed target and C-only build path;
+- bounded transactional parsing and explicit caller-buffer APIs;
+- standalone DAS/OpenOCD Cortex-M7 validation path;
+- native arm64 installed-package validation.
 
-## Current integration evidence
+## Standards invariant
 
-- **132/132 native tests**;
-- Ubuntu 22.04, Ubuntu 24.04, Ubuntu latest, and Windows hosted CI;
-- Doxygen and CLI integration;
-- installed shared-library consumer and examples;
-- Ubuntu 22.04 package/cross-build generation;
-- Cortex-M compile/link probe;
-- independent PUS-C TC acknowledgement vectors for all 16 flag combinations;
-- complete 26-code structured validation evidence matrix;
-- dedicated Clang ASan and UBSan native-suite CI;
-- bounded four-target libFuzzer smoke CI under ASan+UBSan;
-- active hosted workflows target only `main` and `develop`;
-- tag publication uses the current root `RELEASE_NOTES.md`;
-- v1.2 standalone release notes are not carried forward in the v2 tree;
-- hardware-validation CI artifact naming is version-neutral.
+Implementation refactoring must not change the release claim or wire semantics.
+CCSDS/ECSS behavior remains guarded by independent fixed vectors, direct
+negative fixtures, the complete PUS-C acknowledgement matrix, structured
+validation evidence, sanitizer/fuzz gates, and physical/native target
+validation. Round-trip behavior alone is not conformance evidence.
 
-## Release-hardening sequence
+## Current v2.1 release work
 
-1. Record fresh native arm64 v2 installed-package/API execution (#87).
-2. Record fresh physical STM32H755 v2 PUS/Validator/raw-buffer execution (#87).
-3. Verify tag-only GitHub Release/GHCR publication behavior (#87/#88).
-4. Add the fresh target/publication results to final compliance evidence and approve release notes (#88).
-5. Close completed parent integration issue #78 once #87 acceptance is complete.
-6. Promote the approved `develop` release candidate to `main`.
-7. Run final `main` CI, tag `v2.0.0`, publish packages, and verify release artifacts (#88).
+Correctness and target qualification are complete:
 
-Feature work branches from `develop` and returns through reviewed pull requests. `develop` is the integration/release-candidate branch; `main` is promoted only after the release-hardening gates are complete.
+- native regression/conformance suite: **134/134 PASS**;
+- Raspberry Pi 5/native arm64: **PASS**;
+- NUCLEO-H755ZI-Q/Cortex-M7: **PASS**;
+- hosted Linux/Windows/Doxygen/robustness gates: established release gates.
 
-UML generation remains a manual diagnostic/documentation utility and is not a v2.0.0 release gate.
+Before v2.1.0 promotion/tagging:
+
+1. complete issue #163, the broader matched v2.0-vs-v2.1 performance characterization;
+2. finalize release/compliance documentation;
+3. promote accepted `develop` to `main`;
+4. require final `main` CI;
+5. tag `v2.1.0`;
+6. verify GitHub Release assets, package hashes, and GHCR images.
+
+Performance measurements must remain subordinate to conformance: an optimization
+that changes standards-defined bytes, accepted field ranges, tailoring rules, or
+validation behavior is not acceptable merely because it benchmarks faster.
+
+## Detailed evidence
+
+- release gates: `V2_TRANSITION_ACCEPTANCE_LIST.md`;
+- compliance statement: `COMPLIANCE.md`;
+- CCSDS traceability: `CCSDS_COMPLIANCE.md`;
+- PUS/CUC baseline: `docs/PUS_CUC_COMPLIANCE.md`;
+- performance evidence: `docs/PERFORMANCE.md`;
+- hardware evidence: `docs/V2_HARDWARE_VALIDATION.md`;
+- robustness evidence: `docs/ROBUSTNESS.md`.
