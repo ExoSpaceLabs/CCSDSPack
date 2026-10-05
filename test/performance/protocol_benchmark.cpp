@@ -249,6 +249,7 @@ void benchManager(const std::string &label) {
   emit(label, "manager_stream_load", "4096_from_256", iterations, load);
 
   receiver.clearPackets();
+  receiver.setAutoValidateEnable(false);
   if (!receiver.load(stream)) throw std::runtime_error("manager load setup failed");
   const auto reassembly = measure(iterations, [&] {
     const auto result = receiver.getApplicationDataBuffer();
