@@ -161,11 +161,10 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 Before tagging v2.1.0:
 
-1. complete the CI-runtime/Ubuntu-26.04 readiness update;
-2. promote the accepted `develop` commit to `main`;
-3. require final `main` CI to pass;
-4. create tag `v2.1.0`;
-5. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
+1. promote the accepted `develop` commit to `main`;
+2. require final `main` CI to pass;
+3. create tag `v2.1.0`;
+4. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
 
 Native Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 release-candidate execution are already complete and recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
