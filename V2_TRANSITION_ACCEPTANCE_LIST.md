@@ -38,10 +38,12 @@ existing independent conformance evidence continues to pass.
 - [x] Matched v2.0-main vs v2.1 packet-serialization benchmark recorded.
 - [x] Allocation counts and allocated bytes/op recorded.
 - [x] Cortex-M7 retained-text comparison recorded.
-- [ ] Complete broader matched PUS-A/PUS-C, CUC, Validator, Manager,
-  segmentation/reassembly, stream-walking, and isolated-CRC characterization in issue #163.
-- [ ] Update `docs/PERFORMANCE.md` with the issue #163 final artifacts/results before
-  claiming whole-core performance improvement.
+- [x] Broader matched PUS-A/PUS-C, CUC, Validator, Manager,
+  segmentation/reassembly, stream-load, and isolated-CRC characterization completed in issue #163.
+- [x] `docs/PERFORMANCE.md` records the final matched artifacts/results, including measured
+  regressions rather than claiming a universal whole-core speedup.
+- [x] Focused CUC wrapper regression is separately tracked in issue #166 without changing
+  the CCSDS/ECSS release claim or correctness gates.
 
 ## Hardware validation
 
@@ -53,7 +55,7 @@ existing independent conformance evidence continues to pass.
 
 ## Final release gates
 
-- [ ] Issue #163 performance characterization complete.
+- [x] Issue #163 performance characterization complete.
 - [ ] Final release/compliance documentation merged into `develop`.
 - [ ] Approved `develop` promoted to `main`.
 - [ ] Final `main` Linux, Windows, Doxygen, and robustness workflows pass.

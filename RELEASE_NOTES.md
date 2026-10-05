@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These notes describe the v2.1.0 release candidate. Hosted validation, native Raspberry Pi 5 arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution are complete. The remaining pre-release work is the broader matched v2.0-vs-v2.1 performance characterization tracked in issue #163, final promotion to `main`, final `main` CI, tagging, and publication verification.
+> These notes describe the v2.1.0 release candidate. Hosted validation, matched v2.0-vs-v2.1 performance characterization, native Raspberry Pi 5 arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution are complete. The remaining pre-release work is final promotion to `main`, final `main` CI, tagging, and publication verification.
 
 ## Summary
 
@@ -66,7 +66,13 @@ Representative results:
 - forced re-finalization serialization: **4/6 -> 1 allocation** depending on PEC mode;
 - the low-level C packet view remains **0 allocations** and **0 transport-adapter bridge copies**.
 
-Exact methodology, packet sizes, timings and allocation counts are recorded in `docs/PERFORMANCE.md`. These measurements cover owning raw parse and packet serialization; they do not yet establish a speedup for every C-core protocol operation. Broader matched PUS/CUC/Validator/Manager/stream measurements are tracked in issue #163.
+Exact methodology, packet sizes, timings and allocation counts are recorded in `docs/PERFORMANCE.md`.
+The completed broader matched characterization also shows PUS-A/PUS-C encode/decode speedups
+of roughly 1.24x to 2.99x, Manager reassembly at 1.64x with allocations reduced 24 -> 1,
+Manager stream loading at 1.10x with materially lower allocation pressure, effectively
+unchanged isolated CRC16 throughput, and essentially flat Validator timing with fewer
+allocations. Numeric CUC encode/decode is the documented exception and is slower in the
+matched C++ wrapper benchmark; focused optimization is tracked in issue #166.
 
 ## Cortex-M7 footprint
 
@@ -155,19 +161,18 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 Before tagging v2.1.0:
 
-1. complete the broader matched v2.0-vs-v2.1 performance characterization in issue #163 and record results without changing wire semantics;
-2. merge the final release/compliance documentation into `develop`;
-3. promote the accepted `develop` commit to `main`;
-4. require final `main` CI to pass;
-5. create tag `v2.1.0`;
-6. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
+1. merge the final performance evidence into `develop`;
+2. promote the accepted `develop` commit to `main`;
+3. require final `main` CI to pass;
+4. create tag `v2.1.0`;
+5. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
 
 Native Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 release-candidate execution are already complete and recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Release control
 
 ```text
-develop -> complete performance evidence -> main -> final CI -> tag v2.1.0
+develop -> main -> final CI -> tag v2.1.0
 ```
 
 Publication evidence is recorded only after the tag workflow completes.

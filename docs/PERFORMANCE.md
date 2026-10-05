@@ -91,15 +91,16 @@ For each subsequent C-core migration slice:
 4. Record hosted timing trends without turning machine-noise into a release gate.
 5. Record MCU text/data/bss changes for release candidates and hardware validation builds.
 
-The matched comparison currently covers packet inspection/parsing, public packet
-serialization, allocation behavior, and Cortex-M7 retained text. It does **not** yet provide
-cross-version timing evidence for every protocol surface now implemented by the C core.
+The matched comparison now covers packet inspection/parsing, public packet serialization,
+PUS-A/PUS-C encode/decode, numeric CUC encode/decode, structured Validator execution,
+Manager segmentation/stream-load/reassembly, isolated CRC16 throughput, allocation
+behavior, and Cortex-M7 retained text. The benchmark source for the broader protocol
+comparison is compiled unchanged against v2.0 and v2.1 to keep the public-operation
+comparison apples-to-apples.
 
-Issue #163 tracks the remaining matched v2.0-versus-v2.1 characterization for PUS-A/PUS-C
-encode/decode, CUC, Validator, Manager segmentation/reassembly, stream walking, and isolated
-CRC throughput. Those measurements must preserve the existing CCSDS/ECSS fixed-vector,
-negative-fixture, and structured-validation evidence; performance changes do not relax
-wire-format or conformance requirements.
+Performance changes do not relax CCSDS/ECSS wire-format or conformance requirements.
+Independent fixed vectors, negative fixtures, structured-validation evidence, sanitizers,
+fuzzing, and hardware/native target validation remain authoritative for correctness.
 
 
 ## Final matched v2.0 main versus v2.1 candidate
@@ -172,6 +173,59 @@ DataField temporaries and keeps the public vector-returning API to one allocatio
 CRC16 again dominates large packets, so the main serialization gain there is elimination of
 heap churn and intermediate buffers rather than a large wall-clock ratio.
 
+### Broader protocol-operation comparison
+
+Issue #163 was completed with a second matched run using one identical benchmark source
+compiled against both public C++ APIs. The final comparison was executed on Ubuntu 24.04
+with GCC 13.3.0 and CMake 3.31.6.
+
+Compared revisions:
+
+- v2.0 main: `4e198ae4c7f730737d78c1ea2f71ec3ce42ca7eb`
+- v2.1 candidate: `196d151b4d29ffeff3f5e407148e7bc346342872`
+- Linux workflow run: **37327782791**
+- performance artifact: `ccsdspack-performance-d238f828616dbe8a1d0180ebf5149ab2057dc1cf`
+
+The matched benchmark source SHA-256 was
+`72d77fdc598bcbcf9b3bf0199d26b4d0458f1a41be9a04fd72ce09533f508d57`.
+
+| Operation | Variant | v2.0 ns/op | v2.1 ns/op | Speedup | Allocations/op v2.0 -> v2.1 | Allocated bytes/op v2.0 -> v2.1 |
+|---|---|---:|---:|---:|---:|---:|
+| CRC16 | 64 B | 427.45 | 434.87 | 0.983x | 0 -> 0 | 0 -> 0 |
+| CRC16 | 1,024 B | 6,974.58 | 6,977.81 | 1.000x | 0 -> 0 | 0 -> 0 |
+| CRC16 | 32,768 B | 223,521.36 | 223,483.77 | 1.000x | 0 -> 0 | 0 -> 0 |
+| CUC encode | explicit 4 coarse / 2 fine | 21.43 | 30.92 | 0.693x | 1 -> 1 | 7 -> 7 |
+| CUC decode | explicit 4 coarse / 2 fine | 10.05 | 12.94 | 0.777x | 0 -> 0 | 0 -> 0 |
+| PUS-A TC encode | fixed representative header | 75.85 | 33.99 | 2.232x | 4 -> 1 | 15 -> 5 |
+| PUS-A TC decode | fixed representative header | 18.57 | 14.96 | 1.241x | 0 -> 0 | 0 -> 0 |
+| PUS-A TM encode | timestamp-tailored | 92.99 | 61.36 | 1.515x | 4 -> 1 | 29 -> 13 |
+| PUS-A TM decode | timestamp-tailored | 56.64 | 35.24 | 1.607x | 1 -> 0 | 7 -> 0 |
+| PUS-C TC encode | fixed representative header | 75.87 | 25.35 | 2.993x | 4 -> 1 | 15 -> 5 |
+| PUS-C TC decode | fixed representative header | 14.16 | 9.60 | 1.475x | 0 -> 0 | 0 -> 0 |
+| PUS-C TM encode | timestamp-tailored | 85.03 | 52.89 | 1.608x | 4 -> 1 | 36 -> 14 |
+| PUS-C TM decode | timestamp-tailored | 49.53 | 31.97 | 1.549x | 1 -> 0 | 7 -> 0 |
+| Validator | PUS-C TC + CRC16, 256 B | 2,321.32 | 2,333.53 | 0.995x | 14 -> 6 | 832 -> 800 |
+| Manager segmentation | 4,096 B -> 256 B packets | 3,738.77 | 3,893.15 | 0.960x | 148 -> 148 | 22,792 -> 22,792 |
+| Manager stream load | 4,096 B from 256 B packets | 50,134.02 | 45,586.59 | 1.100x | 558 -> 396 | 117,583 -> 56,279 |
+| Manager reassembly | 4,096 B from 256 B packets | 649.27 | 396.70 | 1.637x | 24 -> 1 | 18,901 -> 4,096 |
+
+Interpretation:
+
+- PUS encode/decode materially improves across every measured PUS-A/PUS-C case.
+- Manager reassembly and stream loading materially improve, especially in allocation pressure.
+- Isolated CRC16 throughput is effectively unchanged at meaningful packet sizes.
+- Validator wall-clock timing is effectively flat while allocation count is reduced.
+- The measured Manager segmentation path is about 4% slower in this hosted run with unchanged
+  allocation behavior; that small wall-clock delta is retained as evidence rather than treated
+  as a hard regression threshold.
+- The C++ CUC wrapper is the clear measured regression: encode is about 31% slower and decode
+  about 22% slower in this final run. Issue #166 tracks focused removal of redundant/delegation
+  overhead without changing CCSDS 301.0-B-4 wire or error semantics.
+
+These results demonstrate real performance improvements from the C-core transition, but not a
+universal speedup. The largest gains align with the intended architectural changes: fewer
+temporary buffers, fewer allocations, and caller-buffer-oriented protocol mechanics.
+
 ### Cortex-M7 linked footprint
 
 The same v2.0 public MCU compile probe was compiled against both implementations with:
@@ -202,20 +256,82 @@ MCU comparison with garbage collection was recorded in run **36779957111**.
 
 ## v2.1 interpretation
 
-For the operations measured so far, the v2.1 transition meets the primary performance goals:
+Across the complete matched characterization, the v2.1 transition meets the primary
+allocation/copy-reduction goals and improves most measured packet/PUS/Manager paths:
 
 - pure-C packet inspection remains allocation-free and zero-copy;
 - the existing C++ raw parse path is materially faster than v2.0 main;
 - C++ parse allocations fall from 9/11 to 3;
 - vector-returning serialization falls to one allocation and removes aggregate DataField
   temporaries;
-- CRC-dominated workloads preserve or improve throughput while substantially reducing heap
-  traffic.
+- PUS-A/PUS-C encode/decode is faster across every measured case;
+- Manager stream load and reassembly are faster with substantially lower heap traffic;
+- isolated CRC16 throughput is effectively unchanged;
+- Validator timing is effectively flat while allocations fall;
+- numeric CUC encode/decode is a documented regression tracked in issue #166.
 
 The tradeoff measured so far is Cortex-M7 code size: the identical garbage-collected public
 consumer retains about 3.9 KiB more text than v2.0. That footprint is small in absolute terms
 but is retained as a release metric and should be checked against the physical STM32 build.
 
+
+## Matched protocol-surface characterization
+
+A broader cross-version comparison was added for issue #163. The same
+`test/performance/protocol_benchmark.cpp` source is compiled unchanged against
+the released v2.0 main commit and the v2.1 candidate, back-to-back on the same
+Ubuntu runner/toolchain. The benchmark records wall-clock time, heap
+allocations/op, and allocated bytes/op.
+
+Matched Linux run **37328278762** produced the following comparison:
+
+| Operation | Variant | v2.0 ns/op | v2.1 ns/op | Speedup | Allocations/op v2.0 -> v2.1 | Allocated bytes/op v2.0 -> v2.1 |
+|---|---|---:|---:|---:|---:|---:|
+| CRC16 | 64 B | 427.77 | 434.31 | 0.985x | 0 -> 0 | 0 -> 0 |
+| CRC16 | 1,024 B | 6,976.78 | 6,982.45 | 0.999x | 0 -> 0 | 0 -> 0 |
+| CRC16 | 32,768 B | 223,379.81 | 223,355.88 | 1.000x | 0 -> 0 | 0 -> 0 |
+| CUC decode | explicit 4+2 | 10.20 | 12.62 | 0.808x | 0 -> 0 | 0 -> 0 |
+| CUC encode | explicit 4+2 | 22.34 | 31.46 | 0.710x | 1 -> 1 | 7 -> 7 |
+| Manager reassembly | 4096 from 256 | 656.10 | 396.38 | 1.655x | 24 -> 1 | 18,901 -> 4,096 |
+| Manager segmentation | 4096 to 256 | 3,793.57 | 3,932.65 | 0.965x | 148 -> 148 | 22,792 -> 22,792 |
+| Manager stream load | 4096 from 256 | 50,432.10 | 45,798.82 | 1.101x | 558 -> 396 | 117,583 -> 56,279 |
+| PUS-A TC decode | standard | 18.56 | 14.91 | 1.245x | 0 -> 0 | 0 -> 0 |
+| PUS-A TM decode | timestamp | 60.54 | 37.76 | 1.603x | 1 -> 0 | 7 -> 0 |
+| PUS-C TC decode | standard | 16.81 | 10.06 | 1.671x | 0 -> 0 | 0 -> 0 |
+| PUS-C TM decode | timestamp | 49.76 | 34.74 | 1.432x | 1 -> 0 | 7 -> 0 |
+| PUS-A TC encode | standard | 75.65 | 33.62 | 2.250x | 4 -> 1 | 15 -> 5 |
+| PUS-A TM encode | timestamp | 94.07 | 62.44 | 1.507x | 4 -> 1 | 29 -> 13 |
+| PUS-C TC encode | standard | 77.49 | 25.03 | 3.096x | 4 -> 1 | 15 -> 5 |
+| PUS-C TM encode | timestamp | 88.52 | 58.23 | 1.520x | 4 -> 1 | 36 -> 14 |
+| Validator | PUS-C TC CRC16 256 B | 2,329.16 | 2,323.01 | 1.003x | 14 -> 6 | 832 -> 800 |
+
+The result is deliberately not summarized as “everything is faster.” The
+measured migration gains are strongest where v2.1 removes temporary ownership
+and heap churn:
+
+- PUS encoding is **1.5x to 3.1x faster** in the measured cases and drops from
+  four allocations to one;
+- PUS decoding is **1.25x to 1.67x faster**, with timestamped TM decoding also
+  eliminating its remaining heap allocation;
+- Manager reassembly is **1.66x faster**, reducing allocations from 24 to one
+  and allocated bytes from 18,901 to 4,096;
+- Manager stream loading is **1.10x faster** while reducing allocation count
+  from 558 to 396 and allocated bytes by roughly 52%;
+- Validator and CRC16 throughput are effectively neutral in this run;
+- Manager segmentation is about **3.5% slower** with unchanged allocation
+  behavior;
+- the measured CUC encode/decode paths are slower in v2.1
+  (**0.71x / 0.81x** of v2.0 throughput) with no allocation improvement.
+
+These regressions are retained as evidence rather than hidden. They are small
+enough not to undermine the broader allocation/copy goals, but CUC is an
+obvious future optimization target if wall-clock throughput matters for that
+path.
+
+The benchmark changes no wire semantics. The existing CCSDS/ECSS fixed vectors,
+PUS-C acknowledgement matrix, malformed/tailoring fixtures, structured
+validation evidence, sanitizer/fuzz gates, and target validation remain the
+authority for conformance.
 
 ## Coverage boundary
 
@@ -223,5 +339,5 @@ The timing ratios in this document are claims about the specific measured operat
 matched run conditions, not a claim that C is inherently faster than C++ or that every
 v2.1 protocol operation is faster than v2.0. The architectural gains come from removing
 copies, reducing heap traffic, exposing caller-owned buffers/views, and consolidating wire
-mechanics in the C core. Issue #163 is the release-tracked work item for completing broader
-cross-version protocol benchmarks.
+mechanics in the C core. The broader cross-version characterization requested by issue #163 is complete. Issue #166
+tracks the remaining focused CUC optimization opportunity.
