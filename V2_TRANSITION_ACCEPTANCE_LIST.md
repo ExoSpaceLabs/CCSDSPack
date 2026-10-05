@@ -21,7 +21,8 @@ existing independent conformance evidence continues to pass.
 ## Integration and robustness
 
 - [x] **134/134 native regression/conformance tests** pass on the v2.1 candidate.
-- [x] Linux Ubuntu 22.04/24.04/latest hosted gates pass.
+- [x] Linux Ubuntu 22.04/24.04 hosted gates pass.
+- [ ] Linux Ubuntu 26.04 hosted gate passes before v2.1.0 promotion.
 - [x] Windows hosted gate passes.
 - [x] Doxygen passes.
 - [x] CLI integration passes.
