@@ -108,7 +108,7 @@ v2.1 additionally runs:
 - a true C-only configuration with no C++ compiler;
 - installed pure-C package consumer;
 - installed C++ package consumer and examples;
-- Linux Ubuntu 22.04/24.04/latest;
+- Linux Ubuntu 22.04/24.04/26.04;
 - Windows latest;
 - Doxygen;
 - Clang ASan and UBSan;
@@ -161,7 +161,7 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 Before tagging v2.1.0:
 
-1. merge the final performance evidence into `develop`;
+1. complete the CI-runtime/Ubuntu-26.04 readiness update;
 2. promote the accepted `develop` commit to `main`;
 3. require final `main` CI to pass;
 4. create tag `v2.1.0`;
