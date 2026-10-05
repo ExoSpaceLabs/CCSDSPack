@@ -51,6 +51,11 @@ output_dir="$(realpath -m "${output_dir}")"
 rm -rf "${output_dir}"
 mkdir -p "${output_dir}"
 
+if ! git rev-parse --verify "${baseline_ref}^{commit}" >/dev/null 2>&1; then
+  echo "Fetching baseline ref ${baseline_ref}..."
+  git fetch --no-tags --depth=1 origin "${baseline_ref}"
+fi
+
 baseline_sha="$(git rev-parse "${baseline_ref}^{commit}")"
 candidate_sha="$(git rev-parse "${candidate_ref}^{commit}")"
 
