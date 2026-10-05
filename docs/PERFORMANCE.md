@@ -275,6 +275,64 @@ consumer retains about 3.9 KiB more text than v2.0. That footprint is small in a
 but is retained as a release metric and should be checked against the physical STM32 build.
 
 
+## Matched protocol-surface characterization
+
+A broader cross-version comparison was added for issue #163. The same
+`test/performance/protocol_benchmark.cpp` source is compiled unchanged against
+the released v2.0 main commit and the v2.1 candidate, back-to-back on the same
+Ubuntu runner/toolchain. The benchmark records wall-clock time, heap
+allocations/op, and allocated bytes/op.
+
+Matched Linux run **37328278762** produced the following comparison:
+
+| Operation | Variant | v2.0 ns/op | v2.1 ns/op | Speedup | Allocations/op v2.0 -> v2.1 | Allocated bytes/op v2.0 -> v2.1 |
+|---|---|---:|---:|---:|---:|---:|
+| CRC16 | 64 B | 427.77 | 434.31 | 0.985x | 0 -> 0 | 0 -> 0 |
+| CRC16 | 1,024 B | 6,976.78 | 6,982.45 | 0.999x | 0 -> 0 | 0 -> 0 |
+| CRC16 | 32,768 B | 223,379.81 | 223,355.88 | 1.000x | 0 -> 0 | 0 -> 0 |
+| CUC decode | explicit 4+2 | 10.20 | 12.62 | 0.808x | 0 -> 0 | 0 -> 0 |
+| CUC encode | explicit 4+2 | 22.34 | 31.46 | 0.710x | 1 -> 1 | 7 -> 7 |
+| Manager reassembly | 4096 from 256 | 656.10 | 396.38 | 1.655x | 24 -> 1 | 18,901 -> 4,096 |
+| Manager segmentation | 4096 to 256 | 3,793.57 | 3,932.65 | 0.965x | 148 -> 148 | 22,792 -> 22,792 |
+| Manager stream load | 4096 from 256 | 50,432.10 | 45,798.82 | 1.101x | 558 -> 396 | 117,583 -> 56,279 |
+| PUS-A TC decode | standard | 18.56 | 14.91 | 1.245x | 0 -> 0 | 0 -> 0 |
+| PUS-A TM decode | timestamp | 60.54 | 37.76 | 1.603x | 1 -> 0 | 7 -> 0 |
+| PUS-C TC decode | standard | 16.81 | 10.06 | 1.671x | 0 -> 0 | 0 -> 0 |
+| PUS-C TM decode | timestamp | 49.76 | 34.74 | 1.432x | 1 -> 0 | 7 -> 0 |
+| PUS-A TC encode | standard | 75.65 | 33.62 | 2.250x | 4 -> 1 | 15 -> 5 |
+| PUS-A TM encode | timestamp | 94.07 | 62.44 | 1.507x | 4 -> 1 | 29 -> 13 |
+| PUS-C TC encode | standard | 77.49 | 25.03 | 3.096x | 4 -> 1 | 15 -> 5 |
+| PUS-C TM encode | timestamp | 88.52 | 58.23 | 1.520x | 4 -> 1 | 36 -> 14 |
+| Validator | PUS-C TC CRC16 256 B | 2,329.16 | 2,323.01 | 1.003x | 14 -> 6 | 832 -> 800 |
+
+The result is deliberately not summarized as “everything is faster.” The
+measured migration gains are strongest where v2.1 removes temporary ownership
+and heap churn:
+
+- PUS encoding is **1.5x to 3.1x faster** in the measured cases and drops from
+  four allocations to one;
+- PUS decoding is **1.25x to 1.67x faster**, with timestamped TM decoding also
+  eliminating its remaining heap allocation;
+- Manager reassembly is **1.66x faster**, reducing allocations from 24 to one
+  and allocated bytes from 18,901 to 4,096;
+- Manager stream loading is **1.10x faster** while reducing allocation count
+  from 558 to 396 and allocated bytes by roughly 52%;
+- Validator and CRC16 throughput are effectively neutral in this run;
+- Manager segmentation is about **3.5% slower** with unchanged allocation
+  behavior;
+- the measured CUC encode/decode paths are slower in v2.1
+  (**0.71x / 0.81x** of v2.0 throughput) with no allocation improvement.
+
+These regressions are retained as evidence rather than hidden. They are small
+enough not to undermine the broader allocation/copy goals, but CUC is an
+obvious future optimization target if wall-clock throughput matters for that
+path.
+
+The benchmark changes no wire semantics. The existing CCSDS/ECSS fixed vectors,
+PUS-C acknowledgement matrix, malformed/tailoring fixtures, structured
+validation evidence, sanitizer/fuzz gates, and target validation remain the
+authority for conformance.
+
 ## Coverage boundary
 
 The timing ratios in this document are claims about the specific measured operations and
