@@ -91,8 +91,15 @@ For each subsequent C-core migration slice:
 4. Record hosted timing trends without turning machine-noise into a release gate.
 5. Record MCU text/data/bss changes for release candidates and hardware validation builds.
 
-The next planned measurements are PUS TC/TM encode/decode after their wire codecs move into
-the C core.
+The matched comparison currently covers packet inspection/parsing, public packet
+serialization, allocation behavior, and Cortex-M7 retained text. It does **not** yet provide
+cross-version timing evidence for every protocol surface now implemented by the C core.
+
+Issue #163 tracks the remaining matched v2.0-versus-v2.1 characterization for PUS-A/PUS-C
+encode/decode, CUC, Validator, Manager segmentation/reassembly, stream walking, and isolated
+CRC throughput. Those measurements must preserve the existing CCSDS/ECSS fixed-vector,
+negative-fixture, and structured-validation evidence; performance changes do not relax
+wire-format or conformance requirements.
 
 
 ## Final matched v2.0 main versus v2.1 candidate
@@ -195,7 +202,7 @@ MCU comparison with garbage collection was recorded in run **36779957111**.
 
 ## v2.1 interpretation
 
-The v2.1 transition meets the primary performance goals:
+For the operations measured so far, the v2.1 transition meets the primary performance goals:
 
 - pure-C packet inspection remains allocation-free and zero-copy;
 - the existing C++ raw parse path is materially faster than v2.0 main;
@@ -208,3 +215,13 @@ The v2.1 transition meets the primary performance goals:
 The tradeoff measured so far is Cortex-M7 code size: the identical garbage-collected public
 consumer retains about 3.9 KiB more text than v2.0. That footprint is small in absolute terms
 but is retained as a release metric and should be checked against the physical STM32 build.
+
+
+## Coverage boundary
+
+The timing ratios in this document are claims about the specific measured operations and
+matched run conditions, not a claim that C is inherently faster than C++ or that every
+v2.1 protocol operation is faster than v2.0. The architectural gains come from removing
+copies, reducing heap traffic, exposing caller-owned buffers/views, and consolidating wire
+mechanics in the C core. Issue #163 is the release-tracked work item for completing broader
+cross-version protocol benchmarks.

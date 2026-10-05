@@ -268,6 +268,7 @@ See [Command-line tools](docs/CLI.md).
 - [Space Packet PDU profile](docs/CCSDS_133_0_B_2_PROFILE.md)
 - [Compliance statement](COMPLIANCE.md)
 - [Detailed CCSDS compliance matrix](CCSDS_COMPLIANCE.md)
+- [PUS/CUC compliance baseline](docs/PUS_CUC_COMPLIANCE.md)
 - [PUS tailoring](docs/MISSION_TAILORING.md)
 - [Structured validation](docs/VALIDATION.md)
 - [Configuration](docs/CONFIG.md)

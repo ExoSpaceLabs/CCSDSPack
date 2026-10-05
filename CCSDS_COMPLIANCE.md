@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 
 ## Status
 
-This document records the release-facing CCSDS Space Packet traceability for v2.0.0. It is read together with `COMPLIANCE.md`, `docs/CCSDS_133_0_B_2_PROFILE.md`, `docs/MISSION_TAILORING.md`, `docs/VALIDATION.md`, `docs/PUS_C_EVIDENCE.md`, `docs/VALIDATION_EVIDENCE.md`, and `docs/ROBUSTNESS.md`.
+This document records the release-facing CCSDS Space Packet traceability for v2.1.0. It is read together with `COMPLIANCE.md`, `docs/CCSDS_133_0_B_2_PROFILE.md`, `docs/MISSION_TAILORING.md`, `docs/VALIDATION.md`, `docs/PUS_C_EVIDENCE.md`, `docs/VALIDATION_EVIDENCE.md`, and `docs/ROBUSTNESS.md`.
 
 The presence of an API or an internal round trip is not treated as conformance evidence by itself. Supported areas are tied to focused semantic tests, independently fixed vectors, structured negative fixtures, or integration/robustness evidence.
 
@@ -21,7 +21,7 @@ The presence of an API or an internal round trip is not treated as conformance e
 
 ## Claim boundary
 
-The v2.0.0 claim covers the implemented Space Packet PDU and the library behavior required to create, serialize, parse, inspect, validate, segment, and manage those packets.
+The v2.1.0 claim covers the implemented Space Packet PDU and the library behavior required to create, serialize, parse, inspect, validate, segment, and manage those packets.
 
 Complete abstract Packet/Octet String service primitives, lower-layer packet transfer, network routing, transfer frames, virtual channels, COP-1, CFDP, transport bindings, complete PUS services, and a completed system-level PICS remain outside scope.
 
@@ -98,13 +98,13 @@ The release matrix in `docs/VALIDATION_EVIDENCE.md` traces every public `Validat
 
 Each fuzz target runs with bounded generated-input count, input length, per-input timeout, and RSS. Successful bounded Packet parsing is asserted never to consume beyond supplied input and to agree with the primary-header declared packet boundary. Successful CUC decode is asserted to re-encode to the same complete encoded value.
 
-The object model remains vector-backed. These gates provide crash, over-read, undefined-behavior, timeout, and bounded-resource evidence; they are not a claim that v2.0.0 parsing is zero-copy or globally allocation-free. See `docs/ROBUSTNESS.md`.
+The C++ ownership layer remains vector-backed. The C11 core exposes caller-owned buffer/view APIs with local no-allocation/zero-copy guarantees where documented. These robustness gates are not a claim that the complete library is globally allocation-free. See `docs/ROBUSTNESS.md`.
 
 ## Current evidence
 
 The release candidate is supported by:
 
-- **132/132 native regression/conformance tests**;
+- **134/134 native regression/conformance tests**;
 - independent fixed generic and PUS byte vectors, including the complete 16-value PUS-C TC acknowledgement matrix;
 - a documented negative matrix covering the complete 26-code structured Validator surface;
 - negative tests for version, ranges, length, CRC, identifier, segmentation, sequence, PUS fields/tailoring, and CUC configuration;
@@ -116,8 +116,18 @@ The release candidate is supported by:
 - dedicated Clang ASan and UBSan native-suite jobs;
 - bounded four-target libFuzzer smoke CI under ASan+UBSan.
 
-Fresh native arm64 execution, fresh physical STM32 execution, and final release-publication checks remain release gates and will be added to this evidence set before tagging.
+Fresh Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 execution are recorded in `docs/V2_HARDWARE_VALIDATION.md`. Final release promotion/publication checks remain outstanding.
 
 ## Change control
 
 Changes to packet wire behavior, selected normative baselines, or the conformance boundary require coordinated updates to this matrix, `COMPLIANCE.md`, the detailed PDU profile, PUS evidence, structured-validation evidence, and robustness documentation.
+
+
+## v2.1 C-core change control
+
+The C-core migration does not alter the standards baseline or claim boundary.
+Optimizations must preserve independent generic/PUS wire vectors, the complete
+PUS-C acknowledgement matrix, parser and tailoring negatives, and the structured
+validation evidence. Round-trip tests alone are not sufficient evidence of
+conformance. Broader performance characterization is tracked separately in issue
+#163 and cannot be used to justify wire-semantic changes.

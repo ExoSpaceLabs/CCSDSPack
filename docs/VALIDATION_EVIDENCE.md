@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This matrix records how the public `ccsds::ValidationCode` surface is exercised for v2.0.0. It distinguishes direct malformed fixtures, template/sequence-state failures, and presence/classification checks. A check is not required to have an artificial failing object when its semantics are intentionally positive-only.
+This matrix records how the public `ccsds::ValidationCode` surface is exercised for v2.1.0. It distinguishes direct malformed fixtures, template/sequence-state failures, and presence/classification checks. A check is not required to have an artificial failing object when its semantics are intentionally positive-only.
 
 ## Matrix
 

@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These notes describe the v2.1.0 release candidate. Hosted CI, cross-builds, package consumers, performance comparison, and Cortex-M7 compile/link evidence are complete. Fresh native arm64 and physical Cortex-M7 execution must still be rerun against the final candidate before the release is promoted to `main` and tagged.
+> These notes describe the v2.1.0 release candidate. Hosted validation, native Raspberry Pi 5 arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution are complete. The remaining pre-release work is the broader matched v2.0-vs-v2.1 performance characterization tracked in issue #163, final promotion to `main`, final `main` CI, tagging, and publication verification.
 
 ## Summary
 
@@ -66,7 +66,7 @@ Representative results:
 - forced re-finalization serialization: **4/6 -> 1 allocation** depending on PEC mode;
 - the low-level C packet view remains **0 allocations** and **0 transport-adapter bridge copies**.
 
-Exact methodology, packet sizes, timings and allocation counts are recorded in `docs/PERFORMANCE.md`.
+Exact methodology, packet sizes, timings and allocation counts are recorded in `docs/PERFORMANCE.md`. These measurements cover owning raw parse and packet serialization; they do not yet establish a speedup for every C-core protocol operation. Broader matched PUS/CUC/Validator/Manager/stream measurements are tracked in issue #163.
 
 ## Cortex-M7 footprint
 
@@ -79,7 +79,7 @@ With section garbage collection rooted at the probe entry point:
 - delta: **+3,928 bytes (+10.8%)**;
 - data/bss in the relocatable comparison: **0/0** for both.
 
-The symbol review shows the increase is distributed across the newly retained C packet/PUS/CUC/validation/stream primitives rather than one obvious duplicate implementation. Physical STM32 ELF size remains a release-candidate validation item.
+The symbol review shows the increase is distributed across the newly retained C packet/PUS/CUC/validation/stream primitives rather than one obvious duplicate implementation. Physical STM32 execution has since passed on the release candidate; the matched compile/link comparison remains the cross-version footprint metric.
 
 ## Standards scope
 
@@ -155,19 +155,19 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 Before tagging v2.1.0:
 
-1. merge the final evidence/documentation PR into `develop`;
-2. generate fresh v2.1 arm64 and MCU packages from the exact candidate commit;
-3. rerun Raspberry Pi 5/native arm64 installed-package acceptance;
-4. rerun NUCLEO-H755ZI-Q/Cortex-M7 physical acceptance and record final ELF text/data/bss;
-5. promote the accepted `develop` commit to `main`;
-6. require final `main` CI to pass;
-7. create tag `v2.1.0`;
-8. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
+1. complete the broader matched v2.0-vs-v2.1 performance characterization in issue #163 and record results without changing wire semantics;
+2. merge the final release/compliance documentation into `develop`;
+3. promote the accepted `develop` commit to `main`;
+4. require final `main` CI to pass;
+5. create tag `v2.1.0`;
+6. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
+
+Native Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 release-candidate execution are already complete and recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Release control
 
 ```text
-develop -> physical/native hardware acceptance -> main -> tag v2.1.0
+develop -> complete performance evidence -> main -> final CI -> tag v2.1.0
 ```
 
 Publication evidence is recorded only after the tag workflow completes.
