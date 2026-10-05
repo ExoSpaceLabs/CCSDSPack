@@ -147,7 +147,8 @@ jobs:
           cmake -S . -B build -DCCSDSPACK_BUILD_BENCHMARKS=ON
           cmake --build build --target \
             CCSDSPack_packet_benchmark \
-            CCSDSPack_packet_serialize_benchmark -- -j
+            CCSDSPack_packet_serialize_benchmark \
+            CCSDSPack_protocol_benchmark -- -j
 
       - name: Run performance baselines (latest only)
         if: matrix.os == 'ubuntu-latest'
@@ -156,6 +157,15 @@ jobs:
             | tee packet-performance-baseline.csv
           ./build/bin/CCSDSPack_packet_serialize_benchmark v2.1 \
             | tee packet-serialization-performance.csv
+          ./build/bin/CCSDSPack_protocol_benchmark v2.1 \
+            | tee protocol-performance-current.csv
+
+      - name: Run matched v2.0 vs v2.1 protocol characterization (latest only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          bash test/performance/run_matched_v2_0_vs_v2_1.sh \
+            --candidate "${GITHUB_SHA}" \
+            --output-dir "$PWD/build/matched-performance"
 
       - name: Upload performance baselines (latest only)
         if: matrix.os == 'ubuntu-latest'
@@ -165,6 +175,11 @@ jobs:
           path: |
             packet-performance-baseline.csv
             packet-serialization-performance.csv
+            protocol-performance-current.csv
+            build/matched-performance/metadata.txt
+            build/matched-performance/protocol-v2.0.csv
+            build/matched-performance/protocol-v2.1.csv
+            build/matched-performance/protocol-comparison.csv
           if-no-files-found: error
           retention-days: 30
 
