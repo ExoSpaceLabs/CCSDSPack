@@ -32,7 +32,7 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 
 - [Concise compliance statement](../COMPLIANCE.md)
 - [Detailed CCSDS Space Packet compliance matrix](../CCSDS_COMPLIANCE.md)
-- [PUS/CUC compliance baseline](CCSDS_COMPLIANCE.md)
+- [PUS/CUC compliance baseline](PUS_CUC_COMPLIANCE.md)
 
 ## Migration and historical references
 
