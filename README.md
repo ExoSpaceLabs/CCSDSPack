@@ -28,7 +28,7 @@ The implementation scope is intentionally packet-focused. Complete PUS services,
 |---|---|
 | ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=develop) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=develop) |
 
-CI covers Ubuntu 22.04, Ubuntu 24.04, Ubuntu latest, Windows latest, Doxygen, CLI integration, installed-package consumers, examples, and package/cross-build generation. UML generation is available manually and is not a release gate.
+CI covers explicit Ubuntu 22.04, 24.04, and 26.04 runners, Windows latest, Doxygen, CLI integration, installed-package consumers, examples, and package/cross-build generation. Release-critical Linux jobs avoid the moving `ubuntu-latest` alias. UML generation is available manually and is not a release gate.
 
 ## Why CCSDSPack
 
