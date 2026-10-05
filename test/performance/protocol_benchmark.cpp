@@ -104,8 +104,11 @@ void benchHeader(const std::string &label,
 void benchPus(const std::string &label) {
   constexpr std::size_t iterations = 50000U;
 
+  ccsds::pus::rev_a::TcTailoring aTcTailoring{};
+  aTcTailoring.sourceIdOctets = 2U;
   benchHeader(label, "pus_a_tc",
-              ccsds::pus::rev_a::TcHeader(17U, 1U, 0x12U, 0x0FU),
+              ccsds::pus::rev_a::TcHeader(
+                aTcTailoring, 17U, 1U, 0x1234U, 0x0FU),
               iterations);
 
   ccsds::pus::rev_a::TmTailoring aTmTailoring{};
