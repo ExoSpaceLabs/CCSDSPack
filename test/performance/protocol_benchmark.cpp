@@ -4,6 +4,7 @@
 #include <CCSDSManager.h>
 #include <CCSDSPacket.h>
 #include <CCSDSTime.h>
+#include <CCSDSUtils.h>
 #include <CCSDSValidator.h>
 #include <PusSecondaryHeaders.h>
 #include <PusTailoring.h>
@@ -194,6 +195,24 @@ ccsds::Packet makePusPacket(const std::size_t payloadSize) {
   return packet;
 }
 
+
+void benchCrc(const std::string &label) {
+  for (const std::size_t size : {64U, 1024U, 32768U}) {
+    std::vector<std::uint8_t> data(size, 0U);
+    for (std::size_t i = 0U; i < data.size(); ++i)
+      data[i] = static_cast<std::uint8_t>((i * 31U + size) & 0xFFU);
+
+    const std::size_t iterations =
+      size <= 64U ? 50000U : (size <= 1024U ? 10000U : 500U);
+
+    const auto sample = measure(iterations, [&] {
+      const auto crc = ccsds::crc16(data);
+      g_sink += crc;
+    });
+    emit(label, "crc16", std::to_string(size) + "_bytes", iterations, sample);
+  }
+}
+
 void benchValidator(const std::string &label) {
   constexpr std::size_t iterations = 100000U;
   const auto packet = makePusPacket(256U);
@@ -287,6 +306,7 @@ int main(int argc, char **argv) {
   try {
     benchPus(argv[1]);
     benchCuc(argv[1]);
+    benchCrc(argv[1]);
     benchValidator(argv[1]);
     benchManager(argv[1]);
   } catch (const std::exception &error) {
