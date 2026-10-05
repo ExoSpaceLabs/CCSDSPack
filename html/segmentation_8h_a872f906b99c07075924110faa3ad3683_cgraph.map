@@ -1,0 +1,7 @@
+<map id="ccsds_segmentation_plan" name="ccsds_segmentation_plan">
+<area shape="rect" id="Node000001" title="Computes one packet&#39;s payload slice, flags, and sequence count." alt="" coords="5,45,196,70"/>
+<area shape="rect" id="Node000002" href="$segmentation_8c.html#a47d1791b53a529719ec3299569c4fe61" title="Returns the number of packets required to carry total_size bytes." alt="" coords="249,5,403,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,42,235,36,236,41,191,47"/>
+<area shape="rect" id="Node000003" href="$segmentation_8c.html#a561be163086f75f8fcdfcad3f12972b4" title="Returns the sequence state after emitting packet_count packets." alt="" coords="244,69,408,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,67,231,73,230,78,190,73"/>
+</map>

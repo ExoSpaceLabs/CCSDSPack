@@ -1,0 +1,12 @@
+<map id="ccsds_sequence_after_packets" name="ccsds_sequence_after_packets">
+<area shape="rect" id="Node000001" title="Returns the sequence state after emitting packet_count packets." alt="" coords="849,23,1013,63"/>
+<area shape="rect" id="Node000002" href="$segmentation_8c.html#a3071d60efbf9829e8f0212d9c26e88ca" title="Computes one packet&#39;s payload slice, flags, and sequence count." alt="" coords="611,5,801,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="835,35,801,31,802,26,836,30"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Manager.html#a24d82384ac61254e99a337864795436c" title=" " alt="" coords="308,31,563,56"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="836,46,563,46,563,41,836,41"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="597,31,563,34,563,29,597,26"/>
+<area shape="rect" id="Node000004" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="105,5,160,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="294,34,160,23,160,18,294,29"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1Manager.html#aa4be5c60b050d8f78fb9cad7443ac4b5" title=" " alt="" coords="5,55,260,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="295,57,260,60,260,55,294,52"/>
+</map>

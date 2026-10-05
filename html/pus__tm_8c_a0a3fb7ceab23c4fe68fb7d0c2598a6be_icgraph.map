@@ -1,0 +1,12 @@
+<map id="ccsds_pus_a_tm_encoded_size" name="ccsds_pus_a_tm_encoded_size">
+<area shape="rect" id="Node000001" title="Returns exact encoded size for valid PUS&#45;A TM tailoring, otherwise zero." alt="" coords="453,62,676,87"/>
+<area shape="rect" id="Node000002" href="$pus__tm_8c.html#a26862b0ae6d836a8ce0f4a807f3f6fb2" title="Decodes one complete PUS&#45;A TM secondary header." alt="" coords="223,13,405,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="486,62,379,41,380,35,487,57"/>
+<area shape="rect" id="Node000004" href="$pus__tm_8c.html#af96fd3030f25965f4b5a00a7cf966a5b" title="Encodes one PUS&#45;A TM secondary header into caller&#45;owned storage." alt="" coords="223,62,405,87"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="440,77,406,77,406,72,440,72"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#a6db8e59ecc12363938b0bb01663e6a54" title=" " alt="" coords="13,87,167,127"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="484,92,406,103,280,110,167,111,167,105,280,104,405,97,484,87"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#ab06eaa100a55d74ac92bd87548138d49" title=" " alt="" coords="5,5,175,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="209,28,175,28,175,23,209,23"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="211,92,167,98,167,93,211,87"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="ccsds::Header::serialize" name="ccsds::Header::serialize">
+<area shape="rect" id="Node000001" title="Const overload of serialize()." alt="" coords="5,42,181,67"/>
+<area shape="rect" id="Node000002" href="$primary__header_8c.html#a77b3e5edb03abb942ac1b9946e4fcd47" title="Encodes a validated primary header into exactly six caller&#45;owned bytes." alt="" coords="229,35,397,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,52,216,52,216,57,182,57"/>
+<area shape="rect" id="Node000003" href="$primary__header_8c.html#a41361d838dac671f47eef263a1132735" title="Validates the logical field widths without imposing version&#45;0 policy." alt="" coords="445,5,613,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="397,41,432,36,432,41,398,46"/>
+<area shape="rect" id="Node000004" href="$bytes_8h.html#a1a5c075a1e4cd3ffe5782eec75da0e73" title="Stores a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="461,70,598,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="398,63,448,69,447,75,397,68"/>
+<area shape="rect" id="Node000005" href="$bytes_8h.html#a22386b02332619598f86ea6feb7d901d" title="Stores a 16&#45;bit integer using explicit wire byte order." alt="" coords="661,70,791,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="599,80,648,80,648,85,599,85"/>
+<area shape="rect" id="Node000006" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="839,70,969,95"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="791,80,825,80,825,85,791,85"/>
+</map>

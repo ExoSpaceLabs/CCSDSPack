@@ -1,0 +1,25 @@
+<map id="ccsds_crc16_update" name="ccsds_crc16_update">
+<area shape="rect" id="Node000001" title="Updates an unfinalized MSB&#45;first CRC16 state over caller&#45;owned bytes." alt="" coords="912,125,1064,151"/>
+<area shape="rect" id="Node000002" href="$crc_8c.html#a9a8f6ec238a30577c89aee09ab40ebf2" title="Computes an MSB&#45;first 16&#45;bit CRC over caller&#45;owned bytes." alt="" coords="700,76,864,101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="921,125,835,104,837,99,922,120"/>
+<area shape="rect" id="Node000010" href="$packet__encode_8c.html#a9f2d19262a926fb07189f9da77fd3560" title="Finalizes one packet directly over two caller&#45;owned data&#45;field spans." alt="" coords="701,146,863,186"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="899,153,864,158,863,152,898,148"/>
+<area shape="rect" id="Node000003" href="$crc_8c.html#a93a0c153a731f6023188d242e4e3839a" title="Computes CRC&#45;16/CCITT&#45;FALSE using the CCSDSPack packet defaults." alt="" coords="467,5,642,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="735,74,651,45,610,33,612,28,653,39,737,69"/>
+<area shape="rect" id="Node000004" href="$packet__view_8c.html#a46f06d545df7099008dcf60bf4bc5458" title="Parses and validates one bounded packet without allocating or copying." alt="" coords="460,55,649,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="686,82,649,79,650,74,686,77"/>
+<area shape="rect" id="Node000007" href="$namespaceccsds.html#a5f780ea85e5bf45ceabeabde20820cc1" title="Computes an MSB&#45;first 16&#45;bit CRC over the supplied bytes." alt="" coords="504,104,605,129"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="686,103,606,113,605,108,686,98"/>
+<area shape="rect" id="Node000005" href="$stream_8c.html#a16129c1ccc50cb6f51f2f8975dc20a12" title="Parses the next framed packet and advances the cursor transactionally." alt="" coords="212,55,409,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="446,70,410,70,410,65,446,65"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1Manager.html#a738e17de0116fe9ca11f1032dc81a43a" title=" " alt="" coords="5,55,164,80"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="198,70,164,70,164,65,198,65"/>
+<area shape="rect" id="Node000008" href="$classccsds_1_1Validator.html#acf8ff508437a8472f83313e023a4f799" title=" " alt="" coords="218,104,403,129"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="491,119,404,119,404,114,491,114"/>
+<area shape="rect" id="Node000009" href="$exec__validator_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="57,104,112,129"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="204,119,112,119,112,114,204,114"/>
+<area shape="rect" id="Node000011" href="$packet__encode_8c.html#a453cff50a2379ea9e7c1c1523233f5e5" title="Finalizes one CCSDS Space Packet header and optional packet CRC." alt="" coords="473,153,636,179"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="686,169,636,169,636,163,686,163"/>
+<area shape="rect" id="Node000012" href="$classccsds_1_1Packet.html#a242944a101e85c5f8887e669cd014579" title=" " alt="" coords="457,203,652,243"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="690,192,635,206,634,201,688,187"/>
+</map>

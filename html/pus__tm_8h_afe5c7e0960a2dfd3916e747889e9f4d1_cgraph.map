@@ -1,0 +1,36 @@
+<map id="ccsds_pus_a_tm_encode" name="ccsds_pus_a_tm_encode">
+<area shape="rect" id="Node000001" title="Encodes one PUS&#45;A TM secondary header into caller&#45;owned storage." alt="" coords="5,159,188,185"/>
+<area shape="rect" id="Node000002" href="$cuc_8c.html#af584944f9c87f576846c043611ca6fe3" title="Encodes one numeric CUC value directly into caller&#45;owned storage." alt="" coords="277,210,418,235"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,182,271,205,270,210,160,187"/>
+<area shape="rect" id="Node000006" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="764,297,895,322"/>
+<area shape="poly" id="edge18_Node000001_Node000006" title=" " alt="" coords="119,183,181,221,274,271,387,321,447,341,507,356,559,365,601,368,642,364,694,356,744,343,789,325,791,330,746,348,695,361,642,370,601,373,559,370,506,361,445,346,385,326,272,276,178,225,116,187"/>
+<area shape="rect" id="Node000009" href="$pus__tm_8c.html#a0a3fb7ceab23c4fe68fb7d0c2598a6be" title="Returns exact encoded size for valid PUS&#45;A TM tailoring, otherwise zero." alt="" coords="236,70,459,95"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="133,157,297,98,299,103,134,162"/>
+<area shape="rect" id="Node000010" href="$pus__tm_8c.html#af4916003ae05978628387d3579eeb098" title="Validates PUS&#45;A TM tailoring." alt="" coords="507,5,695,45"/>
+<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="107,157,157,106,194,77,235,55,299,34,367,22,433,17,493,16,493,21,433,22,367,27,301,39,237,60,197,82,161,110,110,161"/>
+<area shape="rect" id="Node000014" href="$pus_8h.html#ab75511ee52cbdfd9bdc21eef1b3e2057" title="Returns non&#45;zero when value fits exactly within the selected identifier width." alt="" coords="257,146,437,171"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="188,164,243,162,243,167,188,170"/>
+<area shape="rect" id="Node000015" href="$pus__tm_8c.html#a72d6e363a0e43ae15a930542502c08e5" title=" " alt="" coords="298,422,397,447"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="104,184,120,226,147,284,186,347,210,376,238,401,260,414,285,423,283,428,258,419,234,405,206,379,182,350,142,287,115,228,99,186"/>
+<area shape="rect" id="Node000003" href="$cuc_8c.html#abd905237c1885654f75ccee85e7d08d8" title="Returns the encoded P&#45;field + T&#45;field size without validating the layout." alt="" coords="509,70,692,95"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="391,207,457,180,521,141,572,102,575,106,524,145,460,185,393,212"/>
+<area shape="rect" id="Node000004" href="$cuc_8c.html#a3bb920cae5f443cb5f41282544bc91b7" title="Validates the supported basic CUC layout." alt="" coords="964,122,1111,147"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="418,211,950,143,951,148,419,216"/>
+<area shape="rect" id="Node000005" href="$bytes_8h.html#a766a460e3ef1b8e6c7409a190cef50e5" title="Stores 0..8 octets in CCSDS&#45;standard big&#45;endian order." alt="" coords="524,222,677,247"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="419,223,510,228,510,233,418,229"/>
+<area shape="rect" id="Node000007" href="$cuc_8c.html#ab5dc55660b1193664799add7549fce09" title=" " alt="" coords="557,271,644,297"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="401,233,544,268,543,273,400,238"/>
+<area shape="rect" id="Node000008" href="$cuc_8c.html#a6719a2e23d16f90287ab7748fe74336c" title=" " alt="" coords="520,321,681,346"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="370,233,430,269,508,307,529,314,527,319,506,312,428,274,367,238"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="653,245,695,257,784,289,782,294,694,263,651,250"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="459,80,496,80,496,85,459,85"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="404,67,498,46,499,51,405,73"/>
+<area shape="rect" id="Node000011" href="$pus_8h.html#a72689b3da3a944528e0b666f1c00fc5d" title="Returns non&#45;zero for supported mission identifier widths 0, 1, 2, or 4 octets." alt="" coords="753,85,906,125"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="661,43,696,55,761,78,759,83,694,60,659,48"/>
+<area shape="rect" id="Node000012" href="$pus__tm_8c.html#a74554a8d759fb67ac7fe96be3e758d7a" title=" " alt="" coords="743,25,916,50"/>
+<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="695,28,729,29,729,35,695,33"/>
+<area shape="poly" id="edge13_Node000012_Node000004" title=" " alt="" coords="864,48,917,71,1001,113,999,118,915,76,861,53"/>
+<area shape="rect" id="Node000013" href="$pus__tm_8c.html#a48a83676b00d92beebf1a62cd17dde0d" title=" " alt="" coords="982,25,1093,50"/>
+<area shape="poly" id="edge14_Node000012_Node000013" title=" " alt="" coords="917,35,968,35,968,40,917,40"/>
+<area shape="poly" id="edge17_Node000014_Node000011" title=" " alt="" coords="437,146,739,113,739,118,438,151"/>
+</map>

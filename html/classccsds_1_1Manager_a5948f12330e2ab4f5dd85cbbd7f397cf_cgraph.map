@@ -1,0 +1,24 @@
+<map id="ccsds::Manager::getApplicationDataBuffer" name="ccsds::Manager::getApplicationDataBuffer">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,191,231,231"/>
+<area shape="rect" id="Node000002" href="$reassembly_8c.html#a583bb766d443c41e1b313607351f32b6" title="Appends one packet&#39;s application&#45;data view into caller&#45;owned output." alt="" coords="279,134,469,159"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="198,188,308,160,310,165,199,193"/>
+<area shape="rect" id="Node000010" href="$reassembly_8c.html#aa177b60c016a5c0ba66881ec6ed6a212" title="Initializes or resets one reassembly state." alt="" coords="283,222,465,247"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="231,219,270,222,270,228,231,224"/>
+<area shape="rect" id="Node000003" href="$primary__header_8c.html#a41361d838dac671f47eef263a1132735" title="Validates the logical field widths without imposing version&#45;0 policy." alt="" coords="769,5,937,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="387,132,441,89,477,66,516,48,577,32,640,22,700,18,756,17,756,22,701,23,640,27,578,37,518,53,480,71,444,93,391,136"/>
+<area shape="rect" id="Node000004" href="$validation_8c.html#ad77bbff29307296f4c7acc3705f603f4" title="Evaluates a sequence count against the current expected value." alt="" coords="528,127,699,167"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="470,144,514,144,514,149,470,149"/>
+<area shape="rect" id="Node000007" href="$validation_8c.html#aecb612b3fe6d3c92c54decb5659e5cb9" title="Evaluates sequence flags against the current segmentation state." alt="" coords="531,191,696,231"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="423,157,525,184,524,190,422,162"/>
+<area shape="rect" id="Node000009" href="$validation_8c.html#a849564ba35c6a5f5a3c0b78c0abb167b" title="Accepts one validated primary header and advances sequence state." alt="" coords="517,63,709,103"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="422,131,524,104,525,109,423,136"/>
+<area shape="rect" id="Node000005" href="$validation_8c.html#a9aee1bb8381f8573144ef13ee8d21afa" title=" " alt="" coords="757,69,949,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="697,124,755,110,756,115,698,129"/>
+<area shape="rect" id="Node000006" href="$validation_8c.html#ad478bbc1e782ba1a05252ddc7a4d9c1e" title=" " alt="" coords="757,133,949,173"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="699,146,744,148,743,153,699,152"/>
+<area shape="rect" id="Node000008" href="$validation_8c.html#a17d8c77cbe6e680f252dd3b47a05f821" title=" " alt="" coords="757,197,949,237"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="696,210,743,212,743,217,696,216"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="697,60,755,46,756,51,698,65"/>
+<area shape="rect" id="Node000011" href="$validation_8c.html#aaef52bac1971a37407378edd47bfc1b1" title=" " alt="" coords="517,255,709,295"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="451,245,504,254,503,259,450,250"/>
+</map>

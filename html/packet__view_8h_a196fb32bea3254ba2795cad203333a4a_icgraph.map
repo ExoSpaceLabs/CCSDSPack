@@ -1,0 +1,7 @@
+<map id="ccsds_packet_view_parse" name="ccsds_packet_view_parse">
+<area shape="rect" id="Node000001" title="Parses and validates one bounded packet without allocating or copying." alt="" coords="457,5,647,31"/>
+<area shape="rect" id="Node000002" href="$stream_8c.html#a16129c1ccc50cb6f51f2f8975dc20a12" title="Parses the next framed packet and advances the cursor transactionally." alt="" coords="212,5,409,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="443,21,410,21,410,15,443,15"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Manager.html#a738e17de0116fe9ca11f1032dc81a43a" title=" " alt="" coords="5,5,164,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="198,21,164,21,164,15,198,15"/>
+</map>

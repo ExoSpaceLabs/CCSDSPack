@@ -1,0 +1,15 @@
+<map id="inc/ccsdspack/c/segmentation.h" name="inc/ccsdspack/c/segmentation.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="41,5,271,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="147,152,221,177"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,30,177,52,187,78,190,109,190,138,184,138,185,109,181,79,172,54,161,32"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="71,225,142,251"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,29,199,56,227,93,238,114,244,136,244,158,236,179,220,197,200,212,157,230,155,225,197,207,216,193,231,176,239,157,239,137,233,116,223,96,195,60,168,33"/>
+<area shape="rect" id="Node000004" href="$error_8h.html" title=" " alt="" coords="5,152,69,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="97,33,57,51,40,64,26,80,21,94,20,109,28,139,23,140,15,109,16,93,22,77,36,60,55,46,95,28"/>
+<area shape="rect" id="Node000005" href="$primary__header_8h.html" title=" " alt="" coords="36,79,172,104"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="150,33,123,69,118,66,145,29"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="51,176,88,214,84,217,47,180"/>
+<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="119,102,163,141,159,145,115,106"/>
+<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="107,104,109,212,104,212,102,105"/>
+<area shape="poly" id="edge8_Node000005_Node000004" title=" " alt="" coords="95,106,59,144,56,140,91,103"/>
+</map>

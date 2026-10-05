@@ -1,0 +1,12 @@
+<map id="ccsds::Manager::getPacketsBuffer" name="ccsds::Manager::getPacketsBuffer">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,207,75"/>
+<area shape="rect" id="Node000002" href="$stream_8c.html#a5559b2b8d8b5c20a2e355c5ccc421307" title="Returns the stream&#45;frame prefix size for the selected sync policy." alt="" coords="464,5,625,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,45,450,29,451,34,207,51"/>
+<area shape="rect" id="Node000003" href="$stream_8c.html#a7cb0bfea061cf224c6678b2acdffa093" title="Writes the optional four&#45;octet big&#45;endian synchronization prefix." alt="" coords="255,63,416,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,64,241,69,241,74,206,70"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="408,60,457,46,459,52,410,65"/>
+<area shape="rect" id="Node000004" href="$bytes_8h.html#a766a460e3ef1b8e6c7409a190cef50e5" title="Stores 0..8 octets in CCSDS&#45;standard big&#45;endian order." alt="" coords="468,70,621,95"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="417,80,454,80,454,85,417,85"/>
+<area shape="rect" id="Node000005" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="673,70,804,95"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="622,80,659,80,659,85,622,85"/>
+</map>

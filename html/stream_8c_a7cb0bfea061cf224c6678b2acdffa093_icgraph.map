@@ -1,0 +1,7 @@
+<map id="ccsds_packet_stream_write_prefix" name="ccsds_packet_stream_write_prefix">
+<area shape="rect" id="Node000001" title="Writes the optional four&#45;octet big&#45;endian synchronization prefix." alt="" coords="357,5,519,45"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Manager.html#a815984258a37cffbbc0412f181af3301" title=" " alt="" coords="108,5,309,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="343,28,309,28,309,23,343,23"/>
+<area shape="rect" id="Node000003" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,13,60,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,28,60,28,60,23,94,23"/>
+</map>

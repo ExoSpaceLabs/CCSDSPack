@@ -1,0 +1,23 @@
+<map id="ccsds_packet_stream_next" name="ccsds_packet_stream_next">
+<area shape="rect" id="Node000001" title="Parses the next framed packet and advances the cursor transactionally." alt="" coords="5,31,203,56"/>
+<area shape="rect" id="Node000002" href="$bytes_8h.html#a83337ad15c9932af4124b8aeea4270f7" title="Loads 0..8 CCSDS&#45;standard big&#45;endian octets." alt="" coords="904,5,1052,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,31,338,20,488,11,672,8,856,11,891,12,890,17,856,17,672,13,488,17,338,25,203,36"/>
+<area shape="rect" id="Node000004" href="$packet__view_8c.html#a46f06d545df7099008dcf60bf4bc5458" title="Parses and validates one bounded packet without allocating or copying." alt="" coords="251,84,440,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="163,54,275,78,273,84,162,59"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#a3e09d1360c5624e2e27f266f37fdf84a" title="Loads 0..8 octets into a uint64_t using explicit wire byte order." alt="" coords="1100,60,1225,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1022,28,1107,53,1105,59,1021,33"/>
+<area shape="rect" id="Node000005" href="$crc_8c.html#a9a8f6ec238a30577c89aee09ab40ebf2" title="Computes an MSB&#45;first 16&#45;bit CRC over caller&#45;owned bytes." alt="" coords="490,27,654,52"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="396,81,507,53,509,58,397,87"/>
+<area shape="rect" id="Node000007" href="$packet__view_8h.html#acaff78f81a48052406d37afd4aee3a38" title="Returns the CCSDSPack default CRC&#45;16/CCITT&#45;FALSE parameters." alt="" coords="495,77,649,117"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="440,94,482,94,482,99,440,99"/>
+<area shape="rect" id="Node000008" href="$bytes_8h.html#abc80bd6553a5888e248bc36939933744" title="Loads a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="714,141,846,167"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="396,107,488,126,599,140,700,147,700,153,599,145,488,131,395,112"/>
+<area shape="rect" id="Node000010" href="$primary__header_8c.html#af0abb6f979ae1840bc82f919747f89e8" title="Decodes the first six bytes from a caller&#45;owned buffer." alt="" coords="488,191,656,231"/>
+<area shape="poly" id="edge10_Node000004_Node000010" title=" " alt="" coords="371,107,489,170,515,183,513,188,487,175,368,112"/>
+<area shape="rect" id="Node000006" href="$crc_8c.html#af74ae660957942ec1bb44a540a04aad1" title="Updates an unfinalized MSB&#45;first CRC16 state over caller&#45;owned bytes." alt="" coords="704,27,856,52"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="654,37,690,37,690,42,654,42"/>
+<area shape="rect" id="Node000009" href="$bytes_8h.html#a678b1b7d7c81754310024520a94a4246" title="Loads a 16&#45;bit integer using explicit wire byte order." alt="" coords="916,84,1040,109"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="824,139,920,111,921,116,825,144"/>
+<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="1040,86,1085,80,1086,85,1041,91"/>
+<area shape="poly" id="edge11_Node000010_Node000008" title=" " alt="" coords="644,189,719,168,720,173,646,194"/>
+</map>

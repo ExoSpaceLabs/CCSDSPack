@@ -1,7 +1,11 @@
 <map id="ccsds::pus::rev_c::TcHeader::deserialize" name="ccsds::pus::rev_c::TcHeader::deserialize">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,167,45"/>
-<area shape="rect" id="Node000002" href="$namespaceccsds_1_1pus.html#a21e8f29c664bb4d548a0aaaf6ffc1233" title=" " alt="" coords="215,13,420,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,23,201,23,201,28,167,28"/>
-<area shape="rect" id="Node000003" href="$namespaceccsds_1_1pus.html#a95f60fbaf0db5c7a94b44688400d1646" title=" " alt="" coords="468,5,655,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,23,454,23,454,28,420,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,47,167,87"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#aa99fab8f360c690807124b1a7a59555e" title="Decodes one complete PUS&#45;C TC secondary header." alt="" coords="215,55,389,80"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,65,201,65,201,70,167,70"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#a3e09d1360c5624e2e27f266f37fdf84a" title="Loads 0..8 octets into a uint64_t using explicit wire byte order." alt="" coords="483,5,608,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="365,52,469,31,470,36,366,57"/>
+<area shape="rect" id="Node000004" href="$pus__tc_8c.html#a6c914d048e4dafc94ce415f4596425c9" title="Returns the exact encoded size for PUS&#45;C TC tailoring." alt="" coords="437,55,653,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="390,65,424,65,424,70,390,70"/>
+<area shape="rect" id="Node000005" href="$pus_8h.html#abdb8b33ff5e40c0946fd2291312ded24" title="Returns non&#45;zero when the configured trailing spare region contains only zero octets." alt="" coords="453,104,637,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="366,77,469,99,468,104,365,83"/>
 </map>

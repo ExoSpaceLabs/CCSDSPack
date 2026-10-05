@@ -78,7 +78,6 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classccsds_1_1Validator-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">ccsds::Validator Class Reference</div></div>
 </div><!--header-->
@@ -91,7 +90,7 @@ $(function() {
 <div class="dynheader">
 Collaboration diagram for ccsds::Validator:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Validator__coll__graph.svg" width="542" height="315"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Validator__coll__graph.svg" width="100%" height="536"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -115,12 +114,6 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a1b185ebe5a1392f460239858115db4da" id="r_a1b185ebe5a1392f460239858115db4da"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a1b185ebe5a1392f460239858115db4da">sequenceInitialized</a> () const noexcept</td></tr>
-<tr class="separator:a1b185ebe5a1392f460239858115db4da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aac86462e4c56200a9573bc2dcd8bd680" id="r_aac86462e4c56200a9573bc2dcd8bd680"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#aac86462e4c56200a9573bc2dcd8bd680">segmentOpen</a> () const noexcept</td></tr>
-<tr class="separator:aac86462e4c56200a9573bc2dcd8bd680"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a6ce497bf695220e8a5deca25e92e13" id="r_a7a6ce497bf695220e8a5deca25e92e13"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a7a6ce497bf695220e8a5deca25e92e13">expectedSequenceCount</a> () const noexcept</td></tr>
-<tr class="separator:a7a6ce497bf695220e8a5deca25e92e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a92fac0f9574cd4cfe0442644be2e89" id="r_a7a92fac0f9574cd4cfe0442644be2e89"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a7a92fac0f9574cd4cfe0442644be2e89">acceptSequence</a> (const <a class="el" href="classccsds_1_1Header.html">Header</a> &amp;header) noexcept</td></tr>
 <tr class="separator:a7a92fac0f9574cd4cfe0442644be2e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad60527e8d37a9309785838b5b9d92201" id="r_ad60527e8d37a9309785838b5b9d92201"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a> (<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ff">ValidationCode</a> code, bool passed) noexcept</td></tr>
@@ -136,25 +129,16 @@ Private Attributes</h2></td></tr>
 <tr class="separator:a132e967693b5d860194acd22b4b21840"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62d9cc52b9913ff0767c2fce716d46af" id="r_a62d9cc52b9913ff0767c2fce716d46af"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">m_validateSequenceCount</a> {true}</td></tr>
 <tr class="separator:a62d9cc52b9913ff0767c2fce716d46af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25491fbcf650272d344d714d3e74b3fc" id="r_a25491fbcf650272d344d714d3e74b3fc"><td class="memItemLeft" align="right" valign="top">std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a25491fbcf650272d344d714d3e74b3fc">m_sequenceCounter</a> {0U}</td></tr>
-<tr class="separator:a25491fbcf650272d344d714d3e74b3fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cacb31bc3a2b17a461e7a164099e221" id="r_a7cacb31bc3a2b17a461e7a164099e221"><td class="memItemLeft" align="right" valign="top"><a class="el" href="validation_8h.html#a7ed4c411a4f949753aa70b7dfe9844df">ccsds_sequence_validator_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a7cacb31bc3a2b17a461e7a164099e221">m_sequenceState</a> {}</td></tr>
+<tr class="separator:a7cacb31bc3a2b17a461e7a164099e221"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b115eae247dc99a2e9c897900b1701b" id="r_a7b115eae247dc99a2e9c897900b1701b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classccsds_1_1ValidationReport.html">ValidationReport</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a> {}</td></tr>
 <tr class="separator:a7b115eae247dc99a2e9c897900b1701b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
-Static Private Attributes</h2></td></tr>
-<tr class="memitem:ac00c295eb88471e3eaa1ab3f496fdb76" id="r_ac00c295eb88471e3eaa1ab3f496fdb76"><td class="memItemLeft" align="right" valign="top">static constexpr std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#ac00c295eb88471e3eaa1ab3f496fdb76">SEQUENCE_COUNT_MASK</a> {0x3FFFU}</td></tr>
-<tr class="separator:ac00c295eb88471e3eaa1ab3f496fdb76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74831fcf37479b7988741bd3cb73cf34" id="r_a74831fcf37479b7988741bd3cb73cf34"><td class="memItemLeft" align="right" valign="top">static constexpr std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a74831fcf37479b7988741bd3cb73cf34">SEGMENT_OPEN_MASK</a> {0x4000U}</td></tr>
-<tr class="separator:a74831fcf37479b7988741bd3cb73cf34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22ddbbe4ec312579bcf5016fe5ecbc3f" id="r_a22ddbbe4ec312579bcf5016fe5ecbc3f"><td class="memItemLeft" align="right" valign="top">static constexpr std::uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1Validator.html#a22ddbbe4ec312579bcf5016fe5ecbc3f">SEQUENCE_INITIALIZED_MASK</a> {0x8000U}</td></tr>
-<tr class="separator:a22ddbbe4ec312579bcf5016fe5ecbc3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Validates packet coherence, concrete secondary-header contracts, and one sequence stream. </p>
 <p><a class="el" href="classccsds_1_1Packet.html" title="Owns, serializes, and parses one CCSDS Space Packet PDU.">Packet</a> validation is read-only. PUS identity/tailoring is read directly from the installed concrete PUS header; no independent MissionProfile exists. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00098">98</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00099">99</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af92183f218cd68cdce1a600a8920b122" name="af92183f218cd68cdce1a600a8920b122"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af92183f218cd68cdce1a600a8920b122">&#9670;&#160;</a></span>Validator() <span class="overload">[1/2]</span></h2>
@@ -230,9 +214,9 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00102">102</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  102</span>: <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>(templatePacket) {}</div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a53e22a64bc8879fdff4fc9126fe50614"><div class="ttname"><a href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">ccsds::Validator::m_templatePacket</a></div><div class="ttdeci">Packet m_templatePacket</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00129">CCSDSValidator.h:129</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00103">103</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  103</span>: <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>(templatePacket) {}</div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_a53e22a64bc8879fdff4fc9126fe50614"><div class="ttname"><a href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">ccsds::Validator::m_templatePacket</a></div><div class="ttdeci">Packet m_templatePacket</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00117">CCSDSValidator.h:117</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -261,21 +245,19 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00125">125</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  125</span>                                                                 {</div>
-<div class="line"><span class="lineno">  126</span>  <span class="keyword">const</span> <span class="keyword">auto</span> next = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>((header.getSequenceCount() + 1U) &amp; <a class="code hl_variable" href="classccsds_1_1Validator.html#ac00c295eb88471e3eaa1ab3f496fdb76">SEQUENCE_COUNT_MASK</a>);</div>
-<div class="line"><span class="lineno">  127</span>  <span class="keyword">auto</span> state = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Validator.html#a22ddbbe4ec312579bcf5016fe5ecbc3f">SEQUENCE_INITIALIZED_MASK</a> | next);</div>
-<div class="line"><span class="lineno">  128</span>  <span class="keywordflow">if</span> (header.getSequenceFlags() == <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adac8fbed983da3c08528c07274ab31cc64">FIRST_SEGMENT</a></div>
-<div class="line"><span class="lineno">  129</span>      || header.getSequenceFlags() == <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158ada2c8338f207c628a8d50715291f0ee144">CONTINUING_SEGMENT</a>) state |= <a class="code hl_variable" href="classccsds_1_1Validator.html#a74831fcf37479b7988741bd3cb73cf34">SEGMENT_OPEN_MASK</a>;</div>
-<div class="line"><span class="lineno">  130</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a25491fbcf650272d344d714d3e74b3fc">m_sequenceCounter</a> = state;</div>
-<div class="line"><span class="lineno">  131</span>}</div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a22ddbbe4ec312579bcf5016fe5ecbc3f"><div class="ttname"><a href="classccsds_1_1Validator.html#a22ddbbe4ec312579bcf5016fe5ecbc3f">ccsds::Validator::SEQUENCE_INITIALIZED_MASK</a></div><div class="ttdeci">static constexpr std::uint16_t SEQUENCE_INITIALIZED_MASK</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00115">CCSDSValidator.h:115</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a25491fbcf650272d344d714d3e74b3fc"><div class="ttname"><a href="classccsds_1_1Validator.html#a25491fbcf650272d344d714d3e74b3fc">ccsds::Validator::m_sequenceCounter</a></div><div class="ttdeci">std::uint16_t m_sequenceCounter</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00133">CCSDSValidator.h:133</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a74831fcf37479b7988741bd3cb73cf34"><div class="ttname"><a href="classccsds_1_1Validator.html#a74831fcf37479b7988741bd3cb73cf34">ccsds::Validator::SEGMENT_OPEN_MASK</a></div><div class="ttdeci">static constexpr std::uint16_t SEGMENT_OPEN_MASK</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00114">CCSDSValidator.h:114</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_ac00c295eb88471e3eaa1ab3f496fdb76"><div class="ttname"><a href="classccsds_1_1Validator.html#ac00c295eb88471e3eaa1ab3f496fdb76">ccsds::Validator::SEQUENCE_COUNT_MASK</a></div><div class="ttdeci">static constexpr std::uint16_t SEQUENCE_COUNT_MASK</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00113">CCSDSValidator.h:113</a></div></div>
-<div class="ttc" id="anamespaceccsds_html_a556724e0442ee92b4ab53c50841158ada2c8338f207c628a8d50715291f0ee144"><div class="ttname"><a href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158ada2c8338f207c628a8d50715291f0ee144">ccsds::CONTINUING_SEGMENT</a></div><div class="ttdeci">@ CONTINUING_SEGMENT</div><div class="ttdoc">Binary 00: an intermediate segment.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00028">CCSDSHeader.h:28</a></div></div>
-<div class="ttc" id="anamespaceccsds_html_a556724e0442ee92b4ab53c50841158adac8fbed983da3c08528c07274ab31cc64"><div class="ttname"><a href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adac8fbed983da3c08528c07274ab31cc64">ccsds::FIRST_SEGMENT</a></div><div class="ttdeci">@ FIRST_SEGMENT</div><div class="ttdoc">Binary 01: first segment of a segmented sequence.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00029">CCSDSHeader.h:29</a></div></div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00123">123</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  123</span>                                                                 {</div>
+<div class="line"><span class="lineno">  124</span>  <span class="keyword">const</span> <span class="keyword">auto</span> coreHeader = toCoreHeader(header);</div>
+<div class="line"><span class="lineno">  125</span>  (void)<a class="code hl_function" href="validation_8h.html#a849564ba35c6a5f5a3c0b78c0abb167b">ccsds_sequence_validator_accept</a>(&amp;<a class="code hl_variable" href="classccsds_1_1Validator.html#a7cacb31bc3a2b17a461e7a164099e221">m_sequenceState</a>, &amp;coreHeader);</div>
+<div class="line"><span class="lineno">  126</span>}</div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_a7cacb31bc3a2b17a461e7a164099e221"><div class="ttname"><a href="classccsds_1_1Validator.html#a7cacb31bc3a2b17a461e7a164099e221">ccsds::Validator::m_sequenceState</a></div><div class="ttdeci">ccsds_sequence_validator_t m_sequenceState</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00121">CCSDSValidator.h:121</a></div></div>
+<div class="ttc" id="avalidation_8h_html_a849564ba35c6a5f5a3c0b78c0abb167b"><div class="ttname"><a href="validation_8h.html#a849564ba35c6a5f5a3c0b78c0abb167b">ccsds_sequence_validator_accept</a></div><div class="ttdeci">ccsds_status_t ccsds_sequence_validator_accept(ccsds_sequence_validator_t *validator, const ccsds_primary_header_t *header)</div><div class="ttdoc">Accepts one validated primary header and advances sequence state.</div><div class="ttdef"><b>Definition</b> <a href="validation_8c_source.html#l00173">validation.c:173</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Validator_a7a92fac0f9574cd4cfe0442644be2e89_cgraph.svg" width="642" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
 </div>
 </div>
 <a id="a28f0372a784fe6f15b0a4c0a642012cc" name="a28f0372a784fe6f15b0a4c0a642012cc"></a>
@@ -293,16 +275,22 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00263">263</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  263</span>                           {</div>
-<div class="line"><span class="lineno">  264</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a25491fbcf650272d344d714d3e74b3fc">m_sequenceCounter</a> = 0U;</div>
-<div class="line"><span class="lineno">  265</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a> = {};</div>
-<div class="line"><span class="lineno">  266</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a> = {};</div>
-<div class="line"><span class="lineno">  267</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>.<a class="code hl_function" href="classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222">setUpdatePacketEnable</a>(<span class="keyword">false</span>);</div>
-<div class="line"><span class="lineno">  268</span>}</div>
-<div class="ttc" id="aclassccsds_1_1Packet_html_a217dbaa5f2aae5ece38b52192fc00222"><div class="ttname"><a href="classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222">ccsds::Packet::setUpdatePacketEnable</a></div><div class="ttdeci">void setUpdatePacketEnable(bool enable)</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00712">CCSDSPacket.cpp:712</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a7b115eae247dc99a2e9c897900b1701b"><div class="ttname"><a href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">ccsds::Validator::m_report</a></div><div class="ttdeci">ValidationReport m_report</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00134">CCSDSValidator.h:134</a></div></div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00286">286</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  286</span>                           {</div>
+<div class="line"><span class="lineno">  287</span>  <a class="code hl_function" href="validation_8h.html#aaef52bac1971a37407378edd47bfc1b1">ccsds_sequence_validator_reset</a>(&amp;<a class="code hl_variable" href="classccsds_1_1Validator.html#a7cacb31bc3a2b17a461e7a164099e221">m_sequenceState</a>);</div>
+<div class="line"><span class="lineno">  288</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a> = {};</div>
+<div class="line"><span class="lineno">  289</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a> = {};</div>
+<div class="line"><span class="lineno">  290</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>.<a class="code hl_function" href="classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222">setUpdatePacketEnable</a>(<span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">  291</span>}</div>
+<div class="ttc" id="aclassccsds_1_1Packet_html_a217dbaa5f2aae5ece38b52192fc00222"><div class="ttname"><a href="classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222">ccsds::Packet::setUpdatePacketEnable</a></div><div class="ttdeci">void setUpdatePacketEnable(bool enable)</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00994">CCSDSPacket.cpp:994</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_a7b115eae247dc99a2e9c897900b1701b"><div class="ttname"><a href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">ccsds::Validator::m_report</a></div><div class="ttdeci">ValidationReport m_report</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00122">CCSDSValidator.h:122</a></div></div>
+<div class="ttc" id="avalidation_8h_html_aaef52bac1971a37407378edd47bfc1b1"><div class="ttname"><a href="validation_8h.html#aaef52bac1971a37407378edd47bfc1b1">ccsds_sequence_validator_reset</a></div><div class="ttdeci">void ccsds_sequence_validator_reset(ccsds_sequence_validator_t *validator)</div><div class="ttdef"><b>Definition</b> <a href="validation_8c_source.html#l00127">validation.c:127</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Validator_a28f0372a784fe6f15b0a4c0a642012cc_cgraph.svg" width="415" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
 </div>
 </div>
 <a id="a72c452f8e272c0f76d719a6539e1843f" name="a72c452f8e272c0f76d719a6539e1843f"></a>
@@ -337,51 +325,21 @@ Static Private Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00117">117</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  119</span>                                                                     {</div>
-<div class="line"><span class="lineno">  120</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a> = validatePacketCoherence;</div>
-<div class="line"><span class="lineno">  121</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">m_validateSequenceCount</a> = validateSequenceCount;</div>
-<div class="line"><span class="lineno">  122</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a132e967693b5d860194acd22b4b21840">m_validateAgainstTemplate</a> = validateAgainstTemplate;</div>
-<div class="line"><span class="lineno">  123</span>}</div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a132e967693b5d860194acd22b4b21840"><div class="ttname"><a href="classccsds_1_1Validator.html#a132e967693b5d860194acd22b4b21840">ccsds::Validator::m_validateAgainstTemplate</a></div><div class="ttdeci">bool m_validateAgainstTemplate</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00131">CCSDSValidator.h:131</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a62d9cc52b9913ff0767c2fce716d46af"><div class="ttname"><a href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">ccsds::Validator::m_validateSequenceCount</a></div><div class="ttdeci">bool m_validateSequenceCount</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00132">CCSDSValidator.h:132</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a758c680af8750ecc7416fbc3ba587b3c"><div class="ttname"><a href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">ccsds::Validator::m_validatePacketCoherence</a></div><div class="ttdeci">bool m_validatePacketCoherence</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00130">CCSDSValidator.h:130</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00115">115</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  117</span>                                                                     {</div>
+<div class="line"><span class="lineno">  118</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a> = validatePacketCoherence;</div>
+<div class="line"><span class="lineno">  119</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">m_validateSequenceCount</a> = validateSequenceCount;</div>
+<div class="line"><span class="lineno">  120</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a132e967693b5d860194acd22b4b21840">m_validateAgainstTemplate</a> = validateAgainstTemplate;</div>
+<div class="line"><span class="lineno">  121</span>}</div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_a132e967693b5d860194acd22b4b21840"><div class="ttname"><a href="classccsds_1_1Validator.html#a132e967693b5d860194acd22b4b21840">ccsds::Validator::m_validateAgainstTemplate</a></div><div class="ttdeci">bool m_validateAgainstTemplate</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00119">CCSDSValidator.h:119</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_a62d9cc52b9913ff0767c2fce716d46af"><div class="ttname"><a href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">ccsds::Validator::m_validateSequenceCount</a></div><div class="ttdeci">bool m_validateSequenceCount</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00120">CCSDSValidator.h:120</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_a758c680af8750ecc7416fbc3ba587b3c"><div class="ttname"><a href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">ccsds::Validator::m_validatePacketCoherence</a></div><div class="ttdeci">bool m_validatePacketCoherence</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00118">CCSDSValidator.h:118</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Validator_a72c452f8e272c0f76d719a6539e1843f_icgraph.svg" width="439" height="86"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
-</div>
-</div>
-<a id="a7a6ce497bf695220e8a5deca25e92e13" name="a7a6ce497bf695220e8a5deca25e92e13"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7a6ce497bf695220e8a5deca25e92e13">&#9670;&#160;</a></span>expectedSequenceCount()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::uint16_t ccsds::Validator::expectedSequenceCount </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00123">123</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  123</span>                                                                     {</div>
-<div class="line"><span class="lineno">  124</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a25491fbcf650272d344d714d3e74b3fc">m_sequenceCounter</a> &amp; <a class="code hl_variable" href="classccsds_1_1Validator.html#ac00c295eb88471e3eaa1ab3f496fdb76">SEQUENCE_COUNT_MASK</a>;</div>
-<div class="line"><span class="lineno">  125</span>    }</div>
-</div><!-- fragment -->
 </div>
 </div>
 <a id="af620e10937526421083fe61a944c5a17" name="af620e10937526421083fe61a944c5a17"></a>
@@ -407,68 +365,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00109">109</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  109</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>; }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aac86462e4c56200a9573bc2dcd8bd680" name="aac86462e4c56200a9573bc2dcd8bd680"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac86462e4c56200a9573bc2dcd8bd680">&#9670;&#160;</a></span>segmentOpen()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ccsds::Validator::segmentOpen </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00120">120</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  120</span>                                                    {</div>
-<div class="line"><span class="lineno">  121</span>      <span class="keywordflow">return</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a25491fbcf650272d344d714d3e74b3fc">m_sequenceCounter</a> &amp; <a class="code hl_variable" href="classccsds_1_1Validator.html#a74831fcf37479b7988741bd3cb73cf34">SEGMENT_OPEN_MASK</a>) != 0U;</div>
-<div class="line"><span class="lineno">  122</span>    }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a1b185ebe5a1392f460239858115db4da" name="a1b185ebe5a1392f460239858115db4da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b185ebe5a1392f460239858115db4da">&#9670;&#160;</a></span>sequenceInitialized()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool ccsds::Validator::sequenceInitialized </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">private</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00117">117</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  117</span>                                                            {</div>
-<div class="line"><span class="lineno">  118</span>      <span class="keywordflow">return</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a25491fbcf650272d344d714d3e74b3fc">m_sequenceCounter</a> &amp; <a class="code hl_variable" href="classccsds_1_1Validator.html#a22ddbbe4ec312579bcf5016fe5ecbc3f">SEQUENCE_INITIALIZED_MASK</a>) != 0U;</div>
-<div class="line"><span class="lineno">  119</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00110">110</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  110</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -506,9 +404,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00127">127</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  127</span>{ <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#ac7e75bb0baa1e3daaffd04c8921656ad">set</a>(code, passed); }</div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_ac7e75bb0baa1e3daaffd04c8921656ad"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#ac7e75bb0baa1e3daaffd04c8921656ad">ccsds::ValidationReport::set</a></div><div class="ttdeci">void set(const ValidationCode code, const bool passed) noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00078">CCSDSValidator.h:78</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00115">115</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  115</span>{ <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#ac7e75bb0baa1e3daaffd04c8921656ad">set</a>(code, passed); }</div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_ac7e75bb0baa1e3daaffd04c8921656ad"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#ac7e75bb0baa1e3daaffd04c8921656ad">ccsds::ValidationReport::set</a></div><div class="ttdeci">void set(const ValidationCode code, const bool passed) noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00079">CCSDSValidator.h:79</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -541,8 +439,8 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00104">104</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  104</span>{ <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a> = templatePacket; }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00105">105</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  105</span>{ <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a> = templatePacket; }</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -567,185 +465,196 @@ Here is the caller graph for this function:</div>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00133">133</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  133</span>                                                                   {</div>
-<div class="line"><span class="lineno">  134</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a> = {};</div>
-<div class="line"><span class="lineno">  135</span>  <span class="keyword">const</span> <span class="keyword">auto</span> &amp;header = packet.getPrimaryHeader();</div>
-<div class="line"><span class="lineno">  136</span>  <span class="keyword">const</span> <span class="keyword">auto</span> headerData = header.serialize();</div>
-<div class="line"><span class="lineno">  137</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> primaryHeaderValid = header.getHeaderStatus() != <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a> &amp;&amp; headerData.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#af526076dd0c1fe3968430f04d9d5c185">size</a>() == 6U;</div>
-<div class="line"><span class="lineno">  138</span>  <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7">ValidationCode::PrimaryHeader</a>, primaryHeaderValid);</div>
-<div class="line"><span class="lineno">  139</span>  <span class="keywordflow">if</span> (!primaryHeaderValid) <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
-<div class="line"><span class="lineno">  140</span> </div>
-<div class="line"><span class="lineno">  141</span>  <span class="keywordtype">bool</span> sequenceFlagsValid{<span class="keyword">true</span>};</div>
-<div class="line"><span class="lineno">  142</span>  <span class="keywordtype">bool</span> sequenceCountValid{<span class="keyword">true</span>};</div>
-<div class="line"><span class="lineno">  143</span> </div>
-<div class="line"><span class="lineno">  144</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a>) {</div>
-<div class="line"><span class="lineno">  145</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa4d78ca9232535cb7ed1f956ec99d77a">ValidationCode::PacketVersion</a>, header.getVersionNumber() == 0U);</div>
-<div class="line"><span class="lineno">  146</span>    <span class="keyword">const</span> <span class="keyword">auto</span> serializedSize = packet.getSerializedSize();</div>
-<div class="line"><span class="lineno">  147</span>    <span class="keyword">const</span> <span class="keyword">auto</span> packetDataFieldSize = serializedSize &gt;= 6U ? serializedSize - 6U : 0U;</div>
-<div class="line"><span class="lineno">  148</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac385cdbad43d4b229c07cbabb1916c09">ValidationCode::PacketDataLength</a>,</div>
-<div class="line"><span class="lineno">  149</span>             packetDataFieldSize &gt; 0U &amp;&amp; header.getDataLength() == packetDataFieldSize - 1U);</div>
-<div class="line"><span class="lineno">  150</span> </div>
-<div class="line"><span class="lineno">  151</span>    <span class="keywordflow">if</span> (packet.getPacketErrorControlMode() == <a class="code hl_enumvalue" href="namespaceccsds.html#ae6bd7c4479e516705a22551199cd42b4a8d5f4880a8a5ff2da50dc8e80c10ef60">PacketErrorControlMode::CRC16</a>) {</div>
-<div class="line"><span class="lineno">  152</span>      <span class="keyword">auto</span> crcInput = headerData;</div>
-<div class="line"><span class="lineno">  153</span>      <span class="keyword">const</span> <span class="keyword">auto</span> dataFieldBytes = packet.getFullDataFieldBytes();</div>
-<div class="line"><span class="lineno">  154</span>      crcInput.insert(crcInput.end(), dataFieldBytes.begin(), dataFieldBytes.end());</div>
-<div class="line"><span class="lineno">  155</span>      <span class="keyword">const</span> CRC16Config crcConfig{};</div>
-<div class="line"><span class="lineno">  156</span>      <span class="keyword">const</span> <span class="keyword">auto</span> calculatedCRC = <a class="code hl_function" href="namespaceccsds.html#a5f780ea85e5bf45ceabeabde20820cc1">ccsds::crc16</a>(</div>
-<div class="line"><span class="lineno">  157</span>        crcInput, crcConfig.polynomial, crcConfig.initialValue, crcConfig.finalXorValue);</div>
-<div class="line"><span class="lineno">  158</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa079571cd6430504a38327ef13d433f4c">ValidationCode::Crc16</a>, calculatedCRC == packet.getCRC());</div>
-<div class="line"><span class="lineno">  159</span>    }</div>
-<div class="line"><span class="lineno">  160</span> </div>
-<div class="line"><span class="lineno">  161</span>    <span class="keyword">const</span> <span class="keyword">auto</span> secondary = packet.getSecondaryHeader();</div>
-<div class="line"><span class="lineno">  162</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> secondaryPresence =</div>
-<div class="line"><span class="lineno">  163</span>      (header.getSecondaryHeaderFlag() != 0U) == <span class="keyword">static_cast&lt;</span><span class="keywordtype">bool</span><span class="keyword">&gt;</span>(secondary);</div>
-<div class="line"><span class="lineno">  164</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaadab2643565dd641a94f5ac266cb4b22">ValidationCode::SecondaryHeaderPresence</a>, secondaryPresence);</div>
-<div class="line"><span class="lineno">  165</span> </div>
-<div class="line"><span class="lineno">  166</span>    <span class="keywordflow">if</span> (secondary &amp;&amp; secondary-&gt;getDirection() != <a class="code hl_enumvalue" href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaa6fcdc090caeade09d0efd6253932b6f5">PacketDirection::Unspecified</a>) {</div>
-<div class="line"><span class="lineno">  167</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac6f36ff435eb21ed760f703edce14b45">ValidationCode::SecondaryHeaderDirection</a>,</div>
-<div class="line"><span class="lineno">  168</span>               header.getType() == <a class="code hl_function" href="namespaceccsds.html#aa1840fa863f2d8ca650eab8eeb00aab3">packetTypeForDirection</a>(secondary-&gt;getDirection()));</div>
-<div class="line"><span class="lineno">  169</span>    }</div>
-<div class="line"><span class="lineno">  170</span> </div>
-<div class="line"><span class="lineno">  171</span>    <span class="keywordflow">if</span> (secondary &amp;&amp; secondary-&gt;isPusHeader()) {</div>
-<div class="line"><span class="lineno">  172</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7031656fa4374d77069c3c621fe93d72">ValidationCode::PusHeader</a>, <span class="keyword">true</span>);</div>
-<div class="line"><span class="lineno">  173</span>      <span class="keyword">const</span> <span class="keyword">auto</span> &amp;pusHeader = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::SecondaryHeader &amp;<span class="keyword">&gt;</span>(*secondary);</div>
-<div class="line"><span class="lineno">  174</span>      <span class="keyword">const</span> <span class="keywordtype">bool</span> revisionValid = validRevision(pusHeader.getRevision());</div>
-<div class="line"><span class="lineno">  175</span>      <span class="keyword">const</span> <span class="keywordtype">bool</span> directionValid = validDirection(pusHeader.getDirection());</div>
-<div class="line"><span class="lineno">  176</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d558f949da9e657af1bf7757f8fc410">ValidationCode::PusRevision</a>, revisionValid);</div>
-<div class="line"><span class="lineno">  177</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324e4dca3302d028e9d6d8ff1d062c7f">ValidationCode::PusDirection</a>, directionValid);</div>
-<div class="line"><span class="lineno">  178</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa5f891647e141e12f2ae92825004a0fd">ValidationCode::PusPacketType</a>,</div>
-<div class="line"><span class="lineno">  179</span>               directionValid</div>
-<div class="line"><span class="lineno">  180</span>               &amp;&amp; header.getType() == <a class="code hl_function" href="namespaceccsds.html#aa1840fa863f2d8ca650eab8eeb00aab3">packetTypeForDirection</a>(pusHeader.getDirection()));</div>
-<div class="line"><span class="lineno">  181</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa4cd766b7abcdc81726aaafb35abb2d4c">ValidationCode::PusTailoring</a>, pusTailoringValid(pusHeader));</div>
-<div class="line"><span class="lineno">  182</span> </div>
-<div class="line"><span class="lineno">  183</span>      <span class="keyword">const</span> <span class="keyword">auto</span> bytes = secondary-&gt;serialize();</div>
-<div class="line"><span class="lineno">  184</span>      <span class="keyword">const</span> <span class="keywordtype">bool</span> sizeValid = !bytes.empty() &amp;&amp; bytes.size() == secondary-&gt;getSize();</div>
-<div class="line"><span class="lineno">  185</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa1485818dc792b32ea9b4247871622abe">ValidationCode::PusSecondaryHeaderSize</a>, sizeValid);</div>
-<div class="line"><span class="lineno">  186</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324f579834ca0e7a3206487543447963">ValidationCode::PusReservedBits</a>,</div>
-<div class="line"><span class="lineno">  187</span>               sizeValid &amp;&amp; reservedBitsValid(bytes, pusHeader.getRevision(), pusHeader.getDirection()));</div>
-<div class="line"><span class="lineno">  188</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa23875ece2b62c9ee5612e3a8abc7efeb">ValidationCode::PusSpareFields</a>,</div>
-<div class="line"><span class="lineno">  189</span>               sizeValid &amp;&amp; spareFieldsValid(bytes, pusHeader.getSecondaryHeaderSpareOctets()));</div>
-<div class="line"><span class="lineno">  190</span> </div>
-<div class="line"><span class="lineno">  191</span>      <span class="keywordflow">if</span> (pusHeader.getDirection() == <a class="code hl_enumvalue" href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaa6da5f2bbd69eab20bd3f2ffb1c2301f2">PacketDirection::Telecommand</a>) {</div>
-<div class="line"><span class="lineno">  192</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;tc = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::TcSecondaryHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
-<div class="line"><span class="lineno">  193</span>        <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffade31ea417e055ee29f01c571219eaa27">ValidationCode::PusAcknowledgement</a>, tc.getAcknowledgementFlags() &lt;= 0x0FU);</div>
-<div class="line"><span class="lineno">  194</span>        <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa6537e703f35c360349fd4a14d69ab8b8">ValidationCode::PusSourceId</a>,</div>
-<div class="line"><span class="lineno">  195</span>                 identifierFits(tc.getSourceId(), tc.getSourceIdOctets()));</div>
-<div class="line"><span class="lineno">  196</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pusHeader.getDirection() == <a class="code hl_enumvalue" href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaaaa96a21412def0d916f43b639424f8e4">PacketDirection::Telemetry</a>) {</div>
-<div class="line"><span class="lineno">  197</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;tm = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::TmSecondaryHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
-<div class="line"><span class="lineno">  198</span>        <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa61c2626fbe86a757408399b0933ba6bb">ValidationCode::PusDestinationId</a>,</div>
-<div class="line"><span class="lineno">  199</span>                 identifierFits(tm.getDestinationId(), tm.getDestinationIdOctets()));</div>
-<div class="line"><span class="lineno">  200</span>        <span class="keywordflow">if</span> (tm.timestampPresent()) {</div>
-<div class="line"><span class="lineno">  201</span>          <span class="keyword">const</span> <span class="keyword">auto</span> timestamp = <a class="code hl_function" href="namespaceccsds_1_1time.html#a30f30138024fa02235795e091003d52e">time::serialize</a>(tm.getTimestamp(), tm.getCucConfiguration());</div>
-<div class="line"><span class="lineno">  202</span>          <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa49c10a05a54317434a6ac08a235d11ac">ValidationCode::PusTimestamp</a>, <span class="keyword">static_cast&lt;</span><span class="keywordtype">bool</span><span class="keyword">&gt;</span>(timestamp));</div>
-<div class="line"><span class="lineno">  203</span>        } <span class="keywordflow">else</span> {</div>
-<div class="line"><span class="lineno">  204</span>          <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa49c10a05a54317434a6ac08a235d11ac">ValidationCode::PusTimestamp</a>, tm.getTimestamp() == time::CucTime{});</div>
-<div class="line"><span class="lineno">  205</span>        }</div>
-<div class="line"><span class="lineno">  206</span>        <span class="keywordflow">if</span> (pusHeader.getRevision() == <a class="code hl_enumvalue" href="namespaceccsds_1_1pus.html#a66bccaa171255540f9e548ea3417e443a7fc56270e7a70fa81a5935b72eacbe29">pus::Revision::A</a>) {</div>
-<div class="line"><span class="lineno">  207</span>          <span class="keyword">const</span> <span class="keyword">auto</span> &amp;aTm = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::rev_a::TmHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
-<div class="line"><span class="lineno">  208</span>          <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa9599fbfa13291c44f84d975457f1c917">ValidationCode::PusPacketSubcounter</a>,</div>
-<div class="line"><span class="lineno">  209</span>                   aTm.packetSubcounterPresent() || aTm.getPacketSubcounter() == 0U);</div>
-<div class="line"><span class="lineno">  210</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pusHeader.getRevision() == <a class="code hl_enumvalue" href="namespaceccsds_1_1pus.html#a66bccaa171255540f9e548ea3417e443a0d61f8370cad1d412f80b84d143e1257">pus::Revision::C</a>) {</div>
-<div class="line"><span class="lineno">  211</span>          <span class="keyword">const</span> <span class="keyword">auto</span> &amp;cTm = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::rev_c::TmHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
-<div class="line"><span class="lineno">  212</span>          <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa06af90dd9fa253ef6d1d7e019d75f296">ValidationCode::PusTimeReferenceStatus</a>,</div>
-<div class="line"><span class="lineno">  213</span>                   cTm.getTimeReferenceStatus() &lt;= 0x0FU);</div>
-<div class="line"><span class="lineno">  214</span>        }</div>
-<div class="line"><span class="lineno">  215</span>      }</div>
-<div class="line"><span class="lineno">  216</span>    }</div>
-<div class="line"><span class="lineno">  217</span> </div>
-<div class="line"><span class="lineno">  218</span>    <span class="keyword">const</span> <span class="keyword">auto</span> flags = <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158ad">ESequenceFlag</a><span class="keyword">&gt;</span>(header.getSequenceFlags());</div>
-<div class="line"><span class="lineno">  219</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> open = <a class="code hl_function" href="classccsds_1_1Validator.html#aac86462e4c56200a9573bc2dcd8bd680">segmentOpen</a>();</div>
-<div class="line"><span class="lineno">  220</span>    <span class="keywordflow">switch</span> (flags) {</div>
-<div class="line"><span class="lineno">  221</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501">UNSEGMENTED</a>:</div>
-<div class="line"><span class="lineno">  222</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adac8fbed983da3c08528c07274ab31cc64">FIRST_SEGMENT</a>: sequenceFlagsValid = !open; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  223</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158ada2c8338f207c628a8d50715291f0ee144">CONTINUING_SEGMENT</a>:</div>
-<div class="line"><span class="lineno">  224</span>      <span class="keywordflow">case</span> <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adabbea3c8b93904c0f14a1c19cf9314acb">LAST_SEGMENT</a>: sequenceFlagsValid = open; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  225</span>      <span class="keywordflow">default</span>: sequenceFlagsValid = <span class="keyword">false</span>; <span class="keywordflow">break</span>;</div>
-<div class="line"><span class="lineno">  226</span>    }</div>
-<div class="line"><span class="lineno">  227</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffadefbac3038cd2bdabdec875af4891f77">ValidationCode::SequenceFlags</a>, sequenceFlagsValid);</div>
-<div class="line"><span class="lineno">  228</span>    <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">m_validateSequenceCount</a>) {</div>
-<div class="line"><span class="lineno">  229</span>      sequenceCountValid = !<a class="code hl_function" href="classccsds_1_1Validator.html#a1b185ebe5a1392f460239858115db4da">sequenceInitialized</a>()</div>
-<div class="line"><span class="lineno">  230</span>                           || header.getSequenceCount() == <a class="code hl_function" href="classccsds_1_1Validator.html#a7a6ce497bf695220e8a5deca25e92e13">expectedSequenceCount</a>();</div>
-<div class="line"><span class="lineno">  231</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d60f489b1e8c0eb4c0dc3a76d721220">ValidationCode::SequenceCount</a>, sequenceCountValid);</div>
-<div class="line"><span class="lineno">  232</span>    }</div>
-<div class="line"><span class="lineno">  233</span>  }</div>
-<div class="line"><span class="lineno">  234</span> </div>
-<div class="line"><span class="lineno">  235</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a132e967693b5d860194acd22b4b21840">m_validateAgainstTemplate</a>) {</div>
-<div class="line"><span class="lineno">  236</span>    <span class="keyword">const</span> <span class="keyword">auto</span> &amp;templateHeader = <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>.<a class="code hl_function" href="classccsds_1_1Packet.html#a7cd06fe6866be997b08e4a71574c5213">getPrimaryHeader</a>();</div>
-<div class="line"><span class="lineno">  237</span>    <span class="keyword">const</span> <span class="keyword">auto</span> templateHeaderData = templateHeader.<a class="code hl_function" href="classccsds_1_1Header.html#a04793c8df2ed9ae7149eeac26236d23c">serialize</a>();</div>
-<div class="line"><span class="lineno">  238</span>    <span class="keyword">const</span> <span class="keywordtype">bool</span> templateHeaderValid = templateHeader.getHeaderStatus() != <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a></div>
-<div class="line"><span class="lineno">  239</span>                                     &amp;&amp; templateHeaderData.size() == 6U;</div>
-<div class="line"><span class="lineno">  240</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffae1e907d15ca32e9eedc4be054588d4b6">ValidationCode::PacketIdentifier</a>,</div>
-<div class="line"><span class="lineno">  241</span>             templateHeaderValid &amp;&amp; templateHeaderData[0] == headerData[0]</div>
-<div class="line"><span class="lineno">  242</span>             &amp;&amp; templateHeaderData[1] == headerData[1]);</div>
-<div class="line"><span class="lineno">  243</span>    <span class="keywordtype">bool</span> segmentationClassValid{<span class="keyword">false</span>};</div>
-<div class="line"><span class="lineno">  244</span>    <span class="keywordflow">if</span> (templateHeaderValid) {</div>
-<div class="line"><span class="lineno">  245</span>      segmentationClassValid = templateHeader.getSequenceFlags() == <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501">UNSEGMENTED</a></div>
-<div class="line"><span class="lineno">  246</span>        ? header.getSequenceFlags() == <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501">UNSEGMENTED</a></div>
-<div class="line"><span class="lineno">  247</span>        : header.getSequenceFlags() != <a class="code hl_enumvalue" href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501">UNSEGMENTED</a>;</div>
-<div class="line"><span class="lineno">  248</span>    }</div>
-<div class="line"><span class="lineno">  249</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa180dc393711aa58e00e33d39b07ccf3b">ValidationCode::SegmentationClass</a>, segmentationClassValid);</div>
-<div class="line"><span class="lineno">  250</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaed437cd6968562da2bed5da28cd0aaa7">ValidationCode::TemplatePacketErrorControl</a>,</div>
-<div class="line"><span class="lineno">  251</span>             <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>.<a class="code hl_function" href="classccsds_1_1Packet.html#a01d30e042073dfd113a7138d4b1f2812">getPacketErrorControlMode</a>() == packet.getPacketErrorControlMode());</div>
-<div class="line"><span class="lineno">  252</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffab4003bbdcdca24ecb421b9fcb8f7c01e">ValidationCode::TemplateSecondaryHeader</a>,</div>
-<div class="line"><span class="lineno">  253</span>             sameSecondaryContract(<a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>, packet));</div>
-<div class="line"><span class="lineno">  254</span>  }</div>
-<div class="line"><span class="lineno">  255</span> </div>
-<div class="line"><span class="lineno">  256</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a> &amp;&amp; sequenceFlagsValid</div>
-<div class="line"><span class="lineno">  257</span>      &amp;&amp; (!<a class="code hl_variable" href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">m_validateSequenceCount</a> || sequenceCountValid) &amp;&amp; <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">valid</a>()) {</div>
-<div class="line"><span class="lineno">  258</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#a7a92fac0f9574cd4cfe0442644be2e89">acceptSequence</a>(header);</div>
-<div class="line"><span class="lineno">  259</span>  }</div>
-<div class="line"><span class="lineno">  260</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
-<div class="line"><span class="lineno">  261</span>}</div>
-<div class="ttc" id="aclassccsds_1_1Header_html_a04793c8df2ed9ae7149eeac26236d23c"><div class="ttname"><a href="classccsds_1_1Header.html#a04793c8df2ed9ae7149eeac26236d23c">ccsds::Header::serialize</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; serialize()</div><div class="ttdoc">Serializes the current primary header in CCSDS network-byte order.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00108">CCSDSHeader.cpp:108</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8cpp_source.html#l00128">128</a> of file <a class="el" href="CCSDSValidator_8cpp_source.html">CCSDSValidator.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  128</span>                                                                   {</div>
+<div class="line"><span class="lineno">  129</span>  <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a> = {};</div>
+<div class="line"><span class="lineno">  130</span>  <span class="keyword">const</span> <span class="keyword">auto</span> &amp;header = packet.getPrimaryHeader();</div>
+<div class="line"><span class="lineno">  131</span>  <span class="keyword">const</span> <span class="keyword">auto</span> coreHeader = toCoreHeader(header);</div>
+<div class="line"><span class="lineno">  132</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> primaryHeaderValid =</div>
+<div class="line"><span class="lineno">  133</span>    header.getHeaderStatus() != <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a></div>
+<div class="line"><span class="lineno">  134</span>    &amp;&amp; <a class="code hl_function" href="primary__header_8h.html#a41361d838dac671f47eef263a1132735">ccsds_primary_header_validate</a>(&amp;coreHeader) == <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a>;</div>
+<div class="line"><span class="lineno">  135</span> </div>
+<div class="line"><span class="lineno">  136</span>  <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a>) {</div>
+<div class="line"><span class="lineno">  137</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7">ValidationCode::PrimaryHeader</a>, primaryHeaderValid);</div>
+<div class="line"><span class="lineno">  138</span>    <span class="keywordflow">if</span> (!primaryHeaderValid) <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
+<div class="line"><span class="lineno">  139</span>  } <span class="keywordflow">else</span> {</div>
+<div class="line"><span class="lineno">  140</span>    <span class="keyword">const</span> <span class="keyword">auto</span> secondary = packet.getSecondaryHeader();</div>
+<div class="line"><span class="lineno">  141</span>    <span class="keywordtype">bool</span> crcValid{<span class="keyword">true</span>};</div>
+<div class="line"><span class="lineno">  142</span>    <span class="keywordflow">if</span> (packet.getPacketErrorControlMode() == <a class="code hl_enumvalue" href="namespaceccsds.html#ae6bd7c4479e516705a22551199cd42b4a8d5f4880a8a5ff2da50dc8e80c10ef60">PacketErrorControlMode::CRC16</a>) {</div>
+<div class="line"><span class="lineno">  143</span>      <span class="keyword">auto</span> crcInput = header.serialize();</div>
+<div class="line"><span class="lineno">  144</span>      <span class="keyword">const</span> <span class="keyword">auto</span> dataFieldBytes = packet.getFullDataFieldBytes();</div>
+<div class="line"><span class="lineno">  145</span>      crcInput.insert(crcInput.end(), dataFieldBytes.begin(), dataFieldBytes.end());</div>
+<div class="line"><span class="lineno">  146</span>      <span class="keyword">const</span> CRC16Config crcConfig{};</div>
+<div class="line"><span class="lineno">  147</span>      <span class="keyword">const</span> <span class="keyword">auto</span> calculatedCRC = <a class="code hl_function" href="namespaceccsds.html#a5f780ea85e5bf45ceabeabde20820cc1">ccsds::crc16</a>(</div>
+<div class="line"><span class="lineno">  148</span>        crcInput, crcConfig.polynomial, crcConfig.initialValue, crcConfig.finalXorValue);</div>
+<div class="line"><span class="lineno">  149</span>      crcValid = calculatedCRC == packet.getCRC();</div>
+<div class="line"><span class="lineno">  150</span>    }</div>
+<div class="line"><span class="lineno">  151</span> </div>
+<div class="line"><span class="lineno">  152</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structccsds__packet__coherence__input.html">ccsds_packet_coherence_input_t</a> input{</div>
+<div class="line"><span class="lineno">  153</span>      coreHeader,</div>
+<div class="line"><span class="lineno">  154</span>      packet.getSerializedSize(),</div>
+<div class="line"><span class="lineno">  155</span>      <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(header.getHeaderStatus() != <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>),</div>
+<div class="line"><span class="lineno">  156</span>      <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span><span class="keywordtype">bool</span><span class="keyword">&gt;</span>(secondary)),</div>
+<div class="line"><span class="lineno">  157</span>      secondary ? toCoreDirection(secondary-&gt;getDirection())</div>
+<div class="line"><span class="lineno">  158</span>                : static_cast&lt;std::uint8_t&gt;(<a class="code hl_enumvalue" href="validation_8h.html#a99fb83031ce9923c84392b4e92f956b5a97bb9479056f34ba67ac8caf42d55e31">CCSDS_PACKET_DIRECTION_UNSPECIFIED</a>),</div>
+<div class="line"><span class="lineno">  159</span>      static_cast&lt;std::uint8_t&gt;(</div>
+<div class="line"><span class="lineno">  160</span>        packet.getPacketErrorControlMode() == <a class="code hl_enumeration" href="namespaceccsds.html#ae6bd7c4479e516705a22551199cd42b4">PacketErrorControlMode</a>::<a class="code hl_enumvalue" href="namespaceccsds.html#ae6bd7c4479e516705a22551199cd42b4a8d5f4880a8a5ff2da50dc8e80c10ef60">CRC16</a>),</div>
+<div class="line"><span class="lineno">  161</span>      static_cast&lt;std::uint8_t&gt;(crcValid)</div>
+<div class="line"><span class="lineno">  162</span>    };</div>
+<div class="line"><span class="lineno">  163</span>    <a class="code hl_struct" href="structccsds__validation__report.html">ccsds_validation_report_t</a> coreReport{};</div>
+<div class="line"><span class="lineno">  164</span>    <a class="code hl_function" href="validation_8h.html#a57bf2bdaa873c85f76352ee0f01a2315">ccsds_validation_report_reset</a>(&amp;coreReport);</div>
+<div class="line"><span class="lineno">  165</span>    <span class="keyword">const</span> <span class="keyword">auto</span> coreStatus = <a class="code hl_function" href="validation_8h.html#afe1b03e23d9df3b0e3336960e574cc79">ccsds_validate_packet_coherence</a>(</div>
+<div class="line"><span class="lineno">  166</span>      &amp;input, &amp;<a class="code hl_variable" href="classccsds_1_1Validator.html#a7cacb31bc3a2b17a461e7a164099e221">m_sequenceState</a>, <a class="code hl_variable" href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">m_validateSequenceCount</a> ? 1 : 0, &amp;coreReport);</div>
+<div class="line"><span class="lineno">  167</span>    <span class="keywordflow">if</span> (coreStatus != <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a>) {</div>
+<div class="line"><span class="lineno">  168</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7">ValidationCode::PrimaryHeader</a>, <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">  169</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
+<div class="line"><span class="lineno">  170</span>    }</div>
+<div class="line"><span class="lineno">  171</span>    <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; coreReport.size; ++i) {</div>
+<div class="line"><span class="lineno">  172</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(</div>
+<div class="line"><span class="lineno">  173</span>        <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ff">ValidationCode</a><span class="keyword">&gt;</span>(coreReport.checks[i].code),</div>
+<div class="line"><span class="lineno">  174</span>        coreReport.checks[i].passed != 0U);</div>
+<div class="line"><span class="lineno">  175</span>    }</div>
+<div class="line"><span class="lineno">  176</span>    <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7">ValidationCode::PrimaryHeader</a>)) <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
+<div class="line"><span class="lineno">  177</span> </div>
+<div class="line"><span class="lineno">  178</span>    <span class="keywordflow">if</span> (secondary &amp;&amp; secondary-&gt;isPusHeader()) {</div>
+<div class="line"><span class="lineno">  179</span>      <span class="keyword">const</span> <span class="keyword">auto</span> &amp;pusHeader = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::SecondaryHeader &amp;<span class="keyword">&gt;</span>(*secondary);</div>
+<div class="line"><span class="lineno">  180</span>      <span class="keyword">const</span> <span class="keyword">auto</span> bytes = secondary-&gt;serialize();</div>
+<div class="line"><span class="lineno">  181</span>      <a class="code hl_struct" href="structccsds__pus__coherence__input.html">ccsds_pus_coherence_input_t</a> pusInput{</div>
+<div class="line"><span class="lineno">  182</span>        <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(pusHeader.getRevision()),</div>
+<div class="line"><span class="lineno">  183</span>        toCoreDirection(pusHeader.getDirection()),</div>
+<div class="line"><span class="lineno">  184</span>        header.getType(),</div>
+<div class="line"><span class="lineno">  185</span>        <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(coreTailoringValid(pusHeader)),</div>
+<div class="line"><span class="lineno">  186</span>        {</div>
+<div class="line"><span class="lineno">  187</span>          bytes.empty() ? nullptr : bytes.data(),</div>
+<div class="line"><span class="lineno">  188</span>          bytes.size()</div>
+<div class="line"><span class="lineno">  189</span>        },</div>
+<div class="line"><span class="lineno">  190</span>        secondary-&gt;getSize(),</div>
+<div class="line"><span class="lineno">  191</span>        pusHeader.getSecondaryHeaderSpareOctets(),</div>
+<div class="line"><span class="lineno">  192</span>        0U,</div>
+<div class="line"><span class="lineno">  193</span>        0U,</div>
+<div class="line"><span class="lineno">  194</span>        0U,</div>
+<div class="line"><span class="lineno">  195</span>        0U,</div>
+<div class="line"><span class="lineno">  196</span>        0U,</div>
+<div class="line"><span class="lineno">  197</span>        1U,</div>
+<div class="line"><span class="lineno">  198</span>        0U,</div>
+<div class="line"><span class="lineno">  199</span>        0U,</div>
+<div class="line"><span class="lineno">  200</span>        0U</div>
+<div class="line"><span class="lineno">  201</span>      };</div>
+<div class="line"><span class="lineno">  202</span> </div>
+<div class="line"><span class="lineno">  203</span>      <span class="keywordflow">if</span> (pusHeader.getDirection() == <a class="code hl_enumvalue" href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaa6da5f2bbd69eab20bd3f2ffb1c2301f2">PacketDirection::Telecommand</a>) {</div>
+<div class="line"><span class="lineno">  204</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;tc = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::TcSecondaryHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
+<div class="line"><span class="lineno">  205</span>        pusInput.<a class="code hl_variable" href="structccsds__pus__coherence__input.html#ae3842102086a6441e9e99b09053e221f">acknowledgement_flags</a> = tc.getAcknowledgementFlags();</div>
+<div class="line"><span class="lineno">  206</span>        pusInput.identifier_octets = tc.getSourceIdOctets();</div>
+<div class="line"><span class="lineno">  207</span>        pusInput.identifier_value = tc.getSourceId();</div>
+<div class="line"><span class="lineno">  208</span>      } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pusHeader.getDirection() == <a class="code hl_enumvalue" href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaaaa96a21412def0d916f43b639424f8e4">PacketDirection::Telemetry</a>) {</div>
+<div class="line"><span class="lineno">  209</span>        <span class="keyword">const</span> <span class="keyword">auto</span> &amp;tm = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::TmSecondaryHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
+<div class="line"><span class="lineno">  210</span>        pusInput.identifier_octets = tm.getDestinationIdOctets();</div>
+<div class="line"><span class="lineno">  211</span>        pusInput.identifier_value = tm.getDestinationId();</div>
+<div class="line"><span class="lineno">  212</span>        pusInput.timestamp_present =</div>
+<div class="line"><span class="lineno">  213</span>          <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(tm.timestampPresent() ? 1U : 0U);</div>
+<div class="line"><span class="lineno">  214</span>        pusInput.timestamp_valid =</div>
+<div class="line"><span class="lineno">  215</span>          <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(</div>
+<div class="line"><span class="lineno">  216</span>            tm.timestampPresent()</div>
+<div class="line"><span class="lineno">  217</span>            &amp;&amp; coreTimestampValid(tm.getTimestamp(), tm.getCucConfiguration()));</div>
+<div class="line"><span class="lineno">  218</span>        pusInput.timestamp_zero_when_absent =</div>
+<div class="line"><span class="lineno">  219</span>          <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(tm.getTimestamp() == time::CucTime{});</div>
+<div class="line"><span class="lineno">  220</span> </div>
+<div class="line"><span class="lineno">  221</span>        <span class="keywordflow">if</span> (pusHeader.getRevision() == <a class="code hl_enumvalue" href="namespaceccsds_1_1pus.html#a66bccaa171255540f9e548ea3417e443a7fc56270e7a70fa81a5935b72eacbe29">pus::Revision::A</a>) {</div>
+<div class="line"><span class="lineno">  222</span>          <span class="keyword">const</span> <span class="keyword">auto</span> &amp;aTm = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::rev_a::TmHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
+<div class="line"><span class="lineno">  223</span>          pusInput.packet_subcounter_present =</div>
+<div class="line"><span class="lineno">  224</span>            <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(aTm.packetSubcounterPresent() ? 1U : 0U);</div>
+<div class="line"><span class="lineno">  225</span>          pusInput.packet_subcounter = aTm.getPacketSubcounter();</div>
+<div class="line"><span class="lineno">  226</span>        } <span class="keywordflow">else</span> <span class="keywordflow">if</span> (pusHeader.getRevision() == <a class="code hl_enumvalue" href="namespaceccsds_1_1pus.html#a66bccaa171255540f9e548ea3417e443a0d61f8370cad1d412f80b84d143e1257">pus::Revision::C</a>) {</div>
+<div class="line"><span class="lineno">  227</span>          <span class="keyword">const</span> <span class="keyword">auto</span> &amp;cTm = <span class="keyword">static_cast&lt;</span><span class="keyword">const </span>pus::rev_c::TmHeader &amp;<span class="keyword">&gt;</span>(pusHeader);</div>
+<div class="line"><span class="lineno">  228</span>          pusInput.time_reference_status = cTm.getTimeReferenceStatus();</div>
+<div class="line"><span class="lineno">  229</span>        }</div>
+<div class="line"><span class="lineno">  230</span>      }</div>
+<div class="line"><span class="lineno">  231</span> </div>
+<div class="line"><span class="lineno">  232</span>      <a class="code hl_struct" href="structccsds__validation__report.html">ccsds_validation_report_t</a> pusReport{};</div>
+<div class="line"><span class="lineno">  233</span>      <a class="code hl_function" href="validation_8h.html#a57bf2bdaa873c85f76352ee0f01a2315">ccsds_validation_report_reset</a>(&amp;pusReport);</div>
+<div class="line"><span class="lineno">  234</span>      <span class="keyword">const</span> <span class="keyword">auto</span> pusStatus = <a class="code hl_function" href="validation_8h.html#a174b8649840be02f37c00b6e0320815f">ccsds_validate_pus_coherence</a>(&amp;pusInput, &amp;pusReport);</div>
+<div class="line"><span class="lineno">  235</span>      <span class="keywordflow">if</span> (pusStatus != <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a>) {</div>
+<div class="line"><span class="lineno">  236</span>        <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7031656fa4374d77069c3c621fe93d72">ValidationCode::PusHeader</a>, <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">  237</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
+<div class="line"><span class="lineno">  238</span>      }</div>
+<div class="line"><span class="lineno">  239</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; pusReport.size; ++i) {</div>
+<div class="line"><span class="lineno">  240</span>        <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(</div>
+<div class="line"><span class="lineno">  241</span>          <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ff">ValidationCode</a><span class="keyword">&gt;</span>(pusReport.checks[i].code),</div>
+<div class="line"><span class="lineno">  242</span>          pusReport.checks[i].passed != 0U);</div>
+<div class="line"><span class="lineno">  243</span>      }</div>
+<div class="line"><span class="lineno">  244</span>    }</div>
+<div class="line"><span class="lineno">  245</span>  }</div>
+<div class="line"><span class="lineno">  246</span> </div>
+<div class="line"><span class="lineno">  247</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a132e967693b5d860194acd22b4b21840">m_validateAgainstTemplate</a>) {</div>
+<div class="line"><span class="lineno">  248</span>    <span class="keyword">const</span> <span class="keyword">auto</span> &amp;templateHeader = <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>.<a class="code hl_function" href="classccsds_1_1Packet.html#a7cd06fe6866be997b08e4a71574c5213">getPrimaryHeader</a>();</div>
+<div class="line"><span class="lineno">  249</span>    <span class="keyword">const</span> <a class="code hl_struct" href="structccsds__template__coherence__input.html">ccsds_template_coherence_input_t</a> templateInput{</div>
+<div class="line"><span class="lineno">  250</span>      toCoreHeader(templateHeader),</div>
+<div class="line"><span class="lineno">  251</span>      <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(templateHeader.getHeaderStatus() != <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>),</div>
+<div class="line"><span class="lineno">  252</span>      <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(</div>
+<div class="line"><span class="lineno">  253</span>        <a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>.<a class="code hl_function" href="classccsds_1_1Packet.html#a01d30e042073dfd113a7138d4b1f2812">getPacketErrorControlMode</a>() == packet.getPacketErrorControlMode()),</div>
+<div class="line"><span class="lineno">  254</span>      <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(sameSecondaryContract(<a class="code hl_variable" href="classccsds_1_1Validator.html#a53e22a64bc8879fdff4fc9126fe50614">m_templatePacket</a>, packet))</div>
+<div class="line"><span class="lineno">  255</span>    };</div>
+<div class="line"><span class="lineno">  256</span>    <a class="code hl_struct" href="structccsds__validation__report.html">ccsds_validation_report_t</a> coreReport{};</div>
+<div class="line"><span class="lineno">  257</span>    <a class="code hl_function" href="validation_8h.html#a57bf2bdaa873c85f76352ee0f01a2315">ccsds_validation_report_reset</a>(&amp;coreReport);</div>
+<div class="line"><span class="lineno">  258</span>    <span class="keyword">const</span> <span class="keyword">auto</span> coreStatus = <a class="code hl_function" href="validation_8h.html#acc843f50cecc2d9a40b83a690222b6e2">ccsds_validate_template_coherence</a>(</div>
+<div class="line"><span class="lineno">  259</span>      &amp;coreHeader, &amp;templateInput, &amp;coreReport);</div>
+<div class="line"><span class="lineno">  260</span>    <span class="keywordflow">if</span> (coreStatus != <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a>) {</div>
+<div class="line"><span class="lineno">  261</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffae1e907d15ca32e9eedc4be054588d4b6">ValidationCode::PacketIdentifier</a>, <span class="keyword">false</span>);</div>
+<div class="line"><span class="lineno">  262</span>      <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
+<div class="line"><span class="lineno">  263</span>    }</div>
+<div class="line"><span class="lineno">  264</span>    <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; coreReport.size; ++i) {</div>
+<div class="line"><span class="lineno">  265</span>      <a class="code hl_function" href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">setCheck</a>(</div>
+<div class="line"><span class="lineno">  266</span>        <span class="keyword">static_cast&lt;</span><a class="code hl_enumeration" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ff">ValidationCode</a><span class="keyword">&gt;</span>(coreReport.checks[i].code),</div>
+<div class="line"><span class="lineno">  267</span>        coreReport.checks[i].passed != 0U);</div>
+<div class="line"><span class="lineno">  268</span>    }</div>
+<div class="line"><span class="lineno">  269</span>  }</div>
+<div class="line"><span class="lineno">  270</span> </div>
+<div class="line"><span class="lineno">  271</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> sequenceFlagsValid =</div>
+<div class="line"><span class="lineno">  272</span>    !<a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a></div>
+<div class="line"><span class="lineno">  273</span>    || <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffadefbac3038cd2bdabdec875af4891f77">ValidationCode::SequenceFlags</a>);</div>
+<div class="line"><span class="lineno">  274</span>  <span class="keyword">const</span> <span class="keywordtype">bool</span> sequenceCountValid =</div>
+<div class="line"><span class="lineno">  275</span>    !<a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a></div>
+<div class="line"><span class="lineno">  276</span>    || !<a class="code hl_variable" href="classccsds_1_1Validator.html#a62d9cc52b9913ff0767c2fce716d46af">m_validateSequenceCount</a></div>
+<div class="line"><span class="lineno">  277</span>    || <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>(<a class="code hl_enumvalue" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d60f489b1e8c0eb4c0dc3a76d721220">ValidationCode::SequenceCount</a>);</div>
+<div class="line"><span class="lineno">  278</span> </div>
+<div class="line"><span class="lineno">  279</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Validator.html#a758c680af8750ecc7416fbc3ba587b3c">m_validatePacketCoherence</a> &amp;&amp; sequenceFlagsValid</div>
+<div class="line"><span class="lineno">  280</span>      &amp;&amp; sequenceCountValid &amp;&amp; <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>.<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">valid</a>()) {</div>
+<div class="line"><span class="lineno">  281</span>    <a class="code hl_function" href="classccsds_1_1Validator.html#a7a92fac0f9574cd4cfe0442644be2e89">acceptSequence</a>(header);</div>
+<div class="line"><span class="lineno">  282</span>  }</div>
+<div class="line"><span class="lineno">  283</span>  <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1Validator.html#a7b115eae247dc99a2e9c897900b1701b">m_report</a>;</div>
+<div class="line"><span class="lineno">  284</span>}</div>
 <div class="ttc" id="aclassccsds_1_1Packet_html_a01d30e042073dfd113a7138d4b1f2812"><div class="ttname"><a href="classccsds_1_1Packet.html#a01d30e042073dfd113a7138d4b1f2812">ccsds::Packet::getPacketErrorControlMode</a></div><div class="ttdeci">PacketErrorControlMode getPacketErrorControlMode() const</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8h_source.html#l00084">CCSDSPacket.h:84</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Packet_html_a7cd06fe6866be997b08e4a71574c5213"><div class="ttname"><a href="classccsds_1_1Packet.html#a7cd06fe6866be997b08e4a71574c5213">ccsds::Packet::getPrimaryHeader</a></div><div class="ttdeci">Header &amp; getPrimaryHeader()</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00320">CCSDSPacket.cpp:320</a></div></div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a35c89cf64b45ad927d42cda59dad6346"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">ccsds::ValidationReport::valid</a></div><div class="ttdeci">bool valid() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00056">CCSDSValidator.h:56</a></div></div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_af526076dd0c1fe3968430f04d9d5c185"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#af526076dd0c1fe3968430f04d9d5c185">ccsds::ValidationReport::size</a></div><div class="ttdeci">std::size_t size() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00061">CCSDSValidator.h:61</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a1b185ebe5a1392f460239858115db4da"><div class="ttname"><a href="classccsds_1_1Validator.html#a1b185ebe5a1392f460239858115db4da">ccsds::Validator::sequenceInitialized</a></div><div class="ttdeci">bool sequenceInitialized() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00117">CCSDSValidator.h:117</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a7a6ce497bf695220e8a5deca25e92e13"><div class="ttname"><a href="classccsds_1_1Validator.html#a7a6ce497bf695220e8a5deca25e92e13">ccsds::Validator::expectedSequenceCount</a></div><div class="ttdeci">std::uint16_t expectedSequenceCount() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00123">CCSDSValidator.h:123</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_a7a92fac0f9574cd4cfe0442644be2e89"><div class="ttname"><a href="classccsds_1_1Validator.html#a7a92fac0f9574cd4cfe0442644be2e89">ccsds::Validator::acceptSequence</a></div><div class="ttdeci">void acceptSequence(const Header &amp;header) noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8cpp_source.html#l00125">CCSDSValidator.cpp:125</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_aac86462e4c56200a9573bc2dcd8bd680"><div class="ttname"><a href="classccsds_1_1Validator.html#aac86462e4c56200a9573bc2dcd8bd680">ccsds::Validator::segmentOpen</a></div><div class="ttdeci">bool segmentOpen() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00120">CCSDSValidator.h:120</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Validator_html_ad60527e8d37a9309785838b5b9d92201"><div class="ttname"><a href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">ccsds::Validator::setCheck</a></div><div class="ttdeci">void setCheck(ValidationCode code, bool passed) noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00127">CCSDSValidator.h:127</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Packet_html_a7cd06fe6866be997b08e4a71574c5213"><div class="ttname"><a href="classccsds_1_1Packet.html#a7cd06fe6866be997b08e4a71574c5213">ccsds::Packet::getPrimaryHeader</a></div><div class="ttdeci">Header &amp; getPrimaryHeader()</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacket_8cpp_source.html#l00501">CCSDSPacket.cpp:501</a></div></div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a35c89cf64b45ad927d42cda59dad6346"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">ccsds::ValidationReport::valid</a></div><div class="ttdeci">bool valid() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00057">CCSDSValidator.h:57</a></div></div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a62e4d911a278589880371cad4711f4e7"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">ccsds::ValidationReport::passed</a></div><div class="ttdeci">bool passed(const ValidationCode code) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00067">CCSDSValidator.h:67</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_a7a92fac0f9574cd4cfe0442644be2e89"><div class="ttname"><a href="classccsds_1_1Validator.html#a7a92fac0f9574cd4cfe0442644be2e89">ccsds::Validator::acceptSequence</a></div><div class="ttdeci">void acceptSequence(const Header &amp;header) noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8cpp_source.html#l00123">CCSDSValidator.cpp:123</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Validator_html_ad60527e8d37a9309785838b5b9d92201"><div class="ttname"><a href="classccsds_1_1Validator.html#ad60527e8d37a9309785838b5b9d92201">ccsds::Validator::setCheck</a></div><div class="ttdeci">void setCheck(ValidationCode code, bool passed) noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00115">CCSDSValidator.h:115</a></div></div>
+<div class="ttc" id="aerror_8h_html_a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d"><div class="ttname"><a href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a></div><div class="ttdeci">@ CCSDS_STATUS_OK</div><div class="ttdef"><b>Definition</b> <a href="error_8h_source.html#l00020">error.h:20</a></div></div>
 <div class="ttc" id="anamespaceccsds_1_1pus_html_a66bccaa171255540f9e548ea3417e443a0d61f8370cad1d412f80b84d143e1257"><div class="ttname"><a href="namespaceccsds_1_1pus.html#a66bccaa171255540f9e548ea3417e443a0d61f8370cad1d412f80b84d143e1257">ccsds::pus::Revision::C</a></div><div class="ttdeci">@ C</div></div>
 <div class="ttc" id="anamespaceccsds_1_1pus_html_a66bccaa171255540f9e548ea3417e443a7fc56270e7a70fa81a5935b72eacbe29"><div class="ttname"><a href="namespaceccsds_1_1pus.html#a66bccaa171255540f9e548ea3417e443a7fc56270e7a70fa81a5935b72eacbe29">ccsds::pus::Revision::A</a></div><div class="ttdeci">@ A</div></div>
-<div class="ttc" id="anamespaceccsds_1_1time_html_a30f30138024fa02235795e091003d52e"><div class="ttname"><a href="namespaceccsds_1_1time.html#a30f30138024fa02235795e091003d52e">ccsds::time::serialize</a></div><div class="ttdeci">ResultBuffer serialize(const CucTime &amp;value, const CucConfiguration &amp;configuration)</div><div class="ttdoc">Encodes a numeric CUC value in network byte order.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSTime_8cpp_source.html#l00061">CCSDSTime.cpp:61</a></div></div>
-<div class="ttc" id="anamespaceccsds_html_a556724e0442ee92b4ab53c50841158ad"><div class="ttname"><a href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158ad">ccsds::ESequenceFlag</a></div><div class="ttdeci">ESequenceFlag</div><div class="ttdoc">Values of the two-bit CCSDS Space Packet sequence-flags field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00027">CCSDSHeader.h:27</a></div></div>
-<div class="ttc" id="anamespaceccsds_html_a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501"><div class="ttname"><a href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501">ccsds::UNSEGMENTED</a></div><div class="ttdeci">@ UNSEGMENTED</div><div class="ttdoc">Binary 11: a complete, unsegmented packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00032">CCSDSHeader.h:31</a></div></div>
-<div class="ttc" id="anamespaceccsds_html_a556724e0442ee92b4ab53c50841158adabbea3c8b93904c0f14a1c19cf9314acb"><div class="ttname"><a href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adabbea3c8b93904c0f14a1c19cf9314acb">ccsds::LAST_SEGMENT</a></div><div class="ttdeci">@ LAST_SEGMENT</div><div class="ttdoc">Binary 10: final segment of a segmented sequence.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00030">CCSDSHeader.h:30</a></div></div>
-<div class="ttc" id="anamespaceccsds_html_a5f780ea85e5bf45ceabeabde20820cc1"><div class="ttname"><a href="namespaceccsds.html#a5f780ea85e5bf45ceabeabde20820cc1">ccsds::crc16</a></div><div class="ttdeci">std::uint16_t crc16(const std::vector&lt; std::uint8_t &gt; &amp;data, std::uint16_t polynomial=0x1021, std::uint16_t initialValue=0xFFFF, std::uint16_t finalXorValue=0x0000)</div><div class="ttdoc">Computes an MSB-first 16-bit CRC over the supplied bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00021">CCSDSUtils.cpp:21</a></div></div>
+<div class="ttc" id="anamespaceccsds_html_a5f780ea85e5bf45ceabeabde20820cc1"><div class="ttname"><a href="namespaceccsds.html#a5f780ea85e5bf45ceabeabde20820cc1">ccsds::crc16</a></div><div class="ttdeci">std::uint16_t crc16(const std::vector&lt; std::uint8_t &gt; &amp;data, std::uint16_t polynomial=0x1021, std::uint16_t initialValue=0xFFFF, std::uint16_t finalXorValue=0x0000)</div><div class="ttdoc">Computes an MSB-first 16-bit CRC over the supplied bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSUtils_8cpp_source.html#l00022">CCSDSUtils.cpp:22</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_a864b761b95018708bc6d939c316827aaa6da5f2bbd69eab20bd3f2ffb1c2301f2"><div class="ttname"><a href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaa6da5f2bbd69eab20bd3f2ffb1c2301f2">ccsds::PacketDirection::Telecommand</a></div><div class="ttdeci">@ Telecommand</div></div>
-<div class="ttc" id="anamespaceccsds_html_a864b761b95018708bc6d939c316827aaa6fcdc090caeade09d0efd6253932b6f5"><div class="ttname"><a href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaa6fcdc090caeade09d0efd6253932b6f5">ccsds::PacketDirection::Unspecified</a></div><div class="ttdeci">@ Unspecified</div></div>
 <div class="ttc" id="anamespaceccsds_html_a864b761b95018708bc6d939c316827aaaaa96a21412def0d916f43b639424f8e4"><div class="ttname"><a href="namespaceccsds.html#a864b761b95018708bc6d939c316827aaaaa96a21412def0d916f43b639424f8e4">ccsds::PacketDirection::Telemetry</a></div><div class="ttdeci">@ Telemetry</div></div>
-<div class="ttc" id="anamespaceccsds_html_aa1840fa863f2d8ca650eab8eeb00aab3"><div class="ttname"><a href="namespaceccsds.html#aa1840fa863f2d8ca650eab8eeb00aab3">ccsds::packetTypeForDirection</a></div><div class="ttdeci">constexpr std::uint8_t packetTypeForDirection(const PacketDirection direction) noexcept</div><div class="ttdoc">Converts a concrete direction to the CCSDS primary-header Packet Type bit.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacketTypes_8h_source.html#l00025">CCSDSPacketTypes.h:25</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790"><div class="ttname"><a href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">ccsds::INVALID</a></div><div class="ttdeci">@ INVALID</div><div class="ttdoc">At least one checked assignment failed; serialization is suppressed.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00046">CCSDSHeader.h:45</a></div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa06af90dd9fa253ef6d1d7e019d75f296"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa06af90dd9fa253ef6d1d7e019d75f296">ccsds::ValidationCode::PusTimeReferenceStatus</a></div><div class="ttdeci">@ PusTimeReferenceStatus</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa079571cd6430504a38327ef13d433f4c"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa079571cd6430504a38327ef13d433f4c">ccsds::ValidationCode::Crc16</a></div><div class="ttdeci">@ Crc16</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa1485818dc792b32ea9b4247871622abe"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa1485818dc792b32ea9b4247871622abe">ccsds::ValidationCode::PusSecondaryHeaderSize</a></div><div class="ttdeci">@ PusSecondaryHeaderSize</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa180dc393711aa58e00e33d39b07ccf3b"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa180dc393711aa58e00e33d39b07ccf3b">ccsds::ValidationCode::SegmentationClass</a></div><div class="ttdeci">@ SegmentationClass</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa23875ece2b62c9ee5612e3a8abc7efeb"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa23875ece2b62c9ee5612e3a8abc7efeb">ccsds::ValidationCode::PusSpareFields</a></div><div class="ttdeci">@ PusSpareFields</div></div>
+<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ff"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ff">ccsds::ValidationCode</a></div><div class="ttdeci">ValidationCode</div><div class="ttdoc">Stable validation checks exposed by ccsds::Validator.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00016">CCSDSValidator.h:16</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7">ccsds::ValidationCode::PrimaryHeader</a></div><div class="ttdeci">@ PrimaryHeader</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa324e4dca3302d028e9d6d8ff1d062c7f"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324e4dca3302d028e9d6d8ff1d062c7f">ccsds::ValidationCode::PusDirection</a></div><div class="ttdeci">@ PusDirection</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa324f579834ca0e7a3206487543447963"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324f579834ca0e7a3206487543447963">ccsds::ValidationCode::PusReservedBits</a></div><div class="ttdeci">@ PusReservedBits</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa49c10a05a54317434a6ac08a235d11ac"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa49c10a05a54317434a6ac08a235d11ac">ccsds::ValidationCode::PusTimestamp</a></div><div class="ttdeci">@ PusTimestamp</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa4cd766b7abcdc81726aaafb35abb2d4c"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa4cd766b7abcdc81726aaafb35abb2d4c">ccsds::ValidationCode::PusTailoring</a></div><div class="ttdeci">@ PusTailoring</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa61c2626fbe86a757408399b0933ba6bb"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa61c2626fbe86a757408399b0933ba6bb">ccsds::ValidationCode::PusDestinationId</a></div><div class="ttdeci">@ PusDestinationId</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa6537e703f35c360349fd4a14d69ab8b8"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa6537e703f35c360349fd4a14d69ab8b8">ccsds::ValidationCode::PusSourceId</a></div><div class="ttdeci">@ PusSourceId</div></div>
 <div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa7031656fa4374d77069c3c621fe93d72"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7031656fa4374d77069c3c621fe93d72">ccsds::ValidationCode::PusHeader</a></div><div class="ttdeci">@ PusHeader</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa7d558f949da9e657af1bf7757f8fc410"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d558f949da9e657af1bf7757f8fc410">ccsds::ValidationCode::PusRevision</a></div><div class="ttdeci">@ PusRevision</div></div>
 <div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa7d60f489b1e8c0eb4c0dc3a76d721220"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d60f489b1e8c0eb4c0dc3a76d721220">ccsds::ValidationCode::SequenceCount</a></div><div class="ttdeci">@ SequenceCount</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffa9599fbfa13291c44f84d975457f1c917"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa9599fbfa13291c44f84d975457f1c917">ccsds::ValidationCode::PusPacketSubcounter</a></div><div class="ttdeci">@ PusPacketSubcounter</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffaa4d78ca9232535cb7ed1f956ec99d77a"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa4d78ca9232535cb7ed1f956ec99d77a">ccsds::ValidationCode::PacketVersion</a></div><div class="ttdeci">@ PacketVersion</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffaa5f891647e141e12f2ae92825004a0fd"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa5f891647e141e12f2ae92825004a0fd">ccsds::ValidationCode::PusPacketType</a></div><div class="ttdeci">@ PusPacketType</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffaadab2643565dd641a94f5ac266cb4b22"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaadab2643565dd641a94f5ac266cb4b22">ccsds::ValidationCode::SecondaryHeaderPresence</a></div><div class="ttdeci">@ SecondaryHeaderPresence</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffab4003bbdcdca24ecb421b9fcb8f7c01e"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffab4003bbdcdca24ecb421b9fcb8f7c01e">ccsds::ValidationCode::TemplateSecondaryHeader</a></div><div class="ttdeci">@ TemplateSecondaryHeader</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffac385cdbad43d4b229c07cbabb1916c09"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac385cdbad43d4b229c07cbabb1916c09">ccsds::ValidationCode::PacketDataLength</a></div><div class="ttdeci">@ PacketDataLength</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffac6f36ff435eb21ed760f703edce14b45"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac6f36ff435eb21ed760f703edce14b45">ccsds::ValidationCode::SecondaryHeaderDirection</a></div><div class="ttdeci">@ SecondaryHeaderDirection</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffade31ea417e055ee29f01c571219eaa27"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffade31ea417e055ee29f01c571219eaa27">ccsds::ValidationCode::PusAcknowledgement</a></div><div class="ttdeci">@ PusAcknowledgement</div></div>
 <div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffadefbac3038cd2bdabdec875af4891f77"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffadefbac3038cd2bdabdec875af4891f77">ccsds::ValidationCode::SequenceFlags</a></div><div class="ttdeci">@ SequenceFlags</div></div>
 <div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffae1e907d15ca32e9eedc4be054588d4b6"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffae1e907d15ca32e9eedc4be054588d4b6">ccsds::ValidationCode::PacketIdentifier</a></div><div class="ttdeci">@ PacketIdentifier</div></div>
-<div class="ttc" id="anamespaceccsds_html_ab894d2792dde9a0a4f31eee0a0e267ffaed437cd6968562da2bed5da28cd0aaa7"><div class="ttname"><a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaed437cd6968562da2bed5da28cd0aaa7">ccsds::ValidationCode::TemplatePacketErrorControl</a></div><div class="ttdeci">@ TemplatePacketErrorControl</div></div>
+<div class="ttc" id="anamespaceccsds_html_ae6bd7c4479e516705a22551199cd42b4"><div class="ttname"><a href="namespaceccsds.html#ae6bd7c4479e516705a22551199cd42b4">ccsds::PacketErrorControlMode</a></div><div class="ttdeci">PacketErrorControlMode</div><div class="ttdoc">Packet-level CCSDSPack error-control trailer selection.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSPacketTypes_8h_source.html#l00019">CCSDSPacketTypes.h:19</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_ae6bd7c4479e516705a22551199cd42b4a8d5f4880a8a5ff2da50dc8e80c10ef60"><div class="ttname"><a href="namespaceccsds.html#ae6bd7c4479e516705a22551199cd42b4a8d5f4880a8a5ff2da50dc8e80c10ef60">ccsds::PacketErrorControlMode::CRC16</a></div><div class="ttdeci">@ CRC16</div></div>
+<div class="ttc" id="aprimary__header_8h_html_a41361d838dac671f47eef263a1132735"><div class="ttname"><a href="primary__header_8h.html#a41361d838dac671f47eef263a1132735">ccsds_primary_header_validate</a></div><div class="ttdeci">ccsds_status_t ccsds_primary_header_validate(const ccsds_primary_header_t *header)</div><div class="ttdoc">Validates the logical field widths without imposing version-0 policy.</div><div class="ttdef"><b>Definition</b> <a href="primary__header_8c_source.html#l00007">primary_header.c:7</a></div></div>
+<div class="ttc" id="astructccsds__packet__coherence__input_html"><div class="ttname"><a href="structccsds__packet__coherence__input.html">ccsds_packet_coherence_input</a></div><div class="ttdoc">Plain generic packet-coherence facts consumed by the C validator.</div><div class="ttdef"><b>Definition</b> <a href="validation_8h_source.html#l00089">validation.h:89</a></div></div>
+<div class="ttc" id="astructccsds__pus__coherence__input_html"><div class="ttname"><a href="structccsds__pus__coherence__input.html">ccsds_pus_coherence_input</a></div><div class="ttdoc">Plain PUS coherence facts consumed by the C validator.</div><div class="ttdef"><b>Definition</b> <a href="validation_8h_source.html#l00110">validation.h:110</a></div></div>
+<div class="ttc" id="astructccsds__pus__coherence__input_html_ae3842102086a6441e9e99b09053e221f"><div class="ttname"><a href="structccsds__pus__coherence__input.html#ae3842102086a6441e9e99b09053e221f">ccsds_pus_coherence_input::acknowledgement_flags</a></div><div class="ttdeci">uint8_t acknowledgement_flags</div><div class="ttdef"><b>Definition</b> <a href="validation_8h_source.html#l00118">validation.h:118</a></div></div>
+<div class="ttc" id="astructccsds__template__coherence__input_html"><div class="ttname"><a href="structccsds__template__coherence__input.html">ccsds_template_coherence_input</a></div><div class="ttdoc">Template-comparison facts whose object-specific equality is supplied by the adapter.</div><div class="ttdef"><b>Definition</b> <a href="validation_8h_source.html#l00130">validation.h:130</a></div></div>
+<div class="ttc" id="astructccsds__validation__report_html"><div class="ttname"><a href="structccsds__validation__report.html">ccsds_validation_report</a></div><div class="ttdoc">Fixed-capacity, allocation-free validation report.</div><div class="ttdef"><b>Definition</b> <a href="validation_8h_source.html#l00065">validation.h:65</a></div></div>
+<div class="ttc" id="avalidation_8h_html_a174b8649840be02f37c00b6e0320815f"><div class="ttname"><a href="validation_8h.html#a174b8649840be02f37c00b6e0320815f">ccsds_validate_pus_coherence</a></div><div class="ttdeci">ccsds_status_t ccsds_validate_pus_coherence(const ccsds_pus_coherence_input_t *input, ccsds_validation_report_t *report)</div><div class="ttdoc">Populates PUS-specific validation checks into a fixed C report.</div><div class="ttdef"><b>Definition</b> <a href="validation_8c_source.html#l00289">validation.c:289</a></div></div>
+<div class="ttc" id="avalidation_8h_html_a57bf2bdaa873c85f76352ee0f01a2315"><div class="ttname"><a href="validation_8h.html#a57bf2bdaa873c85f76352ee0f01a2315">ccsds_validation_report_reset</a></div><div class="ttdeci">void ccsds_validation_report_reset(ccsds_validation_report_t *report)</div><div class="ttdef"><b>Definition</b> <a href="validation_8c_source.html#l00007">validation.c:7</a></div></div>
+<div class="ttc" id="avalidation_8h_html_a99fb83031ce9923c84392b4e92f956b5a97bb9479056f34ba67ac8caf42d55e31"><div class="ttname"><a href="validation_8h.html#a99fb83031ce9923c84392b4e92f956b5a97bb9479056f34ba67ac8caf42d55e31">CCSDS_PACKET_DIRECTION_UNSPECIFIED</a></div><div class="ttdeci">@ CCSDS_PACKET_DIRECTION_UNSPECIFIED</div><div class="ttdef"><b>Definition</b> <a href="validation_8h_source.html#l00076">validation.h:76</a></div></div>
+<div class="ttc" id="avalidation_8h_html_acc843f50cecc2d9a40b83a690222b6e2"><div class="ttname"><a href="validation_8h.html#acc843f50cecc2d9a40b83a690222b6e2">ccsds_validate_template_coherence</a></div><div class="ttdeci">ccsds_status_t ccsds_validate_template_coherence(const ccsds_primary_header_t *packet_header, const ccsds_template_coherence_input_t *template_input, ccsds_validation_report_t *report)</div><div class="ttdoc">Populates generic template-comparison checks into a fixed C report.</div><div class="ttdef"><b>Definition</b> <a href="validation_8c_source.html#l00386">validation.c:386</a></div></div>
+<div class="ttc" id="avalidation_8h_html_afe1b03e23d9df3b0e3336960e574cc79"><div class="ttname"><a href="validation_8h.html#afe1b03e23d9df3b0e3336960e574cc79">ccsds_validate_packet_coherence</a></div><div class="ttdeci">ccsds_status_t ccsds_validate_packet_coherence(const ccsds_packet_coherence_input_t *input, const ccsds_sequence_validator_t *sequence, int validate_sequence_count, ccsds_validation_report_t *report)</div><div class="ttdoc">Populates generic packet-coherence checks into a fixed C report.</div><div class="ttdef"><b>Definition</b> <a href="validation_8c_source.html#l00210">validation.c:210</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -780,13 +689,13 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00134">134</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  134</span>{};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00122">122</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  122</span>{};</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a25491fbcf650272d344d714d3e74b3fc" name="a25491fbcf650272d344d714d3e74b3fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a25491fbcf650272d344d714d3e74b3fc">&#9670;&#160;</a></span>m_sequenceCounter</h2>
+<a id="a7cacb31bc3a2b17a461e7a164099e221" name="a7cacb31bc3a2b17a461e7a164099e221"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cacb31bc3a2b17a461e7a164099e221">&#9670;&#160;</a></span>m_sequenceState</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -795,7 +704,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::uint16_t ccsds::Validator::m_sequenceCounter {0U}</td>
+          <td class="memname"><a class="el" href="validation_8h.html#a7ed4c411a4f949753aa70b7dfe9844df">ccsds_sequence_validator_t</a> ccsds::Validator::m_sequenceState {}</td>
         </tr>
       </table>
   </td>
@@ -805,8 +714,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00133">133</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  133</span>{0U};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00121">121</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  121</span>{};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -830,7 +739,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00129">129</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00117">117</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
 
 </div>
 </div>
@@ -854,8 +763,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00131">131</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  131</span>{<span class="keyword">false</span>};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00119">119</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  119</span>{<span class="keyword">false</span>};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -879,8 +788,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00130">130</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  130</span>{<span class="keyword">true</span>};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00118">118</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  118</span>{<span class="keyword">true</span>};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -904,83 +813,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00132">132</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  132</span>{<span class="keyword">true</span>};</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a74831fcf37479b7988741bd3cb73cf34" name="a74831fcf37479b7988741bd3cb73cf34"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a74831fcf37479b7988741bd3cb73cf34">&#9670;&#160;</a></span>SEGMENT_OPEN_MASK</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr std::uint16_t ccsds::Validator::SEGMENT_OPEN_MASK {0x4000U}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00114">114</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  114</span>{0x4000U};</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="ac00c295eb88471e3eaa1ab3f496fdb76" name="ac00c295eb88471e3eaa1ab3f496fdb76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac00c295eb88471e3eaa1ab3f496fdb76">&#9670;&#160;</a></span>SEQUENCE_COUNT_MASK</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr std::uint16_t ccsds::Validator::SEQUENCE_COUNT_MASK {0x3FFFU}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00113">113</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  113</span>{0x3FFFU};</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a22ddbbe4ec312579bcf5016fe5ecbc3f" name="a22ddbbe4ec312579bcf5016fe5ecbc3f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a22ddbbe4ec312579bcf5016fe5ecbc3f">&#9670;&#160;</a></span>SEQUENCE_INITIALIZED_MASK</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr std::uint16_t ccsds::Validator::SEQUENCE_INITIALIZED_MASK {0x8000U}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00115">115</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  115</span>{0x8000U};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00120">120</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  120</span>{<span class="keyword">true</span>};</div>
 </div><!-- fragment -->
 </div>
 </div>

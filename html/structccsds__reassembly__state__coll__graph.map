@@ -1,0 +1,5 @@
+<map id="ccsds_reassembly_state" name="ccsds_reassembly_state">
+<area shape="rect" id="Node000001" title="Allocation&#45;free receive&#45;side application&#45;data reassembly state." alt="" coords="11,93,192,119"/>
+<area shape="rect" id="Node000002" href="$structccsds__sequence__validator.html" title="Stateful CCSDS sequence/segmentation validator." alt="" coords="5,5,197,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,45,104,93,99,93,99,45"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="write_spare" name="write_spare">
+<area shape="rect" id="Node000001" title=" " alt="" coords="437,46,536,71"/>
+<area shape="rect" id="Node000002" href="$pus__tm_8c.html#af96fd3030f25965f4b5a00a7cf966a5b" title="Encodes one PUS&#45;A TM secondary header into caller&#45;owned storage." alt="" coords="207,17,389,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="423,52,379,45,380,39,424,46"/>
+<area shape="rect" id="Node000004" href="$pus__tm_8c.html#a8cda2bb5ae5f9034e2aff4e70e5dfdd7" title="Encodes one PUS&#45;C TM secondary header into caller&#45;owned storage." alt="" coords="207,70,389,95"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="424,69,389,74,389,68,423,64"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#a6db8e59ecc12363938b0bb01663e6a54" title=" " alt="" coords="5,5,159,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="192,30,159,29,159,24,193,25"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#aa74b7344f16e81c4ca97e32b77a067f7" title=" " alt="" coords="5,69,159,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="193,89,159,90,159,84,193,83"/>
+</map>

@@ -1,0 +1,18 @@
+<map id="ccsds_pus_c_tm_validate_tailoring" name="ccsds_pus_c_tm_validate_tailoring">
+<area shape="rect" id="Node000001" title="Validates PUS&#45;C TM tailoring." alt="" coords="723,81,909,121"/>
+<area shape="rect" id="Node000002" href="$pus__tm_8c.html#a60e74ea0af19b4e6bb6eddc8886c0b08" title="Decodes one complete PUS&#45;C TM secondary header." alt="" coords="223,13,404,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="756,79,674,53,604,41,533,34,404,27,404,22,533,28,605,36,675,48,757,74"/>
+<area shape="rect" id="Node000004" href="$pus__tm_8c.html#a8cda2bb5ae5f9034e2aff4e70e5dfdd7" title="Encodes one PUS&#45;C TM secondary header into caller&#45;owned storage." alt="" coords="223,114,404,139"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="709,109,404,125,404,119,709,104"/>
+<area shape="rect" id="Node000006" href="$pus__tm_8c.html#a8fefd2934d2dbc393203a858130d3856" title="Returns exact encoded size for valid PUS&#45;C TM tailoring, otherwise zero." alt="" coords="452,63,675,89"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="709,93,674,90,675,84,710,88"/>
+<area shape="rect" id="Node000007" href="$namespaceccsds_1_1pus.html#a04025f0fa3181bd8eee0b5f87e916de2" title=" " alt="" coords="461,165,666,190"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="739,128,675,148,610,167,608,162,674,143,738,123"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#abe3d324cbfda334a6f35ede79c934898" title=" " alt="" coords="5,5,175,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="209,28,175,28,175,23,209,23"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#aa74b7344f16e81c4ca97e32b77a067f7" title=" " alt="" coords="13,88,167,128"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="209,121,167,117,167,112,209,115"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="486,63,376,41,377,35,487,58"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="487,94,377,117,376,111,486,89"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="438,87,167,106,167,100,438,82"/>
+</map>

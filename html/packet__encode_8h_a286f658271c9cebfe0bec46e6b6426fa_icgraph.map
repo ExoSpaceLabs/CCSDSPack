@@ -1,0 +1,7 @@
+<map id="ccsds_packet_finalize_parts" name="ccsds_packet_finalize_parts">
+<area shape="rect" id="Node000001" title="Finalizes one packet directly over two caller&#45;owned data&#45;field spans." alt="" coords="248,27,411,67"/>
+<area shape="rect" id="Node000002" href="$packet__encode_8c.html#a453cff50a2379ea9e7c1c1523233f5e5" title="Finalizes one CCSDS Space Packet header and optional packet CRC." alt="" coords="21,5,184,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,38,184,31,184,26,235,32"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#a242944a101e85c5f8887e669cd014579" title=" " alt="" coords="5,55,200,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,62,200,66,200,61,234,56"/>
+</map>

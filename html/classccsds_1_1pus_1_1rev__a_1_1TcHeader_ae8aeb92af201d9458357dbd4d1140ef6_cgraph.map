@@ -1,7 +1,22 @@
 <map id="ccsds::pus::rev_a::TcHeader::serialize" name="ccsds::pus::rev_a::TcHeader::serialize">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,151,45"/>
-<area shape="rect" id="Node000002" href="$namespaceccsds_1_1pus.html#a21e8f29c664bb4d548a0aaaf6ffc1233" title=" " alt="" coords="199,13,404,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,23,185,23,185,28,151,28"/>
-<area shape="rect" id="Node000003" href="$namespaceccsds_1_1pus.html#a95f60fbaf0db5c7a94b44688400d1646" title=" " alt="" coords="452,5,639,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="404,23,438,23,438,28,404,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,49,151,89"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#a76c0bb64ca203f0c554ad05713a6ca48" title="Encodes one PUS&#45;A TC secondary header into caller&#45;owned storage." alt="" coords="199,81,375,107"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,75,185,79,185,84,150,80"/>
+<area shape="rect" id="Node000003" href="$pus__tc_8c.html#ab8a04561fb01af52702618c3df287ad5" title="Returns the exact encoded size for valid PUS&#45;A TC tailoring, otherwise zero." alt="" coords="423,5,640,31"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="150,58,409,29,409,34,151,63"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="325,79,422,47,473,32,475,37,423,53,327,84"/>
+<area shape="rect" id="Node000004" href="$pus__tc_8c.html#ae3255082daa8de48d3e29c61b6a54c45" title="Validates PUS&#45;A TC tailoring." alt="" coords="688,49,871,89"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="375,87,674,71,674,77,375,92"/>
+<area shape="rect" id="Node000006" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="466,107,597,132"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="375,100,453,109,452,114,374,106"/>
+<area shape="rect" id="Node000007" href="$pus__tc_8c.html#a0f67c0b06713126eb0474127405dc1cc" title=" " alt="" coords="473,156,590,181"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="319,104,423,142,460,152,458,157,422,147,317,109"/>
+<area shape="rect" id="Node000009" href="$pus__tc_8c.html#a72d6e363a0e43ae15a930542502c08e5" title=" " alt="" coords="482,205,581,231"/>
+<area shape="poly" id="edge10_Node000002_Node000009" title=" " alt="" coords="303,105,354,148,387,172,424,192,469,206,468,211,422,196,385,176,350,152,300,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="595,28,675,45,674,50,594,33"/>
+<area shape="rect" id="Node000005" href="$pus_8h.html#a72689b3da3a944528e0b666f1c00fc5d" title="Returns non&#45;zero for supported mission identifier widths 0, 1, 2, or 4 octets." alt="" coords="919,99,1072,139"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="866,86,906,96,905,101,864,91"/>
+<area shape="rect" id="Node000008" href="$pus_8h.html#ab75511ee52cbdfd9bdc21eef1b3e2057" title="Returns non&#45;zero when value fits exactly within the selected identifier width." alt="" coords="689,135,869,160"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="590,161,676,154,676,159,590,166"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="870,133,905,128,905,134,870,138"/>
 </map>

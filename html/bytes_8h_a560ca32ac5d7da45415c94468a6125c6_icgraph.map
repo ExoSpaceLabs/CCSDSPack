@@ -1,0 +1,70 @@
+<map id="ccsds_store_uint" name="ccsds_store_uint">
+<area shape="rect" id="Node000001" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="1236,387,1367,412"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#a76c0bb64ca203f0c554ad05713a6ca48" title="Encodes one PUS&#45;A TC secondary header into caller&#45;owned storage." alt="" coords="1012,184,1188,209"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1284,376,1243,316,1216,282,1186,251,1157,229,1127,212,1130,207,1160,224,1190,247,1220,278,1248,312,1288,373"/>
+<area shape="rect" id="Node000004" href="$pus__tm_8c.html#af96fd3030f25965f4b5a00a7cf966a5b" title="Encodes one PUS&#45;A TM secondary header into caller&#45;owned storage." alt="" coords="556,361,739,387"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1222,399,739,380,739,375,1222,394"/>
+<area shape="rect" id="Node000006" href="$pus__tc_8c.html#ada7fac2f6b72d323b9a3d38c129df4ab" title="Encodes one PUS&#45;C TC secondary header into caller&#45;owned storage." alt="" coords="1013,461,1187,487"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1263,421,1189,452,1153,464,1152,459,1187,448,1261,416"/>
+<area shape="rect" id="Node000008" href="$bytes_8h.html#a766a460e3ef1b8e6c7409a190cef50e5" title="Stores 0..8 octets in CCSDS&#45;standard big&#45;endian order." alt="" coords="1023,412,1177,437"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1222,412,1177,418,1177,412,1222,407"/>
+<area shape="rect" id="Node000020" href="$bytes_8h.html#ad772558145a48c2b1621522c0eb5046f" title="Stores 0..8 octets in little&#45;endian order for mission/custom fields." alt="" coords="1025,511,1175,536"/>
+<area shape="poly" id="edge20_Node000001_Node000020" title=" " alt="" coords="1282,424,1242,464,1189,502,1163,513,1160,508,1187,497,1238,460,1278,420"/>
+<area shape="rect" id="Node000021" href="$bytes_8h.html#a22386b02332619598f86ea6feb7d901d" title="Stores a 16&#45;bit integer using explicit wire byte order." alt="" coords="1035,261,1165,287"/>
+<area shape="poly" id="edge21_Node000001_Node000021" title=" " alt="" coords="1267,381,1120,289,1123,284,1269,377"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__a_1_1TcHeader.html#ae8aeb92af201d9458357dbd4d1140ef6" title=" " alt="" coords="807,147,953,187"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="998,186,952,180,953,174,999,180"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#a6db8e59ecc12363938b0bb01663e6a54" title=" " alt="" coords="305,425,459,465"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="586,393,459,427,457,422,585,388"/>
+<area shape="rect" id="Node000007" href="$classccsds_1_1pus_1_1rev__c_1_1TcHeader.html#a9fd365aef21b44c4db9822c1b4a11eda" title=" " alt="" coords="807,539,953,579"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1036,493,1013,502,989,515,965,530,938,542,936,537,963,525,986,511,1011,497,1034,488"/>
+<area shape="rect" id="Node000009" href="$cuc_8c.html#af584944f9c87f576846c043611ca6fe3" title="Encodes one numeric CUC value directly into caller&#45;owned storage." alt="" coords="809,311,951,336"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1058,409,908,338,910,334,1060,404"/>
+<area shape="rect" id="Node000015" href="$stream_8c.html#a7cb0bfea061cf224c6678b2acdffa093" title="Writes the optional four&#45;octet big&#45;endian synchronization prefix." alt="" coords="799,475,961,515"/>
+<area shape="poly" id="edge15_Node000008_Node000015" title=" " alt="" coords="1041,444,1013,453,938,478,936,473,1011,447,1040,439"/>
+<area shape="rect" id="Node000018" href="$primary__header_8c.html#a1c0137aa50f56b9d744bb90400a8e5ad" title="Unpacks a low&#45;48&#45;bit primary&#45;header representation." alt="" coords="796,411,964,451"/>
+<area shape="poly" id="edge18_Node000008_Node000018" title=" " alt="" coords="1010,430,964,431,964,426,1010,425"/>
+<area shape="poly" id="edge9_Node000009_Node000004" title=" " alt="" coords="808,342,707,364,706,359,807,336"/>
+<area shape="rect" id="Node000010" href="$pus__tm_8c.html#a8cda2bb5ae5f9034e2aff4e70e5dfdd7" title="Encodes one PUS&#45;C TM secondary header into caller&#45;owned storage." alt="" coords="557,240,738,265"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="823,309,795,301,689,268,691,263,797,295,825,304"/>
+<area shape="rect" id="Node000012" href="$namespaceccsds_1_1time.html#a30f30138024fa02235795e091003d52e" title="Encodes a numeric CUC value in network byte order." alt="" coords="568,311,727,336"/>
+<area shape="poly" id="edge12_Node000009_Node000012" title=" " alt="" coords="795,326,727,326,727,321,795,321"/>
+<area shape="rect" id="Node000011" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#aa74b7344f16e81c4ca97e32b77a067f7" title=" " alt="" coords="305,233,459,273"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="543,255,459,255,459,250,543,250"/>
+<area shape="rect" id="Node000013" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#af92ae4b361bc9c2a1674abb1b82aba06" title=" " alt="" coords="265,297,499,337"/>
+<area shape="poly" id="edge13_Node000012_Node000013" title=" " alt="" coords="554,324,499,322,499,317,555,318"/>
+<area shape="rect" id="Node000014" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#afb9d5e99aeb508c186afd34daf3549e0" title=" " alt="" coords="265,361,499,401"/>
+<area shape="poly" id="edge14_Node000012_Node000014" title=" " alt="" coords="575,342,476,363,474,358,574,336"/>
+<area shape="rect" id="Node000016" href="$classccsds_1_1Manager.html#a815984258a37cffbbc0412f181af3301" title=" " alt="" coords="547,478,748,518"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="785,499,748,500,748,494,785,494"/>
+<area shape="rect" id="Node000017" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="355,489,409,515"/>
+<area shape="poly" id="edge17_Node000016_Node000017" title=" " alt="" coords="533,502,409,504,409,499,533,497"/>
+<area shape="rect" id="Node000019" href="$classccsds_1_1Header.html#a28baa55c6bd1f7f76c9a67635c3c2a2d" title="Atomically assigns all fields from a packed 48&#45;bit value." alt="" coords="561,419,733,444"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="782,434,734,434,734,429,782,429"/>
+<area shape="rect" id="Node000022" href="$bytes_8h.html#a1a5c075a1e4cd3ffe5782eec75da0e73" title="Stores a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="811,212,949,237"/>
+<area shape="poly" id="edge22_Node000021_Node000022" title=" " alt="" coords="1029,261,937,240,938,235,1030,256"/>
+<area shape="rect" id="Node000033" href="$bytes_8h.html#aaf956c6d2fad4940fea4bbae1c25c4c8" title="Stores a little&#45;endian 16&#45;bit value for mission/custom fields." alt="" coords="813,261,947,287"/>
+<area shape="poly" id="edge35_Node000021_Node000033" title=" " alt="" coords="1022,277,947,277,947,271,1022,271"/>
+<area shape="poly" id="edge34_Node000022_Node000010" title=" " alt="" coords="798,237,738,244,738,239,797,232"/>
+<area shape="rect" id="Node000023" href="$packet__encode_8c.html#a95342e847aaa693b8fe79643cfdec88e" title="Encodes one finalized packet from two logical data&#45;field spans." alt="" coords="301,169,463,209"/>
+<area shape="poly" id="edge23_Node000022_Node000023" title=" " alt="" coords="797,221,463,197,464,192,797,216"/>
+<area shape="rect" id="Node000026" href="$primary__header_8c.html#a77b3e5edb03abb942ac1b9946e4fcd47" title="Encodes a validated primary header into exactly six caller&#45;owned bytes." alt="" coords="563,105,731,145"/>
+<area shape="poly" id="edge26_Node000022_Node000026" title=" " alt="" coords="818,210,795,202,685,147,687,142,797,197,820,205"/>
+<area shape="rect" id="Node000024" href="$packet__encode_8c.html#acf00dc5fdeec17e5f6a973c42598e3a3" title="Encodes an already&#45;finalized packet into caller&#45;owned storage." alt="" coords="30,224,193,249"/>
+<area shape="poly" id="edge24_Node000023_Node000024" title=" " alt="" coords="288,208,184,227,183,221,287,203"/>
+<area shape="rect" id="Node000025" href="$classccsds_1_1Packet.html#a963321800b9b664b4ab55b24e70f057c" title="Serializes directly into caller&#45;owned storage and returns bytes written." alt="" coords="26,175,197,200"/>
+<area shape="poly" id="edge25_Node000023_Node000025" title=" " alt="" coords="287,191,197,190,197,185,287,186"/>
+<area shape="poly" id="edge27_Node000026_Node000023" title=" " alt="" coords="551,151,464,172,463,167,550,145"/>
+<area shape="rect" id="Node000027" href="$packet__encode_8c.html#a9f2d19262a926fb07189f9da77fd3560" title="Finalizes one packet directly over two caller&#45;owned data&#45;field spans." alt="" coords="301,105,463,145"/>
+<area shape="poly" id="edge28_Node000026_Node000027" title=" " alt="" coords="550,127,463,127,463,122,550,122"/>
+<area shape="rect" id="Node000030" href="$primary__header_8c.html#a0c4f42c8f50f430ece7a1e5dfc00a244" title="Packs a validated primary header into the low 48 bits of a uint64_t." alt="" coords="279,5,485,31"/>
+<area shape="poly" id="edge31_Node000026_Node000030" title=" " alt="" coords="603,99,554,70,498,44,460,33,462,28,500,40,556,66,606,95"/>
+<area shape="rect" id="Node000032" href="$classccsds_1_1Header.html#ad6e14aaba07b020133b959d16fcff71e" title="Const overload of serialize()." alt="" coords="294,55,470,80"/>
+<area shape="poly" id="edge33_Node000026_Node000032" title=" " alt="" coords="549,106,441,83,442,77,551,101"/>
+<area shape="rect" id="Node000028" href="$packet__encode_8c.html#a453cff50a2379ea9e7c1c1523233f5e5" title="Finalizes one CCSDS Space Packet header and optional packet CRC." alt="" coords="30,57,193,83"/>
+<area shape="poly" id="edge29_Node000027_Node000028" title=" " alt="" coords="287,108,174,85,175,80,288,103"/>
+<area shape="rect" id="Node000029" href="$classccsds_1_1Packet.html#a242944a101e85c5f8887e669cd014579" title=" " alt="" coords="14,107,209,147"/>
+<area shape="poly" id="edge30_Node000027_Node000029" title=" " alt="" coords="287,128,209,129,209,124,287,123"/>
+<area shape="rect" id="Node000031" href="$classccsds_1_1Header.html#a1ae5844700272117f01c176c6f2aca5f" title="Const overload of getFullHeader()." alt="" coords="5,5,217,31"/>
+<area shape="poly" id="edge32_Node000030_Node000031" title=" " alt="" coords="265,21,218,21,218,15,265,15"/>
+</map>

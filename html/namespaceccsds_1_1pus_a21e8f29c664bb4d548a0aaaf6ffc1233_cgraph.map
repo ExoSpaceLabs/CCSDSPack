@@ -1,5 +1,7 @@
 <map id="ccsds::pus::validateTailoring" name="ccsds::pus::validateTailoring">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,13,211,38"/>
-<area shape="rect" id="Node000002" href="$namespaceccsds_1_1pus.html#a95f60fbaf0db5c7a94b44688400d1646" title=" " alt="" coords="259,5,445,45"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#ae3255082daa8de48d3e29c61b6a54c45" title="Validates PUS&#45;A TC tailoring." alt="" coords="259,5,441,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,23,245,23,245,28,211,28"/>
+<area shape="rect" id="Node000003" href="$pus_8h.html#a72689b3da3a944528e0b666f1c00fc5d" title="Returns non&#45;zero for supported mission identifier widths 0, 1, 2, or 4 octets." alt="" coords="489,5,643,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="442,23,475,23,475,28,442,28"/>
 </map>

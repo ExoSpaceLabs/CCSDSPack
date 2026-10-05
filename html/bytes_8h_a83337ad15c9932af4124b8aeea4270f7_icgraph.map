@@ -1,0 +1,29 @@
+<map id="ccsds_load_be_uint" name="ccsds_load_be_uint">
+<area shape="rect" id="Node000001" title="Loads 0..8 CCSDS&#45;standard big&#45;endian octets." alt="" coords="801,190,949,215"/>
+<area shape="rect" id="Node000002" href="$cuc_8c.html#a436559277f86936e9201271fa2574967" title="Decodes one complete numeric CUC value from caller&#45;owned bytes." alt="" coords="579,117,721,142"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="821,188,689,145,691,140,823,183"/>
+<area shape="rect" id="Node000011" href="$stream_8c.html#a16129c1ccc50cb6f51f2f8975dc20a12" title="Parses the next framed packet and advances the cursor transactionally." alt="" coords="551,190,749,215"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="788,205,749,205,749,200,788,200"/>
+<area shape="rect" id="Node000013" href="$primary__header_8c.html#a0c4f42c8f50f430ece7a1e5dfc00a244" title="Packs a validated primary header into the low 48 bits of a uint64_t." alt="" coords="547,239,753,265"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="804,221,709,242,708,237,803,216"/>
+<area shape="rect" id="Node000003" href="$pus__tm_8c.html#a26862b0ae6d836a8ce0f4a807f3f6fb2" title="Decodes one complete PUS&#45;A TM secondary header." alt="" coords="301,25,484,50"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="603,114,498,75,433,53,435,48,500,69,605,109"/>
+<area shape="rect" id="Node000005" href="$pus__tm_8c.html#a60e74ea0af19b4e6bb6eddc8886c0b08" title="Decodes one complete PUS&#45;C TM secondary header." alt="" coords="302,85,483,110"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="565,122,483,111,484,106,566,116"/>
+<area shape="rect" id="Node000007" href="$namespaceccsds_1_1time.html#a3cce2a1b7a8e23395986491427d82560" title="Decodes one complete CUC value using the declared layout." alt="" coords="305,141,480,166"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="566,140,481,148,480,143,565,135"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#ab06eaa100a55d74ac92bd87548138d49" title=" " alt="" coords="37,5,207,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="287,35,207,32,207,26,288,30"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#abe3d324cbfda334a6f35ede79c934898" title=" " alt="" coords="37,69,207,109"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="288,97,207,94,207,89,288,92"/>
+<area shape="rect" id="Node000008" href="$structccsds_1_1time_1_1CucTime.html#a41500cabb01f643696910c1a43c0ce6d" title=" " alt="" coords="41,133,203,173"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="291,156,203,156,203,151,291,151"/>
+<area shape="rect" id="Node000009" href="$structccsds_1_1time_1_1CucTime.html#a7abfc1b4158995447cf5ab3fc89f2adf" title=" " alt="" coords="41,197,203,237"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="323,172,287,180,204,200,202,195,286,175,322,166"/>
+<area shape="rect" id="Node000010" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#a98a091100a5c8cb5c3e9b26c621fbb16" title=" " alt="" coords="5,261,239,301"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="297,174,288,179,272,196,265,214,257,233,240,251,219,264,217,259,237,247,253,230,260,212,268,193,285,175,295,169"/>
+<area shape="rect" id="Node000012" href="$classccsds_1_1Manager.html#a738e17de0116fe9ca11f1032dc81a43a" title=" " alt="" coords="313,190,472,215"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="538,205,472,205,472,200,538,200"/>
+<area shape="rect" id="Node000014" href="$classccsds_1_1Header.html#a1ae5844700272117f01c176c6f2aca5f" title="Const overload of getFullHeader()." alt="" coords="287,239,499,265"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="533,255,499,255,499,249,533,249"/>
+</map>

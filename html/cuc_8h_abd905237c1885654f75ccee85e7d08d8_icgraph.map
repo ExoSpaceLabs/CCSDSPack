@@ -1,0 +1,55 @@
+<map id="ccsds_cuc_encoded_size" name="ccsds_cuc_encoded_size">
+<area shape="rect" id="Node000001" title="Returns the encoded P&#45;field + T&#45;field size without validating the layout." alt="" coords="839,347,1021,373"/>
+<area shape="rect" id="Node000002" href="$cuc_8c.html#a436559277f86936e9201271fa2574967" title="Decodes one complete numeric CUC value from caller&#45;owned bytes." alt="" coords="609,183,750,209"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="906,339,855,291,789,242,755,225,721,211,723,206,757,220,792,238,858,287,909,335"/>
+<area shape="rect" id="Node000003" href="$pus__tm_8c.html#a26862b0ae6d836a8ce0f4a807f3f6fb2" title="Decodes one complete PUS&#45;A TM secondary header." alt="" coords="312,123,495,149"/>
+<area shape="poly" id="edge18_Node000001_Node000003" title=" " alt="" coords="916,335,898,297,870,252,834,208,813,189,789,173,754,156,717,143,639,128,563,124,495,127,495,121,563,119,640,123,718,138,756,151,792,168,816,185,838,204,875,249,902,295,921,333"/>
+<area shape="rect" id="Node000005" href="$pus__tm_8c.html#a60e74ea0af19b4e6bb6eddc8886c0b08" title="Decodes one complete PUS&#45;C TM secondary header." alt="" coords="313,222,494,247"/>
+<area shape="poly" id="edge23_Node000001_Node000005" title=" " alt="" coords="886,344,790,311,634,274,494,250,495,245,635,269,791,305,887,339"/>
+<area shape="rect" id="Node000011" href="$cuc_8c.html#af584944f9c87f576846c043611ca6fe3" title="Encodes one numeric CUC value directly into caller&#45;owned storage." alt="" coords="609,422,750,447"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="884,380,791,412,742,425,741,419,790,407,882,375"/>
+<area shape="rect" id="Node000016" href="$namespaceccsds_1_1time.html#a30f30138024fa02235795e091003d52e" title="Encodes a numeric CUC value in network byte order." alt="" coords="324,590,483,615"/>
+<area shape="poly" id="edge31_Node000001_Node000016" title=" " alt="" coords="915,386,866,451,831,485,792,514,714,551,632,576,553,592,483,601,483,595,552,587,631,571,713,546,789,510,828,481,862,447,911,383"/>
+<area shape="rect" id="Node000019" href="$pus__tm_8c.html#a0a3fb7ceab23c4fe68fb7d0c2598a6be" title="Returns exact encoded size for valid PUS&#45;A TM tailoring, otherwise zero." alt="" coords="568,321,791,346"/>
+<area shape="poly" id="edge19_Node000001_Node000019" title=" " alt="" coords="825,351,790,348,791,343,825,346"/>
+<area shape="rect" id="Node000020" href="$pus__tm_8c.html#a8fefd2934d2dbc393203a858130d3856" title="Returns exact encoded size for valid PUS&#45;C TM tailoring, otherwise zero." alt="" coords="568,373,791,398"/>
+<area shape="poly" id="edge24_Node000001_Node000020" title=" " alt="" coords="825,373,791,377,790,371,825,368"/>
+<area shape="rect" id="Node000021" href="$namespaceccsds_1_1time.html#a41fa7647a28435a835b06cf7f7db0980" title="Returns the encoded P&#45;field plus T&#45;field size." alt="" coords="586,475,773,501"/>
+<area shape="poly" id="edge28_Node000001_Node000021" title=" " alt="" coords="906,384,855,423,792,461,745,478,743,473,790,456,852,419,903,379"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="609,183,519,163,466,151,468,146,521,157,611,178"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="595,210,495,225,494,219,595,205"/>
+<area shape="rect" id="Node000007" href="$namespaceccsds_1_1time.html#a3cce2a1b7a8e23395986491427d82560" title="Decodes one complete CUC value using the declared layout." alt="" coords="316,173,491,198"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="594,195,491,191,491,186,595,190"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#ab06eaa100a55d74ac92bd87548138d49" title=" " alt="" coords="37,5,207,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="366,119,306,89,238,60,202,48,204,43,240,55,309,85,368,114"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#abe3d324cbfda334a6f35ede79c934898" title=" " alt="" coords="37,261,207,301"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="313,252,207,270,206,265,313,247"/>
+<area shape="rect" id="Node000008" href="$structccsds_1_1time_1_1CucTime.html#a41500cabb01f643696910c1a43c0ce6d" title=" " alt="" coords="41,133,203,173"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="302,177,203,165,203,160,303,171"/>
+<area shape="rect" id="Node000009" href="$structccsds_1_1time_1_1CucTime.html#a7abfc1b4158995447cf5ab3fc89f2adf" title=" " alt="" coords="41,69,203,109"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="307,171,285,162,270,153,261,143,251,133,237,124,202,109,204,104,240,119,255,129,264,139,274,149,288,158,309,166"/>
+<area shape="rect" id="Node000010" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#a98a091100a5c8cb5c3e9b26c621fbb16" title=" " alt="" coords="5,197,239,237"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="303,199,239,207,239,201,302,194"/>
+<area shape="rect" id="Node000012" href="$pus__tm_8c.html#af96fd3030f25965f4b5a00a7cf966a5b" title="Encodes one PUS&#45;A TM secondary header into caller&#45;owned storage." alt="" coords="312,323,495,349"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="599,421,567,412,490,381,428,351,430,346,492,376,569,407,601,416"/>
+<area shape="rect" id="Node000014" href="$pus__tm_8c.html#a8cda2bb5ae5f9034e2aff4e70e5dfdd7" title="Encodes one PUS&#45;C TM secondary header into caller&#45;owned storage." alt="" coords="313,425,494,450"/>
+<area shape="poly" id="edge13_Node000011_Node000014" title=" " alt="" coords="595,438,494,439,494,434,595,433"/>
+<area shape="poly" id="edge15_Node000011_Node000016" title=" " alt="" coords="597,449,570,465,558,478,551,492,547,521,542,550,535,565,522,579,504,591,484,599,482,594,501,586,518,575,530,562,537,549,542,520,546,490,553,475,566,461,594,444"/>
+<area shape="rect" id="Node000013" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#a6db8e59ecc12363938b0bb01663e6a54" title=" " alt="" coords="45,325,199,365"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="299,342,199,345,199,340,298,337"/>
+<area shape="rect" id="Node000015" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#aa74b7344f16e81c4ca97e32b77a067f7" title=" " alt="" coords="45,408,199,448"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="299,437,199,433,199,428,299,431"/>
+<area shape="rect" id="Node000017" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#af92ae4b361bc9c2a1674abb1b82aba06" title=" " alt="" coords="5,615,239,655"/>
+<area shape="poly" id="edge16_Node000016_Node000017" title=" " alt="" coords="310,616,239,624,239,619,310,611"/>
+<area shape="rect" id="Node000018" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#afb9d5e99aeb508c186afd34daf3549e0" title=" " alt="" coords="5,551,239,591"/>
+<area shape="poly" id="edge17_Node000016_Node000018" title=" " alt="" coords="310,595,239,587,239,581,310,589"/>
+<area shape="poly" id="edge20_Node000019_Node000003" title=" " alt="" coords="653,312,566,222,544,189,535,175,519,162,494,151,496,146,521,158,539,171,549,186,570,218,657,309"/>
+<area shape="poly" id="edge21_Node000019_Node000012" title=" " alt="" coords="554,337,495,338,495,332,554,332"/>
+<area shape="poly" id="edge22_Node000019_Node000013" title=" " alt="" coords="591,321,520,313,403,307,287,313,199,328,198,323,286,308,403,301,520,308,592,316"/>
+<area shape="poly" id="edge25_Node000020_Node000005" title=" " alt="" coords="592,371,567,360,551,349,541,337,518,313,469,277,425,250,428,245,472,273,522,309,545,334,555,345,569,355,594,366"/>
+<area shape="poly" id="edge26_Node000020_Node000014" title=" " alt="" coords="598,403,472,427,471,422,597,398"/>
+<area shape="poly" id="edge27_Node000020_Node000015" title=" " alt="" coords="554,395,287,415,199,423,199,417,286,409,554,390"/>
+<area shape="poly" id="edge29_Node000021_Node000010" title=" " alt="" coords="572,497,491,499,407,495,334,485,306,476,285,463,264,438,255,412,254,385,257,358,261,330,261,303,254,277,237,251,223,240,226,236,241,248,259,275,267,303,266,331,263,358,259,385,260,411,269,436,288,459,308,471,335,479,407,490,491,493,572,492"/>
+<area shape="rect" id="Node000022" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#a435227546d2489840d0b02d894af6192" title=" " alt="" coords="287,525,520,565"/>
+<area shape="poly" id="edge30_Node000021_Node000022" title=" " alt="" coords="605,506,501,528,500,523,603,501"/>
+</map>

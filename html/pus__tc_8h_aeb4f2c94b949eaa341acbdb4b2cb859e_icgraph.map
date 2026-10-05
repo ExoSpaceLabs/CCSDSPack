@@ -1,0 +1,5 @@
+<map id="ccsds_pus_c_tc_decode" name="ccsds_pus_c_tc_decode">
+<area shape="rect" id="Node000001" title="Decodes one complete PUS&#45;C TC secondary header." alt="" coords="215,13,389,38"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1pus_1_1rev__c_1_1TcHeader.html#aed73e839a1169ffa3d9afe1b4794b3bf" title=" " alt="" coords="5,5,167,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,28,167,28,167,23,201,23"/>
+</map>

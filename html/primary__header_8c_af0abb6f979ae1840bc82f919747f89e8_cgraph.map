@@ -1,0 +1,9 @@
+<map id="ccsds_primary_header_decode" name="ccsds_primary_header_decode">
+<area shape="rect" id="Node000001" title="Decodes the first six bytes from a caller&#45;owned buffer." alt="" coords="5,5,173,45"/>
+<area shape="rect" id="Node000002" href="$bytes_8h.html#abc80bd6553a5888e248bc36939933744" title="Loads a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="221,13,353,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,23,207,23,207,28,174,28"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#a678b1b7d7c81754310024520a94a4246" title="Loads a 16&#45;bit integer using explicit wire byte order." alt="" coords="401,13,525,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="354,23,388,23,388,28,354,28"/>
+<area shape="rect" id="Node000004" href="$bytes_8h.html#a3e09d1360c5624e2e27f266f37fdf84a" title="Loads 0..8 octets into a uint64_t using explicit wire byte order." alt="" coords="573,13,699,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="526,23,559,23,559,28,526,28"/>
+</map>

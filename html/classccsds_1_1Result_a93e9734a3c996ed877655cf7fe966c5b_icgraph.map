@@ -1,5 +1,7 @@
 <map id="ccsds::Result::value" name="ccsds::Result::value">
-<area shape="rect" id="Node000001" title=" " alt="" coords="240,13,391,38"/>
-<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#af7fc722b2fd1ab79ce5f48933d104005" title="Typed bounded parse returning the number of consumed bytes." alt="" coords="5,5,192,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,28,192,28,192,23,226,23"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="240,45,391,70"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#a3674fafef5c2e84a7745f124effe6223" title="Typed bounded raw parse returning the number of consumed bytes." alt="" coords="5,5,192,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,47,192,42,193,36,227,42"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#af7fc722b2fd1ab79ce5f48933d104005" title="Typed bounded parse returning the number of consumed bytes." alt="" coords="5,69,192,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,73,193,78,192,73,226,68"/>
 </map>

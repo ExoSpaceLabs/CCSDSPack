@@ -1,0 +1,10 @@
+<map id="ccsds_packet_stream_prefix_size" name="ccsds_packet_stream_prefix_size">
+<area shape="rect" id="Node000001" title="Returns the stream&#45;frame prefix size for the selected sync policy." alt="" coords="567,35,728,75"/>
+<area shape="rect" id="Node000002" href="$stream_8c.html#a7cb0bfea061cf224c6678b2acdffa093" title="Writes the optional four&#45;octet big&#45;endian synchronization prefix." alt="" coords="357,5,519,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="552,44,518,39,519,34,553,39"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Manager.html#a815984258a37cffbbc0412f181af3301" title=" " alt="" coords="108,35,309,75"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="553,60,519,60,357,60,309,59,309,54,357,55,519,55,553,54"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="344,40,310,44,309,39,343,35"/>
+<area shape="rect" id="Node000004" href="$exec__encoder_8cpp.html#a638b85ceffac097c2aa79b76ba8c055e" title=" " alt="" coords="5,42,60,67"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,57,60,57,60,52,94,52"/>
+</map>

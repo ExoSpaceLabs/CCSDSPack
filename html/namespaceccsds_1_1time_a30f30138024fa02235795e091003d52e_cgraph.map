@@ -1,7 +1,19 @@
 <map id="ccsds::time::serialize" name="ccsds::time::serialize">
-<area shape="rect" id="Node000001" title="Encodes a numeric CUC value in network byte order." alt="" coords="5,31,164,56"/>
-<area shape="rect" id="Node000002" href="$namespaceccsds_1_1time.html#a41fa7647a28435a835b06cf7f7db0980" title="Returns the encoded P&#45;field plus T&#45;field size." alt="" coords="212,5,399,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,32,198,28,199,33,164,37"/>
-<area shape="rect" id="Node000003" href="$namespaceccsds_1_1time.html#a7d330b98edceb2a95bd23475a70deb71" title="Validates the supported basic CUC layout." alt="" coords="227,55,384,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,49,213,55,213,60,164,55"/>
+<area shape="rect" id="Node000001" title="Encodes a numeric CUC value in network byte order." alt="" coords="5,104,164,129"/>
+<area shape="rect" id="Node000002" href="$cuc_8c.html#af584944f9c87f576846c043611ca6fe3" title="Encodes one numeric CUC value directly into caller&#45;owned storage." alt="" coords="212,104,353,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,114,198,114,198,119,164,119"/>
+<area shape="rect" id="Node000003" href="$cuc_8c.html#abd905237c1885654f75ccee85e7d08d8" title="Returns the encoded P&#45;field + T&#45;field size without validating the layout." alt="" coords="401,5,584,31"/>
+<area shape="poly" id="edge8_Node000001_Node000003" title=" " alt="" coords="138,101,425,31,426,37,139,107"/>
+<area shape="rect" id="Node000004" href="$cuc_8c.html#a3bb920cae5f443cb5f41282544bc91b7" title="Validates the supported basic CUC layout." alt="" coords="419,203,566,228"/>
+<area shape="poly" id="edge9_Node000001_Node000004" title=" " alt="" coords="139,127,426,197,425,202,138,132"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="299,102,343,71,400,40,419,32,421,37,402,44,346,75,302,106"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="303,127,347,157,402,188,425,196,423,201,400,192,344,162,300,132"/>
+<area shape="rect" id="Node000005" href="$bytes_8h.html#a766a460e3ef1b8e6c7409a190cef50e5" title="Stores 0..8 octets in CCSDS&#45;standard big&#45;endian order." alt="" coords="416,55,569,80"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="337,101,424,81,425,86,338,107"/>
+<area shape="rect" id="Node000007" href="$cuc_8c.html#ab5dc55660b1193664799add7549fce09" title=" " alt="" coords="449,104,536,129"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="354,114,435,114,435,119,354,119"/>
+<area shape="rect" id="Node000008" href="$cuc_8c.html#a6719a2e23d16f90287ab7748fe74336c" title=" " alt="" coords="412,153,573,179"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="338,127,425,148,424,153,337,132"/>
+<area shape="rect" id="Node000006" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="632,55,763,80"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="570,65,618,65,618,70,570,70"/>
 </map>

@@ -1,27 +1,51 @@
 <map id="inc/PusTailoring.h" name="inc/PusTailoring.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="305,5,439,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPacketTypes_8h.html" title=" " alt="" coords="5,79,163,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="326,33,144,78,143,73,325,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="220,225,287,251"/>
-<area shape="poly" id="edge14_Node000001_Node000003" title=" " alt="" coords="352,33,322,52,287,79,254,113,229,153,226,168,227,183,239,212,234,214,222,184,221,167,224,151,250,110,284,75,319,48,349,29"/>
-<area shape="rect" id="Node000004" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="435,152,554,177"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="389,29,415,50,442,77,465,108,484,138,480,141,461,111,438,80,412,54,386,33"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="628,225,687,251"/>
-<area shape="poly" id="edge15_Node000001_Node000005" title=" " alt="" coords="393,29,468,76,519,112,568,150,638,213,634,217,565,154,516,116,465,81,390,33"/>
-<area shape="rect" id="Node000009" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="317,79,427,104"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="375,31,375,65,369,65,369,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,102,183,175,230,214,227,218,180,179,95,106"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="457,180,301,225,300,220,455,175"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="522,175,619,217,617,222,520,180"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="535,225,603,251"/>
-<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="508,175,549,214,545,218,505,179"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="343,225,406,251"/>
-<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="477,180,408,220,405,216,474,175"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="431,225,511,251"/>
-<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="493,179,481,213,476,211,488,177"/>
-<area shape="poly" id="edge12_Node000009_Node000003" title=" " alt="" coords="369,106,350,140,323,179,282,219,278,215,319,176,346,137,364,103"/>
-<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="393,102,464,143,462,147,390,106"/>
-<area shape="poly" id="edge13_Node000009_Node000007" title=" " alt="" coords="375,104,377,212,372,212,370,105"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="238,152,309,177"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="358,106,302,146,299,142,355,102"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="295,5,429,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSPacketTypes_8h.html" title=" " alt="" coords="31,79,189,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,33,165,77,163,72,321,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="31,225,98,251"/>
+<area shape="poly" id="edge31_Node000001_Node000003" title=" " alt="" coords="295,24,219,29,137,39,65,55,39,67,21,80,12,96,9,112,14,148,30,184,49,213,45,216,25,186,9,150,4,112,7,94,17,77,36,62,63,50,136,33,218,23,294,18"/>
+<area shape="rect" id="Node000004" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="291,152,409,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="364,31,355,139,349,138,358,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="413,225,471,251"/>
+<area shape="poly" id="edge32_Node000001_Node000005" title=" " alt="" coords="370,30,395,81,423,151,440,211,434,212,418,153,390,84,365,32"/>
+<area shape="rect" id="Node000009" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="213,79,324,104"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="349,33,296,72,293,68,345,29"/>
+<area shape="rect" id="Node000011" href="$pus__tc_8h.html" title=" " alt="" coords="728,79,887,104"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="430,27,723,74,722,79,429,33"/>
+<area shape="rect" id="Node000016" href="$pus__tm_8h.html" title=" " alt="" coords="516,79,680,104"/>
+<area shape="poly" id="edge22_Node000001_Node000016" title=" " alt="" coords="401,28,548,72,546,77,399,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,105,90,153,73,213,68,211,85,151,103,103"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="305,180,112,228,111,222,304,175"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="366,175,418,215,415,219,363,179"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="320,225,388,251"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="353,178,355,212,350,212,348,178"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="128,225,191,251"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="320,180,204,223,203,218,318,175"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="215,225,295,251"/>
+<area shape="poly" id="edge8_Node000004_Node000008" title=" " alt="" coords="336,179,283,219,280,215,333,175"/>
+<area shape="poly" id="edge12_Node000009_Node000003" title=" " alt="" coords="230,107,181,126,133,154,103,184,80,215,76,212,99,181,130,150,179,121,228,102"/>
+<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="284,102,328,141,325,145,280,106"/>
+<area shape="poly" id="edge13_Node000009_Node000007" title=" " alt="" coords="267,105,252,140,228,179,188,218,185,215,224,176,247,137,262,103"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="144,152,215,177"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="256,106,206,145,203,141,253,102"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="701,225,775,251"/>
+<area shape="poly" id="edge15_Node000011_Node000012" title=" " alt="" coords="823,103,837,118,849,137,856,158,851,178,839,194,824,207,790,225,787,220,821,203,835,191,846,176,850,158,844,139,832,121,819,106"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="608,299,679,324"/>
+<area shape="poly" id="edge16_Node000011_Node000013" title=" " alt="" coords="827,102,851,123,871,151,874,165,871,178,861,203,850,221,814,253,785,271,753,285,693,303,691,298,751,280,782,266,811,249,846,218,857,201,866,177,869,165,866,153,848,126,824,106"/>
+<area shape="rect" id="Node000014" href="$error_8h.html" title=" " alt="" coords="611,225,675,251"/>
+<area shape="poly" id="edge17_Node000011_Node000014" title=" " alt="" coords="796,106,668,218,665,214,792,102"/>
+<area shape="rect" id="Node000015" href="$pus_8h.html" title=" " alt="" coords="779,152,836,177"/>
+<area shape="poly" id="edge19_Node000011_Node000015" title=" " alt="" coords="810,104,810,138,805,138,805,104"/>
+<area shape="poly" id="edge18_Node000014_Node000013" title=" " alt="" coords="646,251,646,285,641,285,641,251"/>
+<area shape="poly" id="edge20_Node000015_Node000012" title=" " alt="" coords="798,180,761,217,757,214,794,176"/>
+<area shape="poly" id="edge21_Node000015_Node000013" title=" " alt="" coords="810,178,807,214,801,234,789,252,768,272,744,286,693,304,691,299,742,281,765,267,785,249,796,232,802,213,805,178"/>
+<area shape="poly" id="edge23_Node000016_Node000012" title=" " alt="" coords="611,103,719,214,715,217,608,106"/>
+<area shape="poly" id="edge24_Node000016_Node000013" title=" " alt="" coords="581,106,556,126,536,153,534,165,537,176,552,210,573,241,620,288,616,292,569,244,547,213,532,178,528,164,532,151,552,122,577,102"/>
+<area shape="poly" id="edge29_Node000016_Node000014" title=" " alt="" coords="604,104,638,211,633,213,599,105"/>
+<area shape="poly" id="edge30_Node000016_Node000015" title=" " alt="" coords="633,101,766,147,765,152,631,107"/>
+<area shape="rect" id="Node000017" href="$cuc_8h.html" title=" " alt="" coords="546,152,602,177"/>
+<area shape="poly" id="edge25_Node000016_Node000017" title=" " alt="" coords="597,105,585,140,580,138,592,103"/>
+<area shape="poly" id="edge26_Node000017_Node000012" title=" " alt="" coords="601,175,700,217,698,222,599,180"/>
+<area shape="poly" id="edge27_Node000017_Node000013" title=" " alt="" coords="579,177,587,210,602,249,626,287,622,290,597,252,582,212,574,178"/>
+<area shape="poly" id="edge28_Node000017_Node000014" title=" " alt="" coords="587,176,625,214,621,217,584,180"/>
 </map>

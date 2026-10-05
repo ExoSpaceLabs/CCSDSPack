@@ -1,0 +1,5 @@
+<map id="ccsds_packet_stream" name="ccsds_packet_stream">
+<area shape="rect" id="Node000001" title="Non&#45;owning cursor over a bounded stream of CCSDS Space Packets." alt="" coords="5,93,167,119"/>
+<area shape="rect" id="Node000002" href="$structccsds__crc16__config.html" title="CRC16 parameters for packet error&#45;control validation." alt="" coords="13,5,159,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,45,89,93,83,93,83,45"/>
+</map>

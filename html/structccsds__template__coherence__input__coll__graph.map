@@ -1,0 +1,5 @@
+<map id="ccsds_template_coherence_input" name="ccsds_template_coherence_input">
+<area shape="rect" id="Node000001" title="Template&#45;comparison facts whose object&#45;specific equality is supplied by the adapter." alt="" coords="5,93,204,133"/>
+<area shape="rect" id="Node000002" href="$structccsds__primary__header.html" title="Plain C representation of the six&#45;octet CCSDS Space Packet primary header." alt="" coords="21,5,189,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,44,107,93,102,93,102,44"/>
+</map>

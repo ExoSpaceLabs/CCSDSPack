@@ -1,0 +1,32 @@
+<map id="inc/ccsdspack/c/segmentation.h" name="inc/ccsdspack/c/segmentation.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="503,5,732,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSManager_8h.html" title=" " alt="" coords="332,79,489,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="572,38,445,81,443,76,570,33"/>
+<area shape="rect" id="Node000013" href="$ccsdspack_8h.html" title=" " alt="" coords="514,79,721,104"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="620,44,620,79,615,79,615,44"/>
+<area shape="rect" id="Node000014" href="$segmentation_8c.html" title=" " alt="" coords="745,79,903,104"/>
+<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="664,33,791,76,790,81,663,38"/>
+<area shape="rect" id="Node000003" href="$CCSDSBuffer_8h.html" title="Raw pointer&#45;plus&#45;size adapters for Packet and Manager APIs." alt="" coords="288,152,427,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="396,117,368,153,364,150,392,113"/>
+<area shape="rect" id="Node000004" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="204,225,335,251"/>
+<area shape="poly" id="edge7_Node000002_Node000004" title=" " alt="" coords="340,111,306,128,278,154,270,171,267,190,269,225,264,225,262,190,265,169,274,150,303,123,337,106"/>
+<area shape="rect" id="Node000008" href="$CCSDSUtils_8h.html" title="Declares CRC, diagnostic formatting, and binary file helper functions." alt="" coords="535,152,665,177"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="455,106,570,149,568,154,453,111"/>
+<area shape="rect" id="Node000009" href="$CCSDSManager_8cpp.html" title=" " alt="" coords="359,225,531,251"/>
+<area shape="poly" id="edge14_Node000002_Node000009" title=" " alt="" coords="427,115,441,151,447,192,448,225,443,225,442,192,436,153,422,117"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="334,188,285,227,282,223,331,184"/>
+<area shape="rect" id="Node000005" href="$exec__decoder_8cpp.html" title="Command&#45;line decoder for CCSDS Space Packet streams." alt="" coords="5,299,165,324"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="228,258,116,301,114,296,226,253"/>
+<area shape="rect" id="Node000006" href="$exec__encoder_8cpp.html" title="Command&#45;line encoder for CCSDS Space Packet streams." alt="" coords="189,299,349,324"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="272,264,272,299,267,299,267,264"/>
+<area shape="rect" id="Node000007" href="$exec__validator_8cpp.html" title="Command&#45;line validator for CCSDS Space Packet streams." alt="" coords="374,299,541,324"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="313,253,428,296,426,301,311,258"/>
+<area shape="poly" id="edge9_Node000008_Node000004" title=" " alt="" coords="534,183,323,228,322,223,533,178"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="564,185,472,228,470,223,562,181"/>
+<area shape="rect" id="Node000010" href="$CCSDSPacket_8cpp.html" title=" " alt="" coords="555,225,714,251"/>
+<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="614,189,631,224,627,226,609,191"/>
+<area shape="rect" id="Node000011" href="$CCSDSUtils_8cpp.html" title=" " alt="" coords="739,225,885,251"/>
+<area shape="poly" id="edge12_Node000008_Node000011" title=" " alt="" coords="648,179,779,223,777,228,646,184"/>
+<area shape="rect" id="Node000012" href="$CCSDSValidator_8cpp.html" title=" " alt="" coords="909,225,1083,251"/>
+<area shape="poly" id="edge13_Node000008_Node000012" title=" " alt="" coords="678,177,932,223,931,228,677,182"/>
+</map>

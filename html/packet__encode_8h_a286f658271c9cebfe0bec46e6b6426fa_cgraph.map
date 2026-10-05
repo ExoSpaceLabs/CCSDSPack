@@ -1,0 +1,22 @@
+<map id="ccsds_packet_finalize_parts" name="ccsds_packet_finalize_parts">
+<area shape="rect" id="Node000001" title="Finalizes one packet directly over two caller&#45;owned data&#45;field spans." alt="" coords="5,143,168,183"/>
+<area shape="rect" id="Node000002" href="$packet__view_8h.html#acaff78f81a48052406d37afd4aee3a38" title="Returns the CCSDSPack default CRC&#45;16/CCITT&#45;FALSE parameters." alt="" coords="233,5,387,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,140,153,98,215,55,227,49,230,53,217,60,157,102,110,144"/>
+<area shape="rect" id="Node000003" href="$crc_8c.html#af74ae660957942ec1bb44a540a04aad1" title="Updates an unfinalized MSB&#45;first CRC16 state over caller&#45;owned bytes." alt="" coords="234,70,386,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,140,215,112,258,97,259,102,217,117,142,145"/>
+<area shape="rect" id="Node000004" href="$primary__header_8c.html#a77b3e5edb03abb942ac1b9946e4fcd47" title="Encodes a validated primary header into exactly six caller&#45;owned bytes." alt="" coords="226,171,394,211"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,170,213,176,212,181,168,175"/>
+<area shape="rect" id="Node000005" href="$primary__header_8c.html#a41361d838dac671f47eef263a1132735" title="Validates the logical field widths without imposing version&#45;0 policy." alt="" coords="452,113,620,153"/>
+<area shape="poly" id="edge8_Node000001_Node000005" title=" " alt="" coords="168,155,438,137,438,142,169,160"/>
+<area shape="rect" id="Node000009" href="$packet__encode_8c.html#aae3200d2f1d0b9575ef4da38423af8af" title=" " alt="" coords="216,235,404,261"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="128,180,217,220,243,229,242,234,215,225,125,185"/>
+<area shape="rect" id="Node000010" href="$packet__encode_8c.html#a33966e87a8b5fb5eccbdd5e9439a26b8" title=" " alt="" coords="229,285,391,325"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="108,181,156,226,185,250,217,271,229,277,227,282,215,276,182,254,152,230,105,185"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="389,168,443,154,444,159,390,173"/>
+<area shape="rect" id="Node000006" href="$bytes_8h.html#a1a5c075a1e4cd3ffe5782eec75da0e73" title="Stores a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="467,178,605,203"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="394,188,453,188,453,193,394,193"/>
+<area shape="rect" id="Node000007" href="$bytes_8h.html#a22386b02332619598f86ea6feb7d901d" title="Stores a 16&#45;bit integer using explicit wire byte order." alt="" coords="668,178,797,203"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="605,188,654,188,654,193,605,193"/>
+<area shape="rect" id="Node000008" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="845,178,976,203"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="798,188,832,188,832,193,798,193"/>
+</map>

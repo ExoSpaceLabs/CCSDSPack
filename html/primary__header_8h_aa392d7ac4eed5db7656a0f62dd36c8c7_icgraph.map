@@ -1,0 +1,5 @@
+<map id="ccsds_primary_header_unpack" name="ccsds_primary_header_unpack">
+<area shape="rect" id="Node000001" title="Unpacks a low&#45;48&#45;bit primary&#45;header representation." alt="" coords="225,5,393,45"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Header.html#a28baa55c6bd1f7f76c9a67635c3c2a2d" title="Atomically assigns all fields from a packed 48&#45;bit value." alt="" coords="5,13,177,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,28,177,28,177,23,211,23"/>
+</map>

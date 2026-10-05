@@ -1,0 +1,17 @@
+<map id="ccsds_primary_header_pack" name="ccsds_primary_header_pack">
+<area shape="rect" id="Node000001" title="Packs a validated primary header into the low 48 bits of a uint64_t." alt="" coords="5,35,212,60"/>
+<area shape="rect" id="Node000002" href="$bytes_8h.html#a83337ad15c9932af4124b8aeea4270f7" title="Loads 0..8 CCSDS&#45;standard big&#45;endian octets." alt="" coords="270,5,418,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,32,256,26,257,32,211,37"/>
+<area shape="rect" id="Node000004" href="$primary__header_8c.html#a77b3e5edb03abb942ac1b9946e4fcd47" title="Encodes a validated primary header into exactly six caller&#45;owned bytes." alt="" coords="260,55,428,95"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="212,57,247,61,246,66,212,62"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#a3e09d1360c5624e2e27f266f37fdf84a" title="Loads 0..8 octets into a uint64_t using explicit wire byte order." alt="" coords="497,5,623,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="418,15,484,15,484,21,418,21"/>
+<area shape="rect" id="Node000005" href="$primary__header_8c.html#a41361d838dac671f47eef263a1132735" title="Validates the logical field widths without imposing version&#45;0 policy." alt="" coords="476,55,644,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="428,73,462,73,462,78,428,78"/>
+<area shape="rect" id="Node000006" href="$bytes_8h.html#a1a5c075a1e4cd3ffe5782eec75da0e73" title="Stores a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="491,120,629,145"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="421,93,499,114,497,119,419,98"/>
+<area shape="rect" id="Node000007" href="$bytes_8h.html#a22386b02332619598f86ea6feb7d901d" title="Stores a 16&#45;bit integer using explicit wire byte order." alt="" coords="692,120,821,145"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="629,130,678,130,678,135,629,135"/>
+<area shape="rect" id="Node000008" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="869,120,1000,145"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="822,130,856,130,856,135,822,135"/>
+</map>

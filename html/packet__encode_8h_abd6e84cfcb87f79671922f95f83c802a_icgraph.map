@@ -1,0 +1,7 @@
+<map id="ccsds_packet_encode_parts" name="ccsds_packet_encode_parts">
+<area shape="rect" id="Node000001" title="Encodes one finalized packet from two logical data&#45;field spans." alt="" coords="224,23,387,63"/>
+<area shape="rect" id="Node000002" href="$packet__encode_8c.html#acf00dc5fdeec17e5f6a973c42598e3a3" title="Encodes an already&#45;finalized packet into caller&#45;owned storage." alt="" coords="9,5,172,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,35,172,30,173,25,211,29"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#a963321800b9b664b4ab55b24e70f057c" title="Serializes directly into caller&#45;owned storage and returns bytes written." alt="" coords="5,55,176,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,57,176,60,176,55,210,51"/>
+</map>

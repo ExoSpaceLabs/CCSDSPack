@@ -1,0 +1,7 @@
+<map id="ccsds_pus_a_tc_encoded_size" name="ccsds_pus_a_tc_encoded_size">
+<area shape="rect" id="Node000001" title="Returns the exact encoded size for valid PUS&#45;A TC tailoring, otherwise zero." alt="" coords="5,13,223,38"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#ae3255082daa8de48d3e29c61b6a54c45" title="Validates PUS&#45;A TC tailoring." alt="" coords="271,5,453,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="223,23,257,23,257,28,223,28"/>
+<area shape="rect" id="Node000003" href="$pus_8h.html#a72689b3da3a944528e0b666f1c00fc5d" title="Returns non&#45;zero for supported mission identifier widths 0, 1, 2, or 4 octets." alt="" coords="501,5,655,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="454,23,487,23,487,28,454,28"/>
+</map>

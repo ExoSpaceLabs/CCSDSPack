@@ -197,11 +197,11 @@ Private Attributes</h2></td></tr>
 <div class="line">header.<a class="code hl_function" href="classccsds_1_1Header.html#a4275c4280caa669e6bf0ea1efa12b188">setSequenceCount</a>(42);</div>
 <div class="line"><span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">bytes</a> = header.<a class="code hl_function" href="classccsds_1_1Header.html#a04793c8df2ed9ae7149eeac26236d23c">serialize</a>();</div>
 <div class="ttc" id="aclassccsds_1_1Header_html"><div class="ttname"><a href="classccsds_1_1Header.html">ccsds::Header</a></div><div class="ttdoc">Validated in-memory representation of a CCSDS Space Packet primary header.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00109">CCSDSHeader.h:109</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Header_html_a04793c8df2ed9ae7149eeac26236d23c"><div class="ttname"><a href="classccsds_1_1Header.html#a04793c8df2ed9ae7149eeac26236d23c">ccsds::Header::serialize</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; serialize()</div><div class="ttdoc">Serializes the current primary header in CCSDS network-byte order.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00108">CCSDSHeader.cpp:108</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Header_html_a4275c4280caa669e6bf0ea1efa12b188"><div class="ttname"><a href="classccsds_1_1Header.html#a4275c4280caa669e6bf0ea1efa12b188">ccsds::Header::setSequenceCount</a></div><div class="ttdeci">ResultBool setSequenceCount(const std::uint16_t &amp;value)</div><div class="ttdoc">Sets the 14-bit packet sequence count.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00060">CCSDSHeader.cpp:60</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Header_html_a43c29357a7e67937349127d39b5230c1"><div class="ttname"><a href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">ccsds::Header::deserialize</a></div><div class="ttdeci">ResultBool deserialize(const std::vector&lt; std::uint8_t &gt; &amp;data)</div><div class="ttdoc">Atomically parses exactly six serialized primary-header bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00074">CCSDSHeader.cpp:74</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Header_html_a72fa888a3ce3c7dc93ce6e5c18c5998e"><div class="ttname"><a href="classccsds_1_1Header.html#a72fa888a3ce3c7dc93ce6e5c18c5998e">ccsds::Header::setAPID</a></div><div class="ttdeci">ResultBool setAPID(const std::uint16_t &amp;value)</div><div class="ttdoc">Sets the 11-bit Application Process Identifier.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00040">CCSDSHeader.cpp:40</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Header_html_aca645aa9efaa3bdbbcde2351d3b464d7"><div class="ttname"><a href="classccsds_1_1Header.html#aca645aa9efaa3bdbbcde2351d3b464d7">ccsds::Header::setSequenceFlags</a></div><div class="ttdeci">ResultBool setSequenceFlags(const std::uint8_t &amp;value)</div><div class="ttdoc">Sets the 2-bit sequence-flags field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00050">CCSDSHeader.cpp:50</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Header_html_a04793c8df2ed9ae7149eeac26236d23c"><div class="ttname"><a href="classccsds_1_1Header.html#a04793c8df2ed9ae7149eeac26236d23c">ccsds::Header::serialize</a></div><div class="ttdeci">std::vector&lt; std::uint8_t &gt; serialize()</div><div class="ttdoc">Serializes the current primary header in CCSDS network-byte order.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00120">CCSDSHeader.cpp:120</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Header_html_a4275c4280caa669e6bf0ea1efa12b188"><div class="ttname"><a href="classccsds_1_1Header.html#a4275c4280caa669e6bf0ea1efa12b188">ccsds::Header::setSequenceCount</a></div><div class="ttdeci">ResultBool setSequenceCount(const std::uint16_t &amp;value)</div><div class="ttdoc">Sets the 14-bit packet sequence count.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00061">CCSDSHeader.cpp:61</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Header_html_a43c29357a7e67937349127d39b5230c1"><div class="ttname"><a href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">ccsds::Header::deserialize</a></div><div class="ttdeci">ResultBool deserialize(const std::vector&lt; std::uint8_t &gt; &amp;data)</div><div class="ttdoc">Atomically parses exactly six serialized primary-header bytes.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00075">CCSDSHeader.cpp:75</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Header_html_a72fa888a3ce3c7dc93ce6e5c18c5998e"><div class="ttname"><a href="classccsds_1_1Header.html#a72fa888a3ce3c7dc93ce6e5c18c5998e">ccsds::Header::setAPID</a></div><div class="ttdeci">ResultBool setAPID(const std::uint16_t &amp;value)</div><div class="ttdoc">Sets the 11-bit Application Process Identifier.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00041">CCSDSHeader.cpp:41</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Header_html_aca645aa9efaa3bdbbcde2351d3b464d7"><div class="ttname"><a href="classccsds_1_1Header.html#aca645aa9efaa3bdbbcde2351d3b464d7">ccsds::Header::setSequenceFlags</a></div><div class="ttdeci">ResultBool setSequenceFlags(const std::uint8_t &amp;value)</div><div class="ttdoc">Sets the 2-bit sequence-flags field.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00051">CCSDSHeader.cpp:51</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501"><div class="ttname"><a href="namespaceccsds.html#a556724e0442ee92b4ab53c50841158adaa1214e5844a06672026144ab400db501">ccsds::UNSEGMENTED</a></div><div class="ttdeci">@ UNSEGMENTED</div><div class="ttdoc">Binary 11: a complete, unsegmented packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00032">CCSDSHeader.h:31</a></div></div>
 </div><!-- fragment --> 
 <p class="definition">Definition at line <a class="el" href="CCSDSHeader_8h_source.html#l00109">109</a> of file <a class="el" href="CCSDSHeader_8h_source.html">CCSDSHeader.h</a>.</p>
@@ -259,26 +259,46 @@ Private Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for a wrong size or invalid field. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00074">74</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   74</span>                                                                          {</div>
-<div class="line"><span class="lineno">   75</span>  <span class="keywordflow">if</span> (data.size() != 6U) {</div>
-<div class="line"><span class="lineno">   76</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   77</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid Header Data provided: size != 6&quot;</span>);</div>
-<div class="line"><span class="lineno">   78</span>  }</div>
-<div class="line"><span class="lineno">   79</span> </div>
-<div class="line"><span class="lineno">   80</span>  std::uint64_t <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">headerData</a> = 0;</div>
-<div class="line"><span class="lineno">   81</span>  <span class="keywordflow">for</span> (std::uint8_t <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">i</a> = 0; <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">i</a> &lt; 6; ++<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">i</a>) {</div>
-<div class="line"><span class="lineno">   82</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">headerData</a> |= <span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(data[<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">i</a>]) &lt;&lt; (40 - <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">i</a> * 8);</div>
-<div class="line"><span class="lineno">   83</span>  }</div>
-<div class="line"><span class="lineno">   84</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classccsds_1_1Header.html#a28baa55c6bd1f7f76c9a67635c3c2a2d">setData</a>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">headerData</a>));</div>
-<div class="line"><span class="lineno">   85</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   86</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00075">75</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>                                                                          {</div>
+<div class="line"><span class="lineno">   76</span>  <span class="keywordflow">if</span> (data.size() != <a class="code hl_define" href="primary__header_8h.html#a3120509b80dfb502cb0418ef5706b6f2">CCSDS_PRIMARY_HEADER_SIZE</a>) {</div>
+<div class="line"><span class="lineno">   77</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   78</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid Header Data provided: size != 6&quot;</span>);</div>
+<div class="line"><span class="lineno">   79</span>  }</div>
+<div class="line"><span class="lineno">   80</span> </div>
+<div class="line"><span class="lineno">   81</span>  <a class="code hl_struct" href="structccsds__primary__header.html">ccsds_primary_header_t</a> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>{};</div>
+<div class="line"><span class="lineno">   82</span>  <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">status</a> = <a class="code hl_function" href="primary__header_8h.html#adb6d44d79997f8685cd8f084b13e2507">ccsds_primary_header_decode</a>(data.data(), data.size(), &amp;<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>);</div>
+<div class="line"><span class="lineno">   83</span>  <span class="keywordflow">if</span> (<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">status</a> != <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a>) {</div>
+<div class="line"><span class="lineno">   84</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   85</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid Header Data provided.&quot;</span>);</div>
+<div class="line"><span class="lineno">   86</span>  }</div>
+<div class="line"><span class="lineno">   87</span> </div>
+<div class="line"><span class="lineno">   88</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classccsds_1_1Header.html#a28baa55c6bd1f7f76c9a67635c3c2a2d">setData</a>(PrimaryHeader{</div>
+<div class="line"><span class="lineno">   89</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.version_number,</div>
+<div class="line"><span class="lineno">   90</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.type,</div>
+<div class="line"><span class="lineno">   91</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.secondary_header_flag,</div>
+<div class="line"><span class="lineno">   92</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.apid,</div>
+<div class="line"><span class="lineno">   93</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.sequence_flags,</div>
+<div class="line"><span class="lineno">   94</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.sequence_count,</div>
+<div class="line"><span class="lineno">   95</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.data_length</div>
+<div class="line"><span class="lineno">   96</span>  }));</div>
+<div class="line"><span class="lineno">   97</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   98</span>}</div>
 <div class="ttc" id="aCCSDSResult_8h_html_abd6d95012d1c65577f532086f613234f"><div class="ttname"><a href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a></div><div class="ttdeci">#define FORWARD_RESULT(result)</div><div class="ttdoc">Propagates only the Error so the caller may return a different Result&lt;T&gt;.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00129">CCSDSResult.h:129</a></div></div>
-<div class="ttc" id="aclassccsds_1_1Header_html_a28baa55c6bd1f7f76c9a67635c3c2a2d"><div class="ttname"><a href="classccsds_1_1Header.html#a28baa55c6bd1f7f76c9a67635c3c2a2d">ccsds::Header::setData</a></div><div class="ttdeci">ResultBool setData(const std::uint64_t &amp;data)</div><div class="ttdoc">Atomically assigns all fields from a packed 48-bit value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00088">CCSDSHeader.cpp:88</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Header_html_a28baa55c6bd1f7f76c9a67635c3c2a2d"><div class="ttname"><a href="classccsds_1_1Header.html#a28baa55c6bd1f7f76c9a67635c3c2a2d">ccsds::Header::setData</a></div><div class="ttdeci">ResultBool setData(const std::uint64_t &amp;data)</div><div class="ttdoc">Atomically assigns all fields from a packed 48-bit value.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00100">CCSDSHeader.cpp:100</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Header_html_afadbbc0f41836835f6eddce33094bae5"><div class="ttname"><a href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">ccsds::Header::m_status</a></div><div class="ttdeci">EHeaderStatus m_status</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00231">CCSDSHeader.h:231</a></div></div>
+<div class="ttc" id="aerror_8h_html_a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d"><div class="ttname"><a href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a></div><div class="ttdeci">@ CCSDS_STATUS_OK</div><div class="ttdef"><b>Definition</b> <a href="error_8h_source.html#l00020">error.h:20</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c"><div class="ttname"><a href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">ccsds::INVALID_HEADER_DATA</a></div><div class="ttdeci">@ INVALID_HEADER_DATA</div><div class="ttdef"><b>Definition</b> <a href="CCSDSResult_8h_source.html#l00026">CCSDSResult.h:26</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790"><div class="ttname"><a href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">ccsds::INVALID</a></div><div class="ttdeci">@ INVALID</div><div class="ttdoc">At least one checked assignment failed; serialization is suppressed.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00046">CCSDSHeader.h:45</a></div></div>
+<div class="ttc" id="aprimary__header_8h_html_a3120509b80dfb502cb0418ef5706b6f2"><div class="ttname"><a href="primary__header_8h.html#a3120509b80dfb502cb0418ef5706b6f2">CCSDS_PRIMARY_HEADER_SIZE</a></div><div class="ttdeci">#define CCSDS_PRIMARY_HEADER_SIZE</div><div class="ttdef"><b>Definition</b> <a href="primary__header_8h_source.html#l00015">primary_header.h:15</a></div></div>
+<div class="ttc" id="aprimary__header_8h_html_adb6d44d79997f8685cd8f084b13e2507"><div class="ttname"><a href="primary__header_8h.html#adb6d44d79997f8685cd8f084b13e2507">ccsds_primary_header_decode</a></div><div class="ttdeci">ccsds_status_t ccsds_primary_header_decode(const uint8_t *data, size_t size, ccsds_primary_header_t *header_out)</div><div class="ttdoc">Decodes the first six bytes from a caller-owned buffer.</div><div class="ttdef"><b>Definition</b> <a href="primary__header_8c_source.html#l00022">primary_header.c:22</a></div></div>
+<div class="ttc" id="astructccsds__primary__header_html"><div class="ttname"><a href="structccsds__primary__header.html">ccsds_primary_header</a></div><div class="ttdoc">Plain C representation of the six-octet CCSDS Space Packet primary header.</div><div class="ttdef"><b>Definition</b> <a href="primary__header_8h_source.html#l00024">primary_header.h:24</a></div></div>
 </div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_a43c29357a7e67937349127d39b5230c1_cgraph.svg" width="100%" height="300"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+<div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_a43c29357a7e67937349127d39b5230c1_icgraph.svg" width="100%" height="402"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
@@ -376,10 +396,10 @@ Here is the caller graph for this function:</div>
 <p>Packs the six-byte header into the low 48 bits of a 64-bit integer. </p>
 <dl class="section return"><dt>Returns</dt><dd>Packed header value, or zero while the header is INVALID. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00135">135</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  135</span>                                       {</div>
-<div class="line"><span class="lineno">  136</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span><a class="code hl_function" href="classccsds_1_1Header.html#ad1fef28edd15bbc6e33010b1ae57131f">Header</a> &amp;<span class="keyword">&gt;</span>(*this).getFullHeader();</div>
-<div class="line"><span class="lineno">  137</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00145">145</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  145</span>                                       {</div>
+<div class="line"><span class="lineno">  146</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span><a class="code hl_function" href="classccsds_1_1Header.html#ad1fef28edd15bbc6e33010b1ae57131f">Header</a> &amp;<span class="keyword">&gt;</span>(*this).getFullHeader();</div>
+<div class="line"><span class="lineno">  147</span>}</div>
 <div class="ttc" id="aclassccsds_1_1Header_html_ad1fef28edd15bbc6e33010b1ae57131f"><div class="ttname"><a href="classccsds_1_1Header.html#ad1fef28edd15bbc6e33010b1ae57131f">ccsds::Header::Header</a></div><div class="ttdeci">Header()=default</div><div class="ttdoc">Constructs a normal version-0 header with APID 0 and UNSEGMENTED flags.</div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
@@ -411,28 +431,36 @@ Here is the caller graph for this function:</div>
 
 <p>Const overload of <a class="el" href="classccsds_1_1Header.html#a55edc9ee90871c6326d29e7eaefae375" title="Packs the six-byte header into the low 48 bits of a 64-bit integer.">getFullHeader()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00139">139</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  139</span>                                             {</div>
-<div class="line"><span class="lineno">  140</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> == <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>) {</div>
-<div class="line"><span class="lineno">  141</span>    <span class="keywordflow">return</span> 0<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">U</a>;</div>
-<div class="line"><span class="lineno">  142</span>  }</div>
-<div class="line"><span class="lineno">  143</span>  <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetSequenceControl</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">  144</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a>) &lt;&lt; 14U) | <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a>);</div>
-<div class="line"><span class="lineno">  145</span>  <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetIdentificationAndVersion</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">  146</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a>) &lt;&lt; 13U)</div>
-<div class="line"><span class="lineno">  147</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a>) &lt;&lt; 12U)</div>
-<div class="line"><span class="lineno">  148</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a>) &lt;&lt; 11U)</div>
-<div class="line"><span class="lineno">  149</span>    | <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a>);</div>
-<div class="line"><span class="lineno">  150</span>  <span class="keywordflow">return</span> (<span class="keyword">static_cast&lt;</span>std::uint64_t<span class="keyword">&gt;</span>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetIdentificationAndVersion</a>) &lt;&lt; 32U)</div>
-<div class="line"><span class="lineno">  151</span>         | (<span class="keyword">static_cast&lt;</span>std::uint32_t<span class="keyword">&gt;</span>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetSequenceControl</a>) &lt;&lt; 16U)</div>
-<div class="line"><span class="lineno">  152</span>         | <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a>;</div>
-<div class="line"><span class="lineno">  153</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00149">149</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  149</span>                                             {</div>
+<div class="line"><span class="lineno">  150</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> == <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>) {</div>
+<div class="line"><span class="lineno">  151</span>    <span class="keywordflow">return</span> 0<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">U</a>;</div>
+<div class="line"><span class="lineno">  152</span>  }</div>
+<div class="line"><span class="lineno">  153</span> </div>
+<div class="line"><span class="lineno">  154</span>  <span class="keyword">const</span> <a class="code hl_struct" href="structccsds__primary__header.html">ccsds_primary_header_t</a> header{</div>
+<div class="line"><span class="lineno">  155</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a>,</div>
+<div class="line"><span class="lineno">  156</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a>,</div>
+<div class="line"><span class="lineno">  157</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a>,</div>
+<div class="line"><span class="lineno">  158</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a>,</div>
+<div class="line"><span class="lineno">  159</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a>,</div>
+<div class="line"><span class="lineno">  160</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a>,</div>
+<div class="line"><span class="lineno">  161</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a></div>
+<div class="line"><span class="lineno">  162</span>  };</div>
+<div class="line"><span class="lineno">  163</span>  std::uint64_t <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packed</a> = 0<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">U</a>;</div>
+<div class="line"><span class="lineno">  164</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="primary__header_8h.html#a0c4f42c8f50f430ece7a1e5dfc00a244">ccsds_primary_header_pack</a>(&amp;header, &amp;<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packed</a>) == <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a> ? <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packed</a> : 0<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">U</a>;</div>
+<div class="line"><span class="lineno">  165</span>}</div>
 <div class="ttc" id="aclassccsds_1_1Header_html_a1cc765902a8cf87ed7d83e73d1f37023"><div class="ttname"><a href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">ccsds::Header::m_type</a></div><div class="ttdeci">std::uint8_t m_type</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00223">CCSDSHeader.h:223</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Header_html_a9c6bca6a60f113c1eb5028083428436f"><div class="ttname"><a href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">ccsds::Header::m_sequenceFlags</a></div><div class="ttdeci">std::uint8_t m_sequenceFlags</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00226">CCSDSHeader.h:226</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Header_html_a9dbdace97ebe593c016b8d19a69c0143"><div class="ttname"><a href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">ccsds::Header::m_versionNumber</a></div><div class="ttdeci">std::uint8_t m_versionNumber</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00222">CCSDSHeader.h:222</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Header_html_adc679e7903c5d14a5f81178c361a5d76"><div class="ttname"><a href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">ccsds::Header::m_secondaryHeaderFlag</a></div><div class="ttdeci">std::uint8_t m_secondaryHeaderFlag</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00224">CCSDSHeader.h:224</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Header_html_afaf3e4083d1002ed155a2a4a3de2ec67"><div class="ttname"><a href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">ccsds::Header::m_sequenceCount</a></div><div class="ttdeci">std::uint16_t m_sequenceCount</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00227">CCSDSHeader.h:227</a></div></div>
-</div><!-- fragment -->
+<div class="ttc" id="aprimary__header_8h_html_a0c4f42c8f50f430ece7a1e5dfc00a244"><div class="ttname"><a href="primary__header_8h.html#a0c4f42c8f50f430ece7a1e5dfc00a244">ccsds_primary_header_pack</a></div><div class="ttdeci">ccsds_status_t ccsds_primary_header_pack(const ccsds_primary_header_t *header, uint64_t *packed_out)</div><div class="ttdoc">Packs a validated primary header into the low 48 bits of a uint64_t.</div><div class="ttdef"><b>Definition</b> <a href="primary__header_8c_source.html#l00082">primary_header.c:82</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_a1ae5844700272117f01c176c6f2aca5f_cgraph.svg" width="100%" height="413"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
 </div>
 </div>
 <a id="aec97755c66f8d2d0cbbdb5775c74348f" name="aec97755c66f8d2d0cbbdb5775c74348f"></a>
@@ -668,10 +696,10 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00006">6</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">    6</span>                                {</div>
-<div class="line"><span class="lineno">    7</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a> == <a class="code hl_variable" href="namespaceccsds.html#a338508b77c5e5a33db889ee4d9dd3dad">IDLE_APID</a> ? <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea2985a34e6f94d3d4888ce7a0256a1bf0">IDLE</a> : <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea3cf3b26e821b938fbc3d0a2685ec13f5">NORMAL</a>;</div>
-<div class="line"><span class="lineno">    8</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00007">7</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">    7</span>                                {</div>
+<div class="line"><span class="lineno">    8</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a> == <a class="code hl_variable" href="namespaceccsds.html#a338508b77c5e5a33db889ee4d9dd3dad">IDLE_APID</a> ? <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea2985a34e6f94d3d4888ce7a0256a1bf0">IDLE</a> : <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea3cf3b26e821b938fbc3d0a2685ec13f5">NORMAL</a>;</div>
+<div class="line"><span class="lineno">    9</span>}</div>
 <div class="ttc" id="anamespaceccsds_html_a338508b77c5e5a33db889ee4d9dd3dad"><div class="ttname"><a href="namespaceccsds.html#a338508b77c5e5a33db889ee4d9dd3dad">ccsds::IDLE_APID</a></div><div class="ttdeci">constexpr std::uint16_t IDLE_APID</div><div class="ttdoc">Reserved 11-bit APID value identifying an idle Space Packet.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00017">CCSDSHeader.h:17</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_aaffbdf3c66b0447d0f5162b21a64c4bea2985a34e6f94d3d4888ce7a0256a1bf0"><div class="ttname"><a href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea2985a34e6f94d3d4888ce7a0256a1bf0">ccsds::IDLE</a></div><div class="ttdeci">@ IDLE</div><div class="ttdoc">APID equals the reserved idle value 2047.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00044">CCSDSHeader.h:44</a></div></div>
 <div class="ttc" id="anamespaceccsds_html_aaffbdf3c66b0447d0f5162b21a64c4bea3cf3b26e821b938fbc3d0a2685ec13f5"><div class="ttname"><a href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea3cf3b26e821b938fbc3d0a2685ec13f5">ccsds::NORMAL</a></div><div class="ttdeci">@ NORMAL</div><div class="ttdoc">APID is in the normal range 0..2046 and all fields are valid.</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00043">CCSDSHeader.h:43</a></div></div>
@@ -697,10 +725,10 @@ Here is the caller graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>Exactly six bytes, or an empty vector while the header is INVALID. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>This operation does not mutate the logical fields. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00108">108</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  108</span>                                             {</div>
-<div class="line"><span class="lineno">  109</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span><a class="code hl_function" href="classccsds_1_1Header.html#ad1fef28edd15bbc6e33010b1ae57131f">Header</a> &amp;<span class="keyword">&gt;</span>(*this).serialize();</div>
-<div class="line"><span class="lineno">  110</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00120">120</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  120</span>                                             {</div>
+<div class="line"><span class="lineno">  121</span>  <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keyword">const </span><a class="code hl_function" href="classccsds_1_1Header.html#ad1fef28edd15bbc6e33010b1ae57131f">Header</a> &amp;<span class="keyword">&gt;</span>(*this).serialize();</div>
+<div class="line"><span class="lineno">  122</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -731,30 +759,34 @@ Here is the caller graph for this function:</div>
 
 <p>Const overload of <a class="el" href="classccsds_1_1Header.html#a04793c8df2ed9ae7149eeac26236d23c" title="Serializes the current primary header in CCSDS network-byte order.">serialize()</a>. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00112">112</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  112</span>                                                   {</div>
-<div class="line"><span class="lineno">  113</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> == <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>) {</div>
-<div class="line"><span class="lineno">  114</span>    <span class="keywordflow">return</span> {};</div>
-<div class="line"><span class="lineno">  115</span>  }</div>
-<div class="line"><span class="lineno">  116</span> </div>
-<div class="line"><span class="lineno">  117</span>  <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetSequenceControl</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">  118</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a>) &lt;&lt; 14U) | <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a>);</div>
-<div class="line"><span class="lineno">  119</span>  <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetIdentificationAndVersion</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">  120</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a>) &lt;&lt; 13U)</div>
-<div class="line"><span class="lineno">  121</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a>) &lt;&lt; 12U)</div>
-<div class="line"><span class="lineno">  122</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a>) &lt;&lt; 11U)</div>
-<div class="line"><span class="lineno">  123</span>    | <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a>);</div>
-<div class="line"><span class="lineno">  124</span> </div>
-<div class="line"><span class="lineno">  125</span>  <span class="keywordflow">return</span> {</div>
-<div class="line"><span class="lineno">  126</span>    <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetIdentificationAndVersion</a> &gt;&gt; 8U),</div>
-<div class="line"><span class="lineno">  127</span>    <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetIdentificationAndVersion</a> &amp; 0xFFU),</div>
-<div class="line"><span class="lineno">  128</span>    <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetSequenceControl</a> &gt;&gt; 8U),</div>
-<div class="line"><span class="lineno">  129</span>    <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">packetSequenceControl</a> &amp; 0xFFU),</div>
-<div class="line"><span class="lineno">  130</span>    <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a> &gt;&gt; 8U),</div>
-<div class="line"><span class="lineno">  131</span>    <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a> &amp; 0xFFU),</div>
-<div class="line"><span class="lineno">  132</span>  };</div>
-<div class="line"><span class="lineno">  133</span>}</div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00124">124</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  124</span>                                                   {</div>
+<div class="line"><span class="lineno">  125</span>  <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> == <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>) {</div>
+<div class="line"><span class="lineno">  126</span>    <span class="keywordflow">return</span> {};</div>
+<div class="line"><span class="lineno">  127</span>  }</div>
+<div class="line"><span class="lineno">  128</span> </div>
+<div class="line"><span class="lineno">  129</span>  <span class="keyword">const</span> <a class="code hl_struct" href="structccsds__primary__header.html">ccsds_primary_header_t</a> header{</div>
+<div class="line"><span class="lineno">  130</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a>,</div>
+<div class="line"><span class="lineno">  131</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a>,</div>
+<div class="line"><span class="lineno">  132</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a>,</div>
+<div class="line"><span class="lineno">  133</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a>,</div>
+<div class="line"><span class="lineno">  134</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a>,</div>
+<div class="line"><span class="lineno">  135</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a>,</div>
+<div class="line"><span class="lineno">  136</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a></div>
+<div class="line"><span class="lineno">  137</span>  };</div>
+<div class="line"><span class="lineno">  138</span>  std::uint8_t <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">bytes</a>[<a class="code hl_define" href="primary__header_8h.html#a3120509b80dfb502cb0418ef5706b6f2">CCSDS_PRIMARY_HEADER_SIZE</a>]{};</div>
+<div class="line"><span class="lineno">  139</span>  <span class="keywordflow">if</span> (<a class="code hl_function" href="primary__header_8h.html#a882b97595264dad33abaf4ff0e662893">ccsds_primary_header_encode</a>(&amp;header, <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">bytes</a>, <span class="keyword">sizeof</span>(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">bytes</a>)) != <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a>) {</div>
+<div class="line"><span class="lineno">  140</span>    <span class="keywordflow">return</span> {};</div>
+<div class="line"><span class="lineno">  141</span>  }</div>
+<div class="line"><span class="lineno">  142</span>  <span class="keywordflow">return</span> std::vector&lt;std::uint8_t&gt;(<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">bytes</a>, <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">bytes</a> + <a class="code hl_define" href="primary__header_8h.html#a3120509b80dfb502cb0418ef5706b6f2">CCSDS_PRIMARY_HEADER_SIZE</a>);</div>
+<div class="line"><span class="lineno">  143</span>}</div>
+<div class="ttc" id="aprimary__header_8h_html_a882b97595264dad33abaf4ff0e662893"><div class="ttname"><a href="primary__header_8h.html#a882b97595264dad33abaf4ff0e662893">ccsds_primary_header_encode</a></div><div class="ttdeci">ccsds_status_t ccsds_primary_header_encode(const ccsds_primary_header_t *header, uint8_t *data_out, size_t capacity)</div><div class="ttdoc">Encodes a validated primary header into exactly six caller-owned bytes.</div><div class="ttdef"><b>Definition</b> <a href="primary__header_8c_source.html#l00049">primary_header.c:49</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_ad6e14aaba07b020133b959d16fcff71e_cgraph.svg" width="100%" height="376"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
 </div>
 </div>
 <a id="a72fa888a3ce3c7dc93ce6e5c18c5998e" name="a72fa888a3ce3c7dc93ce6e5c18c5998e"></a>
@@ -783,17 +815,17 @@ Here is the caller graph for this function:</div>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for a wider value. </dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Value 2047 changes <a class="el" href="classccsds_1_1Header.html#aec97755c66f8d2d0cbbdb5775c74348f" title="Returns NORMAL, IDLE, or INVALID for the current header state.">getHeaderStatus()</a> to IDLE. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00040">40</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   40</span>                                                             {</div>
-<div class="line"><span class="lineno">   41</span>  <span class="keywordflow">if</span> (value &gt; <a class="code hl_variable" href="namespaceccsds.html#a338508b77c5e5a33db889ee4d9dd3dad">IDLE_APID</a>) {</div>
-<div class="line"><span class="lineno">   42</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   43</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid APID, value &gt; 2047&quot;</span>);</div>
-<div class="line"><span class="lineno">   44</span>  }</div>
-<div class="line"><span class="lineno">   45</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a> = value;</div>
-<div class="line"><span class="lineno">   46</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">   47</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   48</span>}</div>
-<div class="ttc" id="aclassccsds_1_1Header_html_ad0d0f0c44bbf5dac2591ed231b92c136"><div class="ttname"><a href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">ccsds::Header::refreshStatus</a></div><div class="ttdeci">void refreshStatus()</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00006">CCSDSHeader.cpp:6</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00041">41</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   41</span>                                                             {</div>
+<div class="line"><span class="lineno">   42</span>  <span class="keywordflow">if</span> (value &gt; <a class="code hl_variable" href="namespaceccsds.html#a338508b77c5e5a33db889ee4d9dd3dad">IDLE_APID</a>) {</div>
+<div class="line"><span class="lineno">   43</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   44</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid APID, value &gt; 2047&quot;</span>);</div>
+<div class="line"><span class="lineno">   45</span>  }</div>
+<div class="line"><span class="lineno">   46</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a> = value;</div>
+<div class="line"><span class="lineno">   47</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
+<div class="line"><span class="lineno">   48</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   49</span>}</div>
+<div class="ttc" id="aclassccsds_1_1Header_html_ad0d0f0c44bbf5dac2591ed231b92c136"><div class="ttname"><a href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">ccsds::Header::refreshStatus</a></div><div class="ttdeci">void refreshStatus()</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8cpp_source.html#l00007">CCSDSHeader.cpp:7</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -822,50 +854,50 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for the first invalid-width field. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00155">155</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">  155</span>                                                              {</div>
-<div class="line"><span class="lineno">  156</span>  <span class="keywordflow">if</span> (data.versionNumber &gt; 0x07U) {</div>
-<div class="line"><span class="lineno">  157</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">  158</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid version number, value &gt; 7&quot;</span>);</div>
-<div class="line"><span class="lineno">  159</span>  }</div>
-<div class="line"><span class="lineno">  160</span>  <span class="keywordflow">if</span> (data.type &gt; 0x01U) {</div>
-<div class="line"><span class="lineno">  161</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">  162</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid type, value &gt; 1&quot;</span>);</div>
-<div class="line"><span class="lineno">  163</span>  }</div>
-<div class="line"><span class="lineno">  164</span>  <span class="keywordflow">if</span> (data.secondaryHeaderFlag &gt; 0x01U) {</div>
-<div class="line"><span class="lineno">  165</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">  166</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid secondary header flag, value &gt; 1&quot;</span>);</div>
-<div class="line"><span class="lineno">  167</span>  }</div>
-<div class="line"><span class="lineno">  168</span>  <span class="keywordflow">if</span> (data.APID &gt; <a class="code hl_variable" href="namespaceccsds.html#a338508b77c5e5a33db889ee4d9dd3dad">IDLE_APID</a>) {</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00167">167</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  167</span>                                                              {</div>
+<div class="line"><span class="lineno">  168</span>  <span class="keywordflow">if</span> (data.versionNumber &gt; 0x07U) {</div>
 <div class="line"><span class="lineno">  169</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">  170</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid APID, value &gt; 2047&quot;</span>);</div>
+<div class="line"><span class="lineno">  170</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid version number, value &gt; 7&quot;</span>);</div>
 <div class="line"><span class="lineno">  171</span>  }</div>
-<div class="line"><span class="lineno">  172</span>  <span class="keywordflow">if</span> (data.sequenceFlags &gt; 0x03U) {</div>
+<div class="line"><span class="lineno">  172</span>  <span class="keywordflow">if</span> (data.type &gt; 0x01U) {</div>
 <div class="line"><span class="lineno">  173</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">  174</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence flag, value &gt; 3&quot;</span>);</div>
+<div class="line"><span class="lineno">  174</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid type, value &gt; 1&quot;</span>);</div>
 <div class="line"><span class="lineno">  175</span>  }</div>
-<div class="line"><span class="lineno">  176</span>  <span class="keywordflow">if</span> (data.sequenceCount &gt; 0x3FFFU) {</div>
+<div class="line"><span class="lineno">  176</span>  <span class="keywordflow">if</span> (data.secondaryHeaderFlag &gt; 0x01U) {</div>
 <div class="line"><span class="lineno">  177</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">  178</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence count, value &gt; 16383&quot;</span>);</div>
+<div class="line"><span class="lineno">  178</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid secondary header flag, value &gt; 1&quot;</span>);</div>
 <div class="line"><span class="lineno">  179</span>  }</div>
-<div class="line"><span class="lineno">  180</span> </div>
-<div class="line"><span class="lineno">  181</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a> = data.versionNumber;</div>
-<div class="line"><span class="lineno">  182</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a> = data.type;</div>
-<div class="line"><span class="lineno">  183</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a> = data.secondaryHeaderFlag;</div>
-<div class="line"><span class="lineno">  184</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a> = data.APID;</div>
-<div class="line"><span class="lineno">  185</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a> = data.sequenceFlags;</div>
-<div class="line"><span class="lineno">  186</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a> = data.sequenceCount;</div>
-<div class="line"><span class="lineno">  187</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a> = data.dataLength;</div>
-<div class="line"><span class="lineno">  188</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9df359714cec0865b191260a4b6a2d6c">m_packetSequenceControl</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">  189</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a>) &lt;&lt; 14U) | <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a>);</div>
-<div class="line"><span class="lineno">  190</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">m_packetIdentificationAndVersion</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
-<div class="line"><span class="lineno">  191</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a>) &lt;&lt; 13U)</div>
-<div class="line"><span class="lineno">  192</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a>) &lt;&lt; 12U)</div>
-<div class="line"><span class="lineno">  193</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a>) &lt;&lt; 11U)</div>
-<div class="line"><span class="lineno">  194</span>    | <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a>);</div>
-<div class="line"><span class="lineno">  195</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">  196</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  197</span>}</div>
+<div class="line"><span class="lineno">  180</span>  <span class="keywordflow">if</span> (data.APID &gt; <a class="code hl_variable" href="namespaceccsds.html#a338508b77c5e5a33db889ee4d9dd3dad">IDLE_APID</a>) {</div>
+<div class="line"><span class="lineno">  181</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">  182</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid APID, value &gt; 2047&quot;</span>);</div>
+<div class="line"><span class="lineno">  183</span>  }</div>
+<div class="line"><span class="lineno">  184</span>  <span class="keywordflow">if</span> (data.sequenceFlags &gt; 0x03U) {</div>
+<div class="line"><span class="lineno">  185</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">  186</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence flag, value &gt; 3&quot;</span>);</div>
+<div class="line"><span class="lineno">  187</span>  }</div>
+<div class="line"><span class="lineno">  188</span>  <span class="keywordflow">if</span> (data.sequenceCount &gt; 0x3FFFU) {</div>
+<div class="line"><span class="lineno">  189</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">  190</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence count, value &gt; 16383&quot;</span>);</div>
+<div class="line"><span class="lineno">  191</span>  }</div>
+<div class="line"><span class="lineno">  192</span> </div>
+<div class="line"><span class="lineno">  193</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a> = data.versionNumber;</div>
+<div class="line"><span class="lineno">  194</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a> = data.type;</div>
+<div class="line"><span class="lineno">  195</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a> = data.secondaryHeaderFlag;</div>
+<div class="line"><span class="lineno">  196</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a> = data.APID;</div>
+<div class="line"><span class="lineno">  197</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a> = data.sequenceFlags;</div>
+<div class="line"><span class="lineno">  198</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a> = data.sequenceCount;</div>
+<div class="line"><span class="lineno">  199</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a> = data.dataLength;</div>
+<div class="line"><span class="lineno">  200</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9df359714cec0865b191260a4b6a2d6c">m_packetSequenceControl</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
+<div class="line"><span class="lineno">  201</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a>) &lt;&lt; 14U) | <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a>);</div>
+<div class="line"><span class="lineno">  202</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">m_packetIdentificationAndVersion</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(</div>
+<div class="line"><span class="lineno">  203</span>    (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a>) &lt;&lt; 13U)</div>
+<div class="line"><span class="lineno">  204</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a>) &lt;&lt; 12U)</div>
+<div class="line"><span class="lineno">  205</span>    | (<span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a>) &lt;&lt; 11U)</div>
+<div class="line"><span class="lineno">  206</span>    | <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a>);</div>
+<div class="line"><span class="lineno">  207</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
+<div class="line"><span class="lineno">  208</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  209</span>}</div>
 <div class="ttc" id="aclassccsds_1_1Header_html_a9df359714cec0865b191260a4b6a2d6c"><div class="ttname"><a href="classccsds_1_1Header.html#a9df359714cec0865b191260a4b6a2d6c">ccsds::Header::m_packetSequenceControl</a></div><div class="ttdeci">std::uint16_t m_packetSequenceControl</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00229">CCSDSHeader.h:229</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Header_html_ab197ee20f2a79f86ef58afbe7b8eb766"><div class="ttname"><a href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">ccsds::Header::m_packetIdentificationAndVersion</a></div><div class="ttdeci">std::uint16_t m_packetIdentificationAndVersion</div><div class="ttdef"><b>Definition</b> <a href="CCSDSHeader_8h_source.html#l00228">CCSDSHeader.h:228</a></div></div>
 </div><!-- fragment -->
@@ -896,27 +928,33 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA when decoded fields are rejected. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00088">88</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   88</span>                                                            {</div>
-<div class="line"><span class="lineno">   89</span>  <span class="keywordflow">if</span> (data &gt; 0xFFFFFFFFFFFFULL) {</div>
-<div class="line"><span class="lineno">   90</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   91</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Input data exceeds expected bit size for version or size.&quot;</span>);</div>
-<div class="line"><span class="lineno">   92</span>  }</div>
-<div class="line"><span class="lineno">   93</span> </div>
-<div class="line"><span class="lineno">   94</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>(data &amp; 0xFFFFU);</div>
-<div class="line"><span class="lineno">   95</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9df359714cec0865b191260a4b6a2d6c">m_packetSequenceControl</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>((data &gt;&gt; 16) &amp; 0xFFFFU);</div>
-<div class="line"><span class="lineno">   96</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">m_packetIdentificationAndVersion</a> = <span class="keyword">static_cast&lt;</span>std::uint16_t<span class="keyword">&gt;</span>((data &gt;&gt; 32) &amp; 0xFFFFU);</div>
-<div class="line"><span class="lineno">   97</span> </div>
-<div class="line"><span class="lineno">   98</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a> = <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">m_packetIdentificationAndVersion</a> &gt;&gt; 13);</div>
-<div class="line"><span class="lineno">   99</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a> = <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>((<a class="code hl_variable" href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">m_packetIdentificationAndVersion</a> &gt;&gt; 12) &amp; 0x01U);</div>
-<div class="line"><span class="lineno">  100</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a> = <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>((<a class="code hl_variable" href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">m_packetIdentificationAndVersion</a> &gt;&gt; 11) &amp; 0x01U);</div>
-<div class="line"><span class="lineno">  101</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a8c424de1518b1f3b080819bbb72bfa93">m_APID</a> = <a class="code hl_variable" href="classccsds_1_1Header.html#ab197ee20f2a79f86ef58afbe7b8eb766">m_packetIdentificationAndVersion</a> &amp; 0x07FFU;</div>
-<div class="line"><span class="lineno">  102</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a> = <span class="keyword">static_cast&lt;</span>std::uint8_t<span class="keyword">&gt;</span>(<a class="code hl_variable" href="classccsds_1_1Header.html#a9df359714cec0865b191260a4b6a2d6c">m_packetSequenceControl</a> &gt;&gt; 14);</div>
-<div class="line"><span class="lineno">  103</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a> = <a class="code hl_variable" href="classccsds_1_1Header.html#a9df359714cec0865b191260a4b6a2d6c">m_packetSequenceControl</a> &amp; 0x3FFFU;</div>
-<div class="line"><span class="lineno">  104</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">  105</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">  106</span>}</div>
-</div><!-- fragment -->
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00100">100</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">  100</span>                                                            {</div>
+<div class="line"><span class="lineno">  101</span>  <a class="code hl_struct" href="structccsds__primary__header.html">ccsds_primary_header_t</a> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>{};</div>
+<div class="line"><span class="lineno">  102</span>  <span class="keyword">const</span> <span class="keyword">auto</span> <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">status</a> = <a class="code hl_function" href="primary__header_8h.html#aa392d7ac4eed5db7656a0f62dd36c8c7">ccsds_primary_header_unpack</a>(data, &amp;<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>);</div>
+<div class="line"><span class="lineno">  103</span>  <span class="keywordflow">if</span> (<a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">status</a> != <a class="code hl_enumvalue" href="error_8h.html#a59446f89978f2b65e31da3d939a36ceeae1809a302394ffbca98785e610e8ee9d">CCSDS_STATUS_OK</a>) {</div>
+<div class="line"><span class="lineno">  104</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">  105</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Input data exceeds expected bit size for version or size.&quot;</span>);</div>
+<div class="line"><span class="lineno">  106</span>  }</div>
+<div class="line"><span class="lineno">  107</span> </div>
+<div class="line"><span class="lineno">  108</span>  <a class="code hl_define" href="CCSDSResult_8h.html#abd6d95012d1c65577f532086f613234f">FORWARD_RESULT</a>(<a class="code hl_function" href="classccsds_1_1Header.html#a28baa55c6bd1f7f76c9a67635c3c2a2d">setData</a>(PrimaryHeader{</div>
+<div class="line"><span class="lineno">  109</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.version_number,</div>
+<div class="line"><span class="lineno">  110</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.type,</div>
+<div class="line"><span class="lineno">  111</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.secondary_header_flag,</div>
+<div class="line"><span class="lineno">  112</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.apid,</div>
+<div class="line"><span class="lineno">  113</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.sequence_flags,</div>
+<div class="line"><span class="lineno">  114</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.sequence_count,</div>
+<div class="line"><span class="lineno">  115</span>    <a class="code hl_function" href="classccsds_1_1Header.html#a43c29357a7e67937349127d39b5230c1">decoded</a>.data_length</div>
+<div class="line"><span class="lineno">  116</span>  }));</div>
+<div class="line"><span class="lineno">  117</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">  118</span>}</div>
+<div class="ttc" id="aprimary__header_8h_html_aa392d7ac4eed5db7656a0f62dd36c8c7"><div class="ttname"><a href="primary__header_8h.html#aa392d7ac4eed5db7656a0f62dd36c8c7">ccsds_primary_header_unpack</a></div><div class="ttdeci">ccsds_status_t ccsds_primary_header_unpack(uint64_t packed, ccsds_primary_header_t *header_out)</div><div class="ttdoc">Unpacks a low-48-bit primary-header representation.</div><div class="ttdef"><b>Definition</b> <a href="primary__header_8c_source.html#l00100">primary_header.c:100</a></div></div>
+</div><!-- fragment --><div class="dynheader">
+Here is the call graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><div class="zoom"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_a28baa55c6bd1f7f76c9a67635c3c2a2d_cgraph.svg" width="100%" height="376"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
+</div>
+
 </div>
 </div>
 <a id="ae08f9e3a989c9010ae4c35e2c0608193" name="ae08f9e3a989c9010ae4c35e2c0608193"></a>
@@ -944,14 +982,14 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section note"><dt>Note</dt><dd><a class="el" href="classccsds_1_1Packet.html" title="Owns, serializes, and parses one CCSDS Space Packet PDU.">Packet</a> normally calculates this field during update()/serialize(). </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00070">70</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   70</span>                                                        {</div>
-<div class="line"><span class="lineno">   71</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a> = value;</div>
-<div class="line"><span class="lineno">   72</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00071">71</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   71</span>                                                        {</div>
+<div class="line"><span class="lineno">   72</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#aa28d3ab32d2242a226345dfbe860255f">m_dataLength</a> = value;</div>
+<div class="line"><span class="lineno">   73</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_ae08f9e3a989c9010ae4c35e2c0608193_icgraph.svg" width="436" height="36"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_ae08f9e3a989c9010ae4c35e2c0608193_icgraph.svg" width="470" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -981,16 +1019,16 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for any other value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00030">30</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   30</span>                                                                           {</div>
-<div class="line"><span class="lineno">   31</span>  <span class="keywordflow">if</span> (value &gt; 0x01U) {</div>
-<div class="line"><span class="lineno">   32</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   33</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid secondary header flag, value &gt; 1&quot;</span>);</div>
-<div class="line"><span class="lineno">   34</span>  }</div>
-<div class="line"><span class="lineno">   35</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a> = value;</div>
-<div class="line"><span class="lineno">   36</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">   37</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   38</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00031">31</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   31</span>                                                                           {</div>
+<div class="line"><span class="lineno">   32</span>  <span class="keywordflow">if</span> (value &gt; 0x01U) {</div>
+<div class="line"><span class="lineno">   33</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   34</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid secondary header flag, value &gt; 1&quot;</span>);</div>
+<div class="line"><span class="lineno">   35</span>  }</div>
+<div class="line"><span class="lineno">   36</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#adc679e7903c5d14a5f81178c361a5d76">m_secondaryHeaderFlag</a> = value;</div>
+<div class="line"><span class="lineno">   37</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
+<div class="line"><span class="lineno">   38</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   39</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1019,20 +1057,20 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for a wider value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00060">60</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>                                                                      {</div>
-<div class="line"><span class="lineno">   61</span>  <span class="keywordflow">if</span> (value &gt; 0x3FFFU) {</div>
-<div class="line"><span class="lineno">   62</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   63</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence count, value &gt; 16383&quot;</span>);</div>
-<div class="line"><span class="lineno">   64</span>  }</div>
-<div class="line"><span class="lineno">   65</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a> = value;</div>
-<div class="line"><span class="lineno">   66</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">   67</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   68</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00061">61</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>                                                                      {</div>
+<div class="line"><span class="lineno">   62</span>  <span class="keywordflow">if</span> (value &gt; 0x3FFFU) {</div>
+<div class="line"><span class="lineno">   63</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   64</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence count, value &gt; 16383&quot;</span>);</div>
+<div class="line"><span class="lineno">   65</span>  }</div>
+<div class="line"><span class="lineno">   66</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#afaf3e4083d1002ed155a2a4a3de2ec67">m_sequenceCount</a> = value;</div>
+<div class="line"><span class="lineno">   67</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
+<div class="line"><span class="lineno">   68</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   69</span>}</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_a4275c4280caa669e6bf0ea1efa12b188_icgraph.svg" width="424" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="classccsds_1_1Header_a4275c4280caa669e6bf0ea1efa12b188_icgraph.svg" width="458" height="51"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
@@ -1062,16 +1100,16 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for a wider value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00050">50</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   50</span>                                                                     {</div>
-<div class="line"><span class="lineno">   51</span>  <span class="keywordflow">if</span> (value &gt; 0x03U) {</div>
-<div class="line"><span class="lineno">   52</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   53</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence flag, value &gt; 3&quot;</span>);</div>
-<div class="line"><span class="lineno">   54</span>  }</div>
-<div class="line"><span class="lineno">   55</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a> = value;</div>
-<div class="line"><span class="lineno">   56</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">   57</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   58</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00051">51</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   51</span>                                                                     {</div>
+<div class="line"><span class="lineno">   52</span>  <span class="keywordflow">if</span> (value &gt; 0x03U) {</div>
+<div class="line"><span class="lineno">   53</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   54</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid sequence flag, value &gt; 3&quot;</span>);</div>
+<div class="line"><span class="lineno">   55</span>  }</div>
+<div class="line"><span class="lineno">   56</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9c6bca6a60f113c1eb5028083428436f">m_sequenceFlags</a> = value;</div>
+<div class="line"><span class="lineno">   57</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
+<div class="line"><span class="lineno">   58</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   59</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1100,16 +1138,16 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for any other value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00020">20</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   20</span>                                                            {</div>
-<div class="line"><span class="lineno">   21</span>  <span class="keywordflow">if</span> (value &gt; 0x01U) {</div>
-<div class="line"><span class="lineno">   22</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   23</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid type, value &gt; 1&quot;</span>);</div>
-<div class="line"><span class="lineno">   24</span>  }</div>
-<div class="line"><span class="lineno">   25</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a> = value;</div>
-<div class="line"><span class="lineno">   26</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">   27</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   28</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00021">21</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   21</span>                                                            {</div>
+<div class="line"><span class="lineno">   22</span>  <span class="keywordflow">if</span> (value &gt; 0x01U) {</div>
+<div class="line"><span class="lineno">   23</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   24</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid type, value &gt; 1&quot;</span>);</div>
+<div class="line"><span class="lineno">   25</span>  }</div>
+<div class="line"><span class="lineno">   26</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a1cc765902a8cf87ed7d83e73d1f37023">m_type</a> = value;</div>
+<div class="line"><span class="lineno">   27</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
+<div class="line"><span class="lineno">   28</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   29</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1138,16 +1176,16 @@ Here is the caller graph for this function:</div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Success, or INVALID_HEADER_DATA for a wider value. </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00010">10</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   10</span>                                                                     {</div>
-<div class="line"><span class="lineno">   11</span>  <span class="keywordflow">if</span> (value &gt; 0x07U) {</div>
-<div class="line"><span class="lineno">   12</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
-<div class="line"><span class="lineno">   13</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid version number, value &gt; 7&quot;</span>);</div>
-<div class="line"><span class="lineno">   14</span>  }</div>
-<div class="line"><span class="lineno">   15</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a> = value;</div>
-<div class="line"><span class="lineno">   16</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
-<div class="line"><span class="lineno">   17</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   18</span>}</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSHeader_8cpp_source.html#l00011">11</a> of file <a class="el" href="CCSDSHeader_8cpp_source.html">CCSDSHeader.cpp</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   11</span>                                                                     {</div>
+<div class="line"><span class="lineno">   12</span>  <span class="keywordflow">if</span> (value &gt; 0x07U) {</div>
+<div class="line"><span class="lineno">   13</span>    <a class="code hl_variable" href="classccsds_1_1Header.html#afadbbc0f41836835f6eddce33094bae5">m_status</a> = <a class="code hl_enumvalue" href="namespaceccsds.html#aaffbdf3c66b0447d0f5162b21a64c4bea023dac1939350e9a64a01bf7bf1ed790">INVALID</a>;</div>
+<div class="line"><span class="lineno">   14</span>    <span class="keywordflow">return</span> Error(<a class="code hl_enumvalue" href="namespaceccsds.html#a425001da953127ea96fdf8d2e869c240a3579fae2fc213327b0c61e442272384c">INVALID_HEADER_DATA</a>, <span class="stringliteral">&quot;Invalid version number, value &gt; 7&quot;</span>);</div>
+<div class="line"><span class="lineno">   15</span>  }</div>
+<div class="line"><span class="lineno">   16</span>  <a class="code hl_variable" href="classccsds_1_1Header.html#a9dbdace97ebe593c016b8d19a69c0143">m_versionNumber</a> = value;</div>
+<div class="line"><span class="lineno">   17</span>  <a class="code hl_function" href="classccsds_1_1Header.html#ad0d0f0c44bbf5dac2591ed231b92c136">refreshStatus</a>();</div>
+<div class="line"><span class="lineno">   18</span>  <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   19</span>}</div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -1,0 +1,12 @@
+<map id="ccsds_pus_c_tc_encoded_size" name="ccsds_pus_c_tc_encoded_size">
+<area shape="rect" id="Node000001" title="Returns the exact encoded size for PUS&#45;C TC tailoring." alt="" coords="437,62,653,87"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#aa99fab8f360c690807124b1a7a59555e" title="Decodes one complete PUS&#45;C TC secondary header." alt="" coords="215,13,389,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="468,62,365,41,366,35,469,57"/>
+<area shape="rect" id="Node000004" href="$pus__tc_8c.html#ada7fac2f6b72d323b9a3d38c129df4ab" title="Encodes one PUS&#45;C TC secondary header into caller&#45;owned storage." alt="" coords="215,62,389,87"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="424,77,389,77,389,72,424,72"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1pus_1_1rev__c_1_1TcHeader.html#a9fd365aef21b44c4db9822c1b4a11eda" title=" " alt="" coords="13,87,159,127"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="466,92,390,103,268,109,159,111,159,105,268,104,389,97,466,87"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__c_1_1TcHeader.html#aed73e839a1169ffa3d9afe1b4794b3bf" title=" " alt="" coords="5,5,167,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="201,28,167,28,167,23,201,23"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="203,92,159,99,159,93,202,87"/>
+</map>

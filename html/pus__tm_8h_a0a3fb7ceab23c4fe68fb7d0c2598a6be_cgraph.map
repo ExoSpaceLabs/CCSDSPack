@@ -1,0 +1,15 @@
+<map id="ccsds_pus_a_tm_encoded_size" name="ccsds_pus_a_tm_encoded_size">
+<area shape="rect" id="Node000001" title="Returns exact encoded size for valid PUS&#45;A TM tailoring, otherwise zero." alt="" coords="5,35,228,60"/>
+<area shape="rect" id="Node000002" href="$cuc_8c.html#abd905237c1885654f75ccee85e7d08d8" title="Returns the encoded P&#45;field + T&#45;field size without validating the layout." alt="" coords="279,5,461,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,32,265,28,265,33,227,37"/>
+<area shape="rect" id="Node000003" href="$pus__tm_8c.html#af4916003ae05978628387d3579eeb098" title="Validates PUS&#45;A TM tailoring." alt="" coords="276,55,464,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="229,57,263,61,262,66,228,62"/>
+<area shape="rect" id="Node000004" href="$pus_8h.html#a72689b3da3a944528e0b666f1c00fc5d" title="Returns non&#45;zero for supported mission identifier widths 0, 1, 2, or 4 octets." alt="" coords="522,26,675,66"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="464,61,508,55,509,60,465,66"/>
+<area shape="rect" id="Node000005" href="$pus__tm_8c.html#a74554a8d759fb67ac7fe96be3e758d7a" title=" " alt="" coords="512,91,685,116"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="465,84,499,88,498,94,464,90"/>
+<area shape="rect" id="Node000006" href="$cuc_8c.html#a3bb920cae5f443cb5f41282544bc91b7" title="Validates the supported basic CUC layout." alt="" coords="733,65,880,91"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="686,90,719,86,720,91,686,95"/>
+<area shape="rect" id="Node000007" href="$pus__tm_8c.html#a48a83676b00d92beebf1a62cd17dde0d" title=" " alt="" coords="751,115,862,140"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="686,111,738,117,737,122,686,116"/>
+</map>

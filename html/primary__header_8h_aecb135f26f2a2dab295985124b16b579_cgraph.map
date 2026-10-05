@@ -1,0 +1,11 @@
+<map id="ccsds_packet_declared_size" name="ccsds_packet_declared_size">
+<area shape="rect" id="Node000001" title="Reads the version&#45;0 primary header and returns the declared full packet size." alt="" coords="5,13,209,38"/>
+<area shape="rect" id="Node000002" href="$primary__header_8c.html#af0abb6f979ae1840bc82f919747f89e8" title="Decodes the first six bytes from a caller&#45;owned buffer." alt="" coords="257,5,425,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,23,244,23,244,28,209,28"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#abc80bd6553a5888e248bc36939933744" title="Loads a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="473,13,605,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="426,23,459,23,459,28,426,28"/>
+<area shape="rect" id="Node000004" href="$bytes_8h.html#a678b1b7d7c81754310024520a94a4246" title="Loads a 16&#45;bit integer using explicit wire byte order." alt="" coords="653,13,777,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="606,23,640,23,640,28,606,28"/>
+<area shape="rect" id="Node000005" href="$bytes_8h.html#a3e09d1360c5624e2e27f266f37fdf84a" title="Loads 0..8 octets into a uint64_t using explicit wire byte order." alt="" coords="825,13,951,38"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="778,23,811,23,811,28,778,28"/>
+</map>

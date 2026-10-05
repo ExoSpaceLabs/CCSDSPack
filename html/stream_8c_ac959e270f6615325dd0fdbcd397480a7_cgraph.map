@@ -1,0 +1,5 @@
+<map id="ccsds_packet_stream_init" name="ccsds_packet_stream_init">
+<area shape="rect" id="Node000001" title="Initializes a packet&#45;stream cursor over caller&#45;owned storage." alt="" coords="5,13,195,38"/>
+<area shape="rect" id="Node000002" href="$packet__view_8h.html#acaff78f81a48052406d37afd4aee3a38" title="Returns the CCSDSPack default CRC&#45;16/CCITT&#45;FALSE parameters." alt="" coords="243,5,396,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,23,229,23,229,28,195,28"/>
+</map>

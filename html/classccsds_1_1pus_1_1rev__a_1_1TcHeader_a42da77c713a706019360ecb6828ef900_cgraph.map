@@ -1,7 +1,16 @@
 <map id="ccsds::pus::rev_a::TcHeader::deserialize" name="ccsds::pus::rev_a::TcHeader::deserialize">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,167,45"/>
-<area shape="rect" id="Node000002" href="$namespaceccsds_1_1pus.html#a21e8f29c664bb4d548a0aaaf6ffc1233" title=" " alt="" coords="215,13,420,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,23,201,23,201,28,167,28"/>
-<area shape="rect" id="Node000003" href="$namespaceccsds_1_1pus.html#a95f60fbaf0db5c7a94b44688400d1646" title=" " alt="" coords="468,5,655,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="420,23,454,23,454,28,420,28"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,73,167,113"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#aec78188767ef95052642233ca9719428" title="Decodes one complete PUS&#45;A TC secondary header." alt="" coords="215,80,391,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,90,201,90,201,95,167,95"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#a3e09d1360c5624e2e27f266f37fdf84a" title="Loads 0..8 octets into a uint64_t using explicit wire byte order." alt="" coords="485,5,610,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="333,77,438,39,470,31,472,36,439,45,335,82"/>
+<area shape="rect" id="Node000004" href="$pus__tc_8c.html#ab8a04561fb01af52702618c3df287ad5" title="Returns the exact encoded size for valid PUS&#45;A TC tailoring, otherwise zero." alt="" coords="439,55,656,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="390,81,425,77,425,83,391,86"/>
+<area shape="rect" id="Node000005" href="$pus__tc_8c.html#ae3255082daa8de48d3e29c61b6a54c45" title="Validates PUS&#45;A TC tailoring." alt="" coords="704,73,887,113"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="391,90,690,90,690,95,391,95"/>
+<area shape="rect" id="Node000007" href="$pus_8h.html#abdb8b33ff5e40c0946fd2291312ded24" title="Returns non&#45;zero when the configured trailing spare region contains only zero octets." alt="" coords="455,156,639,181"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="343,103,439,134,491,150,489,155,438,139,341,108"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="657,76,690,79,690,85,656,81"/>
+<area shape="rect" id="Node000006" href="$pus_8h.html#a72689b3da3a944528e0b666f1c00fc5d" title="Returns non&#45;zero for supported mission identifier widths 0, 1, 2, or 4 octets." alt="" coords="935,73,1088,113"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="887,90,921,90,921,95,887,95"/>
 </map>

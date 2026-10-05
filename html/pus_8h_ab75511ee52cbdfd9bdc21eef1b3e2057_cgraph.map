@@ -1,0 +1,5 @@
+<map id="ccsds_pus_identifier_fits" name="ccsds_pus_identifier_fits">
+<area shape="rect" id="Node000001" title="Returns non&#45;zero when value fits exactly within the selected identifier width." alt="" coords="5,13,185,38"/>
+<area shape="rect" id="Node000002" href="$pus_8h.html#a72689b3da3a944528e0b666f1c00fc5d" title="Returns non&#45;zero for supported mission identifier widths 0, 1, 2, or 4 octets." alt="" coords="233,5,387,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,23,220,23,220,28,185,28"/>
+</map>

@@ -111,7 +111,7 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a892b94e4974281486dfad4dcca658bbe" id="r_a892b94e4974281486dfad4dcca658bbe"><td class="memItemLeft" align="right" valign="top">static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1ValidationReport.html#a892b94e4974281486dfad4dcca658bbe">Capacity</a> {32U}</td></tr>
+<tr class="memitem:a892b94e4974281486dfad4dcca658bbe" id="r_a892b94e4974281486dfad4dcca658bbe"><td class="memItemLeft" align="right" valign="top">static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classccsds_1_1ValidationReport.html#a892b94e4974281486dfad4dcca658bbe">Capacity</a> {<a class="el" href="validation_8h.html#a0457b730b1bae1c59ca5e60816aad8a7">CCSDS_VALIDATION_REPORT_CAPACITY</a>}</td></tr>
 <tr class="separator:a892b94e4974281486dfad4dcca658bbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
@@ -134,7 +134,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Fixed-capacity structured validation result with no dynamic allocation. </p>
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00052">52</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00053">53</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="adbacfc55f44fb0116768d94c4ff5b2dd" name="adbacfc55f44fb0116768d94c4ff5b2dd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adbacfc55f44fb0116768d94c4ff5b2dd">&#9670;&#160;</a></span>begin()</h2>
@@ -159,9 +159,9 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00074">74</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   74</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>.data(); }</div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a90e0b57e589141f0104e86f09f43b604"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">ccsds::ValidationReport::m_checks</a></div><div class="ttdeci">std::array&lt; ValidationCheck, Capacity &gt; m_checks</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00087">CCSDSValidator.h:87</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00075">75</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   75</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>.data(); }</div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a90e0b57e589141f0104e86f09f43b604"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">ccsds::ValidationReport::m_checks</a></div><div class="ttdeci">std::array&lt; ValidationCheck, Capacity &gt; m_checks</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00088">CCSDSValidator.h:88</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -189,12 +189,12 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00062">62</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   62</span>                                                                          {</div>
-<div class="line"><span class="lineno">   63</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i) <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].code == code) <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   64</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   65</span>    }</div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a9ad7b3d70a4c628dd0221d77683ce4ba"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">ccsds::ValidationReport::m_size</a></div><div class="ttdeci">std::size_t m_size</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00088">CCSDSValidator.h:88</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00063">63</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   63</span>                                                                          {</div>
+<div class="line"><span class="lineno">   64</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i) <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].code == code) <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   65</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   66</span>    }</div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a9ad7b3d70a4c628dd0221d77683ce4ba"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">ccsds::ValidationReport::m_size</a></div><div class="ttdeci">std::size_t m_size</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00089">CCSDSValidator.h:89</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -226,8 +226,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00075">75</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   75</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>.data() + <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00076">76</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   76</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>.data() + <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -255,12 +255,12 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00071">71</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   71</span>                                                                        {</div>
-<div class="line"><span class="lineno">   72</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a0f1e5d4676a30fb0f32a94cbf761ed42">contains</a>(code) &amp;&amp; !<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>(code);</div>
-<div class="line"><span class="lineno">   73</span>    }</div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a0f1e5d4676a30fb0f32a94cbf761ed42"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a0f1e5d4676a30fb0f32a94cbf761ed42">ccsds::ValidationReport::contains</a></div><div class="ttdeci">bool contains(const ValidationCode code) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00062">CCSDSValidator.h:62</a></div></div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a62e4d911a278589880371cad4711f4e7"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">ccsds::ValidationReport::passed</a></div><div class="ttdeci">bool passed(const ValidationCode code) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00066">CCSDSValidator.h:66</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00072">72</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   72</span>                                                                        {</div>
+<div class="line"><span class="lineno">   73</span>      <span class="keywordflow">return</span> <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a0f1e5d4676a30fb0f32a94cbf761ed42">contains</a>(code) &amp;&amp; !<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>(code);</div>
+<div class="line"><span class="lineno">   74</span>    }</div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a0f1e5d4676a30fb0f32a94cbf761ed42"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a0f1e5d4676a30fb0f32a94cbf761ed42">ccsds::ValidationReport::contains</a></div><div class="ttdeci">bool contains(const ValidationCode code) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00063">CCSDSValidator.h:63</a></div></div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a62e4d911a278589880371cad4711f4e7"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">ccsds::ValidationReport::passed</a></div><div class="ttdeci">bool passed(const ValidationCode code) const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00067">CCSDSValidator.h:67</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -292,9 +292,9 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00060">60</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   60</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">valid</a>(); }</div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a35c89cf64b45ad927d42cda59dad6346"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">ccsds::ValidationReport::valid</a></div><div class="ttdeci">bool valid() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00056">CCSDSValidator.h:56</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00061">61</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   61</span>{ <span class="keywordflow">return</span> <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">valid</a>(); }</div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a35c89cf64b45ad927d42cda59dad6346"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a35c89cf64b45ad927d42cda59dad6346">ccsds::ValidationReport::valid</a></div><div class="ttdeci">bool valid() const noexcept</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00057">CCSDSValidator.h:57</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -327,12 +327,12 @@ Here is the call graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00066">66</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   66</span>                                                                        {</div>
-<div class="line"><span class="lineno">   67</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i)</div>
-<div class="line"><span class="lineno">   68</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].code == code) <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].passed;</div>
-<div class="line"><span class="lineno">   69</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   70</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00067">67</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   67</span>                                                                        {</div>
+<div class="line"><span class="lineno">   68</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i)</div>
+<div class="line"><span class="lineno">   69</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].code == code) <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].passed;</div>
+<div class="line"><span class="lineno">   70</span>      <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   71</span>    }</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
@@ -375,17 +375,17 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00078">78</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   78</span>                                                                    {</div>
-<div class="line"><span class="lineno">   79</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i) {</div>
-<div class="line"><span class="lineno">   80</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].code == code) {</div>
-<div class="line"><span class="lineno">   81</span>          <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].passed = <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].passed &amp;&amp; <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>;</div>
-<div class="line"><span class="lineno">   82</span>          <span class="keywordflow">return</span>;</div>
-<div class="line"><span class="lineno">   83</span>        }</div>
-<div class="line"><span class="lineno">   84</span>      }</div>
-<div class="line"><span class="lineno">   85</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a> &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a892b94e4974281486dfad4dcca658bbe">Capacity</a>) <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>++] = {code, <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>};</div>
-<div class="line"><span class="lineno">   86</span>    }</div>
-<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a892b94e4974281486dfad4dcca658bbe"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a892b94e4974281486dfad4dcca658bbe">ccsds::ValidationReport::Capacity</a></div><div class="ttdeci">static constexpr std::size_t Capacity</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00054">CCSDSValidator.h:54</a></div></div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00079">79</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   79</span>                                                                    {</div>
+<div class="line"><span class="lineno">   80</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i) {</div>
+<div class="line"><span class="lineno">   81</span>        <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].code == code) {</div>
+<div class="line"><span class="lineno">   82</span>          <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].passed = <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].passed &amp;&amp; <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>;</div>
+<div class="line"><span class="lineno">   83</span>          <span class="keywordflow">return</span>;</div>
+<div class="line"><span class="lineno">   84</span>        }</div>
+<div class="line"><span class="lineno">   85</span>      }</div>
+<div class="line"><span class="lineno">   86</span>      <span class="keywordflow">if</span> (<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a> &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a892b94e4974281486dfad4dcca658bbe">Capacity</a>) <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>++] = {code, <a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>};</div>
+<div class="line"><span class="lineno">   87</span>    }</div>
+<div class="ttc" id="aclassccsds_1_1ValidationReport_html_a892b94e4974281486dfad4dcca658bbe"><div class="ttname"><a href="classccsds_1_1ValidationReport.html#a892b94e4974281486dfad4dcca658bbe">ccsds::ValidationReport::Capacity</a></div><div class="ttdeci">static constexpr std::size_t Capacity</div><div class="ttdef"><b>Definition</b> <a href="CCSDSValidator_8h_source.html#l00055">CCSDSValidator.h:55</a></div></div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -422,8 +422,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00061">61</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   61</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00062">62</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   62</span>{ <span class="keywordflow">return</span> <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; }</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -450,11 +450,11 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00056">56</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   56</span>                                              {</div>
-<div class="line"><span class="lineno">   57</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i) <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><span class="lineno">   58</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><span class="lineno">   59</span>    }</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00057">57</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   57</span>                                              {</div>
+<div class="line"><span class="lineno">   58</span>      <span class="keywordflow">for</span> (std::size_t i = 0U; i &lt; <a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a9ad7b3d70a4c628dd0221d77683ce4ba">m_size</a>; ++i) <span class="keywordflow">if</span> (!<a class="code hl_variable" href="classccsds_1_1ValidationReport.html#a90e0b57e589141f0104e86f09f43b604">m_checks</a>[i].<a class="code hl_function" href="classccsds_1_1ValidationReport.html#a62e4d911a278589880371cad4711f4e7">passed</a>) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><span class="lineno">   59</span>      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><span class="lineno">   60</span>    }</div>
 </div><!-- fragment --><div class="dynheader">
 Here is the call graph for this function:</div>
 <div class="dyncontent">
@@ -489,7 +489,7 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00089">89</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00090">90</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
 
 </div>
 </div>
@@ -504,7 +504,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr std::size_t ccsds::ValidationReport::Capacity {32U}</td>
+          <td class="memname">constexpr std::size_t ccsds::ValidationReport::Capacity {<a class="el" href="validation_8h.html#a0457b730b1bae1c59ca5e60816aad8a7">CCSDS_VALIDATION_REPORT_CAPACITY</a>}</td>
         </tr>
       </table>
   </td>
@@ -514,8 +514,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00054">54</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   54</span>{32U};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00055">55</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   55</span>{<a class="code hl_define" href="validation_8h.html#a0457b730b1bae1c59ca5e60816aad8a7">CCSDS_VALIDATION_REPORT_CAPACITY</a>};</div>
+<div class="ttc" id="avalidation_8h_html_a0457b730b1bae1c59ca5e60816aad8a7"><div class="ttname"><a href="validation_8h.html#a0457b730b1bae1c59ca5e60816aad8a7">CCSDS_VALIDATION_REPORT_CAPACITY</a></div><div class="ttdeci">#define CCSDS_VALIDATION_REPORT_CAPACITY</div><div class="ttdef"><b>Definition</b> <a href="validation_8h_source.html#l00017">validation.h:17</a></div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -539,8 +540,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00087">87</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   87</span>{};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00088">88</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   88</span>{};</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -564,8 +565,8 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00088">88</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
-<div class="fragment"><div class="line"><span class="lineno">   88</span>{0U};</div>
+<p class="definition">Definition at line <a class="el" href="CCSDSValidator_8h_source.html#l00089">89</a> of file <a class="el" href="CCSDSValidator_8h_source.html">CCSDSValidator.h</a>.</p>
+<div class="fragment"><div class="line"><span class="lineno">   89</span>{0U};</div>
 </div><!-- fragment -->
 </div>
 </div>

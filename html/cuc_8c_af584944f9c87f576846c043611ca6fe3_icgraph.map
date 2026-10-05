@@ -1,0 +1,17 @@
+<map id="ccsds_cuc_encode" name="ccsds_cuc_encode">
+<area shape="rect" id="Node000001" title="Encodes one numeric CUC value directly into caller&#45;owned storage." alt="" coords="517,77,659,102"/>
+<area shape="rect" id="Node000002" href="$pus__tm_8c.html#af96fd3030f25965f4b5a00a7cf966a5b" title="Encodes one PUS&#45;A TM secondary header into caller&#45;owned storage." alt="" coords="287,21,469,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="526,76,426,49,427,44,527,70"/>
+<area shape="rect" id="Node000004" href="$pus__tm_8c.html#a8cda2bb5ae5f9034e2aff4e70e5dfdd7" title="Encodes one PUS&#45;C TM secondary header into caller&#45;owned storage." alt="" coords="287,77,469,102"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="503,92,469,92,469,87,503,87"/>
+<area shape="rect" id="Node000006" href="$namespaceccsds_1_1time.html#a30f30138024fa02235795e091003d52e" title="Encodes a numeric CUC value in network byte order." alt="" coords="299,141,457,166"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="533,109,422,143,420,138,532,104"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#a6db8e59ecc12363938b0bb01663e6a54" title=" " alt="" coords="45,5,199,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="273,33,199,30,199,25,273,27"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#aa74b7344f16e81c4ca97e32b77a067f7" title=" " alt="" coords="45,69,199,109"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="273,92,199,92,199,87,273,87"/>
+<area shape="rect" id="Node000007" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#af92ae4b361bc9c2a1674abb1b82aba06" title=" " alt="" coords="5,133,239,173"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="285,156,239,156,239,151,285,151"/>
+<area shape="rect" id="Node000008" href="$classccsds_1_1pus_1_1TmSecondaryHeader.html#afb9d5e99aeb508c186afd34daf3549e0" title=" " alt="" coords="5,197,239,237"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="313,172,203,200,202,195,312,167"/>
+</map>

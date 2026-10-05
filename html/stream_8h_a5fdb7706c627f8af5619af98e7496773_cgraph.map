@@ -1,0 +1,9 @@
+<map id="ccsds_packet_stream_write_prefix" name="ccsds_packet_stream_write_prefix">
+<area shape="rect" id="Node000001" title="Writes the optional four&#45;octet big&#45;endian synchronization prefix." alt="" coords="5,35,167,75"/>
+<area shape="rect" id="Node000002" href="$stream_8c.html#a5559b2b8d8b5c20a2e355c5ccc421307" title="Returns the stream&#45;frame prefix size for the selected sync policy." alt="" coords="215,5,376,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,41,201,36,202,41,168,46"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#a766a460e3ef1b8e6c7409a190cef50e5" title="Stores 0..8 octets in CCSDS&#45;standard big&#45;endian order." alt="" coords="219,70,372,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,63,205,68,205,73,167,68"/>
+<area shape="rect" id="Node000004" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="424,70,555,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="372,80,410,80,410,85,372,85"/>
+</map>

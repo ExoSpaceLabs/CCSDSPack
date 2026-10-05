@@ -1,0 +1,18 @@
+<map id="ccsds_crc16_default_config" name="ccsds_crc16_default_config">
+<area shape="rect" id="Node000001" title="Returns the CCSDSPack default CRC&#45;16/CCITT&#45;FALSE parameters." alt="" coords="695,113,848,153"/>
+<area shape="rect" id="Node000002" href="$packet__encode_8c.html#a9f2d19262a926fb07189f9da77fd3560" title="Finalizes one packet directly over two caller&#45;owned data&#45;field spans." alt="" coords="471,55,633,95"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="680,112,628,98,630,93,682,107"/>
+<area shape="rect" id="Node000005" href="$stream_8c.html#ac959e270f6615325dd0fdbcd397480a7" title="Initializes a packet&#45;stream cursor over caller&#45;owned storage." alt="" coords="457,120,647,145"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="681,135,647,135,647,130,681,130"/>
+<area shape="rect" id="Node000007" href="$packet__view_8c.html#a46f06d545df7099008dcf60bf4bc5458" title="Parses and validates one bounded packet without allocating or copying." alt="" coords="457,169,647,195"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="682,156,610,172,609,167,680,150"/>
+<area shape="rect" id="Node000003" href="$packet__encode_8c.html#a453cff50a2379ea9e7c1c1523233f5e5" title="Finalizes one CCSDS Space Packet header and optional packet CRC." alt="" coords="229,5,392,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="457,55,364,33,366,28,458,50"/>
+<area shape="rect" id="Node000004" href="$classccsds_1_1Packet.html#a242944a101e85c5f8887e669cd014579" title=" " alt="" coords="213,55,408,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="457,78,408,78,408,73,457,73"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1Manager.html#a738e17de0116fe9ca11f1032dc81a43a" title=" " alt="" coords="5,145,164,171"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="444,141,164,156,164,151,444,136"/>
+<area shape="rect" id="Node000008" href="$stream_8c.html#a16129c1ccc50cb6f51f2f8975dc20a12" title="Parses the next framed packet and advances the cursor transactionally." alt="" coords="212,171,409,196"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="443,185,410,185,410,180,443,180"/>
+<area shape="poly" id="edge8_Node000008_Node000006" title=" " alt="" coords="198,173,164,170,164,164,198,168"/>
+</map>

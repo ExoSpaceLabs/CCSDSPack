@@ -1,0 +1,5 @@
+<map id="ccsds_packet_stream_remaining" name="ccsds_packet_stream_remaining">
+<area shape="rect" id="Node000001" title="Returns the number of unconsumed bytes in the stream." alt="" coords="212,5,373,45"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Manager.html#a738e17de0116fe9ca11f1032dc81a43a" title=" " alt="" coords="5,13,164,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="199,28,164,28,164,23,199,23"/>
+</map>

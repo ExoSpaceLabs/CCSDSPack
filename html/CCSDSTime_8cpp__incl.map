@@ -1,15 +1,17 @@
 <map id="src/CCSDSTime.cpp" name="src/CCSDSTime.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="187,5,336,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="206,79,317,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="264,31,264,65,259,65,259,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="321,5,471,31"/>
+<area shape="rect" id="Node000002" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="255,79,366,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="384,33,337,72,333,68,381,29"/>
+<area shape="rect" id="Node000010" href="$cuc_8h.html" title=" " alt="" coords="449,79,588,104"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="417,28,488,69,486,74,414,33"/>
 <area shape="rect" id="Node000003" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="154,152,273,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,106,231,142,226,139,251,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="297,106,242,146,239,141,293,102"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="5,225,72,251"/>
-<area shape="poly" id="edge9_Node000002_Node000004" title=" " alt="" coords="236,106,192,127,144,154,100,187,63,218,59,214,96,182,141,150,189,122,233,102"/>
+<area shape="poly" id="edge9_Node000002_Node000004" title=" " alt="" coords="265,107,205,126,143,154,98,186,61,218,58,214,94,181,140,150,204,121,264,102"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="377,225,439,251"/>
-<area shape="poly" id="edge10_Node000002_Node000007" title=" " alt="" coords="273,102,339,175,384,214,380,218,335,179,269,106"/>
+<area shape="poly" id="edge10_Node000002_Node000007" title=" " alt="" coords="315,104,322,138,338,176,357,197,378,215,375,219,353,201,334,179,317,140,309,105"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="349,152,419,177"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="282,102,354,143,351,147,280,106"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="325,102,364,140,360,144,321,106"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="186,180,81,222,79,218,184,175"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="96,225,155,251"/>
 <area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="201,179,152,219,149,214,198,175"/>
@@ -18,4 +20,11 @@
 <area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="246,175,364,218,363,223,244,180"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="272,225,352,251"/>
 <area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="231,175,286,215,283,219,228,180"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="444,152,519,177"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="515,106,496,141,491,139,510,103"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="555,225,626,251"/>
+<area shape="poly" id="edge13_Node000010_Node000012" title=" " alt="" coords="527,103,581,212,576,214,522,106"/>
+<area shape="rect" id="Node000013" href="$error_8h.html" title=" " alt="" coords="593,152,657,177"/>
+<area shape="poly" id="edge14_Node000010_Node000013" title=" " alt="" coords="537,102,598,142,595,147,534,106"/>
+<area shape="poly" id="edge15_Node000013_Node000012" title=" " alt="" coords="622,179,605,214,600,212,617,176"/>
 </map>

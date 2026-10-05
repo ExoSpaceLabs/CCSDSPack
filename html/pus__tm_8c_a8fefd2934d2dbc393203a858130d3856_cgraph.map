@@ -1,0 +1,13 @@
+<map id="ccsds_pus_c_tm_encoded_size" name="ccsds_pus_c_tm_encoded_size">
+<area shape="rect" id="Node000001" title="Returns exact encoded size for valid PUS&#45;C TM tailoring, otherwise zero." alt="" coords="5,35,228,60"/>
+<area shape="rect" id="Node000002" href="$cuc_8c.html#abd905237c1885654f75ccee85e7d08d8" title="Returns the encoded P&#45;field + T&#45;field size without validating the layout." alt="" coords="278,5,461,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,32,264,28,264,33,227,37"/>
+<area shape="rect" id="Node000003" href="$pus__tm_8c.html#ad3fd36292a45ef0b5ceec6b4b804e63a" title="Validates PUS&#45;C TM tailoring." alt="" coords="276,55,463,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="228,57,263,61,262,66,228,62"/>
+<area shape="rect" id="Node000004" href="$pus__tm_8c.html#a74554a8d759fb67ac7fe96be3e758d7a" title=" " alt="" coords="511,63,684,88"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="463,73,497,73,497,78,463,78"/>
+<area shape="rect" id="Node000005" href="$cuc_8c.html#a3bb920cae5f443cb5f41282544bc91b7" title="Validates the supported basic CUC layout." alt="" coords="732,37,879,63"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="684,62,718,58,718,63,685,67"/>
+<area shape="rect" id="Node000006" href="$pus__tm_8c.html#a48a83676b00d92beebf1a62cd17dde0d" title=" " alt="" coords="750,87,861,112"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="685,83,736,89,736,94,684,88"/>
+</map>

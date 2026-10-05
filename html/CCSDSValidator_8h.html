@@ -86,6 +86,7 @@ $(function() {
 <code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 <code>#include &quot;<a class="el" href="CCSDSPacket_8h_source.html">CCSDSPacket.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="validation_8h_source.html">ccsdspack/c/validation.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for CCSDSValidator.h:</div>
 <div class="dyncontent">
@@ -118,38 +119,38 @@ Namespaces</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ab894d2792dde9a0a4f31eee0a0e267ff" id="r_ab894d2792dde9a0a4f31eee0a0e267ff"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ff">ccsds::ValidationCode</a> : std::uint8_t { <br />
-&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7">ccsds::PrimaryHeader</a> = 0
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa4d78ca9232535cb7ed1f956ec99d77a">ccsds::PacketVersion</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac385cdbad43d4b229c07cbabb1916c09">ccsds::PacketDataLength</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa079571cd6430504a38327ef13d433f4c">ccsds::Crc16</a>
+&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa2dda1b0ec870ff5ed3b17151e388b0a7">ccsds::PrimaryHeader</a> = CCSDS_VALIDATION_PRIMARY_HEADER
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa4d78ca9232535cb7ed1f956ec99d77a">ccsds::PacketVersion</a> = CCSDS_VALIDATION_PACKET_VERSION
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac385cdbad43d4b229c07cbabb1916c09">ccsds::PacketDataLength</a> = CCSDS_VALIDATION_PACKET_DATA_LENGTH
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa079571cd6430504a38327ef13d433f4c">ccsds::Crc16</a> = CCSDS_VALIDATION_CRC16
 , <br />
-&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaadab2643565dd641a94f5ac266cb4b22">ccsds::SecondaryHeaderPresence</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac6f36ff435eb21ed760f703edce14b45">ccsds::SecondaryHeaderDirection</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffadefbac3038cd2bdabdec875af4891f77">ccsds::SequenceFlags</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d60f489b1e8c0eb4c0dc3a76d721220">ccsds::SequenceCount</a>
+&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaadab2643565dd641a94f5ac266cb4b22">ccsds::SecondaryHeaderPresence</a> = CCSDS_VALIDATION_SECONDARY_HEADER_PRESENCE
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffac6f36ff435eb21ed760f703edce14b45">ccsds::SecondaryHeaderDirection</a> = CCSDS_VALIDATION_SECONDARY_HEADER_DIRECTION
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffadefbac3038cd2bdabdec875af4891f77">ccsds::SequenceFlags</a> = CCSDS_VALIDATION_SEQUENCE_FLAGS
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d60f489b1e8c0eb4c0dc3a76d721220">ccsds::SequenceCount</a> = CCSDS_VALIDATION_SEQUENCE_COUNT
 , <br />
-&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffae1e907d15ca32e9eedc4be054588d4b6">ccsds::PacketIdentifier</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa180dc393711aa58e00e33d39b07ccf3b">ccsds::SegmentationClass</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaed437cd6968562da2bed5da28cd0aaa7">ccsds::TemplatePacketErrorControl</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffab4003bbdcdca24ecb421b9fcb8f7c01e">ccsds::TemplateSecondaryHeader</a>
+&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffae1e907d15ca32e9eedc4be054588d4b6">ccsds::PacketIdentifier</a> = CCSDS_VALIDATION_PACKET_IDENTIFIER
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa180dc393711aa58e00e33d39b07ccf3b">ccsds::SegmentationClass</a> = CCSDS_VALIDATION_SEGMENTATION_CLASS
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaed437cd6968562da2bed5da28cd0aaa7">ccsds::TemplatePacketErrorControl</a> = CCSDS_VALIDATION_TEMPLATE_PACKET_ERROR_CONTROL
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffab4003bbdcdca24ecb421b9fcb8f7c01e">ccsds::TemplateSecondaryHeader</a> = CCSDS_VALIDATION_TEMPLATE_SECONDARY_HEADER
 , <br />
-&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7031656fa4374d77069c3c621fe93d72">ccsds::PusHeader</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d558f949da9e657af1bf7757f8fc410">ccsds::PusRevision</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324e4dca3302d028e9d6d8ff1d062c7f">ccsds::PusDirection</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa5f891647e141e12f2ae92825004a0fd">ccsds::PusPacketType</a>
+&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7031656fa4374d77069c3c621fe93d72">ccsds::PusHeader</a> = CCSDS_VALIDATION_PUS_HEADER
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa7d558f949da9e657af1bf7757f8fc410">ccsds::PusRevision</a> = CCSDS_VALIDATION_PUS_REVISION
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324e4dca3302d028e9d6d8ff1d062c7f">ccsds::PusDirection</a> = CCSDS_VALIDATION_PUS_DIRECTION
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffaa5f891647e141e12f2ae92825004a0fd">ccsds::PusPacketType</a> = CCSDS_VALIDATION_PUS_PACKET_TYPE
 , <br />
-&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa4cd766b7abcdc81726aaafb35abb2d4c">ccsds::PusTailoring</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa1485818dc792b32ea9b4247871622abe">ccsds::PusSecondaryHeaderSize</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324f579834ca0e7a3206487543447963">ccsds::PusReservedBits</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa23875ece2b62c9ee5612e3a8abc7efeb">ccsds::PusSpareFields</a>
+&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa4cd766b7abcdc81726aaafb35abb2d4c">ccsds::PusTailoring</a> = CCSDS_VALIDATION_PUS_TAILORING
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa1485818dc792b32ea9b4247871622abe">ccsds::PusSecondaryHeaderSize</a> = CCSDS_VALIDATION_PUS_SECONDARY_HEADER_SIZE
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa324f579834ca0e7a3206487543447963">ccsds::PusReservedBits</a> = CCSDS_VALIDATION_PUS_RESERVED_BITS
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa23875ece2b62c9ee5612e3a8abc7efeb">ccsds::PusSpareFields</a> = CCSDS_VALIDATION_PUS_SPARE_FIELDS
 , <br />
-&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffade31ea417e055ee29f01c571219eaa27">ccsds::PusAcknowledgement</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa6537e703f35c360349fd4a14d69ab8b8">ccsds::PusSourceId</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa61c2626fbe86a757408399b0933ba6bb">ccsds::PusDestinationId</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa9599fbfa13291c44f84d975457f1c917">ccsds::PusPacketSubcounter</a>
+&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffade31ea417e055ee29f01c571219eaa27">ccsds::PusAcknowledgement</a> = CCSDS_VALIDATION_PUS_ACKNOWLEDGEMENT
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa6537e703f35c360349fd4a14d69ab8b8">ccsds::PusSourceId</a> = CCSDS_VALIDATION_PUS_SOURCE_ID
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa61c2626fbe86a757408399b0933ba6bb">ccsds::PusDestinationId</a> = CCSDS_VALIDATION_PUS_DESTINATION_ID
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa9599fbfa13291c44f84d975457f1c917">ccsds::PusPacketSubcounter</a> = CCSDS_VALIDATION_PUS_PACKET_SUBCOUNTER
 , <br />
-&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa06af90dd9fa253ef6d1d7e019d75f296">ccsds::PusTimeReferenceStatus</a>
-, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa49c10a05a54317434a6ac08a235d11ac">ccsds::PusTimestamp</a>
+&#160;&#160;<a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa06af90dd9fa253ef6d1d7e019d75f296">ccsds::PusTimeReferenceStatus</a> = CCSDS_VALIDATION_PUS_TIME_REFERENCE_STATUS
+, <a class="el" href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ffa49c10a05a54317434a6ac08a235d11ac">ccsds::PusTimestamp</a> = CCSDS_VALIDATION_PUS_TIMESTAMP
 <br />
  }</td></tr>
 <tr class="memdesc:ab894d2792dde9a0a4f31eee0a0e267ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stable validation checks exposed by <a class="el" href="classccsds_1_1Validator.html" title="Validates packet coherence, concrete secondary-header contracts, and one sequence stream.">ccsds::Validator</a>.  <a href="namespaceccsds.html#ab894d2792dde9a0a4f31eee0a0e267ff">More...</a><br /></td></tr>

@@ -1,54 +1,80 @@
 <map id="src/PusSecondaryHeaders.cpp" name="src/PusSecondaryHeaders.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="614,5,831,31"/>
-<area shape="rect" id="Node000002" href="$PusSecondaryHeaders_8h.html" title="Defines standards&#45;oriented PUS&#45;A and PUS&#45;C TC/TM secondary headers." alt="" coords="561,79,740,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="713,33,674,71,670,67,709,29"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="765,79,825,104"/>
-<area shape="poly" id="edge35_Node000001_Node000017" title=" " alt="" coords="736,29,775,67,771,71,733,33"/>
-<area shape="rect" id="Node000003" href="$CCSDSSecondaryHeaderAbstract_8h.html" title="Defines the extension interface and raw&#45;buffer implementation for packet secondary headers." alt="" coords="527,152,774,177"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="653,104,653,138,648,138,648,104"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="855,372,921,397"/>
-<area shape="poly" id="edge32_Node000002_Node000005" title=" " alt="" coords="727,101,825,120,934,146,985,163,1030,181,1065,201,1087,224,1101,250,1107,275,1102,300,1087,326,1073,342,1055,355,1016,373,974,383,935,387,935,381,973,378,1014,368,1052,350,1069,338,1083,322,1097,298,1101,275,1096,252,1083,227,1062,206,1027,186,983,168,933,152,824,125,726,107"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="29,372,88,397"/>
-<area shape="poly" id="edge33_Node000002_Node000007" title=" " alt="" coords="561,101,420,114,258,138,181,154,113,175,58,199,38,212,23,227,10,250,9,271,24,323,32,342,43,360,38,362,27,345,19,325,4,272,5,248,19,224,35,208,56,194,111,170,179,149,257,132,420,109,561,95"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="510,372,573,397"/>
-<area shape="poly" id="edge34_Node000002_Node000009" title=" " alt="" coords="590,106,550,124,532,137,518,153,506,179,500,206,499,234,502,263,515,317,532,358,527,360,510,318,496,264,493,235,495,205,501,177,514,151,529,133,547,119,588,102"/>
-<area shape="rect" id="Node000014" href="$PusTailoring_8h.html" title=" " alt="" coords="797,152,909,177"/>
-<area shape="poly" id="edge22_Node000002_Node000014" title=" " alt="" coords="684,102,809,145,807,150,682,107"/>
-<area shape="rect" id="Node000004" href="$CCSDSPacketTypes_8h.html" title=" " alt="" coords="755,225,912,251"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="681,175,791,218,790,223,679,180"/>
-<area shape="poly" id="edge12_Node000003_Node000005" title=" " alt="" coords="665,176,744,249,867,361,863,365,741,253,661,179"/>
-<area shape="rect" id="Node000006" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="579,299,698,324"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="652,178,643,285,638,285,647,178"/>
-<area shape="poly" id="edge13_Node000003_Node000007" title=" " alt="" coords="527,172,384,178,232,189,106,205,64,216,42,227,32,241,27,257,27,293,36,329,48,359,43,361,31,330,21,294,22,257,27,239,38,223,62,211,105,200,232,184,384,173,527,167"/>
-<area shape="poly" id="edge11_Node000003_Node000009" title=" " alt="" coords="644,179,609,230,570,300,550,359,545,357,565,298,605,227,640,176"/>
-<area shape="rect" id="Node000011" href="$CCSDSConfig_8h.html" title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files." alt="" coords="325,225,443,251"/>
-<area shape="poly" id="edge14_Node000003_Node000011" title=" " alt="" coords="608,180,441,224,440,219,607,175"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="840,250,881,358,876,360,835,252"/>
-<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="679,321,842,368,840,373,678,327"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="580,323,102,381,101,375,579,317"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="346,372,414,397"/>
-<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="598,327,428,373,426,368,596,321"/>
-<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="624,326,570,366,567,361,621,322"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="599,372,679,397"/>
-<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="641,324,641,358,636,358,636,324"/>
-<area shape="poly" id="edge16_Node000011_Node000005" title=" " alt="" coords="444,243,568,261,640,276,711,296,854,363,851,368,710,301,639,282,567,267,443,248"/>
-<area shape="poly" id="edge20_Node000011_Node000006" title=" " alt="" coords="426,248,585,292,584,298,424,253"/>
-<area shape="poly" id="edge15_Node000011_Node000007" title=" " alt="" coords="325,246,233,263,183,279,137,301,102,330,76,362,72,358,98,326,134,296,182,274,231,258,324,241"/>
-<area shape="poly" id="edge18_Node000011_Node000008" title=" " alt="" coords="372,253,353,273,338,300,337,316,341,331,360,360,355,363,336,334,331,316,333,298,349,270,368,249"/>
-<area shape="poly" id="edge19_Node000011_Node000009" title=" " alt="" coords="397,249,474,322,519,361,515,365,470,326,394,253"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="347,299,402,324"/>
-<area shape="poly" id="edge17_Node000011_Node000012" title=" " alt="" coords="385,251,380,286,375,285,380,251"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="147,299,271,324"/>
-<area shape="poly" id="edge21_Node000011_Node000013" title=" " alt="" coords="357,253,251,296,249,291,355,248"/>
-<area shape="poly" id="edge23_Node000014_Node000004" title=" " alt="" coords="852,178,843,213,838,211,847,177"/>
-<area shape="poly" id="edge30_Node000014_Node000005" title=" " alt="" coords="910,172,999,192,1038,206,1062,224,1077,250,1082,274,1077,299,1062,326,1036,351,1003,368,968,379,935,384,935,379,967,373,1001,363,1033,347,1058,322,1072,298,1077,274,1072,251,1058,227,1035,211,998,197,909,177"/>
-<area shape="poly" id="edge24_Node000014_Node000006" title=" " alt="" coords="830,180,789,201,744,228,700,260,663,291,660,287,697,256,741,223,786,196,827,175"/>
-<area shape="poly" id="edge31_Node000014_Node000007" title=" " alt="" coords="797,178,787,180,653,193,549,198,445,205,314,228,199,248,152,265,102,301,80,329,67,360,62,358,76,326,98,297,150,260,197,243,313,223,445,200,549,192,653,188,786,175,797,173"/>
-<area shape="rect" id="Node000015" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="937,225,1047,251"/>
-<area shape="poly" id="edge25_Node000014_Node000015" title=" " alt="" coords="877,175,958,217,956,221,874,180"/>
-<area shape="poly" id="edge28_Node000015_Node000005" title=" " alt="" coords="986,253,906,362,902,359,981,250"/>
-<area shape="poly" id="edge26_Node000015_Node000006" title=" " alt="" coords="937,253,709,299,708,293,936,248"/>
-<area shape="poly" id="edge29_Node000015_Node000009" title=" " alt="" coords="957,253,586,372,585,367,955,248"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="977,299,1047,324"/>
-<area shape="poly" id="edge27_Node000015_Node000016" title=" " alt="" coords="998,250,1008,285,1002,286,993,252"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1224,5,1441,31"/>
+<area shape="rect" id="Node000002" href="$PusSecondaryHeaders_8h.html" title="Defines standards&#45;oriented PUS&#45;A and PUS&#45;C TC/TM secondary headers." alt="" coords="602,79,781,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1230,33,795,81,794,76,1229,28"/>
+<area shape="rect" id="Node000017" href="$pus__tc_8h.html" title=" " alt="" coords="1228,225,1387,251"/>
+<area shape="poly" id="edge52_Node000001_Node000017" title=" " alt="" coords="1334,31,1313,211,1308,211,1329,31"/>
+<area shape="rect" id="Node000022" href="$pus__tm_8h.html" title=" " alt="" coords="1411,225,1575,251"/>
+<area shape="poly" id="edge53_Node000001_Node000022" title=" " alt="" coords="1342,30,1387,102,1434,163,1476,213,1472,217,1430,167,1383,106,1337,33"/>
+<area shape="rect" id="Node000024" title=" " alt="" coords="1396,79,1456,104"/>
+<area shape="poly" id="edge54_Node000001_Node000024" title=" " alt="" coords="1349,29,1402,68,1398,72,1346,33"/>
+<area shape="rect" id="Node000003" href="$CCSDSSecondaryHeaderAbstract_8h.html" title="Defines the extension interface and raw&#45;buffer implementation for packet secondary headers." alt="" coords="488,152,735,177"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="680,106,636,145,633,141,677,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="831,372,898,397"/>
+<area shape="poly" id="edge49_Node000002_Node000005" title=" " alt="" coords="706,102,728,124,750,150,785,206,815,264,858,358,853,360,811,266,780,209,745,154,724,127,702,106"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="7,372,66,397"/>
+<area shape="poly" id="edge50_Node000002_Node000007" title=" " alt="" coords="606,107,495,126,375,155,315,169,261,178,167,192,126,204,87,224,50,255,14,300,9,314,10,329,22,359,17,361,4,330,3,313,9,297,46,251,84,220,124,199,166,187,260,173,314,164,374,149,494,121,605,101"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="208,372,271,397"/>
+<area shape="poly" id="edge51_Node000002_Node000009" title=" " alt="" coords="615,107,542,122,458,146,372,181,331,203,293,227,255,258,243,275,233,299,229,330,234,359,229,360,224,330,228,298,239,273,251,255,290,223,329,198,370,176,457,141,541,117,614,101"/>
+<area shape="rect" id="Node000014" href="$PusTailoring_8h.html" title=" " alt="" coords="939,152,1051,177"/>
+<area shape="poly" id="edge22_Node000002_Node000014" title=" " alt="" coords="741,101,934,146,932,151,740,107"/>
+<area shape="rect" id="Node000004" href="$CCSDSPacketTypes_8h.html" title=" " alt="" coords="995,225,1153,251"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="686,175,986,221,986,226,685,180"/>
+<area shape="poly" id="edge12_Node000003_Node000005" title=" " alt="" coords="626,175,842,360,839,364,623,179"/>
+<area shape="rect" id="Node000006" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="556,299,675,324"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="614,178,617,285,612,285,609,178"/>
+<area shape="poly" id="edge13_Node000003_Node000007" title=" " alt="" coords="488,170,374,175,253,185,144,202,102,214,70,228,50,242,37,257,21,299,19,330,28,359,22,360,14,331,16,298,33,254,46,238,68,223,100,209,143,197,252,180,374,170,488,165"/>
+<area shape="poly" id="edge11_Node000003_Node000009" title=" " alt="" coords="488,177,423,191,356,215,325,231,295,250,269,273,247,300,240,314,237,328,237,358,232,358,232,328,235,312,243,297,265,269,292,246,322,226,354,210,421,186,487,172"/>
+<area shape="rect" id="Node000011" href="$CCSDSConfig_8h.html" title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files." alt="" coords="415,225,533,251"/>
+<area shape="poly" id="edge14_Node000003_Node000011" title=" " alt="" coords="591,180,510,221,507,217,588,175"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1070,252,1045,288,1008,326,960,354,912,373,910,368,958,349,1005,322,1041,285,1065,249"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="656,321,819,368,817,373,655,327"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="556,323,80,381,80,375,555,317"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="484,372,552,397"/>
+<area shape="poly" id="edge8_Node000006_Node000008" title=" " alt="" coords="601,326,547,366,544,361,598,322"/>
+<area shape="poly" id="edge9_Node000006_Node000009" title=" " alt="" coords="556,326,285,377,284,372,555,321"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="577,372,657,397"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="618,324,619,358,614,359,613,324"/>
+<area shape="poly" id="edge16_Node000011_Node000005" title=" " alt="" coords="525,248,603,268,688,296,767,330,833,363,831,368,765,335,687,301,601,274,524,253"/>
+<area shape="poly" id="edge20_Node000011_Node000006" title=" " alt="" coords="498,248,582,290,579,295,496,253"/>
+<area shape="poly" id="edge15_Node000011_Node000007" title=" " alt="" coords="423,253,339,274,246,301,153,336,75,369,73,364,151,331,244,296,338,269,421,248"/>
+<area shape="poly" id="edge18_Node000011_Node000008" title=" " alt="" coords="480,250,495,298,513,358,508,360,490,299,475,251"/>
+<area shape="poly" id="edge19_Node000011_Node000009" title=" " alt="" coords="415,244,378,249,338,260,300,276,267,301,257,313,250,328,243,359,238,358,245,326,252,311,263,297,297,272,336,254,377,244,414,239"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="277,299,332,324"/>
+<area shape="poly" id="edge17_Node000011_Node000012" title=" " alt="" coords="448,253,346,296,344,291,446,248"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="356,299,480,324"/>
+<area shape="poly" id="edge21_Node000011_Node000013" title=" " alt="" coords="467,253,438,289,434,286,463,249"/>
+<area shape="poly" id="edge23_Node000014_Node000004" title=" " alt="" coords="1010,175,1053,214,1050,218,1006,179"/>
+<area shape="poly" id="edge47_Node000014_Node000005" title=" " alt="" coords="1052,170,1099,179,1142,195,1159,205,1170,218,1173,234,1167,252,1144,283,1115,310,1082,331,1046,348,974,370,912,382,911,376,973,365,1044,343,1079,326,1112,305,1140,280,1162,249,1168,234,1165,221,1155,209,1140,199,1097,184,1051,175"/>
+<area shape="poly" id="edge24_Node000014_Node000006" title=" " alt="" coords="966,180,659,296,657,291,964,175"/>
+<area shape="poly" id="edge48_Node000014_Node000007" title=" " alt="" coords="940,170,705,185,555,202,404,228,288,256,178,301,117,334,65,367,63,362,114,329,176,296,287,251,403,223,554,197,704,180,939,165"/>
+<area shape="rect" id="Node000015" href="$CCSDSTime_8h.html" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="860,225,971,251"/>
+<area shape="poly" id="edge25_Node000014_Node000015" title=" " alt="" coords="984,179,940,218,937,214,981,175"/>
+<area shape="poly" id="edge30_Node000014_Node000017" title=" " alt="" coords="1046,175,1244,220,1243,225,1045,180"/>
+<area shape="poly" id="edge38_Node000014_Node000022" title=" " alt="" coords="1052,171,1400,221,1399,226,1051,177"/>
+<area shape="poly" id="edge28_Node000015_Node000005" title=" " alt="" coords="939,249,961,263,981,281,992,302,993,314,988,325,973,343,954,358,913,376,911,371,952,353,970,340,984,323,988,313,987,303,976,284,957,267,936,253"/>
+<area shape="poly" id="edge26_Node000015_Node000006" title=" " alt="" coords="868,253,678,298,676,293,867,248"/>
+<area shape="poly" id="edge29_Node000015_Node000009" title=" " alt="" coords="891,253,803,290,688,327,575,350,463,366,285,383,284,378,462,361,574,345,687,321,801,285,889,248"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="903,299,973,324"/>
+<area shape="poly" id="edge27_Node000015_Node000016" title=" " alt="" coords="922,250,933,285,928,286,917,252"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="1367,372,1442,397"/>
+<area shape="poly" id="edge31_Node000017_Node000018" title=" " alt="" coords="1318,250,1351,297,1392,359,1388,362,1347,300,1314,253"/>
+<area shape="rect" id="Node000019" title=" " alt="" coords="1451,445,1521,471"/>
+<area shape="poly" id="edge32_Node000017_Node000019" title=" " alt="" coords="1298,253,1274,285,1268,304,1270,323,1281,348,1293,365,1330,395,1384,424,1438,443,1437,448,1382,429,1327,400,1289,368,1276,350,1265,325,1263,303,1270,282,1293,250"/>
+<area shape="rect" id="Node000020" href="$error_8h.html" title=" " alt="" coords="1523,372,1587,397"/>
+<area shape="poly" id="edge33_Node000017_Node000020" title=" " alt="" coords="1380,248,1469,268,1507,281,1532,297,1543,310,1550,326,1557,358,1552,359,1545,328,1538,313,1528,301,1504,286,1467,273,1379,253"/>
+<area shape="rect" id="Node000021" href="$pus_8h.html" title=" " alt="" coords="1279,299,1336,324"/>
+<area shape="poly" id="edge35_Node000017_Node000021" title=" " alt="" coords="1310,251,1310,285,1305,285,1305,251"/>
+<area shape="poly" id="edge34_Node000020_Node000019" title=" " alt="" coords="1546,400,1509,437,1505,434,1542,396"/>
+<area shape="poly" id="edge36_Node000021_Node000018" title=" " alt="" coords="1325,322,1379,361,1376,366,1322,326"/>
+<area shape="poly" id="edge37_Node000021_Node000019" title=" " alt="" coords="1314,323,1330,358,1342,378,1357,395,1397,422,1439,440,1437,445,1394,427,1354,399,1338,381,1325,361,1309,325"/>
+<area shape="poly" id="edge39_Node000022_Node000018" title=" " alt="" coords="1486,252,1452,300,1419,361,1414,358,1448,297,1482,249"/>
+<area shape="poly" id="edge40_Node000022_Node000019" title=" " alt="" coords="1530,248,1566,267,1583,281,1596,297,1610,324,1617,348,1614,372,1602,399,1589,415,1572,428,1536,447,1533,442,1569,424,1585,411,1597,396,1609,371,1611,348,1605,325,1592,300,1579,284,1563,272,1528,253"/>
+<area shape="poly" id="edge45_Node000022_Node000020" title=" " alt="" coords="1521,249,1551,268,1566,281,1577,298,1581,314,1581,330,1571,361,1566,359,1576,329,1576,314,1572,300,1562,285,1548,272,1518,253"/>
+<area shape="poly" id="edge46_Node000022_Node000021" title=" " alt="" coords="1464,253,1350,297,1348,292,1462,248"/>
+<area shape="rect" id="Node000023" href="$cuc_8h.html" title=" " alt="" coords="1462,299,1518,324"/>
+<area shape="poly" id="edge41_Node000022_Node000023" title=" " alt="" coords="1495,251,1494,285,1488,285,1490,251"/>
+<area shape="poly" id="edge42_Node000023_Node000018" title=" " alt="" coords="1478,326,1431,365,1427,361,1475,322"/>
+<area shape="poly" id="edge43_Node000023_Node000019" title=" " alt="" coords="1492,325,1490,432,1484,432,1487,324"/>
+<area shape="poly" id="edge44_Node000023_Node000020" title=" " alt="" coords="1503,323,1538,360,1534,364,1499,326"/>
 </map>

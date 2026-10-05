@@ -1,13 +1,21 @@
 <map id="ccsds::Manager::setApplicationData" name="ccsds::Manager::setApplicationData">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,95,260,120"/>
-<area shape="rect" id="Node000002" href="$classccsds_1_1Manager.html#a24d82384ac61254e99a337864795436c" title=" " alt="" coords="308,95,563,120"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,105,294,105,294,110,260,110"/>
-<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#a5012f3f2126c6111c5276cd751fa94f8" title=" " alt="" coords="611,5,851,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="466,92,532,67,610,41,648,31,649,36,611,46,533,72,468,97"/>
-<area shape="rect" id="Node000004" href="$classccsds_1_1Packet.html#a4872f8dd3405ad419834709e9b4687dc" title=" " alt="" coords="631,55,830,95"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="552,92,617,85,618,90,553,97"/>
-<area shape="rect" id="Node000005" href="$classccsds_1_1Packet.html#a35201a4fd4c119845d19816743623836" title=" " alt="" coords="631,119,830,159"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="553,117,618,124,617,130,552,123"/>
-<area shape="rect" id="Node000006" href="$classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222" title=" " alt="" coords="639,183,822,223"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="470,118,612,169,639,177,637,182,610,174,468,123"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,155,260,181"/>
+<area shape="rect" id="Node000002" href="$classccsds_1_1Manager.html#a24d82384ac61254e99a337864795436c" title=" " alt="" coords="308,155,563,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,165,294,165,294,171,260,171"/>
+<area shape="rect" id="Node000003" href="$segmentation_8c.html#a47d1791b53a529719ec3299569c4fe61" title="Returns the number of packets required to carry total_size bytes." alt="" coords="903,5,1058,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="447,153,512,95,558,63,610,39,681,20,756,12,827,10,890,12,890,18,827,15,756,17,682,26,612,44,561,68,515,99,450,157"/>
+<area shape="rect" id="Node000004" href="$segmentation_8c.html#a3071d60efbf9829e8f0212d9c26e88ca" title="Computes one packet&#39;s payload slice, flags, and sequence count." alt="" coords="635,54,826,79"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="465,153,531,125,610,96,663,80,665,85,612,101,533,130,467,158"/>
+<area shape="rect" id="Node000005" href="$segmentation_8c.html#a561be163086f75f8fcdfcad3f12972b4" title="Returns the sequence state after emitting packet_count packets." alt="" coords="899,79,1063,119"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="527,153,610,141,885,107,885,113,611,147,527,158"/>
+<area shape="rect" id="Node000006" href="$classccsds_1_1Packet.html#a5012f3f2126c6111c5276cd751fa94f8" title=" " alt="" coords="611,155,851,181"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="563,165,597,165,597,171,563,171"/>
+<area shape="rect" id="Node000007" href="$classccsds_1_1Packet.html#a4872f8dd3405ad419834709e9b4687dc" title=" " alt="" coords="631,205,830,245"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="502,178,619,201,617,206,501,183"/>
+<area shape="rect" id="Node000008" href="$classccsds_1_1Packet.html#a35201a4fd4c119845d19816743623836" title=" " alt="" coords="631,269,830,309"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="459,178,526,215,612,255,634,263,632,268,610,260,524,220,457,183"/>
+<area shape="rect" id="Node000009" href="$classccsds_1_1Packet.html#a217dbaa5f2aae5ece38b52192fc00222" title=" " alt="" coords="639,333,822,373"/>
+<area shape="poly" id="edge10_Node000002_Node000009" title=" " alt="" coords="449,179,514,246,560,285,612,319,627,326,625,331,609,324,557,290,510,250,446,183"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="807,51,889,38,890,43,808,57"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="827,76,885,84,884,89,826,82"/>
 </map>

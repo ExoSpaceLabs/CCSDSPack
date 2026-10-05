@@ -1,0 +1,5 @@
+<map id="ccsds_store_be_uint" name="ccsds_store_be_uint">
+<area shape="rect" id="Node000001" title="Stores 0..8 octets in CCSDS&#45;standard big&#45;endian order." alt="" coords="5,5,159,31"/>
+<area shape="rect" id="Node000002" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="207,5,337,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,15,193,15,193,21,159,21"/>
+</map>

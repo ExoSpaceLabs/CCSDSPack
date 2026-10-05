@@ -1,0 +1,5 @@
+<map id="ccsds_load_be_uint" name="ccsds_load_be_uint">
+<area shape="rect" id="Node000001" title="Loads 0..8 CCSDS&#45;standard big&#45;endian octets." alt="" coords="5,5,153,31"/>
+<area shape="rect" id="Node000002" href="$bytes_8h.html#a3e09d1360c5624e2e27f266f37fdf84a" title="Loads 0..8 octets into a uint64_t using explicit wire byte order." alt="" coords="201,5,327,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,15,187,15,187,21,154,21"/>
+</map>

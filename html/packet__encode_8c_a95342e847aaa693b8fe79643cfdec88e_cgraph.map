@@ -1,0 +1,19 @@
+<map id="ccsds_packet_encode_parts" name="ccsds_packet_encode_parts">
+<area shape="rect" id="Node000001" title="Encodes one finalized packet from two logical data&#45;field spans." alt="" coords="5,105,168,145"/>
+<area shape="rect" id="Node000002" href="$primary__header_8c.html#a77b3e5edb03abb942ac1b9946e4fcd47" title="Encodes a validated primary header into exactly six caller&#45;owned bytes." alt="" coords="226,48,394,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,103,218,89,219,94,166,108"/>
+<area shape="rect" id="Node000003" href="$primary__header_8c.html#a41361d838dac671f47eef263a1132735" title="Validates the logical field widths without imposing version&#45;0 policy." alt="" coords="452,5,620,45"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="107,103,154,66,183,47,215,33,271,19,330,12,387,10,439,12,438,17,387,16,330,18,272,25,217,39,186,52,157,70,110,107"/>
+<area shape="rect" id="Node000004" href="$bytes_8h.html#a1a5c075a1e4cd3ffe5782eec75da0e73" title="Stores a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="467,85,605,110"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="168,118,453,100,454,105,169,123"/>
+<area shape="rect" id="Node000007" href="$packet__encode_8c.html#aae3200d2f1d0b9575ef4da38423af8af" title=" " alt="" coords="216,163,404,189"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="169,141,241,158,240,163,168,146"/>
+<area shape="rect" id="Node000008" href="$packet__encode_8c.html#a33966e87a8b5fb5eccbdd5e9439a26b8" title=" " alt="" coords="229,213,391,253"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="119,143,165,171,217,199,233,206,231,211,215,204,162,176,117,148"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="394,49,438,41,439,46,395,55"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="395,76,454,84,453,89,394,82"/>
+<area shape="rect" id="Node000005" href="$bytes_8h.html#a22386b02332619598f86ea6feb7d901d" title="Stores a 16&#45;bit integer using explicit wire byte order." alt="" coords="668,85,797,110"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="605,95,654,95,654,100,605,100"/>
+<area shape="rect" id="Node000006" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="845,85,976,110"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="798,95,832,95,832,100,798,100"/>
+</map>

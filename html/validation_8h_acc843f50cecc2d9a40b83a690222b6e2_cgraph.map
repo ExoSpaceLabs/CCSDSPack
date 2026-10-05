@@ -1,0 +1,9 @@
+<map id="ccsds_validate_template_coherence" name="ccsds_validate_template_coherence">
+<area shape="rect" id="Node000001" title="Populates generic template&#45;comparison checks into a fixed C report." alt="" coords="5,35,189,75"/>
+<area shape="rect" id="Node000002" href="$primary__header_8c.html#a41361d838dac671f47eef263a1132735" title="Validates the logical field widths without imposing version&#45;0 policy." alt="" coords="237,5,405,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,40,223,35,224,41,190,45"/>
+<area shape="rect" id="Node000003" href="$validation_8c.html#a2557315793af305b182ee3fbaa5248f7" title=" " alt="" coords="278,70,365,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="190,64,265,73,264,78,190,69"/>
+<area shape="rect" id="Node000004" href="$validation_8c.html#a90614f56b0674087138f0f18618dfa0a" title=" " alt="" coords="453,70,656,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="365,80,439,80,439,85,365,85"/>
+</map>

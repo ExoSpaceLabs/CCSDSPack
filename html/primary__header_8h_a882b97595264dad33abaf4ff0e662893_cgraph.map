@@ -1,0 +1,11 @@
+<map id="ccsds_primary_header_encode" name="ccsds_primary_header_encode">
+<area shape="rect" id="Node000001" title="Encodes a validated primary header into exactly six caller&#45;owned bytes." alt="" coords="5,35,173,75"/>
+<area shape="rect" id="Node000002" href="$primary__header_8c.html#a41361d838dac671f47eef263a1132735" title="Validates the logical field widths without imposing version&#45;0 policy." alt="" coords="221,5,389,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,41,208,36,208,41,174,46"/>
+<area shape="rect" id="Node000003" href="$bytes_8h.html#a1a5c075a1e4cd3ffe5782eec75da0e73" title="Stores a CCSDS&#45;standard big&#45;endian 16&#45;bit value." alt="" coords="237,70,374,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="174,63,224,69,223,75,173,68"/>
+<area shape="rect" id="Node000004" href="$bytes_8h.html#a22386b02332619598f86ea6feb7d901d" title="Stores a 16&#45;bit integer using explicit wire byte order." alt="" coords="437,70,567,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="375,80,424,80,424,85,375,85"/>
+<area shape="rect" id="Node000005" href="$bytes_8h.html#a560ca32ac5d7da45415c94468a6125c6" title="Stores the low&#45;order 0..8 octets using explicit wire byte order." alt="" coords="615,70,745,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="567,80,601,80,601,85,567,85"/>
+</map>

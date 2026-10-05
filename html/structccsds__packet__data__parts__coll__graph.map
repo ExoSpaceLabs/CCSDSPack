@@ -1,0 +1,5 @@
+<map id="ccsds_packet_data_parts" name="ccsds_packet_data_parts">
+<area shape="rect" id="Node000001" title="Two non&#45;owning packet&#45;data&#45;field spans for scatter/gather encoding." alt="" coords="5,108,189,133"/>
+<area shape="rect" id="Node000002" href="$structccsds__buffer__view.html" title="Non&#45;owning immutable byte view." alt="" coords="27,5,168,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,45,100,108,95,108,95,45"/>
+</map>

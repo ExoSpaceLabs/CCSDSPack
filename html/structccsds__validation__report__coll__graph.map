@@ -1,0 +1,5 @@
+<map id="ccsds_validation_report" name="ccsds_validation_report">
+<area shape="rect" id="Node000001" title="Fixed&#45;capacity, allocation&#45;free validation report." alt="" coords="5,93,181,119"/>
+<area shape="rect" id="Node000002" href="$structccsds__validation__check.html" title=" " alt="" coords="6,5,181,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,45,96,93,91,93,91,45"/>
+</map>

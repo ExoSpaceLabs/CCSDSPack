@@ -1,0 +1,30 @@
+<map id="ccsds_pus_a_tc_validate_tailoring" name="ccsds_pus_a_tc_validate_tailoring">
+<area shape="rect" id="Node000001" title="Validates PUS&#45;A TC tailoring." alt="" coords="728,81,911,121"/>
+<area shape="rect" id="Node000002" href="$pus__tc_8c.html#aec78188767ef95052642233ca9719428" title="Decodes one complete PUS&#45;A TC secondary header." alt="" coords="227,13,403,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="760,79,679,53,607,41,534,33,403,27,403,22,535,28,608,36,681,48,761,73"/>
+<area shape="rect" id="Node000004" href="$pus__tc_8c.html#a76c0bb64ca203f0c554ad05713a6ca48" title="Encodes one PUS&#45;A TC secondary header into caller&#45;owned storage." alt="" coords="227,114,403,139"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="714,109,403,125,403,120,714,104"/>
+<area shape="rect" id="Node000006" href="$pus__tc_8c.html#ab8a04561fb01af52702618c3df287ad5" title="Returns the exact encoded size for valid PUS&#45;A TC tailoring, otherwise zero." alt="" coords="463,63,680,89"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="714,93,680,90,681,84,714,88"/>
+<area shape="rect" id="Node000007" href="$namespaceccsds_1_1pus.html#a21e8f29c664bb4d548a0aaaf6ffc1233" title=" " alt="" coords="469,299,674,325"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="786,133,590,301,586,297,782,128"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1pus_1_1rev__a_1_1TcHeader.html#a42da77c713a706019360ecb6828ef900" title=" " alt="" coords="5,5,167,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="213,28,167,28,167,23,213,23"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1pus_1_1rev__a_1_1TcHeader.html#ae8aeb92af201d9458357dbd4d1140ef6" title=" " alt="" coords="13,88,159,128"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="213,121,159,117,159,111,213,116"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="492,63,379,41,380,35,493,58"/>
+<area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="493,94,380,117,379,111,492,89"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="449,87,159,106,159,101,448,81"/>
+<area shape="rect" id="Node000008" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#ab06eaa100a55d74ac92bd87548138d49" title=" " alt="" coords="230,356,399,396"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="507,331,396,359,395,353,505,326"/>
+<area shape="rect" id="Node000009" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#abe3d324cbfda334a6f35ede79c934898" title=" " alt="" coords="230,420,399,460"/>
+<area shape="poly" id="edge11_Node000007_Node000009" title=" " alt="" coords="543,335,486,372,416,410,386,422,384,417,414,406,483,368,540,330"/>
+<area shape="rect" id="Node000010" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#ab368f9b460336dace25defa1239871d4" title=" " alt="" coords="215,484,415,524"/>
+<area shape="poly" id="edge12_Node000007_Node000010" title=" " alt="" coords="555,338,498,405,459,442,416,474,393,486,390,481,413,470,456,438,494,401,551,334"/>
+<area shape="rect" id="Node000011" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#a61eab7c956c0271621b181d418ae9318" title=" " alt="" coords="215,164,415,204"/>
+<area shape="poly" id="edge13_Node000007_Node000011" title=" " alt="" coords="540,294,483,256,414,218,384,207,386,202,416,214,486,252,543,289"/>
+<area shape="rect" id="Node000012" href="$classccsds_1_1pus_1_1rev__a_1_1TmHeader.html#a6db8e59ecc12363938b0bb01663e6a54" title=" " alt="" coords="238,228,391,268"/>
+<area shape="poly" id="edge14_Node000007_Node000012" title=" " alt="" coords="505,298,391,270,392,265,507,293"/>
+<area shape="rect" id="Node000013" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#aa74b7344f16e81c4ca97e32b77a067f7" title=" " alt="" coords="238,292,391,332"/>
+<area shape="poly" id="edge15_Node000007_Node000013" title=" " alt="" coords="455,315,391,315,391,309,455,309"/>
+</map>
