@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the automated parser-robustness evidence used by the v2.0.0 release. It complements semantic malformed-vector tests and structured `ccsds::Validator` checks; fuzzing is not used as a substitute for protocol conformance vectors.
+This document defines the automated parser-robustness evidence used by the v2.1.0 release. It complements semantic malformed-vector tests and structured `ccsds::Validator` checks; fuzzing is not used as a substitute for protocol conformance vectors.
 
 ## Sanitizer gates
 
@@ -32,6 +32,6 @@ Successful bounded Packet parses must never report more consumed bytes than were
 
 ## Evidence boundary
 
-The v2.0.0 Packet and PUS object model remains vector-backed and is not claimed to be globally heap-free or zero-copy. The RSS bound is a robustness guard against pathological behavior in the bounded smoke corpus, not a proof that parsing performs no allocation.
+The C++ Packet and PUS ownership layer remains vector-backed and is not claimed to be globally heap-free or zero-copy. The C11 core uses caller-owned buffers/views where documented; those local no-allocation/zero-copy guarantees do not extend automatically to the complete C++ object model. The RSS bound is a robustness guard against pathological behavior in the bounded smoke corpus, not a proof that parsing performs no allocation.
 
 Fuzz smoke coverage is also not an exhaustive proof that no malformed byte string can fail. Release confidence comes from the combination of independent fixed vectors, direct malformed-vector tests, structured Validator checks, ASan/UBSan regression execution, bounded fuzzing, installed-consumer tests, and target validation.
