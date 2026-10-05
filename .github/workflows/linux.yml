@@ -152,7 +152,9 @@ jobs:
 
       - name: Run performance baselines (latest only)
         if: matrix.os == 'ubuntu-latest'
+        shell: bash
         run: |
+          set -o pipefail
           ./build/bin/CCSDSPack_packet_benchmark \
             | tee packet-performance-baseline.csv
           ./build/bin/CCSDSPack_packet_serialize_benchmark v2.1 \
@@ -164,7 +166,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         run: |
           bash test/performance/run_matched_v2_0_vs_v2_1.sh \
-            --candidate "${GITHUB_SHA}" \
+            --candidate "${{ github.event.pull_request.head.sha || github.sha }}" \
             --output-dir "$PWD/build/matched-performance"
 
       - name: Upload performance baselines (latest only)
