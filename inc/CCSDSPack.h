@@ -3,8 +3,9 @@
 
 /**
  * @file CCSDSPack.h
- * @brief Convenience umbrella header for the complete public CCSDSPack API.
+ * @brief Convenience umbrella header for the public C++17 CCSDSPack API.
  *
+ * The standalone C11 API is exposed separately through <ccsdspack/c/ccsdspack.h>.
  * Packet-level error control and direction use generic ccsds types. Standards PUS
  * revision/direction identity comes from the concrete rev_a/rev_c TC/TM header,
  * while optional mission-specific PUS layout choices use the direction-specific
