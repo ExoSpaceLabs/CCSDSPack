@@ -22,7 +22,6 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 
 - [Configuration reference](CONFIG.md): host-side Packet-template configuration schema.
 - [Command-line tools](CLI.md): encoder, decoder, validator, and exit behavior.
-- [Executable overview](EXECUTABLES.md): hosted executable set and build controls.
 - [Packages](PACKAGES.md): native packages and installed CMake consumption.
 - [Cross-build guide](CROSSBUILD.md): aarch64 Linux and bare-metal Cortex-M builds.
 - [Error and Result handling](ERROR.md): exception-free operation errors and structured validation diagnostics.
@@ -36,11 +35,9 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 
 ## Migration and historical references
 
-Upgrade-specific source, configuration, package, CLI, and wire-format guidance is maintained exclusively in [Migrating CCSDSPack v1 to v2](MIGRATION_V1_TO_V2.md).
+Upgrade-specific source, configuration, package, CLI, and wire-format guidance is maintained exclusively in [Migrating CCSDSPack v1 to v2](MIGRATION_V1_TO_V2.md). Repository contribution and release workflow is documented in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 Historical v1.2 behavior and hardware evidence remain available in the `V1_2_*` documents for release archaeology and regression reference; they do not define the v2 API.
-
-`CROSSCOMPILE.md` is a compatibility pointer to the maintained cross-build guide. `PRIV_HELPER.md` contains maintainer workflow notes rather than public API documentation.
 
 ## Diagrams
 
