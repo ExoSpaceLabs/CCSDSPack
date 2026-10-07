@@ -57,9 +57,9 @@ existing independent conformance evidence continues to pass.
 ## Final release gates
 
 - [x] Issue #163 performance characterization complete.
-- [ ] Final release/compliance documentation merged into `develop`.
-- [ ] Approved `develop` promoted to `main`.
-- [ ] Final `main` Linux, Windows, Doxygen, and robustness workflows pass.
+- [x] Final release/compliance documentation merged into `develop`.
+- [x] Approved `develop` promoted to `main`.
+- [x] Final `main` Linux, Windows, Doxygen, and robustness workflows pass.
 - [ ] `v2.1.0` tag created from the approved `main` commit.
 - [ ] Tag-produced GitHub Release assets and package hashes verified.
 - [ ] GHCR `v2.1.0` and `latest` images verified.
