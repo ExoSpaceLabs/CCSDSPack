@@ -2,7 +2,7 @@
 # Copyright 2025-2026 ExoSpaceLabs
 # SPDX-License-Identifier: Apache-2.0
 
-"""Generate independent CCSDS Space Packet golden vectors for the v1.2 tests.
+"""Generate independent CCSDS Space Packet golden vectors for conformance tests.
 
 This script intentionally has no dependency on CCSDSPack. It implements only
 primary-header packing and CRC-16/CCITT-FALSE calculation needed by the fixed
