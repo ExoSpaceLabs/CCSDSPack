@@ -85,7 +85,7 @@ With section garbage collection rooted at the probe entry point:
 - delta: **+3,928 bytes (+10.8%)**;
 - data/bss in the relocatable comparison: **0/0** for both.
 
-The symbol review shows the increase is distributed across the newly retained C packet/PUS/CUC/validation/stream primitives rather than one obvious duplicate implementation. Physical STM32 execution has since passed on the release candidate; the matched compile/link comparison remains the cross-version footprint metric.
+The symbol review shows the increase is distributed across the newly retained C packet/PUS/CUC/validation/stream primitives rather than one obvious duplicate implementation. Physical STM32 execution passed on the qualified v2.1 implementation; the matched compile/link comparison remains the cross-version footprint metric.
 
 ## Standards scope
 
