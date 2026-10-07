@@ -10,23 +10,23 @@ SPDX-License-Identifier: Apache-2.0
 This page records physical-target and native-target release evidence for CCSDSPack v2 releases. Hardware execution complements hosted CI and package/cross-build evidence; it does not extend the documented compliance scope beyond the supported CCSDS Space Packet PDU, PUS, CUC, and mission-tailoring profiles.
 
 
-## v2.1.0 release-candidate validation
+## v2.1.0 validation evidence
 
-v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API, so fresh physical/native execution is required before tagging.
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Fresh physical/native execution was therefore required and completed before tagging.
 
 | Target | v2.1 status | Required marker |
 |---|---|---|
 | Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
 | NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
-Use the exact accepted `develop` commit after the final v2.1 hardening PR is merged. Record that source SHA and the generated package/library hashes here before promotion to `main`.
+The exact validated source commits and generated package/library hashes are recorded below. The final qualified `main` commit is `93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`.
 
 ### Raspberry Pi 5 / arm64 rerun
 
-From a clean native arm64 checkout of the accepted candidate:
+For a future rerun from a clean native arm64 checkout:
 
 ```bash
-git checkout develop
+git checkout main
 git pull --ff-only
 bash test/package_tester/run_aarch64_validation.sh
 ```
@@ -63,7 +63,7 @@ the generated CCSDSPack MCU package with the pinned Device Abstraction Stack
 the ST-LINK VCP UART. It does **not** use STM32CubeIDE, STM32 HAL, the Nucleo
 BSP, generated vendor makefiles, or a CM4 companion project.
 
-Generate the MCU package from the same candidate commit:
+For a future physical rerun, generate the MCU package from the exact source commit being qualified:
 
 ```bash
 ./package.sh \
@@ -93,9 +93,9 @@ The UART transcript also contains candidate/package/DAS/compiler/runtime
 identity, per-section BEGIN/PASS markers, symbolic failure names, and explicit
 HardFault/MemManage/BusFault/UsageFault markers.
 
-Record the exact candidate SHA, MCU package SHA-256, linked ELF SHA-256,
-compiler version, final ELF text/data/bss, complete UART transcript, and
-OpenOCD program/verify log in this page before release promotion. See
+For future releases, record the exact candidate SHA, MCU package SHA-256,
+linked ELF SHA-256, compiler version, final ELF text/data/bss, complete UART
+transcript, and OpenOCD program/verify log before release promotion. See
 `test/package_tester/stm32h7xx/H755_INTEGRATION.md` for the full procedure.
 
 ### v2.1.0 validation evidence
@@ -184,6 +184,16 @@ The OpenOCD 0.11 target script still emits non-fatal STM32H7 DBGMCU
 verification complete successfully and the firmware executes the full
 acceptance suite.
 
+### Final release integration note
+
+The final qualified `main` commit for v2.1.0 is
+`93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`. Comparison from both physical/native
+validation source commits to that final release line shows no changes under
+`src/`, `inc/`, the root `CMakeLists.txt`, or `package.sh`; subsequent changes
+are confined to validation tooling, performance harnesses, CI, and documentation.
+The recorded Pi/H755 executions therefore qualify the same library implementation
+that is being released.
+
 ### Pre-hardware footprint evidence
 
 A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2.0 public hardware probe for both implementations. With section garbage collection, retained text is:
@@ -192,7 +202,7 @@ A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2
 - v2.1 candidate: **40,166 bytes**;
 - delta: **+3,928 bytes (+10.8%)**.
 
-This is compile/link evidence only. The physical STM32 ELF remains authoritative for the release-candidate footprint record.
+This is compile/link evidence only. The physical STM32 execution record above remains authoritative for the v2.1 hardware qualification.
 
 ---
 
@@ -340,6 +350,6 @@ No HardFault, MemManage, BusFault, allocation-failure, or test-failure marker wa
 
 This run satisfies the v2.0.0 physical Cortex-M7 execution gate for the tested NUCLEO-H755ZI-Q board and exact source/package/library identities recorded above.
 
-## Release status
+## Historical v2.0 release status
 
-Fresh native arm64 and physical Cortex-M7 execution gates are complete. Remaining v2.0.0 gates are release/publication control: final evidence/release-note approval, `develop -> main`, final `main` CI, tag creation, and verification of the tag-produced GitHub Release, packages, and GHCR images.
+The v2.0.0 native arm64 and physical Cortex-M7 gates recorded above were subsequently incorporated into the published v2.0.0 release. The original source/package/library identities are retained here as historical evidence; they are not open release gates for v2.1.0.
