@@ -244,8 +244,9 @@ namespace ccsds {
     }
 
     [[nodiscard]] ResultBool update();
-    ResultBool loadFromConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
+    /** @brief Loads hosted packet configuration from a file. Not available in MCU builds. */
+    ResultBool loadFromConfigFile(const std::string &configPath);
     ResultBool loadFromConfig(const ccsds::Config &cfg);
 #endif
 
