@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
 
-**[API Documentation](https://exospacelabs.github.io/CCSDSPack/html/)** · [Documentation index](docs/README.md)
+**[API Documentation](https://exospacelabs.github.io/CCSDSPack/html/)** · [Documentation index](docs/README.md) · [Contributing](CONTRIBUTING.md)
 
 **CCSDSPack** is a layered CCSDS Space Packet library with an authoritative **C11 protocol core** and a compatible **C++17 ownership/convenience API**. The C core provides allocation-free wire primitives, packet views, PUS codecs, CUC time, validation, segmentation/reassembly, and stream framing; the established C++ API remains available for owned `Packet`/`Manager` workflows.
 
