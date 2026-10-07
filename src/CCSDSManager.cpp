@@ -104,13 +104,13 @@ ccsds::ResultBool ccsds::Manager::setPacketTemplate(Packet packet) {
   return true;
 }
 
+#ifndef CCSDS_MCU
 ccsds::ResultBool ccsds::Manager::loadTemplateConfigFile(const std::string &configPath) {
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfigFile(configPath));
   return setPacketTemplate(std::move(templatePacket));
 }
 
-#ifndef CCSDS_MCU
 ccsds::ResultBool ccsds::Manager::loadTemplateConfig(const ccsds::Config &cfg) {
   Packet templatePacket;
   FORWARD_RESULT(templatePacket.loadFromConfig(cfg));
@@ -411,6 +411,7 @@ ccsds::ResultBool ccsds::Manager::write(const std::string &binaryFile) const {
   return writeBinaryFile(buffer, binaryFile);
 }
 
+#ifndef CCSDS_MCU
 ccsds::ResultBool ccsds::Manager::readTemplate(const std::string &filename) {
   Packet templatePacket;
   templatePacket.setUpdatePacketEnable(false);
@@ -426,6 +427,7 @@ ccsds::ResultBool ccsds::Manager::readTemplate(const std::string &filename) {
   }
   return setPacketTemplate(std::move(templatePacket));
 }
+#endif
 
 void ccsds::Manager::clear() {
   m_packets.clear();
