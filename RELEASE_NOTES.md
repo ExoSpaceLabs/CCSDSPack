@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These notes describe the v2.1.0 release candidate. Hosted validation, matched v2.0-vs-v2.1 performance characterization, native Raspberry Pi 5 arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution are complete. The remaining pre-release work is final promotion to `main`, final `main` CI, tagging, and publication verification.
+> v2.1.0 has been promoted to `main` at commit `93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`. Hosted validation, matched v2.0-vs-v2.1 performance characterization, native Raspberry Pi 5 arm64 execution, physical NUCLEO-H755ZI-Q Cortex-M7 execution, and final `main` CI are complete. The remaining release action is to tag this qualified release line and verify the tag-produced artifacts and GHCR images.
 
 ## Summary
 
@@ -54,7 +54,7 @@ The C core exposes explicit byte-order load/store helpers for big- and little-en
 
 ## Performance versus v2.0 main
 
-Matched Release builds were compared back-to-back on the same Ubuntu 24.04 GitHub Actions runner using v2.0 `main` commit `4e198ae4c7f730737d78c1ea2f71ec3ce42ca7eb` and the v2.1 candidate after PR #154.
+Matched Release builds were compared back-to-back on the same Ubuntu 24.04 GitHub Actions runner using v2.0 `main` commit `4e198ae4c7f730737d78c1ea2f71ec3ce42ca7eb` and the v2.1 implementation under qualification. The final broader characterization is recorded in `docs/PERFORMANCE.md`.
 
 Representative results:
 
@@ -157,16 +157,15 @@ target_link_libraries(c_app PRIVATE ccsdspack::c)
 target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 ```
 
-## Remaining release-candidate gates
+## Remaining release gates
 
-Before tagging v2.1.0:
+Before publication is complete:
 
-1. promote the accepted `develop` commit to `main`;
-2. require final `main` CI to pass;
-3. create tag `v2.1.0`;
-4. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
+1. create tag `v2.1.0` from qualified `main`;
+2. verify tag-produced GitHub Release assets and package hashes;
+3. verify GHCR `v2.1.0` and `latest` images.
 
-Native Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 release-candidate execution are already complete and recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+Native Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 release validation are complete and recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Release control
 
