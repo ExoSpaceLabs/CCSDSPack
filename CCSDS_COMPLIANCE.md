@@ -102,7 +102,7 @@ The C++ ownership layer remains vector-backed. The C11 core exposes caller-owned
 
 ## Current evidence
 
-The release candidate is supported by:
+The v2.1.0 release is supported by:
 
 - **134/134 native regression/conformance tests**;
 - independent fixed generic and PUS byte vectors, including the complete 16-value PUS-C TC acknowledgement matrix;
