@@ -15,7 +15,9 @@ docker build \
   -f docker/Dockerfile docker
 ```
 
-Alternatively, run `bash docker/build_docker.sh v2.1.0` from any directory to build the image and execute its installed tester. This requires the release assets for the tag to exist.\n\nThe release workflow uses the same mechanism and publishes both the versioned
+Alternatively, run `bash docker/build_docker.sh v2.1.0` from any directory to build the image and execute its installed tester. This requires the release assets for the tag to exist.
+
+The release workflow uses the same mechanism and publishes both the versioned
 GHCR tag and `latest` only from a Git release tag.
 
 ## Interactive shell
