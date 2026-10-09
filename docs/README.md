@@ -15,7 +15,7 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 - [PUS tailoring](MISSION_TAILORING.md): concrete PUS identities, optional layout choices, and numeric CUC time.
 - [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
 - [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size interfaces.
-- [Performance baseline](PERFORMANCE.md): matched v2.0 `main` versus v2.1 parse/serialization evidence, C zero-copy behavior, allocation accounting, and MCU footprint.
+- [Performance baseline](PERFORMANCE.md): matched v2.0 `main` versus v2.1 packet, PUS, CUC, Validator, Manager, and CRC measurements, allocation accounting, C packet views, and MCU footprint.
 - [Packet processing flow](FLOW.md): Packet, Manager, parsing, validation, and reassembly lifecycle.
 
 ## Hosted integration
