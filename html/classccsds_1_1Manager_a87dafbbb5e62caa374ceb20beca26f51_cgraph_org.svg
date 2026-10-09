@@ -11,7 +11,7 @@
 <!-- Node1 -->
 <g id="Node000001" class="node">
 <title>Node1</title>
-<g id="a_Node000001"><a xlink:title=" ">
+<g id="a_Node000001"><a xlink:title="Loads a hosted packet&#45;template configuration file.">
 <polygon fill="#999999" stroke="#666666" points="164,-42.5 0,-42.5 0,-12.5 164,-12.5 164,-42.5"/>
 <text text-anchor="start" x="8" y="-30.5" font-family="Helvetica,sans-Serif" font-size="10.00">ccsds::Manager::loadTemplate</text>
 <text text-anchor="middle" x="82" y="-19.5" font-family="Helvetica,sans-Serif" font-size="10.00">ConfigFile</text>
@@ -21,7 +21,7 @@
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
-<g id="a_Node000002"><a xlink:href="classccsds_1_1Packet.html#aae818e04ef6d7bbc81073028b9d35c93" target="_top" xlink:title=" ">
+<g id="a_Node000002"><a xlink:href="classccsds_1_1Packet.html#aae818e04ef6d7bbc81073028b9d35c93" target="_top" xlink:title="Loads hosted packet configuration from a file.">
 <polygon fill="white" stroke="#666666" points="381,-37 200,-37 200,-18 381,-18 381,-37"/>
 <text text-anchor="middle" x="290.5" y="-25" font-family="Helvetica,sans-Serif" font-size="10.00">ccsds::Packet::loadFromConfigFile</text>
 </a>

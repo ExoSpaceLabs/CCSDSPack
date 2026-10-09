@@ -627,7 +627,7 @@ var sectionId = 'dynsection-1';
 <!-- Node17 -->
 <g id="Node000017" class="node">
 <title>Node17</title>
-<g id="a_Node000017"><a xlink:href="CCSDSPack_8h.html" target="_top" xlink:title="Convenience umbrella header for the complete public CCSDSPack API.">
+<g id="a_Node000017"><a xlink:href="CCSDSPack_8h.html" target="_top" xlink:title="Convenience umbrella header for the public C++17 CCSDSPack API.">
 <polygon fill="white" stroke="#666666" points="1452.5,-74 1354.5,-74 1354.5,-55 1452.5,-55 1452.5,-74"/>
 <text text-anchor="middle" x="1403.5" y="-62" font-family="Helvetica,sans-Serif" font-size="10.00">inc/CCSDSPack.h</text>
 </a>

@@ -1,5 +1,5 @@
 <map id="inc/CCSDSPack.h" name="inc/CCSDSPack.h">
-<area shape="rect" id="Node000001" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="204,5,335,31"/>
+<area shape="rect" id="Node000001" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="204,5,335,31"/>
 <area shape="rect" id="Node000002" href="$exec__decoder_8cpp.html" title="Command&#45;line decoder for CCSDS Space Packet streams." alt="" coords="5,79,165,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,38,116,81,114,76,226,33"/>
 <area shape="rect" id="Node000003" href="$exec__encoder_8cpp.html" title="Command&#45;line encoder for CCSDS Space Packet streams." alt="" coords="189,79,349,104"/>

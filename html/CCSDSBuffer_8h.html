@@ -147,7 +147,7 @@ Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Raw pointer-plus-size adapters for Packet and Manager APIs. </p>
-<p>The vector APIs remain the convenience surface. Raw Packet and Manager adapters delegate directly to pointer-native parsing paths; ownership copies occur only when parsed fields are committed into the owning C++ objects. </p>
+<p>The vector APIs remain the convenience surface. Packet parsing and Manager stream loading delegate to pointer-native parsing paths, avoiding a copy of the complete receive buffer. Owning C++ objects still copy state/data they retain. Generation helpers such as setApplicationData() and addPacketFromBuffer() may materialize owned vectors because the Manager/Packet ownership model requires it. </p>
 
 <p class="definition">Definition in file <a class="el" href="CCSDSBuffer_8h_source.html">CCSDSBuffer.h</a>.</p>
 </div></div><!-- contents -->

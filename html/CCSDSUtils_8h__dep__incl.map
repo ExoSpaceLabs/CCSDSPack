@@ -1,6 +1,6 @@
 <map id="inc/CCSDSUtils.h" name="inc/CCSDSUtils.h">
 <area shape="rect" id="Node000001" title="Declares CRC, diagnostic formatting, and binary file helper functions." alt="" coords="569,5,700,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="204,79,335,104"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="204,79,335,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="563,36,329,81,328,76,562,31"/>
 <area shape="rect" id="Node000006" href="$CCSDSManager_8cpp.html" title=" " alt="" coords="359,79,531,104"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="592,38,477,81,475,76,591,33"/>

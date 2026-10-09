@@ -716,7 +716,7 @@ Variables</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Calculated 16-bit CRC.</dd></dl>
-<p>The default parameters implement CRC-16/CCITT-FALSE. <a class="el" href="classccsds_1_1Packet.html" title="Owns, serializes, and parses one CCSDS Space Packet PDU.">Packet</a> uses this function over finalized primary-header and packet-data-field bytes, excluding the CRC itself. </p>
+<p>The default parameters implement CRC-16/CCITT-FALSE. C++ parsing/validation paths use this wrapper where an owned byte vector is already available; the pointer-native encode/view paths use the equivalent C11 CRC core directly. </p>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSUtils_8cpp_source.html#l00022">22</a> of file <a class="el" href="CCSDSUtils_8cpp_source.html">CCSDSUtils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   24</span>                                   {</div>
@@ -1383,7 +1383,7 @@ Here is the caller graph for this function:</div>
 <div class="line"><span class="lineno">  201</span>    idx++;</div>
 <div class="line"><span class="lineno">  202</span>  }</div>
 <div class="line"><span class="lineno">  203</span>}</div>
-<div class="ttc" id="aclassccsds_1_1Manager_html_a602bea873653821efcb64e1a923f762c"><div class="ttname"><a href="classccsds_1_1Manager.html#a602bea873653821efcb64e1a923f762c">ccsds::Manager::getTemplate</a></div><div class="ttdeci">Packet getTemplate()</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00082">CCSDSManager.h:82</a></div></div>
+<div class="ttc" id="aclassccsds_1_1Manager_html_a602bea873653821efcb64e1a923f762c"><div class="ttname"><a href="classccsds_1_1Manager.html#a602bea873653821efcb64e1a923f762c">ccsds::Manager::getTemplate</a></div><div class="ttdeci">Packet getTemplate()</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8h_source.html#l00083">CCSDSManager.h:83</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Manager_html_a81b7dcd9a509acd7602771816f6d4b83"><div class="ttname"><a href="classccsds_1_1Manager.html#a81b7dcd9a509acd7602771816f6d4b83">ccsds::Manager::getTotalPackets</a></div><div class="ttdeci">std::uint16_t getTotalPackets() const</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00316">CCSDSManager.cpp:316</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Manager_html_ab1aead2f0f1bf81b49a0ba05a1021b6a"><div class="ttname"><a href="classccsds_1_1Manager.html#ab1aead2f0f1bf81b49a0ba05a1021b6a">ccsds::Manager::getSyncPattern</a></div><div class="ttdeci">std::uint32_t getSyncPattern() const</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00033">CCSDSManager.cpp:33</a></div></div>
 <div class="ttc" id="aclassccsds_1_1Manager_html_adccdf952f0ef6871e8c2da13f708b620"><div class="ttname"><a href="classccsds_1_1Manager.html#adccdf952f0ef6871e8c2da13f708b620">ccsds::Manager::getSyncPatternEnable</a></div><div class="ttdeci">bool getSyncPatternEnable() const</div><div class="ttdef"><b>Definition</b> <a href="CCSDSManager_8cpp_source.html#l00035">CCSDSManager.cpp:35</a></div></div>

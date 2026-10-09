@@ -28,7 +28,7 @@
 <area shape="poly" id="edge36_Node000001_Node000029" title=" " alt="" coords="104,605,117,655,142,729,160,769,182,808,209,844,240,875,251,883,248,887,237,879,205,847,178,811,155,771,137,731,112,657,99,606"/>
 <area shape="rect" id="Node000030" href="$classccsds_1_1Packet.html#a7c215b48049929319b73bcc43cd6961c" title=" " alt="" coords="253,953,459,993"/>
 <area shape="poly" id="edge37_Node000001_Node000030" title=" " alt="" coords="103,604,112,665,134,755,152,805,175,854,204,900,241,939,246,944,242,948,237,943,200,903,170,857,147,807,129,757,106,666,98,605"/>
-<area shape="rect" id="Node000031" href="$classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" title=" " alt="" coords="242,775,470,801"/>
+<area shape="rect" id="Node000031" href="$classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" title="Returns the exact serialized wire size as size_t." alt="" coords="242,775,470,801"/>
 <area shape="poly" id="edge38_Node000001_Node000031" title=" " alt="" coords="109,604,128,634,157,675,195,718,240,754,271,769,269,773,237,758,192,721,153,678,124,637,104,606"/>
 <area shape="rect" id="Node000034" href="$classccsds_1_1pus_1_1rev__c_1_1TmHeader.html#addbe557f50ce311afd6d31088ee5f5da" title=" " alt="" coords="247,1018,465,1073"/>
 <area shape="poly" id="edge43_Node000001_Node000034" title=" " alt="" coords="102,605,108,674,128,781,146,840,170,899,201,955,241,1004,245,1008,241,1012,237,1007,196,958,165,901,141,842,123,782,103,675,97,605"/>

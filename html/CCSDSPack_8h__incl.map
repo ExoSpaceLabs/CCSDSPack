@@ -1,5 +1,5 @@
 <map id="inc/CCSDSPack.h" name="inc/CCSDSPack.h">
-<area shape="rect" id="Node000001" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="2229,5,2360,31"/>
+<area shape="rect" id="Node000001" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="2229,5,2360,31"/>
 <area shape="rect" id="Node000002" href="$CCSDSDataField_8h.html" title="Defines storage and secondary&#45;header handling for a CCSDS packet data field." alt="" coords="1732,372,1872,397"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="2229,22,2057,27,1953,34,1849,46,1753,64,1673,89,1643,105,1620,122,1606,142,1601,164,1601,239,1604,264,1614,285,1629,304,1649,321,1694,347,1742,366,1740,371,1692,352,1646,325,1626,308,1610,288,1599,265,1596,240,1596,163,1601,140,1616,119,1640,100,1671,84,1751,59,1848,41,1953,29,2057,21,2229,16"/>
 <area shape="rect" id="Node000003" href="$CCSDSResult_8h.html" title="Defines non&#45;throwing result/error types and propagation helpers used by CCSDSPack." alt="" coords="2458,739,2576,764"/>

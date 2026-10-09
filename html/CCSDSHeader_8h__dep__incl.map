@@ -1,6 +1,6 @@
 <map id="inc/CCSDSHeader.h" name="inc/CCSDSHeader.h">
 <area shape="rect" id="Node000001" title="Defines CCSDS Space Packet primary&#45;header fields, validation, and serialization." alt="" coords="253,5,400,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="27,372,157,397"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="27,372,157,397"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,25,163,36,124,46,88,60,56,78,31,101,14,129,8,164,8,239,10,260,16,280,35,317,59,348,81,370,77,374,55,351,31,320,11,282,5,261,3,239,3,163,9,127,26,97,53,74,85,55,123,41,162,31,239,20"/>
 <area shape="rect" id="Node000006" href="$CCSDSPacket_8h.html" title="CCSDS 133.0&#45;B&#45;2 Space Packet container, parsing, and packet&#45;level error control." alt="" coords="255,79,398,104"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="329,44,329,79,324,79,324,44"/>

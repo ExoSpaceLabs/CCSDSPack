@@ -1,5 +1,5 @@
 <map id="ccsds::Packet::loadFromConfigFile" name="ccsds::Packet::loadFromConfigFile">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,247,56"/>
+<area shape="rect" id="Node000001" title="Loads hosted packet configuration from a file." alt="" coords="5,31,247,56"/>
 <area shape="rect" id="Node000002" href="$classccsds_1_1Config.html#a6f3e475a7201bee9da581cff8a28b22d" title="Loads and replaces configuration values from a file." alt="" coords="295,31,437,56"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="247,41,281,41,281,46,247,46"/>
 <area shape="rect" id="Node000003" href="$classccsds_1_1Config.html#adad989efb9684e77cdac68eded30e2b5" title="Parses a bracketed comma&#45;separated byte vector." alt="" coords="485,5,673,31"/>

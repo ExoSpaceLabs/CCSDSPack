@@ -284,7 +284,7 @@
 <!-- Node31 -->
 <g id="Node000031" class="node">
 <title>Node31</title>
-<g id="a_Node000031"><a xlink:href="classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" target="_top" xlink:title=" ">
+<g id="a_Node000031"><a xlink:href="classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" target="_top" xlink:title="Returns the exact serialized wire size as size_t.">
 <polygon fill="white" stroke="#666666" points="348.5,-271.5 177.5,-271.5 177.5,-252.5 348.5,-252.5 348.5,-271.5"/>
 <text text-anchor="middle" x="263" y="-259.5" font-family="Helvetica,sans-Serif" font-size="10.00">ccsds::Packet::getSerializedSize</text>
 </a>

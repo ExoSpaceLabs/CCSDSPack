@@ -1,6 +1,6 @@
 <map id="inc/CCSDSPacketTypes.h" name="inc/CCSDSPacketTypes.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="563,5,743,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="533,695,664,720"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="533,695,664,720"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="550,26,388,39,298,50,210,66,130,86,66,111,41,126,23,142,12,159,8,178,8,562,14,593,32,614,58,629,92,644,128,657,176,668,296,684,425,695,533,701,533,706,424,700,296,690,175,673,126,662,90,649,56,634,28,618,9,596,3,562,3,178,7,157,19,138,38,121,63,106,129,81,208,60,297,45,387,34,550,21"/>
 <area shape="rect" id="Node000006" href="$CCSDSPacket_8h.html" title="CCSDS 133.0&#45;B&#45;2 Space Packet container, parsing, and packet&#45;level error control." alt="" coords="879,401,1022,427"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="758,27,886,46,1020,76,1080,96,1128,119,1160,146,1169,162,1172,178,1172,262,1167,291,1154,316,1135,338,1111,357,1056,386,1003,404,1001,399,1054,381,1108,353,1132,335,1150,313,1162,289,1167,261,1167,178,1164,163,1156,150,1125,124,1078,101,1019,81,885,51,757,33"/>

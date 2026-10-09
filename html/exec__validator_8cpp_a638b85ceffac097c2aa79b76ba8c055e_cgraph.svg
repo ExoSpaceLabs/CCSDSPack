@@ -776,7 +776,7 @@ var sectionId = 'dynsection-1';
 <!-- Node69 -->
 <g id="Node000069" class="node">
 <title>Node69</title>
-<g id="a_Node000069"><a xlink:href="classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" target="_top" xlink:title=" ">
+<g id="a_Node000069"><a xlink:href="classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" target="_top" xlink:title="Returns the exact serialized wire size as size_t.">
 <polygon fill="#fff0f0" stroke="red" points="450.5,-386 279.5,-386 279.5,-367 450.5,-367 450.5,-386"/>
 <text text-anchor="middle" x="365" y="-374" font-family="Helvetica,sans-Serif" font-size="10.00">ccsds::Packet::getSerializedSize</text>
 </a>

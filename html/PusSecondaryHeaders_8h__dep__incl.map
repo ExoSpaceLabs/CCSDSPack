@@ -1,6 +1,6 @@
 <map id="inc/PusSecondaryHeaders.h" name="inc/PusSecondaryHeaders.h">
 <area shape="rect" id="Node000001" title="Defines standards&#45;oriented PUS&#45;A and PUS&#45;C TC/TM secondary headers." alt="" coords="829,5,1032,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="80,519,211,544"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="80,519,211,544"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="815,21,690,24,539,33,375,51,214,81,177,88,140,90,73,95,47,101,26,113,13,133,8,164,8,386,11,409,20,430,33,450,50,467,87,496,122,516,119,521,84,501,46,471,29,453,15,433,6,410,3,386,3,163,8,131,22,109,45,96,73,90,140,85,176,82,213,76,375,46,538,27,690,18,815,16"/>
 <area shape="rect" id="Node000006" href="$PusSecondaryHeaderFactory_8h.html" title=" " alt="" coords="225,79,465,104"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="824,35,440,81,439,76,823,30"/>

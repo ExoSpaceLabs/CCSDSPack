@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="332,5,489,31"/>
 <area shape="rect" id="Node000002" href="$CCSDSBuffer_8h.html" title="Raw pointer&#45;plus&#45;size adapters for Packet and Manager APIs." alt="" coords="288,79,427,104"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="396,43,368,80,364,77,392,40"/>
-<area shape="rect" id="Node000003" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="204,152,335,177"/>
+<area shape="rect" id="Node000003" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="204,152,335,177"/>
 <area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="340,38,306,55,278,80,270,98,267,117,269,152,264,152,262,117,265,96,274,77,303,50,337,33"/>
 <area shape="rect" id="Node000007" href="$CCSDSUtils_8h.html" title="Declares CRC, diagnostic formatting, and binary file helper functions." alt="" coords="535,79,665,104"/>
 <area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="455,33,570,76,568,81,453,38"/>

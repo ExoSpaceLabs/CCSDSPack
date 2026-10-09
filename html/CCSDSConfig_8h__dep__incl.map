@@ -1,6 +1,6 @@
 <map id="inc/CCSDSConfig.h" name="inc/CCSDSConfig.h">
 <area shape="rect" id="Node000001" title="Defines the host&#45;only parser for CCSDSPack key:type=value configuration files." alt="" coords="1007,5,1150,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="1072,695,1203,720"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="1072,695,1203,720"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1164,24,1238,39,1276,51,1312,67,1344,87,1369,112,1386,142,1392,178,1392,562,1387,593,1373,619,1352,641,1325,659,1264,685,1204,700,1202,695,1263,680,1323,654,1348,637,1369,616,1382,591,1387,562,1387,178,1381,144,1365,115,1340,91,1310,71,1274,56,1237,44,1163,29"/>
 <area shape="rect" id="Node000006" href="$CCSDSSecondaryHeaderAbstract_8h.html" title="Defines the extension interface and raw&#45;buffer implementation for packet secondary headers." alt="" coords="666,79,870,119"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1021,37,843,81,842,76,1019,31"/>

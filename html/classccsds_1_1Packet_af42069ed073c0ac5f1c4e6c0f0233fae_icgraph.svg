@@ -270,7 +270,7 @@ var sectionId = 'dynsection-2';
 <!-- Node26 -->
 <g id="Node000026" class="node">
 <title>Node26</title>
-<g id="a_Node000026"><a xlink:href="classccsds_1_1Manager.html#a1ae9675ee3ba08504c160e66f86674c0" target="_top" xlink:title=" ">
+<g id="a_Node000026"><a xlink:href="classccsds_1_1Manager.html#a1ae9675ee3ba08504c160e66f86674c0" target="_top" xlink:title="Loads a hosted binary or configuration&#45;file packet template.">
 <polygon fill="white" stroke="#666666" points="844,-105 679,-105 679,-86 844,-86 844,-105"/>
 <text text-anchor="middle" x="761.5" y="-93" font-family="Helvetica,sans-Serif" font-size="10.00">ccsds::Manager::readTemplate</text>
 </a>
@@ -574,7 +574,7 @@ var sectionId = 'dynsection-2';
 <!-- Node21 -->
 <g id="Node000021" class="node">
 <title>Node21</title>
-<g id="a_Node000021"><a xlink:href="classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" target="_top" xlink:title=" ">
+<g id="a_Node000021"><a xlink:href="classccsds_1_1Packet.html#a833657e30ae9f1fed0d6c04f4da97304" target="_top" xlink:title="Returns the exact serialized wire size as size_t.">
 <polygon fill="white" stroke="#666666" points="423,-119 252,-119 252,-100 423,-100 423,-119"/>
 <text text-anchor="middle" x="337.5" y="-107" font-family="Helvetica,sans-Serif" font-size="10.00">ccsds::Packet::getSerializedSize</text>
 </a>

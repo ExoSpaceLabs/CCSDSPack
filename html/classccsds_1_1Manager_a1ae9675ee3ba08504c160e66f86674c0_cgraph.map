@@ -1,8 +1,8 @@
 <map id="ccsds::Manager::readTemplate" name="ccsds::Manager::readTemplate">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,104,225,129"/>
+<area shape="rect" id="Node000001" title="Loads a hosted binary or configuration&#45;file packet template." alt="" coords="5,104,225,129"/>
 <area shape="rect" id="Node000002" href="$classccsds_1_1Packet.html#af42069ed073c0ac5f1c4e6c0f0233fae" title="Parses one packet." alt="" coords="301,5,487,31"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,102,197,71,272,39,301,31,302,36,274,45,200,75,140,106"/>
-<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#aae818e04ef6d7bbc81073028b9d35c93" title=" " alt="" coords="273,55,515,80"/>
+<area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#aae818e04ef6d7bbc81073028b9d35c93" title="Loads hosted packet configuration from a file." alt="" coords="273,55,515,80"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,101,308,80,308,85,188,107"/>
 <area shape="rect" id="Node000007" href="$namespaceccsds.html#a2c080b9180c136c266cde489de8827c9" title="Reads an entire binary file into memory." alt="" coords="314,104,474,129"/>
 <area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="225,114,300,114,300,119,225,119"/>

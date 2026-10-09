@@ -1,6 +1,6 @@
 <map id="inc/PusTailoring.h" name="inc/PusTailoring.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="520,5,655,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="370,592,501,617"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="370,592,501,617"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="507,32,398,50,282,78,231,95,189,116,162,139,155,151,153,164,153,459,158,492,175,519,199,542,230,560,264,573,301,584,370,596,369,601,299,589,262,578,227,564,196,546,170,523,153,494,147,460,147,163,150,149,158,135,186,111,228,90,280,72,397,45,506,27"/>
 <area shape="rect" id="Node000006" href="$PusSecondaryHeaders_8h.html" title="Defines standards&#45;oriented PUS&#45;A and PUS&#45;C TC/TM secondary headers." alt="" coords="949,79,1151,104"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="669,29,976,76,975,81,668,34"/>

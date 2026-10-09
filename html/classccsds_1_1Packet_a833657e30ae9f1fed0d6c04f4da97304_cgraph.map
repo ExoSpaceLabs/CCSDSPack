@@ -1,5 +1,5 @@
 <map id="ccsds::Packet::getSerializedSize" name="ccsds::Packet::getSerializedSize">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,45,233,70"/>
+<area shape="rect" id="Node000001" title="Returns the exact serialized wire size as size_t." alt="" coords="5,45,233,70"/>
 <area shape="rect" id="Node000002" href="$classccsds_1_1DataField.html#a765dcfcfb8e1e5c6fc23f82c14307fda" title=" " alt="" coords="281,5,469,45"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,42,267,36,268,41,221,47"/>
 <area shape="rect" id="Node000003" href="$classccsds_1_1Packet.html#aa76e477304e8f1f26026066c9d3cf158" title=" " alt="" coords="286,69,465,109"/>

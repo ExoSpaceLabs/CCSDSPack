@@ -6,7 +6,7 @@
 <area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="362,86,60,49,61,44,363,80"/>
 <area shape="rect" id="Node000004" href="$classccsds_1_1Manager.html#a218f9981af87f849faea5732e5e415bc" title=" " alt="" coords="138,107,298,132"/>
 <area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="362,107,298,114,298,108,362,101"/>
-<area shape="rect" id="Node000005" href="$classccsds_1_1Manager.html#a1ae9675ee3ba08504c160e66f86674c0" title=" " alt="" coords="108,156,328,181"/>
+<area shape="rect" id="Node000005" href="$classccsds_1_1Manager.html#a1ae9675ee3ba08504c160e66f86674c0" title="Loads a hosted binary or configuration&#45;file packet template." alt="" coords="108,156,328,181"/>
 <area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="414,114,329,146,281,159,280,153,327,141,412,109"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="142,31,61,42,60,37,141,26"/>
 </map>

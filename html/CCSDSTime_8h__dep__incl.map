@@ -1,6 +1,6 @@
 <map id="inc/CCSDSTime.h" name="inc/CCSDSTime.h">
 <area shape="rect" id="Node000001" title="Defines numeric CCSDS Unsegmented Time Code support." alt="" coords="1409,5,1544,31"/>
-<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the complete public CCSDSPack API." alt="" coords="901,665,1031,691"/>
+<area shape="rect" id="Node000002" href="$CCSDSPack_8h.html" title="Convenience umbrella header for the public C++17 CCSDSPack API." alt="" coords="901,665,1031,691"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1479,44,1479,163,1479,533,1476,550,1465,566,1449,581,1428,594,1373,616,1307,635,1160,661,1032,675,1031,669,1159,656,1305,630,1371,611,1425,589,1446,576,1461,563,1471,548,1474,532,1474,163,1474,44"/>
 <area shape="rect" id="Node000006" href="$PusTailoring_8h.html" title=" " alt="" coords="1304,79,1439,104"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1450,41,1390,81,1387,76,1447,36"/>
