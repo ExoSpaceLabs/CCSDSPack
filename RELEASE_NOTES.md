@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> v2.1.0 has been promoted to `main` at commit `93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`. Hosted validation, matched v2.0-vs-v2.1 performance characterization, native Raspberry Pi 5 arm64 execution, physical NUCLEO-H755ZI-Q Cortex-M7 execution, and final `main` CI are complete. The remaining release action is to tag this qualified release line and verify the tag-produced artifacts and GHCR images.
+> These are pre-tag v2.1.0 release notes. Earlier Raspberry Pi 5 and physical Cortex-M7 runs passed on the source commits recorded in `docs/V2_HARDWARE_VALIDATION.md`; the pre-tag audit updates host/MCU API boundaries. The final accepted post-audit `main` commit must pass CI and fresh native/physical target validation before the release tag is created.
 
 ## Summary
 
@@ -161,11 +161,13 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 Before publication is complete:
 
-1. create tag `v2.1.0` from qualified `main`;
-2. verify tag-produced GitHub Release assets and package hashes;
-3. verify GHCR `v2.1.0` and `latest` images.
+1. merge the reviewed pre-tag audit into `main` and qualify that exact commit in final CI;
+2. run native Raspberry Pi 5 and physical Cortex-M7 hardware validation on that exact release commit and record new evidence;
+3. create tag `v2.1.0` only after the source and target evidence is accepted;
+4. verify tag-produced GitHub Release assets and package hashes;
+5. verify GHCR `v2.1.0` and `latest` images.
 
-Native Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 release validation are complete and recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+Previously completed native Raspberry Pi 5 and NUCLEO-H755ZI-Q test runs are recorded in `docs/V2_HARDWARE_VALIDATION.md`; final post-audit hardware acceptance remains outstanding.
 
 ## Release control
 
