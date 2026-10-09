@@ -59,7 +59,10 @@ existing independent conformance evidence continues to pass.
 - [x] Issue #163 performance characterization complete.
 - [x] Final release/compliance documentation merged into `develop`.
 - [x] Approved `develop` promoted to `main`.
-- [x] Final `main` Linux, Windows, Doxygen, and robustness workflows pass.
+- [x] Pre-audit `main` Linux, Windows, Doxygen, and robustness workflows passed at `93f43b6f`.
+- [ ] Final post-audit `main` Linux, Windows, Doxygen, and robustness workflows pass on the exact release commit.
+- [ ] Fresh native Raspberry Pi 5 run passes against the exact post-audit release commit (record package/source hashes).
+- [ ] Fresh physical NUCLEO-H755ZI-Q run passes against that same release commit (record package/library/ELF hashes and UART/OpenOCD evidence).
 - [ ] `v2.1.0` tag created from the approved `main` commit.
 - [ ] Tag-produced GitHub Release assets and package hashes verified.
 - [ ] GHCR `v2.1.0` and `latest` images verified.
