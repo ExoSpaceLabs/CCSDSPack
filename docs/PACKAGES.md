@@ -47,18 +47,20 @@ Packages that include `CCSDSPack_tester` also install its `test_resources` fixtu
 
 ## arm64 validation
 
-A native 64-bit Raspberry Pi or equivalent arm64 target can validate an installed DEB with:
+A native 64-bit Raspberry Pi or equivalent arm64 target can build and validate the current source tree in one command:
 
 ```bash
-ARM64_DEB="$(find ./packages -type f -name '*arm64*.deb' -print -quit)"
-bash test/package_tester/aarch64_validate.sh "$ARM64_DEB" \
-  2>&1 | tee ~/ccsdspack-aarch64-validation.log
+bash test/package_tester/run_aarch64_validation.sh
 ```
 
-Successful release evidence ends with:
+The lower-level `aarch64_validate.sh <package.deb>` entry point remains available when an already-built package must be qualified directly.
+
+Successful full-run evidence ends with:
 
 ```text
+CCSDSPACK_HARDWARE_TEST:PASS
 CCSDSPACK_AARCH64_TEST:PASS
+CCSDSPACK_AARCH64_RUNNER:PASS
 ```
 
 ## Bare-metal package

@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These notes describe the v2.1.0 release candidate. Hosted validation, matched v2.0-vs-v2.1 performance characterization, native Raspberry Pi 5 arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution are complete. The remaining pre-release work is final promotion to `main`, final `main` CI, tagging, and publication verification.
+> These are pre-tag v2.1.0 release notes. Earlier Raspberry Pi 5 and physical Cortex-M7 runs passed on the source commits recorded in `docs/V2_HARDWARE_VALIDATION.md`; the pre-tag audit updates host/MCU API boundaries. The final accepted post-audit `main` commit must pass CI and fresh native/physical target validation before the release tag is created.
 
 ## Summary
 
@@ -54,7 +54,7 @@ The C core exposes explicit byte-order load/store helpers for big- and little-en
 
 ## Performance versus v2.0 main
 
-Matched Release builds were compared back-to-back on the same Ubuntu 24.04 GitHub Actions runner using v2.0 `main` commit `4e198ae4c7f730737d78c1ea2f71ec3ce42ca7eb` and the v2.1 candidate after PR #154.
+Matched Release builds were compared back-to-back on the same Ubuntu 24.04 GitHub Actions runner using v2.0 `main` commit `4e198ae4c7f730737d78c1ea2f71ec3ce42ca7eb` and the v2.1 implementation under qualification. The final broader characterization is recorded in `docs/PERFORMANCE.md`.
 
 Representative results:
 
@@ -85,7 +85,7 @@ With section garbage collection rooted at the probe entry point:
 - delta: **+3,928 bytes (+10.8%)**;
 - data/bss in the relocatable comparison: **0/0** for both.
 
-The symbol review shows the increase is distributed across the newly retained C packet/PUS/CUC/validation/stream primitives rather than one obvious duplicate implementation. Physical STM32 execution has since passed on the release candidate; the matched compile/link comparison remains the cross-version footprint metric.
+The symbol review shows the increase is distributed across the newly retained C packet/PUS/CUC/validation/stream primitives rather than one obvious duplicate implementation. Physical STM32 execution passed on the qualified v2.1 implementation; the matched compile/link comparison remains the cross-version footprint metric.
 
 ## Standards scope
 
@@ -157,16 +157,17 @@ target_link_libraries(c_app PRIVATE ccsdspack::c)
 target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 ```
 
-## Remaining release-candidate gates
+## Remaining release gates
 
-Before tagging v2.1.0:
+Before publication is complete:
 
-1. promote the accepted `develop` commit to `main`;
-2. require final `main` CI to pass;
-3. create tag `v2.1.0`;
-4. verify tag-produced GitHub Release assets, package hashes, and GHCR images.
+1. merge the reviewed pre-tag audit into `main` and qualify that exact commit in final CI;
+2. run native Raspberry Pi 5 and physical Cortex-M7 hardware validation on that exact release commit and record new evidence;
+3. create tag `v2.1.0` only after the source and target evidence is accepted;
+4. verify tag-produced GitHub Release assets and package hashes;
+5. verify GHCR `v2.1.0` and `latest` images.
 
-Native Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 release-candidate execution are already complete and recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+Previously completed native Raspberry Pi 5 and NUCLEO-H755ZI-Q test runs are recorded in `docs/V2_HARDWARE_VALIDATION.md`; final post-audit hardware acceptance remains outstanding.
 
 ## Release control
 

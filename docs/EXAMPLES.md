@@ -7,7 +7,7 @@ The examples use the C++17 v2 API and the same ownership model as the library: P
 ## Installed-package integration
 
 ```cmake
-find_package(CCSDSPack 2.0 CONFIG REQUIRED)
+find_package(CCSDSPack 2.1 CONFIG REQUIRED)
 add_executable(example main.cpp)
 target_link_libraries(example PRIVATE ccsdspack::CCSDSPack)
 target_compile_features(example PRIVATE cxx_std_17)

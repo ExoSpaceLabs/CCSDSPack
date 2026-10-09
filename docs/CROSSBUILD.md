@@ -8,7 +8,7 @@ CCSDSPack v2.1 has a C11 protocol core with an optional C++17 ownership/convenie
 
 The repository provides `cmake/toolchains/aarch64-linux-gnu.cmake`.
 
-On Ubuntu 22.04 or newer, install the cross toolchain and target runtime dependencies required by package inspection:
+Install the cross toolchain and target runtime dependencies required by package inspection. The repository helper `install-aarch-cross-build-deps.sh` is intentionally restricted to Ubuntu 22.04 (Jammy), because it configures Jammy amd64/arm64 package sources explicitly; other host releases should use their native repository layout:
 
 ```bash
 sudo dpkg --add-architecture arm64

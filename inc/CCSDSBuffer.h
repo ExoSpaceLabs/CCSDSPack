@@ -5,9 +5,11 @@
  * @file CCSDSBuffer.h
  * @brief Raw pointer-plus-size adapters for Packet and Manager APIs.
  *
- * The vector APIs remain the convenience surface. Raw Packet and Manager adapters
- * delegate directly to pointer-native parsing paths; ownership copies occur only
- * when parsed fields are committed into the owning C++ objects.
+ * The vector APIs remain the convenience surface. Packet parsing and Manager
+ * stream loading delegate to pointer-native parsing paths, avoiding a copy of the
+ * complete receive buffer. Owning C++ objects still copy state/data they retain.
+ * Generation helpers such as setApplicationData() and addPacketFromBuffer() may
+ * materialize owned vectors because the Manager/Packet ownership model requires it.
  */
 #ifndef CCSDS_BUFFER_H
 #define CCSDS_BUFFER_H

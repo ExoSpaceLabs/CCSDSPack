@@ -35,7 +35,7 @@ elseif(APPLE)
     # .tgz by default; you can add DragNDrop later if you bundle apps
     set(CPACK_GENERATOR "TGZ")
 else()
-    # Linux: produce .deb, .packages, and .tar.gz
+    # Linux: support DEB, RPM, and TGZ package generators
     set(CPACK_GENERATOR "DEB;RPM;TGZ")
     # Auto-detect shared library dependencies for Debian/Ubuntu
     set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)

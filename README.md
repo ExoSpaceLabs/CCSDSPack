@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack [[ExoSpaceLabs](https://github.com/ExoSpaceLabs)]
 
-**[API Documentation](https://exospacelabs.github.io/CCSDSPack/html/)** · [Documentation index](docs/README.md)
+**[API Documentation](https://exospacelabs.github.io/CCSDSPack/html/)** · [Documentation index](docs/README.md) · [Contributing](CONTRIBUTING.md)
 
 **CCSDSPack** is a layered CCSDS Space Packet library with an authoritative **C11 protocol core** and a compatible **C++17 ownership/convenience API**. The C core provides allocation-free wire primitives, packet views, PUS codecs, CUC time, validation, segmentation/reassembly, and stream framing; the established C++ API remains available for owned `Packet`/`Manager` workflows.
 
@@ -26,7 +26,7 @@ The implementation scope is intentionally packet-focused. Complete PUS services,
 
 | Linux | Windows |
 |---|---|
-| ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=develop) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=develop) |
+| ![Linux build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/linux.yml?branch=main) | ![Windows build status](https://img.shields.io/github/actions/workflow/status/ExoSpaceLabs/CCSDSPack/windows.yml?branch=main) |
 
 CI covers explicit Ubuntu 22.04, 24.04, and 26.04 runners, Windows latest, Doxygen, CLI integration, installed-package consumers, examples, and package/cross-build generation. Release-critical Linux jobs avoid the moving `ubuntu-latest` alias. UML generation is available manually and is not a release gate.
 

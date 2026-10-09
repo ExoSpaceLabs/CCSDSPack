@@ -73,7 +73,7 @@ Round-trip behavior alone is not treated as sufficient conformance evidence.
 
 ## v2.1 release evidence
 
-The current v2.1 candidate is covered by:
+The v2.1.0 release is covered by:
 
 - **134/134 native regression/conformance tests**;
 - Linux and Windows hosted CI, Doxygen, CLI integration, installed-package
@@ -87,9 +87,10 @@ The current v2.1 candidate is covered by:
 - physical NUCLEO-H755ZI-Q / Cortex-M7 execution with
   `CCSDSPACK_HARDWARE_TEST:PASS` using the standalone DAS/OpenOCD harness.
 
-Broader matched PUS/CUC/Validator/Manager/stream performance characterization is
-tracked in issue #163. That work is a performance-evidence gate, not a change to
-the CCSDS/ECSS conformance boundary.
+Broader matched PUS/CUC/Validator/Manager/stream performance characterization
+was completed in issue #163. The measured CUC wrapper regression remains tracked
+in issue #166 as a focused optimization follow-up. Neither performance work item
+changes the CCSDS/ECSS conformance boundary.
 
 Detailed scope and traceability are maintained in:
 

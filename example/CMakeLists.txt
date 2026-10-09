@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(CCSDSPack 2.0 CONFIG REQUIRED)
+find_package(CCSDSPack 2.1 CONFIG REQUIRED)
 
 enable_testing()
 add_subdirectory(basic_packet)

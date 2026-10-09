@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 All notable changes to CCSDSPack are documented here. Upgrade-specific v1.2-to-v2
 source/configuration mapping is maintained in `docs/MIGRATION_V1_TO_V2.md`.
 
-## [Unreleased] - v2.1.0 candidate
+## [2.1.0] - pending release tag
 
 ### Architecture
 
@@ -32,8 +32,8 @@ source/configuration mapping is maintained in `docs/MIGRATION_V1_TO_V2.md`.
   bridge copy.
 - Matched Cortex-M7 retained text increased by 3,928 bytes (+10.8%) in the documented
   `--gc-sections` comparison.
-- Broader matched PUS/CUC/Validator/Manager/stream benchmarks are tracked in issue #163
-  before broad whole-core speed claims are made.
+- Completed matched PUS/CUC/Validator/Manager/stream characterization in issue #163,
+  recording both gains and regressions; focused CUC wrapper optimization remains tracked in issue #166.
 
 ### Standards and validation
 

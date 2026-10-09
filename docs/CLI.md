@@ -8,6 +8,22 @@ CCSDSPack provides three host-side command-line programs:
 
 The tools build and use the same complete `ccsds::Packet` template used by `ccsds::Manager`.
 
+
+## Build controls
+
+Hosted tools are enabled independently:
+
+```bash
+cmake -S . -B build \
+  -DENABLE_ENCODER=ON \
+  -DENABLE_DECODER=ON \
+  -DENABLE_VALIDATOR=ON \
+  -DENABLE_TESTER=ON
+cmake --build build
+```
+
+These executables are excluded when `CCSDSPACK_BUILD_MCU=ON`.
+
 ## Packet error control
 
 All three tools accept:

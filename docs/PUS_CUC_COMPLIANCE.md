@@ -89,7 +89,7 @@ The fuzz smoke gate limits generated-input count, input length, per-input timeou
 
 ## Evidence
 
-The current release candidate has **134/134 native regression/conformance tests** covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, structured validation, the complete PUS-C acknowledgement matrix, and the final named negative-validation matrix.
+The v2.1.0 release has **134/134 native regression/conformance tests** covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, structured validation, the complete PUS-C acknowledgement matrix, and the final named negative-validation matrix.
 
 CLI integration covers generic and representative PUS streams and malformed PUS input. Linux/Windows CI, Doxygen, installed-package examples/consumer, Ubuntu 22.04 package/cross-build generation, and the Cortex-M compile/link probe provide integration evidence. Dedicated ASan, UBSan, and bounded four-target libFuzzer CI provide automated robustness evidence.
 
@@ -98,4 +98,4 @@ Fresh real-target execution is also recorded in `docs/V2_HARDWARE_VALIDATION.md`
 - Raspberry Pi 5 / native arm64 installed-package validation completed with `CCSDSPACK_HARDWARE_TEST:PASS` and `CCSDSPACK_AARCH64_TEST:PASS`;
 - physical NUCLEO-H755ZI-Q / Cortex-M7 execution completed with `CCSDSPACK_HARDWARE_TEST:PASS` using the same board-independent acceptance core.
 
-The v2.1 candidate has completed Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 validation. Remaining release-level work is performance-evidence completion in issue #163, final `main` CI, tag-only GitHub Release/GHCR execution, and verification of the artifacts produced from the approved `v2.1.0` tag.
+The v2.1.0 release has completed Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 validation, broader matched performance characterization in issue #163, and final `main` CI. The remaining publication step is tag-only GitHub Release/GHCR execution and verification of artifacts produced from the approved `v2.1.0` tag.

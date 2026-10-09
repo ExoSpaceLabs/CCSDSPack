@@ -9,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 
 ## Normative baseline
 
-CCSDSPack v2.0.0 targets **CCSDS 133.0-B-2, Issue 2, June 2020, including Editorial Change 2 of September 2024** for its supported Space Packet PDU profile.
+CCSDSPack v2.1.0 targets **CCSDS 133.0-B-2, Issue 2, June 2020, including Editorial Change 2 of September 2024** for its supported Space Packet PDU profile.
 
 The claim covers packet construction, checked serialization, bounded transactional parsing, inspection, sequence-count handling, segmentation support, structured validation, and Manager stream handling for the implemented PDU profile. It does not claim a complete Space Packet Protocol entity, complete abstract service interfaces, transfer frames, routing, COP-1, CFDP, or a completed PICS.
 
@@ -124,6 +124,4 @@ See [VALIDATION.md](VALIDATION.md).
 
 ## Conformance evidence
 
-The current integration candidate is exercised by 125 native tests, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux/Windows CI, Doxygen, package/cross-build generation, and a Cortex-M compile/link probe.
-
-Physical arm64 and STM32 execution and dedicated fuzz/sanitizer CI remain separate v2.0.0 release-acceptance gates until recorded.
+The v2.1.0 release is exercised by 134 native regression/conformance tests, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux Ubuntu 22.04/24.04/26.04 and Windows CI, Doxygen, package/cross-build generation, ASan/UBSan, bounded fuzzing, Raspberry Pi 5 native arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution.

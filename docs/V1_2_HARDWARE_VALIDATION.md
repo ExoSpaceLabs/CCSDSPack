@@ -5,7 +5,7 @@ SPDX-License-Identifier: Apache-2.0
 
 # CCSDSPack v1.2 hardware validation
 
-[Documentation index](README.md) | [Packages](PACKAGES.md) | [v1.2 release notes](releases/v1.2.0.md)
+[Documentation index](README.md) | [Packages](PACKAGES.md) | [v1.2 GitHub Release](https://github.com/ExoSpaceLabs/CCSDSPack/releases/tag/v1.2.0)
 
 This page records the release hardware evidence for CCSDSPack v1.2.0 and provides the repeatable validation procedures. Hardware execution complements the Linux and Windows CI evidence; it does not extend the compliance claim beyond the CCSDS Space Packet PDU profile described in [COMPLIANCE.md](../COMPLIANCE.md) and [CCSDS_COMPLIANCE.md](../CCSDS_COMPLIANCE.md).
 

@@ -30,8 +30,8 @@ int main() {
   if (!declared || declared.value() != wire.size()) return 1;
 
   // The raw-buffer API accepts memory owned by a UART/DMA/network receive buffer.
-  // v2.0 currently bridges this call to the existing vector-backed parser; callers
-  // do not need to change when that implementation becomes zero-copy later.
+  // Framing and CRC inspection operate directly on caller-owned bytes; the owning
+  // Packet copies only the decoded state/application bytes it must retain.
   ccsds::Packet incoming;
   incoming.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
   const auto consumed = ccsds::buffer::deserializeBounded(

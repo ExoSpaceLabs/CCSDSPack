@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-# Exact release tag to install, for example v2.0.0.
+# Exact release tag to install, for example v2.1.0.
 ARG CCSDSPACK_TAG
 
 # Prevent interactive prompts during package install

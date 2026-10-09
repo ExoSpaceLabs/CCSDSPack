@@ -42,8 +42,9 @@ namespace ccsds {
     [[nodiscard]] bool getSyncPatternEnable() const;
 
     [[nodiscard]] ResultBool setPacketTemplate(Packet packet);
-    [[nodiscard]] ResultBool loadTemplateConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
+    /** @brief Loads a hosted packet-template configuration file. */
+    [[nodiscard]] ResultBool loadTemplateConfigFile(const std::string &configPath);
     [[nodiscard]] ResultBool loadTemplateConfig(const ccsds::Config &cfg);
 #endif
 
@@ -103,7 +104,10 @@ namespace ccsds {
 
     [[nodiscard]] ResultBool read(const std::string &binaryFile);
     [[nodiscard]] ResultBool write(const std::string &binaryFile) const;
+#ifndef CCSDS_MCU
+    /** @brief Loads a hosted binary or configuration-file packet template. */
     [[nodiscard]] ResultBool readTemplate(const std::string &filename);
+#endif
 
     void clear();
     void clearPackets();

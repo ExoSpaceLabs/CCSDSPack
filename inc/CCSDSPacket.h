@@ -189,8 +189,16 @@ namespace ccsds {
 
     std::uint64_t getPrimaryHeader64bit();
     [[nodiscard]] std::uint64_t getPrimaryHeader64bit() const;
+    /**
+     * @brief Returns the serialized packet length saturated to UINT16_MAX.
+     *
+     * This compatibility accessor cannot represent the largest legal CCSDS Space
+     * Packet (65542 bytes including the six-octet primary header). Use
+     * getSerializedSize() when the exact wire size is required.
+     */
     std::uint16_t getFullPacketLength();
     [[nodiscard]] std::uint16_t getFullPacketLength() const;
+    /** @brief Returns the exact serialized wire size as size_t. */
     [[nodiscard]] std::size_t getSerializedSize() const {
       return 6U + static_cast<std::size_t>(m_dataField.getDataFieldUsedBytesSize())
              + static_cast<std::size_t>(getPacketErrorControlSize());
@@ -236,8 +244,9 @@ namespace ccsds {
     }
 
     [[nodiscard]] ResultBool update();
-    ResultBool loadFromConfigFile(const std::string &configPath);
 #ifndef CCSDS_MCU
+    /** @brief Loads hosted packet configuration from a file. Not available in MCU builds. */
+    ResultBool loadFromConfigFile(const std::string &configPath);
     ResultBool loadFromConfig(const ccsds::Config &cfg);
 #endif
 

@@ -22,8 +22,9 @@ namespace ccsds {
  * @param finalXorValue Value XORed with the final register; defaults to zero.
  * @return Calculated 16-bit CRC.
  *
- * The default parameters implement CRC-16/CCITT-FALSE. Packet uses this function
- * over finalized primary-header and packet-data-field bytes, excluding the CRC itself.
+ * The default parameters implement CRC-16/CCITT-FALSE. C++ parsing/validation
+ * paths use this wrapper where an owned byte vector is already available; the
+ * pointer-native encode/view paths use the equivalent C11 CRC core directly.
  */
 std::uint16_t crc16(const std::vector<std::uint8_t> &data,
                     std::uint16_t polynomial = 0x1021,
