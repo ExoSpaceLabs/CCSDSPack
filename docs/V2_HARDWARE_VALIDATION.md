@@ -12,14 +12,14 @@ This page records physical-target and native-target release evidence for CCSDSPa
 
 ## v2.1.0 validation evidence
 
-v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Fresh physical/native execution was therefore required and completed before tagging.
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Physical/native execution passed on the exact source commits recorded below. After the subsequent pre-tag audit modifies MCU public-header/configuration guards, an additional run against the final accepted release commit is required before tagging.
 
 | Target | v2.1 status | Required marker |
 |---|---|---|
 | Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
 | NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
-The exact validated source commits and generated package/library hashes are recorded below. The final qualified `main` commit is `93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`.
+The exact previously validated source commits and package/library hashes are recorded below. Commit `93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4` passed the pre-audit `main` CI. The post-audit release commit and its fresh target evidence must be added after approval of PR #169.
 
 ### Raspberry Pi 5 / arm64 rerun
 
@@ -186,13 +186,22 @@ acceptance suite.
 
 ### Final release integration note
 
-The final qualified `main` commit for v2.1.0 is
-`93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`. Comparison from both physical/native
-validation source commits to that final release line shows no changes under
-`src/`, `inc/`, the root `CMakeLists.txt`, or `package.sh`; subsequent changes
-are confined to validation tooling, performance harnesses, CI, and documentation.
-The recorded Pi/H755 executions therefore qualify the same library implementation
-that is being released.
+The first v2.1 release-promotion commit was
+`93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`. Comparison from the original
+Pi 5 and H755 test commits to that point showed no differences under
+`src/`, `inc/`, root `CMakeLists.txt`, or `package.sh`; their physical/native
+evidence therefore covers that library implementation.
+
+The subsequent pre-tag repository audit (PR #169) modifies public C++ header
+documentation, hosted-only API declarations, and the compilation guard for
+`Manager` configuration loading. It does not modify Space Packet/PUS/CUC wire
+algorithms or the C11 core, but the resulting MCU archive and public interface
+are not byte-for-byte identical to the previously validated artifact.
+
+**Final acceptance still requires new physical H755 and native Pi 5 validation
+on the exact post-audit release commit**, including recorded source, package,
+linked-library, and executable identifiers. Do not substitute the earlier
+successful runs or hosted cross-build for this final target execution.
 
 ### Pre-hardware footprint evidence
 
