@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 All notable changes to CCSDSPack are documented here. Upgrade-specific v1.2-to-v2
 source/configuration mapping is maintained in `docs/MIGRATION_V1_TO_V2.md`.
 
-## [2.1.0] - 2026-10-07
+## [2.1.0] - pending release tag
 
 ### Architecture
 
