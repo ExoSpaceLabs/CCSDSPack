@@ -19,7 +19,9 @@ v2.1.0 changes the implementation architecture substantially while preserving th
 | Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
 | NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
-The **final tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. Any subsequent release-evidence documentation commit must be verified not to modify the qualified code, public headers, build configuration or hardware harness.
+The **last physically tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below.
+
+**Post-audit qualification note:** A subsequent API/packaging audit found that hosted-only `Manager::read/write`, diagnostic-print, and file helpers were still exposed in MCU public headers without linkable MCU implementations. A correction is proposed on `fix/v2.1-pretag-api-doc-consistency`, together with installed-header filtering. These corrections do not change the CCSDS/PUS/CUC wire algorithms, but they change public headers, the MCU archive surface, and package contents. **The recorded Pi/H755 PASS evidence remains valid for the SHA above, not for the new candidate. Repeat both target campaigns after the fix is accepted onto `develop`; record its exact new SHA and artifacts before tag/promotion.**
 
 ### Final v2.1.0 hardware acceptance: 2026-10-11
 
@@ -60,7 +62,7 @@ Both physical/native campaigns completed successfully using **exactly the same s
 
 **Non-blocking tool diagnostics:** ARM GCC 10.3.1 warns when `-fno-rtti` is forwarded to C compilation units (it is a C++ option). OpenOCD 0.11 reports STM32H7 DBGMCU `mem2array` examine errors, but completes programming and verification; the target executes all acceptance sections successfully. Neither is a protocol test failure. Follow-up toolchain/script cleanup must not be introduced into this qualified release without a new assessment.
 
-**Acceptance conclusion:** the final post-audit implementation is qualified on both targets. Evidence-only Markdown changes after the tested source commit do not change the qualified executable or package identity; verify this with a commit-level diff before tagging.
+**Acceptance conclusion for the recorded commit:** both physical/native campaigns passed on `3c93e6b`. A later change to the MCU-facing API or installed package must be requalified as noted above. Documentation-only changes can instead be verified with a commit-level diff.
 ### Raspberry Pi 5 / arm64 rerun
 
 For a future rerun from a clean native arm64 checkout:
@@ -241,7 +243,7 @@ This is compile/link evidence only. The physical STM32 execution record above re
 
 ---
 
-## Status
+## Historical v2.0 physical-validation summary
 
 | Target | Status | Required marker |
 |---|---|---|
