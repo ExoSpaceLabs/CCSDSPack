@@ -15,7 +15,7 @@ Hosted CCSDSPack configuration files use one typed entry per line:
 
 Lines beginning with `#` are comments. The parser is `ccsds::Config`; configuration parsing is excluded from `CCSDS_MCU` builds.
 
-The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring.
+The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring. `ccsds::Config` is a generic typed-key parser: an unknown but syntactically valid key may be stored without being consumed by `Packet` or the CLI, and therefore is **not necessarily rejected**. Use the documented keys below; the old `ccsds_secondary_header_flag` key is ignored because that flag is derived from the actual secondary-header object.
 
 ## Value types
 
