@@ -64,7 +64,7 @@ The optional CCSDSPack CRC16 trailer is an external Packet-level convention enco
 
 ## Packet error control
 
-`PacketErrorControlMode::None` reserves no trailer. `PacketErrorControlMode::CRC16` reserves the final two Packet Data Field octets for CRC-16/CCITT-FALSE. The trailer contributes to Packet Data Length, is encoded most-significant byte first, and is excluded from its own CRC calculation.
+`PacketErrorControlMode::None` reserves no trailer. `PacketErrorControlMode::CRC16` reserves the final two Packet Data Field octets for CRC16 (CRC-16/CCITT-FALSE by default; explicit parameter customization is supported). The trailer contributes to Packet Data Length, is encoded most-significant byte first, and is excluded from its own CRC calculation.
 
 CRC coverage includes the primary header, optional secondary header, and application data. Bounded parsing validates the selected mode transactionally.
 
