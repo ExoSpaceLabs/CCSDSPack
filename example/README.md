@@ -1,6 +1,6 @@
 # CCSDSPack standalone examples
 
-Each example is an independent CMake consumer of an installed CCSDSPack 2.x package. None links the source-tree target directly, so the suite also validates the installed headers, exported CMake target, and package surface.
+Each example is an independent CMake consumer of an installed CCSDSPack 2.1-or-later compatible package (`find_package(CCSDSPack 2.1 CONFIG REQUIRED)`). None links the source-tree target directly, so the suite also validates the installed headers, exported CMake target, and package surface.
 
 Install the library, then build every example:
 
