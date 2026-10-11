@@ -248,7 +248,7 @@ CC=gcc CXX=/bin/false cmake -S . -B build-c \
 cmake --build build-c
 ```
 
-The umbrella C header is `<ccsdspack/c/ccsdspack.h>`. Low-level C APIs use caller-owned buffers/views and do not hide heap ownership.
+The umbrella C header is `<ccsdspack/c/ccsdspack.h>`. Low-level C APIs use caller-owned buffers/views and do not hide heap ownership. The [standalone C API reference](docs/C_API.md) lists the complete implemented facilities, while [Packages](docs/PACKAGES.md) specifies which targets and headers are installed in C-only, MCU, and hosted builds.
 
 ## Command-line tools
 
