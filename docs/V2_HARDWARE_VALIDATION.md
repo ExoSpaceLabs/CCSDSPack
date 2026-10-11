@@ -14,12 +14,12 @@ This page records physical-target and native-target release evidence for CCSDSPa
 
 v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Final physical/native execution was completed on 2026-10-11 against the same post-audit implementation commit on `develop`. Earlier validation evidence remains below as historical context.
 
-| Target | v2.1 status | Required marker |
+| Target (tested SHA `3c93e6b`) | October 11 result | Required marker |
 |---|---|---|
 | Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
 | NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
-The **final tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. Any subsequent release-evidence documentation commit must be verified not to modify the qualified code, public headers, build configuration or hardware harness.
+The **tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. The pre-tag audit changes MCU API declarations/compilation guards after this run; a subsequent corrected candidate must be qualified separately. Evidence-only commits do not change the tested binaries.
 
 ### Final v2.1.0 hardware acceptance: 2026-10-11
 
