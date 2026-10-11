@@ -43,7 +43,7 @@ define_secondary_header:bool=false
 | Key | Required | Constraint |
 |---|---:|---|
 | `ccsds_packet_error_control` | optional | `crc16` or `none`; default `crc16` |
-| `data_field_size` | optional | content capacity `0..65535` |
+| `data_field_size` | optional | secondary-header + application-data capacity `0..65535`; default `2024` octets (packet-level CRC trailer is accounted for separately) |
 | `ccsds_version_number` | yes | `0` |
 | `ccsds_type` | for direction-neutral packets | `false` TM, `true` TC |
 | `ccsds_APID` | yes | `0..2047` |
