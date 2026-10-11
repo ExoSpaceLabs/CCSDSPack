@@ -56,14 +56,14 @@ void printPackets(ccsds::Manager &manager);
 /**
  * @brief Formats the low-order bits of an integer as a binary string.
  * @param value Value to format.
- * @param bits Number of low-order bits to include.
+ * @param bits Number of low-order bits to include (non-positive: empty; above 32: clamp to 32).
  * @return Binary string without a `0b` prefix.
  */
 std::string getBinaryString(std::uint32_t value, std::int32_t bits);
 
 /**
  * @brief Returns spacing used by the diagnostic bit-field formatter.
- * @param num Number of spaces.
+ * @param num Number of spaces (non-positive returns empty).
  * @return String containing num spaces, or an empty string for non-positive input.
  */
 std::string getBitsSpaces(std::int32_t num);
