@@ -54,6 +54,36 @@ define_secondary_header:bool=false
 
 The Secondary Header Flag is derived from the installed secondary-header object. `data_field_size` is capacity; Packet Data Length is calculated from the actual serialized content.
 
+## Hosted CLI and stream settings
+
+The following keys control the hosted command-line tools and Manager's
+optional **external** stream framing. They are not fields in a CCSDS Space
+Packet PDU.
+
+| Key | Used by | Requirement / behavior |
+|---|---|---|
+| `validation_enable:bool` | decoder | **Required** by `ccsds_decoder`; selects validation when reconstructing application data |
+| `sync_pattern_enable:bool` | encoder, decoder, validator | Optional; defaults to `false` |
+| `sync_pattern:int` | encoder, decoder, validator | Optional when synchronization is enabled; defaults to `0x1ACFFC1D`; encoded as four big-endian bytes before each packet |
+
+Example for synchronized streams:
+
+```ini
+validation_enable:bool=true
+sync_pattern_enable:bool=true
+sync_pattern:int=0x1ACFFC1D
+```
+
+The encoder and decoder must agree on synchronization settings. The validator
+reads synchronization settings only when a configuration file is supplied;
+without a configuration it validates ordinary adjacent Space Packet bytes.
+The encoder does not require `validation_enable`. The decoder **does**
+require that key even when set to `false`.
+
+`sync_pattern` is parsed using the configuration parser's signed 32-bit
+`int` representation, then interpreted as a 32-bit synchronization word.
+The marker is not included in Packet Data Length or CRC coverage.
+
 ## PUS identity
 
 A PUS configuration selects one concrete header:
