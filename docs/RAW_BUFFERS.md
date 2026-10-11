@@ -87,6 +87,16 @@ const ccsds::Validator &validator = view.getValidatorReference();
 
 References remain owned by Manager and must not outlive it.
 
+## Non-owning application-data view
+
+`ccsds::DataField::getApplicationDataView()` returns a
+`ccsds_buffer_view_t` over the DataField's currently owned application-data
+bytes. It avoids copying the application-data vector just to inspect its
+contents. The view does **not** own memory and becomes invalid when the
+underlying application data is replaced, reallocated, or its owning DataField
+is destroyed. This is distinct from the owning
+`getApplicationData()` convenience accessor.
+
 ## Bare-metal use
 
 Raw-buffer APIs are available under `CCSDS_MCU` and add no RTTI or exception requirement. The pure-C core can also be built without a C++ compiler. The Cortex-M compile/link probe exercises declared-size inspection, generic raw bounded parsing, typed raw PUS parsing, structured validation, and the shared C wire primitives. Physical execution remains a separate release-validation gate.
