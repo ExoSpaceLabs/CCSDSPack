@@ -80,7 +80,7 @@ CCSDS 133.0-B-2 defines the Space Packet as the Primary Header plus Packet Data 
 CCSDSPack therefore treats error control as explicit Packet-level policy:
 
 - `PacketErrorControlMode::None`: no trailer is reserved;
-- `PacketErrorControlMode::CRC16`: the final two Packet Data Field octets contain CRC-16/CCITT-FALSE.
+- `PacketErrorControlMode::CRC16`: the final two Packet Data Field octets contain the selected CRC16. CRC-16/CCITT-FALSE is the default; the C++ Packet API permits explicitly configured polynomial, initial value, and final XOR.
 
 In CRC16 mode the trailer contributes to Packet Data Length, is encoded most-significant byte first, and is excluded from its own CRC calculation. The CRC covers the six-byte primary header, secondary-header bytes, and application data. Parsing validates the selected CRC mode transactionally.
 
