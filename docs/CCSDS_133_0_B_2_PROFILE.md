@@ -124,4 +124,4 @@ See [VALIDATION.md](VALIDATION.md).
 
 ## Conformance evidence
 
-The v2.1.0 release is exercised by 134 native regression/conformance tests, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux Ubuntu 22.04/24.04/26.04 and Windows CI, Doxygen, package/cross-build generation, ASan/UBSan, bounded fuzzing, Raspberry Pi 5 native arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution.
+The v2.1.0 release is exercised by 135 native regression/conformance tests in the audit-corrected candidate, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux Ubuntu 22.04/24.04/26.04 and Windows CI, Doxygen, package/cross-build generation, ASan/UBSan, bounded fuzzing, Raspberry Pi 5 native arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution.
