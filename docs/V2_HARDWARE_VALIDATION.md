@@ -60,7 +60,7 @@ Both physical/native campaigns completed successfully using **exactly the same s
 
 **Non-blocking tool diagnostics:** ARM GCC 10.3.1 warns when `-fno-rtti` is forwarded to C compilation units (it is a C++ option). OpenOCD 0.11 reports STM32H7 DBGMCU `mem2array` examine errors, but completes programming and verification; the target executes all acceptance sections successfully. Neither is a protocol test failure. Follow-up toolchain/script cleanup must not be introduced into this qualified release without a new assessment.
 
-**Acceptance conclusion:** the final post-audit implementation is qualified on both targets. Evidence-only Markdown changes after the tested source commit do not change the qualified executable or package identity; verify this with a commit-level diff before tagging.
+**Acceptance conclusion for tested commit `3c93e6b`:** both targets passed and their artifact hashes are recorded. These results do not automatically qualify later MCU public-header/source fixes; requalify the audit-corrected candidate before tagging.
 ### Raspberry Pi 5 / arm64 rerun
 
 For a future rerun from a clean native arm64 checkout:
@@ -138,7 +138,7 @@ linked ELF SHA-256, compiler version, final ELF text/data/bss, complete UART
 transcript, and OpenOCD program/verify log before release promotion. See
 `test/package_tester/stm32h7xx/H755_INTEGRATION.md` for the full procedure.
 
-### v2.1.0 validation evidence
+### Earlier v2.1.0 candidate validation (historical)
 
 Validation date: **2026-10-04**
 
@@ -224,11 +224,19 @@ The OpenOCD 0.11 target script still emits non-fatal STM32H7 DBGMCU
 verification complete successfully and the firmware executes the full
 acceptance suite.
 
-### Final release integration note
+### Candidate history and change control
 
-The earlier physical/native runs against the pre-audit source commits remain historical evidence. PR #169 changed MCU-facing declarations and `Manager` hosted-configuration compilation guards, so those earlier artifacts were not interchangeable with the final candidate.
+The October 4 runs above were completed on the indicated earlier source
+commits. PR #169 changed MCU-facing declarations and hosted-configuration
+compilation guards; those older artifacts are not interchangeable with the
+October 11 validation of `3c93e6b79d3d97ff3003682804c120f38672e229`.
 
-New Raspberry Pi 5 and NUCLEO-H755ZI-Q runs on **`3c93e6b79d3d97ff3003682804c120f38672e229`** passed on 2026-10-11. This is the qualified implementation SHA. Release-evidence documentation commits should not trigger new physical testing unless a source, public-header, build, package, hardware-harness, or dependency change is introduced.
+**Pre-tag full-audit note:** the subsequent source/API consistency audit found
+hosted-only functions still exposed on MCU. Corrections to MCU declarations and
+Manager compilation guards require renewed qualification of the corrected
+source commit before the release tag. The October 11 evidence remains valid
+for the exact commit and package hashes recorded above.
+
 ### Pre-hardware footprint evidence
 
 A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2.0 public hardware probe for both implementations. With section garbage collection, retained text is:
@@ -241,14 +249,7 @@ This is compile/link evidence only. The physical STM32 execution record above re
 
 ---
 
-## Status
-
-| Target | Status | Required marker |
-|---|---|---|
-| Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
-| NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
-
-## Raspberry Pi 5 v2 validation record
+## Historical v2.0.0 Raspberry Pi 5 validation record
 
 Validation date: **2026-08-31**
 
@@ -319,7 +320,7 @@ Installed release surfaces confirmed by the package include:
 
 This run satisfies the v2.0.0 release gate requiring fresh native arm64 installed-package/API execution against the v2 hardware-acceptance baseline.
 
-## NUCLEO-H755ZI-Q Cortex-M7 validation record
+## Historical v2.0.0 NUCLEO-H755ZI-Q Cortex-M7 validation record
 
 Validation date: **2026-08-31**
 
