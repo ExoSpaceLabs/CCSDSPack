@@ -63,7 +63,10 @@ existing independent conformance evidence continues to pass.
 - [x] `develop` Linux, Windows, and robustness CI passed on the qualified implementation SHA; Doxygen passed on the matching `main` SHA.
 - [x] Native Raspberry Pi 5 validation passed on the qualified SHA; ARM64 package SHA-256 recorded.
 - [x] Physical NUCLEO-H755ZI-Q validation passed on the qualified SHA; MCU package, library, ELF, UART and OpenOCD evidence recorded.
-- [ ] Final documentation-only evidence changes verified against the qualified implementation SHA and accepted on `develop`.
+- [ ] Correct MCU hosted-only API declarations and installed-header layout on `develop`; verify the new candidate in Linux, Windows, Doxygen and robustness CI.
+- [ ] Repeat Pi 5 native package acceptance on the corrected `develop` SHA, recording the new package hash.
+- [ ] Repeat physical H755 firmware acceptance on the same corrected `develop` SHA, recording MCU package, library/ELF hashes, and UART/OpenOCD evidence.
+- [ ] Verify the final documentation/evidence-only changes against the **newly qualified** implementation SHA and accept on `develop`.
 - [ ] Final approved `develop` evidence promoted to `main` without source/build modifications.
 - [ ] Final `main` Linux, Windows, Doxygen and robustness workflows pass on the exact commit to be tagged.
 - [ ] `v2.1.0` tag created from the approved `main` commit.
