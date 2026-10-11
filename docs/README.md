@@ -11,6 +11,7 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 
 - [Main README](../README.md): project overview, design, primary APIs, build, and integration model.
 - [Examples](EXAMPLES.md): packet construction, PUS, Manager, validation, raw buffers, and configuration examples.
+- [Standalone C11 API](C_API.md): public C facilities, target selection, ownership, and feature boundaries.
 - [Space Packet PDU profile](CCSDS_133_0_B_2_PROFILE.md): supported CCSDS packet behavior and scope boundary.
 - [PUS tailoring](MISSION_TAILORING.md): concrete PUS identities, optional layout choices, and numeric CUC time.
 - [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
