@@ -61,6 +61,7 @@ Both physical/native campaigns completed successfully using **exactly the same s
 **Non-blocking tool diagnostics:** ARM GCC 10.3.1 warns when `-fno-rtti` is forwarded to C compilation units (it is a C++ option). OpenOCD 0.11 reports STM32H7 DBGMCU `mem2array` examine errors, but completes programming and verification; the target executes all acceptance sections successfully. Neither is a protocol test failure. Follow-up toolchain/script cleanup must not be introduced into this qualified release without a new assessment.
 
 **Acceptance conclusion:** the final post-audit implementation is qualified on both targets. Evidence-only Markdown changes after the tested source commit do not change the qualified executable or package identity; verify this with a commit-level diff before tagging.
+
 ### Raspberry Pi 5 / arm64 rerun
 
 For a future rerun from a clean native arm64 checkout:
@@ -138,7 +139,7 @@ linked ELF SHA-256, compiler version, final ELF text/data/bss, complete UART
 transcript, and OpenOCD program/verify log before release promotion. See
 `test/package_tester/stm32h7xx/H755_INTEGRATION.md` for the full procedure.
 
-### v2.1.0 validation evidence
+### Earlier v2.1.0 candidate validation (historical)
 
 Validation date: **2026-10-04**
 
@@ -224,11 +225,12 @@ The OpenOCD 0.11 target script still emits non-fatal STM32H7 DBGMCU
 verification complete successfully and the firmware executes the full
 acceptance suite.
 
-### Final release integration note
+### Why final physical revalidation was required
 
 The earlier physical/native runs against the pre-audit source commits remain historical evidence. PR #169 changed MCU-facing declarations and `Manager` hosted-configuration compilation guards, so those earlier artifacts were not interchangeable with the final candidate.
 
 New Raspberry Pi 5 and NUCLEO-H755ZI-Q runs on **`3c93e6b79d3d97ff3003682804c120f38672e229`** passed on 2026-10-11. This is the qualified implementation SHA. Release-evidence documentation commits should not trigger new physical testing unless a source, public-header, build, package, hardware-harness, or dependency change is introduced.
+
 ### Pre-hardware footprint evidence
 
 A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2.0 public hardware probe for both implementations. With section garbage collection, retained text is:
@@ -241,7 +243,9 @@ This is compile/link evidence only. The physical STM32 execution record above re
 
 ---
 
-## Status
+## Historical v2.0 acceptance
+
+The following target status belongs to the **previous v2.0 campaign**, not the final v2.1 candidate recorded above.
 
 | Target | Status | Required marker |
 |---|---|---|
