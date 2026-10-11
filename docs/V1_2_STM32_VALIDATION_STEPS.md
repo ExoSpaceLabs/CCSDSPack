@@ -1,5 +1,11 @@
 # CCSDSPack v1.2.0 STM32H755 Validation Procedure
 
+> **Historical instructions, not a v2.1 release test.** The CubeIDE CM4/CM7
+> project tree described here was removed from current `develop`. To reproduce
+> the historical setup, use the `v1.2.0` Git tag in a clean checkout/worktree.
+> For the current v2.1 standalone DAS/OpenOCD harness, follow
+> [H755_INTEGRATION.md](../test/package_tester/stm32h7xx/H755_INTEGRATION.md).
+
 ## Purpose
 
 Close the remaining CCSDSPack v1.2.0 hardware release gate by executing the existing deterministic Cortex-M7 validation suite on the NUCLEO-H755ZI-Q.
@@ -9,7 +15,7 @@ This validation is limited to the v1.2 CCSDS Space Packet implementation. ECSS P
 ## Target and repository baseline
 
 - Repository: `ExoSpaceLabs/CCSDSPack`
-- Branch: `develop`
+- Historical source baseline: `v1.2.0` release tag (original validation was performed on the v1.2-era `develop` history)
 - Board: `NUCLEO-H755ZI-Q`
 - Core: Cortex-M7
 - Existing project: `test/package_tester/stm32h7xx`
@@ -25,8 +31,8 @@ For this validation, retain the committed STM32H745 project metadata and sources
 From the repository root:
 
 ```bash
-git switch develop
-git pull --ff-only
+git fetch origin --tags
+git switch --detach v1.2.0
 
 git status --short
 git rev-parse HEAD
@@ -36,7 +42,7 @@ arm-none-eabi-g++ --version | head -n 1
 Acceptance:
 
 - Working tree is clean.
-- The exact `develop` commit SHA is recorded.
+- The exact historical `v1.2.0` commit SHA is recorded.
 - The ARM GNU toolchain version is recorded.
 
 ## 2. Build the v1.2 MCU package
