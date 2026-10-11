@@ -200,7 +200,25 @@ CCSDSPack represents the numeric time code. Calendar conversion, leap-second han
 
 ## Library architecture
 
-![CCSDSPack library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
+```text
+Hosted CLI and user applications       Bare-metal / C applications
+               |                                 |
+      C++17 ownership layer                      |
+   Packet, Manager, Validator, PUS               |
+               |                                 |
+               +---------------+-----------------+
+                               |
+                  C11 protocol core
+   CCSDS header / CRC / PUS-A,C / CUC / validation
+         segmentation / reassembly / stream
+                               |
+                 Caller-owned wire buffers
+```
+
+The former architecture image used pre-v2 PusA/PusB/PusC class names and is
+not an accurate depiction of the current implementation. This textual layout
+reflects the implemented layers and is maintained alongside
+the [C11 API reference](docs/C_API.md).
 
 The protocol layer is C11. The established C++17 Packet/Manager API is built above that core by default. Hosted builds export both layers; `CCSDSPACK_BUILD_MCU=ON` produces bare-metal static libraries while excluding host-only configuration and command-line components.
 
