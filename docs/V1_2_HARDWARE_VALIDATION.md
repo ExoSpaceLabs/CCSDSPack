@@ -7,7 +7,7 @@ SPDX-License-Identifier: Apache-2.0
 
 [Documentation index](README.md) | [Packages](PACKAGES.md) | [v1.2 GitHub Release](https://github.com/ExoSpaceLabs/CCSDSPack/releases/tag/v1.2.0)
 
-This page records the release hardware evidence for CCSDSPack v1.2.0 and provides the repeatable validation procedures. Hardware execution complements the Linux and Windows CI evidence; it does not extend the compliance claim beyond the CCSDS Space Packet PDU profile described in [COMPLIANCE.md](../COMPLIANCE.md) and [CCSDS_COMPLIANCE.md](../CCSDS_COMPLIANCE.md).
+This page records historical release hardware evidence for CCSDSPack v1.2.0 and provides archived validation procedures. Reproducing the v1.2 STM32/CubeIDE source layout requires the `v1.2.0` tag: current `develop` uses the separate v2.1 DAS/OpenOCD harness. Hardware execution complements the Linux and Windows CI evidence; it does not extend the compliance claim beyond the CCSDS Space Packet PDU profile described in [COMPLIANCE.md](../COMPLIANCE.md) and [CCSDS_COMPLIANCE.md](../CCSDS_COMPLIANCE.md).
 
 ## Status
 
