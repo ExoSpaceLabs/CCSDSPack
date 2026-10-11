@@ -42,4 +42,7 @@ Historical v1.2 behavior and hardware evidence remain available in the `V1_2_*` 
 
 ## Diagrams
 
-The maintained packet-layout and architecture diagrams are embedded in the main README. UML generation is manual-only and is not a v2.1.0 release gate.
+The maintained Space Packet layout is embedded in the main README. The current
+C11/C++17 architecture is represented there as a textual layer diagram; the
+old image naming PusA/PusB/PusC classes is obsolete. UML generation is manual
+and is not a v2.1.0 release gate.
