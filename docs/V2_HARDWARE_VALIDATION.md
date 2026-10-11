@@ -12,7 +12,7 @@ This page records physical-target and native-target release evidence for CCSDSPa
 
 ## v2.1.0 validation evidence
 
-v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Final physical/native execution was completed on 2026-10-11 against the same post-audit implementation commit on `develop`. Earlier validation evidence remains below as historical context.
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Physical/native execution passed on 2026-10-11 against the same post-audit implementation commit on `develop`. That evidence qualifies the recorded candidate; a later MCU API/package correction requires a new target campaign before release.
 
 | Target | v2.1 status | Required marker |
 |---|---|---|
@@ -23,7 +23,7 @@ The **last physically tested implementation commit** for both devices is `3c93e6
 
 **Post-audit qualification note:** A subsequent API/packaging audit found that hosted-only `Manager::read/write`, diagnostic-print, and file helpers were still exposed in MCU public headers without linkable MCU implementations. A correction is proposed on `fix/v2.1-pretag-api-doc-consistency`, together with installed-header filtering. These corrections do not change the CCSDS/PUS/CUC wire algorithms, but they change public headers, the MCU archive surface, and package contents. **The recorded Pi/H755 PASS evidence remains valid for the SHA above, not for the new candidate. Repeat both target campaigns after the fix is accepted onto `develop`; record its exact new SHA and artifacts before tag/promotion.**
 
-### Final v2.1.0 hardware acceptance: 2026-10-11
+### Recorded v2.1.0 candidate hardware acceptance: 2026-10-11
 
 Both physical/native campaigns completed successfully using **exactly the same source commit**:
 
@@ -226,11 +226,11 @@ The OpenOCD 0.11 target script still emits non-fatal STM32H7 DBGMCU
 verification complete successfully and the firmware executes the full
 acceptance suite.
 
-### Final release integration note
+### Release integration and qualification history
 
 The earlier physical/native runs against the pre-audit source commits remain historical evidence. PR #169 changed MCU-facing declarations and `Manager` hosted-configuration compilation guards, so those earlier artifacts were not interchangeable with the final candidate.
 
-New Raspberry Pi 5 and NUCLEO-H755ZI-Q runs on **`3c93e6b79d3d97ff3003682804c120f38672e229`** passed on 2026-10-11. This is the qualified implementation SHA. Release-evidence documentation commits should not trigger new physical testing unless a source, public-header, build, package, hardware-harness, or dependency change is introduced.
+New Raspberry Pi 5 and NUCLEO-H755ZI-Q runs on **`3c93e6b79d3d97ff3003682804c120f38672e229`** passed on 2026-10-11. This is the qualified implementation SHA **for the 2026-10-11 candidate**. Release-evidence documentation commits alone do not trigger new physical testing. The later MCU API/header/package fix is a substantive change and therefore does require requalification.
 ### Pre-hardware footprint evidence
 
 A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2.0 public hardware probe for both implementations. With section garbage collection, retained text is:
