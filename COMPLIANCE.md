@@ -75,7 +75,7 @@ Round-trip behavior alone is not treated as sufficient conformance evidence.
 
 The v2.1.0 release is covered by:
 
-- **134/134 native regression/conformance tests**;
+- **135 native regression/conformance tests in the audit-corrected candidate**;
 - Linux and Windows hosted CI, Doxygen, CLI integration, installed-package
   consumers/examples, and native/cross-package generation;
 - dedicated Clang ASan and UBSan execution plus bounded libFuzzer smoke tests;
