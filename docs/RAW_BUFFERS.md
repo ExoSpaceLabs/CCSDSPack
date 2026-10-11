@@ -87,6 +87,25 @@ const ccsds::Validator &validator = view.getValidatorReference();
 
 References remain owned by Manager and must not outlive it.
 
+## Caller-buffer packet serialization
+
+The existing C++ Packet API also serializes into a caller-owned output buffer:
+
+```cpp
+std::uint8_t output[256]{};
+const auto written = packet.serialize(output, sizeof(output));
+if (!written) {
+  // Handle written.error() before using the output.
+} else {
+  // output[0 .. written.value()) contains the serialized packet.
+}
+```
+
+This avoids returning an owning wire `std::vector` from
+`Packet::serialize()`; it does not imply that every internal secondary-header
+object is allocation-free. The size/capacity and packet finalization checks
+still apply.
+
 ## Non-owning application-data view
 
 `ccsds::DataField::getApplicationDataView()` returns a
