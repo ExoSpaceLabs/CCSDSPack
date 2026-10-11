@@ -50,7 +50,7 @@ String Services, a complete protocol entity, a completed PICS, complete PUS
 services, transfer frames, virtual channels, CFDP, COP-1, transport bindings,
 calendar-time conversion, leap-second handling, or mission time correlation.
 
-The optional CRC-16/CCITT-FALSE trailer is a CCSDSPack packet-level convention
+The optional CRC16 trailer (CRC-16/CCITT-FALSE by default, with explicit CRC parameter customization) is a CCSDSPack packet-level convention
 encoded inside the Packet Data Field; CCSDS 133.0-B-2 does not define it as a
 separate top-level Space Packet field. The optional Manager synchronization
 marker is external stream framing and is not part of a Space Packet.
