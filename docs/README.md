@@ -16,6 +16,7 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 - [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
 - [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size interfaces.
 - [Performance baseline](PERFORMANCE.md): matched v2.0 `main` versus v2.1 packet, PUS, CUC, Validator, Manager, and CRC measurements, allocation accounting, C packet views, and MCU footprint.
+- [Architecture](ARCHITECTURE.md): detailed C11/C++17 layering, ownership boundaries and build profiles.
 - [Packet processing flow](FLOW.md): Packet, Manager, parsing, validation, and reassembly lifecycle.
 
 ## Hosted integration
@@ -41,4 +42,4 @@ Historical v1.2 behavior and hardware evidence remain available in the `V1_2_*` 
 
 ## Diagrams
 
-The maintained packet-layout and architecture diagrams are embedded in the main README. UML generation is manual-only and is not a v2.1.0 release gate.
+The main README includes a compact Mermaid architecture overview; the [detailed architecture](ARCHITECTURE.md) is also maintained as Mermaid source. The precision-sensitive packet-layout image remains in the README. UML generation is manual-only and is not a v2.1.0 release gate.
