@@ -10,6 +10,8 @@ The repository provides `cmake/toolchains/aarch64-linux-gnu.cmake`.
 
 Install the cross toolchain and target runtime dependencies required by package inspection. The repository helper `install-aarch-cross-build-deps.sh` is intentionally restricted to Ubuntu 22.04 (Jammy), because it configures Jammy amd64/arm64 package sources explicitly; other host releases should use their native repository layout:
 
+> **Host configuration warning:** the helper makes a timestamped backup and then **replaces `/etc/apt/sources.list`** with the repository's Jammy amd64/arm64 mirror configuration. It is intended for controlled/ephemeral CI or dedicated package-build machines, **not** as a routine workstation setup script. On a shared/development host, inspect and install the cross-toolchain packages using your own APT source configuration instead.
+
 ```bash
 sudo dpkg --add-architecture arm64
 sudo apt-get update

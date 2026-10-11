@@ -71,4 +71,16 @@ using ResultBool = Result<bool>;
 using ResultBuffer = Result<std::vector<std::uint8_t>>;
 ```
 
-The same Result/Error and Validator APIs are available in hosted and `CCSDS_MCU` C++17 builds, including builds that disable RTTI and exceptions.
+The same Result/Error and Validator APIs are available in hosted and
+`CCSDS_MCU` C++17 builds, including builds that disable RTTI and exceptions.
+
+## Native C11 status codes
+
+The standalone C11 API uses `ccsds_status_t` and
+`ccsds_status_name()`, not C++ `Result<T>`. Status values `0..13`
+align with the corresponding C++ `ErrorCode` values. The C enum
+additionally exposes `CCSDS_STATUS_BUFFER_TOO_SMALL` and dedicated
+CUC/PUS field, range, size, and reserved-state failures (values `14..31`).
+See [Native C11 API](C_CORE.md) and
+[`inc/ccsdspack/c/error.h`](../inc/ccsdspack/c/error.h) for the
+authoritative list; these C-only statuses are not C++ `ErrorCode` entries.

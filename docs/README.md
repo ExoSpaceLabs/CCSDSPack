@@ -14,7 +14,8 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 - [Space Packet PDU profile](CCSDS_133_0_B_2_PROFILE.md): supported CCSDS packet behavior and scope boundary.
 - [PUS tailoring](MISSION_TAILORING.md): concrete PUS identities, optional layout choices, and numeric CUC time.
 - [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
-- [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size interfaces.
+- [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size C++ adapters.
+- [Native C11 API](C_CORE.md): C-only packet views, stream cursors, direct encoding, segmentation/reassembly, and error/ownership conventions.
 - [Performance baseline](PERFORMANCE.md): matched v2.0 `main` versus v2.1 packet, PUS, CUC, Validator, Manager, and CRC measurements, allocation accounting, C packet views, and MCU footprint.
 - [Packet processing flow](FLOW.md): Packet, Manager, parsing, validation, and reassembly lifecycle.
 
@@ -24,6 +25,7 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 - [Command-line tools](CLI.md): encoder, decoder, validator, and exit behavior.
 - [Packages](PACKAGES.md): native packages and installed CMake consumption.
 - [Cross-build guide](CROSSBUILD.md): aarch64 Linux and bare-metal Cortex-M builds.
+- [Hardware validation](V2_HARDWARE_VALIDATION.md): native Pi 5 and physical Cortex-M7 qualification, source and artifact hashes.
 - [Error and Result handling](ERROR.md): exception-free operation errors and structured validation diagnostics.
 - [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/): public headers and API details.
 

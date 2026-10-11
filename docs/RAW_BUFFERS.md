@@ -11,7 +11,7 @@ CCSDSPack supports both `std::vector<std::uint8_t>` interfaces and pointer-plus-
 
 ## Implementation boundary
 
-In v2.1.0, bounded raw packet parsing is pointer-native. The C packet view validates framing, declared length, optional CRC16, and packet policy directly over caller-owned input; the C++ `Packet` adapter then copies only state it must own. Manager stream walking also operates over non-owning C views rather than materializing the unconsumed tail on every packet.
+In v2.1.0, bounded raw packet parsing is pointer-native. The C packet view validates packet boundaries, declared length, selected CRC16 policy, version-zero support, and structural Idle Packet constraints directly over caller-owned input; it does not decode PUS/custom secondary-header fields. The C++ `Packet` adapter then decodes the selected secondary-header schema and copies only state it must own. Manager stream walking also operates over non-owning C views rather than materializing the unconsumed tail on every packet.
 
 ## Declared packet size
 

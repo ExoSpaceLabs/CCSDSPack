@@ -51,7 +51,7 @@ CCSDSPack implements the six-octet CCSDS primary header followed by a Packet Dat
 
 ![CCSDSPack Space Packet layout](docs/imgs/ccsdsPacket.drawio.png)
 
-The implementation enforces:
+The packet-level implementation enforces the following profile (individual low-level C primary-header field helpers also allow inspection of other version bit patterns):
 
 - Packet Version Number `000`;
 - telemetry and telecommand Packet Types;
@@ -239,6 +239,8 @@ find_package(CCSDSPack 2.1 CONFIG REQUIRED)
 target_link_libraries(my_c_app PRIVATE ccsdspack::c)
 ```
 
+For C11 packet-view and stream examples, segmentation/reassembly helpers, status codes, and the precise packet-level policy boundary, see the [native C11 API guide](docs/C_CORE.md).
+
 A C-only build does not require a C++ compiler:
 
 ```bash
@@ -273,6 +275,7 @@ See [Command-line tools](docs/CLI.md).
 - [Structured validation](docs/VALIDATION.md)
 - [Configuration](docs/CONFIG.md)
 - [Raw-buffer APIs](docs/RAW_BUFFERS.md)
+- [Native C11 API](docs/C_CORE.md)
 - [Performance baseline](docs/PERFORMANCE.md)
 - [Examples](docs/EXAMPLES.md)
 - [Packages and cross-builds](docs/PACKAGES.md)

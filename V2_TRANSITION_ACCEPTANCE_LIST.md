@@ -63,6 +63,7 @@ existing independent conformance evidence continues to pass.
 - [x] `develop` Linux, Windows, and robustness CI passed on the qualified implementation SHA; Doxygen passed on the matching `main` SHA.
 - [x] Native Raspberry Pi 5 validation passed on the qualified SHA; ARM64 package SHA-256 recorded.
 - [x] Physical NUCLEO-H755ZI-Q validation passed on the qualified SHA; MCU package, library, ELF, UART and OpenOCD evidence recorded.
+- [ ] Pre-tag disposition of [issue #172](https://github.com/ExoSpaceLabs/CCSDSPack/issues/172): accept the pre-existing capacity-shrink edge case for this release with explicit scope, or fix it and reassess/re-run qualified hardware tests.
 - [ ] Final documentation-only evidence changes verified against the qualified implementation SHA and accepted on `develop`.
 - [ ] Final approved `develop` evidence promoted to `main` without source/build modifications.
 - [ ] Final `main` Linux, Windows, Doxygen and robustness workflows pass on the exact commit to be tagged.
