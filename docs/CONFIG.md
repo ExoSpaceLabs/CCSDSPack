@@ -54,6 +54,8 @@ define_secondary_header:bool=false
 
 The Secondary Header Flag is derived from the installed secondary-header object. `data_field_size` is capacity; Packet Data Length is calculated from the actual serialized content.
 
+Older fixture files may contain `ccsds_secondary_header_flag`; the v2.1 Packet loader derives that bit from the selected secondary-header object rather than accepting a separate configuration override. New configurations should omit this legacy key.
+
 ## Hosted CLI and stream settings
 
 The following keys control the hosted command-line tools and Manager's
