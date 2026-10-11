@@ -87,6 +87,35 @@ const ccsds::Validator &validator = view.getValidatorReference();
 
 References remain owned by Manager and must not outlive it.
 
+## Caller-buffer packet serialization
+
+The existing C++ Packet API also serializes into a caller-owned output buffer:
+
+```cpp
+std::uint8_t output[256]{};
+const auto written = packet.serialize(output, sizeof(output));
+if (!written) {
+  // Handle written.error() before using the output.
+} else {
+  // output[0 .. written.value()) contains the serialized packet.
+}
+```
+
+This avoids returning an owning wire `std::vector` from
+`Packet::serialize()`; it does not imply that every internal secondary-header
+object is allocation-free. The size/capacity and packet finalization checks
+still apply.
+
+## Non-owning application-data view
+
+`ccsds::DataField::getApplicationDataView()` returns a
+`ccsds_buffer_view_t` over the DataField's currently owned application-data
+bytes. It avoids copying the application-data vector just to inspect its
+contents. The view does **not** own memory and becomes invalid when the
+underlying application data is replaced, reallocated, or its owning DataField
+is destroyed. This is distinct from the owning
+`getApplicationData()` convenience accessor.
+
 ## Bare-metal use
 
 Raw-buffer APIs are available under `CCSDS_MCU` and add no RTTI or exception requirement. The pure-C core can also be built without a C++ compiler. The Cortex-M compile/link probe exercises declared-size inspection, generic raw bounded parsing, typed raw PUS parsing, structured validation, and the shared C wire primitives. Physical execution remains a separate release-validation gate.

@@ -80,7 +80,7 @@ CCSDS 133.0-B-2 defines the Space Packet as the Primary Header plus Packet Data 
 CCSDSPack therefore treats error control as explicit Packet-level policy:
 
 - `PacketErrorControlMode::None`: no trailer is reserved;
-- `PacketErrorControlMode::CRC16`: the final two Packet Data Field octets contain CRC-16/CCITT-FALSE.
+- `PacketErrorControlMode::CRC16`: the final two Packet Data Field octets contain the selected CRC16. CRC-16/CCITT-FALSE is the default; the C++ Packet API permits explicitly configured polynomial, initial value, and final XOR.
 
 In CRC16 mode the trailer contributes to Packet Data Length, is encoded most-significant byte first, and is excluded from its own CRC calculation. The CRC covers the six-byte primary header, secondary-header bytes, and application data. Parsing validates the selected CRC mode transactionally.
 
@@ -124,4 +124,4 @@ See [VALIDATION.md](VALIDATION.md).
 
 ## Conformance evidence
 
-The v2.1.0 release is exercised by 134 native regression/conformance tests, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux Ubuntu 22.04/24.04/26.04 and Windows CI, Doxygen, package/cross-build generation, ASan/UBSan, bounded fuzzing, Raspberry Pi 5 native arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution.
+The v2.1.0 release is exercised by 135 native regression/conformance tests in the audit-corrected candidate, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux Ubuntu 22.04/24.04/26.04 and Windows CI, Doxygen, package/cross-build generation, ASan/UBSan, bounded fuzzing, Raspberry Pi 5 native arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution.

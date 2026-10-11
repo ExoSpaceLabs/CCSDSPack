@@ -73,7 +73,7 @@ packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::CRC16);
 packet.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
 ```
 
-When CRC16 is enabled, the final two Packet Data Field octets contain CRC-16/CCITT-FALSE. Those octets contribute to Packet Data Length and are excluded from their own CRC calculation. The receiving side selects the expected mode before parsing.
+When CRC16 is enabled, the final two Packet Data Field octets contain the computed CRC16 trailer. **CRC-16/CCITT-FALSE is the default**; advanced C++ callers may configure its polynomial, initial register, and final XOR with `Packet::setCrcConfig()`, while the C11 core exposes corresponding CRC configuration. The trailer contributes to Packet Data Length and is excluded from its own CRC calculation. Sender and receiver must agree on both the error-control mode and any non-default CRC parameters.
 
 ## PUS secondary headers
 
@@ -204,7 +204,7 @@ CCSDSPack represents the numeric time code. Calendar conversion, leap-second han
 
 The protocol layer is C11. The established C++17 Packet/Manager API is built above that core by default. Hosted builds export both layers; `CCSDSPACK_BUILD_MCU=ON` produces bare-metal static libraries while excluding host-only configuration and command-line components.
 
-MCU builds can use `-fno-exceptions -fno-rtti`. The library as a whole is not described as heap-free; fixed-capacity/no-allocation claims apply specifically where documented, such as `ValidationReport`.
+MCU builds can use `-fno-exceptions -fno-rtti`. Filesystem `Manager::read()`/`write()`, hosted diagnostics, and configuration-file APIs are host-only; MCU applications use buffer-based serialization and loading. The library as a whole is not described as heap-free; fixed-capacity/no-allocation claims apply specifically where documented, such as `ValidationReport`.
 
 ## Build and install
 

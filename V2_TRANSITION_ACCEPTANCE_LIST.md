@@ -20,7 +20,8 @@ existing independent conformance evidence continues to pass.
 
 ## Integration and robustness
 
-- [x] **134/134 native regression/conformance tests** pass on the v2.1 candidate.
+- [x] **134/134 native regression/conformance tests** passed on the hardware-qualified October 11 implementation SHA `3c93e6b`.
+- [ ] **135/135 native regression/conformance tests** pass on the final audit-corrected candidate (additional bounded diagnostic-formatting regression).
 - [x] Linux Ubuntu 22.04/24.04 hosted gates pass.
 - [x] Linux Ubuntu 26.04 hosted gate passes before v2.1.0 promotion.
 - [x] Windows hosted gate passes.
@@ -63,8 +64,10 @@ existing independent conformance evidence continues to pass.
 - [x] `develop` Linux, Windows, and robustness CI passed on the qualified implementation SHA; Doxygen passed on the matching `main` SHA.
 - [x] Native Raspberry Pi 5 validation passed on the qualified SHA; ARM64 package SHA-256 recorded.
 - [x] Physical NUCLEO-H755ZI-Q validation passed on the qualified SHA; MCU package, library, ELF, UART and OpenOCD evidence recorded.
-- [ ] Final documentation-only evidence changes verified against the qualified implementation SHA and accepted on `develop`.
-- [ ] Final approved `develop` evidence promoted to `main` without source/build modifications.
+- [x] October 11 Pi 5 and H755 runs qualified implementation SHA `3c93e6b`; exact evidence recorded.
+- [ ] Correct MCU header/implementation discrepancies identified by the final pre-tag source audit and qualify the new implementation SHA on `develop` (hosted CI and affected physical targets).
+- [ ] Verify documentation and examples against the updated qualified implementation; accept the audit PR on `develop`.
+- [ ] Final audit-corrected and qualified `develop` revision promoted to `main` (the previous `main` promotion is not qualification for subsequent code changes).
 - [ ] Final `main` Linux, Windows, Doxygen and robustness workflows pass on the exact commit to be tagged.
 - [ ] `v2.1.0` tag created from the approved `main` commit.
 - [ ] Tag-produced GitHub Release assets and package hashes verified.

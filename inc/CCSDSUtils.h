@@ -39,6 +39,7 @@ std::uint16_t crc16(const std::vector<std::uint8_t> &data,
  */
 bool stringEndsWith(const std::string &str, const std::string &suffix);
 
+#ifndef CCSDS_MCU
 /**
  * @brief Prints a human-readable summary of one packet to standard output.
  * @param packet Packet to inspect; current stored state is printed.
@@ -50,22 +51,24 @@ void printPacket(ccsds::Packet &packet);
  * @param manager Manager to inspect.
  */
 void printPackets(ccsds::Manager &manager);
+#endif
 
 /**
  * @brief Formats the low-order bits of an integer as a binary string.
  * @param value Value to format.
- * @param bits Number of low-order bits to include.
+ * @param bits Number of low-order bits to include (non-positive: empty; above 32: clamp to 32).
  * @return Binary string without a `0b` prefix.
  */
 std::string getBinaryString(std::uint32_t value, std::int32_t bits);
 
 /**
  * @brief Returns spacing used by the diagnostic bit-field formatter.
- * @param num Number of spaces.
+ * @param num Number of spaces (non-positive returns empty).
  * @return String containing num spaces, or an empty string for non-positive input.
  */
 std::string getBitsSpaces(std::int32_t num);
 
+#ifndef CCSDS_MCU
 /**
  * @brief Prints bytes in hexadecimal form to standard output.
  * @param buffer Bytes to print.
@@ -120,6 +123,8 @@ ccsds::ResultBuffer readBinaryFile(const std::string &filename);
  * @return True when the file exists and is accessible.
  */
 bool fileExists(const std::string &fileName);
+#endif
+
 } // namespace ccsds
 
 #endif // CCSDS_UTILS_H

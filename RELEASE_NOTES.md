@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These are pre-tag v2.1.0 release notes. Final Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against the same post-audit implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. The remaining gates are evidence-only promotion, final `main` CI, tagging and publication verification; see `docs/V2_HARDWARE_VALIDATION.md`.
+> These are pre-tag v2.1.0 release notes. Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. A subsequent pre-tag source audit identified MCU public-header/implementation inconsistencies. Those corrections must pass CI and renewed target qualification on the corrected commit before tagging; see `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Summary
 
@@ -159,11 +159,11 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 ## Remaining release gates
 
-Physical/native validation is **complete** on implementation SHA `3c93e6b79d3d97ff3003682804c120f38672e229`: Pi 5 (134/134, CLI, installed consumer and shared acceptance) and NUCLEO-H755ZI-Q (program/verify and all Cortex-M7 acceptance sections). Exact artifact hashes and runtime evidence are recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+Physical/native validation **passed for implementation SHA** `3c93e6b79d3d97ff3003682804c120f38672e229`: Pi 5 (134/134, CLI, installed consumer and shared acceptance) and NUCLEO-H755ZI-Q (program/verify and all Cortex-M7 acceptance sections). Exact artifact hashes and runtime evidence are recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
 Before publication is complete:
 
-1. verify and accept the final hardware-evidence documentation-only changes on `develop`;
+1. complete the pre-tag audit MCU API corrections on `develop`, pass CI, and requalify the affected targets on the corrected source commit;
 2. promote approved `develop` to `main` with no source/build/harness changes, and pass final `main` CI;
 3. create tag `v2.1.0` from the exact approved `main` commit;
 4. verify tag-produced GitHub Release assets and package hashes;

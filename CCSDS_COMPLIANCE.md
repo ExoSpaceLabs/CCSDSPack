@@ -64,7 +64,7 @@ The optional CCSDSPack CRC16 trailer is an external Packet-level convention enco
 
 ## Packet error control
 
-`PacketErrorControlMode::None` reserves no trailer. `PacketErrorControlMode::CRC16` reserves the final two Packet Data Field octets for CRC-16/CCITT-FALSE. The trailer contributes to Packet Data Length, is encoded most-significant byte first, and is excluded from its own CRC calculation.
+`PacketErrorControlMode::None` reserves no trailer. `PacketErrorControlMode::CRC16` reserves the final two Packet Data Field octets for CRC16 (CRC-16/CCITT-FALSE by default; explicit parameter customization is supported). The trailer contributes to Packet Data Length, is encoded most-significant byte first, and is excluded from its own CRC calculation.
 
 CRC coverage includes the primary header, optional secondary header, and application data. Bounded parsing validates the selected mode transactionally.
 
@@ -104,7 +104,7 @@ The C++ ownership layer remains vector-backed. The C11 core exposes caller-owned
 
 The v2.1.0 release is supported by:
 
-- **134/134 native regression/conformance tests**;
+- **135 native regression/conformance tests in the audit-corrected candidate**;
 - independent fixed generic and PUS byte vectors, including the complete 16-value PUS-C TC acknowledgement matrix;
 - a documented negative matrix covering the complete 26-code structured Validator surface;
 - negative tests for version, ranges, length, CRC, identifier, segmentation, sequence, PUS fields/tailoring, and CUC configuration;

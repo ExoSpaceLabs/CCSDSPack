@@ -15,7 +15,7 @@ Hosted CCSDSPack configuration files use one typed entry per line:
 
 Lines beginning with `#` are comments. The parser is `ccsds::Config`; configuration parsing is excluded from `CCSDS_MCU` builds.
 
-The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring.
+The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring. `ccsds::Config` is a generic typed-key parser: an unknown but syntactically valid key may be stored without being consumed by `Packet` or the CLI, and therefore is **not necessarily rejected**. Use the documented keys below; the old `ccsds_secondary_header_flag` key is ignored because that flag is derived from the actual secondary-header object.
 
 ## Value types
 
@@ -53,6 +53,28 @@ define_secondary_header:bool=false
 | `application_data` | optional | initial application or Idle Packet data |
 
 The Secondary Header Flag is derived from the installed secondary-header object. `data_field_size` is capacity; Packet Data Length is calculated from the actual serialized content.
+
+## Hosted CLI stream settings
+
+The encoder, decoder, and validator also read **tool-level** stream settings
+from configuration files. These are not Packet data-field or CCSDS primary-header
+fields:
+
+| Key | Type | Tools | Meaning |
+|---|---|---|---|
+| `sync_pattern_enable` | `bool` | Encoder, decoder, validator | Enable a four-byte synchronization word before each Space Packet in the external stream; default `false`. |
+| `sync_pattern` | `int` | Encoder, decoder, validator | Optional 32-bit synchronization bit pattern when enabled; default `0x1ACFFC1D`. The parser accepts signed 32-bit integers; the tool interprets the resulting bits as `uint32_t`. |
+| `validation_enable` | `bool` | Decoder | Required in decoder configuration; enables its application/stream validation setting. |
+
+The synchronization pattern is **external transport framing**, not part of
+the CCSDS Space Packet PDU or its Packet Data Length. The decoder's
+`validation_enable` setting is unrelated to whether the standalone
+`ccsds_validator` tool performs validation.
+
+Non-default packet CRC parameters are set using the C++ `Packet::setCrcConfig()`
+API or the relevant C11 API. The configuration-file key
+`ccsds_packet_error_control` selects only `crc16` or `none`; it does **not**
+configure a custom CRC polynomial, initial value, or final XOR.
 
 ## PUS identity
 
