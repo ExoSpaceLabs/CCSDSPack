@@ -20,7 +20,8 @@ existing independent conformance evidence continues to pass.
 
 ## Integration and robustness
 
-- [x] **134/134 native regression/conformance tests** pass on the v2.1 candidate.
+- [x] **134/134 native regression/conformance tests** passed on the hardware-qualified October 11 implementation SHA `3c93e6b`.
+- [ ] **135/135 native regression/conformance tests** pass on the final audit-corrected candidate (additional bounded diagnostic-formatting regression).
 - [x] Linux Ubuntu 22.04/24.04 hosted gates pass.
 - [x] Linux Ubuntu 26.04 hosted gate passes before v2.1.0 promotion.
 - [x] Windows hosted gate passes.
