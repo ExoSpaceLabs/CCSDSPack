@@ -89,7 +89,7 @@ The fuzz smoke gate limits generated-input count, input length, per-input timeou
 
 ## Evidence
 
-The v2.1.0 release has **134/134 native regression/conformance tests** covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, structured validation, the complete PUS-C acknowledgement matrix, and the final named negative-validation matrix.
+The v2.1.0 release includes **135 native regression/conformance tests** in the audit-corrected candidate covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, structured validation, the complete PUS-C acknowledgement matrix, and the final named negative-validation matrix.
 
 CLI integration covers generic and representative PUS streams and malformed PUS input. Linux/Windows CI, Doxygen, installed-package examples/consumer, Ubuntu 22.04 package/cross-build generation, and the Cortex-M compile/link probe provide integration evidence. Dedicated ASan, UBSan, and bounded four-target libFuzzer CI provide automated robustness evidence.
 
