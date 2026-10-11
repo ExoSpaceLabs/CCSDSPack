@@ -58,7 +58,7 @@ parsePacketErrorControlMode(const std::string &value);
 /** @brief Returns the stable CLI spelling for a packet-error-control mode. */
 const char *packetErrorControlModeName(ccsds::PacketErrorControlMode mode);
 
-/** @brief Applies a CLI packet-error-control override to the packet and its profile. */
+/** @brief Applies a CLI packet-error-control override to the enclosing Packet. */
 ccsds::ResultBool applyPacketErrorControlMode(
   ccsds::Packet &packet, ccsds::PacketErrorControlMode mode);
 
