@@ -67,7 +67,7 @@ Only checks actually performed appear in the report. Malformed wire input can fa
 ## Configuration
 
 Encoder and decoder require a Packet-template configuration. **Decoder also requires
-`validation_enable:bool=true|false` in that file**; the encoder does not.
+`validation_enable:bool` in that file (value `true` or `false`)**; the encoder does not.
 The optional `sync_pattern_enable` and `sync_pattern` keys configure
 four-byte external framing shared with Manager. Decoder and encoder must use
 matching framing settings. The validator can operate without a template for
