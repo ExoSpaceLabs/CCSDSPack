@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These are pre-tag v2.1.0 release notes. Earlier Raspberry Pi 5 and physical Cortex-M7 runs passed on the source commits recorded in `docs/V2_HARDWARE_VALIDATION.md`; the pre-tag audit updates host/MCU API boundaries. The final accepted post-audit `main` commit must pass CI and fresh native/physical target validation before the release tag is created.
+> These are pre-tag v2.1.0 release notes. Final Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against the same post-audit implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. The remaining gates are evidence-only promotion, final `main` CI, tagging and publication verification; see `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Summary
 
@@ -159,20 +159,19 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 ## Remaining release gates
 
+Physical/native validation is **complete** on implementation SHA `3c93e6b79d3d97ff3003682804c120f38672e229`: Pi 5 (134/134, CLI, installed consumer and shared acceptance) and NUCLEO-H755ZI-Q (program/verify and all Cortex-M7 acceptance sections). Exact artifact hashes and runtime evidence are recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+
 Before publication is complete:
 
-1. merge the reviewed pre-tag audit into `main` and qualify that exact commit in final CI;
-2. run native Raspberry Pi 5 and physical Cortex-M7 hardware validation on that exact release commit and record new evidence;
-3. create tag `v2.1.0` only after the source and target evidence is accepted;
+1. verify and accept the final hardware-evidence documentation-only changes on `develop`;
+2. promote approved `develop` to `main` with no source/build/harness changes, and pass final `main` CI;
+3. create tag `v2.1.0` from the exact approved `main` commit;
 4. verify tag-produced GitHub Release assets and package hashes;
 5. verify GHCR `v2.1.0` and `latest` images.
-
-Previously completed native Raspberry Pi 5 and NUCLEO-H755ZI-Q test runs are recorded in `docs/V2_HARDWARE_VALIDATION.md`; final post-audit hardware acceptance remains outstanding.
-
 ## Release control
 
 ```text
-develop -> main -> final CI -> tag v2.1.0
+develop (all CI + hardware validation) -> main (approved only) -> final main CI -> tag v2.1.0
 ```
 
 Publication evidence is recorded only after the tag workflow completes.
