@@ -66,7 +66,13 @@ Only checks actually performed appear in the report. Malformed wire input can fa
 
 ## Configuration
 
-Encoder and decoder require a Packet-template configuration. Validator can operate without a template for generic packets, while a template enables identifier, PEC, segmentation-class, and secondary-header contract checks.
+Encoder and decoder require a Packet-template configuration. **Decoder also requires
+`validation_enable:bool=true|false` in that file**; the encoder does not.
+The optional `sync_pattern_enable` and `sync_pattern` keys configure
+four-byte external framing shared with Manager. Decoder and encoder must use
+matching framing settings. The validator can operate without a template for
+generic packets; a template enables identifier, PEC, segmentation-class,
+secondary-header contract, and optional synchronization framing checks.
 
 PUS identity is selected by a canonical concrete selector:
 
