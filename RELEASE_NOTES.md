@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These are pre-tag v2.1.0 release notes. Final Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against the same post-audit implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. The remaining gates are evidence-only promotion, final `main` CI, tagging and publication verification; see `docs/V2_HARDWARE_VALIDATION.md`.
+> These are pre-tag v2.1.0 release notes. Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. A later pre-tag audit found an MCU hosted-only API/package-surface inconsistency. The correction changes headers and package contents, so **both target campaigns must be repeated on the corrected `develop` commit** before promotion/tagging. The old accepted evidence is retained in `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Summary
 
@@ -159,15 +159,16 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 ## Remaining release gates
 
-Physical/native validation is **complete** on implementation SHA `3c93e6b79d3d97ff3003682804c120f38672e229`: Pi 5 (134/134, CLI, installed consumer and shared acceptance) and NUCLEO-H755ZI-Q (program/verify and all Cortex-M7 acceptance sections). Exact artifact hashes and runtime evidence are recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+Physical/native validation **passed for the recorded candidate** `3c93e6b79d3d97ff3003682804c120f38672e229`. Its Pi 5 and H755 logs and exact artifact hashes remain in `docs/V2_HARDWARE_VALIDATION.md`. A further MCU API/package correction is proposed; qualification of its **new source and package SHA** is required before v2.1.0 release.
 
 Before publication is complete:
 
-1. verify and accept the final hardware-evidence documentation-only changes on `develop`;
-2. promote approved `develop` to `main` with no source/build/harness changes, and pass final `main` CI;
-3. create tag `v2.1.0` from the exact approved `main` commit;
-4. verify tag-produced GitHub Release assets and package hashes;
-5. verify GHCR `v2.1.0` and `latest` images.
+1. accept the MCU API/packaging correction on `develop`, pass all CI, and repeat Pi/H755 target validation against that exact corrected commit;
+2. verify and accept the updated evidence-only documentation changes on `develop`;
+3. promote approved `develop` to `main` with no source/build/harness changes, and pass final `main` CI;
+4. create tag `v2.1.0` from the exact approved `main` commit;
+5. verify tag-produced GitHub Release assets and package hashes;
+6. verify GHCR `v2.1.0` and `latest` images.
 ## Release control
 
 ```text
