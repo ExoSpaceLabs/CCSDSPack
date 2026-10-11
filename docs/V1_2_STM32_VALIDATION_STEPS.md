@@ -332,7 +332,7 @@ Record:
 - configured minimum heap and stack;
 - linker map file, when available.
 
-A successful link is necessary but is not the hardware release gate. Silicon execution remains mandatory because humanity has repeatedly demonstrated that “it linked” is not equivalent to “it works.”
+A successful link is necessary but not sufficient for the hardware release gate. Physical execution must also pass, because linking alone does not validate the target startup, runtime behavior, or peripheral integration.
 
 ## 7. Build and flash both STM32 cores
 
