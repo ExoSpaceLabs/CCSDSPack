@@ -54,6 +54,28 @@ define_secondary_header:bool=false
 
 The Secondary Header Flag is derived from the installed secondary-header object. `data_field_size` is capacity; Packet Data Length is calculated from the actual serialized content.
 
+## Hosted CLI stream settings
+
+The encoder, decoder, and validator also read **tool-level** stream settings
+from configuration files. These are not Packet data-field or CCSDS primary-header
+fields:
+
+| Key | Type | Tools | Meaning |
+|---|---|---|---|
+| `sync_pattern_enable` | `bool` | Encoder, decoder, validator | Enable a four-byte synchronization word before each Space Packet in the external stream; default `false`. |
+| `sync_pattern` | `int` | Encoder, decoder, validator | Optional 32-bit synchronization bit pattern when enabled; default `0x1ACFFC1D`. The parser accepts signed 32-bit integers; the tool interprets the resulting bits as `uint32_t`. |
+| `validation_enable` | `bool` | Decoder | Required in decoder configuration; enables its application/stream validation setting. |
+
+The synchronization pattern is **external transport framing**, not part of
+the CCSDS Space Packet PDU or its Packet Data Length. The decoder's
+`validation_enable` setting is unrelated to whether the standalone
+`ccsds_validator` tool performs validation.
+
+Non-default packet CRC parameters are set using the C++ `Packet::setCrcConfig()`
+API or the relevant C11 API. The configuration-file key
+`ccsds_packet_error_control` selects only `crc16` or `none`; it does **not**
+configure a custom CRC polynomial, initial value, or final XOR.
+
 ## PUS identity
 
 A PUS configuration selects one concrete header:
