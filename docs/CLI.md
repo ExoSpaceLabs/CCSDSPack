@@ -34,6 +34,32 @@ All three tools accept:
 
 The command-line value overrides `ccsds_packet_error_control` from configuration. The selected mode applies to the enclosing Packet independently of its secondary-header type. Decoder and validator must use the mode expected by the packet stream.
 
+## Stream framing and decoder validation
+
+The hosted tools support optional **four-octet external synchronization
+markers** through their configuration files:
+
+```ini
+sync_pattern_enable:bool=true
+sync_pattern:int=0x1ACFFC1D
+```
+
+When framing is enabled, the encoder writes the marker before each packet;
+the decoder and validator expect the same marker and value. The default marker
+is `0x1ACFFC1D`; framing is disabled by default. These markers are outside
+the CCSDS Space Packet PDU and do not contribute to Packet Data Length or CRC16.
+
+The decoder additionally requires:
+
+```ini
+validation_enable:bool=true
+```
+
+It enables the Manager's packet/sequence checks while reassembling application
+data. Disabling it does **not** disable parsing, length checks, or selected
+packet CRC verification. The validator CLI performs its own validation and
+does not use this setting. See [CONFIG.md](CONFIG.md) for the complete schema.
+
 ## Encoder
 
 ```bash
