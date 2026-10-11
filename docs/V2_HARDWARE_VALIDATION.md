@@ -12,22 +12,62 @@ This page records physical-target and native-target release evidence for CCSDSPa
 
 ## v2.1.0 validation evidence
 
-v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Physical/native execution passed on the exact source commits recorded below. After the subsequent pre-tag audit modifies MCU public-header/configuration guards, an additional run against the final accepted release commit is required before tagging.
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Final physical/native execution was completed on 2026-10-11 against the same post-audit implementation commit on `develop`. Earlier validation evidence remains below as historical context.
 
 | Target | v2.1 status | Required marker |
 |---|---|---|
 | Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
 | NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
-The exact previously validated source commits and package/library hashes are recorded below. Commit `93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4` passed the pre-audit `main` CI. The post-audit release commit and its fresh target evidence must be added after approval of PR #169.
+The **final tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. Any subsequent release-evidence documentation commit must be verified not to modify the qualified code, public headers, build configuration or hardware harness.
 
+### Final v2.1.0 hardware acceptance: 2026-10-11
+
+Both physical/native campaigns completed successfully using **exactly the same source commit**:
+
+```text
+3c93e6b79d3d97ff3003682804c120f38672e229
+```
+
+**Raspberry Pi 5, native arm64 Linux**
+
+- Device: Raspberry Pi 5 Model B Rev 1.0; Debian GNU/Linux 13 (trixie), kernel `6.18.34+rpt-rpi-2712`.
+- Compiler: GCC/G++ 14.2.0; CMake 3.31.6; Python 3.13.5.
+- Checkout: clean detached worktree based on `develop` at the tested source commit.
+- Native package: `ccsdspack-v2.1.0-Linux-arm64.deb`, package version `2.1.0`, architecture `arm64`.
+- Package SHA-256: `6a3dd566fedb81a7c49884008cb719828a2ffcb8696d0de9dedda38ec6e2e8a3`.
+- Regression/conformance: **134 passed, 0 failed**; installed CLI integration: **PASS**.
+- Installed external CMake consumer: **1 passed, 0 failed**.
+- Shared acceptance: `CCSDSPACK_HARDWARE_TEST:PASS`.
+- Native validation: `CCSDSPACK_AARCH64_TEST:PASS`; top-level runner: `CCSDSPACK_AARCH64_RUNNER:PASS`.
+- Full run transcript retained on target: `~/ccsdspack-v2.1.0-final-validation.log`.
+
+**NUCLEO-H755ZI-Q, physical Cortex-M7**
+
+- Device: NUCLEO-H755ZI-Q; ST-LINK V3 VCP at 115200 8N1; 400 MHz Cortex-M7; effective UART baud 115207.
+- ARM compiler: GNU Arm Embedded 10.3.1 (`20210621`); C++17, hard-float Cortex-M7 ABI.
+- Package: `ccsdspack-v2.1.0-Generic-arm.tar.gz`.
+- Package SHA-256: `46c40cdfd7787c4f06db2c34fdd337bc47161ac578bde2d6f9c48d350640c2cd`.
+- Linked `libccsdspack.a` SHA-256: `ae30a498e5cacc1e4ddffc902b6d864fb10e796b05c3655e72983f2c16145a3c`.
+- DAS pin: `4b768ef86b43652c94cc91b1c77e247fa37ebd8a`.
+- STM32CubeH7 CMSIS pin: `f5c0b7a2b1f6eb26fde150f72edb2d7deb647066`.
+- ELF SHA-256: `3e050aa79fbfd6adaeebc3ab8cc1e1740f998b43c1e1942effc24b003e38f551`.
+- Linked ELF sections (`arm-none-eabi-size`): **text 81,848 B; data 112 B; bss 96 B**.
+- Runtime heap: capacity 507,696 B; peak used 2,996 B.
+- Flash programming completed and OpenOCD reported `Verified OK`.
+- UART: all eight acceptance sections passed, then `TEST:PASS:all`, `RESULT_CODE:0`, `RESULT_NAME:Pass`, and `CCSDSPACK_HARDWARE_TEST:PASS` followed by `CCSDSPACK_HARDWARE_TEST:END`.
+- Full local evidence: `build/h755-validation/logs/{metadata,uart,openocd,size}.log`, `logs/elf.sha256`, and `firmware/ccsdspack_h755_validation.{elf,map}`.
+
+**Non-blocking tool diagnostics:** ARM GCC 10.3.1 warns when `-fno-rtti` is forwarded to C compilation units (it is a C++ option). OpenOCD 0.11 reports STM32H7 DBGMCU `mem2array` examine errors, but completes programming and verification; the target executes all acceptance sections successfully. Neither is a protocol test failure. Follow-up toolchain/script cleanup must not be introduced into this qualified release without a new assessment.
+
+**Acceptance conclusion:** the final post-audit implementation is qualified on both targets. Evidence-only Markdown changes after the tested source commit do not change the qualified executable or package identity; verify this with a commit-level diff before tagging.
 ### Raspberry Pi 5 / arm64 rerun
 
 For a future rerun from a clean native arm64 checkout:
 
 ```bash
-git checkout main
-git pull --ff-only
+git switch develop
+git pull --ff-only origin develop
 bash test/package_tester/run_aarch64_validation.sh
 ```
 
@@ -186,23 +226,9 @@ acceptance suite.
 
 ### Final release integration note
 
-The first v2.1 release-promotion commit was
-`93f43b6fc4b9e3395dd8273ed63e182f42a8f3b4`. Comparison from the original
-Pi 5 and H755 test commits to that point showed no differences under
-`src/`, `inc/`, root `CMakeLists.txt`, or `package.sh`; their physical/native
-evidence therefore covers that library implementation.
+The earlier physical/native runs against the pre-audit source commits remain historical evidence. PR #169 changed MCU-facing declarations and `Manager` hosted-configuration compilation guards, so those earlier artifacts were not interchangeable with the final candidate.
 
-The subsequent pre-tag repository audit (PR #169) modifies public C++ header
-documentation, hosted-only API declarations, and the compilation guard for
-`Manager` configuration loading. It does not modify Space Packet/PUS/CUC wire
-algorithms or the C11 core, but the resulting MCU archive and public interface
-are not byte-for-byte identical to the previously validated artifact.
-
-**Final acceptance still requires new physical H755 and native Pi 5 validation
-on the exact post-audit release commit**, including recorded source, package,
-linked-library, and executable identifiers. Do not substitute the earlier
-successful runs or hosted cross-build for this final target execution.
-
+New Raspberry Pi 5 and NUCLEO-H755ZI-Q runs on **`3c93e6b79d3d97ff3003682804c120f38672e229`** passed on 2026-10-11. This is the qualified implementation SHA. Release-evidence documentation commits should not trigger new physical testing unless a source, public-header, build, package, hardware-harness, or dependency change is introduced.
 ### Pre-hardware footprint evidence
 
 A matched Cortex-M7 compile/link comparison against v2.0 `main` uses the same v2.0 public hardware probe for both implementations. With section garbage collection, retained text is:

@@ -3,9 +3,9 @@
 ## Branch model
 
 - `main` is the approved release line. Release tags are created only from qualified `main` commits.
-- `develop` is the integration line for ongoing work.
+- `develop` is the integration and qualification line for ongoing work, CI, and required native/physical hardware validation.
 - Short-lived `feature/`, `fix/`, `perf/`, `test/`, `docs/`, and `ci/` branches target `develop`.
-- Release promotion is performed through a reviewed `develop -> main` pull request.
+- Release promotion is performed through a reviewed `develop -> main` pull request only after required tests and hardware campaigns pass on `develop`.
 
 Do not maintain long-lived release-staging branches unless a future release explicitly requires one.
 
@@ -37,12 +37,15 @@ test(CCSDSPack): description
 
 ## Release control
 
-A release is tagged only after:
+**All qualification belongs on `develop`.** `main` is the approved release line, not a staging or hardware-test branch.
 
-1. the release acceptance list is reconciled;
-2. the candidate is promoted to `main`;
-3. final `main` CI is green on the exact commit to be tagged;
-4. required native/physical validation evidence is recorded;
-5. release notes and compliance documents match the tested implementation.
+A release is promoted and tagged only after:
 
-Tag publication must then be verified for GitHub Release assets, package identity/hashes, and GHCR images.
+1. freeze the implementation candidate on `develop` and run its hosted CI/conformance gates;
+2. run required native and physical target campaigns against that exact implementation SHA on `develop` and record source, package and executable hashes;
+3. update and reconcile the release acceptance list, compliance evidence, changelog and release notes on `develop`; verify evidence-only changes do not modify the qualified source, public headers, build scripts or hardware harness;
+4. review and promote the fully qualified `develop` revision to `main`;
+5. pass final `main` CI on the exact commit being tagged;
+6. create the release tag from the approved `main` commit and verify GitHub Release artifacts, package identity/hashes and GHCR images.
+
+Do not merge unqualified changes into `main` merely because hosted CI is green. If a release-candidate implementation or hardware harness changes after physical tests, reassess whether the tests must be rerun.

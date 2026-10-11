@@ -52,21 +52,23 @@ existing independent conformance evidence continues to pass.
 - [x] Raspberry Pi runner records platform/source/package identity and hashes.
 - [x] NUCLEO-H755ZI-Q Cortex-M7 standalone DAS/OpenOCD validation recorded.
 - [x] H755 hard-float startup path physically qualified.
-- [x] Hardware validation evidence is recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+- [x] Final Pi 5 and H755 hardware runs passed on the same post-audit `develop` implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229` (2026-10-11).
+- [x] Package hashes, MCU library/ELF hashes, full target PASS markers, firmware size and heap statistics recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Final release gates
 
 - [x] Issue #163 performance characterization complete.
-- [x] Final release/compliance documentation merged into `develop`.
-- [x] Approved `develop` promoted to `main`.
-- [x] Pre-audit `main` Linux, Windows, Doxygen, and robustness workflows passed at `93f43b6f`.
-- [ ] Final post-audit `main` Linux, Windows, Doxygen, and robustness workflows pass on the exact release commit.
-- [ ] Fresh native Raspberry Pi 5 run passes against the exact post-audit release commit (record package/source hashes).
-- [ ] Fresh physical NUCLEO-H755ZI-Q run passes against that same release commit (record package/library/ELF hashes and UART/OpenOCD evidence).
+- [x] Release/compliance documentation audited; PR #169 merged (prematurely) before physical qualification.
+- [x] Post-audit qualified implementation SHA fixed: `3c93e6b79d3d97ff3003682804c120f38672e229`.
+- [x] `develop` Linux, Windows, and robustness CI passed on the qualified implementation SHA; Doxygen passed on the matching `main` SHA.
+- [x] Native Raspberry Pi 5 validation passed on the qualified SHA; ARM64 package SHA-256 recorded.
+- [x] Physical NUCLEO-H755ZI-Q validation passed on the qualified SHA; MCU package, library, ELF, UART and OpenOCD evidence recorded.
+- [ ] Final documentation-only evidence changes verified against the qualified implementation SHA and accepted on `develop`.
+- [ ] Final approved `develop` evidence promoted to `main` without source/build modifications.
+- [ ] Final `main` Linux, Windows, Doxygen and robustness workflows pass on the exact commit to be tagged.
 - [ ] `v2.1.0` tag created from the approved `main` commit.
 - [ ] Tag-produced GitHub Release assets and package hashes verified.
 - [ ] GHCR `v2.1.0` and `latest` images verified.
-
 ## Historical v2.0 publication
 
 The v2.0.0 publication record is intentionally not duplicated here. It remains
