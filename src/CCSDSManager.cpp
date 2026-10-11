@@ -399,6 +399,7 @@ ccsds::ResultBool ccsds::Manager::load(
   return true;
 }
 
+#ifndef CCSDS_MCU
 ccsds::ResultBool ccsds::Manager::read(const std::string &binaryFile) {
   std::vector<std::uint8_t> buffer;
   ASSIGN_CP(buffer, readBinaryFile(binaryFile));
@@ -411,7 +412,6 @@ ccsds::ResultBool ccsds::Manager::write(const std::string &binaryFile) const {
   return writeBinaryFile(buffer, binaryFile);
 }
 
-#ifndef CCSDS_MCU
 ccsds::ResultBool ccsds::Manager::readTemplate(const std::string &filename) {
   Packet templatePacket;
   templatePacket.setUpdatePacketEnable(false);
