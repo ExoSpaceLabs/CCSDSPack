@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These are pre-tag v2.1.0 release notes. Final Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against the same post-audit implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. The remaining gates are evidence-only promotion, final `main` CI, tagging and publication verification; see `docs/V2_HARDWARE_VALIDATION.md`.
+> These are pre-tag v2.1.0 release notes. Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. A later pre-tag audit found an MCU hosted-only API/package-surface inconsistency. The correction changes headers and package contents, so **both target campaigns must be repeated on the corrected `develop` commit** before promotion/tagging. The old accepted evidence is retained in `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Summary
 
