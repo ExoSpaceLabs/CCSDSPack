@@ -35,7 +35,7 @@ Generate a package:
 
 ## Bare-metal Cortex-M static library
 
-`CCSDSPACK_BUILD_MCU=ON` builds static protocol libraries and defines `CCSDS_MCU` publicly. The C11 core is always available; the compatible C++17 archive is included when `CCSDSPACK_BUILD_CPP=ON`. Host-side configuration parsing and command-line executables are excluded.
+`CCSDSPACK_BUILD_MCU=ON` builds static protocol libraries and defines `CCSDS_MCU` publicly. The C11 core is always available; the compatible C++17 archive is included when `CCSDSPACK_BUILD_CPP=ON`. Host-side configuration parsing, filesystem-based Manager operations, diagnostic output, and command-line executables are excluded. MCU packages install only headers for APIs backed by the selected static libraries.
 
 The C11 MCU core retains allocation-free wire primitives, packet views, PUS codecs, CUC, validation, segmentation/reassembly, and stream framing. With the default C++ layer enabled, the MCU library also retains:
 
