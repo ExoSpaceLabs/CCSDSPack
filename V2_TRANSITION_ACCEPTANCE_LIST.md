@@ -55,6 +55,15 @@ existing independent conformance evidence continues to pass.
 - [x] Final Pi 5 and H755 hardware runs passed on the same post-audit `develop` implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229` (2026-10-11).
 - [x] Package hashes, MCU library/ELF hashes, full target PASS markers, firmware size and heap statistics recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
+
+## Post-audit requalification
+
+- [ ] Reconciled MCU-facing public APIs and conditional installed-header package rules accepted on develop.
+- [ ] Full Linux, Windows, Doxygen and robustness CI green on the final reconciled commit.
+- [ ] Fresh Raspberry Pi 5 native package validation passed on that commit and hashes recorded.
+- [ ] Fresh STM32H755 physical validation passed on that commit and hashes recorded.
+- [ ] Only then promote to main and allow automatic VERSION tagging.
+
 ## Final release gates
 
 - [x] Issue #163 performance characterization complete.

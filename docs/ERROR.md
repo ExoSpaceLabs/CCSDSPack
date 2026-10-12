@@ -40,6 +40,11 @@ A `Result<T>` contains either a success value or an `Error`; callers inspect the
 | `FILE_WRITE_ERROR` | 12 | Output write failed |
 | `CONFIG_FILE_ERROR` | 13 | Configuration file/key/type/value is invalid |
 
+The executable-only exit codes `14..18` are declared in the internal CLI
+helper and are **not** part of the `ccsds::ErrorCode` library enum. In
+particular, the validator uses exit code `18` for packet-stream validation
+failure; see [CLI](CLI.md).
+
 ## Symbolic names
 
 `ccsds::errorCodeName()` returns a static symbolic label without allocation. `Error::message()` provides operation-specific detail.
