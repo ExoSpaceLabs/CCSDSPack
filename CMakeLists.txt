@@ -269,10 +269,26 @@ else()
     )
 endif()
 
-install(DIRECTORY ${INCLUDE_DIR}/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    FILES_MATCHING PATTERN "*.h"
-)
+# The CLI's exec_utils.h is internal to executables, not part of the library.
+if(NOT CCSDSPACK_BUILD_CPP)
+    install(DIRECTORY ${INCLUDE_DIR}/ccsdspack/c/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ccsdspack/c
+        FILES_MATCHING PATTERN "*.h"
+    )
+elseif(CCSDSPACK_BUILD_MCU)
+    install(DIRECTORY ${INCLUDE_DIR}/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILES_MATCHING PATTERN "*.h"
+        PATTERN "CCSDSConfig.h" EXCLUDE
+        PATTERN "exec_utils.h" EXCLUDE
+    )
+else()
+    install(DIRECTORY ${INCLUDE_DIR}/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILES_MATCHING PATTERN "*.h"
+        PATTERN "exec_utils.h" EXCLUDE
+    )
+endif()
 
 include(CMakePackageConfigHelpers)
 configure_package_config_file(
