@@ -12,6 +12,9 @@ This page records physical-target and native-target release evidence for CCSDSPa
 
 ## v2.1.0 validation evidence
 
+**Qualification reopened:** PR #174 MCU public-header and package corrections are being reconciled. The October 11 results below remain historical evidence only for commit `3c93e6b79d3d97ff3003682804c120f38672e229`; rerun both physical/native campaigns after the revised candidate is frozen.
+
+
 v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Final physical/native execution was completed on 2026-10-11 against the same post-audit implementation commit on `develop`. Earlier validation evidence remains below as historical context.
 
 | Target | v2.1 status | Required marker |
