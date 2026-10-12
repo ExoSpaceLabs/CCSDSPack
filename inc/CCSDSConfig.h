@@ -38,7 +38,7 @@ namespace ccsds {
     /**
      * @brief Loads and replaces configuration values from a file.
      * @param filename Path to a text configuration file.
-     * @return Success, or FILE_READ_ERROR/CONFIG_FILE_ERROR for malformed input.
+     * @return Success, or CONFIG_FILE_ERROR if the file cannot be opened or parsed.
      */
     ResultBool load(const std::string &filename);
 
