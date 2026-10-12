@@ -33,7 +33,7 @@ Consumers that require the exact release can use:
 find_package(CCSDSPack 2.1.0 EXACT CONFIG REQUIRED)
 ```
 
-The installed package exports both `ccsdspack::c` (the C11 protocol core) and `ccsdspack::CCSDSPack` (the established C++17 ownership/convenience layer). Pure-C consumers can link only `ccsdspack::c` and configure with `CCSDSPACK_BUILD_CPP=OFF` when building from source.
+The default hosted package exports both `ccsdspack::c` (the C11 protocol core) and `ccsdspack::CCSDSPack` (the C++17 ownership/convenience layer). A build configured with `CCSDSPACK_BUILD_CPP=OFF` exports **only** `ccsdspack::c` and installs only the standalone C headers. The MCU build exports the static core and, when enabled, the C++17 archive; hosted configuration, file-I/O, and CLI helpers are not MCU library APIs. The internal `exec_utils.h` CLI helper is not part of installed library headers.
 
 ## Linux packages
 
