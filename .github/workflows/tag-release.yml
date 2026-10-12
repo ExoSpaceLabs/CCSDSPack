@@ -1,0 +1,58 @@
+name: Auto Tag Release
+on:
+  workflow_run:
+    workflows: ["Linux", "Windows", "Generate Doxygen Docs", "Robustness"]
+    types: [completed]
+permissions:
+  contents: write
+  actions: write
+  pull-requests: read
+concurrency:
+  group: release-${{ github.event.workflow_run.head_sha }}
+  cancel-in-progress: false
+jobs:
+  tag:
+    if: >-
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+      - name: Verify CI and publish tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_SHA: ${{ github.event.workflow_run.head_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main --tags
+          [[ "$(git rev-parse origin/main)" == "$RELEASE_SHA" ]] || { echo "Stale main run; skipping"; exit 0; }
+          version="$(tr -d '[:space:]' < VERSION)"
+          [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Bad VERSION" >&2; exit 1; }
+          tag="v$version"
+          grep -Fq "## [$version]" CHANGELOG.md || { echo "Missing changelog section" >&2; exit 1; }
+          grep -Fqx "# CCSDSPack $tag" RELEASE_NOTES.md || { echo "Release notes version mismatch" >&2; exit 1; }
+          for workflow in linux.yml windows.yml doxygen.yml robustness.yml; do
+            runs="$(gh api --method GET "repos/$GITHUB_REPOSITORY/actions/workflows/$workflow/runs" -f head_sha="$RELEASE_SHA" -f branch=main -f event=push -f per_page=100)"
+            count="$(jq --arg sha "$RELEASE_SHA" '[.workflow_runs[] | select(.head_sha == $sha and .event == "push" and .head_branch == "main" and .status == "completed" and .conclusion == "success")] | length' <<< "$runs")"
+            [[ "$count" -ge 1 ]] || { echo "$workflow not yet passed for $RELEASE_SHA"; exit 0; }
+          done
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null; then
+            [[ "$(git rev-list -n 1 "$tag")" == "$RELEASE_SHA" ]] || { echo "Tag collision" >&2; exit 1; }
+            echo "$tag already present; skipping."
+            exit 0
+          fi
+          prs="$(gh api "repos/$GITHUB_REPOSITORY/commits/$RELEASE_SHA/pulls")"
+          count="$(jq --arg sha "$RELEASE_SHA" '[.[] | select(.base.ref == "main" and .head.ref == "develop" and .merged_at != null and .merge_commit_sha == $sha)] | length' <<< "$prs")"
+          [[ "$count" == 1 ]] || { echo "Release requires merged develop to main PR" >&2; exit 1; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$tag" "$RELEASE_SHA" -m "CCSDSPack $tag"
+          git push origin "refs/tags/$tag"
+          # GITHUB_TOKEN-created tag pushes do not trigger ordinary push events.
+          # Dispatch is explicitly permitted and retains the tag as github.ref.
+          gh workflow run linux.yml --ref "$tag"
