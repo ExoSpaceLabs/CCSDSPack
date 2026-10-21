@@ -116,6 +116,17 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     return !serialized;
   });
 
+  tester->unitTest("Manager refuses zero remaining segmentation capacity.", [] {
+    ccsds::Manager manager;
+    ccsds::Packet templatePacket;
+    TEST_VOID(templatePacket.setApplicationData({1U, 2U, 3U, 4U}));
+    TEST_VOID(manager.setPacketTemplate(templatePacket));
+    manager.setDataFieldSize(2U);
+    if (manager.getDataFieldSize() != 0U) return false;
+    const auto result = manager.setApplicationData({0xABU, 0xCDU});
+    return !result && result.error().code() == ccsds::INVALID_APPLICATION_DATA;
+  });
+
   tester->unitTest("Capacity below a secondary header also saturates.", [] {
     ccsds::Packet packet;
     TEST_VOID(packet.setSecondaryHeader({0x01U, 0x02U, 0x03U}));
