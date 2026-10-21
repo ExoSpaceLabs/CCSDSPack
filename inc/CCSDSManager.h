@@ -102,9 +102,10 @@ namespace ccsds {
     [[nodiscard]] ResultBool load(const std::vector<std::uint8_t> &packetsBuffer);
     [[nodiscard]] ResultBool load(const std::uint8_t *data, std::size_t size);
 
+#ifndef CCSDS_MCU
+    /** @brief Hosted file I/O; not part of the MCU API. */
     [[nodiscard]] ResultBool read(const std::string &binaryFile);
     [[nodiscard]] ResultBool write(const std::string &binaryFile) const;
-#ifndef CCSDS_MCU
     /** @brief Loads a hosted binary or configuration-file packet template. */
     [[nodiscard]] ResultBool readTemplate(const std::string &filename);
 #endif

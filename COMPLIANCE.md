@@ -73,7 +73,11 @@ Round-trip behavior alone is not treated as sufficient conformance evidence.
 
 ## v2.1 release evidence
 
-The v2.1.0 release is covered by:
+The recorded `3c93e6b` v2.1.0 implementation candidate is covered by the
+evidence below. Corrections to the MCU public/package surface after that SHA
+require CI and fresh target qualification before the release is tagged.
+
+The recorded evidence includes:
 
 - **134/134 native regression/conformance tests**;
 - Linux and Windows hosted CI, Doxygen, CLI integration, installed-package

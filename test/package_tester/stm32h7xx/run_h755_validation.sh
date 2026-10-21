@@ -8,7 +8,8 @@ OPENOCD_SCRIPTS="${OPENOCD_SCRIPTS:-/usr/share/openocd/scripts}"
 UART_TIMEOUT="${CCSDSPACK_UART_TIMEOUT:-30}"
 
 DAS_REPOSITORY="https://github.com/Inczert/device-abstraction-stack.git"
-DAS_COMMIT="4b768ef86b43652c94cc91b1c77e247fa37ebd8a"
+DAS_TAG="v0.1.0"
+DAS_COMMIT="8553d903a615fe99e2a3a434f876b51f9542fd46"
 STM32_CUBE_H7_REPOSITORY="https://github.com/STMicroelectronics/STM32CubeH7.git"
 STM32_CUBE_H7_COMMIT="f5c0b7a2b1f6eb26fde150f72edb2d7deb647066"
 
@@ -44,7 +45,7 @@ Environment:
                        UART result timeout in seconds (default 30).
 
 The runner pins:
-  DAS:       4b768ef86b43652c94cc91b1c77e247fa37ebd8a
+  DAS:       v0.1.0 (commit 8553d903a615fe99e2a3a434f876b51f9542fd46)
   STM32CubeH7 CMSIS:
              f5c0b7a2b1f6eb26fde150f72edb2d7deb647066
 
@@ -98,13 +99,16 @@ PACKAGE_SHA="$(sha256sum "$PACKAGE" | awk '{print $1}')"
 printf 'CCSDSPack source SHA: %s\n' "$SOURCE_SHA" | tee "$BUILD_ROOT/logs/metadata.log"
 printf 'CCSDSPack package: %s\n' "$PACKAGE" | tee -a "$BUILD_ROOT/logs/metadata.log"
 printf 'CCSDSPack package SHA-256: %s\n' "$PACKAGE_SHA" | tee -a "$BUILD_ROOT/logs/metadata.log"
+printf 'DAS release: %s\n' "$DAS_TAG" | tee -a "$BUILD_ROOT/logs/metadata.log"
 printf 'DAS SHA: %s\n' "$DAS_COMMIT" | tee -a "$BUILD_ROOT/logs/metadata.log"
 printf 'STM32CubeH7 CMSIS SHA: %s\n' "$STM32_CUBE_H7_COMMIT" | tee -a "$BUILD_ROOT/logs/metadata.log"
 
 if [[ ! -d "$BUILD_ROOT/external/das/.git" ]]; then
   git clone --filter=blob:none "$DAS_REPOSITORY" "$BUILD_ROOT/external/das"
 fi
-git -C "$BUILD_ROOT/external/das" fetch --depth 1 origin "$DAS_COMMIT"
+git -C "$BUILD_ROOT/external/das" fetch --depth 1 origin "refs/tags/$DAS_TAG:refs/tags/$DAS_TAG"
+RESOLVED_DAS_COMMIT="$(git -C "$BUILD_ROOT/external/das" rev-list -n 1 "$DAS_TAG")"
+[[ "$RESOLVED_DAS_COMMIT" == "$DAS_COMMIT" ]] || { echo "DAS release $DAS_TAG unexpectedly resolves to $RESOLVED_DAS_COMMIT" >&2; exit 1; }
 git -C "$BUILD_ROOT/external/das" checkout --detach "$DAS_COMMIT"
 test "$(git -C "$BUILD_ROOT/external/das" rev-parse HEAD)" = "$DAS_COMMIT"
 

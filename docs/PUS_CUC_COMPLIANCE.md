@@ -98,4 +98,4 @@ Fresh real-target execution is also recorded in `docs/V2_HARDWARE_VALIDATION.md`
 - Raspberry Pi 5 / native arm64 installed-package validation completed with `CCSDSPACK_HARDWARE_TEST:PASS` and `CCSDSPACK_AARCH64_TEST:PASS`;
 - physical NUCLEO-H755ZI-Q / Cortex-M7 execution completed with `CCSDSPACK_HARDWARE_TEST:PASS` using the same board-independent acceptance core.
 
-The v2.1.0 release has completed Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 validation, broader matched performance characterization in issue #163, and final `main` CI. The remaining publication step is tag-only GitHub Release/GHCR execution and verification of artifacts produced from the approved `v2.1.0` tag.
+The original v2.1.0 implementation candidate `3c93e6b` passed native Pi 5 and physical H755 acceptance, matched performance characterization (issue #163), and final hosted CI. A subsequent MCU API/package correction changes the release artifact surface. The revised candidate still requires CI and fresh Pi 5/H755 qualification before a `v2.1.0` tag or publication; see `docs/V2_HARDWARE_VALIDATION.md`.

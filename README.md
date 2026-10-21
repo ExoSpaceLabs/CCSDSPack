@@ -285,6 +285,7 @@ See [Command-line tools](docs/CLI.md).
 - [Structured validation](docs/VALIDATION.md)
 - [Configuration](docs/CONFIG.md)
 - [Raw-buffer APIs](docs/RAW_BUFFERS.md)
+- [Standalone C API](docs/C_API.md)
 - [Performance baseline](docs/PERFORMANCE.md)
 - [Examples](docs/EXAMPLES.md)
 - [Packages and cross-builds](docs/PACKAGES.md)
