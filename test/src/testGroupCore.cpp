@@ -103,6 +103,28 @@ void testGroupCore(TestManager *tester, const std::string &description) {
            && packet.getCRC() == 0x3B8D;
   });
 
+  tester->unitTest("Shrinking data-field capacity never wraps available bytes.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setApplicationData({1U, 2U, 3U, 4U}));
+    packet.setDataFieldSize(2U);
+    const auto &field = packet.getDataField();
+    if (field.getDataFieldAbsoluteBytesSize() != 2U
+        || field.getDataFieldUsedBytesSize() != 4U
+        || field.getDataFieldAvailableBytesSize() != 0U
+        || packet.getDataFieldMaximumSize() != 0U) return false;
+    const auto serialized = packet.serialize();
+    return !serialized;
+  });
+
+  tester->unitTest("Capacity below a secondary header also saturates.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setSecondaryHeader({0x01U, 0x02U, 0x03U}));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    packet.setDataFieldSize(1U);
+    return packet.getDataField().getDataFieldAvailableBytesSize() == 0U
+           && packet.getDataFieldMaximumSize() == 0U;
+  });
+
   tester->unitTest("Application data set from a pointer round-trips.", [] {
     const std::uint8_t input[]{1, 2, 3, 4, 5};
     ccsds::Packet packet;
