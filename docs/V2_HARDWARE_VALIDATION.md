@@ -17,16 +17,16 @@ This page records physical-target and native-target release evidence for CCSDSPa
 **Qualification reopened:** PR #174 MCU public-header and package corrections are being reconciled. The October 11 results below remain historical evidence only for commit `3c93e6b79d3d97ff3003682804c120f38672e229`; rerun both physical/native campaigns after the revised candidate is frozen.
 
 
-v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. Final physical/native execution was completed on 2026-10-11 against the same post-audit implementation commit on `develop`. Earlier validation evidence remains below as historical context.
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. The October 11 physical/native execution passed against the historical implementation candidate `3c93e6b`. **It is not final release qualification** after PR #177 modified MCU-facing public APIs, package layout and capacity handling. Both targets must be rerun once the current `develop` candidate is frozen.
 
 | Target | v2.1 status | Required marker |
 |---|---|---|
-| Raspberry Pi 5, native arm64 Linux | **PASS** | `CCSDSPACK_AARCH64_TEST:PASS` |
-| NUCLEO-H755ZI-Q, Cortex-M7 | **PASS** | `CCSDSPACK_HARDWARE_TEST:PASS` |
+| Raspberry Pi 5, native arm64 Linux | **Historical PASS, rerun required** | `CCSDSPACK_AARCH64_TEST:PASS` |
+| NUCLEO-H755ZI-Q, Cortex-M7 | **Historical PASS, rerun required** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
-The **final tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. Any subsequent release-evidence documentation commit must be verified not to modify the qualified code, public headers, build configuration or hardware harness.
+The **historically tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. Any subsequent release-evidence documentation commit must be verified not to modify the qualified code, public headers, build configuration or hardware harness.
 
-### Final v2.1.0 hardware acceptance: 2026-10-11
+### Historical v2.1.0 hardware acceptance: 2026-10-11
 
 Both physical/native campaigns completed successfully using **exactly the same source commit**:
 
@@ -65,7 +65,7 @@ Both physical/native campaigns completed successfully using **exactly the same s
 
 **Non-blocking tool diagnostics:** ARM GCC 10.3.1 warns when `-fno-rtti` is forwarded to C compilation units (it is a C++ option). OpenOCD 0.11 reports STM32H7 DBGMCU `mem2array` examine errors, but completes programming and verification; the target executes all acceptance sections successfully. Neither is a protocol test failure. Follow-up toolchain/script cleanup must not be introduced into this qualified release without a new assessment.
 
-**Acceptance conclusion:** the final post-audit implementation is qualified on both targets. Evidence-only Markdown changes after the tested source commit do not change the qualified executable or package identity; verify this with a commit-level diff before tagging.
+**Historical acceptance conclusion:** the `3c93e6b` implementation was qualified on both targets. Later MCU API/build/harness changes invalidate treating this as qualification of the current candidate. New package, binary and target evidence must be recorded before promotion.
 
 ### Raspberry Pi 5 / arm64 rerun
 
