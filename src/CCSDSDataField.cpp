@@ -30,7 +30,9 @@ std::vector<std::uint8_t> ccsds::DataField::getApplicationData() const {
 }
 
 std::uint16_t ccsds::DataField::getDataFieldAvailableBytesSize() const {
-  return static_cast<std::uint16_t>(m_dataPacketSize - getDataFieldUsedBytesSize());
+  const auto used = getDataFieldUsedBytesSize();
+  return used >= m_dataPacketSize ? 0U
+                                  : static_cast<std::uint16_t>(m_dataPacketSize - used);
 }
 
 std::uint16_t ccsds::DataField::getDataFieldAbsoluteBytesSize() const {
