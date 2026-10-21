@@ -20,7 +20,7 @@ existing independent conformance evidence continues to pass.
 
 ## Integration and robustness
 
-- [x] **134/134 native regression/conformance tests** pass on the v2.1 candidate.
+- [x] **134/134 native regression/conformance tests** passed on the 2026-10-11 historical candidate; the current regression suite includes additional post-audit coverage and has passed hosted CI.
 - [x] Linux Ubuntu 22.04/24.04 hosted gates pass.
 - [x] Linux Ubuntu 26.04 hosted gate passes before v2.1.0 promotion.
 - [x] Windows hosted gate passes.
@@ -58,13 +58,16 @@ existing independent conformance evidence continues to pass.
 
 ## Post-audit requalification
 
-- [ ] Reconciled MCU-facing public APIs and conditional installed-header package rules accepted on develop.
-- [ ] Full Linux, Windows, Doxygen and robustness CI green on the final reconciled commit.
+- [x] MCU-facing public APIs, conditional installed-header package rules, and capacity-underflow regression fixes merged into `develop` in PR #177.
+- [x] Linux, Windows, Doxygen and robustness CI passed on post-merge `develop` implementation `f076991b88cf70e45a1752b8ea8dd81878ba6a38`.
+- [ ] Final `develop` CI rechecked after any further candidate changes and before hardware qualification.
 - [ ] Fresh Raspberry Pi 5 native package validation passed on that commit and hashes recorded.
 - [ ] Fresh STM32H755 physical validation passed on that commit and hashes recorded.
 - [ ] Only then promote to main and allow automatic VERSION tagging.
 
 ## Final release gates
+
+**Historical qualification vs current candidate:** all October 11 target PASS markers below apply to `3c93e6b` only. The current release requires the unchecked post-audit Pi 5/H755 gates above; the historical checkboxes do not authorize tagging.
 
 - [x] Issue #163 performance characterization complete.
 - [x] Release/compliance documentation audited; PR #169 merged (prematurely) before physical qualification.
