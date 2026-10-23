@@ -200,7 +200,19 @@ CCSDSPack represents the numeric time code. Calendar conversion, leap-second han
 
 ## Library architecture
 
-![CCSDSPack library architecture](docs/imgs/CCSDSPack_architecture.drawio.png)
+```mermaid
+flowchart TB
+    APP["C / C++ applications"] --> API["C++17 Packet / Manager API (optional)"]
+    APP --> CORE["C11 protocol core"]
+    API --> CORE
+    CORE --> WIRE["CCSDS packet / CRC16"]
+    CORE --> PUS["PUS-A / PUS-C TC & TM"]
+    CORE --> TIME["Numeric CUC time"]
+    CORE --> PROCESS["Validation / segmentation / streams"]
+    HOST["Hosted CLI / configuration"] --> API
+```
+
+For component boundaries, ownership and build profiles, see the [full Mermaid architecture](docs/ARCHITECTURE.md).
 
 The protocol layer is C11. The established C++17 Packet/Manager API is built above that core by default. Hosted builds export both layers; `CCSDSPACK_BUILD_MCU=ON` produces bare-metal static libraries while excluding host-only configuration and command-line components.
 
@@ -273,6 +285,7 @@ See [Command-line tools](docs/CLI.md).
 - [Structured validation](docs/VALIDATION.md)
 - [Configuration](docs/CONFIG.md)
 - [Raw-buffer APIs](docs/RAW_BUFFERS.md)
+- [Standalone C API](docs/C_API.md)
 - [Performance baseline](docs/PERFORMANCE.md)
 - [Examples](docs/EXAMPLES.md)
 - [Packages and cross-builds](docs/PACKAGES.md)

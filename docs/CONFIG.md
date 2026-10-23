@@ -125,6 +125,36 @@ pus_time_fine:uint=0xA0B0
 | `pus_time_coarse` | must fit configured coarse width |
 | `pus_time_fine` | must fit configured fine width |
 
+## Command-line stream controls
+
+These keys are consumed by the **hosted CLI applications**, not by
+`Packet::loadFromConfig()` itself. They should be included in a configuration
+intended for `ccsds_decoder`:
+
+```ini
+validation_enable:bool=true
+sync_pattern_enable:bool=false
+# sync_pattern:int=0x1ACFFC1D
+```
+
+| Key | Used by | Requirement / behavior |
+|---|---|---|
+| `validation_enable` | decoder | **Required** `bool`. Enables/disables the Manager's packet and sequence validation during application-data reconstruction. Packet framing and CRC checks remain active when disabled. |
+| `sync_pattern_enable` | encoder, decoder, validator | Optional `bool`, defaults to `false`. When enabled, a four-octet synchronization marker precedes each Space Packet in the external stream. |
+| `sync_pattern` | encoder, decoder, validator | Optional signed `int` holding the 32-bit marker bit pattern; default `0x1ACFFC1D` if enabled but omitted. Encoder and consumers must agree. |
+
+`ccsds_encoder` and `ccsds_validator` do not require `validation_enable`.
+The validator runs its own structured checks. `ccsds_decoder` requires this
+key even if the application only wants byte reassembly. The Manager's optional
+four-octet synchronization marker is **not part of the CCSDS Space Packet PDU**.
+
+`ccsds_secondary_header_flag` is a retired configuration key. It does not
+select or enable a secondary header; use `define_secondary_header` and
+`secondary_header_type`. The flag on the packet itself is derived from the
+installed secondary-header object.
+
+See [CLI.md](CLI.md) for command-line switches and parsing behavior.
+
 ## Packet error control
 
 `ccsds_packet_error_control` configures the enclosing Packet independently of the selected secondary-header type. In `crc16` mode the CCSDSPack CRC16 trailer is appended at Packet level.

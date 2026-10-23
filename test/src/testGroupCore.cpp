@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <vector>
 #include "CCSDSResult.h"
@@ -73,6 +74,17 @@ namespace {
 void testGroupCore(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupCore: " << description << std::endl;
 
+  tester->unitTest("Diagnostic bit formatting bounds shifts and spacing.", [] {
+    return ccsds::getBinaryString(0xFFFFFFFFU, 33)
+             == "1111 1111 1111 1111 1111 1111 1111 1111"
+           && ccsds::getBinaryString(0xABU, 5) == "1010 1011"
+           && ccsds::getBinaryString(0x1U, -1).empty()
+           && ccsds::getBinaryString(0x1U, std::numeric_limits<std::int32_t>::max())
+                == "0000 0000 0000 0000 0000 0000 0000 0001"
+           && ccsds::getBitsSpaces(-1).empty()
+           && ccsds::getBitsSpaces(3) == "   ";
+  });
+
   tester->unitTest("Primary header can be assigned from packed data.", [] {
     ccsds::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(0x0000C0000001ULL));
@@ -101,6 +113,39 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     return packet.getApplicationDataBytes() == std::vector<std::uint8_t>({1, 2, 3, 4, 5})
            && packet.getSecondaryHeaderBytes().empty()
            && packet.getCRC() == 0x3B8D;
+  });
+
+  tester->unitTest("Shrinking data-field capacity never wraps available bytes.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setApplicationData({1U, 2U, 3U, 4U}));
+    packet.setDataFieldSize(2U);
+    const auto &field = packet.getDataField();
+    if (field.getDataFieldAbsoluteBytesSize() != 2U
+        || field.getDataFieldUsedBytesSize() != 4U
+        || field.getDataFieldAvailableBytesSize() != 0U
+        || packet.getDataFieldMaximumSize() != 0U) return false;
+    const auto serialized = packet.serialize();
+    return !serialized;
+  });
+
+  tester->unitTest("Manager refuses zero remaining segmentation capacity.", [] {
+    ccsds::Manager manager;
+    ccsds::Packet templatePacket;
+    TEST_VOID(templatePacket.setApplicationData({1U, 2U, 3U, 4U}));
+    TEST_VOID(manager.setPacketTemplate(templatePacket));
+    manager.setDataFieldSize(2U);
+    if (manager.getDataFieldSize() != 0U) return false;
+    const auto result = manager.setApplicationData({0xABU, 0xCDU});
+    return !result && result.error().code() == ccsds::INVALID_APPLICATION_DATA;
+  });
+
+  tester->unitTest("Capacity below a secondary header also saturates.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setSecondaryHeader({0x01U, 0x02U, 0x03U}));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    packet.setDataFieldSize(1U);
+    return packet.getDataField().getDataFieldAvailableBytesSize() == 0U
+           && packet.getDataFieldMaximumSize() == 0U;
   });
 
   tester->unitTest("Application data set from a pointer round-trips.", [] {

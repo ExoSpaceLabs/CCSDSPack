@@ -124,8 +124,14 @@ Sender and receiver select the same Packet-level mode; it is independent of the 
 
 ## Configuration
 
+This example can be used as a template by the hosted encoder or decoder. The
+decoder requires `validation_enable`; external sync framing is optional.
+
 ```ini
 ccsds_packet_error_control:string=crc16
+data_field_size:int=256
+validation_enable:bool=true
+sync_pattern_enable:bool=false
 ccsds_version_number:int=0
 ccsds_APID:int=0x123
 ccsds_segmented:bool=false

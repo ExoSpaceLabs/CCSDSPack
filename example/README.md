@@ -1,23 +1,23 @@
 # CCSDSPack standalone examples
 
-Each example is an independent CMake consumer of an installed CCSDSPack 2.x package. None links the source-tree target directly, so the suite also validates the installed headers, exported CMake target, and package surface.
+Each example is an independent CMake consumer of an installed CCSDSPack 2.1-or-later compatible package (`find_package(CCSDSPack 2.1 CONFIG REQUIRED)`). None links the source-tree target directly, so the suite also validates the installed headers, exported CMake target, and package surface.
 
-Install the library, then build every example:
+From the **repository root**, build/install the library to a local prefix, then run the installed-package examples:
 
 ```bash
-cmake -S . -B ../build
-cmake --build ../build
-cmake --install ../build --prefix ../build/install
+cmake -S . -B build
+cmake --build build
+cmake --install build --prefix "$PWD/build/install"
 
-./example/build_examples.sh all ../build/install
+./example/build_examples.sh all "$PWD/build/install"
 ```
 
 Build one example by directory name:
 
 ```bash
-./example/build_examples.sh raw_buffer_packet ../build/install
-./example/build_examples.sh raw_buffer_manager ../build/install
-./example/build_examples.sh pus_c_telecommand ../build/install
+./example/build_examples.sh raw_buffer_packet "$PWD/build/install"
+./example/build_examples.sh raw_buffer_manager "$PWD/build/install"
+./example/build_examples.sh pus_c_telecommand "$PWD/build/install"
 ```
 
 The installation-prefix argument is optional when `CCSDSPACK_PREFIX` or `CMAKE_PREFIX_PATH` already identifies the package. Builds are written under `build/examples/<selection>` by default; `CCSDSPACK_EXAMPLE_BUILD_DIR` overrides that root.

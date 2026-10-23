@@ -4,6 +4,9 @@ CCSDSPack validates the physical Cortex-M7 target with a small standalone
 CMake/OpenOCD harness. The old STM32CubeIDE/HAL/BSP example project is not part
 of the validation path.
 
+DAS is a dependency of **this standalone STM32H755 validation firmware only**.
+Neither CCSDSPack's C11/C++17 libraries nor its installed packages require DAS.
+
 The release test reuses the same board-independent acceptance body as native
 arm64:
 
@@ -56,15 +59,16 @@ The validation runner pins its target substrate rather than building against
 whatever happens to be installed on a workstation:
 
 ```text
-DAS
-4b768ef86b43652c94cc91b1c77e247fa37ebd8a
+DAS release tag: v0.1.0
+Resolved Git commit: 8553d903a615fe99e2a3a434f876b51f9542fd46
 
 STM32CubeH7 CMSIS source
 f5c0b7a2b1f6eb26fde150f72edb2d7deb647066
 ```
 
-Those are the same DAS/STM32H7 baselines used by the SpWKit STM32H755 DAS
-integration.
+The runner fetches DAS tag `v0.1.0`, verifies that it resolves to the pinned
+commit above, and checks out that exact commit. This is a test-harness pin,
+not a CCSDSPack runtime or build dependency.
 
 ## Build-only validation
 
@@ -123,7 +127,7 @@ bash test/package_tester/stm32h7xx/run_h755_validation.sh \
 The runner:
 
 1. hashes the supplied CCSDSPack package;
-2. checks out the exact DAS revision;
+2. resolves the DAS `v0.1.0` tag, verifies its commit SHA, and checks it out;
 3. sparse-fetches only the required pinned STM32 CMSIS headers;
 4. builds and installs DAS for Cortex-M7;
 5. links the CCSDSPack validation ELF from the supplied MCU package;
@@ -148,7 +152,7 @@ UART_FORMAT:115200 8N1
 CCSDSPACK_SOURCE_SHA:<candidate-sha>
 CCSDSPACK_PACKAGE_SHA256:<package-sha256>
 CCSDSPACK_LIBRARY_SHA256:<libccsdspack.a-sha256>
-DAS_SHA:4b768ef86b43652c94cc91b1c77e247fa37ebd8a
+DAS_SHA:8553d903a615fe99e2a3a434f876b51f9542fd46
 COMPILER:<arm-none-eabi compiler version>
 CPP_STANDARD:201703
 CORE_HZ:<measured DAS core clock>
@@ -228,7 +232,7 @@ Retain from every release-candidate hardware run:
 1. exact CCSDSPack candidate SHA;
 2. exact MCU package filename and SHA-256;
 3. linked `libccsdspack.a` SHA-256;
-4. pinned DAS SHA;
+4. DAS release tag `v0.1.0` and its verified commit SHA;
 5. compiler identity printed by the target;
 6. target-reported core clock/effective UART baud and heap high-water mark;
 7. final ELF SHA-256;

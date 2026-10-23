@@ -21,6 +21,12 @@ source/configuration mapping is maintained in `docs/MIGRATION_V1_TO_V2.md`.
 - Removed avoidable bridge copies and aggregate temporaries from key C++ parsing and
   serialization paths.
 
+### Pre-release correctness and packaging fixes
+
+- Prevent wrapped available-capacity reporting when packet data-field capacity is reduced below already-stored content; add Packet and Manager regression coverage (issue #172).
+- Restrict host-only C++ file I/O and configuration declarations from MCU builds, and align installed headers with C-only, hosted C++ and MCU package profiles.
+- Pin **only the standalone STM32H755 validation harness** to DAS v0.1.0 with tag-to-commit verification. CCSDSPack itself does not link against or require DAS.
+
 ### Performance and footprint
 
 - Matched v2.0-main vs v2.1 Release benchmarks show owning raw parse improvements of
@@ -41,7 +47,7 @@ source/configuration mapping is maintained in `docs/MIGRATION_V1_TO_V2.md`.
   ECSS-E-70-41A PUS-A, ECSS-E-ST-70-41C PUS-C, and the supported CCSDS 301.0-B-4 CUC subset.
 - Preserved independent wire-vector evidence, including the complete PUS-C TC
   acknowledgement matrix `0x0..0xF`.
-- Expanded the native regression/conformance suite to **134/134 passing tests**.
+- Expanded the hosted native regression/conformance suite with capacity-shrink, installed-MCU API, and bounded diagnostic bit-formatting regression coverage.
 - Preserved structured negative validation evidence for all 26 public validation codes.
 - Kept dedicated ASan, UBSan, and bounded libFuzzer robustness gates.
 
