@@ -20,7 +20,7 @@ existing independent conformance evidence continues to pass.
 
 ## Integration and robustness
 
-- [x] **137/137 hosted native regression/conformance tests** passed on the current `develop` candidate (Ubuntu 22.04 Linux workflow, 2026-10-23). The October 11 historical Raspberry Pi candidate passed 134/134 tests; that hardware evidence remains historical.
+- [x] **137/137 hosted native regression/conformance tests** passed on the pre-final `develop` CI baseline (Ubuntu 22.04 Linux workflow, 2026-10-23). A subsequent diagnostic formatter fix adds a regression case; final-source CI remains unchecked below. The October 11 Pi 5 candidate passed 134/134 tests, now historical.
 - [x] Linux Ubuntu 22.04/24.04 hosted gates pass.
 - [x] Linux Ubuntu 26.04 hosted gate passes before v2.1.0 promotion.
 - [x] Windows hosted gate passes.
