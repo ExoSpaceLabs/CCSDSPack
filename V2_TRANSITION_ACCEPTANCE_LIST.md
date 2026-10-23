@@ -46,14 +46,14 @@ existing independent conformance evidence continues to pass.
 - [x] Focused CUC wrapper regression is separately tracked in issue #166 without changing
   the CCSDS/ECSS release claim or correctness gates.
 
-## Hardware validation
+## Historical hardware validation (2026-10-11 candidate)
 
 - [x] Raspberry Pi 5 native arm64 package/API execution recorded.
 - [x] Raspberry Pi runner records platform/source/package identity and hashes.
 - [x] NUCLEO-H755ZI-Q Cortex-M7 standalone DAS/OpenOCD validation recorded.
 - [x] H755 hard-float startup path physically qualified.
-- [x] Final Pi 5 and H755 hardware runs passed on the same post-audit `develop` implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229` (2026-10-11).
-- [x] Package hashes, MCU library/ELF hashes, full target PASS markers, firmware size and heap statistics recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+- [x] Pi 5 and H755 historical hardware runs passed on the same previous `develop` implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229` (2026-10-11).
+- [x] Historical package hashes, MCU library/ELF hashes, full target PASS markers, firmware size and heap statistics recorded in `docs/V2_HARDWARE_VALIDATION.md`.
 
 
 ## Post-audit requalification
