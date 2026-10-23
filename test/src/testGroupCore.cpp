@@ -73,6 +73,17 @@ namespace {
 void testGroupCore(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupCore: " << description << std::endl;
 
+  tester->unitTest("Diagnostic bit formatting bounds shifts and spacing.", [] {
+    return ccsds::getBinaryString(0xFFFFFFFFU, 33)
+             == "1111 1111 1111 1111 1111 1111 1111 1111"
+           && ccsds::getBinaryString(0xABU, 5) == "1010 1011"
+           && ccsds::getBinaryString(0x1U, -1).empty()
+           && ccsds::getBinaryString(0x1U, INT32_MAX)
+                == "0000 0000 0000 0000 0000 0000 0000 0001"
+           && ccsds::getBitsSpaces(-1).empty()
+           && ccsds::getBitsSpaces(3) == "   ";
+  });
+
   tester->unitTest("Primary header can be assigned from packed data.", [] {
     ccsds::Packet packet;
     TEST_VOID(packet.setPrimaryHeader(0x0000C0000001ULL));
