@@ -47,7 +47,7 @@ source/configuration mapping is maintained in `docs/MIGRATION_V1_TO_V2.md`.
   ECSS-E-70-41A PUS-A, ECSS-E-ST-70-41C PUS-C, and the supported CCSDS 301.0-B-4 CUC subset.
 - Preserved independent wire-vector evidence, including the complete PUS-C TC
   acknowledgement matrix `0x0..0xF`.
-- Expanded the native regression/conformance suite to **134/134 passing tests**.
+- Expanded the hosted native regression/conformance suite to **137/137 passing tests** on the post-audit `develop` implementation.
 - Preserved structured negative validation evidence for all 26 public validation codes.
 - Kept dedicated ASan, UBSan, and bounded libFuzzer robustness gates.
 
