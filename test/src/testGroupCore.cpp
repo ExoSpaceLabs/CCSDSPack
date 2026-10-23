@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <vector>
 #include "CCSDSResult.h"
@@ -78,7 +79,7 @@ void testGroupCore(TestManager *tester, const std::string &description) {
              == "1111 1111 1111 1111 1111 1111 1111 1111"
            && ccsds::getBinaryString(0xABU, 5) == "1010 1011"
            && ccsds::getBinaryString(0x1U, -1).empty()
-           && ccsds::getBinaryString(0x1U, INT32_MAX)
+           && ccsds::getBinaryString(0x1U, std::numeric_limits<std::int32_t>::max())
                 == "0000 0000 0000 0000 0000 0000 0000 0001"
            && ccsds::getBitsSpaces(-1).empty()
            && ccsds::getBitsSpaces(3) == "   ";
