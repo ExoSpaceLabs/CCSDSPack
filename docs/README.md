@@ -27,6 +27,9 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 - [Packages](PACKAGES.md): native packages and installed CMake consumption.
 - [Cross-build guide](CROSSBUILD.md): aarch64 Linux and bare-metal Cortex-M builds.
 - [Error and Result handling](ERROR.md): exception-free operation errors and structured validation diagnostics.
+- [Robustness and fuzz coverage](ROBUSTNESS.md): sanitizer and bounded libFuzzer release gates.
+- [Raspberry Pi 5 and STM32H755 validation](V2_HARDWARE_VALIDATION.md): current qualification gates and historical hardware evidence.
+- [STM32H755 standalone test procedure](../test/package_tester/stm32h7xx/H755_INTEGRATION.md): build, DAS v0.1.0 test-only pin, flash and UART PASS markers.
 - [Generated API reference](https://exospacelabs.github.io/CCSDSPack/html/): public headers and API details.
 
 ## Compliance
@@ -34,6 +37,8 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 - [Concise compliance statement](../COMPLIANCE.md)
 - [Detailed CCSDS Space Packet compliance matrix](../CCSDS_COMPLIANCE.md)
 - [PUS/CUC compliance baseline](PUS_CUC_COMPLIANCE.md)
+- [PUS-C independent evidence](PUS_C_EVIDENCE.md): acknowledgement vectors and conformance checks.
+- [Structured validation evidence](VALIDATION_EVIDENCE.md): complete public validation-code traceability.
 
 ## Migration and historical references
 
