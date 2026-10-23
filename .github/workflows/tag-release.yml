@@ -34,6 +34,13 @@ jobs:
           version="$(tr -d '[:space:]' < VERSION)"
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "Bad VERSION" >&2; exit 1; }
           tag="v$version"
+          # A new release must introduce or change VERSION relative to the prior main commit.
+          # If the previous commit has no VERSION (initial adoption), allow the first release.
+          previous_version="$(git show "$RELEASE_SHA^:VERSION" 2>/dev/null | tr -d '[:space:]' || true)"
+          if [[ "$previous_version" == "$version" ]]; then
+            echo "VERSION is unchanged from the previous main commit; no release tag."
+            exit 0
+          fi
           grep -Fq "## [$version]" CHANGELOG.md || { echo "Missing changelog section" >&2; exit 1; }
           grep -Fqx "# CCSDSPack $tag" RELEASE_NOTES.md || { echo "Release notes version mismatch" >&2; exit 1; }
           for workflow in linux.yml windows.yml doxygen.yml robustness.yml; do
