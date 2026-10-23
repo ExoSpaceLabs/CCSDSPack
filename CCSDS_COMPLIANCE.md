@@ -104,7 +104,7 @@ The C++ ownership layer remains vector-backed. The C11 core exposes caller-owned
 
 The v2.1.0 release is supported by:
 
-- **137/137 native regression/conformance tests** on the current `develop` hosted CI candidate (historical Pi 5 qualification at `3c93e6b` ran 134 tests);
+- hosted native regression/conformance coverage for the C11 and C++17 APIs, including capacity-boundary and diagnostic-bit-formatting regressions; final candidate counts and success are established by the required CI gates (the historical Pi 5 run at `3c93e6b` passed 134 tests);
 - independent fixed generic and PUS byte vectors, including the complete 16-value PUS-C TC acknowledgement matrix;
 - a documented negative matrix covering the complete 26-code structured Validator surface;
 - negative tests for version, ranges, length, CRC, identifier, segmentation, sequence, PUS fields/tailoring, and CUC configuration;
