@@ -15,10 +15,19 @@ set(TEST_RESOURCE_DIR "${CMAKE_SOURCE_DIR}/test/test_resources")
 file(GLOB TEST_SOURCES "${TEST_SOURCE_DIR}/*.cpp")
 
 
-# Whitelist committed tester fixtures. Never package arbitrary/generated
-# files from the writable test_resources directory or retired v1 configs.
+# Whitelist the eight committed tester fixtures. Never package arbitrary
+# runtime-generated files from writable test_resources or retired v1 configs.
 # These are not runtime data or dependencies of the library/CLI.
-set(TEST_RESOURCES "${TEST_RESOURCE_DIR}/test_config.cfg")
+set(TEST_RESOURCES
+    "${TEST_RESOURCE_DIR}/test_config.cfg"
+    "${TEST_RESOURCE_DIR}/templatePacket.bin"
+    "${TEST_RESOURCE_DIR}/ccsds_golden_minimum_crc16.hex"
+    "${TEST_RESOURCE_DIR}/ccsds_golden_no_secondary_crc16.hex"
+    "${TEST_RESOURCE_DIR}/ccsds_golden_custom_secondary_crc16.hex"
+    "${TEST_RESOURCE_DIR}/ccsds_golden_no_crc.hex"
+    "${TEST_RESOURCE_DIR}/ccsds_golden_apid_0123_seq_0123_crc16.hex"
+    "${TEST_RESOURCE_DIR}/ccsds_golden_rollover_concat_crc16.hex"
+)
 
 file(MAKE_DIRECTORY "${BINARY_OUTPUT_DIR}/test_resources")
 file(COPY ${TEST_RESOURCES}

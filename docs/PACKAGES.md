@@ -43,7 +43,7 @@ Example DEB installation:
 sudo dpkg -i packages/ccsdspack-v<version>-Linux-<architecture>.deb
 ```
 
-Packages that include `CCSDSPack_tester` install its explicitly whitelisted `test_resources/test_config.cfg` fixture. Tester-generated round-trip data is created at runtime and must not be included in the packaged fixture set. The old v1 `test_resources/config.cfg` (PVN=1, obsolete secondary-header claim) was retired in v2.2 development. These fixtures are not runtime dependencies of the library or CLI tools.
+Packages that include `CCSDSPack_tester` install **eight explicitly whitelisted committed fixtures**: `test_config.cfg`, `templatePacket.bin`, and six independent CCSDS golden-vector `.hex` files. The tester also generates round-trip files at runtime; those are not distributed in the package. The old v1 `test_resources/config.cfg` (PVN=1, obsolete secondary-header claim) was retired in v2.2 development. These fixtures are not runtime dependencies of the library or CLI tools.
 
 ## arm64 validation
 
