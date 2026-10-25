@@ -15,6 +15,7 @@
 #include "reassembly.h"
 #include "segmentation.h"
 #include "stream.h"
+#include "stream_receiver.h"
 #include "validation.h"
 #include "pus.h"
 #include "pus_tc.h"
