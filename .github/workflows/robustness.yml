@@ -57,7 +57,7 @@ jobs:
           cd bin
           ./CCSDSPack_tester
           cd ..
-          ctest --test-dir build-robustness-${{ matrix.sanitizer.name }} --output-on-failure -R '^ccsdspack_c_(core|stream_receiver)$'
+          ctest --test-dir build-robustness-${{ matrix.sanitizer.name }} --output-on-failure -R '^ccsdspack_c_(core|stream_receiver|packet_parts)$'
 
   fuzz-smoke:
     name: fuzz-smoke-clang

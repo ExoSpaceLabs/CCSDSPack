@@ -218,6 +218,11 @@ if(CCSDSPACK_BUILD_C_TESTS)
     )
     target_link_libraries(CCSDSPack_c_stream_receiver_test PRIVATE ${C_CORE_NAME})
     add_test(NAME ccsdspack_c_stream_receiver COMMAND CCSDSPack_c_stream_receiver_test)
+    add_executable(CCSDSPack_c_packet_parts_test
+        "${CMAKE_SOURCE_DIR}/test/c/test_packet_parts.c"
+    )
+    target_link_libraries(CCSDSPack_c_packet_parts_test PRIVATE ${C_CORE_NAME})
+    add_test(NAME ccsdspack_c_packet_parts COMMAND CCSDSPack_c_packet_parts_test)
 endif()
 
 if(CCSDSPACK_BUILD_CPP AND NOT CCSDSPACK_BUILD_MCU)
