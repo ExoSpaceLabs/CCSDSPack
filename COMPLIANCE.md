@@ -73,13 +73,14 @@ Round-trip behavior alone is not treated as sufficient conformance evidence.
 
 ## v2.1 release evidence
 
-The recorded `3c93e6b` v2.1.0 implementation candidate is covered by the
-evidence below. Corrections to the MCU public/package surface after that SHA
-require CI and fresh target qualification before the release is tagged.
+The frozen current v2.1.0 implementation `8d6fe89` passed hosted CI, native
+Raspberry Pi 5 arm64 (2026-10-25) and physical STM32H755 Cortex-M7 validation
+(2026-10-25). The earlier `3c93e6b` implementation and its October 11 target
+PASS evidence remain historical; publication is pending approved promotion.
 
 The recorded evidence includes:
 
-- **134/134 native regression/conformance tests**;
+- **138/138 native Raspberry Pi 5 regression/conformance tests** on the frozen implementation (historical October 11 candidate: 134/134);
 - Linux and Windows hosted CI, Doxygen, CLI integration, installed-package
   consumers/examples, and native/cross-package generation;
 - dedicated Clang ASan and UBSan execution plus bounded libFuzzer smoke tests;

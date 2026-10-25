@@ -62,12 +62,12 @@ existing independent conformance evidence continues to pass.
 - [x] Linux, Windows, Doxygen and robustness CI passed on post-merge `develop` implementation `f076991b88cf70e45a1752b8ea8dd81878ba6a38`.
 - [x] Final `develop` Linux, Windows, Doxygen and robustness CI passed on exact implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf`.
 - [x] Fresh Raspberry Pi 5 native arm64 package validation passed on `8d6fe89a946fafd2be0d48917aa77fe473f89ecf` (2026-10-25): 138/138 native tests, CLI, installed consumer and all acceptance markers PASS; DEB SHA-256 `8974910ddf7ac90acbfd9e6b7353d65fa94058eaeff19b169b0130ab71871515`. Evidence in `docs/V2_HARDWARE_VALIDATION.md`.
-- [ ] Fresh STM32H755 physical validation passed on the **same** implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf`; MCU package/library/ELF hashes and UART/OpenOCD logs recorded.
+- [x] Fresh STM32H755 physical Cortex-M7 validation **PASS** on the same implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf` (2026-10-25), all 8 acceptance sections and OpenOCD flash verification PASS. MCU package SHA-256 `4a9ab0156d04df62305031dc5e4ea32438b24c5aae0d610ac4f4b1f023ad7a9c`, library SHA-256 `50369efaa72ab093469184a1be655a8d04d4cb6a76dfe8e81a69e4606294120c`, ELF SHA-256 `96726120004288ac61f9daa076eb63b955be8a06fdf0d01dd221cf52e2779800`. Full metadata/UART/OpenOCD/size evidence reviewed; see `docs/V2_HARDWARE_VALIDATION.md`.
 - [ ] Only then promote to main and allow automatic VERSION tagging.
 
 ## Final release gates
 
-**Historical qualification vs current candidate:** all October 11 target PASS markers below apply to `3c93e6b` only. The current release requires the unchecked post-audit Pi 5/H755 gates above; the historical checkboxes do not authorize tagging.
+**Historical qualification vs current candidate:** all October 11 target PASS markers below apply to `3c93e6b` only. The current release has independently **passed both** post-audit Pi 5/H755 gates above on `8d6fe89`; the historical checkboxes were not used to authorize release. Tagging is still gated on reviewed `develop -> main` promotion and final CI.
 
 - [x] Issue #163 performance characterization complete.
 - [x] Release/compliance documentation audited; PR #169 merged (prematurely) before physical qualification.

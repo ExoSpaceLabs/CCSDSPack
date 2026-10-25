@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These are pre-tag v2.1.0 release notes. Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 validation **passed on 2026-10-11** against implementation commit `3c93e6b79d3d97ff3003682804c120f38672e229`. The MCU public-API/package corrections and data-field capacity fix were merged into `develop` through PR #177, and hosted CI passed. These changes affect the release candidate's headers, packages and implementation, so **both target campaigns must be repeated on the frozen `develop` candidate** before promotion/tagging. The old accepted evidence is retained in `docs/V2_HARDWARE_VALIDATION.md`.
+> These are pre-tag v2.1.0 release notes. **Both Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 qualification campaigns PASSED on 2026-10-25** against the same frozen implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf` following the MCU API/package and data-field corrections. The prior October 11 qualification (`3c93e6b`) remains historical. Final `main` promotion, automated tagging and publication verification have **not** yet occurred; see `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Summary
 
@@ -159,16 +159,14 @@ target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 
 ## Remaining release gates
 
-The October 11 physical/native validation **passed for the earlier implementation** SHA `3c93e6b79d3d97ff3003682804c120f38672e229`. It does **not** qualify the current `develop` candidate after the MCU public-API/package corrections, capacity fix, and DAS v0.1.0 test-harness pin. Historical hashes remain recorded in `docs/V2_HARDWARE_VALIDATION.md`.
+The October 11 physical/native PASS evidence belongs only to historical implementation `3c93e6b`. New Pi 5 and STM32H755 PASS results on frozen implementation `8d6fe89` have been accepted into `docs/V2_HARDWARE_VALIDATION.md`, with exact package, library and firmware hashes.
 
 Before publication is complete:
 
-1. finish release-documentation and `main` historical-evidence reconciliation on `develop`, then freeze the code and hardware harness;
-2. pass all `develop` CI and package/cross-build gates on the frozen candidate;
-3. rerun Raspberry Pi 5 native-arm64 and physical STM32H755 acceptance on that candidate, using DAS `v0.1.0` **only in the H755 validation firmware**; record matching source, package and executable hashes;
-4. update the acceptance checklist with the new evidence without modifying qualified code or harness;
-5. promote approved `develop` to `main`, run final `main` CI and let the release workflow automatically create tag `v2.1.0`;
-6. verify GitHub Release assets, package hashes, and GHCR `v2.1.0` / `latest` images.
+1. review the final **evidence-only** documentation changes on `develop`; confirm a diff against frozen implementation `8d6fe89` changes no production code, headers, build metadata or hardware harness;
+2. approve and promote `develop` to `main` through PR #178 without modifying the qualified implementation;
+3. pass final `main` CI and let the release workflow create tag `v2.1.0` automatically;
+4. verify GitHub Release assets and hashes, and GHCR `v2.1.0` / `latest` images.
 ## Release control
 
 ```text

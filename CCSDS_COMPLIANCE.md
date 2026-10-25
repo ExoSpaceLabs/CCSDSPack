@@ -116,7 +116,7 @@ The v2.1.0 release is supported by:
 - dedicated Clang ASan and UBSan native-suite jobs;
 - bounded four-target libFuzzer smoke CI under ASan+UBSan.
 
-Historical Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 PASS evidence is recorded for `3c93e6b` in `docs/V2_HARDWARE_VALIDATION.md`. The corrected `develop` candidate still requires fresh Pi 5/H755 hardware qualification before release promotion.
+The corrected frozen `develop` implementation `8d6fe89` **passed fresh Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 qualification on 2026-10-25**, including 138/138 Pi native tests and all eight MCU acceptance sections. Exact source/package/ELF evidence is in `docs/V2_HARDWARE_VALIDATION.md`. Earlier PASS evidence for `3c93e6b` remains historical; release promotion and publication remain pending.
 
 ## Change control
 
