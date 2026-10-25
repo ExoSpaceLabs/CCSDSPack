@@ -13,6 +13,7 @@ set(CCSDSPACK_FUZZ_TARGETS
     ccsdspack_fuzz_packet
     ccsdspack_fuzz_pus
     ccsdspack_fuzz_cuc
+    ccsdspack_fuzz_stream_receiver
 )
 
 add_executable(ccsdspack_fuzz_declared_packet_size
@@ -23,6 +24,8 @@ add_executable(ccsdspack_fuzz_pus
     "${CCSDSPACK_FUZZ_DIR}/fuzz_pus.cpp")
 add_executable(ccsdspack_fuzz_cuc
     "${CCSDSPACK_FUZZ_DIR}/fuzz_cuc.cpp")
+add_executable(ccsdspack_fuzz_stream_receiver
+    "${CCSDSPACK_FUZZ_DIR}/fuzz_stream_receiver.cpp")
 
 foreach(target IN LISTS CCSDSPACK_FUZZ_TARGETS)
     target_include_directories(${target} PRIVATE "${INCLUDE_DIR}")
