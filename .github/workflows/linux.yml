@@ -33,6 +33,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake make gcc g++
 
+      - name: Check arm64 validation VERSION source (host-safe)
+        run: |
+          version="$(bash test/package_tester/read_source_version.sh)"
+          test "$version" = "$(tr -d '[:space:]' < VERSION)"
+          grep -Fq 'read_source_version.sh' test/package_tester/run_aarch64_validation.sh
+          grep -Fq 'read_source_version.sh' test/package_tester/aarch64_validate.sh
+
       - name: Configure and build (native x86_64)
         run: |
           mkdir -p build
