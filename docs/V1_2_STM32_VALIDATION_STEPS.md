@@ -1,5 +1,11 @@
 # CCSDSPack v1.2.0 STM32H755 Validation Procedure
 
+> **Historical procedure, not a v2.1+ hardware test.** The CubeIDE CM4/CM7
+> projects described below are no longer present in the active repository
+> tree. To reproduce this original test, check out the historical `v1.2.0`
+> tag in a separate worktree. For current STM32H755 qualification, use the
+> [standalone DAS/OpenOCD integration guide](../test/package_tester/stm32h7xx/H755_INTEGRATION.md).
+
 ## Purpose
 
 Close the remaining CCSDSPack v1.2.0 hardware release gate by executing the existing deterministic Cortex-M7 validation suite on the NUCLEO-H755ZI-Q.

@@ -56,8 +56,10 @@ void printPackets(ccsds::Manager &manager);
 /**
  * @brief Formats the low-order bits of an integer as a binary string.
  * @param value Value to format.
- * @param bits Number of low-order bits to include.
- * @return Binary string without a `0b` prefix.
+ * @param bits Requested bit width; non-positive returns an empty string,
+ *             positive widths round up to a group of four bits, and values
+ *             above 32 clamp to 32 before rounding.
+ * @return Space-separated groups of four binary digits, without a `0b` prefix.
  */
 std::string getBinaryString(std::uint32_t value, std::int32_t bits);
 

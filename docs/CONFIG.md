@@ -15,7 +15,7 @@ Hosted CCSDSPack configuration files use one typed entry per line:
 
 Lines beginning with `#` are comments. The parser is `ccsds::Config`; configuration parsing is excluded from `CCSDS_MCU` builds.
 
-The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring.
+The schema mirrors the runtime ownership model: generic packet policy configures `ccsds::Packet`, while `secondary_header_type` identifies a concrete secondary header and optional PUS keys configure only its supported fields/tailoring. `ccsds::Config` parses typed keys generically: it can retain an unknown, syntactically valid key without the Packet or CLI ever consuming it. An unrecognized key is therefore **not necessarily rejected**. Use the documented keys below.
 
 ## Value types
 
@@ -157,7 +157,7 @@ See [CLI.md](CLI.md) for command-line switches and parsing behavior.
 
 ## Packet error control
 
-`ccsds_packet_error_control` configures the enclosing Packet independently of the selected secondary-header type. In `crc16` mode the CCSDSPack CRC16 trailer is appended at Packet level.
+`ccsds_packet_error_control` configures the enclosing Packet independently of the selected secondary-header type. In `crc16` mode the CCSDSPack CRC16 trailer is appended at Packet level. This configuration key selects only `crc16` or `none`; custom CRC polynomial, initial register and final XOR values must be configured through `Packet::setCrcConfig()` or the relevant C11 API, not through this key.
 
 ## Idle Packets
 

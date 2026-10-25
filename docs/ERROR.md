@@ -69,6 +69,18 @@ if (report.failed(ccsds::ValidationCode::Crc16)) {
 
 Use `ccsds::validationCodeName()` for a symbolic check label. Malformed wire input can still return a parsing `Error` before a Packet exists for object validation.
 
+## Native C11 status codes
+
+The standalone C11 API returns `ccsds_status_t` and provides
+`ccsds_status_name()` for symbolic error names, rather than C++
+`Result<T>`. Values `0..13` align with the corresponding C++ `ErrorCode`
+entries, but the C enum also includes buffer-capacity, CUC and PUS-specific
+status values (including `CCSDS_STATUS_BUFFER_TOO_SMALL`). These additional
+C statuses are **not** C++ `ErrorCode` members.
+
+See [C11 protocol API](C_API.md) and the
+[authoritative status definitions](../inc/ccsdspack/c/error.h).
+
 ## Result aliases
 
 ```cpp

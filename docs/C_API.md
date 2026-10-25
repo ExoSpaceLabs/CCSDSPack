@@ -61,6 +61,52 @@ target as well. See [Packages](PACKAGES.md) for conditional targets.
 Include `<ccsdspack/c/ccsdspack.h>` to access the complete public C surface,
 or include individual headers as needed.
 
+## Parse one packet without copying
+
+The following complete C11 example inspects a Space Packet containing three
+application-data octets. The example explicitly selects **no packet-level CRC**;
+for CRC16 streams, use `CCSDS_PACKET_ERROR_CONTROL_CRC16` and the matching
+CRC configuration (`NULL` selects the default CRC-16/CCITT-FALSE parameters).
+
+```c
+#include <stddef.h>
+#include <stdint.h>
+#include <ccsdspack/c/ccsdspack.h>
+
+int main(void) {
+    const uint8_t wire[] = {
+        0x01, 0x23, 0xC0, 0x2A, 0x00, 0x02, 0xAA, 0xBB, 0xCC
+    };
+    size_t declared = 0U;
+    ccsds_packet_view_t view;
+
+    ccsds_status_t status =
+        ccsds_packet_declared_size(wire, sizeof(wire), &declared);
+    if (status != CCSDS_STATUS_OK || declared != sizeof(wire)) return 1;
+
+    status = ccsds_packet_view_parse(
+        wire, sizeof(wire), CCSDS_PACKET_ERROR_CONTROL_NONE,
+        NULL, &view);
+    if (status != CCSDS_STATUS_OK) return 2;
+
+    if (view.consumed != sizeof(wire) ||
+        view.primary_header.apid != 0x0123U ||
+        view.data_field.size != 3U ||
+        view.data_field.data != wire + CCSDS_PRIMARY_HEADER_SIZE) return 3;
+    return 0;
+}
+```
+
+`ccsds_packet_declared_size()` inspects the primary header's declared size,
+not the full body. The bounded packet-view parser checks packet boundaries,
+version-zero policy, the selected packet-level error-control mode and
+structural Idle Packet constraints. It does **not** interpret or validate
+custom/PUS secondary-header fields; applications use the dedicated PUS codecs
+or a configured C++ Packet adapter for that work.
+
+All buffer views in `ccsds_packet_view_t` alias the caller's input, so they
+must not outlive the input storage or be used after it changes.
+
 ## Ownership and boundaries
 
 - Packet views alias input memory: retain the backing buffer for as long as
