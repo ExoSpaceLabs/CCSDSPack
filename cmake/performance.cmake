@@ -80,3 +80,18 @@ if(UNIX)
         BUILD_RPATH "${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib"
     )
 endif()
+
+# Diagnostic CUC path profile (never a release correctness gate).
+add_executable(CCSDSPack_cuc_path_benchmark
+    "${CMAKE_SOURCE_DIR}/test/performance/cuc_path_benchmark.cpp"
+)
+target_include_directories(CCSDSPack_cuc_path_benchmark PRIVATE "${INCLUDE_DIR}")
+target_link_libraries(CCSDSPack_cuc_path_benchmark PRIVATE ${LIB_NAME} ${C_CORE_NAME})
+set_target_properties(CCSDSPack_cuc_path_benchmark PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+if(UNIX)
+    set_target_properties(CCSDSPack_cuc_path_benchmark PROPERTIES
+        BUILD_RPATH "${LIBRARY_OUTPUT_DIR}:${CMAKE_BINARY_DIR}/lib"
+    )
+endif()

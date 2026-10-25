@@ -350,3 +350,58 @@ for contiguous and discontiguous inputs**, while retaining C++ diagnostics and
 transactional failure guarantees. Tests include C-only malformed/CRC/Idle
 vectors, a 1:1 split-versus-contiguous fuzzer, C++ message/error-code
 regressions, installed C consumers, ASan/UBSan and hosted CI.
+
+## v2.2 CUC C11 codec vs C++ wrapper path profile (issue #166)
+
+The v2.1 CUC regression was investigated without changing any production
+codec or wrapper source. [Linux CI run 40205255656](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/40205255656),
+Ubuntu 26.04, benchmark commit `94707a67aaa7935bf4fc14942a012a76b6da71bd`,
+measured the *same* explicit basic CUC layout (4 coarse + 2 fine octets,
+CCSDS-1958 epoch) in C11 and C++17 on the same host process.
+
+All values below are the **median of seven batches**, each 200,000 iterations
+after warmup. The benchmark's overridden `operator new` tracks allocations
+in the measured operation. The source is
+`test/performance/cuc_path_benchmark.cpp`, built only with
+`CCSDSPACK_BUILD_BENCHMARKS=ON`.
+
+| Path | Median ns/op | Allocations/op | Allocated bytes/op |
+| --- | ---: | ---: | ---: |
+| C11 configuration validation alone | 2.707 | 0 | 0 |
+| C11 encoded-size lookup | 2.469 | 0 | 0 |
+| C11 encode into caller-supplied stack buffer | **11.733** | **0** | **0** |
+| Create owning C++ 7-byte vector only | 13.831 | 1 | 7 |
+| C11 encode into newly allocated vector | 19.359 | 1 | 7 |
+| C++ `time::serialize()` wrapper | **27.894** | **1** | **7** |
+| C11 decode to caller-owned numeric structure | **9.863** | **0** | **0** |
+| C++ `time::deserialize()` wrapper | **21.110** | **0** | **0** |
+
+**Observations (not a causal proof):**
+
+- For hot/bare-metal paths with caller-owned storage, the C11 API avoids the
+  vector allocation and gives the shortest encode path (about 11.7 ns vs
+  27.9 ns for C++ convenience encoding in this run).
+- The owning vector construction is a significant cost. A direct C11 encode
+  *into an allocated vector* still measures about 8.5 ns faster than the
+  current C++ wrapper; this residual includes result construction, duplicate
+  validation/size work and wrapper/delegation overhead.
+- C11 decode and C++ decode both allocate **zero**. The 9.9 ns vs 21.1 ns
+  gap therefore cannot be blamed on allocation. Result-wrapper/translation
+  and dynamic-library call boundaries are plausible contributors, not
+  separately established causes.
+- The prior [PR #183](https://github.com/ExoSpaceLabs/CCSDSPack/pull/183)
+  removed duplicate validation in an experiment but **did not improve
+  matched performance** against the frozen v2.1 baseline. It was closed
+  without merging. This result still stands and prevents treating the
+  inferred overhead as a validated optimization.
+
+Timing components in independent loops are **not additive** and do not
+directly predict end-to-end latency. The differences are tens of nanoseconds
+and depend on the toolchain and shared-library linkage. No protocol semantics
+were changed; wire/error regression evidence remains governed by the existing
+C11/C++ tests, sanitizers and fixed vectors.
+
+**Disposition:** keep #166 open for a future, justified candidate using
+controlled static/shared linkage comparison or call-graph profiling. Do not
+rewrite basic CUC solely to remove the C++ convenience layer. Applications
+with hard timing constraints can already use the C11 codec directly.

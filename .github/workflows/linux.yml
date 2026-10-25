@@ -159,7 +159,8 @@ jobs:
           cmake --build build --target \
             CCSDSPack_packet_benchmark \
             CCSDSPack_packet_serialize_benchmark \
-            CCSDSPack_protocol_benchmark -- -j
+            CCSDSPack_protocol_benchmark \
+            CCSDSPack_cuc_path_benchmark -- -j
 
       - name: Run performance baselines (26.04 only)
         if: matrix.os == 'ubuntu-26.04'
@@ -172,6 +173,8 @@ jobs:
             | tee packet-serialization-performance.csv
           ./build/bin/CCSDSPack_protocol_benchmark v2.1 \
             | tee protocol-performance-current.csv
+          ./build/bin/CCSDSPack_cuc_path_benchmark \
+            | tee cuc-path-profile.csv
 
       - name: Run matched v2.0 vs v2.1 protocol characterization (26.04 only)
         if: matrix.os == 'ubuntu-26.04'
@@ -196,6 +199,7 @@ jobs:
             packet-performance-baseline.csv
             packet-serialization-performance.csv
             protocol-performance-current.csv
+            cuc-path-profile.csv
             build/matched-performance/metadata.txt
             build/matched-performance/protocol-v2.0.csv
             build/matched-performance/protocol-v2.1.csv
