@@ -35,8 +35,11 @@ bool stringEndsWith(const std::string& str, const std::string& suffix) {
 
 std::string getBinaryString(const std::uint32_t value, const std::int32_t bits) {
   std::string binaryString;
-  // Calculate the minimum number of bits required to represent in groups of 4
-  const std::int32_t paddedBits = ((bits + 3) / 4) * 4; // Round up to the nearest multiple of 4
+  // A uint32_t supports at most 32 valid shifts. Bound caller-supplied widths
+  // before rounding to groups of four, also avoiding signed overflow in bits + 3.
+  if (bits <= 0) return {};
+  const std::int32_t boundedBits = bits > 32 ? 32 : bits;
+  const std::int32_t paddedBits = ((boundedBits + 3) / 4) * 4;
 
   for (std::int32_t i = paddedBits - 1; i >= 0; --i) {
     binaryString += ((value >> i) & 1) ? '1' : '0';
@@ -50,6 +53,7 @@ std::string getBinaryString(const std::uint32_t value, const std::int32_t bits) 
 }
 
 std::string getBitsSpaces(const std::int32_t num) {
+  if (num <= 0) return {};
   std::string spaces;
 
   for (std::int32_t i = num - 1; i >= 0; --i) {

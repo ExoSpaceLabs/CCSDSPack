@@ -104,7 +104,7 @@ The C++ ownership layer remains vector-backed. The C11 core exposes caller-owned
 
 The v2.1.0 release is supported by:
 
-- **134/134 native regression/conformance tests**;
+- hosted native regression/conformance coverage for the C11 and C++17 APIs, including capacity-boundary and diagnostic-bit-formatting regressions; final candidate counts and success are established by the required CI gates (the historical Pi 5 run at `3c93e6b` passed 134 tests);
 - independent fixed generic and PUS byte vectors, including the complete 16-value PUS-C TC acknowledgement matrix;
 - a documented negative matrix covering the complete 26-code structured Validator surface;
 - negative tests for version, ranges, length, CRC, identifier, segmentation, sequence, PUS fields/tailoring, and CUC configuration;
@@ -116,7 +116,7 @@ The v2.1.0 release is supported by:
 - dedicated Clang ASan and UBSan native-suite jobs;
 - bounded four-target libFuzzer smoke CI under ASan+UBSan.
 
-Fresh Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 execution are recorded in `docs/V2_HARDWARE_VALIDATION.md`. Final release promotion/publication checks remain outstanding.
+The corrected frozen `develop` implementation `8d6fe89` **passed fresh Raspberry Pi 5/native arm64 and physical NUCLEO-H755ZI-Q/Cortex-M7 qualification on 2026-10-25**, including 138/138 Pi native tests and all eight MCU acceptance sections. Exact source/package/ELF evidence is in `docs/V2_HARDWARE_VALIDATION.md`. Earlier PASS evidence for `3c93e6b` remains historical; release promotion and publication remain pending.
 
 ## Change control
 

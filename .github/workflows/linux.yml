@@ -33,6 +33,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake make gcc g++
 
+      - name: Check arm64 validation VERSION source (host-safe)
+        run: |
+          version="$(bash test/package_tester/read_source_version.sh)"
+          test "$version" = "$(tr -d '[:space:]' < VERSION)"
+          grep -Fq 'read_source_version.sh' test/package_tester/run_aarch64_validation.sh
+          grep -Fq 'read_source_version.sh' test/package_tester/aarch64_validate.sh
+
       - name: Configure and build (native x86_64)
         run: |
           mkdir -p build
@@ -59,6 +66,10 @@ jobs:
             -DCCSDSPACK_BUILD_C_TESTS=ON
           cmake --build build-c-only -- -j
           ctest --test-dir build-c-only --output-on-failure
+          cmake --install build-c-only --prefix "$PWD/build-c-only/install"
+          test -f build-c-only/install/include/ccsdspack/c/ccsdspack.h
+          test ! -e build-c-only/install/include/CCSDSPacket.h
+          test ! -e build-c-only/install/include/exec_utils.h
           if ldd build-c-only/bin/CCSDSPack_c_core_test | grep -q 'libstdc++'; then
             echo "C-only core unexpectedly depends on libstdc++" >&2
             exit 1
@@ -222,6 +233,10 @@ jobs:
           bash -n test/package_tester/stm32h7xx/run_h755_validation.sh
           MCU_PACKAGE="$(find packages -maxdepth 1 -type f -name 'ccsdspack-v*-Generic-arm.tar.gz' -print -quit)"
           test -n "$MCU_PACKAGE"
+          if tar -tzf "$MCU_PACKAGE" | grep -E '/include/(CCSDSConfig|exec_utils)[.]h'; then
+            echo "MCU package unexpectedly contains hosted-only headers" >&2
+            exit 1
+          fi
           bash test/package_tester/stm32h7xx/run_h755_validation.sh \
             --package "$MCU_PACKAGE" \
             --source-sha "${GITHUB_SHA}" \

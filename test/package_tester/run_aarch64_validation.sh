@@ -65,19 +65,7 @@ if [[ -n "$(git ls-files --others --exclude-standard)" ]]; then
   exit 5
 fi
 
-source_version_component() {
-  local component="$1"
-  sed -nE "s/^[[:space:]]*set\\(${component}[[:space:]]+\"?([0-9]+)\"?\\).*/\\1/p" "${repo_root}/CMakeLists.txt"
-}
-
-source_major="$(source_version_component MAJOR)"
-source_minor="$(source_version_component MINOR)"
-source_patch="$(source_version_component PATCH)"
-if [[ -z "${source_major}" || -z "${source_minor}" || -z "${source_patch}" ]]; then
-  echo "ERROR: could not determine CCSDSPack source version from CMakeLists.txt" >&2
-  exit 6
-fi
-source_version="${source_major}.${source_minor}.${source_patch}"
+source_version="$(bash "${script_dir}/read_source_version.sh")"
 
 if [[ -z "${log_path}" ]]; then
   log_path="${HOME}/ccsdspack-v${source_version}-aarch64-validation.log"

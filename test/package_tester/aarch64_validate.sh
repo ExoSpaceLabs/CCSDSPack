@@ -24,19 +24,7 @@ repo_root="$(cd "${script_dir}/../.." && pwd)"
 package_path="$(realpath -m "$1")"
 [[ -f "${package_path}" ]] || { echo "ERROR: package not found: ${package_path}" >&2; exit 5; }
 
-source_version_component() {
-  local component="$1"
-  sed -nE "s/^[[:space:]]*set\\(${component}[[:space:]]+\"?([0-9]+)\"?\\).*/\\1/p" "${repo_root}/CMakeLists.txt"
-}
-
-source_major="$(source_version_component MAJOR)"
-source_minor="$(source_version_component MINOR)"
-source_patch="$(source_version_component PATCH)"
-if [[ -z "${source_major}" || -z "${source_minor}" || -z "${source_patch}" ]]; then
-  echo "ERROR: could not determine CCSDSPack source version from CMakeLists.txt" >&2
-  exit 6
-fi
-source_version="${source_major}.${source_minor}.${source_patch}"
+source_version="$(bash "${script_dir}/read_source_version.sh")"
 
 package_arch="$(dpkg-deb -f "${package_path}" Architecture)"
 [[ "${package_arch}" == "arm64" ]] || { echo "ERROR: package architecture is ${package_arch}, expected arm64" >&2; exit 7; }
