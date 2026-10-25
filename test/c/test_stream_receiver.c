@@ -193,6 +193,8 @@ static int test_errors_and_minimum_buffer(void) {
     CHECK(ccsds_stream_receiver_init(&rx, storage, 10U, 0x1ACFFC1DU,
           CCSDS_PACKET_ERROR_CONTROL_NONE, NULL) == CCSDS_STATUS_INVALID_DATA);
     CHECK(ccsds_stream_receiver_init(&rx, storage, sizeof(storage), 0x1ACFFC1DU,
+          CCSDS_PACKET_ERROR_CONTROL_CRC16, NULL) == CCSDS_STATUS_INVALID_DATA);
+    CHECK(ccsds_stream_receiver_init(&rx, storage, sizeof(storage), 0x1ACFFC1DU,
           CCSDS_PACKET_ERROR_CONTROL_NONE, NULL) == CCSDS_STATUS_OK);
     CHECK(ccsds_stream_receiver_feed(&rx, NULL, 1U, &consumed, &view, &ready)
           == CCSDS_STATUS_NULL_POINTER);

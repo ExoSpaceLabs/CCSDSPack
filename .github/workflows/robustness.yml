@@ -56,6 +56,59 @@ jobs:
         run: |
           cd bin
           ./CCSDSPack_tester
+          cd ..
+          ctest --test-dir build-robustness-${{ matrix.sanitizer.name }} --output-on-failure -R '^ccsdspack_c_(core|stream_receiver)
+  fuzz-smoke:
+    name: fuzz-smoke-clang
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Install Clang
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake make
+
+      - name: Configure bounded fuzz build
+        run: |
+          cmake -S . -B build-fuzz \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+            -DCMAKE_C_COMPILER=clang \
+            -DCMAKE_CXX_COMPILER=clang++ \
+            -DENABLE_TESTER=OFF \
+            -DENABLE_ENCODER=OFF \
+            -DENABLE_DECODER=OFF \
+            -DENABLE_VALIDATOR=OFF \
+            -DCCSDSPACK_ENABLE_FUZZING=ON \
+            -DCMAKE_C_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+            -DCMAKE_CXX_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+            -DCMAKE_SHARED_LINKER_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer" \
+            -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address,undefined -fno-omit-frame-pointer"
+
+      - name: Build fuzz targets
+        run: cmake --build build-fuzz -- -j2
+
+      - name: Run bounded fuzz smoke suite
+        env:
+          ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          for target in \
+            ccsdspack_fuzz_declared_packet_size \
+            ccsdspack_fuzz_packet \
+            ccsdspack_fuzz_pus \
+            ccsdspack_fuzz_cuc \
+            ccsdspack_fuzz_stream_receiver; do
+            echo "Running ${target}"
+            "./build-fuzz/fuzz/${target}" \
+              -runs=2500 \
+              -max_len=4096 \
+              -timeout=5 \
+              -rss_limit_mb=512
+          done
+
 
   fuzz-smoke:
     name: fuzz-smoke-clang

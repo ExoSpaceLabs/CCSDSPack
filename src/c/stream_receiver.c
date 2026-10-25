@@ -116,7 +116,8 @@ ccsds_status_t ccsds_stream_receiver_init(ccsds_stream_receiver_t *receiver,
                                           const ccsds_crc16_config_t *crc_config) {
     ccsds_stream_receiver_t init = {0};
     if (receiver == NULL || storage == NULL) return CCSDS_STATUS_NULL_POINTER;
-    if (capacity < 4U + CCSDS_PRIMARY_HEADER_SIZE + 1U
+    if (capacity < 4U + CCSDS_PRIMARY_HEADER_SIZE
+                      + (error_control == CCSDS_PACKET_ERROR_CONTROL_CRC16 ? 2U : 1U)
         || (error_control != CCSDS_PACKET_ERROR_CONTROL_NONE
             && error_control != CCSDS_PACKET_ERROR_CONTROL_CRC16)) {
         return CCSDS_STATUS_INVALID_DATA;
