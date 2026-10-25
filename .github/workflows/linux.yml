@@ -180,6 +180,13 @@ jobs:
             --candidate "${{ github.event.pull_request.head.sha || github.sha }}" \
             --output-dir "$PWD/build/matched-performance"
 
+      - name: Matched CUC wrapper experiment vs qualified v2.1 source (PR only)
+        if: matrix.os == 'ubuntu-26.04' && github.event_name == 'pull_request'
+        run: |
+          bash test/performance/run_matched_v2_0_vs_v2_1.sh \
+            --baseline 8d6fe89a946fafd2be0d48917aa77fe473f89ecf \
+            --candidate "${{ github.event.pull_request.head.sha }}" \
+            --output-dir "$PWD/build/matched-cuc-v2.1-baseline"
       - name: Upload performance baselines (26.04 only)
         if: matrix.os == 'ubuntu-26.04'
         uses: actions/upload-artifact@v7
