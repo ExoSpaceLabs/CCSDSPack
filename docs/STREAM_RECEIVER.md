@@ -44,6 +44,9 @@ buffer, this receiver maintains state across UART/DMA/serial read boundaries.
 static uint8_t packet_storage[4U + 2048U];
 static ccsds_stream_receiver_t receiver;
 
+/* Application-supplied, synchronous handler. */
+extern void handle_packet(const ccsds_packet_view_t *packet);
+
 int setup_receiver(void) {
     return ccsds_stream_receiver_init(
         &receiver, packet_storage, sizeof(packet_storage),

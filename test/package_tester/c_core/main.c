@@ -385,6 +385,30 @@ int main(void) {
         }
     }
 
+    /* Installed pure-C consumer exercises the v2.2 incremental receiver API. */
+    {
+        static const uint8_t framed[] = {
+            0x1AU, 0xCFU, 0xFCU, 0x1DU,
+            0x00U, 0x2AU, 0xC0U, 0x01U, 0x00U, 0x00U, 0xA5U
+        };
+        uint8_t storage[sizeof(framed)] = {0U};
+        ccsds_stream_receiver_t rx;
+        ccsds_packet_view_t view;
+        size_t consumed = 0U;
+        int ready = 0;
+        if (ccsds_stream_receiver_init(&rx, storage, sizeof(storage),
+                                       0x1ACFFC1DU, CCSDS_PACKET_ERROR_CONTROL_NONE,
+                                       NULL) != CCSDS_STATUS_OK) return 42;
+        if (ccsds_stream_receiver_feed(&rx, framed, 5U, &consumed, &view, &ready)
+            != CCSDS_STATUS_OK || ready || consumed != 5U) return 43;
+        if (ccsds_stream_receiver_feed(&rx, framed + 5U, sizeof(framed) - 5U,
+                                       &consumed, &view, &ready) != CCSDS_STATUS_OK
+            || !ready || consumed != sizeof(framed) - 5U) return 44;
+        if (view.primary_header.sequence_count != 1U
+            || view.data_field.size != 1U
+            || view.data_field.data[0] != 0xA5U) return 45;
+    }
+
     puts("CCSDSPACK_INSTALLED_C_CONSUMER:PASS");
     return 0;
 }
