@@ -3,7 +3,6 @@
 
 #include "CCSDSTime.h"
 #include "ccsdspack/c/cuc.h"
-#include <array>
 
 namespace {
   ccsds_cuc_config_t toCoreConfig(const ccsds::time::CucConfiguration &configuration) {
@@ -67,15 +66,15 @@ ccsds::ResultBuffer ccsds::time::serialize(const CucTime &value,
   const auto coreConfig = toCoreConfig(configuration);
   const ccsds_cuc_time_t coreValue{value.coarse, value.fine};
 
-  // Basic numeric CUC is at most one P-field, four coarse and three fine octets.
-  // Let the authoritative C encoder validate once and fill bounded local storage.
-  // Allocate the owning C++ result only after successful validation/encoding.
-  std::array<std::uint8_t, 8U> encoded{};
+  // The C encoder performs the authoritative configuration and value checks.
+  // Avoid the extra C validation pass, but write directly into the final
+  // owning vector to avoid a second payload copy on the success path.
+  std::vector<std::uint8_t> output(ccsds_cuc_encoded_size(&coreConfig));
   std::size_t written = 0U;
   const auto status = ccsds_cuc_encode(
-    &coreValue, &coreConfig, encoded.data(), encoded.size(), &written);
+    &coreValue, &coreConfig, output.data(), output.size(), &written);
   if (status != CCSDS_STATUS_OK) return cucError(status);
-  return std::vector<std::uint8_t>(encoded.data(), encoded.data() + written);
+  return output;
 }
 
 ccsds::Result<ccsds::time::CucTime> ccsds::time::deserialize(
