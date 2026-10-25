@@ -60,9 +60,9 @@ existing independent conformance evidence continues to pass.
 
 - [x] MCU-facing public APIs, conditional installed-header package rules, and capacity-underflow regression fixes merged into `develop` in PR #177.
 - [x] Linux, Windows, Doxygen and robustness CI passed on post-merge `develop` implementation `f076991b88cf70e45a1752b8ea8dd81878ba6a38`.
-- [ ] Final `develop` CI rechecked after any further candidate changes and before hardware qualification.
-- [ ] Fresh Raspberry Pi 5 native package validation passed on that commit and hashes recorded.
-- [ ] Fresh STM32H755 physical validation passed on that commit and hashes recorded.
+- [x] Final `develop` Linux, Windows, Doxygen and robustness CI passed on exact implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf`.
+- [x] Fresh Raspberry Pi 5 native arm64 package validation passed on `8d6fe89a946fafd2be0d48917aa77fe473f89ecf` (2026-10-25): 138/138 native tests, CLI, installed consumer and all acceptance markers PASS; DEB SHA-256 `8974910ddf7ac90acbfd9e6b7353d65fa94058eaeff19b169b0130ab71871515`. Evidence in `docs/V2_HARDWARE_VALIDATION.md`.
+- [ ] Fresh STM32H755 physical validation passed on the **same** implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf`; MCU package/library/ELF hashes and UART/OpenOCD logs recorded.
 - [ ] Only then promote to main and allow automatic VERSION tagging.
 
 ## Final release gates

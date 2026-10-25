@@ -14,17 +14,42 @@ This page records physical-target and native-target release evidence for CCSDSPa
 
 **STM32 test-harness-only dependency (not a CCSDSPack library dependency):** The next STM32 validation firmware uses [DAS v0.1.0](https://github.com/Inczert/device-abstraction-stack/releases/tag/v0.1.0), resolved to commit `8553d903a615fe99e2a3a434f876b51f9542fd46`. The validation runner verifies both tag and resolved commit before building. Earlier hardware evidence below used DAS commit `4b768ef86b43652c94cc91b1c77e247fa37ebd8a` and must remain attributed to that older dependency; it is not evidence for the new DAS release.
 
-**Qualification pending:** MCU API/package and data-field capacity corrections were merged to `develop` through PR #177. The October 11 results below are historical evidence only for commit `3c93e6b79d3d97ff3003682804c120f38672e229`. A pre-final post-audit hosted regression suite passed 137/137 tests before one further diagnostic bit-formatting regression was introduced. Final-source CI and fresh Raspberry Pi 5/STM32H755 execution remain mandatory before promotion.
+**Qualification status (2026-10-25):** Post-audit hosted Linux, Windows, Doxygen and robustness CI passed on the final implementation commit `8d6fe89a946fafd2be0d48917aa77fe473f89ecf`. Native Raspberry Pi 5 arm64 qualification **passed on that exact commit** (138/138 regression tests). **Physical STM32H755 acceptance remains pending**. The October 11 Pi/H755 results below remain historical evidence only for `3c93e6b79d3d97ff3003682804c120f38672e229`.
+
+### Current v2.1.0 qualification candidate (2026-10-25)
+
+**Frozen implementation and hardware-harness source commit:** `8d6fe89a946fafd2be0d48917aa77fe473f89ecf` (branch `develop`). Later evidence-only documentation commits do not change the qualified implementation; verify their diff against this exact SHA before promotion.
+
+| Target | Current candidate status | Required acceptance marker |
+|---|---|---|
+| Raspberry Pi 5, native arm64 Linux | **PASS (2026-10-25)** | `CCSDSPACK_AARCH64_RUNNER:PASS` |
+| NUCLEO-H755ZI-Q, Cortex-M7 | **PENDING physical validation** | `CCSDSPACK_HARDWARE_TEST:PASS` |
+
+**Raspberry Pi 5 result, 2026-10-25:**
+
+- Device: Raspberry Pi 5 Model B Rev 1.0; Debian GNU/Linux 13 (trixie); kernel `6.18.34+rpt-rpi-2712`; native `aarch64`.
+- Tools: GCC/G++ 14.2.0; CMake 3.31.6; Python 3.13.5.
+- Source: clean `develop` checkout at `8d6fe89a946fafd2be0d48917aa77fe473f89ecf`, `VERSION=2.1.0`.
+- Package: `ccsdspack-v2.1.0-Linux-arm64.deb`; package name `ccsdspack`, version `2.1.0`, architecture `arm64`.
+- **Package SHA-256:** `8974910ddf7ac90acbfd9e6b7353d65fa94058eaeff19b169b0130ab71871515`.
+- Native C++ regression/conformance: **138 passed, 0 failed**; includes diagnostic bit-width and capacity-shrink regression tests.
+- C11 core library and C-only test executable: built successfully; standalone C-core execution is covered by hosted CI and is not claimed as a separate Pi run here.
+- Installed CLI integration: **PASS**; external installed shared-library CMake consumer: **1 passed, 0 failed**.
+- Shared acceptance: `CCSDSPACK_HARDWARE_TEST:PASS`; Pi arm64 validator: `CCSDSPACK_AARCH64_TEST:PASS`; top-level runner: `CCSDSPACK_AARCH64_RUNNER:PASS`.
+- Complete native evidence log retained on the Pi: `~/ccsdspack-v2.1.0-aarch64-validation.log`. The provided run log contained no build warnings or test failures.
+
+**Remaining candidate gate:** Cross-build and physically run STM32H755 using the **same implementation source SHA** above, with DAS v0.1.0 pinned **only for the hardware test harness**. Record MCU package/library/ELF hashes, OpenOCD verification and full UART PASS transcript, then promote to `main` through reviewed PR #178. Do not modify implementation or harness after qualification.
 
 
-v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. The October 11 physical/native execution passed against the historical implementation candidate `3c93e6b`. **It is not final release qualification** after PR #177 modified MCU-facing public APIs, package layout and capacity handling. Both targets must be rerun once the current `develop` candidate is frozen.
+
+v2.1.0 changes the implementation architecture substantially while preserving the v2 C++ API. The October 11 physical/native execution passed against the historical implementation candidate `3c93e6b`. **It does not qualify the post-audit implementation**. The fresh Pi5 result is recorded above; H755 remains to be rerun on the same frozen source SHA.
 
 | Target | v2.1 status | Required marker |
 |---|---|---|
-| Raspberry Pi 5, native arm64 Linux | **Historical PASS, rerun required** | `CCSDSPACK_AARCH64_TEST:PASS` |
+| Raspberry Pi 5, native arm64 Linux | **Historical PASS on `3c93e6b` (current PASS above)** | `CCSDSPACK_AARCH64_TEST:PASS` |
 | NUCLEO-H755ZI-Q, Cortex-M7 | **Historical PASS, rerun required** | `CCSDSPACK_HARDWARE_TEST:PASS` |
 
-The **historically tested implementation commit** for both devices is `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. Any subsequent release-evidence documentation commit must be verified not to modify the qualified code, public headers, build configuration or hardware harness.
+For the **historical October 11 results below**, the tested implementation commit for both devices was `3c93e6b79d3d97ff3003682804c120f38672e229` (`develop`). The exact package, library and executable identities are recorded below. Any subsequent release-evidence documentation commit must be verified not to modify the qualified code, public headers, build configuration or hardware harness.
 
 ### Historical v2.1.0 hardware acceptance: 2026-10-11
 
