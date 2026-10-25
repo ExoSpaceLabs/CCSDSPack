@@ -40,7 +40,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="exec__utils_8cpp.html#a49f86e57c13cbb21467fad8d94cdfa06" target="_top" xlink:title="Applies a CLI packet&#45;error&#45;control override to the packet and its profile.">
+<g id="a_Node000004"><a xlink:href="exec__utils_8cpp.html#a49f86e57c13cbb21467fad8d94cdfa06" target="_top" xlink:title="Applies a CLI packet&#45;error&#45;control override to the enclosing Packet.">
 <polygon fill="white" stroke="#666666" points="345,-86.8 184,-86.8 184,-67.8 345,-67.8 345,-86.8"/>
 <text text-anchor="middle" x="264.5" y="-74.8" font-family="Helvetica,sans-Serif" font-size="10.00">applyPacketErrorControlMode</text>
 </a>

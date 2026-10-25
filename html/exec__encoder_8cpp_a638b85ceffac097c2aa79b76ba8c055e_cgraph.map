@@ -1,6 +1,6 @@
 <map id="main" name="main">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,506,60,531"/>
-<area shape="rect" id="Node000002" href="$exec__utils_8cpp.html#a49f86e57c13cbb21467fad8d94cdfa06" title="Applies a CLI packet&#45;error&#45;control override to the packet and its profile." alt="" coords="128,13,343,38"/>
+<area shape="rect" id="Node000002" href="$exec__utils_8cpp.html#a49f86e57c13cbb21467fad8d94cdfa06" title="Applies a CLI packet&#45;error&#45;control override to the enclosing Packet." alt="" coords="128,13,343,38"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="31,506,34,415,44,277,53,205,66,139,84,84,106,48,114,40,118,44,110,51,88,87,71,140,59,206,49,278,39,415,37,506"/>
 <area shape="rect" id="Node000004" href="$exec__utils_8cpp.html#a9e185650945304fff798a065a8f29936" title="Prints a timestamped executable log message." alt="" coords="174,62,297,87"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="32,506,37,425,49,305,58,242,71,185,86,137,106,105,131,87,159,77,161,82,133,91,110,108,91,140,76,186,63,243,54,306,42,426,37,506"/>

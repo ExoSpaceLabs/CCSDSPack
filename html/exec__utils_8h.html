@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CCSDSPack
+   <div id="projectname">CCSDSPack<span id="projectnumber">&#160;2.1.0</span>
    </div>
-   <div id="projectbrief">C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, analisys and more</div>
+   <div id="projectbrief">C11 CCSDS Space Packet protocol core with compatible C++17 Packet and Manager APIs</div>
   </td>
  </tr>
  </tbody>
@@ -136,7 +136,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a4bb622b33a3222f2341e16b6532ec7cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the stable CLI spelling for a packet-error-control mode.  <br /></td></tr>
 <tr class="separator:a4bb622b33a3222f2341e16b6532ec7cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acbc723a7aea8508091a92e15ccddaf89" id="r_acbc723a7aea8508091a92e15ccddaf89"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceccsds.html#a3522bba00b0c3c0e30a280b07475f37c">ccsds::ResultBool</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#acbc723a7aea8508091a92e15ccddaf89">applyPacketErrorControlMode</a> (<a class="el" href="classccsds_1_1Packet.html">ccsds::Packet</a> &amp;packet, <a class="el" href="namespaceccsds.html#ae6bd7c4479e516705a22551199cd42b4">ccsds::PacketErrorControlMode</a> mode)</td></tr>
-<tr class="memdesc:acbc723a7aea8508091a92e15ccddaf89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a CLI packet-error-control override to the packet and its profile.  <br /></td></tr>
+<tr class="memdesc:acbc723a7aea8508091a92e15ccddaf89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies a CLI packet-error-control override to the enclosing Packet.  <br /></td></tr>
 <tr class="separator:acbc723a7aea8508091a92e15ccddaf89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac424b5d07913c5b5a147f53881403dce" id="r_ac424b5d07913c5b5a147f53881403dce"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classccsds_1_1Result.html">ccsds::Result</a>&lt; <a class="el" href="structPacketStreamLayout.html">PacketStreamLayout</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="exec__utils_8h.html#ac424b5d07913c5b5a147f53881403dce">inspectPacketStream</a> (const std::vector&lt; std::uint8_t &gt; &amp;data, bool syncPatternEnable, std::uint32_t syncPattern, bool allowTrailingBytes)</td></tr>
 <tr class="memdesc:ac424b5d07913c5b5a147f53881403dce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scans adjacent packets using each encoded Packet Data Length boundary.  <br /></td></tr>
@@ -213,7 +213,7 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Applies a CLI packet-error-control override to the packet and its profile. </p>
+<p>Applies a CLI packet-error-control override to the enclosing Packet. </p>
 
 <p class="definition">Definition at line <a class="el" href="exec__utils_8cpp_source.html#l00079">79</a> of file <a class="el" href="exec__utils_8cpp_source.html">exec_utils.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   80</span>                                                                 {</div>

@@ -56,7 +56,7 @@
 <!-- Node4 -->
 <g id="Node000004" class="node">
 <title>Node4</title>
-<g id="a_Node000004"><a xlink:href="classccsds_1_1Manager.html#a218f9981af87f849faea5732e5e415bc" target="_top" xlink:title=" ">
+<g id="a_Node000004"><a xlink:href="classccsds_1_1Manager.html#a218f9981af87f849faea5732e5e415bc" target="_top" xlink:title="Hosted file I/O; not part of the MCU API.">
 <polygon fill="white" stroke="#666666" points="219.5,-56 99.5,-56 99.5,-37 219.5,-37 219.5,-56"/>
 <text text-anchor="middle" x="159.5" y="-44" font-family="Helvetica,sans-Serif" font-size="10.00">ccsds::Manager::read</text>
 </a>

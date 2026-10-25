@@ -21,9 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">CCSDSPack
+   <div id="projectname">CCSDSPack<span id="projectnumber">&#160;2.1.0</span>
    </div>
-   <div id="projectbrief">C++ Library for CCSDS Space Packet manipulation. i.e. generation, extraction, analisys and more</div>
+   <div id="projectbrief">C11 CCSDS Space Packet protocol core with compatible C++17 Packet and Manager APIs</div>
   </td>
  </tr>
  </tbody>
@@ -277,7 +277,7 @@ Here is the caller graph for this function:</div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Success, or FILE_READ_ERROR/CONFIG_FILE_ERROR for malformed input. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>Success, or CONFIG_FILE_ERROR if the file cannot be opened or parsed. </dd></dl>
 
 <p class="definition">Definition at line <a class="el" href="CCSDSConfig_8cpp_source.html#l00018">18</a> of file <a class="el" href="CCSDSConfig_8cpp_source.html">CCSDSConfig.cpp</a>.</p>
 <div class="fragment"><div class="line"><span class="lineno">   18</span>                                                           {</div>
