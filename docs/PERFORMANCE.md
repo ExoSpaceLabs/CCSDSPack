@@ -302,3 +302,51 @@ v2.1 protocol operation is faster than v2.0. The architectural gains come from r
 copies, reducing heap traffic, exposing caller-owned buffers/views, and consolidating wire
 mechanics in the C core. The broader cross-version characterization requested by issue #163 is complete. Issue #166
 tracks the remaining focused CUC optimization opportunity.
+
+## v2.2 split-buffer validation refactor (issue #182, PR #184)
+
+**Pre-release characterization, not v2.2 physical qualification.** The
+Ubuntu 26.04 CI matched run
+[40203735012](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/40203735012)
+built the identical `test/performance/protocol_benchmark.cpp` source against
+both implementations with one host compiler and identical Release flags:
+
+- **Before:** `132cd3ac37b3f65db69c5b9067a82498fc268167` (`develop` before PR #184).
+- **After:** `17a000c1868720a4dc928386f356dfe373d975aa` (qualified hosted-code candidate).
+- The matched runner's generic labels `v2.0` and `v2.1` are only
+  benchmark filenames; the actual comparison is between the **two v2.2
+  commits listed above**, as recorded in `metadata.txt`.
+
+| C++ split-buffer deserialize | Before (ns/op) | After (ns/op) | Allocations before → after | Bytes allocated before → after |
+| --- | ---: | ---: | ---: | ---: |
+| CRC16, 64-byte payload | 726.49 | 716.65 | **7 → 5** | 452 → 376 |
+| CRC16, 1024-byte payload | 8,333.23 | 8,239.81 | **7 → 5** | 4,292 → 3,256 |
+| No CRC, 64-byte payload | 154.39 | 168.15 | 5 → 5 | 376 → 376 |
+| No CRC, 1024-byte payload | 208.73 | 230.09 | 5 → 5 | 3,256 → 3,256 |
+
+The C-only split-span validator introduces **no allocations**; the C++
+adapter's owned result still allocates. Moving split-buffer CRC directly
+into the C11 state updater eliminated the previously aggregated temporary
+CRC-input vector (two allocations per call in the measured C++ path).
+CRC-enabled latency was essentially unchanged/slightly improved, while
+CRC-disabled split-buffer parsing was **about 9–10% slower** on these tiny
+hosted operations. These absolute differences (approximately 14–21 ns/op)
+are a documented tradeoff, **not** a claim of universal improvement.
+
+Matched unstripped Linux shared-library file sizes:
+
+| Library | Before | After | Delta |
+| --- | ---: | ---: | ---: |
+| C11 core (`libccsdspack_c.so`) | 56,616 B | 60,824 B | +4,208 B |
+| C++ layer (`libccsdspack.so`) | 546,536 B | 542,672 B | -3,864 B |
+| **Combined** | **603,152 B** | **603,496 B** | **+344 B** |
+
+These are hosted **DSO file sizes**, not a Cortex-M7 garbage-collected
+firmware footprint. Physical STM32/Pi acceptance, MCU linker sizes and the
+frozen version bump remain future v2.2 release gates.
+
+The refactor's engineering goal was **one authoritative C11 packet policy
+for contiguous and discontiguous inputs**, while retaining C++ diagnostics and
+transactional failure guarantees. Tests include C-only malformed/CRC/Idle
+vectors, a 1:1 split-versus-contiguous fuzzer, C++ message/error-code
+regressions, installed C consumers, ASan/UBSan and hosted CI.
