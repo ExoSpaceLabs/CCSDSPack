@@ -96,7 +96,7 @@ build_revision() {
   # The historical v2.0 baseline may not contain a standalone C library.
   for artifact in "${c_lib_dir}/libccsdspack_c.so" "${lib_dir}/libccsdspack.so"; do
     if [[ -f "${artifact}" ]]; then
-      printf '%s,%s,%s\\n' "${label}" "$(basename "${artifact}")" \
+      printf '%s,%s,%s\n' "${label}" "$(basename "${artifact}")" \
         "$(stat -Lc '%s' "${artifact}")" >> "${output_dir}/library-footprint.csv"
     fi
   done
