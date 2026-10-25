@@ -107,6 +107,13 @@ or a configured C++ Packet adapter for that work.
 All buffer views in `ccsds_packet_view_t` alias the caller's input, so they
 must not outlive the input storage or be used after it changes.
 
+## Incremental stream reception
+
+For chunked UART/DMA input and sync recovery, the allocation-free
+`ccsds_stream_receiver_t` uses caller-owned scratch storage and returns
+validated, non-owning packet views. See the [receiver design and example](STREAM_RECEIVER.md).
+The existing `ccsds_packet_stream_t` still walks already-contiguous buffers.
+
 ## Ownership and boundaries
 
 - Packet views alias input memory: retain the backing buffer for as long as
