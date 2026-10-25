@@ -5,6 +5,7 @@
 #include "tests.h"
 #include <CCSDSPack.h>
 #include <array>
+#include <algorithm>
 #include <cstdio>
 #include <fstream>
 #include <iostream>
@@ -346,6 +347,44 @@ void testGroupPus(TestManager *tester, const std::string &description) {
       ccsds::time::PFieldMode::Implicit, 2U, 1U};
     const auto implicit = ccsds::time::serialize({0x1234U, 0x80U}, implicitCuc);
     return implicit && implicit.value() == std::vector<std::uint8_t>({0x12U, 0x34U, 0x80U});
+  });
+
+  tester->unitTest("C++ basic CUC encodes all valid layouts byte-identically to the C11 core.", [] {
+    for (const auto epoch : {ccsds::time::Epoch::Ccsds1958Tai,
+                             ccsds::time::Epoch::AgencyDefined}) {
+      for (const auto pfield : {ccsds::time::PFieldMode::Implicit,
+                               ccsds::time::PFieldMode::Explicit}) {
+        for (std::uint8_t coarseOctets = 1U; coarseOctets <= 4U; ++coarseOctets) {
+          for (std::uint8_t fineOctets = 0U; fineOctets <= 3U; ++fineOctets) {
+            const ccsds::time::CucConfiguration cppConfig{
+              epoch, pfield, coarseOctets, fineOctets};
+            const ccsds_cuc_config_t cConfig{
+              static_cast<ccsds_cuc_epoch_t>(epoch),
+              static_cast<ccsds_cuc_pfield_mode_t>(pfield),
+              coarseOctets, fineOctets};
+            const std::uint64_t coarseMask =
+              (UINT64_C(1) << (8U * coarseOctets)) - 1U;
+            const std::uint64_t fineMask =
+              fineOctets == 0U ? 0U : (UINT64_C(1) << (8U * fineOctets)) - 1U;
+            const ccsds::time::CucTime cppValue{
+              UINT64_C(0x01020304) & coarseMask,
+              UINT64_C(0x00A0B0C0) & fineMask};
+            const ccsds_cuc_time_t cValue{cppValue.coarse, cppValue.fine};
+            std::array<std::uint8_t, 8U> expected{};
+            std::size_t written = 0U;
+            if (ccsds_cuc_encode(&cValue, &cConfig, expected.data(),
+                                 expected.size(), &written) != CCSDS_STATUS_OK) return false;
+            const auto encoded = ccsds::time::serialize(cppValue, cppConfig);
+            if (!encoded || encoded.value().size() != written
+                || !std::equal(encoded.value().begin(), encoded.value().end(),
+                               expected.begin())) return false;
+            const auto decoded = ccsds::time::deserialize(encoded.value(), cppConfig);
+            if (!decoded || decoded.value() != cppValue) return false;
+          }
+        }
+      }
+    }
+    return true;
   });
 
   tester->unitTest("CUC rejects mismatched P-fields, invalid widths, and counter overflow.", [] {
