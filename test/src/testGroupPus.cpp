@@ -4,6 +4,7 @@
 #include "PusSecondaryHeaderFactory.h"
 #include "tests.h"
 #include <CCSDSPack.h>
+#include <ccsdspack/c/cuc.h>
 #include <array>
 #include <algorithm>
 #include <cstdio>
