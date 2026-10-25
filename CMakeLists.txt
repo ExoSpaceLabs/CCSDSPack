@@ -213,6 +213,11 @@ if(CCSDSPACK_BUILD_C_TESTS)
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
     add_test(NAME ccsdspack_c_core COMMAND CCSDSPack_c_core_test)
+    add_executable(CCSDSPack_c_stream_receiver_test
+        "${CMAKE_SOURCE_DIR}/test/c/test_stream_receiver.c"
+    )
+    target_link_libraries(CCSDSPack_c_stream_receiver_test PRIVATE ${C_CORE_NAME})
+    add_test(NAME ccsdspack_c_stream_receiver COMMAND CCSDSPack_c_stream_receiver_test)
 endif()
 
 if(CCSDSPACK_BUILD_CPP AND NOT CCSDSPACK_BUILD_MCU)
