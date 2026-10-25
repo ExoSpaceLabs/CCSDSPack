@@ -46,7 +46,7 @@ jobs:
 
       - name: Run C11 core tests
         run: |
-          ctest --test-dir build --output-on-failure -R "^ccsdspack_c_(core|stream_receiver)$"
+          ctest --test-dir build --output-on-failure -R "^ccsdspack_c_(core|stream_receiver|packet_parts)$"
 
       - name: Build and run C11-only core
         shell: pwsh

@@ -93,79 +93,63 @@ namespace {
     };
   }
 
+  // Diagnostic strings remain part of the established C++ API. The source
+  // of each decision is now the C11 parser's structured failure reason.
+  ccsds::Error packetParseError(const ccsds_status_t status,
+                                const ccsds_packet_parse_reason_t reason,
+                                const bool split) {
+    using ccsds::Error;
+    using ccsds::ErrorCode;
+    switch (reason) {
+      case CCSDS_PACKET_PARSE_HEADER_SIZE:
+        return {ErrorCode::INVALID_HEADER_DATA,
+                split ? "Cannot deserialize packet: primary header must contain exactly six bytes."
+                      : "Cannot deserialize packet: truncated CCSDS primary header."};
+      case CCSDS_PACKET_PARSE_NULL_INPUT:
+        return {ErrorCode::NULL_POINTER,
+                "Cannot deserialize packet: raw buffer pointer is null."};
+      case CCSDS_PACKET_PARSE_HEADER_INVALID:
+        return {ErrorCode::INVALID_HEADER_DATA,
+                "Cannot deserialize packet: invalid CCSDS primary header."};
+      case CCSDS_PACKET_PARSE_VERSION:
+        return {ErrorCode::INVALID_HEADER_DATA,
+                "Cannot deserialize packet: unsupported CCSDS packet version."};
+      case CCSDS_PACKET_PARSE_BODY_TRUNCATED:
+        return {ErrorCode::INVALID_DATA,
+                "Cannot deserialize packet: truncated packet body for Packet Data Length."};
+      case CCSDS_PACKET_PARSE_BODY_SIZE_MISMATCH:
+        return {ErrorCode::INVALID_DATA,
+                "Cannot deserialize packet: packet body size does not match Packet Data Length."};
+      case CCSDS_PACKET_PARSE_CRC_TRAILER_TOO_SHORT:
+        return {ErrorCode::INVALID_DATA,
+                "Cannot deserialize packet: CRC16 mode requires two packet error-control bytes."};
+      case CCSDS_PACKET_PARSE_CRC_MISMATCH:
+        return {ErrorCode::INVALID_CHECKSUM,
+                "Cannot deserialize packet: CRC16 packet error-control mismatch."};
+      case CCSDS_PACKET_PARSE_IDLE_SECONDARY_HEADER:
+        return {ErrorCode::INVALID_HEADER_DATA,
+                "Cannot deserialize Idle Packet: secondary-header flag must be zero."};
+      case CCSDS_PACKET_PARSE_IDLE_DATA_REQUIRED:
+        return {ErrorCode::INVALID_DATA,
+                "Cannot deserialize Idle Packet: mission-defined idle user data is required."};
+      case CCSDS_PACKET_PARSE_INVALID_POLICY:
+      case CCSDS_PACKET_PARSE_OK:
+        return packetViewError(status);
+    }
+    return packetViewError(status);
+  }
+
   ccsds::Result<ParsedPacketView> validatePacketView(
       const std::uint8_t *data,
       const std::size_t size,
       const ccsds::PacketErrorControlMode mode,
       const ccsds::CRC16Config &crcConfig) {
-    if (size < CCSDS_PRIMARY_HEADER_SIZE) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: truncated CCSDS primary header."};
-    }
-    if (data == nullptr) {
-      return ccsds::Error{ccsds::ErrorCode::NULL_POINTER,
-                          "Cannot deserialize packet: raw buffer pointer is null."};
-    }
-
-    ccsds_primary_header_t coreHeader{};
-    const auto headerStatus =
-      ccsds_primary_header_decode(data, size, &coreHeader);
-    if (headerStatus != CCSDS_STATUS_OK) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: invalid CCSDS primary header."};
-    }
-    if (coreHeader.version_number != 0U) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: unsupported CCSDS packet version."};
-    }
-
-    const auto packetSize =
-      CCSDS_PRIMARY_HEADER_SIZE + static_cast<std::size_t>(coreHeader.data_length) + 1U;
-    if (size < packetSize) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
-                          "Cannot deserialize packet: truncated packet body for Packet Data Length."};
-    }
-
-    const auto bodySize = packetSize - CCSDS_PRIMARY_HEADER_SIZE;
-    const auto pecSize =
-      mode == ccsds::PacketErrorControlMode::CRC16 ? std::size_t{2U} : std::size_t{0U};
-    if (bodySize < pecSize) {
-      return ccsds::Error{
-        ccsds::ErrorCode::INVALID_DATA,
-        "Cannot deserialize packet: CRC16 mode requires two packet error-control bytes."
-      };
-    }
-    const auto dataFieldSize = bodySize - pecSize;
-    if (coreHeader.apid == CCSDS_IDLE_APID) {
-      if (coreHeader.secondary_header_flag != 0U) {
-        return ccsds::Error{
-          ccsds::ErrorCode::INVALID_HEADER_DATA,
-          "Cannot deserialize Idle Packet: secondary-header flag must be zero."
-        };
-      }
-      if (dataFieldSize == 0U) {
-        return ccsds::Error{
-          ccsds::ErrorCode::INVALID_DATA,
-          "Cannot deserialize Idle Packet: mission-defined idle user data is required."
-        };
-      }
-    }
-
-    const ccsds_crc16_config_t coreCrc{
-      crcConfig.polynomial,
-      crcConfig.initialValue,
-      crcConfig.finalXorValue
-    };
+    const auto coreCrc = toCoreCrcConfig(crcConfig);
     ccsds_packet_view_t view{};
-    const auto status = ccsds_packet_view_parse(
-      data,
-      size,
-      mode == ccsds::PacketErrorControlMode::CRC16
-        ? CCSDS_PACKET_ERROR_CONTROL_CRC16
-        : CCSDS_PACKET_ERROR_CONTROL_NONE,
-      &coreCrc,
-      &view);
-    if (status != CCSDS_STATUS_OK) return packetViewError(status);
+    ccsds_packet_parse_reason_t reason = CCSDS_PACKET_PARSE_OK;
+    const auto status = ccsds_packet_view_parse_ex(
+      data, size, toCoreErrorControl(mode), &coreCrc, &view, &reason);
+    if (status != CCSDS_STATUS_OK) return packetParseError(status, reason, false);
 
     ParsedPacketView parsed;
     const ccsds::PrimaryHeader header{
@@ -227,57 +211,32 @@ namespace {
       const std::vector<std::uint8_t> &packetData,
       const ccsds::PacketErrorControlMode mode,
       const ccsds::CRC16Config &crcConfig) {
-    if (headerData.size() != 6U) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: primary header must contain exactly six bytes."};
-    }
+    const auto coreCrc = toCoreCrcConfig(crcConfig);
+    ccsds_packet_parts_view_t view{};
+    ccsds_packet_parse_reason_t reason = CCSDS_PACKET_PARSE_OK;
+    const auto status = ccsds_packet_parts_parse(
+      headerData.data(), headerData.size(),
+      packetData.data(), packetData.size(),
+      toCoreErrorControl(mode), &coreCrc, &view, &reason);
+    if (status != CCSDS_STATUS_OK) return packetParseError(status, reason, true);
 
     ParsedPacket parsed;
-    const auto headerResult = parsed.header.deserialize(headerData);
+    const ccsds::PrimaryHeader header{
+      view.primary_header.version_number,
+      view.primary_header.type,
+      view.primary_header.secondary_header_flag,
+      view.primary_header.apid,
+      view.primary_header.sequence_flags,
+      view.primary_header.sequence_count,
+      view.primary_header.data_length
+    };
+    const auto headerResult = parsed.header.setData(header);
     if (!headerResult) return headerResult.error();
-    if (parsed.header.getVersionNumber() != 0U) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                          "Cannot deserialize packet: unsupported CCSDS packet version."};
+    if (view.data_field.size != 0U) {
+      parsed.dataField.assign(view.data_field.data,
+                              view.data_field.data + view.data_field.size);
     }
-
-    const auto expectedDataSize = static_cast<std::size_t>(parsed.header.getDataLength()) + 1U;
-    if (packetData.size() != expectedDataSize) {
-      return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
-                          "Cannot deserialize packet: packet body size does not match Packet Data Length."};
-    }
-
-    if (mode == ccsds::PacketErrorControlMode::CRC16) {
-      if (packetData.size() < 2U) {
-        return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
-                            "Cannot deserialize packet: CRC16 mode requires two packet error-control bytes."};
-      }
-      parsed.receivedCRC = static_cast<std::uint16_t>(
-        (static_cast<std::uint16_t>(packetData[packetData.size() - 2U]) << 8U)
-        | packetData.back());
-      std::vector<std::uint8_t> crcInput = headerData;
-      crcInput.insert(crcInput.end(), packetData.begin(), packetData.end() - 2);
-      const auto expectedCRC = ccsds::crc16(crcInput, crcConfig.polynomial,
-                                            crcConfig.initialValue, crcConfig.finalXorValue);
-      if (expectedCRC != parsed.receivedCRC) {
-        return ccsds::Error{ccsds::ErrorCode::INVALID_CHECKSUM,
-                            "Cannot deserialize packet: CRC16 packet error-control mismatch."};
-      }
-      parsed.dataField.assign(packetData.begin(), packetData.end() - 2);
-    } else {
-      parsed.receivedCRC = 0U;
-      parsed.dataField = packetData;
-    }
-
-    if (parsed.header.getAPID() == ccsds::IDLE_APID) {
-      if (parsed.header.getSecondaryHeaderFlag() != 0U) {
-        return ccsds::Error{ccsds::ErrorCode::INVALID_HEADER_DATA,
-                            "Cannot deserialize Idle Packet: secondary-header flag must be zero."};
-      }
-      if (parsed.dataField.empty()) {
-        return ccsds::Error{ccsds::ErrorCode::INVALID_DATA,
-                            "Cannot deserialize Idle Packet: mission-defined idle user data is required."};
-      }
-    }
+    parsed.receivedCRC = view.received_crc16;
     return parsed;
   }
 

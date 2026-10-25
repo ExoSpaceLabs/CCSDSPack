@@ -196,6 +196,42 @@ ccsds::Packet makePusPacket(const std::size_t payloadSize) {
 }
 
 
+void benchSplitPacketValidation(const std::string &label) {
+  for (const auto mode : {ccsds::PacketErrorControlMode::CRC16,
+                          ccsds::PacketErrorControlMode::None}) {
+    for (const std::size_t bytes : {64U, 1024U}) {
+      ccsds::Packet packet;
+      packet.setPacketErrorControlMode(mode);
+      packet.setDataFieldSize(65535U);
+      std::vector<std::uint8_t> payload(bytes, 0U);
+      for (std::size_t i = 0U; i < bytes; ++i)
+        payload[i] = static_cast<std::uint8_t>((i * 17U) & 0xFFU);
+      if (!packet.setApplicationData(payload))
+        throw std::runtime_error("split benchmark data-field setup failed");
+      const auto wire = packet.serialize();
+      if (!wire || wire.value().size() < 7U)
+        throw std::runtime_error("split benchmark serialization failed");
+      const std::vector<std::uint8_t> header(
+        wire.value().begin(), wire.value().begin() + 6);
+      const std::vector<std::uint8_t> body(
+        wire.value().begin() + 6, wire.value().end());
+      ccsds::Packet decoded;
+      decoded.setPacketErrorControlMode(mode);
+      decoded.setDataFieldSize(65535U);
+      const std::size_t iterations = bytes == 64U ? 30000U : 3000U;
+      const auto sample = measure(iterations, [&] {
+        const auto result = decoded.deserialize(header, body);
+        if (!result) throw std::runtime_error("split packet decode failed");
+        g_sink += decoded.getDataField().getApplicationDataBytesSize();
+      });
+      emit(label, "packet_split_decode",
+           std::string(mode == ccsds::PacketErrorControlMode::CRC16 ? "crc16_" : "none_")
+             + std::to_string(bytes),
+           iterations, sample);
+    }
+  }
+}
+
 void benchCrc(const std::string &label) {
   for (const std::size_t size : {64U, 1024U, 32768U}) {
     std::vector<std::uint8_t> data(size, 0U);
@@ -309,6 +345,7 @@ int main(int argc, char **argv) {
     benchCrc(argv[1]);
     benchValidator(argv[1]);
     benchManager(argv[1]);
+    benchSplitPacketValidation(argv[1]);
   } catch (const std::exception &error) {
     std::cerr << "protocol benchmark failed: " << error.what() << '\n';
     return 1;

@@ -156,6 +156,95 @@ void testGroupParsing(TestManager *tester, const std::string &description) {
            && header.getDataLength() == 9;
   });
 
+  tester->unitTest("Split-buffer CRC and no-CRC parsing preserve the C++ packet API.", [] {
+    for (const auto mode : {ccsds::PacketErrorControlMode::CRC16,
+                            ccsds::PacketErrorControlMode::None}) {
+      ccsds::Packet source;
+      source.setPacketErrorControlMode(mode);
+      TEST_VOID(source.setApplicationData({0x10U, 0x20U, 0x30U}));
+      const auto encoded = serializedPacket(source);
+      const std::vector<std::uint8_t> header(encoded.begin(), encoded.begin() + 6);
+      const std::vector<std::uint8_t> body(encoded.begin() + 6, encoded.end());
+
+      ccsds::Packet split;
+      split.setPacketErrorControlMode(mode);
+      TEST_VOID(split.deserialize(header, body));
+      ccsds::Packet contiguous;
+      contiguous.setPacketErrorControlMode(mode);
+      TEST_VOID(contiguous.deserialize(encoded));
+      if (split.getApplicationDataBytes() != source.getApplicationDataBytes()
+          || split.getApplicationDataBytes() != contiguous.getApplicationDataBytes()
+          || split.getCRC() != contiguous.getCRC()) return false;
+    }
+    return true;
+  });
+
+  tester->unitTest("Split-buffer parser preserves CRC diagnostics and destination on failure.", [] {
+    ccsds::Packet source;
+    TEST_VOID(source.setApplicationData({0x01U, 0x02U, 0x03U}));
+    const auto wire = serializedPacket(source);
+    const std::vector<std::uint8_t> header(wire.begin(), wire.begin() + 6);
+    std::vector<std::uint8_t> body(wire.begin() + 6, wire.end());
+    body[0] ^= 0x01U;
+
+    ccsds::Packet target;
+    target.setUpdatePacketEnable(false);
+    TEST_VOID(target.setApplicationData({0xABU}));
+    const auto result = target.deserialize(header, body);
+    return hasErrorCode(result, ccsds::INVALID_CHECKSUM)
+      && result.error().message() ==
+           "Cannot deserialize packet: CRC16 packet error-control mismatch."
+      && target.getApplicationDataBytes() == std::vector<std::uint8_t>({0xABU});
+  });
+
+  tester->unitTest("Split-buffer errors retain their established C++ codes and messages.", [] {
+    ccsds::Packet source;
+    TEST_VOID(source.setApplicationData({0x11U, 0x22U}));
+    const auto wire = serializedPacket(source);
+    std::vector<std::uint8_t> header(wire.begin(), wire.begin() + 6);
+    std::vector<std::uint8_t> body(wire.begin() + 6, wire.end());
+
+    ccsds::Packet target;
+    {
+      auto shortHeader = header;
+      shortHeader.pop_back();
+      const auto result = target.deserialize(shortHeader, body);
+      if (!hasErrorCode(result, ccsds::INVALID_HEADER_DATA)
+          || result.error().message() !=
+               "Cannot deserialize packet: primary header must contain exactly six bytes.")
+        return false;
+    }
+    {
+      auto shortBody = body;
+      shortBody.pop_back();
+      const auto result = target.deserialize(header, shortBody);
+      if (!hasErrorCode(result, ccsds::INVALID_DATA)
+          || result.error().message() !=
+               "Cannot deserialize packet: packet body size does not match Packet Data Length.")
+        return false;
+    }
+    {
+      auto version1 = header;
+      version1[0] |= 0x20U;
+      const auto result = target.deserialize(version1, body);
+      if (!hasErrorCode(result, ccsds::INVALID_HEADER_DATA)
+          || result.error().message() !=
+               "Cannot deserialize packet: unsupported CCSDS packet version.")
+        return false;
+    }
+    {
+      auto noCrcRoom = header;
+      noCrcRoom[4] = 0U;
+      noCrcRoom[5] = 0U; // declares a single body byte
+      const auto result = target.deserialize(noCrcRoom, std::vector<std::uint8_t>{0x00U});
+      if (!hasErrorCode(result, ccsds::INVALID_DATA)
+          || result.error().message() !=
+               "Cannot deserialize packet: CRC16 mode requires two packet error-control bytes.")
+        return false;
+    }
+    return true;
+  });
+
   tester->unitTest("Separated header and body input must match the declared packet length.", [] {
     ccsds::Packet source;
     TEST_VOID(source.setApplicationData({1, 2}));

@@ -50,6 +50,7 @@ repo_root="$(pwd)"
 output_dir="$(realpath -m "${output_dir}")"
 rm -rf "${output_dir}"
 mkdir -p "${output_dir}"
+printf "revision,artifact,file_bytes\n" > "${output_dir}/library-footprint.csv"
 
 ensure_ref() {
   local ref="$1"
@@ -90,6 +91,15 @@ build_revision() {
   local lib_dir="${tree}/lib"
   local c_lib_dir="${build_dir}/lib"
   local exe="${output_dir}/protocol-benchmark-${label}"
+
+  # Compare production DSO footprints under the same build flags/toolchain.
+  # The historical v2.0 baseline may not contain a standalone C library.
+  for artifact in "${c_lib_dir}/libccsdspack_c.so" "${lib_dir}/libccsdspack.so"; do
+    if [[ -f "${artifact}" ]]; then
+      printf '%s,%s,%s\n' "${label}" "$(basename "${artifact}")" \
+        "$(stat -Lc '%s' "${artifact}")" >> "${output_dir}/library-footprint.csv"
+    fi
+  done
 
   g++ -std=c++17 -O3 -DNDEBUG     "${benchmark_source}"     -I"${tree}/inc"     -L"${lib_dir}"     -Wl,-rpath,"${lib_dir}"     -lccsdspack     -o "${exe}"
 
@@ -157,5 +167,6 @@ with (root / "protocol-comparison.csv").open("w", newline="") as f:
 print((root / "protocol-comparison.csv").read_text(), end="")
 PY
 
+cat "${output_dir}/library-footprint.csv"
 echo "CCSDSPACK_MATCHED_PROTOCOL_BENCHMARK:PASS"
 echo "Results: ${output_dir}"

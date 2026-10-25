@@ -62,6 +62,62 @@ typedef struct ccsds_packet_view {
 } ccsds_packet_view_t;
 
 /**
+ * @brief Non-owning validated split-header/body packet view.
+ *
+ * Header and body may be discontiguous; all views alias caller-owned storage.
+ * data_field excludes the optional CRC16 trailer. There is intentionally no
+ * whole-packet pointer because the input spans need not be adjacent.
+ */
+typedef struct ccsds_packet_parts_view {
+    ccsds_primary_header_t primary_header;
+    ccsds_buffer_view_t header_bytes;
+    ccsds_buffer_view_t body;
+    ccsds_buffer_view_t data_field;
+    ccsds_buffer_view_t packet_error_control;
+    size_t consumed;
+    uint16_t received_crc16;
+} ccsds_packet_parts_view_t;
+
+/** @brief Stable validation reasons for adapter diagnostics (not wire data). */
+typedef enum ccsds_packet_parse_reason {
+    CCSDS_PACKET_PARSE_OK = 0,
+    CCSDS_PACKET_PARSE_HEADER_SIZE,
+    CCSDS_PACKET_PARSE_NULL_INPUT,
+    CCSDS_PACKET_PARSE_HEADER_INVALID,
+    CCSDS_PACKET_PARSE_VERSION,
+    CCSDS_PACKET_PARSE_BODY_TRUNCATED,
+    CCSDS_PACKET_PARSE_BODY_SIZE_MISMATCH,
+    CCSDS_PACKET_PARSE_CRC_TRAILER_TOO_SHORT,
+    CCSDS_PACKET_PARSE_CRC_MISMATCH,
+    CCSDS_PACKET_PARSE_IDLE_SECONDARY_HEADER,
+    CCSDS_PACKET_PARSE_IDLE_DATA_REQUIRED,
+    CCSDS_PACKET_PARSE_INVALID_POLICY
+} ccsds_packet_parse_reason_t;
+
+/**
+ * @brief Checks separate six-byte header and exact body spans with no copying.
+ *
+ * body_size must equal the primary header's Packet Data Length + 1.
+ * Output view is unchanged on failure. reason_out is optional and receives the
+ * dominant failure reason or CCSDS_PACKET_PARSE_OK on success.
+ */
+ccsds_status_t ccsds_packet_parts_parse(
+    const uint8_t *header_data, size_t header_size,
+    const uint8_t *body_data, size_t body_size,
+    ccsds_packet_error_control_t error_control,
+    const ccsds_crc16_config_t *crc_config,
+    ccsds_packet_parts_view_t *view_out,
+    ccsds_packet_parse_reason_t *reason_out);
+
+/** @brief Detailed diagnostic variant of the contiguous packet-view parser. */
+ccsds_status_t ccsds_packet_view_parse_ex(
+    const uint8_t *data, size_t size,
+    ccsds_packet_error_control_t error_control,
+    const ccsds_crc16_config_t *crc_config,
+    ccsds_packet_view_t *view_out,
+    ccsds_packet_parse_reason_t *reason_out);
+
+/**
  * @brief Parses and validates one bounded packet without allocating or copying.
  *
  * Extra bytes after the first declared packet are permitted and reported only
