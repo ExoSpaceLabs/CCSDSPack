@@ -56,6 +56,8 @@ jobs:
         run: |
           cd bin
           ./CCSDSPack_tester
+          cd ..
+          ctest --test-dir build-robustness-${{ matrix.sanitizer.name }} --output-on-failure -R '^ccsdspack_c_(core|stream_receiver)$'
 
   fuzz-smoke:
     name: fuzz-smoke-clang
@@ -98,7 +100,8 @@ jobs:
             ccsdspack_fuzz_declared_packet_size \
             ccsdspack_fuzz_packet \
             ccsdspack_fuzz_pus \
-            ccsdspack_fuzz_cuc; do
+            ccsdspack_fuzz_cuc \
+            ccsdspack_fuzz_stream_receiver; do
             echo "Running ${target}"
             "./build-fuzz/fuzz/${target}" \
               -runs=2500 \

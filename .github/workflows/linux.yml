@@ -56,7 +56,7 @@ jobs:
 
       - name: Run C11 core tests
         run: |
-          ctest --test-dir build --output-on-failure -R '^ccsdspack_c_core$'
+          ctest --test-dir build --output-on-failure -R '^ccsdspack_c_(core|stream_receiver)$'
 
       - name: Build and run C11 core without a C++ compiler
         run: |
