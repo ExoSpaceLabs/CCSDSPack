@@ -180,6 +180,13 @@ jobs:
             --candidate "${{ github.event.pull_request.head.sha || github.sha }}" \
             --output-dir "$PWD/build/matched-performance"
 
+      - name: Matched v2.2 validation baseline vs PR candidate (26.04 only)
+        if: matrix.os == 'ubuntu-26.04' && github.event_name == 'pull_request'
+        run: |
+          bash test/performance/run_matched_v2_0_vs_v2_1.sh \
+            --baseline 132cd3ac37b3f65db69c5b9067a82498fc268167 \
+            --candidate "${{ github.event.pull_request.head.sha }}" \
+            --output-dir "$PWD/build/matched-v2.2-packet-validation"
       - name: Upload performance baselines (26.04 only)
         if: matrix.os == 'ubuntu-26.04'
         uses: actions/upload-artifact@v7

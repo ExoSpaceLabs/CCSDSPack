@@ -107,6 +107,26 @@ or a configured C++ Packet adapter for that work.
 All buffer views in `ccsds_packet_view_t` alias the caller's input, so they
 must not outlive the input storage or be used after it changes.
 
+## Unified packet validation for contiguous and split inputs
+
+The C11 core is the authority for **wire-packet policy**. 
+`ccsds_packet_view_parse()` retains its existing contiguous-buffer API and
+permits trailing stream bytes. The new `ccsds_packet_parts_parse()` consumes
+a separate, **exact six-byte primary-header span and exact body span** without
+joining them into a temporary buffer. CRC16 is checked incrementally across
+the two spans, with configured polynomial, initial and final XOR values.
+Returned `ccsds_packet_parts_view_t` fields alias their respective
+caller-owned spans. Unlike a contiguous packet view, no whole-packet pointer
+is exposed. All output views remain untouched when validation fails.
+
+`ccsds_packet_view_parse_ex()` adds optional structured
+`ccsds_packet_parse_reason_t` diagnostics to the established contiguous API.
+Both parsers share one C11 implementation for version-zero, Packet Data
+Length, Idle Packet, CRC trailer and checksum policy. An optional reason output
+preserves detailed diagnostics for the C++ adapter, which still owns object
+lifetime, application-data vectors and custom secondary-header parsing.
+The original `ccsds_packet_view_parse()` API remains source-compatible.
+
 ## Incremental stream reception
 
 For chunked UART/DMA input and sync recovery, the allocation-free
