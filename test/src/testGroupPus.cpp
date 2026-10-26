@@ -405,6 +405,32 @@ void testGroupPus(TestManager *tester, const std::string &description) {
            "Basic CUC coarse time requires 1 to 4 octets.";
   });
 
+  tester->unitTest("PUS TM encoding delegates invalid tailoring to the C11 codecs.", [] {
+    ccsds::pus::rev_a::TmTailoring badA{};
+    badA.destinationIdOctets = 3U; // C11 PUS-A accepts 0, 1, 2 or 4.
+    ccsds::pus::rev_a::TmHeader a(badA);
+    if (!a.serialize().empty()) return false;
+
+    ccsds::pus::rev_c::TmTailoring badC{};
+    badC.timestampPresent = false;
+    badC.cuc = {ccsds::time::Epoch::Ccsds1958Tai,
+                ccsds::time::PFieldMode::Implicit, 4U, 0U};
+    ccsds::pus::rev_c::TmHeader c(badC);
+    if (!c.serialize().empty()) return false;
+
+    const ccsds_pus_a_tm_tailoring_t cA{
+      3U, 0U, 0U, {}, 0U
+    };
+    const ccsds_pus_c_tm_tailoring_t cC{
+      0U, {CCSDS_CUC_EPOCH_CCSDS_1958_TAI,
+           CCSDS_CUC_PFIELD_IMPLICIT, 4U, 0U}, 0U
+    };
+    return ccsds_pus_a_tm_validate_tailoring(&cA)
+             == CCSDS_STATUS_PUS_INVALID_IDENTIFIER_WIDTH
+        && ccsds_pus_c_tm_validate_tailoring(&cC)
+             == CCSDS_STATUS_PUS_DISABLED_TIME_CONFIG;
+  });
+
   tester->unitTest("CUC rejects mismatched P-fields, invalid widths, and counter overflow.", [] {
     const ccsds::time::CucConfiguration configuration{
       ccsds::time::Epoch::Ccsds1958Tai,
