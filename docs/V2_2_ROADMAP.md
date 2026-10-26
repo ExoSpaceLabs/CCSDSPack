@@ -57,3 +57,13 @@ the MCU timer, RTOS thread, DMA or transport queue. See
 
 These are **future release gates**, not claims of physical validation for
 post-2.1 features.
+
+## C11/C++17 validation ownership
+
+The library-wide [boundary audit](C_CPP_BOUNDARY.md) defines **C11 as the sole
+protocol-rule authority** and C++ as the owning object/adaptation layer. The
+first cleanup removes duplicate CUC and PUS TM encoding preflights while
+retaining C++ error mapping. Other legacy boundaries, notably primary-header
+setters and PUS TM decoding preflights, require separate diagnostic-compatibility
+work before they can be considered fully compliant. This is distinct from
+microbenchmark optimization tracked in #166.

@@ -111,9 +111,8 @@ ccsds::ResultBool ccsds::pus::SecondaryHeader::loadFromConfig(const ccsds::Confi
 
 bool ccsds::pus::SecondaryHeader::identifierFits(const std::uint32_t value,
                                                   const std::uint8_t octets) const {
-  if (octets == 0U) return value == 0U;
-  if (octets >= 4U) return true;
-  return value < (1UL << (octets * 8U));
+  // Width and value representability are C11 PUS protocol rules.
+  return ccsds_pus_identifier_fits(value, octets) != 0;
 }
 
 void ccsds::pus::SecondaryHeader::appendIdentifier(std::vector<std::uint8_t> &bytes,
@@ -500,7 +499,7 @@ ccsds::ResultBool ccsds::pus::rev_a::TmHeader::deserialize(
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_a::TmHeader::serialize() const {
-  if (!validateTailoring(getTailoring())) return {};
+  // The C11 encoder validates tailoring and wire fields in one operation.
   const ccsds_pus_a_tm_tailoring_t tailoring{
     m_destinationIdOctets,
     static_cast<std::uint8_t>(m_packetSubcounterPresent ? 1U : 0U),
@@ -665,7 +664,7 @@ ccsds::ResultBool ccsds::pus::rev_c::TmHeader::deserialize(
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_c::TmHeader::serialize() const {
-  if (!validateTailoring(getTailoring())) return {};
+  // The C11 encoder validates tailoring and wire fields in one operation.
   const ccsds_pus_c_tm_tailoring_t tailoring{
     static_cast<std::uint8_t>(m_timestampPresent ? 1U : 0U),
     {
