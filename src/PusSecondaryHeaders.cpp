@@ -37,6 +37,29 @@ namespace {
     using ccsds::Error;
     using ccsds::ErrorCode;
     switch (status) {
+      case CCSDS_STATUS_PUS_INVALID_IDENTIFIER_WIDTH:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     "PUS-A TM destination-ID width must be 0, 1, 2, or 4 octets.");
+      case CCSDS_STATUS_PUS_DISABLED_TIME_CONFIG:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     revisionA
+                       ? "Disabled PUS-A TM time requires an empty CUC configuration."
+                       : "Disabled PUS-C TM time requires an empty CUC configuration.");
+      case CCSDS_STATUS_CUC_INVALID_EPOCH:
+        return Error(ErrorCode::INVALID_DATA,
+                     "CUC requires the CCSDS-1958 or an agency-defined epoch.");
+      case CCSDS_STATUS_CUC_INVALID_PFIELD_MODE:
+        return Error(ErrorCode::INVALID_DATA, "CUC P-field policy is invalid.");
+      case CCSDS_STATUS_CUC_INVALID_COARSE_WIDTH:
+        return Error(ErrorCode::INVALID_DATA,
+                     "Basic CUC coarse time requires 1 to 4 octets.");
+      case CCSDS_STATUS_CUC_INVALID_FINE_WIDTH:
+        return Error(ErrorCode::INVALID_DATA,
+                     "Basic CUC fine time requires 0 to 3 octets.");
+      case CCSDS_STATUS_PUS_INVALID_BOOLEAN:
+        return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                     revisionA ? "Invalid PUS-A TM tailoring."
+                               : "Invalid PUS-C TM tailoring.");
       case CCSDS_STATUS_PUS_SIZE_MISMATCH:
         return Error(ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                      revisionA ? "PUS-A TM secondary-header size mismatch."
@@ -472,7 +495,7 @@ std::uint16_t ccsds::pus::rev_a::TmHeader::getSize() const {
 
 ccsds::ResultBool ccsds::pus::rev_a::TmHeader::deserialize(
     const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateTailoring(getTailoring()));
+  // The C11 decoder performs all wire/tailoring validation.
   const ccsds_pus_a_tm_tailoring_t tailoring{
     m_destinationIdOctets,
     static_cast<std::uint8_t>(m_packetSubcounterPresent ? 1U : 0U),
@@ -638,7 +661,7 @@ std::uint16_t ccsds::pus::rev_c::TmHeader::getSize() const {
 
 ccsds::ResultBool ccsds::pus::rev_c::TmHeader::deserialize(
     const std::vector<std::uint8_t> &data) {
-  FORWARD_RESULT(validateTailoring(getTailoring()));
+  // The C11 decoder performs all wire/tailoring validation.
   const ccsds_pus_c_tm_tailoring_t tailoring{
     static_cast<std::uint8_t>(m_timestampPresent ? 1U : 0U),
     {
