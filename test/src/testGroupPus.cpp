@@ -431,6 +431,26 @@ void testGroupPus(TestManager *tester, const std::string &description) {
              == CCSDS_STATUS_PUS_DISABLED_TIME_CONFIG;
   });
 
+  tester->unitTest("PUS C++ identifier setters use C11 field-width rules.", [] {
+    ccsds::pus::rev_a::TcTailoring invalidTc{};
+    invalidTc.sourceIdOctets = 3U;
+    ccsds::pus::rev_a::TcHeader tc(invalidTc);
+    if (tc.setSourceId(1U)) return false;
+
+    ccsds::pus::rev_a::TmTailoring invalidTm{};
+    invalidTm.destinationIdOctets = 3U;
+    ccsds::pus::rev_a::TmHeader tm(invalidTm);
+    if (tm.setDestinationId(1U)) return false;
+
+    ccsds::pus::rev_a::TcTailoring valid{};
+    valid.sourceIdOctets = 1U;
+    ccsds::pus::rev_a::TcHeader fitting(valid);
+    return fitting.setSourceId(255U) && !fitting.setSourceId(256U)
+        && ccsds_pus_identifier_fits(255U, 1U)
+        && !ccsds_pus_identifier_fits(256U, 1U)
+        && !ccsds_pus_identifier_fits(1U, 3U);
+  });
+
   tester->unitTest("CUC rejects mismatched P-fields, invalid widths, and counter overflow.", [] {
     const ccsds::time::CucConfiguration configuration{
       ccsds::time::Epoch::Ccsds1958Tai,

@@ -67,7 +67,8 @@ namespace ccsds::pus {
   } // namespace rev_c
 
   [[nodiscard]] inline bool validIdentifierWidth(const std::uint8_t width) noexcept {
-    return width == 0U || width == 1U || width == 2U || width == 4U;
+    // Delegate the supported PUS identifier-width rule to C11.
+    return ccsds_pus_identifier_width_is_valid(width) != 0;
   }
 
   [[nodiscard]] inline ResultBool validateTailoring(const rev_a::TcTailoring &tailoring) {

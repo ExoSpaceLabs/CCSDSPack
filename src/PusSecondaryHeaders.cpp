@@ -111,9 +111,8 @@ ccsds::ResultBool ccsds::pus::SecondaryHeader::loadFromConfig(const ccsds::Confi
 
 bool ccsds::pus::SecondaryHeader::identifierFits(const std::uint32_t value,
                                                   const std::uint8_t octets) const {
-  if (octets == 0U) return value == 0U;
-  if (octets >= 4U) return true;
-  return value < (1UL << (octets * 8U));
+  // Width and value representability are C11 PUS protocol rules.
+  return ccsds_pus_identifier_fits(value, octets) != 0;
 }
 
 void ccsds::pus::SecondaryHeader::appendIdentifier(std::vector<std::uint8_t> &bytes,
