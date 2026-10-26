@@ -451,6 +451,38 @@ void testGroupPus(TestManager *tester, const std::string &description) {
         && !ccsds_pus_identifier_fits(1U, 3U);
   });
 
+  tester->unitTest("PUS TM decode maps C11 tailoring status without duplicated prechecks.", [] {
+    ccsds::pus::rev_a::TmTailoring invalidA{};
+    invalidA.destinationIdOctets = 3U;
+    ccsds::pus::rev_a::TmHeader tmA(invalidA);
+    const auto a = tmA.deserialize({0x10U, 0x00U, 0x00U});
+    if (a || a.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+        || a.error().message() !=
+          "PUS-A TM destination-ID width must be 0, 1, 2, or 4 octets.")
+      return false;
+
+    ccsds::pus::rev_c::TmTailoring invalidC{};
+    invalidC.timestampPresent = false;
+    invalidC.cuc = {ccsds::time::Epoch::Ccsds1958Tai,
+                    ccsds::time::PFieldMode::Implicit, 4U, 0U};
+    ccsds::pus::rev_c::TmHeader tmC(invalidC);
+    const auto c = tmC.deserialize({0x20U, 0x00U, 0x00U});
+    if (c || c.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+        || c.error().message() !=
+          "Disabled PUS-C TM time requires an empty CUC configuration.")
+      return false;
+
+    ccsds::pus::rev_a::TmTailoring invalidTime{};
+    invalidTime.timestampPresent = true;
+    invalidTime.cuc = {ccsds::time::Epoch::Unspecified,
+                       ccsds::time::PFieldMode::Implicit, 4U, 0U};
+    ccsds::pus::rev_a::TmHeader tmTime(invalidTime);
+    const auto t = tmTime.deserialize({0x10U, 0x00U, 0x00U});
+    return !t && t.error().code() == ccsds::INVALID_DATA
+        && t.error().message() ==
+            "CUC requires the CCSDS-1958 or an agency-defined epoch.";
+  });
+
   tester->unitTest("CUC rejects mismatched P-fields, invalid widths, and counter overflow.", [] {
     const ccsds::time::CucConfiguration configuration{
       ccsds::time::Epoch::Ccsds1958Tai,
