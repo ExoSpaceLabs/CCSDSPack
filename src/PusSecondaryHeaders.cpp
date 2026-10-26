@@ -500,7 +500,7 @@ ccsds::ResultBool ccsds::pus::rev_a::TmHeader::deserialize(
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_a::TmHeader::serialize() const {
-  if (!validateTailoring(getTailoring())) return {};
+  // The C11 encoder validates tailoring and wire fields in one operation.
   const ccsds_pus_a_tm_tailoring_t tailoring{
     m_destinationIdOctets,
     static_cast<std::uint8_t>(m_packetSubcounterPresent ? 1U : 0U),
@@ -665,7 +665,7 @@ ccsds::ResultBool ccsds::pus::rev_c::TmHeader::deserialize(
 }
 
 std::vector<std::uint8_t> ccsds::pus::rev_c::TmHeader::serialize() const {
-  if (!validateTailoring(getTailoring())) return {};
+  // The C11 encoder validates tailoring and wire fields in one operation.
   const ccsds_pus_c_tm_tailoring_t tailoring{
     static_cast<std::uint8_t>(m_timestampPresent ? 1U : 0U),
     {
