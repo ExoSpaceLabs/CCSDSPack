@@ -4,6 +4,8 @@
 #include "PusSecondaryHeaderFactory.h"
 #include "tests.h"
 #include <CCSDSPack.h>
+#include <ccsdspack/c/cuc.h>
+#include <algorithm>
 #include <array>
 #include <cstdio>
 #include <fstream>
@@ -346,6 +348,107 @@ void testGroupPus(TestManager *tester, const std::string &description) {
       ccsds::time::PFieldMode::Implicit, 2U, 1U};
     const auto implicit = ccsds::time::serialize({0x1234U, 0x80U}, implicitCuc);
     return implicit && implicit.value() == std::vector<std::uint8_t>({0x12U, 0x34U, 0x80U});
+  });
+
+  tester->unitTest("C++ CUC encoding delegates all 64 supported layouts to the C11 codec.", [] {
+    for (const auto epoch : {ccsds::time::Epoch::Ccsds1958Tai,
+                             ccsds::time::Epoch::AgencyDefined}) {
+      for (const auto pfield : {ccsds::time::PFieldMode::Implicit,
+                                ccsds::time::PFieldMode::Explicit}) {
+        for (std::uint8_t coarse = 1U; coarse <= 4U; ++coarse) {
+          for (std::uint8_t fine = 0U; fine <= 3U; ++fine) {
+            const ccsds::time::CucConfiguration cfg{epoch, pfield, coarse, fine};
+            const ccsds_cuc_config_t core{
+              static_cast<ccsds_cuc_epoch_t>(epoch),
+              static_cast<ccsds_cuc_pfield_mode_t>(pfield), coarse, fine
+            };
+            const std::uint64_t coarseMax =
+              (UINT64_C(1) << (8U * coarse)) - UINT64_C(1);
+            const std::uint64_t fineMax =
+              fine == 0U ? 0U : ((UINT64_C(1) << (8U * fine)) - UINT64_C(1));
+            const ccsds::time::CucTime input{
+              UINT64_C(0x01020304) & coarseMax,
+              UINT64_C(0x00A0B0C0) & fineMax
+            };
+            const ccsds_cuc_time_t coreValue{input.coarse, input.fine};
+            std::array<std::uint8_t, 8U> coreBytes{};
+            std::size_t written = 0U;
+            if (ccsds_cuc_encode(&coreValue, &core,
+                                 coreBytes.data(), coreBytes.size(),
+                                 &written) != CCSDS_STATUS_OK) return false;
+            const auto wrapped = ccsds::time::serialize(input, cfg);
+            if (!wrapped || wrapped.value().size() != written
+                || !std::equal(wrapped.value().begin(), wrapped.value().end(),
+                               coreBytes.begin())) return false;
+          }
+        }
+      }
+    }
+    return true;
+  });
+
+  tester->unitTest("C++ CUC encoding preserves the C11 validation error categories.", [] {
+    using ccsds::time::CucConfiguration;
+    using ccsds::time::CucTime;
+    const CucConfiguration valid{
+      ccsds::time::Epoch::Ccsds1958Tai,
+      ccsds::time::PFieldMode::Explicit, 1U, 1U};
+    const auto overflow = ccsds::time::serialize(CucTime{256U, 0U}, valid);
+    if (overflow || overflow.error().code() != ccsds::INVALID_DATA
+        || overflow.error().message() !=
+           "CUC coarse time does not fit the configured width.") return false;
+    auto invalid = valid;
+    invalid.coarseOctets = 0U;
+    const auto rejected = ccsds::time::serialize(CucTime{1U, 0U}, invalid);
+    return !rejected && rejected.error().code() == ccsds::INVALID_DATA
+      && rejected.error().message() ==
+           "Basic CUC coarse time requires 1 to 4 octets.";
+  });
+
+  tester->unitTest("PUS TM encoding delegates invalid tailoring to the C11 codecs.", [] {
+    ccsds::pus::rev_a::TmTailoring badA{};
+    badA.destinationIdOctets = 3U; // C11 PUS-A accepts 0, 1, 2 or 4.
+    ccsds::pus::rev_a::TmHeader a(badA);
+    if (!a.serialize().empty()) return false;
+
+    ccsds::pus::rev_c::TmTailoring badC{};
+    badC.timestampPresent = false;
+    badC.cuc = {ccsds::time::Epoch::Ccsds1958Tai,
+                ccsds::time::PFieldMode::Implicit, 4U, 0U};
+    ccsds::pus::rev_c::TmHeader c(badC);
+    if (!c.serialize().empty()) return false;
+
+    const ccsds_pus_a_tm_tailoring_t cA{
+      3U, 0U, 0U, {}, 0U
+    };
+    const ccsds_pus_c_tm_tailoring_t cC{
+      0U, {CCSDS_CUC_EPOCH_CCSDS_1958_TAI,
+           CCSDS_CUC_PFIELD_IMPLICIT, 4U, 0U}, 0U
+    };
+    return ccsds_pus_a_tm_validate_tailoring(&cA)
+             == CCSDS_STATUS_PUS_INVALID_IDENTIFIER_WIDTH
+        && ccsds_pus_c_tm_validate_tailoring(&cC)
+             == CCSDS_STATUS_PUS_DISABLED_TIME_CONFIG;
+  });
+
+  tester->unitTest("PUS C++ identifier setters use C11 field-width rules.", [] {
+    ccsds::pus::rev_a::TcTailoring invalidTc{};
+    invalidTc.sourceIdOctets = 3U;
+    ccsds::pus::rev_a::TcHeader tc(invalidTc);
+    if (tc.setSourceId(1U)) return false;
+
+    ccsds::pus::rev_a::TmTailoring invalidTm{};
+    invalidTm.destinationIdOctets = 3U;
+    ccsds::pus::rev_a::TmHeader tm(invalidTm);
+    if (tm.setDestinationId(1U)) return false;
+
+    ccsds::pus::rev_a::TcTailoring valid{};
+    valid.sourceIdOctets = 1U;
+    ccsds::pus::rev_a::TcHeader fitting(valid);
+    return fitting.setSourceId(255U) && !fitting.setSourceId(256U)
+        && ccsds_pus_identifier_fits(255U, 1U)
+        && !ccsds_pus_identifier_fits(256U, 1U)
+        && !ccsds_pus_identifier_fits(1U, 3U);
   });
 
   tester->unitTest("CUC rejects mismatched P-fields, invalid widths, and counter overflow.", [] {
