@@ -279,6 +279,23 @@ void testGroupCore(TestManager *tester, const std::string &description) {
            && result.error().message().find("Packet Data Length") != std::string::npos;
   });
 
+  tester->unitTest("Unaliased Packet cache invalidates through normal setters.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setApplicationData({0x10U, 0x20U}));
+    TEST_VOID(packet.update());
+    const auto cached1 = packet.serialize();
+    const auto cached2 = packet.serialize();
+    if (!cached1 || !cached2 || cached1.value() != cached2.value()
+        || !coreCrcValid(cached1.value())) return false;
+
+    // No mutable reference has escaped. Invalidating through the owning
+    // Packet setter must still force C11 re-finalization.
+    TEST_VOID(packet.setApplicationData({0x10U, 0x21U}));
+    const auto changed = packet.serialize();
+    return changed && coreCrcValid(changed.value())
+        && changed.value() != cached1.value();
+  });
+
   tester->unitTest("Current mutable Header/DataField/PUS values always re-finalize CRC.", [] {
     ccsds::Packet packet;
     auto pusHeader = std::make_shared<ccsds::pus::rev_c::TcHeader>();
