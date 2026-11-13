@@ -590,7 +590,7 @@ int main(void) {
                                       corrupt, sizeof(corrupt), &written),
                 CCSDS_STATUS_OK);
             if (written != ccsds_pus_a_tm_encoded_size(&explicit_a)) {
-                fprintf(stderr, "pus-a-tm-explicit-setup: unexpected size\\n");
+                fprintf(stderr, "pus-a-tm-explicit-setup: unexpected size\n");
                 failed = 1;
             } else {
                 corrupt[3U + 1U + 1U] ^= 0x01U;
@@ -600,7 +600,7 @@ int main(void) {
                     ccsds_pus_a_tm_decode(corrupt, written, &explicit_a, &output),
                     CCSDS_STATUS_CUC_PFIELD_MISMATCH);
                 if (memcmp(&output, &before, sizeof(output)) != 0) {
-                    fprintf(stderr, "pus-a-tm-cuc-failure-atomic: output mutated\\n");
+                    fprintf(stderr, "pus-a-tm-cuc-failure-atomic: output mutated\n");
                     failed = 1;
                 }
             }
@@ -618,7 +618,7 @@ int main(void) {
                                       corrupt, sizeof(corrupt), &written),
                 CCSDS_STATUS_OK);
             if (written != ccsds_pus_c_tm_encoded_size(&explicit_c)) {
-                fprintf(stderr, "pus-c-tm-explicit-setup: unexpected size\\n");
+                fprintf(stderr, "pus-c-tm-explicit-setup: unexpected size\n");
                 failed = 1;
             } else {
                 corrupt[7U] ^= 0x01U;
@@ -628,7 +628,7 @@ int main(void) {
                     ccsds_pus_c_tm_decode(corrupt, written, &explicit_c, &output),
                     CCSDS_STATUS_CUC_PFIELD_MISMATCH);
                 if (memcmp(&output, &before, sizeof(output)) != 0) {
-                    fprintf(stderr, "pus-c-tm-cuc-failure-atomic: output mutated\\n");
+                    fprintf(stderr, "pus-c-tm-cuc-failure-atomic: output mutated\n");
                     failed = 1;
                 }
             }
