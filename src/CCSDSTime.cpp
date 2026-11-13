@@ -77,6 +77,28 @@ ccsds::ResultBuffer ccsds::time::serialize(const CucTime &value,
   return output;
 }
 
+ccsds::Result<std::size_t> ccsds::time::serialize(
+    const CucTime &value, const CucConfiguration &configuration,
+    std::uint8_t *output, const std::size_t capacity) {
+  const auto coreConfig = toCoreConfig(configuration);
+  const ccsds_cuc_time_t coreValue{value.coarse, value.fine};
+  std::size_t written = 0U;
+  const auto status =
+    ccsds_cuc_encode(&coreValue, &coreConfig, output, capacity, &written);
+  if (status != CCSDS_STATUS_OK) return cucError(status);
+  return written;
+}
+
+ccsds::Result<ccsds::time::CucTime> ccsds::time::deserialize(
+    const std::uint8_t *data, const std::size_t size,
+    const CucConfiguration &configuration) {
+  const auto coreConfig = toCoreConfig(configuration);
+  ccsds_cuc_time_t value{};
+  const auto status = ccsds_cuc_decode(data, size, &coreConfig, &value);
+  if (status != CCSDS_STATUS_OK) return cucError(status);
+  return CucTime{value.coarse, value.fine};
+}
+
 ccsds::Result<ccsds::time::CucTime> ccsds::time::deserialize(
     const std::vector<std::uint8_t> &data,
     const CucConfiguration &configuration) {
