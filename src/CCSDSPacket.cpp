@@ -668,9 +668,8 @@ ccsds::Result<std::size_t> ccsds::Packet::deserializeBoundedWithSecondaryHeader(
   DataField parsedField = m_dataField;
   parsedField.clearContent();
   std::shared_ptr<SecondaryHeaderAbstract> secondaryHeader;
-  if (prototype->isPusHeader()) {
-    const auto &pusPrototype = static_cast<const pus::SecondaryHeader &>(*prototype);
-    auto cloneResult = parsedField.getPusSecondaryHeaderFactory().clone(pusPrototype);
+  if (const auto *pusPrototype = prototype->asPusHeader()) {
+    auto cloneResult = parsedField.getPusSecondaryHeaderFactory().clone(*pusPrototype);
     if (!cloneResult) return cloneResult.error();
     secondaryHeader = cloneResult.value();
   } else {
@@ -684,7 +683,7 @@ ccsds::Result<std::size_t> ccsds::Packet::deserializeBoundedWithSecondaryHeader(
                  "Cannot deserialize packet: failed to create secondary-header parser.");
 
   std::size_t secondaryHeaderSize = secondaryHeader->getSize();
-  if (!secondaryHeader->isPusHeader() && secondaryHeader->variableLength
+  if (!secondaryHeader->asPusHeader() && secondaryHeader->variableLength
       && customHeaderSize > 0) {
     secondaryHeaderSize = static_cast<std::size_t>(customHeaderSize);
   }
@@ -775,7 +774,7 @@ ccsds::Result<std::size_t> ccsds::Packet::deserializeBounded(
 
   std::shared_ptr<SecondaryHeaderAbstract> prototype;
   const auto installed = m_dataField.getSecondaryHeader();
-  if (isPus && installed && installed->isPusHeader() && installed->getType() == headerType) {
+  if (isPus && installed && installed->asPusHeader() && installed->getType() == headerType) {
     prototype = installed;
   } else if (isPus) {
     auto createResult = m_dataField.getPusSecondaryHeaderFactory().create(headerType);
