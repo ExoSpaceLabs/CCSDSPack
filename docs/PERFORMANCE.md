@@ -462,9 +462,32 @@ those hot paths are **not** claimed to have gained from this setter change.
 
 The benchmark `cpp_pus_a_tm_set_timestamp` and
 `cpp_pus_c_tm_set_timestamp` cases report same-process timing,
-allocations and allocated bytes under successful updates. Follow-up CI
-measurements are evidence for this change, not grounds to infer packet-wide
-speedups.
+allocations and allocated bytes under successful updates.
+
+The [Ubuntu 26.04 implementation CI run #43446881949](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43446881949)
+on source commit `7d0f72f00191bab37852d1e2a01637d456d93d1f`
+recorded these **same-process** medians over seven batches of 200,000
+iterations, following warmup. Success-path allocation counts were
+measured using the benchmark's tracked global `operator new`.
+
+| Operation | Median ns/op | Allocations/op | Allocated bytes/op |
+| --- | ---: | ---: | ---: |
+| C11 CUC caller-owned encode | 10.107 | 0 | 0 |
+| C++17 bounded CUC encode | 13.339 | 0 | 0 |
+| C++17 owning-vector CUC encode | 28.980 | 1 | 7 |
+| **PUS-A TM setTimestamp() (new)** | **15.248** | **0** | **0** |
+| **PUS-C TM setTimestamp() (new)** | **15.252** | **0** | **0** |
+
+The previous setter called the owning CUC encode, which allocated a
+temporary vector, and then discarded it. The new success path does not
+allocate. The standalone vector API still allocates as designed.
+The old setter was **not** separately timed under this same benchmark;
+no exact setter before/after latency multiplier is claimed. Error
+diagnostic construction may still allocate on failure.
+
+These numbers are not grounds to infer end-to-end packet speedups;
+the built-in PUS-A/C TM wire encoders already used the C11 codec
+directly.
 
 The 7.292 ns C11 encode figure is faster than the 11.733 ns historical
 C11 baseline; this is **not** evidence of changed C11 implementation,
