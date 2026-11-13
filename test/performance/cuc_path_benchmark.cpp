@@ -145,6 +145,13 @@ int main() {
               == CCSDS_STATUS_OK && count == written);
       sink += output.back();
     });
+    emit("cpp_bounded_encode_caller_buffer", [&] {
+      std::array<std::uint8_t, 8U> output{};
+      const auto count = ccsds::time::serialize(
+        cpptime, cppcfg, output.data(), output.size());
+      require(count && count.value() == written);
+      sink += output[count.value() - 1U];
+    });
     emit("cpp_wrapper_encode", [&] {
       const auto encoded = ccsds::time::serialize(cpptime, cppcfg);
       require(encoded && encoded.value().size() == written);
@@ -155,6 +162,12 @@ int main() {
       require(ccsds_cuc_decode(bytes.data(), written, &ccfg, &decoded)
               == CCSDS_STATUS_OK);
       sink += decoded.coarse & 255U;
+    });
+    emit("cpp_bounded_decode_borrowed_buffer", [&] {
+      const auto decoded = ccsds::time::deserialize(
+        bytes.data(), written, cppcfg);
+      require(decoded && decoded.value() == cpptime);
+      sink += decoded.value().coarse & 255U;
     });
     emit("cpp_wrapper_decode", [&] {
       const auto decoded = ccsds::time::deserialize(input, cppcfg);
