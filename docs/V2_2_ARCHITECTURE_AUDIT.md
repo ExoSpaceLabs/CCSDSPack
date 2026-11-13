@@ -216,6 +216,29 @@ saturating `Packet::getFullPacketLength()`.
 additive full-width accessor without silently breaking the public API.
 Add a boundary test at a practical reduced-limit abstraction.
 
+### A-12 | P2/API/documentation | C++ data-field capacity is narrower than the C11 wire limit
+
+**Code:** `inc/CCSDSDataField.h` (`m_dataPacketSize` is
+`uint16_t`), `DataField::setApplicationData()`,
+`Packet::getSerializedSize()` and `src/c/packet_encode.c`.
+
+CCSDS Packet Data Length can represent up to **65,536** octets after the
+primary header (CCSDS 133.0-B-2 Issue 2 + EC2, 4.1.3.5).
+The C11 packet codec supports that maximum, but the C++ DataField storage
+budget is a `uint16_t` capped at 65,535 *secondary/application* bytes.
+With CRC disabled, the C++ owning API therefore cannot generate the legal
+maximum 65,536-byte data field, despite the generic PDU profile describing
+the full CCSDS range. With CRC enabled, the two trailer bytes count toward
+the wire Packet Data Field and must be included in the 65,536-byte limit;
+the budget currently does not directly reserve those two bytes.
+
+**Required:** explicitly distinguish the normative wire range, C11 core
+capability and C++ configured capacity. Either preserve the intentional
+C++ limit and document it, or widen C++ capacity/accounting in a
+separately reviewed compatibility change. Test exact last-successful
+sizes with both PEC modes and the next invalid size. Avoid wrapping
+the 16-bit legacy size accessors.
+
 ### A-09 | P2/documentation | Historical v2.1 release text is stale
 
 **Evidence:** PR #178 is merged into `main`, and `v2.1.0` resolves as
@@ -231,6 +254,12 @@ to commit `8d6fe89`.
 **Required:** reconcile current versus historical statements. Do not erase
 old source identities, test results or published qualification records.
 Avoid presenting a v2.1 candidate as still awaiting a merge that happened.
+
+**Documentation resolution on audit branch:** the changelog, release notes,
+concise/detailed compliance statements, PUS/CUC baseline and Space Packet
+profile now distinguish verified PR #178/tag completion from unverified
+Release asset/GHCR publication. Prior 2026-10-25 hardware identities remain
+unchanged. Recheck on merged `develop` before marking A-09 fully closed.
 
 ### A-10 | P2/API contract | Hosted config loads modify objects before error
 
