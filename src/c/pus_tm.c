@@ -141,6 +141,7 @@ ccsds_status_t ccsds_pus_a_tm_decode(
     size_t timestamp_size = 0U;
     size_t expected;
     ccsds_status_t status;
+    ccsds_pus_a_tm_fields_t staged = {0};
 
     if (tailoring == NULL || fields_out == NULL) {
         return CCSDS_STATUS_NULL_POINTER;
@@ -157,30 +158,31 @@ ccsds_status_t ccsds_pus_a_tm_decode(
         return CCSDS_STATUS_PUS_NONZERO_SPARE;
     }
 
-    fields_out->service_type = data[1];
-    fields_out->service_subtype = data[2];
+    staged.service_type = data[1];
+    staged.service_subtype = data[2];
     offset = 3U;
 
     if (tailoring->packet_subcounter_present != 0U) {
-        fields_out->packet_subcounter = data[offset++];
+        staged.packet_subcounter = data[offset++];
     } else {
-        fields_out->packet_subcounter = 0U;
+        staged.packet_subcounter = 0U;
     }
 
-    fields_out->destination_id = (uint32_t)ccsds_load_uint(
+    staged.destination_id = (uint32_t)ccsds_load_uint(
         data + offset, tailoring->destination_id_octets, CCSDS_BYTE_ORDER_BIG);
     offset += (size_t)tailoring->destination_id_octets;
 
     if (tailoring->timestamp_present != 0U) {
         timestamp_size = ccsds_cuc_encoded_size(&tailoring->cuc);
         status = ccsds_cuc_decode(
-            data + offset, timestamp_size, &tailoring->cuc, &fields_out->timestamp);
+            data + offset, timestamp_size, &tailoring->cuc, &staged.timestamp);
         if (status != CCSDS_STATUS_OK) return status;
     } else {
-        fields_out->timestamp.coarse = UINT64_C(0);
-        fields_out->timestamp.fine = UINT64_C(0);
+        staged.timestamp.coarse = UINT64_C(0);
+        staged.timestamp.fine = UINT64_C(0);
     }
 
+    *fields_out = staged;
     return CCSDS_STATUS_OK;
 }
 
@@ -246,6 +248,7 @@ ccsds_status_t ccsds_pus_c_tm_decode(
     size_t timestamp_size = 0U;
     size_t expected;
     ccsds_status_t status;
+    ccsds_pus_c_tm_fields_t staged = {0};
 
     if (tailoring == NULL || fields_out == NULL) {
         return CCSDS_STATUS_NULL_POINTER;
@@ -262,21 +265,22 @@ ccsds_status_t ccsds_pus_c_tm_decode(
         return CCSDS_STATUS_PUS_NONZERO_SPARE;
     }
 
-    fields_out->time_reference_status = (uint8_t)(data[0] & 0x0FU);
-    fields_out->service_type = data[1];
-    fields_out->service_subtype = data[2];
-    fields_out->message_type_counter = ccsds_load_be16(data + 3U);
-    fields_out->destination_id = (uint32_t)ccsds_load_be16(data + 5U);
+    staged.time_reference_status = (uint8_t)(data[0] & 0x0FU);
+    staged.service_type = data[1];
+    staged.service_subtype = data[2];
+    staged.message_type_counter = ccsds_load_be16(data + 3U);
+    staged.destination_id = (uint32_t)ccsds_load_be16(data + 5U);
 
     if (tailoring->timestamp_present != 0U) {
         timestamp_size = ccsds_cuc_encoded_size(&tailoring->cuc);
         status = ccsds_cuc_decode(
-            data + 7U, timestamp_size, &tailoring->cuc, &fields_out->timestamp);
+            data + 7U, timestamp_size, &tailoring->cuc, &staged.timestamp);
         if (status != CCSDS_STATUS_OK) return status;
     } else {
-        fields_out->timestamp.coarse = UINT64_C(0);
-        fields_out->timestamp.fine = UINT64_C(0);
+        staged.timestamp.coarse = UINT64_C(0);
+        staged.timestamp.fine = UINT64_C(0);
     }
 
+    *fields_out = staged;
     return CCSDS_STATUS_OK;
 }
