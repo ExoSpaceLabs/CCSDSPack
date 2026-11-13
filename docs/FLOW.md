@@ -65,7 +65,7 @@ For explicit sequence validation, one Validator instance should be used per sequ
 
 ## Reassemble application data
 
-`getApplicationDataBuffer()` concatenates stored application data in packet order and returns a checked `ResultBuffer`. `getPacketsBuffer() const`, `getPacketTemplate()` and indexed packet output use callback-free finalized snapshots: reading a copied packet must not invoke a mutating callback on a secondary header shared with the stored packet. Custom-header derived fields that require a callback must be prepared explicitly before read-style snapshot generation.
+`getApplicationDataBuffer()` concatenates stored application data in packet order and returns a checked `ResultBuffer`. Inspection uses stateless packet-coherence validation; ordered sequence/segmentation checks occur in the local C11 reassembly state. Repeated inspection does not advance the Manager's retained ingestion Validator state. Random-access `getPacketBufferAtIndex()` validates packet/template coherence without attempting stream sequence checks outside its ordering context. `getPacketsBuffer() const`, `getPacketTemplate()` and indexed packet output use callback-free finalized snapshots: reading a copied packet must not invoke a mutating callback on a secondary header shared with the stored packet. Custom-header derived fields that require a callback must be prepared explicitly before read-style snapshot generation.
 
 The optional Manager synchronization pattern is external stream framing and is not part of the CCSDS Space Packet PDU.
 
