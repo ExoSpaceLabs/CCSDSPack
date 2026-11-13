@@ -58,7 +58,7 @@ Therefore:
 total packet size = 6 + Packet Data Length + 1
 ```
 
-The Packet Data Field range is 1 through 65,536 octets, giving a total packet range of 7 through 65,542 octets. `Packet::getSerializedSize()` reports the exact complete size as `std::size_t`.
+The **normative** Packet Data Field range is 1 through 65,536 octets, giving a total packet range of 7 through 65,542 octets. The C11 packet codec supports the full field-width range. `Packet::getSerializedSize()` reports the exact size of the current C++ object as `std::size_t`, but the current C++ `DataField` configured capacity is `uint16_t` (maximum 65,535 secondary-header/application octets); the largest standard-legal packet with CRC disabled is therefore not constructible through that C++ convenience layer. The two optional CRC16 trailer bytes additionally count toward the 65,536-octet wire limit. See [audit A-12](V2_2_ARCHITECTURE_AUDIT.md).
 
 ## Secondary headers
 
@@ -124,4 +124,4 @@ See [VALIDATION.md](VALIDATION.md).
 
 ## Conformance evidence
 
-The v2.1.0 implementation candidate `3c93e6b` was exercised by 134 native regression/conformance tests, independent generic and PUS byte vectors, malformed/negative inputs, CLI integration, installed-package consumers and examples, Linux Ubuntu 22.04/24.04/26.04 and Windows CI, Doxygen, package/cross-build generation, ASan/UBSan, bounded fuzzing, Raspberry Pi 5 native arm64 execution, and physical NUCLEO-H755ZI-Q Cortex-M7 execution. A later MCU API/packaging correction requires new artifact and target evidence before release; see [hardware validation](V2_HARDWARE_VALIDATION.md).
+The earlier v2.1.0 candidate `3c93e6b` passed 134 native regression tests and target campaigns but is **historical** after MCU API/packaging corrections. The corrected, frozen v2.1.0 implementation `8d6fe89` passed 138/138 native Raspberry Pi 5 tests and all eight physical NUCLEO-H755ZI-Q/Cortex-M7 acceptance sections on 2026-10-25, alongside required hosted checks. The exact source, package and firmware hashes are in [hardware validation](V2_HARDWARE_VALIDATION.md). PR #178 has merged into `main` and tag `v2.1.0` resolves in GitHub; release assets/GHCR were not independently verified here. The v2.2 development tree requires separate [architecture remediation](V2_2_ARCHITECTURE_AUDIT.md) and new physical qualification.

@@ -2,7 +2,7 @@
 
 [Documentation index](README.md) | [Main README](../README.md) | [Packet processing flow](FLOW.md)
 
-CCSDSPack v2.1 separates **protocol mechanics** in an authoritative C11 core from the existing **C++17 ownership/convenience layer**. The C core can be used independently; the C++ layer is optional at build time. The diagrams describe responsibilities and dependencies, not one-to-one source files or an exhaustive function call graph.
+CCSDSPack v2.1 established **protocol mechanics** in an authoritative C11 core and the existing **C++17 ownership/convenience layer**. The C core can be used independently; the C++ layer is optional at build time. The diagrams describe responsibilities and dependencies, not one-to-one source files or an exhaustive function call graph. **The v2.2 source audit has unresolved correctness/safety blockers**; see [v2.2 architecture audit](V2_2_ARCHITECTURE_AUDIT.md).
 
 ## Component architecture
 
@@ -94,4 +94,4 @@ flowchart TB
 
 `CCSDSPACK_BUILD_CPP=OFF` allows a C-only build without a C++ compiler. `CCSDSPACK_BUILD_MCU=ON` excludes host-only tooling; the optional C++ layer may still be built for the MCU target. Neither the complete library nor its C++ ownership API should be described as universally heap-free.
 
-See [raw-buffer interfaces](RAW_BUFFERS.md), [PUS tailoring](MISSION_TAILORING.md), [structured validation](VALIDATION.md), [cross-builds](CROSSBUILD.md) and [compliance scope](PUS_CUC_COMPLIANCE.md).
+See [v2.2 architecture audit and release blockers](V2_2_ARCHITECTURE_AUDIT.md), [C11/C++ responsibility matrix](C_CPP_BOUNDARY.md), [raw-buffer interfaces](RAW_BUFFERS.md), [PUS tailoring](MISSION_TAILORING.md), [structured validation](VALIDATION.md), [cross-builds](CROSSBUILD.md) and [compliance scope](PUS_CUC_COMPLIANCE.md).

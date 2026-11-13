@@ -89,7 +89,7 @@ The fuzz smoke gate limits generated-input count, input length, per-input timeou
 
 ## Evidence
 
-The current v2.1.0 `develop` candidate includes hosted native regression/conformance tests covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, structured validation, the complete PUS-C acknowledgement matrix, and the final named negative-validation matrix.
+The qualified v2.1.0 release baseline includes hosted native regression/conformance tests covering generic packet behavior, all four PUS concrete identities, tailoring, CUC vectors, configuration selectors, Manager parsing, raw-buffer interfaces, structured validation, the complete PUS-C acknowledgement matrix, and the final named negative-validation matrix.
 
 CLI integration covers generic and representative PUS streams and malformed PUS input. Linux/Windows CI, Doxygen, installed-package examples/consumer, Ubuntu 22.04 package/cross-build generation, and the Cortex-M compile/link probe provide integration evidence. Dedicated ASan, UBSan, and bounded four-target libFuzzer CI provide automated robustness evidence.
 
@@ -98,4 +98,4 @@ Historical real-target execution (implementation `3c93e6b`, prior to the MCU API
 - Raspberry Pi 5 / native arm64 installed-package validation completed with `CCSDSPACK_HARDWARE_TEST:PASS` and `CCSDSPACK_AARCH64_TEST:PASS`;
 - physical NUCLEO-H755ZI-Q / Cortex-M7 execution completed with `CCSDSPACK_HARDWARE_TEST:PASS` using the same board-independent acceptance core.
 
-The earlier v2.1.0 candidate `3c93e6b` remains historical. The corrected, frozen implementation `8d6fe89` has now **passed hosted CI and fresh native Raspberry Pi 5 and physical STM32H755 acceptance** on 2026-10-25, including 138/138 Pi native tests and all eight physical MCU acceptance sections. Tagging and publication still require approved `develop -> main` promotion and final CI; see `docs/V2_HARDWARE_VALIDATION.md`.
+The earlier v2.1.0 candidate `3c93e6b` remains historical. The corrected, frozen v2.1.0 implementation `8d6fe89` **passed hosted CI and fresh native Raspberry Pi 5 and physical STM32H755 acceptance** on 2026-10-25, including 138/138 Pi native tests and all eight physical MCU acceptance sections. Promotion PR #178 is merged and tag `v2.1.0` exists; release assets and GHCR publication were not independently verified in the v2.2 audit. See `V2_HARDWARE_VALIDATION.md`. The current v2.2 `develop` code has separate [open architecture findings](V2_2_ARCHITECTURE_AUDIT.md) and has not been physically qualified.

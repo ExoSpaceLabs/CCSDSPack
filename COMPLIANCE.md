@@ -76,7 +76,9 @@ Round-trip behavior alone is not treated as sufficient conformance evidence.
 The frozen current v2.1.0 implementation `8d6fe89` passed hosted CI, native
 Raspberry Pi 5 arm64 (2026-10-25) and physical STM32H755 Cortex-M7 validation
 (2026-10-25). The earlier `3c93e6b` implementation and its October 11 target
-PASS evidence remain historical; publication is pending approved promotion.
+PASS evidence remain historical. Promotion PR #178 is merged into `main` and
+GitHub resolves tag `v2.1.0`; release asset/GHCR publication was not
+independently checked in the 2026-11-13 v2.2 architecture audit.
 
 The recorded evidence includes:
 
@@ -96,6 +98,11 @@ Broader matched PUS/CUC/Validator/Manager/stream performance characterization
 was completed in issue #163. The measured CUC wrapper regression remains tracked
 in issue #166 as a focused optimization follow-up. Neither performance work item
 changes the CCSDS/ECSS conformance boundary.
+
+The current **v2.2 development tree** is not covered by the frozen v2.1
+physical results. Its [deep architecture audit](docs/V2_2_ARCHITECTURE_AUDIT.md)
+identifies open source-level correctness and safety issues; physical v2.2
+qualification must use a new frozen source/build/harness identity.
 
 Detailed scope and traceability are maintained in:
 
