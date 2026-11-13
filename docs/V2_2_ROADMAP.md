@@ -1,6 +1,6 @@
 # v2.2 development plan
 
-[Documentation index](README.md) | [Architecture](ARCHITECTURE.md) | [C11 API](C_API.md) | [v2.1 hardware evidence](V2_HARDWARE_VALIDATION.md)
+[Documentation index](README.md) | [Architecture](ARCHITECTURE.md) | [Deep v2.2 audit](V2_2_ARCHITECTURE_AUDIT.md) | [C11 API](C_API.md) | [v2.1 hardware evidence](V2_HARDWARE_VALIDATION.md)
 
 **Status:** development on `develop`; **v2.1.0 remains the current tagged,
 physically qualified release on `main`**. Neither the 2.1.0 tag nor its
@@ -23,7 +23,7 @@ Consolidate any remaining duplicated protocol *decisions* instead.
 | P0 | [#38: incremental sync-framed C receiver](https://github.com/ExoSpaceLabs/CCSDSPack/issues/38) | **Merged** via PR #181 (commit `04fabc8c`), C11, no allocation; Linux/Windows/ASan/UBSan/fuzz/Doxygen plus C-only installed consumer PASS. |
 | P1 | [#182: eliminate duplicated split-buffer packet validation](https://github.com/ExoSpaceLabs/CCSDSPack/issues/182) | **Merged into `develop` via PR #184** (`844b2fa`), issue closed. Unified C11 contiguous/split policy, retained C++ diagnostics; split CRC allocations reduced 7→5. No-CRC path ~9–10% slower in matched hosted run. See [PERFORMANCE.md](PERFORMANCE.md); physical real-target acceptance remains a future release gate. |
 | P1 | [#166: optimize CUC C++ wrapper](https://github.com/ExoSpaceLabs/CCSDSPack/issues/166) | **Diagnosed with isolated C11/C++ profiling**, PR #186. On Ubuntu 26.04 C encoder 11.733 ns/0 alloc, C++ encoder 27.894 ns/1 alloc; C decoder 9.863 ns vs C++ 21.110 ns, both 0 alloc. Earlier no-gain experiment #183 remains rejected. See [PERFORMANCE.md](PERFORMANCE.md). Keep open until a *measured* improvement is demonstrated; no protocol code changed. |
-| P1 | [#187: C11/C++ protocol validation ownership](https://github.com/ExoSpaceLabs/CCSDSPack/issues/187) | **Partially completed on `develop`:** PR #188 removes duplicate CUC/PUS TM encoding checks, PR #189 moves primary-header field validation to C11, and PR #190 removes PUS TM decode preflight with error-parity/transactionality tests. Remaining PUS setter, Validator, Manager and stream boundary audit is tracked in #187. |
+| P1 | [#187: C11/C++ protocol validation ownership](https://github.com/ExoSpaceLabs/CCSDSPack/issues/187) | **Partially completed on `develop`:** PR #188 removes duplicate CUC/PUS TM encoding checks, PR #189 moves primary-header field validation to C11, and PR #190 removes PUS TM decode preflight with error-parity/transactionality tests. **Deep source audit on 2026-11-13 found release blockers** in C11 PUS TM failure transactionality, raw C++ pointer handling, Manager read-side sequence state and virtual-identity PUS downcast safety; see [audit A-01 through A-04](V2_2_ARCHITECTURE_AUDIT.md). Remaining boundaries are tracked in #187. |
 | P2 | Optional C11 packet-processing context | **Defer** until EXN OBC consumers show a real need beyond existing C packet view, sequence validation, PUS codecs and reassembly; no second owning Manager. |
 | Maintenance | [#176: retire obsolete v1 test configuration](https://github.com/ExoSpaceLabs/CCSDSPack/issues/176) | **Merged via PR #185** (`b0a55f0`), issue closed. Retired unused PVN=1 config and installed tester fixtures now explicit. All native/CLI/package/hosted gates passed. |
 | Future | CFDP #39–#41, Python #37 | **Outside the v2.2 core migration** unless separately scoped and justified. |
@@ -41,8 +41,7 @@ the MCU timer, RTOS thread, DMA or transport queue. See
 
 ## Qualification before v2.2 publication
 
-1. Audit the exact `develop` implementation, library headers, build flags,
-   documentation and issue dispositions, and freeze its source SHA.
+1. **Resolve the [deep architecture audit](V2_2_ARCHITECTURE_AUDIT.md)**, including source-level A-01..A-04 release blockers, missing negative tests, C/C++ boundary classifications and documentation consistency; close #187 only with actual test evidence. Then disposition measured CUC issue #166. Audit the exact `develop` implementation, headers, build flags, documentation and issue dispositions and freeze its SHA.
 2. Pass Linux, Windows, Doxygen, C-only installed-package/consumer,
    ASan/UBSan, bounded fuzz and cross-package builds on that SHA.
 3. Requalify a **native Raspberry Pi 5 arm64 package** and physically run
@@ -67,6 +66,8 @@ PRs #188, #189 and #190 are merged into `develop`: duplicate CUC/PUS TM encode
 and PUS TM decode preflights have been removed, and primary-header setters
 now use the C11 field-reason validator. Historical C++ error diagnostics and
 transactional failure handling have regression coverage. The remaining
-PUS setter, Validator, Manager and stream-boundary audit is open as #187;
-measured CUC optimization is separately open as #166. Passing hosted PR CI
+PUS setter, Validator, Manager and stream-boundary work remains open as #187.
+The [2026-11-13 deep audit](V2_2_ARCHITECTURE_AUDIT.md) identifies concrete
+correctness/safety blockers not exercised by existing CI; #166 remains the
+separate measured CUC optimization decision. Passing hosted PR CI
 and MCU cross-builds does **not** constitute physical v2.2 qualification.
