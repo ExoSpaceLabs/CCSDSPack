@@ -72,6 +72,8 @@ flowchart LR
 
 The C view is non-owning: buffers must remain valid while spans are used. C++ `Packet` and `Manager` own application-level state and may allocate. The C++ raw-buffer path avoids an intermediate full-packet transport bridge copy but still performs any copying required for ownership.
 
+**v2.2 finalization rule (#198):** mutable C++ Packet subobjects and secondary-header shared pointers cannot reliably propagate cache-invalidating events to their parent. Packet serialization must therefore recompute Packet Data Length and optional CRC from current state through the C11 core, or verify previously finalized fields in manual mode. `Packet::serializeSnapshot() const` stages a local Packet and omits the legacy virtual secondary-header refresh callback; it is used for Manager read-style output to avoid mutating aliased secondary headers. Automatic/custom-header refresh and wire finalization are deliberately separate responsibilities. A custom callback that performs arbitrary mutation is not inherently failure-transactional.
+
 ### PUS and packet policy
 
 - Concrete C++ PUS identities are `ccsds::pus::rev_a::{TcHeader,TmHeader}` and `ccsds::pus::rev_c::{TcHeader,TmHeader}`. There is **no PUS-B implementation**.
