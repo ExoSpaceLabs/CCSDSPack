@@ -700,7 +700,7 @@ int main(void) {
                  &report, CCSDS_VALIDATION_SEQUENCE_FLAGS)
             || ccsds_validation_report_contains(
                  &report, CCSDS_VALIDATION_SEQUENCE_COUNT)) {
-            fprintf(stderr, "packet-coherence-stateless: unexpected sequence checks\\n");
+            fprintf(stderr, "packet-coherence-stateless: unexpected sequence checks\n");
             failed = 1;
         }
         ccsds_validation_report_reset(&report);
@@ -712,7 +712,7 @@ int main(void) {
             CCSDS_STATUS_OK);
         if (!ccsds_validation_report_failed(
                 &report, CCSDS_VALIDATION_SEQUENCE_FLAGS)) {
-            fprintf(stderr, "packet-coherence-stateful: continuation unexpectedly accepted\\n");
+            fprintf(stderr, "packet-coherence-stateful: continuation unexpectedly accepted\n");
             failed = 1;
         }
     }
