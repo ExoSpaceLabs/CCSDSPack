@@ -67,8 +67,9 @@ namespace ccsds::time {
    * @brief Encodes basic numeric CUC directly into caller-owned storage.
    *
    * Delegates all wire, epoch, width, overflow and capacity checks to the
-   * authoritative C11 codec. Allocates no heap memory. On failure, output
-   * bytes are unchanged; the returned byte count is valid only on success.
+   * authoritative C11 codec. Successful encoding performs no heap allocation.
+   * Error diagnostics may allocate; on failure, output bytes are unchanged
+   * and the returned byte count is valid only on success.
    *
    * @see CCSDS 301.0-B-4, sections 3.2.1 and 3.2.2 (supported basic subset).
    */
@@ -77,9 +78,10 @@ namespace ccsds::time {
     std::uint8_t *output, std::size_t capacity);
 
   /**
-   * @brief Decodes CUC from a borrowed exact-size byte span with no allocation.
+   * @brief Decodes CUC from borrowed bytes without allocating on success.
    *
-   * Uses the same C11 parser as the owning-vector overload. The caller owns
+   * Error diagnostics may allocate. Uses the same C11 parser as the
+   * owning-vector overload. The caller owns
    * the input buffer and must retain its lifetime for the duration of the call.
    */
   [[nodiscard]] Result<CucTime> deserialize(
