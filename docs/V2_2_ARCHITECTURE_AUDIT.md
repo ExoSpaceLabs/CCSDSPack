@@ -138,6 +138,29 @@ objects at public entry points. Add an adversarial custom-header regression
 under UBSan and preserve valid PUS-A/C parsing/template parity. Document the
 extension contract explicitly.
 
+### A-11 | P1/blocker | Validator ignores Packet's configured CRC16 parameters
+
+**Code:** `src/CCSDSValidator.cpp::Validator::validate()` (~line 146),
+`inc/CCSDSPacket.h::setCrcConfig()`, `src/CCSDSPacket.cpp` finalization.
+
+`Packet::setCrcConfig(polynomial, initial, finalXor)` is a supported public
+API. Packet finalization and parsing pass `m_CRC16Config` into the C11
+core. However, the Validator constructs a **default**
+`const CRC16Config crcConfig{}` to check every CRC16 packet. A correctly
+serialized packet using non-default parameters can therefore report
+`ValidationCode::Crc16` failure. The current
+`testGroupEdgeCases.cpp` explicitly tests a non-default wire vector
+(initial value 0x0000), but `testGroupValidator.cpp` has no matching
+configured-CRC parity test.
+
+**Required:** expose the Packet's CRC configuration through a const accessor
+or a bounded C11 CRC validation adapter, and use the *actual Packet* settings
+in `Validator`. Prefer incremental C11 CRC update over constructing two
+temporary owning vectors (A-07). Add positive default/non-default
+`Packet::serialize -> Validator::validate -> Packet::deserialize` parity
+tests and negative corruption tests that use the same explicit configuration.
+Verify error codes and Manager validation with the custom profile.
+
 ### A-05 | P2/architecture | Remaining C++ wire-rule repetition
 
 **Code:** `Packet.cpp::validatePacketForSerialization()` (PVN,
@@ -240,8 +263,8 @@ and add invalid-late-key regression tests.
 
 ## Required acceptance campaign
 
-1. **Correctness before performance:** resolve A-01, A-02, A-03 and
-   A-04; settle A-06's C output-failure contract. Add fixed C11 malformed
+1. **Correctness before performance:** resolve A-01, A-02, A-03,
+   A-04 and A-11; settle A-06's C output-failure contract. Add fixed C11 malformed
    vectors, C++ raw-pointer negative tests, Manager repeat-read tests and
    RTTI-free adversarial PUS-subtype tests.
 2. **Complete the one-authority inventory:** disposition A-05 and A-07;
