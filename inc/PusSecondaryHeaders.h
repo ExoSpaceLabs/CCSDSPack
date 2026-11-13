@@ -87,11 +87,11 @@ namespace ccsds::pus {
     void setServiceSubtype(std::uint8_t value) { m_serviceSubtype = value; }
     ResultBool setDestinationId(std::uint32_t value);
     /**
-     * @brief Set and validate a numeric CUC timestamp without heap allocation.
+     * @brief Set a numeric CUC timestamp with no heap allocation on success.
      *
-     * The C11 CUC codec validates the configured epoch, P-field and coarse/
-     * fractional widths through a bounded eight-octet temporary stack buffer.
-     * On error, the previously stored timestamp remains unchanged.
+     * The C11 CUC codec validates epoch, P-field and coarse/fractional widths
+     * through a bounded eight-octet stack buffer. Diagnostic strings may
+     * allocate on failure; the stored timestamp remains unchanged.
      */
     ResultBool setTimestamp(const time::CucTime &timestamp);
 #ifndef CCSDS_MCU
