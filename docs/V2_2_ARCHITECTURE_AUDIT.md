@@ -39,7 +39,7 @@ external stream framing.
 | Packet parse | **Coherent** | `packet_view.c::parse_parts()` is the shared C11 contiguous/split policy; the C++ Packet adapters use it, then stage owned state before commit. Typed PUS, opaque and custom header selection remains C++ object policy. |
 | Packet encode | **Partially duplicated** | C11 `packet_finalize_parts` / `packet_encode_parts` own version/idle/length rules. `Packet.cpp::validatePacketForSerialization()` also checks version and idle constraints for historic diagnostics. Cross-object secondary-header presence and direction checks belong in C++ unless C11 receives sufficient metadata. |
 | PUS TC/TM codecs | **Coherent dispatch, defect in C11 TM failure state** | C++ delegates wire encode/decode to PUS C11 functions; PUS-A and PUS-C remain distinct. Invalid CUC on C11 TM decoding can partially update output (A-01). |
-| CUC | **Single wire implementation** | `time::serialize/deserialize` call C11. `TmSecondaryHeader::setTimestamp()` uses C++ allocating serialization just to validate a prospective field. This is C11-backed but expensive, not independent wire logic. |
+| CUC | **Single wire implementation** | `time::serialize/deserialize` call C11. On `develop`, `TmSecondaryHeader::setTimestamp()` still allocates a temporary CUC vector to validate a prospective field; **unmerged PR #201** replaces it with stack-bounded CUC validation and adds caller-owned C++ overloads without duplicating wire rules. |
 | Validator | **Correct source of decisions, allocation/typing risks** | Calls `ccsds_validate_packet_coherence`, `ccsds_validate_pus_coherence`, and C11 CUC/CRC utilities. CRC input is assembled via temporary vectors; PUS subtype discrimination relies on unchecked static downcasts (A-04). Its report itself is fixed capacity. |
 | Manager | **C11 protocol core leveraged, read semantics defective** | Uses C11 segmentation, sequence increments, stream walker and reassembly. C++ owns packet storage/contracts. Public getters directly advance the persistent validator (A-03). Manager also independently packs the primary-header Packet Identification bits. |
 | DataField/custom header | **Object-level rules valid, unsafe raw overload** | Registry checks, serialized object sizes and configured capacity are legitimate C++ rules. Pointer-size typed overload lacks a null guard; sum-based capacity checks can overflow (A-02). |
@@ -232,14 +232,20 @@ before writing. Add an output sentinel test either way.
 
 **Code:** `src/CCSDSValidator.cpp::validate()` concatenates a serialized
 primary-header vector and full data-field vector solely to calculate CRC.
-`TmSecondaryHeader::setTimestamp()` allocates a C++ CUC serialization
-buffer to validate numeric range. C11 PUS TM decode validates tailoring
-and then calls `*_encoded_size()`, which validates it again.
+On `develop`, `TmSecondaryHeader::setTimestamp()` creates an owning CUC
+vector solely to validate numeric range. C11 PUS TM decode validates
+tailoring and then calls `*_encoded_size()`, which validates it again.
 
-**Disposition:** Stream CRC over existing pieces with C11 CRC update,
-expose a nonencoding CUC value-fit check if beneficial, and only optimize
-the C11 duplicate-validation path with measured evidence. No
-regression/performance improvement is asserted here; issue #166 is separate.
+**Disposition:** **Partially addressed by unmerged PR #201**: C++17 bounded
+CUC encode/decode overloads call the same C11 codec; successful PUS-A/C TM
+`setTimestamp()` operations no longer allocate. The protected TM tail
+helpers also stop materializing intermediate CUC vectors. Fixed-vector,
+overflow/error message and transactional state tests protect behavior.
+The owning vector API remains supported, and built-in PUS-A/C TM wire
+codecs already delegate to C11. Follow-up CRC aggregation and C11
+duplicate-tailoring validation remain open, subject to profiling. See
+issue #166 and the matched candidate evidence in
+[PERFORMANCE.md](PERFORMANCE.md). No whole-packet speedup is claimed.
 
 ### A-08 | P2/API consistency | Large Manager packet counts narrow to 16 bits
 
