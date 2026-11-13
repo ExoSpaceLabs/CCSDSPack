@@ -40,7 +40,7 @@ width/epoch, or other wire rules.
 | Explicit PUS tailoring/config load | C11 checks protocol fields; C++ checks config schema | Public `validateTailoring` calls C11. Distinguish independent validation requests from duplicate preflight inside a codec operation. |
 | `Header::setData` and primary-header setters | C11 `ccsds_primary_header_validate_ex` identifies first invalid field; C++ retains state transition and error mapping | **Implemented in PR #189**: removes C++ range constants; C++ maps the C11 field reason into the existing messages and keeps atomic assignment, INVALID recovery and IDLE transitions. |
 | `Packet` contiguous/split parse | C11 packet_view / packet_parts | **Already consolidated** by PR #184. The C++ object factory and secondary-header selection stay C++. |
-| `Validator` packet and PUS coherence | C11 validation core | C11 delegates are present; **A-04** identifies unsafe virtual-identity-based downcasts, **A-07** CRC temporary aggregation. Sequence validation advances validator state and must not be reused for read-only Manager inspection (**A-03**). |
+| `Validator` packet and PUS coherence | C11 validation core | C11 delegates are present; **A-04** identifies unsafe virtual-identity-based downcasts; **A-11** finds that Validator ignores configured Packet CRC16 parameters; **A-07** covers CRC temporary aggregation. Sequence validation advances validator state and must not be reused for read-only Manager inspection (**A-03**). |
 | Manager segmentation, reassembly, stream | C11 segmentation/reassembly/stream core | C++ packet collection, application policy, indexing and ownership are legitimate. **A-03** read-side sequence mutations, **A-04** PUS type cast safety, **A-05** duplicated identifier bit packing and **A-08** packet-count narrowing remain open. |
 | `DataField` capacity and registered headers | C++ object/container state | Capacity and custom-object checks correctly belong in C++, **but A-02** documents missing null checks and overflow-prone capacity addition in raw overloads. |
 | CRC16 utility | C11 CRC | C++ wrapper delegates to C11; no second polynomial implementation. |
@@ -54,5 +54,5 @@ should reject independent reimplementations of C11 validation constants.
 
 The [deep v2.2 audit](V2_2_ARCHITECTURE_AUDIT.md) found outstanding
 correctness/safety issues in C11 and C++ despite green hosted PR CI.
-Release freeze is blocked until A-01..A-04 are resolved and verified.
+Release freeze is blocked until A-01..A-04 and A-11 are resolved and verified.
 Physical hardware qualification is an additional, later release gate.
