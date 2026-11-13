@@ -58,7 +58,7 @@ Therefore:
 total packet size = 6 + Packet Data Length + 1
 ```
 
-The Packet Data Field range is 1 through 65,536 octets, giving a total packet range of 7 through 65,542 octets. `Packet::getSerializedSize()` reports the exact complete size as `std::size_t`.
+The **normative** Packet Data Field range is 1 through 65,536 octets, giving a total packet range of 7 through 65,542 octets. The C11 packet codec supports the full field-width range. `Packet::getSerializedSize()` reports the exact size of the current C++ object as `std::size_t`, but the current C++ `DataField` configured capacity is `uint16_t` (maximum 65,535 secondary-header/application octets); the largest standard-legal packet with CRC disabled is therefore not constructible through that C++ convenience layer. The two optional CRC16 trailer bytes additionally count toward the 65,536-octet wire limit. See [audit A-12](V2_2_ARCHITECTURE_AUDIT.md).
 
 ## Secondary headers
 
