@@ -200,6 +200,39 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
            && report.passed(ccsds::ValidationCode::PacketIdentifier);
   });
 
+  tester->unitTest("Validator uses the Packet's configured CRC16 parameters.", [] {
+    ccsds::Packet packet;
+    packet.setCrcConfig(0x1021U, 0x0000U, 0x0000U);
+    TEST_VOID(packet.setApplicationData({0xAAU, 0x55U}));
+    const auto encoded = packet.serialize();
+    if (!encoded) return false;
+
+    // This is an independent fixed wire vector from the packet edge suite:
+    // default CRC parameters must not be substituted for the configured ones.
+    const std::vector<std::uint8_t> expected{
+      0x00U, 0x00U, 0xC0U, 0x00U, 0x00U, 0x03U,
+      0xAAU, 0x55U, 0x1FU, 0x85U
+    };
+    if (encoded.value() != expected) return false;
+
+    ccsds::Validator validator;
+    validator.configure(true, false, false);
+    const auto validReport = validator.validate(packet);
+    if (!validReport.valid() || !validReport.passed(ccsds::ValidationCode::Crc16))
+      return false;
+
+    ccsds::Packet parsed;
+    parsed.setCrcConfig(0x1021U, 0x0000U, 0x0000U);
+    TEST_VOID(parsed.deserialize(encoded.value()));
+    if (!validator.validate(parsed).passed(ccsds::ValidationCode::Crc16))
+      return false;
+
+    // Corruption must still be detected using the same custom configuration.
+    TEST_VOID(parsed.setApplicationData({0xAAU, 0x54U}));
+    const auto invalidReport = validator.validate(parsed);
+    return invalidReport.failed(ccsds::ValidationCode::Crc16);
+  });
+
   tester->unitTest("Validator isolates a CRC failure.", [] {
     auto packet = finalizedPacket(1, ccsds::UNSEGMENTED, 9, {1, 2, 3});
     TEST_VOID(packet.setApplicationData({1, 2, 4}));
