@@ -143,7 +143,7 @@ ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
       auto crcInput = header.serialize();
       const auto dataFieldBytes = packet.getFullDataFieldBytes();
       crcInput.insert(crcInput.end(), dataFieldBytes.begin(), dataFieldBytes.end());
-      const CRC16Config crcConfig{};
+      const CRC16Config crcConfig = packet.getCrcConfig();
       const auto calculatedCRC = ccsds::crc16(
         crcInput, crcConfig.polynomial, crcConfig.initialValue, crcConfig.finalXorValue);
       crcValid = calculatedCRC == packet.getCRC();
