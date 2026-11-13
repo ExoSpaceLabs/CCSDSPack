@@ -451,6 +451,113 @@ void testGroupPus(TestManager *tester, const std::string &description) {
         && !ccsds_pus_identifier_fits(1U, 3U);
   });
 
+  tester->unitTest("PUS TM decode maps every reachable C11 tailoring error.", [] {
+    const auto checkA = [](const ccsds::pus::rev_a::TmTailoring &tailoring,
+                           const ccsds::ErrorCode code, const char *message) {
+      ccsds::pus::rev_a::TmHeader header(tailoring);
+      // Deliberately malformed size: invalid tailoring must have precedence.
+      const auto result = header.deserialize({});
+      return !result && result.error().code() == code
+          && result.error().message() == message;
+    };
+    const auto checkC = [](const ccsds::pus::rev_c::TmTailoring &tailoring,
+                           const ccsds::ErrorCode code, const char *message) {
+      ccsds::pus::rev_c::TmHeader header(tailoring);
+      const auto result = header.deserialize({});
+      return !result && result.error().code() == code
+          && result.error().message() == message;
+    };
+
+    ccsds::pus::rev_a::TmTailoring invalidA{};
+    invalidA.destinationIdOctets = 3U;
+    if (!checkA(invalidA, ccsds::INVALID_SECONDARY_HEADER_DATA,
+                "PUS-A TM destination-ID width must be 0, 1, 2, or 4 octets."))
+      return false;
+
+    invalidA = {};
+    invalidA.cuc = {ccsds::time::Epoch::Ccsds1958Tai,
+                    ccsds::time::PFieldMode::Implicit, 4U, 0U};
+    if (!checkA(invalidA, ccsds::INVALID_SECONDARY_HEADER_DATA,
+                "Disabled PUS-A TM time requires an empty CUC configuration."))
+      return false;
+
+    ccsds::pus::rev_c::TmTailoring invalidC{};
+    invalidC.cuc = {ccsds::time::Epoch::Ccsds1958Tai,
+                    ccsds::time::PFieldMode::Implicit, 4U, 0U};
+    if (!checkC(invalidC, ccsds::INVALID_SECONDARY_HEADER_DATA,
+                "Disabled PUS-C TM time requires an empty CUC configuration."))
+      return false;
+
+    const auto checkCuc = [&](const ccsds::time::CucConfiguration &config,
+                              const char *message) {
+      ccsds::pus::rev_a::TmTailoring a{};
+      a.timestampPresent = true;
+      a.cuc = config;
+      ccsds::pus::rev_c::TmTailoring c{};
+      c.timestampPresent = true;
+      c.cuc = config;
+      return checkA(a, ccsds::INVALID_DATA, message)
+          && checkC(c, ccsds::INVALID_DATA, message);
+    };
+    using ccsds::time::Epoch;
+    using ccsds::time::PFieldMode;
+    return checkCuc({Epoch::Unspecified, PFieldMode::Implicit, 2U, 1U},
+                    "CUC requires the CCSDS-1958 or an agency-defined epoch.")
+        && checkCuc({Epoch::Ccsds1958Tai, static_cast<PFieldMode>(2U), 2U, 1U},
+                    "CUC P-field policy is invalid.")
+        && checkCuc({Epoch::Ccsds1958Tai, PFieldMode::Implicit, 0U, 1U},
+                    "Basic CUC coarse time requires 1 to 4 octets.")
+        && checkCuc({Epoch::Ccsds1958Tai, PFieldMode::Implicit, 5U, 1U},
+                    "Basic CUC coarse time requires 1 to 4 octets.")
+        && checkCuc({Epoch::Ccsds1958Tai, PFieldMode::Implicit, 2U, 4U},
+                    "Basic CUC fine time requires 0 to 3 octets.");
+  });
+
+  tester->unitTest("PUS-A/C TM decoders preserve objects after invalid CUC wire data.", [] {
+    const ccsds::time::CucConfiguration cuc{
+      ccsds::time::Epoch::Ccsds1958Tai,
+      ccsds::time::PFieldMode::Explicit, 2U, 1U
+    };
+
+    ccsds::pus::rev_a::TmTailoring tailoringA{};
+    tailoringA.destinationIdOctets = 1U;
+    tailoringA.packetSubcounterPresent = true;
+    tailoringA.timestampPresent = true;
+    tailoringA.cuc = cuc;
+    ccsds::pus::rev_a::TmHeader tmA(tailoringA, 1U, 2U, 3U, 4U, {0x1234U, 0x56U});
+    const auto beforeA = tmA.serialize();
+    if (beforeA.size() != 9U) return false;
+    auto corruptedA = beforeA;
+    corruptedA[1] = 0x99U;  // Fields differ to reveal premature mutation.
+    corruptedA[3] = 0x88U;
+    corruptedA[4] = 0x77U;
+    corruptedA[5] = 0x00U;  // Correct explicit CUC P-field is 0x15.
+    const auto badA = tmA.deserialize(corruptedA);
+    if (badA || badA.error().code() != ccsds::INVALID_DATA
+        || badA.error().message() !=
+             "CUC P-field does not match the configured epoch or widths."
+        || tmA.serialize() != beforeA) return false;
+
+    ccsds::pus::rev_c::TmTailoring tailoringC{};
+    tailoringC.timestampPresent = true;
+    tailoringC.cuc = cuc;
+    ccsds::pus::rev_c::TmHeader tmC(
+      tailoringC, 1U, 2U, 0x1234U, 0x5678U, 3U, {0x2345U, 0x67U});
+    const auto beforeC = tmC.serialize();
+    if (beforeC.size() != 11U) return false;
+    auto corruptedC = beforeC;
+    corruptedC[0] = 0x2FU;
+    corruptedC[1] = 0x99U;
+    corruptedC[3] = 0x88U;
+    corruptedC[5] = 0x77U;
+    corruptedC[7] = 0x00U;  // Invalid explicit CUC P-field.
+    const auto badC = tmC.deserialize(corruptedC);
+    return !badC && badC.error().code() == ccsds::INVALID_DATA
+        && badC.error().message() ==
+             "CUC P-field does not match the configured epoch or widths."
+        && tmC.serialize() == beforeC;
+  });
+
   tester->unitTest("CUC rejects mismatched P-fields, invalid widths, and counter overflow.", [] {
     const ccsds::time::CucConfiguration configuration{
       ccsds::time::Epoch::Ccsds1958Tai,
