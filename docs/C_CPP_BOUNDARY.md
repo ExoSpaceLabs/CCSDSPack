@@ -33,7 +33,7 @@ width/epoch, or other wire rules.
 
 | API boundary | Rule ownership | Current classification / action |
 | --- | --- | --- |
-| CUC `time::serialize` / `deserialize` | C11 CUC codec | **Merged via PR #188:** removed C++ prevalidation before C encode. Decode already delegates directly. C++ still owns output vector and error translation. |
+| CUC `time::serialize` / `deserialize` | C11 CUC codec | **Merged via PR #188:** removed duplicate C++ validation before C encoding. **Unmerged PR #201:** adds optional zero-allocation caller-owned C++ bounded encode and borrowed decode; retains the original owning vector overloads and error translation. The PUS TM timestamp setter and protected tail helpers use the bounded adapter, while built-in PUS-A/C TM codecs continue to encode/decode directly in C11. |
 | PUS-A and PUS-C TM `serialize` | C11 PUS encode, including tailoring | **Merged via PR #188:** removed the duplicate C++ tailoring preflight; the C encoder checks it. |
 | PUS identifier setters and tailoring width helper | C11 PUS identifier-width and fit helpers | **Merged via PR #188:** removed duplicated C++ bit arithmetic using `ccsds_pus_identifier_width_is_valid()` and `ccsds_pus_identifier_fits()`. Setter object state and error translation remain in C++. |
 | PUS-A and PUS-C TM `deserialize` | C11 PUS decode, including tailoring | **PR #190 merged** with C++ diagnostic/error and transactionality tests. **Open A-01:** the C11 TM decoders themselves still modify output POD fields on late CUC failure. |
