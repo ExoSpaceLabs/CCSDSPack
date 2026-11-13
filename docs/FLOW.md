@@ -63,7 +63,7 @@ For explicit sequence validation, one Validator instance should be used per sequ
 
 ## Reassemble application data
 
-`getApplicationDataBuffer()` concatenates stored application data in packet order and returns a checked `ResultBuffer`.
+`getApplicationDataBuffer()` concatenates stored application data in packet order and returns a checked `ResultBuffer`. Inspection uses stateless packet-coherence validation; ordered sequence/segmentation checks occur in the local C11 reassembly state. Repeated inspection does not advance the Manager's retained ingestion Validator state. Random-access `getPacketBufferAtIndex()` validates packet/template coherence without attempting stream sequence checks outside its ordering context.
 
 The optional Manager synchronization pattern is external stream framing and is not part of the CCSDS Space Packet PDU.
 
