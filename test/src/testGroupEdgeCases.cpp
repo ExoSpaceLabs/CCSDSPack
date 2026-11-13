@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -493,6 +494,39 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
            && serialized[4] == 0xFF
            && serialized[5] == 0xFF
            && packet.getPrimaryHeader().getDataLength() == 0xFFFFU;
+  });
+
+  tester->unitTest("DataField raw secondary-header APIs reject null and wrapped lengths", [] {
+    ccsds::DataField field;
+    field.setDataPacketSize(3U);
+    TEST_VOID(field.setApplicationData(std::vector<std::uint8_t>{0x11U, 0x22U}));
+    const std::uint8_t byte = 0x33U;
+    const auto huge = std::numeric_limits<std::size_t>::max();
+
+    const auto nullTyped = field.setSecondaryHeader(nullptr, 1U, "PUS:revC:TC");
+    const auto nullOpaque = field.setSecondaryHeader(nullptr, 1U);
+    if (nullTyped || nullOpaque
+        || nullTyped.error().code() != ccsds::NULL_POINTER
+        || nullOpaque.error().code() != ccsds::NULL_POINTER) return false;
+
+    const auto oversizedTyped = field.setSecondaryHeader(&byte, huge, "PUS:revC:TC");
+    const auto oversizedOpaque = field.setSecondaryHeader(&byte, huge);
+    const auto oversizedApplication = field.setApplicationData(&byte, huge);
+    if (oversizedTyped || oversizedOpaque || oversizedApplication
+        || oversizedTyped.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+        || oversizedOpaque.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+        || oversizedApplication.error().code() != ccsds::INVALID_APPLICATION_DATA)
+      return false;
+
+    // Exact remaining capacity succeeds, and a one-byte overflow does not
+    // change the previously installed opaque header.
+    TEST_VOID(field.setSecondaryHeader(&byte, 1U));
+    const std::uint8_t twoBytes[] = {0x44U, 0x55U};
+    const auto tooLarge = field.setSecondaryHeader(twoBytes, 2U);
+    return !tooLarge
+           && tooLarge.error().code() == ccsds::INVALID_SECONDARY_HEADER_DATA
+           && field.getSecondaryHeaderBytes() == std::vector<std::uint8_t>({0x33U})
+           && field.getApplicationData() == std::vector<std::uint8_t>({0x11U, 0x22U});
   });
 
   tester->unitTest("Packet Data Length overflow is rejected", []() {
