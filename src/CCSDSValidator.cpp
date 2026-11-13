@@ -53,37 +53,38 @@ namespace {
 
   bool coreTailoringValid(const ccsds::pus::SecondaryHeader &header) noexcept {
     if (header.getDirection() == ccsds::PacketDirection::Telecommand) {
-      const auto &tc = static_cast<const ccsds::pus::TcSecondaryHeader &>(header);
+      const auto *tc = header.asTc();
+      if (!tc) return false;
       if (header.getRevision() == ccsds::pus::Revision::A) {
         const ccsds_pus_a_tc_tailoring_t tailoring{
-          tc.getSourceIdOctets(), header.getSecondaryHeaderSpareOctets()
+          tc->getSourceIdOctets(), header.getSecondaryHeaderSpareOctets()
         };
         return ccsds_pus_a_tc_validate_tailoring(&tailoring) == CCSDS_STATUS_OK;
       }
       if (header.getRevision() == ccsds::pus::Revision::C) {
-        return tc.getSourceIdOctets() == 2U;
+        return tc->getSourceIdOctets() == 2U;
       }
       return false;
     }
 
     if (header.getDirection() == ccsds::PacketDirection::Telemetry) {
-      const auto &tm = static_cast<const ccsds::pus::TmSecondaryHeader &>(header);
+      const auto *tm = header.asTm();
+      if (!tm) return false;
       if (header.getRevision() == ccsds::pus::Revision::A) {
-        const auto &aTm = static_cast<const ccsds::pus::rev_a::TmHeader &>(header);
         const ccsds_pus_a_tm_tailoring_t tailoring{
-          tm.getDestinationIdOctets(),
-          static_cast<std::uint8_t>(aTm.packetSubcounterPresent() ? 1U : 0U),
-          static_cast<std::uint8_t>(tm.timestampPresent() ? 1U : 0U),
-          toCoreCuc(tm.getCucConfiguration()),
+          tm->getDestinationIdOctets(),
+          static_cast<std::uint8_t>(tm->packetSubcounterPresent() ? 1U : 0U),
+          static_cast<std::uint8_t>(tm->timestampPresent() ? 1U : 0U),
+          toCoreCuc(tm->getCucConfiguration()),
           header.getSecondaryHeaderSpareOctets()
         };
         return ccsds_pus_a_tm_validate_tailoring(&tailoring) == CCSDS_STATUS_OK;
       }
       if (header.getRevision() == ccsds::pus::Revision::C) {
-        if (tm.getDestinationIdOctets() != 2U) return false;
+        if (tm->getDestinationIdOctets() != 2U) return false;
         const ccsds_pus_c_tm_tailoring_t tailoring{
-          static_cast<std::uint8_t>(tm.timestampPresent() ? 1U : 0U),
-          toCoreCuc(tm.getCucConfiguration()),
+          static_cast<std::uint8_t>(tm->timestampPresent() ? 1U : 0U),
+          toCoreCuc(tm->getCucConfiguration()),
           header.getSecondaryHeaderSpareOctets()
         };
         return ccsds_pus_c_tm_validate_tailoring(&tailoring) == CCSDS_STATUS_OK;
@@ -98,13 +99,14 @@ namespace {
     const auto rhsHeader = rhs.getSecondaryHeader();
     if (static_cast<bool>(lhsHeader) != static_cast<bool>(rhsHeader)) return false;
     if (!lhsHeader) return true;
+    const auto *lhsPus = lhsHeader->asPusHeader();
+    const auto *rhsPus = rhsHeader->asPusHeader();
     if (lhsHeader->getType() != rhsHeader->getType()
         || lhsHeader->getDirection() != rhsHeader->getDirection()
+        || static_cast<bool>(lhsPus) != static_cast<bool>(rhsPus)
         || lhsHeader->isPusHeader() != rhsHeader->isPusHeader()) return false;
-    if (!lhsHeader->isPusHeader()) return true;
-    return ccsds::pus::sameTailoring(
-      static_cast<const ccsds::pus::SecondaryHeader &>(*lhsHeader),
-      static_cast<const ccsds::pus::SecondaryHeader &>(*rhsHeader));
+    if (!lhsPus) return true;
+    return ccsds::pus::sameTailoring(*lhsPus, *rhsPus);
   }
 }
 
@@ -175,20 +177,24 @@ ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
     }
     if (!m_report.passed(ValidationCode::PrimaryHeader)) return m_report;
 
-    if (secondary && secondary->isPusHeader()) {
-      const auto &pusHeader = static_cast<const pus::SecondaryHeader &>(*secondary);
+    const auto *pusHeader = secondary ? secondary->asPusHeader() : nullptr;
+    if (secondary && secondary->isPusHeader() && !pusHeader) {
+      setCheck(ValidationCode::PusHeader, false);
+      return m_report;
+    }
+    if (pusHeader) {
       const auto bytes = secondary->serialize();
       ccsds_pus_coherence_input_t pusInput{
-        static_cast<std::uint8_t>(pusHeader.getRevision()),
-        toCoreDirection(pusHeader.getDirection()),
+        static_cast<std::uint8_t>(pusHeader->getRevision()),
+        toCoreDirection(pusHeader->getDirection()),
         header.getType(),
-        static_cast<std::uint8_t>(coreTailoringValid(pusHeader)),
+        static_cast<std::uint8_t>(coreTailoringValid(*pusHeader)),
         {
           bytes.empty() ? nullptr : bytes.data(),
           bytes.size()
         },
         secondary->getSize(),
-        pusHeader.getSecondaryHeaderSpareOctets(),
+        pusHeader->getSecondaryHeaderSpareOctets(),
         0U,
         0U,
         0U,
@@ -200,32 +206,32 @@ ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
         0U
       };
 
-      if (pusHeader.getDirection() == PacketDirection::Telecommand) {
-        const auto &tc = static_cast<const pus::TcSecondaryHeader &>(pusHeader);
-        pusInput.acknowledgement_flags = tc.getAcknowledgementFlags();
-        pusInput.identifier_octets = tc.getSourceIdOctets();
-        pusInput.identifier_value = tc.getSourceId();
-      } else if (pusHeader.getDirection() == PacketDirection::Telemetry) {
-        const auto &tm = static_cast<const pus::TmSecondaryHeader &>(pusHeader);
-        pusInput.identifier_octets = tm.getDestinationIdOctets();
-        pusInput.identifier_value = tm.getDestinationId();
+      if (pusHeader->getDirection() == PacketDirection::Telecommand) {
+        const auto *tc = pusHeader->asTc();
+        if (!tc) { setCheck(ValidationCode::PusDirection, false); return m_report; }
+        pusInput.acknowledgement_flags = tc->getAcknowledgementFlags();
+        pusInput.identifier_octets = tc->getSourceIdOctets();
+        pusInput.identifier_value = tc->getSourceId();
+      } else if (pusHeader->getDirection() == PacketDirection::Telemetry) {
+        const auto *tm = pusHeader->asTm();
+        if (!tm) { setCheck(ValidationCode::PusDirection, false); return m_report; }
+        pusInput.identifier_octets = tm->getDestinationIdOctets();
+        pusInput.identifier_value = tm->getDestinationId();
         pusInput.timestamp_present =
-          static_cast<std::uint8_t>(tm.timestampPresent() ? 1U : 0U);
+          static_cast<std::uint8_t>(tm->timestampPresent() ? 1U : 0U);
         pusInput.timestamp_valid =
           static_cast<std::uint8_t>(
-            tm.timestampPresent()
-            && coreTimestampValid(tm.getTimestamp(), tm.getCucConfiguration()));
+            tm->timestampPresent()
+            && coreTimestampValid(tm->getTimestamp(), tm->getCucConfiguration()));
         pusInput.timestamp_zero_when_absent =
-          static_cast<std::uint8_t>(tm.getTimestamp() == time::CucTime{});
+          static_cast<std::uint8_t>(tm->getTimestamp() == time::CucTime{});
 
-        if (pusHeader.getRevision() == pus::Revision::A) {
-          const auto &aTm = static_cast<const pus::rev_a::TmHeader &>(pusHeader);
+        if (pusHeader->getRevision() == pus::Revision::A) {
           pusInput.packet_subcounter_present =
-            static_cast<std::uint8_t>(aTm.packetSubcounterPresent() ? 1U : 0U);
-          pusInput.packet_subcounter = aTm.getPacketSubcounter();
-        } else if (pusHeader.getRevision() == pus::Revision::C) {
-          const auto &cTm = static_cast<const pus::rev_c::TmHeader &>(pusHeader);
-          pusInput.time_reference_status = cTm.getTimeReferenceStatus();
+            static_cast<std::uint8_t>(tm->packetSubcounterPresent() ? 1U : 0U);
+          pusInput.packet_subcounter = tm->getPacketSubcounter();
+        } else if (pusHeader->getRevision() == pus::Revision::C) {
+          pusInput.time_reference_status = tm->getTimeReferenceStatus();
         }
       }
 
