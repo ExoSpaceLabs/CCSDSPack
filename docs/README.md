@@ -16,6 +16,7 @@ CCSDSPack v2.1 uses an authoritative C11 protocol core with a compatible C++17 o
 - [PUS tailoring](MISSION_TAILORING.md): concrete PUS identities, optional layout choices, and numeric CUC time.
 - [Structured validation](VALIDATION.md): named packet/template/PUS checks and sequence validation.
 - [v2.2 development plan](V2_2_ROADMAP.md): C11/C++ boundary, open protocol work and release qualification gates.
+- [v2.2 deep architecture audit](V2_2_ARCHITECTURE_AUDIT.md): source-level defects, evidence limits, P1 release blockers, cross-layer ownership classifications and acceptance actions. Does not claim hardware or new test execution.
 - [Incremental C11 stream receiver](STREAM_RECEIVER.md): chunked UART/DMA input, synchronization recovery, and bounded caller-owned storage.
 - [C11/C++ boundary and validation ownership](C_CPP_BOUNDARY.md): protocol-rule authority, wrapper responsibilities and audit status.
 - [Raw-buffer APIs](RAW_BUFFERS.md): transport-facing pointer-plus-size interfaces.
