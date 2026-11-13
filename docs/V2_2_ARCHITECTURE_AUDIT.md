@@ -8,9 +8,10 @@
 
 The findings and source snippets below record the **original pre-fix
 `develop` baseline**, not the post-integration state. Integration PR
-[#202](https://github.com/ExoSpaceLabs/CCSDSPack/pull/202) combines all seven
-individually qualified fixes on one branch. This qualification does not by
-itself confer release acceptance or physical-target coverage.
+[#202](https://github.com/ExoSpaceLabs/CCSDSPack/pull/202) squash-merged the seven
+individually qualified fixes into `develop` at
+`aefadba71fd682545fbf5403f75d1cf6ad5fafe9`. This qualification does
+not by itself confer release acceptance or physical-target coverage.
 
 | Finding | Integrated change and evidence |
 | --- | --- |
@@ -26,9 +27,20 @@ The independent six-fix combination was qualified on the draft
 [#200](https://github.com/ExoSpaceLabs/CCSDSPack/pull/200) at
 `5712e7b68a1d9909210cfa509bd351ecd5331006`. CUC/PUS change #201
 was independently qualified at `7f02ba902eedc8b32200e45ba9c3b01f2cd557ea`.
-These source trees were then reconciled in PR #202. Acceptance additionally
-requires the **exact integrated PR head** to pass Linux, Windows, standalone
-C11/MCU cross-build, ASan/UBSan/fuzz, Doxygen and fixed-vector tests.
+These source trees were reconciled in PR #202. The **exact PR head**
+`52bae8e151fed97036255cc44ae947037000f9f5` passed Linux
+[43452871782](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43452871782),
+Windows [43452871820](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43452871820),
+ASan/UBSan/fuzz [43452871885](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43452871885),
+Doxygen [43452872102](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43452872102),
+standalone C11/installed consumers and H755 firmware cross-build.
+Post-merge `develop` Linux [43453537008](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43453537008),
+Windows [43453536922](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43453536922),
+and robustness [43453536808](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43453536808)
+also **PASS**, including **166/166 C++ unit tests** on Ubuntu 24.04.
+This is hosted/cross-build evidence, not native Pi 5 or physical STM32H755
+acceptance. Issues #166 and #198 are closed for their approved, scoped
+implementation; parent architecture issue #187 stays open.
 
 **Still open:** A-05 duplicated C++ protocol checks; A-06 C11 TM encode
 output-on-failure contract; remaining A-07 Validator CRC allocations and
@@ -72,7 +84,7 @@ external stream framing.
 | Packet parse | **Coherent** | `packet_view.c::parse_parts()` is the shared C11 contiguous/split policy; the C++ Packet adapters use it, then stage owned state before commit. Typed PUS, opaque and custom header selection remains C++ object policy. |
 | Packet encode | **Partially duplicated** | C11 `packet_finalize_parts` / `packet_encode_parts` own version/idle/length rules. `Packet.cpp::validatePacketForSerialization()` also checks version and idle constraints for historic diagnostics. Cross-object secondary-header presence and direction checks belong in C++ unless C11 receives sufficient metadata. |
 | PUS TC/TM codecs | **Coherent dispatch, defect in C11 TM failure state** | C++ delegates wire encode/decode to PUS C11 functions; PUS-A and PUS-C remain distinct. Invalid CUC on C11 TM decoding can partially update output (A-01). |
-| CUC | **Single wire implementation** | `time::serialize/deserialize` call C11. In the original audited baseline, `TmSecondaryHeader::setTimestamp()` allocates a temporary CUC vector to validate a prospective field; PR #201 (integrated into the #202 candidate) replaces it with stack-bounded CUC validation and adds caller-owned C++ overloads without duplicating wire rules. |
+| CUC | **Single wire implementation** | `time::serialize/deserialize` call C11. In the original audited baseline, `TmSecondaryHeader::setTimestamp()` allocates a temporary CUC vector to validate a prospective field; PR #201 (squash-integrated via merged #202) replaces it with stack-bounded CUC validation and adds caller-owned C++ overloads without duplicating wire rules. |
 | Validator | **Correct source of decisions, allocation/typing risks** | Calls `ccsds_validate_packet_coherence`, `ccsds_validate_pus_coherence`, and C11 CUC/CRC utilities. CRC input is assembled via temporary vectors; PUS subtype discrimination relies on unchecked static downcasts (A-04). Its report itself is fixed capacity. |
 | Manager | **C11 protocol core leveraged, read semantics defective** | Uses C11 segmentation, sequence increments, stream walker and reassembly. C++ owns packet storage/contracts. Public getters directly advance the persistent validator (A-03). Manager also independently packs the primary-header Packet Identification bits. |
 | DataField/custom header | **Object-level rules valid, unsafe raw overload** | Registry checks, serialized object sizes and configured capacity are legitimate C++ rules. Pointer-size typed overload lacks a null guard; sum-based capacity checks can overflow (A-02). |
@@ -265,11 +277,11 @@ before writing. Add an output sentinel test either way.
 
 **Code:** `src/CCSDSValidator.cpp::validate()` concatenates a serialized
 primary-header vector and full data-field vector solely to calculate CRC.
-On `develop`, `TmSecondaryHeader::setTimestamp()` creates an owning CUC
-vector solely to validate numeric range. C11 PUS TM decode validates
+In the original audited `develop` baseline, `TmSecondaryHeader::setTimestamp()`
+created an owning CUC vector solely to validate numeric range. C11 PUS TM decode validates
 tailoring and then calls `*_encoded_size()`, which validates it again.
 
-**Disposition:** **Partially addressed by unmerged PR #201**: C++17 bounded
+**Disposition:** **Partially addressed by merged PR #202** (focused #201): C++17 bounded
 CUC encode/decode overloads call the same C11 codec; successful PUS-A/C TM
 `setTimestamp()` operations no longer allocate. The protected TM tail
 helpers also stop materializing intermediate CUC vectors. Fixed-vector,
@@ -386,8 +398,10 @@ and add invalid-late-key regression tests.
    passed, and Linux/Windows, C-only installed consumer, package and
    MCU/no-exception/no-RTTI cross-build plus ASan/UBSan/fuzz/Doxygen PASS
    on the final implementation SHA.
-6. **Then** address measured CUC performance issue #166 without changing wire
-   behavior. Decide to optimize, accept or defer using matched measurements.
+6. **Completed for the approved dual-API CUC design:** issue #166 was closed
+   after measured, bounded C++ encoding and PUS TM setter optimization landed via
+   #202. Legacy owning-vector performance is unchanged; review broader
+   release performance separately. Do not alter CUC wire requirements.
 7. **Only after gates 1-6:** freeze the v2.2 implementation, reconcile
    release documentation/version/changelog, run native Raspberry Pi 5 arm64
    and physical STM32H755 M7 qualification against the same source/build
