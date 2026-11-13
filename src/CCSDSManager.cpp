@@ -208,7 +208,7 @@ ccsds::ResultBuffer ccsds::Manager::getPacketBufferAtIndex(const std::uint16_t i
   packet.setUpdatePacketEnable(false);
   if (m_validateEnable) {
     FORWARD_RESULT(packet.update());  // C11 finalization on the local packet only
-    RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
+    RET_IF_ERR_MSG(!m_validator.validateStateless(packet), ErrorCode::VALIDATION_FAILURE,
                    "Validation failure for packet at index " + std::to_string(index));
   }
   return packet.serializeSnapshot();
@@ -274,7 +274,7 @@ ccsds::ResultBuffer ccsds::Manager::getApplicationDataBuffer() {
   for (std::size_t index = 0U; index < m_packets.size(); ++index) {
     const auto &packet = m_packets[index];
     if (m_validateEnable) {
-      RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
+      RET_IF_ERR_MSG(!m_validator.validateStateless(packet), ErrorCode::VALIDATION_FAILURE,
                      "Validation failure for packet at index " + std::to_string(index));
     }
 
