@@ -50,7 +50,7 @@ namespace ccsds {
       return PacketDirection::Unspecified;
     }
 
-    /** @brief Identifies standards-defined PUS codecs without requiring RTTI. */
+    /** @brief Legacy classifier, never a sufficient proof for a C++ downcast. */
     [[nodiscard]] virtual bool isPusHeader() const { return false; }
 
     /** @brief Returns a typed PUS view without RTTI; null for custom headers. */
