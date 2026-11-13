@@ -15,6 +15,37 @@
 #include <vector>
 
 namespace {
+  // Exercise the protected CUC tail helpers that remain available to
+  // mission-defined TM headers even though built-in PUS-A/C use C11 codecs.
+  class TmTailProbe final : public ccsds::pus::TmSecondaryHeader {
+  public:
+    TmTailProbe(std::uint8_t destinationWidth, bool timed,
+                ccsds::time::CucConfiguration cuc, std::uint8_t spare,
+                std::uint32_t destination, ccsds::time::CucTime timestamp)
+      : TmSecondaryHeader(destinationWidth, timed, cuc, spare,
+                          0U, 0U, destination, timestamp) {}
+    [[nodiscard]] ccsds::pus::Revision getRevision() const noexcept override {
+      return ccsds::pus::Revision::C;
+    }
+    [[nodiscard]] std::uint16_t getSize() const override { return tmTailSize(); }
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override {
+      std::vector<std::uint8_t> output;
+      if (!appendTmTail(output)) return {};
+      return output;
+    }
+    [[nodiscard]] ccsds::ResultBool deserialize(
+        const std::vector<std::uint8_t> &data) override {
+      return parseTmTail(data, 0U);
+    }
+    ccsds::ResultBool appendTo(std::vector<std::uint8_t> &buffer) const {
+      return appendTmTail(buffer);
+    }
+    ccsds::ResultBool parseAt(const std::vector<std::uint8_t> &bytes,
+                              std::size_t offset) {
+      return parseTmTail(bytes, offset);
+    }
+  };
+
   class ReservedCustomHeader final : public ccsds::SecondaryHeaderAbstract {
   public:
     [[nodiscard]] ccsds::ResultBool deserialize(const std::vector<std::uint8_t> &data) override {
@@ -330,6 +361,132 @@ void testGroupPus(TestManager *tester, const std::string &description) {
                           ccsds::time::PFieldMode::Implicit, 4U, 0U};
     ccsds::pus::rev_c::TmHeader timed(timedTailoring);
     return !timed.setTimestamp({0x100000000ULL, 0U});
+  });
+
+  tester->unitTest("PUS-A/C TM setters keep wire/error parity and state after CUC failure.", [] {
+    using ccsds::time::CucTime;
+    const ccsds::time::CucConfiguration cfg{
+      ccsds::time::Epoch::Ccsds1958Tai,
+      ccsds::time::PFieldMode::Explicit, 4U, 3U};
+    ccsds::pus::rev_a::TmTailoring tailoringA{};
+    tailoringA.destinationIdOctets = 1U;
+    tailoringA.timestampPresent = true;
+    tailoringA.cuc = cfg;
+    ccsds::pus::rev_a::TmHeader tmA(
+      tailoringA, 0x11U, 1U, 0U, 0x7EU, {0U, 0U});
+    ccsds::pus::rev_c::TmTailoring tailoringC{};
+    tailoringC.timestampPresent = true;
+    tailoringC.cuc = cfg;
+    ccsds::pus::rev_c::TmHeader tmC(
+      tailoringC, 0x11U, 1U, 0x1234U, 0x5678U, 2U, {0U, 0U});
+
+    const CucTime valid{0x01020304U, 0xA0B0C0U};
+    const auto updateA = tmA.setTimestamp(valid);
+    const auto updateC = tmC.setTimestamp(valid);
+    if (!updateA || !updateC) return false;
+    const std::vector<std::uint8_t> expectedA{
+      0x10U, 0x11U, 1U, 0x7EU,
+      0x1FU, 1U, 2U, 3U, 4U, 0xA0U, 0xB0U, 0xC0U};
+    const std::vector<std::uint8_t> expectedC{
+      0x22U, 0x11U, 1U, 0x12U, 0x34U, 0x56U, 0x78U,
+      0x1FU, 1U, 2U, 3U, 4U, 0xA0U, 0xB0U, 0xC0U};
+    if (tmA.serialize() != expectedA || tmC.serialize() != expectedC)
+      return false;
+    const auto checkInvalid = [&](ccsds::pus::TmSecondaryHeader &header,
+                                  const CucTime value, const char *message) {
+      const auto oldTimestamp = header.getTimestamp();
+      const auto oldWire = header.serialize();
+      const auto result = header.setTimestamp(value);
+      return !result
+          && result.error().code() == ccsds::INVALID_SECONDARY_HEADER_DATA
+          && result.error().message() == message
+          && header.getTimestamp() == oldTimestamp
+          && header.serialize() == oldWire;
+    };
+    for (auto *header : {static_cast<ccsds::pus::TmSecondaryHeader *>(&tmA),
+                         static_cast<ccsds::pus::TmSecondaryHeader *>(&tmC)}) {
+      if (!checkInvalid(*header, CucTime{0x100000000ULL, 0U},
+                        "Invalid PUS TM CUC timestamp: CUC coarse time does not fit the configured width.")
+          || !checkInvalid(*header, CucTime{0U, 0x1000000ULL},
+                        "Invalid PUS TM CUC timestamp: CUC fine time does not fit the configured width."))
+        return false;
+    }
+
+    auto badA = tailoringA;
+    badA.cuc.coarseOctets = 0U;
+    ccsds::pus::rev_a::TmHeader invalidA(
+      badA, 0x11U, 1U, 0U, 0x7EU, valid);
+    const auto badConfigA = invalidA.setTimestamp({1U, 0U});
+    if (badConfigA || invalidA.getTimestamp() != valid
+        || badConfigA.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+        || badConfigA.error().message() !=
+           "Invalid PUS TM CUC timestamp: Basic CUC coarse time requires 1 to 4 octets.")
+      return false;
+    auto badC = tailoringC;
+    badC.cuc.epoch = ccsds::time::Epoch::Unspecified;
+    ccsds::pus::rev_c::TmHeader invalidC(
+      badC, 0x11U, 1U, 0x1234U, 0x5678U, 2U, valid);
+    const auto badConfigC = invalidC.setTimestamp({1U, 0U});
+    if (badConfigC || invalidC.getTimestamp() != valid
+        || badConfigC.error().message() !=
+           "Invalid PUS TM CUC timestamp: CUC requires the CCSDS-1958 or an agency-defined epoch.")
+      return false;
+
+    ccsds::pus::rev_a::TmHeader untimedA;
+    ccsds::pus::rev_c::TmHeader untimedC;
+    for (auto *header : {static_cast<ccsds::pus::TmSecondaryHeader *>(&untimedA),
+                         static_cast<ccsds::pus::TmSecondaryHeader *>(&untimedC)}) {
+      const auto failed = header->setTimestamp(valid);
+      if (failed || failed.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+          || failed.error().message() !=
+             "PUS TM timestamp is disabled by the active tailoring."
+          || header->getTimestamp() != CucTime{})
+        return false;
+    }
+    return true;
+  });
+
+  tester->unitTest("Protected TM tail helpers decode borrowed CUC and stay transactional.", [] {
+    const ccsds::time::CucConfiguration cfg{
+      ccsds::time::Epoch::Ccsds1958Tai,
+      ccsds::time::PFieldMode::Explicit, 2U, 1U};
+    TmTailProbe encoder(1U, true, cfg, 1U, 0x7EU, {0x1234U, 0x56U});
+    const std::vector<std::uint8_t> expected{
+      0x7EU, 0x15U, 0x12U, 0x34U, 0x56U, 0U};
+    if (encoder.serialize() != expected) return false;
+    TmTailProbe parser(1U, true, cfg, 1U, 0x11U, {0x22U, 0x33U});
+    const auto ok = parser.deserialize(expected);
+    if (!ok || parser.getDestinationId() != 0x7EU
+        || parser.getTimestamp() != ccsds::time::CucTime{0x1234U, 0x56U})
+      return false;
+    auto invalid = expected;
+    invalid[0] = 0x44U;
+    invalid[1] = 0x25U;  // Valid CUC shape, incorrect epoch identification.
+    const auto rejected = parser.deserialize(invalid);
+    if (rejected || rejected.error().message() !=
+          "CUC P-field does not match the configured epoch or widths."
+        || parser.getDestinationId() != 0x7EU
+        || parser.getTimestamp() != ccsds::time::CucTime{0x1234U, 0x56U})
+      return false;
+    invalid = expected;
+    invalid.back() = 0x01U;
+    if (parser.deserialize(invalid) || parser.getDestinationId() != 0x7EU
+        || parser.getTimestamp() != ccsds::time::CucTime{0x1234U, 0x56U})
+      return false;
+    if (parser.parseAt(expected, static_cast<std::size_t>(-1))
+        || parser.getDestinationId() != 0x7EU)
+      return false;
+
+    const ccsds::time::CucConfiguration narrow{
+      ccsds::time::Epoch::Ccsds1958Tai,
+      ccsds::time::PFieldMode::Explicit, 1U, 0U};
+    TmTailProbe overflow(1U, true, narrow, 0U, 0x7EU, {0x100U, 0U});
+    std::vector<std::uint8_t> output{0xA5U, 0x5AU};
+    const auto failure = overflow.appendTo(output);
+    return !failure
+        && failure.error().message() ==
+             "CUC coarse time does not fit the configured width."
+        && output == std::vector<std::uint8_t>({0xA5U, 0x5AU});
   });
 
   tester->unitTest("Basic CUC encodes numeric counters with implicit and explicit P-fields.", [] {
