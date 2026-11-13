@@ -74,7 +74,7 @@ manager.addPacketFromBuffer(packetBytes, packetSize);
 manager.load(streamBytes, streamSize);
 ```
 
-These overloads preserve the same identifier, sequence, CRC, secondary-header, transactional-load, and synchronization-pattern behavior as vector paths.
+These overloads are intended to preserve the identifier, sequence, CRC, secondary-header, transactional-load, and synchronization-pattern behavior of vector paths. **v2.2 audit caution:** a direct `DataField::setSecondaryHeader(pointer,size,type)` overload lacks null/overflow guards (A-02), and Manager read-style operations may mutate persistent sequence-validation state (A-03). See [architecture audit](V2_2_ARCHITECTURE_AUDIT.md); the existing hosted CI does not establish these negative cases.
 
 ## Const Manager views
 
