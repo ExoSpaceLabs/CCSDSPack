@@ -209,7 +209,7 @@ namespace ccsds {
              + static_cast<std::size_t>(getPacketErrorControlSize());
     }
 
-    /** @brief Serialize, automatically finalizing when enabled; never emit stale manual CRC/length. */
+    /** @brief Serialize, finalizing when dirty/aliased; never emit stale manual CRC/length. */
     [[nodiscard]] ResultBuffer serialize();
     /** @brief Serializes directly into caller-owned storage and returns bytes written. */
     [[nodiscard]] Result<std::size_t> serialize(std::uint8_t *output,
