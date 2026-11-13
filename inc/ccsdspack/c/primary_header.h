@@ -31,7 +31,28 @@ typedef struct ccsds_primary_header {
     uint16_t data_length;
 } ccsds_primary_header_t;
 
-/** @brief Validates the logical field widths without imposing version-0 policy. */
+/** @brief Identifies the first out-of-range field without duplicating wire limits. */
+typedef enum ccsds_primary_header_field {
+    CCSDS_PRIMARY_HEADER_FIELD_NONE = 0,
+    CCSDS_PRIMARY_HEADER_FIELD_VERSION,
+    CCSDS_PRIMARY_HEADER_FIELD_TYPE,
+    CCSDS_PRIMARY_HEADER_FIELD_SECONDARY_HEADER_FLAG,
+    CCSDS_PRIMARY_HEADER_FIELD_APID,
+    CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_FLAGS,
+    CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_COUNT
+} ccsds_primary_header_field_t;
+
+/**
+ * @brief Validates logical field widths and optionally reports the first
+ *        offending field. No version-0 Space Packet profile policy is applied.
+ * @note invalid_field_out is optional; set to FIELD_NONE for valid input
+ *       and for a NULL header. No allocation or object ownership occurs.
+ */
+ccsds_status_t ccsds_primary_header_validate_ex(
+    const ccsds_primary_header_t *header,
+    ccsds_primary_header_field_t *invalid_field_out);
+
+/** @brief Validates logical field widths without imposing version-0 policy. */
 ccsds_status_t ccsds_primary_header_validate(const ccsds_primary_header_t *header);
 
 /**

@@ -36,6 +36,50 @@ int main(void) {
     size_t declared_size = 0U;
     int failed = 0;
 
+    {
+        /* Field diagnostic reason comes from C11, not copied C++ limits. */
+        ccsds_primary_header_field_t reason = CCSDS_PRIMARY_HEADER_FIELD_VERSION;
+        ccsds_primary_header_t candidate = header;
+        static const ccsds_primary_header_field_t expected[] = {
+            CCSDS_PRIMARY_HEADER_FIELD_VERSION,
+            CCSDS_PRIMARY_HEADER_FIELD_TYPE,
+            CCSDS_PRIMARY_HEADER_FIELD_SECONDARY_HEADER_FLAG,
+            CCSDS_PRIMARY_HEADER_FIELD_APID,
+            CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_FLAGS,
+            CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_COUNT
+        };
+        size_t i;
+        failed |= expect_status("primary-header-ex-valid",
+            ccsds_primary_header_validate_ex(&candidate, &reason),
+            CCSDS_STATUS_OK);
+        if (reason != CCSDS_PRIMARY_HEADER_FIELD_NONE) failed = 1;
+
+        for (i = 0U; i < sizeof(expected) / sizeof(expected[0]); ++i) {
+            candidate = header;
+            switch (i) {
+                case 0U: candidate.version_number = 8U; break;
+                case 1U: candidate.type = 2U; break;
+                case 2U: candidate.secondary_header_flag = 2U; break;
+                case 3U: candidate.apid = 2048U; break;
+                case 4U: candidate.sequence_flags = 4U; break;
+                default: candidate.sequence_count = 16384U; break;
+            }
+            reason = CCSDS_PRIMARY_HEADER_FIELD_NONE;
+            failed |= expect_status("primary-header-ex-invalid",
+                ccsds_primary_header_validate_ex(&candidate, &reason),
+                CCSDS_STATUS_INVALID_HEADER_DATA);
+            if (reason != expected[i]) failed = 1;
+            failed |= expect_status("primary-header-legacy-invalid",
+                ccsds_primary_header_validate(&candidate),
+                CCSDS_STATUS_INVALID_HEADER_DATA);
+        }
+        reason = CCSDS_PRIMARY_HEADER_FIELD_VERSION;
+        failed |= expect_status("primary-header-ex-null",
+            ccsds_primary_header_validate_ex(NULL, &reason),
+            CCSDS_STATUS_NULL_POINTER);
+        if (reason != CCSDS_PRIMARY_HEADER_FIELD_NONE) failed = 1;
+    }
+
     failed |= expect_status("crc",
         ccsds_crc16_ccitt_false(crc_vector, sizeof(crc_vector), &crc),
         CCSDS_STATUS_OK);

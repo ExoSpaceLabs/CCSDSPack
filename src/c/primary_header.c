@@ -4,19 +4,42 @@
 #include "ccsdspack/c/primary_header.h"
 #include "ccsdspack/c/bytes.h"
 
-ccsds_status_t ccsds_primary_header_validate(const ccsds_primary_header_t *header) {
+ccsds_status_t ccsds_primary_header_validate_ex(
+    const ccsds_primary_header_t *header,
+    ccsds_primary_header_field_t *invalid_field_out) {
+    ccsds_primary_header_field_t invalid = CCSDS_PRIMARY_HEADER_FIELD_NONE;
+
+    if (invalid_field_out != NULL) {
+        *invalid_field_out = CCSDS_PRIMARY_HEADER_FIELD_NONE;
+    }
     if (header == NULL) {
         return CCSDS_STATUS_NULL_POINTER;
     }
-    if (header->version_number > 0x07U
-        || header->type > 0x01U
-        || header->secondary_header_flag > 0x01U
-        || header->apid > CCSDS_IDLE_APID
-        || header->sequence_flags > 0x03U
-        || header->sequence_count > CCSDS_SEQUENCE_COUNT_MAX) {
-        return CCSDS_STATUS_INVALID_HEADER_DATA;
+
+    if (header->version_number > 0x07U) {
+        invalid = CCSDS_PRIMARY_HEADER_FIELD_VERSION;
+    } else if (header->type > 0x01U) {
+        invalid = CCSDS_PRIMARY_HEADER_FIELD_TYPE;
+    } else if (header->secondary_header_flag > 0x01U) {
+        invalid = CCSDS_PRIMARY_HEADER_FIELD_SECONDARY_HEADER_FLAG;
+    } else if (header->apid > CCSDS_IDLE_APID) {
+        invalid = CCSDS_PRIMARY_HEADER_FIELD_APID;
+    } else if (header->sequence_flags > 0x03U) {
+        invalid = CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_FLAGS;
+    } else if (header->sequence_count > CCSDS_SEQUENCE_COUNT_MAX) {
+        invalid = CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_COUNT;
     }
-    return CCSDS_STATUS_OK;
+
+    if (invalid_field_out != NULL) {
+        *invalid_field_out = invalid;
+    }
+    return invalid == CCSDS_PRIMARY_HEADER_FIELD_NONE
+        ? CCSDS_STATUS_OK : CCSDS_STATUS_INVALID_HEADER_DATA;
+}
+
+ccsds_status_t ccsds_primary_header_validate(
+    const ccsds_primary_header_t *header) {
+    return ccsds_primary_header_validate_ex(header, NULL);
 }
 
 ccsds_status_t ccsds_primary_header_decode(const uint8_t *data,

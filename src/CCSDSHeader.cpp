@@ -8,64 +8,36 @@ void ccsds::Header::refreshStatus() {
   m_status = m_APID == IDLE_APID ? IDLE : NORMAL;
 }
 
+// Each checked setter asks the C11 core to validate the proposed field set.
+// C++ retains the atomic object update and invalid-state recovery contract.
 ccsds::ResultBool ccsds::Header::setVersionNumber(const std::uint8_t &value) {
-  if (value > 0x07U) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid version number, value > 7");
-  }
-  m_versionNumber = value;
-  refreshStatus();
-  return true;
+  return setData(PrimaryHeader{value, m_type, m_secondaryHeaderFlag,
+                               m_APID, m_sequenceFlags, m_sequenceCount, m_dataLength});
 }
 
 ccsds::ResultBool ccsds::Header::setType(const std::uint8_t &value) {
-  if (value > 0x01U) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid type, value > 1");
-  }
-  m_type = value;
-  refreshStatus();
-  return true;
+  return setData(PrimaryHeader{m_versionNumber, value, m_secondaryHeaderFlag,
+                               m_APID, m_sequenceFlags, m_sequenceCount, m_dataLength});
 }
 
 ccsds::ResultBool ccsds::Header::setSecondaryHeaderFlag(const std::uint8_t &value) {
-  if (value > 0x01U) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid secondary header flag, value > 1");
-  }
-  m_secondaryHeaderFlag = value;
-  refreshStatus();
-  return true;
+  return setData(PrimaryHeader{m_versionNumber, m_type, value,
+                               m_APID, m_sequenceFlags, m_sequenceCount, m_dataLength});
 }
 
 ccsds::ResultBool ccsds::Header::setAPID(const std::uint16_t &value) {
-  if (value > IDLE_APID) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid APID, value > 2047");
-  }
-  m_APID = value;
-  refreshStatus();
-  return true;
+  return setData(PrimaryHeader{m_versionNumber, m_type, m_secondaryHeaderFlag,
+                               value, m_sequenceFlags, m_sequenceCount, m_dataLength});
 }
 
 ccsds::ResultBool ccsds::Header::setSequenceFlags(const std::uint8_t &value) {
-  if (value > 0x03U) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid sequence flag, value > 3");
-  }
-  m_sequenceFlags = value;
-  refreshStatus();
-  return true;
+  return setData(PrimaryHeader{m_versionNumber, m_type, m_secondaryHeaderFlag,
+                               m_APID, value, m_sequenceCount, m_dataLength});
 }
 
 ccsds::ResultBool ccsds::Header::setSequenceCount(const std::uint16_t &value) {
-  if (value > 0x3FFFU) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid sequence count, value > 16383");
-  }
-  m_sequenceCount = value;
-  refreshStatus();
-  return true;
+  return setData(PrimaryHeader{m_versionNumber, m_type, m_secondaryHeaderFlag,
+                               m_APID, m_sequenceFlags, value, m_dataLength});
 }
 
 void ccsds::Header::setDataLength(const std::uint16_t &value) {
@@ -165,29 +137,33 @@ std::uint64_t ccsds::Header::getFullHeader() const {
 }
 
 ccsds::ResultBool ccsds::Header::setData(const PrimaryHeader &data) {
-  if (data.versionNumber > 0x07U) {
+  // Wire field widths have exactly one authority: the C11 primary-header core.
+  // The C++ layer maps field identity to established diagnostic text.
+  const ccsds_primary_header_t core{
+    data.versionNumber, data.type, data.secondaryHeaderFlag, data.APID,
+    data.sequenceFlags, data.sequenceCount, data.dataLength
+  };
+  ccsds_primary_header_field_t invalid = CCSDS_PRIMARY_HEADER_FIELD_NONE;
+  const auto status = ccsds_primary_header_validate_ex(&core, &invalid);
+  if (status != CCSDS_STATUS_OK) {
     m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid version number, value > 7");
-  }
-  if (data.type > 0x01U) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid type, value > 1");
-  }
-  if (data.secondaryHeaderFlag > 0x01U) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid secondary header flag, value > 1");
-  }
-  if (data.APID > IDLE_APID) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid APID, value > 2047");
-  }
-  if (data.sequenceFlags > 0x03U) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid sequence flag, value > 3");
-  }
-  if (data.sequenceCount > 0x3FFFU) {
-    m_status = INVALID;
-    return Error(INVALID_HEADER_DATA, "Invalid sequence count, value > 16383");
+    switch (invalid) {
+      case CCSDS_PRIMARY_HEADER_FIELD_VERSION:
+        return Error(INVALID_HEADER_DATA, "Invalid version number, value > 7");
+      case CCSDS_PRIMARY_HEADER_FIELD_TYPE:
+        return Error(INVALID_HEADER_DATA, "Invalid type, value > 1");
+      case CCSDS_PRIMARY_HEADER_FIELD_SECONDARY_HEADER_FLAG:
+        return Error(INVALID_HEADER_DATA, "Invalid secondary header flag, value > 1");
+      case CCSDS_PRIMARY_HEADER_FIELD_APID:
+        return Error(INVALID_HEADER_DATA, "Invalid APID, value > 2047");
+      case CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_FLAGS:
+        return Error(INVALID_HEADER_DATA, "Invalid sequence flag, value > 3");
+      case CCSDS_PRIMARY_HEADER_FIELD_SEQUENCE_COUNT:
+        return Error(INVALID_HEADER_DATA, "Invalid sequence count, value > 16383");
+      case CCSDS_PRIMARY_HEADER_FIELD_NONE:
+        return Error(INVALID_HEADER_DATA, "Invalid primary header.");
+    }
+    return Error(INVALID_HEADER_DATA, "Invalid primary header.");
   }
 
   m_versionNumber = data.versionNumber;

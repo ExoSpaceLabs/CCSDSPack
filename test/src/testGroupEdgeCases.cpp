@@ -89,6 +89,50 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
     return !res;
   });
 
+  tester->unitTest("Header setter diagnostics are mapped from C11 field reasons.", [] {
+    using ccsds::PrimaryHeader;
+    ccsds::Header header;
+    const PrimaryHeader valid{0U, 1U, 0U, 42U, ccsds::UNSEGMENTED, 123U, 4U};
+    TEST_VOID(header.setData(valid));
+    const std::uint64_t before = header.getFullHeader();
+
+    const PrimaryHeader candidates[] = {
+      {8U, 1U, 0U, 42U, ccsds::UNSEGMENTED, 123U, 4U},
+      {0U, 2U, 0U, 42U, ccsds::UNSEGMENTED, 123U, 4U},
+      {0U, 1U, 2U, 42U, ccsds::UNSEGMENTED, 123U, 4U},
+      {0U, 1U, 0U, 2048U, ccsds::UNSEGMENTED, 123U, 4U},
+      {0U, 1U, 0U, 42U, 4U, 123U, 4U},
+      {0U, 1U, 0U, 42U, ccsds::UNSEGMENTED, 16384U, 4U}
+    };
+    const char *messages[] = {
+      "Invalid version number, value > 7",
+      "Invalid type, value > 1",
+      "Invalid secondary header flag, value > 1",
+      "Invalid APID, value > 2047",
+      "Invalid sequence flag, value > 3",
+      "Invalid sequence count, value > 16383"
+    };
+    for (std::size_t i = 0U; i < 6U; ++i) {
+      const auto result = header.setData(candidates[i]);
+      if (result || result.error().code() != ccsds::INVALID_HEADER_DATA
+          || result.error().message() != messages[i]
+          || header.getHeaderStatus() != ccsds::INVALID
+          || !header.serialize().empty()) return false;
+      if (header.getAPID() != 42U || header.getSequenceCount() != 123U)
+        return false;
+      TEST_VOID(header.setData(valid));
+      if (header.getFullHeader() != before) return false;
+    }
+
+    const auto invalid = header.setSequenceCount(16384U);
+    if (invalid || invalid.error().message()
+          != "Invalid sequence count, value > 16383") return false;
+    TEST_VOID(header.setAPID(2047U));  // A valid checked setter restores state.
+    return header.getHeaderStatus() == ccsds::IDLE
+        && header.getSequenceCount() == 123U
+        && header.serialize().size() == 6U;
+  });
+
   tester->unitTest("APID range and header status are handled explicitly", []() {
     ccsds::Header header;
     for (const std::uint16_t apid : {0U, 255U, 256U, 2046U}) {
