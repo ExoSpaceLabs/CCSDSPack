@@ -303,6 +303,7 @@ ccsds::ResultBool ccsds::Packet::finalizeDataFieldParts(
 }
 
 ccsds::ResultBool ccsds::Packet::update() {
+  m_wireFinalized = false;
   FORWARD_RESULT(validatePacketForSerialization(m_primaryHeader, m_dataField));
 
   // This is explicit finalization, not a cached one-time operation. Callbacks
@@ -604,7 +605,7 @@ ccsds::Result<std::size_t> ccsds::Packet::serialize(
   if (m_enableUpdatePacket) {
     if (!canReuseFinalization()) FORWARD_RESULT(update());
   } else {
-    FORWARD_RESULT(validateManualFinalization());
+    if (!canReuseFinalization()) FORWARD_RESULT(validateManualFinalization());
   }
   return serializePrepared(output, capacity);
 }
@@ -613,7 +614,7 @@ ccsds::ResultBuffer ccsds::Packet::serialize() {
   if (m_enableUpdatePacket) {
     if (!canReuseFinalization()) FORWARD_RESULT(update());
   } else {
-    FORWARD_RESULT(validateManualFinalization());
+    if (!canReuseFinalization()) FORWARD_RESULT(validateManualFinalization());
   }
   std::vector<std::uint8_t> packet(getSerializedSize());
   const auto written = serializePrepared(packet.data(), packet.size());
