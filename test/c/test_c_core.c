@@ -684,6 +684,40 @@ int main(void) {
     }
 
     {
+        /* Stateless packet checks may inspect a continuation in isolation. */
+        ccsds_validation_report_t report;
+        ccsds_sequence_validator_t fresh = {0U};
+        ccsds_packet_coherence_input_t input = {
+            {0U, 0U, 0U, 1U, CCSDS_SEQUENCE_CONTINUING, 55U, 0U},
+            7U, 1U, 0U, CCSDS_PACKET_DIRECTION_UNSPECIFIED, 0U, 1U
+        };
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("packet-coherence-stateless",
+            ccsds_validate_packet_coherence(&input, NULL, 0, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_valid(&report)
+            || ccsds_validation_report_contains(
+                 &report, CCSDS_VALIDATION_SEQUENCE_FLAGS)
+            || ccsds_validation_report_contains(
+                 &report, CCSDS_VALIDATION_SEQUENCE_COUNT)) {
+            fprintf(stderr, "packet-coherence-stateless: unexpected sequence checks\\n");
+            failed = 1;
+        }
+        ccsds_validation_report_reset(&report);
+        failed |= expect_status("packet-coherence-stateless-count-invalid",
+            ccsds_validate_packet_coherence(&input, NULL, 1, &report),
+            CCSDS_STATUS_NULL_POINTER);
+        failed |= expect_status("packet-coherence-stateful",
+            ccsds_validate_packet_coherence(&input, &fresh, 1, &report),
+            CCSDS_STATUS_OK);
+        if (!ccsds_validation_report_failed(
+                &report, CCSDS_VALIDATION_SEQUENCE_FLAGS)) {
+            fprintf(stderr, "packet-coherence-stateful: continuation unexpectedly accepted\\n");
+            failed = 1;
+        }
+    }
+
+    {
         size_t packet_count = 0U;
         ccsds_segment_plan_t plan;
 
