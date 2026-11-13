@@ -9,6 +9,8 @@ SPDX-License-Identifier: Apache-2.0
 
 This page records physical-target and native-target release evidence for CCSDSPack v2 releases. Hardware execution complements hosted CI and package/cross-build evidence; it does not extend the documented compliance scope beyond the supported CCSDS Space Packet PDU, PUS, CUC, and mission-tailoring profiles.
 
+**Status update (2026-11-13):** promotion PR #178 merged to `main`, and GitHub resolves tag `v2.1.0`. References below to a *next* approval/promotion gate are preserved as part of the original 2026-10-25 campaign record, not current open steps. Release assets/GHCR images were not independently verified in the v2.2 audit. The current v2.2 `develop` source has [open architecture issues](V2_2_ARCHITECTURE_AUDIT.md) and **no physical qualification claim**.
+
 
 ## v2.1.0 validation evidence
 
