@@ -1,6 +1,6 @@
 # C11 / C++17 boundary and validation ownership
 
-Status: v2.2 development, 2026-10-26.
+Status: v2.2 development, integration status checked 2026-11-13.
 
 ## Non-negotiable ownership rule
 
@@ -33,9 +33,9 @@ width/epoch, or other wire rules.
 
 | API boundary | Rule ownership | Current classification / action |
 | --- | --- | --- |
-| CUC `time::serialize` / `deserialize` | C11 CUC codec | **This change:** remove C++ prevalidation before C encode. Decode already delegates directly. C++ still owns output vector and error translation. |
-| PUS-A and PUS-C TM `serialize` | C11 PUS encode, including tailoring | **This change:** remove the duplicate C++ tailoring preflight; the C encoder checks it. |
-| PUS identifier setters and tailoring width helper | C11 PUS identifier-width and fit helpers | **This change:** remove duplicated C++ bit arithmetic using `ccsds_pus_identifier_width_is_valid()` and `ccsds_pus_identifier_fits()`. Setter object state and error translation remain in C++. |
+| CUC `time::serialize` / `deserialize` | C11 CUC codec | **Merged via PR #188:** removed C++ prevalidation before C encode. Decode already delegates directly. C++ still owns output vector and error translation. |
+| PUS-A and PUS-C TM `serialize` | C11 PUS encode, including tailoring | **Merged via PR #188:** removed the duplicate C++ tailoring preflight; the C encoder checks it. |
+| PUS identifier setters and tailoring width helper | C11 PUS identifier-width and fit helpers | **Merged via PR #188:** removed duplicated C++ bit arithmetic using `ccsds_pus_identifier_width_is_valid()` and `ccsds_pus_identifier_fits()`. Setter object state and error translation remain in C++. |
 | PUS-A and PUS-C TM `deserialize` | C11 PUS decode, including tailoring | **Implemented in PR #190:** remove redundant C++ tailoring preflight and map C11 status to preserved C++ messages, including invalid identifier widths and disabled/invalid CUC configuration. Decoder stays transactional. |
 | Explicit PUS tailoring/config load | C11 checks protocol fields; C++ checks config schema | Public `validateTailoring` calls C11. Distinguish independent validation requests from duplicate preflight inside a codec operation. |
 | `Header::setData` and primary-header setters | C11 `ccsds_primary_header_validate_ex` identifies first invalid field; C++ retains state transition and error mapping | **Implemented in PR #189**: removes C++ range constants; C++ maps the C11 field reason into the existing messages and keeps atomic assignment, INVALID recovery and IDLE transitions. |
