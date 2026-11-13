@@ -204,10 +204,21 @@ namespace ccsds {
              + static_cast<std::size_t>(getPacketErrorControlSize());
     }
 
+    /** @brief Serialize, automatically finalizing when enabled; never emit stale manual CRC/length. */
     [[nodiscard]] ResultBuffer serialize();
     /** @brief Serializes directly into caller-owned storage and returns bytes written. */
     [[nodiscard]] Result<std::size_t> serialize(std::uint8_t *output,
                                                 std::size_t capacity);
+    /**
+     * @brief Produce a freshly finalized wire snapshot without mutating this Packet
+     *        or invoking custom secondary-header update callbacks.
+     *
+     * This view is suitable for read-style Manager output. It uses the currently
+     * serialized secondary-header bytes and current primary-header fields.
+     */
+    [[nodiscard]] ResultBuffer serializeSnapshot() const;
+    [[nodiscard]] Result<std::size_t> serializeSnapshot(
+      std::uint8_t *output, std::size_t capacity) const;
 
     std::vector<std::uint8_t> getPrimaryHeaderBytes();
     [[nodiscard]] std::vector<std::uint8_t> getPrimaryHeaderBytes() const;
@@ -234,15 +245,18 @@ namespace ccsds {
 
     void setCrcConfig(const CRC16Config crcConfig) {
       m_CRC16Config = crcConfig;
-      m_updateStatus = false;
     }
     void setCrcConfig(const std::uint16_t polynomial,
                       const std::uint16_t initialValue,
                       const std::uint16_t finalXorValue) {
       m_CRC16Config = {polynomial, initialValue, finalXorValue};
-      m_updateStatus = false;
     }
 
+    /** @brief Explicitly finalize from current data/headers using C11 (even in manual mode).
+     *
+     * In auto-update mode, a pending legacy secondary-header callback may run.
+     * The operation is not a general-purpose transaction for user callbacks.
+     */
     [[nodiscard]] ResultBool update();
 #ifndef CCSDS_MCU
     /** @brief Loads hosted packet configuration from a file. Not available in MCU builds. */
@@ -259,6 +273,11 @@ namespace ccsds {
     [[nodiscard]] ResultBool finalizeDataFieldParts(
       const std::vector<std::uint8_t> &secondaryHeader,
       ccsds_buffer_view_t applicationData);
+    /** @brief Check that disabled-auto-update wire fields already match current data. */
+    [[nodiscard]] ResultBool validateManualFinalization() const;
+    /** @brief Encode current checked/finalized fields without callbacks or recomputation. */
+    [[nodiscard]] Result<std::size_t> serializePrepared(
+      std::uint8_t *output, std::size_t capacity) const;
 
     static constexpr std::uint16_t SEQUENCE_COUNT_MASK = 0x3FFFU;
     static constexpr std::uint16_t PACKET_ERROR_CONTROL_DISABLED_MASK = 0x8000U;
@@ -267,7 +286,6 @@ namespace ccsds {
     DataField m_dataField{};
     std::uint16_t m_CRC16{};
     CRC16Config m_CRC16Config;
-    bool m_updateStatus{false};
     bool m_enableUpdatePacket{true};
     std::uint16_t m_sequenceCounter{0};
   };
