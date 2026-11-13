@@ -44,6 +44,38 @@ packet.setSecondaryHeader(
 
 The concrete header identifies PUS-C Telecommand and synchronizes Packet Type. Its source ID is two octets.
 
+## Numeric CUC without heap allocation
+
+For high-rate or MCU-facing paths, C++17 can write basic numeric CUC
+directly into caller-owned storage. The caller owns the buffer; the codec
+allocates nothing and uses the same authoritative C11 implementation as
+the owning-vector API.
+
+```cpp
+#include <CCSDSTime.h>
+#include <array>
+
+const ccsds::time::CucConfiguration cfg{
+  ccsds::time::Epoch::Ccsds1958Tai,
+  ccsds::time::PFieldMode::Explicit, 4U, 2U
+};
+std::array<std::uint8_t, 7U> bytes{};
+const auto encoded = ccsds::time::serialize(
+  {0x01020304U, 0xA0B0U}, cfg, bytes.data(), bytes.size());
+if (!encoded) return encoded.error().code();
+
+const auto decoded = ccsds::time::deserialize(
+  bytes.data(), encoded.value(), cfg);
+if (!decoded) return decoded.error().code();
+```
+
+The existing vector-returning `time::serialize(value, cfg)` and
+vector-accepting `time::deserialize(bytes, cfg)` remain supported.
+The two overload families preserve the same C11 validation, exact-size
+and P-field matching rules; they differ only in data ownership and
+error/return adaptation. Supported scope is CCSDS 301.0-B-4,
+sections 3.2.1–3.2.2, basic numeric CUC (no extended P-field).
+
 ## PUS-C telemetry with CUC
 
 ```cpp
