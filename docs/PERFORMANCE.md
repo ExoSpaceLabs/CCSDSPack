@@ -443,6 +443,29 @@ The two C++ decode paths are indistinguishable at this measurement
 precision. Decoding external borrowed buffers may avoid vector construction
 performed by a caller, but this benchmark does not include such setup costs.
 
+### PUS TM internal timestamp and tail helpers
+
+Prior to this optimization, `TmSecondaryHeader::setTimestamp()` called the
+owning `time::serialize(value, config)` and discarded its encoded vector:
+a heap allocation per successful timestamp update in the basic CUC subset.
+It now validates with the bounded `time::serialize(value, config, data, capacity)`
+into an eight-octet local array, **without changing** the public setter,
+its error categories/messages, or successful field values.
+
+The protected `appendTmTail()` and `parseTmTail()` helpers also now use
+bounded CUC operations instead of temporary encoded/sliced CUC vectors.
+The helpers preserve size/spare/P-field errors and now avoid partial
+destination/timestamp mutation if CUC decoding fails. The built-in
+PUS-A/PUS-C TM wire serializers and deserializers already call the
+C11 PUS TM codecs, which delegate time encoding directly to C11 CUC;
+those hot paths are **not** claimed to have gained from this setter change.
+
+The benchmark `cpp_pus_a_tm_set_timestamp` and
+`cpp_pus_c_tm_set_timestamp` cases report same-process timing,
+allocations and allocated bytes under successful updates. Follow-up CI
+measurements are evidence for this change, not grounds to infer packet-wide
+speedups.
+
 The 7.292 ns C11 encode figure is faster than the 11.733 ns historical
 C11 baseline; this is **not** evidence of changed C11 implementation,
 because CI runners and conditions vary. Only within-run comparisons are
