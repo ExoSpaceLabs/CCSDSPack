@@ -1,7 +1,7 @@
 # CCSDSPack v2.1.0
 
 > [!IMPORTANT]
-> These are pre-tag v2.1.0 release notes. **Both Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 qualification campaigns PASSED on 2026-10-25** against the same frozen implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf` following the MCU API/package and data-field corrections. The prior October 11 qualification (`3c93e6b`) remains historical. Final `main` promotion, automated tagging and publication verification have **not** yet occurred; see `docs/V2_HARDWARE_VALIDATION.md`.
+> **v2.1.0 historical release evidence:** Raspberry Pi 5 arm64 and physical NUCLEO-H755ZI-Q Cortex-M7 qualification **PASSED on 2026-10-25** against frozen implementation `8d6fe89a946fafd2be0d48917aa77fe473f89ecf`. The October 11 campaign (`3c93e6b`) remains historical. Promotion PR #178 is merged into `main` and tag `v2.1.0` resolves in GitHub. Release asset and GHCR publication status was not independently verified in the v2.2 audit; see `docs/V2_HARDWARE_VALIDATION.md`.
 
 ## Summary
 
@@ -157,20 +157,15 @@ target_link_libraries(c_app PRIVATE ccsdspack::c)
 target_link_libraries(cpp_app PRIVATE ccsdspack::CCSDSPack)
 ```
 
-## Remaining release gates
+## Release acceptance and evidence status
 
-The October 11 physical/native PASS evidence belongs only to historical implementation `3c93e6b`. New Pi 5 and STM32H755 PASS results on frozen implementation `8d6fe89` have been accepted into `docs/V2_HARDWARE_VALIDATION.md`, with exact package, library and firmware hashes.
+The October 11 physical/native PASS evidence belongs only to historical implementation `3c93e6b`. New Pi 5 and STM32H755 PASS results on frozen implementation `8d6fe89` were accepted into `docs/V2_HARDWARE_VALIDATION.md`, with exact package, library and firmware hashes.
 
-Before publication is complete:
-
-1. review the final **evidence-only** documentation changes on `develop`; confirm a diff against frozen implementation `8d6fe89` changes no production code, headers, build metadata or hardware harness;
-2. approve and promote `develop` to `main` through PR #178 without modifying the qualified implementation;
-3. pass final `main` CI and let the release workflow create tag `v2.1.0` automatically;
-4. verify GitHub Release assets and hashes, and GHCR `v2.1.0` / `latest` images.
+The formerly pending promotion through PR #178 is **complete**, and GitHub resolves tag `v2.1.0`. This document does **not** independently verify GitHub Release asset hashes or GHCR `v2.1.0` / `latest` publication. Historical qualification is not evidence for v2.2 source changes; see [v2.2 architecture audit](docs/V2_2_ARCHITECTURE_AUDIT.md) for currently blocked release gates.
 ## Release control
 
 ```text
 develop (all CI + hardware validation) -> main (approved only) -> final main CI -> tag v2.1.0
 ```
 
-Publication evidence is recorded only after the tag workflow completes.
+Published artifact and image verification should be attributed to the actual tagged workflow; do not infer it merely from the presence of tag `v2.1.0`.
