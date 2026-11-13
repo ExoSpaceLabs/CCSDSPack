@@ -8,7 +8,7 @@ SPDX-License-Identifier: Apache-2.0
 All notable changes to CCSDSPack are documented here. Upgrade-specific v1.2-to-v2
 source/configuration mapping is maintained in `docs/MIGRATION_V1_TO_V2.md`.
 
-## [2.1.0] - released (tag `v2.1.0` verified in repository)
+## [2.1.0] - tagged (`v2.1.0` verified in repository)
 
 The v2.1.0 promotion PR #178 is merged into `main`. The tag exists; this
 changelog edit does not independently verify release assets or GHCR images.
