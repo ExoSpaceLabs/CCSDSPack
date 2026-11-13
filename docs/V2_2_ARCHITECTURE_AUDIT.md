@@ -161,6 +161,43 @@ temporary owning vectors (A-07). Add positive default/non-default
 tests and negative corruption tests that use the same explicit configuration.
 Verify error codes and Manager validation with the custom profile.
 
+### A-13 | P1/blocker | Packet update/serialization cache coherency and custom callback side effects
+
+**Code:** `src/CCSDSPacket.cpp::update()/serialize()`, public mutable
+`Packet::getPrimaryHeader()/getDataField()/getSecondaryHeader()`,
+`src/CCSDSDataField.cpp::update()`, and `Manager` const/readback output.
+
+A cached `m_updateStatus` could remain true after callers mutated a Header,
+application bytes or shared secondary header through public references. The
+next serialization could reuse a stale CRC16 despite emitting changed bytes.
+In disabled-auto-update mode a same-length modification could likewise emit
+a stale trailer. `Manager::getPacketsBuffer() const` serialized shallow Packet
+copies, which could invoke a mutating user callback on a shared header.
+
+**Remediation under review:** [issue #198](https://github.com/ExoSpaceLabs/CCSDSPack/issues/198)
+and [PR #199](https://github.com/ExoSpaceLabs/CCSDSPack/pull/199).
+Normal serialization re-finalizes using C11 when a mutable subobject has
+escaped or any secondary header is present. It retains CRC caching only for
+unaliased, secondary-header-free Packets with setter-based invalidation.
+Disabled-auto-update preserves finalized wire bytes only if CRC/length still
+match a callback-free independent C11 finalization. Explicit `update()`
+always finalizes. A const callback-free `serializeSnapshot()` is used for
+Manager read-style output so copied shared headers are not mutated.
+
+**Remaining acceptance:** independently exercise C11 CRC validation on direct
+Header/DataField/PUS mutations, stale-manual checks, guarded cache reuse,
+callback size-growth and bounded buffer handling, repeatable const Manager
+readback, Linux/Windows, ASan/UBSan/fuzz, C-only and MCU cross-builds. The
+legacy third-party `void SecondaryHeaderAbstract::update(DataField*)`
+callback remains intentionally stateful/non-transactional; arbitrary custom
+callbacks cannot be retrofitted with rollback guarantees. Explicitly
+document this limitation rather than claiming atomic user-code effects.
+Benchmark cached and alias-sensitive CRC paths; the initial always-recompute
+prototype exhibited a prohibitive large-buffer regression, motivating the
+guarded cache. This architecture problem is a **v2.2 release gate** and
+must be resolved before #166 or hardware freeze. Source review and PR CI
+are not physical validation.
+
 ### A-05 | P2/architecture | Remaining C++ wire-rule repetition
 
 **Code:** `Packet.cpp::validatePacketForSerialization()` (PVN,
@@ -293,7 +330,7 @@ and add invalid-late-key regression tests.
 ## Required acceptance campaign
 
 1. **Correctness before performance:** resolve A-01, A-02, A-03,
-   A-04 and A-11; settle A-06's C output-failure contract. Add fixed C11 malformed
+   A-04, A-11 and A-13; settle A-06's C output-failure contract. Add fixed C11 malformed
    vectors, C++ raw-pointer negative tests, Manager repeat-read tests and
    RTTI-free adversarial PUS-subtype tests.
 2. **Complete the one-authority inventory:** disposition A-05 and A-07;
