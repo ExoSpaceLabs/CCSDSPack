@@ -392,6 +392,26 @@ void testGroupCore(TestManager *tester, const std::string &description) {
         && header->getSize() == 2U;
   });
 
+  tester->unitTest("Raw serialization bounds callback size growth before writing.", [] {
+    ccsds::Packet packet;
+    auto header = std::make_shared<GrowingSecondaryHeader>();
+    TEST_VOID(packet.setSecondaryHeader(header));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    const auto originalSize = packet.getSerializedSize();
+    std::vector<std::uint8_t> output(originalSize, 0xA5U);
+    const auto tooSmall = packet.serialize(output.data(), output.size());
+    if (tooSmall || tooSmall.error().code() != ccsds::INVALID_DATA
+        || output != std::vector<std::uint8_t>(originalSize, 0xA5U)
+        || header->getSize() != 2U) return false;
+
+    // The legacy callback has deliberately mutated its own header and is not
+    // failure-transactional. The caller's output buffer is still untouched,
+    // and retrying with adequate space must produce a valid C11 packet.
+    const auto recovered = packet.serialize();
+    return recovered && recovered.value().size() == originalSize + 1U
+        && coreCrcValid(recovered.value());
+  });
+
   tester->unitTest("Const Manager retrieval never invokes callbacks on shared headers.", [] {
     ccsds::Packet prototype;
     auto header = std::make_shared<UpdatingSecondaryHeader>();
