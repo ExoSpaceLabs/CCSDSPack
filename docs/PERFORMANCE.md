@@ -405,9 +405,10 @@ C11/C++ tests, sanitizers and fixed vectors.
 its owning allocation and published performance regression. No compliant
 rewrite of the basic C11 codec was justified by this evidence.
 
-### v2.2 candidate: optional C++ caller-owned CUC adapter (#166)
+### v2.2 integrated: optional C++ caller-owned CUC adapter (#166, PR #202)
 
-The `perf/v2.2-cuc-cpp-bounded` branch adds C++17 overloads for
+Focused PR #201, squash-integrated by PR #202 into `develop` at
+`aefadba71fd682545fbf5403f75d1cf6ad5fafe9`, adds C++17 overloads for
 `serialize(value, config, uint8_t*, capacity)` and
 `deserialize(const uint8_t*, size, config)`. They call the same C11
 CUC encode/decode functions as the owning C++ methods and preserve their
@@ -420,7 +421,9 @@ epoch, P-field policy or width changes.
 and legacy C++ variants, including heap-allocation instrumentation.
 This is a new **non-owning** interface, so latency differences versus
 the owning-vector method are ownership differences, not evidence
-that the original vector-returning API became faster. The CUC microbenchmark's **same-process** candidate run on GitHub Actions
+that the original vector-returning API became faster.
+
+The CUC microbenchmark's **same-process** candidate run on GitHub Actions
 Ubuntu 26.04 at `4b61e85fb938ffc6a02d666ac346e96b2c6be0e7`
 ([Linux run 43441835419](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43441835419),
 `build-and-test (ubuntu-26.04)`) measured medians across 7 batches of
@@ -500,6 +503,17 @@ Acceptance requires fixed CCSDS 301.0-B-4 §3.2.2 vectors, all 64
 supported basic CUC layouts, negative P-field/size/config/overflow
 cases, no output-buffer mutation on error, and unchanged C11 tests,
 C++ legacy byte/error compatibility, Linux/Windows, sanitizers and MCU
-cross-builds. `#166` stays open until an accepted measurement and an
-integration decision on `develop`.
+cross-builds. These gates were **met** for the merged `develop` source
+`aefadba71fd682545fbf5403f75d1cf6ad5fafe9`: PR #202 exact-head
+Linux/Windows/ASan/UBSan/fuzz/Doxygen PASS; post-merge `develop` Linux
+[43453537008](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43453537008),
+Windows [43453536922](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43453536922)
+and Robustness [43453536808](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43453536808)
+PASS, with 166/166 C++ unit tests on Ubuntu 24.04 and standalone H755
+firmware cross-build PASS. Issue #166 was closed for the **approved dual-API
+design**. The original vector-returning convenience encoder remains
+allocating and is intentionally not claimed to be accelerated.
+
+These measurements are hosted and not a matched, physically validated
+v2.2 release benchmark. Hardware and final source-freeze gates remain.
 
