@@ -578,6 +578,63 @@ int main(void) {
         }
 
         {
+            /* A late CUC P-field failure must not publish partial TM fields. */
+            ccsds_pus_a_tm_tailoring_t explicit_a = tailoring_a_tm;
+            uint8_t corrupt[20] = {0U};
+            size_t written = 0U;
+            ccsds_pus_a_tm_fields_t output;
+            ccsds_pus_a_tm_fields_t before;
+            explicit_a.cuc.pfield_mode = CCSDS_CUC_PFIELD_EXPLICIT;
+            failed |= expect_status("pus-a-tm-explicit-setup",
+                ccsds_pus_a_tm_encode(&fields_a_tm, &explicit_a,
+                                      corrupt, sizeof(corrupt), &written),
+                CCSDS_STATUS_OK);
+            if (written != ccsds_pus_a_tm_encoded_size(&explicit_a)) {
+                fprintf(stderr, "pus-a-tm-explicit-setup: unexpected size\\n");
+                failed = 1;
+            } else {
+                corrupt[3U + 1U + 1U] ^= 0x01U;
+                memset(&output, 0xA5, sizeof(output));
+                memcpy(&before, &output, sizeof(output));
+                failed |= expect_status("pus-a-tm-cuc-failure-atomic",
+                    ccsds_pus_a_tm_decode(corrupt, written, &explicit_a, &output),
+                    CCSDS_STATUS_CUC_PFIELD_MISMATCH);
+                if (memcmp(&output, &before, sizeof(output)) != 0) {
+                    fprintf(stderr, "pus-a-tm-cuc-failure-atomic: output mutated\\n");
+                    failed = 1;
+                }
+            }
+        }
+
+        {
+            ccsds_pus_c_tm_tailoring_t explicit_c = tailoring_c_tm_time;
+            uint8_t corrupt[20] = {0U};
+            size_t written = 0U;
+            ccsds_pus_c_tm_fields_t output;
+            ccsds_pus_c_tm_fields_t before;
+            explicit_c.cuc.pfield_mode = CCSDS_CUC_PFIELD_EXPLICIT;
+            failed |= expect_status("pus-c-tm-explicit-setup",
+                ccsds_pus_c_tm_encode(&fields_c_tm_time, &explicit_c,
+                                      corrupt, sizeof(corrupt), &written),
+                CCSDS_STATUS_OK);
+            if (written != ccsds_pus_c_tm_encoded_size(&explicit_c)) {
+                fprintf(stderr, "pus-c-tm-explicit-setup: unexpected size\\n");
+                failed = 1;
+            } else {
+                corrupt[7U] ^= 0x01U;
+                memset(&output, 0xA5, sizeof(output));
+                memcpy(&before, &output, sizeof(output));
+                failed |= expect_status("pus-c-tm-cuc-failure-atomic",
+                    ccsds_pus_c_tm_decode(corrupt, written, &explicit_c, &output),
+                    CCSDS_STATUS_CUC_PFIELD_MISMATCH);
+                if (memcmp(&output, &before, sizeof(output)) != 0) {
+                    fprintf(stderr, "pus-c-tm-cuc-failure-atomic: output mutated\\n");
+                    failed = 1;
+                }
+            }
+        }
+
+        {
             ccsds_pus_a_tm_fields_t time_overflow = fields_a_tm;
             time_overflow.timestamp.coarse = UINT64_C(0x100000000);
             failed |= expect_status("pus-a-tm-time-overflow",
