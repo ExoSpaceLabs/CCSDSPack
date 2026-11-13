@@ -6,6 +6,7 @@
 // owning-output costs, reporting median latency and heap allocation counts.
 
 #include <CCSDSTime.h>
+#include <PusSecondaryHeaders.h>
 #include <ccsdspack/c/cuc.h>
 #include <algorithm>
 #include <array>
@@ -168,6 +169,24 @@ int main() {
         bytes.data(), written, cppcfg);
       require(decoded && decoded.value() == cpptime);
       sink += decoded.value().coarse & 255U;
+    });
+    const ccsds::pus::rev_a::TmTailoring aTailoring{
+      1U, false, true, cppcfg, 0U
+    };
+    const ccsds::pus::rev_c::TmTailoring cTailoring{
+      true, cppcfg, 0U
+    };
+    ccsds::pus::rev_a::TmHeader tmA(aTailoring);
+    ccsds::pus::rev_c::TmHeader tmC(cTailoring);
+    emit("cpp_pus_a_tm_set_timestamp", [&] {
+      const auto updated = tmA.setTimestamp(cpptime);
+      require(updated && tmA.getTimestamp() == cpptime);
+      sink += tmA.getTimestamp().fine & 255U;
+    });
+    emit("cpp_pus_c_tm_set_timestamp", [&] {
+      const auto updated = tmC.setTimestamp(cpptime);
+      require(updated && tmC.getTimestamp() == cpptime);
+      sink += tmC.getTimestamp().fine & 255U;
     });
     emit("cpp_wrapper_decode", [&] {
       const auto decoded = ccsds::time::deserialize(input, cppcfg);
