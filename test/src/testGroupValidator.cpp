@@ -82,10 +82,47 @@ namespace {
       return {0x39U, 17U, 1U, 0x12U, 0x34U, 0xFFU};
     }
   };
+
+  // Deliberately spoofs the legacy classifier without inheriting from PUS.
+  // RTTI-free consumers must not turn this hint into a static downcast.
+  class SpoofedPusHeader final : public ccsds::SecondaryHeaderAbstract {
+  public:
+    [[nodiscard]] bool isPusHeader() const override { return true; }
+    [[nodiscard]] std::string getType() const override { return "SpoofedCustomHeader"; }
+    [[nodiscard]] std::uint16_t getSize() const override { return 1U; }
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return {0x5AU}; }
+    [[nodiscard]] ccsds::ResultBool deserialize(
+        const std::vector<std::uint8_t> &data) override {
+      return data.size() == 1U;
+    }
+    void update(ccsds::DataField *) override {}
+#ifndef CCSDS_MCU
+    ccsds::ResultBool loadFromConfig(const ccsds::Config &) override { return true; }
+#endif
+  };
 }
 
 void testGroupValidator(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupValidator: " << description << std::endl;
+
+  tester->unitTest("Validator rejects legacy PUS classification spoof without a cast.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<SpoofedPusHeader>()));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    if (!packet.serialize()) return false;
+
+    ccsds::Validator validator;
+    validator.configure(true, false, false);
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::PusHeader);
+  });
+
+  tester->unitTest("PUS clone rejects subclass identity without unsafe concrete downcast.", [] {
+    ccsds::pus::SecondaryHeaderFactory factory;
+    MalformedPusCTcHeader subclass;
+    const auto cloned = factory.clone(subclass);
+    return !cloned && cloned.error().code() == ccsds::INVALID_SECONDARY_HEADER_DATA;
+  });
 
   tester->unitTest("Validator accepts a non-zero unsegmented sequence count.", [] {
     ccsds::Validator validator;
