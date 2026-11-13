@@ -63,6 +63,29 @@ namespace ccsds::time {
   [[nodiscard]] ResultBuffer serialize(const CucTime &value,
                                        const CucConfiguration &configuration);
 
+  /**
+   * @brief Encodes basic numeric CUC directly into caller-owned storage.
+   *
+   * Delegates all wire, epoch, width, overflow and capacity checks to the
+   * authoritative C11 codec. Allocates no heap memory. On failure, output
+   * bytes are unchanged; the returned byte count is valid only on success.
+   *
+   * @see CCSDS 301.0-B-4, sections 3.2.1 and 3.2.2 (supported basic subset).
+   */
+  [[nodiscard]] Result<std::size_t> serialize(
+    const CucTime &value, const CucConfiguration &configuration,
+    std::uint8_t *output, std::size_t capacity);
+
+  /**
+   * @brief Decodes CUC from a borrowed exact-size byte span with no allocation.
+   *
+   * Uses the same C11 parser as the owning-vector overload. The caller owns
+   * the input buffer and must retain its lifetime for the duration of the call.
+   */
+  [[nodiscard]] Result<CucTime> deserialize(
+    const std::uint8_t *data, std::size_t size,
+    const CucConfiguration &configuration);
+
   /** @brief Decodes one complete CUC value using the declared layout. */
   [[nodiscard]] Result<CucTime> deserialize(const std::vector<std::uint8_t> &data,
                                             const CucConfiguration &configuration);
