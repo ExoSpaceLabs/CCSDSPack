@@ -5,13 +5,22 @@
 #include <CCSDSSecondaryHeaderFactory.h>
 #include <utility>
 
+namespace {
+  // C++ configured object capacity, not a CCSDS wire-field constraint.
+  bool fitsCapacity(const std::size_t additional,
+                    const std::size_t existing,
+                    const std::size_t capacity) noexcept {
+    return existing <= capacity && additional <= capacity - existing;
+  }
+}
+
 ccsds::ResultBuffer ccsds::DataField::serialize() {
   update();
   const auto secondaryHeader = static_cast<const DataField &>(*this).getSecondaryHeaderBytes();
   RET_IF_ERR_MSG(m_secondaryHeader && secondaryHeader.size() != m_secondaryHeader->getSize(),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header serialization failed or returned an unexpected size.");
-  RET_IF_ERR_MSG(secondaryHeader.size() + m_applicationData.size() > m_dataPacketSize,
+  RET_IF_ERR_MSG(!fitsCapacity(secondaryHeader.size(), m_applicationData.size(), m_dataPacketSize),
                  ErrorCode::INVALID_DATA,
                  "Serialized packet data field exceeds its configured capacity.");
   std::vector<std::uint8_t> fullData{};
@@ -77,7 +86,7 @@ ccsds::ResultBool ccsds::DataField::setApplicationData(const std::uint8_t *pData
                  "Application data size cannot be less than one");
   const auto secondaryHeaderSize = m_secondaryHeader
                                      ? static_cast<std::size_t>(m_secondaryHeader->getSize()) : 0U;
-  RET_IF_ERR_MSG(sizeData + secondaryHeaderSize > m_dataPacketSize,
+  RET_IF_ERR_MSG(!fitsCapacity(sizeData, secondaryHeaderSize, m_dataPacketSize),
                  ErrorCode::INVALID_APPLICATION_DATA,
                  "Application data field exceeds available size");
   m_applicationData.assign(pData, pData + sizeData);
@@ -89,7 +98,7 @@ ccsds::ResultBool ccsds::DataField::setApplicationData(
     const std::vector<std::uint8_t> &applicationData) {
   const auto secondaryHeaderSize = m_secondaryHeader
                                      ? static_cast<std::size_t>(m_secondaryHeader->getSize()) : 0U;
-  RET_IF_ERR_MSG(applicationData.size() + secondaryHeaderSize > m_dataPacketSize,
+  RET_IF_ERR_MSG(!fitsCapacity(applicationData.size(), secondaryHeaderSize, m_dataPacketSize),
                  ErrorCode::INVALID_APPLICATION_DATA,
                  "Application data field exceeds available size");
   m_applicationData = applicationData;
@@ -102,7 +111,7 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const std::uint8_t *pData
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
   RET_IF_ERR_MSG(sizeData < 1U, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data size cannot be less than one");
-  RET_IF_ERR_MSG(sizeData + m_applicationData.size() > m_dataPacketSize,
+  RET_IF_ERR_MSG(!fitsCapacity(sizeData, m_applicationData.size(), m_dataPacketSize),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
   const std::vector<std::uint8_t> data(pData, pData + sizeData);
@@ -113,13 +122,16 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const std::uint8_t *pData
                                                        const std::size_t &sizeData,
                                                        const std::string &pType) {
   RET_IF_ERR_MSG(!pData, ErrorCode::NULL_POINTER, "Secondary header data is nullptr");
+  RET_IF_ERR_MSG(!fitsCapacity(sizeData, m_applicationData.size(), m_dataPacketSize),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Secondary header data exceeds available size");
   const std::vector<std::uint8_t> data(pData, pData + sizeData);
   return setSecondaryHeader(data, pType);
 }
 
 ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
     const std::vector<std::uint8_t> &data, const std::string &pType) {
-  RET_IF_ERR_MSG(data.size() + m_applicationData.size() > m_dataPacketSize,
+  RET_IF_ERR_MSG(!fitsCapacity(data.size(), m_applicationData.size(), m_dataPacketSize),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
   std::shared_ptr<SecondaryHeaderAbstract> header;
@@ -148,7 +160,7 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
 
 ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
     const std::vector<std::uint8_t> &secondaryHeader) {
-  RET_IF_ERR_MSG(secondaryHeader.size() + m_applicationData.size() > m_dataPacketSize,
+  RET_IF_ERR_MSG(!fitsCapacity(secondaryHeader.size(), m_applicationData.size(), m_dataPacketSize),
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Secondary header data exceeds available size");
   auto header = std::make_shared<BufferHeader>(secondaryHeader);
@@ -182,6 +194,9 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const ccsds::Config &cfg)
   RET_IF_ERR_MSG(!header, ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Failed to create secondary header of type: " + type);
   FORWARD_RESULT(header->loadFromConfig(cfg));
+  RET_IF_ERR_MSG(!fitsCapacity(header->getSize(), m_applicationData.size(), m_dataPacketSize),
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+                 "Configured secondary header exceeds available size");
   m_secondaryHeader = std::move(header);
   m_secondaryHeaderType = m_secondaryHeader->getType();
   m_secondaryHeaderUpdated = false;
@@ -192,8 +207,8 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(const ccsds::Config &cfg)
 ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
     std::shared_ptr<SecondaryHeaderAbstract> header) {
   if (header) {
-    RET_IF_ERR_MSG(static_cast<std::size_t>(header->getSize()) + m_applicationData.size()
-                     > m_dataPacketSize,
+    RET_IF_ERR_MSG(!fitsCapacity(header->getSize(), m_applicationData.size(),
+                                  m_dataPacketSize),
                    ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Secondary header exceeds available data-field capacity.");
     RET_IF_ERR_MSG(!header->isPusHeader()
