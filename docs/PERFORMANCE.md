@@ -420,8 +420,35 @@ epoch, P-field policy or width changes.
 and legacy C++ variants, including heap-allocation instrumentation.
 This is a new **non-owning** interface, so latency differences versus
 the owning-vector method are ownership differences, not evidence
-that the original vector-returning API became faster. No performance
-claim is accepted without completed matched CI data.
+that the original vector-returning API became faster. The CUC microbenchmark's **same-process** candidate run on GitHub Actions
+Ubuntu 26.04 at `4b61e85fb938ffc6a02d666ac346e96b2c6be0e7`
+([Linux run 43441835419](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43441835419),
+`build-and-test (ubuntu-26.04)`) measured medians across 7 batches of
+200,000 iterations, with allocation tracking enabled:
+
+| Same-process path | Median ns/op | Allocations/op | Bytes allocated/op |
+| --- | ---: | ---: | ---: |
+| C11 encode into caller buffer | 7.292 | 0 | 0 |
+| C++17 bounded encode into caller buffer | **11.921** | **0** | **0** |
+| Existing C++17 owning-vector encode | 26.093 | 1 | 7 |
+| C11 decode from caller buffer | 4.466 | 0 | 0 |
+| C++17 bounded decode from borrowed buffer | 13.978 | 0 | 0 |
+| Existing C++17 vector-argument decode | 13.991 | 0 | 0 |
+
+This supports a **2.19× improvement in the encode operation** when callers
+choose the *new bounded C++ API* instead of the owning-vector API, and removes
+one output allocation. It does **not** show an improvement in existing
+vector-returning C++ encoding; the old method was retained without changes.
+The two C++ decode paths are indistinguishable at this measurement
+precision. Decoding external borrowed buffers may avoid vector construction
+performed by a caller, but this benchmark does not include such setup costs.
+
+The 7.292 ns C11 encode figure is faster than the 11.733 ns historical
+C11 baseline; this is **not** evidence of changed C11 implementation,
+because CI runners and conditions vary. Only within-run comparisons are
+suitable for evaluating this additive API. Cross-PR matched v2.2
+performance acceptance and source-frozen hardware qualification remain
+separate gates.
 
 Acceptance requires fixed CCSDS 301.0-B-4 §3.2.2 vectors, all 64
 supported basic CUC layouts, negative P-field/size/config/overflow
