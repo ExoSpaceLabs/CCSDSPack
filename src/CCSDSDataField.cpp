@@ -196,7 +196,7 @@ ccsds::ResultBool ccsds::DataField::setSecondaryHeader(
                      > m_dataPacketSize,
                    ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Secondary header exceeds available data-field capacity.");
-    RET_IF_ERR_MSG(!header->isPusHeader()
+    RET_IF_ERR_MSG(header->asPusHeader() == nullptr
                    && pus::SecondaryHeaderFactory::isPusSelector(header->getType()),
                    ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                    "Custom secondary headers cannot use the reserved PUS: namespace.");
