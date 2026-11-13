@@ -483,6 +483,48 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
            && packets[1].getPrimaryHeader().getSequenceCount() == 0U;
   });
 
+  tester->unitTest("Manager packet reads and reconstruction do not consume sequence state.", [] {
+    ccsds::Packet protocolTemplate;
+    protocolTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    protocolTemplate.setSequenceFlags(ccsds::FIRST_SEGMENT);
+    protocolTemplate.setDataFieldSize(4U);
+
+    ccsds::Packet first = protocolTemplate;
+    first.setSequenceFlags(ccsds::FIRST_SEGMENT);
+    TEST_VOID(first.setSequenceCount(0x3FFEU));
+    TEST_VOID(first.setApplicationData({0xAAU, 0xBBU}));
+    const auto firstBytes = first.serialize();
+    if (!firstBytes) return false;
+
+    ccsds::Packet last = protocolTemplate;
+    last.setSequenceFlags(ccsds::LAST_SEGMENT);
+    TEST_VOID(last.setSequenceCount(0x3FFFU));
+    TEST_VOID(last.setApplicationData({0xCCU}));
+    const auto lastBytes = last.serialize();
+    if (!lastBytes) return false;
+
+    ccsds::Manager manager;
+    manager.setAutoUpdateEnable(false);
+    TEST_VOID(manager.setPacketTemplate(protocolTemplate));
+    TEST_VOID(manager.load(std::vector<ccsds::Packet>{first, last}));
+
+    // The Manager sequence validator has already consumed both packets.
+    // A random-access inspection must not consume the same sequence again.
+    const auto lastRead1 = manager.getPacketBufferAtIndex(1U);
+    const auto firstRead = manager.getPacketBufferAtIndex(0U);
+    const auto lastRead2 = manager.getPacketBufferAtIndex(1U);
+    if (!lastRead1 || !firstRead || !lastRead2
+        || lastRead1.value() != lastBytes.value()
+        || lastRead2.value() != lastBytes.value()
+        || firstRead.value() != firstBytes.value()) return false;
+
+    const auto payload1 = manager.getApplicationDataBuffer();
+    const auto payload2 = manager.getApplicationDataBuffer();
+    return payload1 && payload2
+           && payload1.value() == std::vector<std::uint8_t>({0xAAU, 0xBBU, 0xCCU})
+           && payload2.value() == payload1.value();
+  });
+
   tester->unitTest("Maximum Packet Data Length value is encoded", []() {
     ccsds::Packet packet;
     packet.setDataFieldSize(0xFFFEU);
