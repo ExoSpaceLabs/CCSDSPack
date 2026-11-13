@@ -6,6 +6,7 @@
 // owning-output costs, reporting median latency and heap allocation counts.
 
 #include <CCSDSTime.h>
+#include <PusSecondaryHeaders.h>
 #include <ccsdspack/c/cuc.h>
 #include <algorithm>
 #include <array>
@@ -145,6 +146,13 @@ int main() {
               == CCSDS_STATUS_OK && count == written);
       sink += output.back();
     });
+    emit("cpp_bounded_encode_caller_buffer", [&] {
+      std::array<std::uint8_t, 8U> output{};
+      const auto count = ccsds::time::serialize(
+        cpptime, cppcfg, output.data(), output.size());
+      require(count && count.value() == written);
+      sink += output[count.value() - 1U];
+    });
     emit("cpp_wrapper_encode", [&] {
       const auto encoded = ccsds::time::serialize(cpptime, cppcfg);
       require(encoded && encoded.value().size() == written);
@@ -155,6 +163,30 @@ int main() {
       require(ccsds_cuc_decode(bytes.data(), written, &ccfg, &decoded)
               == CCSDS_STATUS_OK);
       sink += decoded.coarse & 255U;
+    });
+    emit("cpp_bounded_decode_borrowed_buffer", [&] {
+      const auto decoded = ccsds::time::deserialize(
+        bytes.data(), written, cppcfg);
+      require(decoded && decoded.value() == cpptime);
+      sink += decoded.value().coarse & 255U;
+    });
+    const ccsds::pus::rev_a::TmTailoring aTailoring{
+      1U, false, true, cppcfg, 0U
+    };
+    const ccsds::pus::rev_c::TmTailoring cTailoring{
+      true, cppcfg, 0U
+    };
+    ccsds::pus::rev_a::TmHeader tmA(aTailoring);
+    ccsds::pus::rev_c::TmHeader tmC(cTailoring);
+    emit("cpp_pus_a_tm_set_timestamp", [&] {
+      const auto updated = tmA.setTimestamp(cpptime);
+      require(updated && tmA.getTimestamp() == cpptime);
+      sink += tmA.getTimestamp().fine & 255U;
+    });
+    emit("cpp_pus_c_tm_set_timestamp", [&] {
+      const auto updated = tmC.setTimestamp(cpptime);
+      require(updated && tmC.getTimestamp() == cpptime);
+      sink += tmC.getTimestamp().fine & 255U;
     });
     emit("cpp_wrapper_decode", [&] {
       const auto decoded = ccsds::time::deserialize(input, cppcfg);

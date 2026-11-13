@@ -4,6 +4,39 @@
 **Baseline:** `develop` after PR #191, merge commit `8cbdd9e33cf9d8a33027b81872bbe67001bcc925`.  
 **Verdict:** **NOT READY** for implementation freeze, performance sign-off, or physical v2.2 release qualification.
 
+## Post-audit integration disposition (PR #202)
+
+The findings and source snippets below record the **original pre-fix
+`develop` baseline**, not the post-integration state. Integration PR
+[#202](https://github.com/ExoSpaceLabs/CCSDSPack/pull/202) combines all seven
+individually qualified fixes on one branch. This qualification does not by
+itself confer release acceptance or physical-target coverage.
+
+| Finding | Integrated change and evidence |
+| --- | --- |
+| A-01 | C11 PUS-A/C TM decode publishes output only after successful CUC checks; failure-sentinel and fixed-vector tests from #193. |
+| A-02 | Null/overflow-safe C++ DataField raw-buffer handling and boundary tests from #194. |
+| A-03 | Stateless Manager readback validation, with sequential ingest behavior retained, from #196. |
+| A-04 | RTTI-free typed PUS dispatch and adversarial identity tests from #197. |
+| A-11 | Validator checks Packet-specific CRC16 parameters and associated fixed vectors from #195. |
+| A-13 | Packet mutable-alias aware finalization, guarded CRC cache and callback-free read snapshot from #199; custom user callbacks remain outside rollback guarantees. |
+| A-07 (CUC/PUS part) | #201 retains both public C++ ownership models, delegates to the C11 CUC codec, removes the temporary vector in successful TM timestamp setters and protected TM tail helpers; tests and same-process benchmark evidence in [PERFORMANCE.md](PERFORMANCE.md). |
+
+The independent six-fix combination was qualified on the draft
+[#200](https://github.com/ExoSpaceLabs/CCSDSPack/pull/200) at
+`5712e7b68a1d9909210cfa509bd351ecd5331006`. CUC/PUS change #201
+was independently qualified at `7f02ba902eedc8b32200e45ba9c3b01f2cd557ea`.
+These source trees were then reconciled in PR #202. Acceptance additionally
+requires the **exact integrated PR head** to pass Linux, Windows, standalone
+C11/MCU cross-build, ASan/UBSan/fuzz, Doxygen and fixed-vector tests.
+
+**Still open:** A-05 duplicated C++ protocol checks; A-06 C11 TM encode
+output-on-failure contract; remaining A-07 Validator CRC allocations and
+C11 redundant tailoring checks; A-08 Manager count narrowing; A-10 partial
+hosted configuration mutation; A-12 C/C++ data-field capacity discrepancy;
+documentation audit A-09; and the v2.2 hardware/release gates. Keep parent
+issue #187 open pending these dispositions and the final integration audit.
+
 ## Evidence discipline and scope
 
 This is a **source/documentation audit**, not a test execution. Inspected current
@@ -30,7 +63,7 @@ CCSDS/ECSS compliance. The optional CRC16 trailer is CCSDSPack packet-level
 policy within the CCSDS data field. The four-byte sync marker belongs to
 external stream framing.
 
-## Architectural classification
+## Architectural classification (original audited baseline)
 
 | Boundary | Classification | Evidence / caveat |
 | --- | --- | --- |
@@ -39,7 +72,7 @@ external stream framing.
 | Packet parse | **Coherent** | `packet_view.c::parse_parts()` is the shared C11 contiguous/split policy; the C++ Packet adapters use it, then stage owned state before commit. Typed PUS, opaque and custom header selection remains C++ object policy. |
 | Packet encode | **Partially duplicated** | C11 `packet_finalize_parts` / `packet_encode_parts` own version/idle/length rules. `Packet.cpp::validatePacketForSerialization()` also checks version and idle constraints for historic diagnostics. Cross-object secondary-header presence and direction checks belong in C++ unless C11 receives sufficient metadata. |
 | PUS TC/TM codecs | **Coherent dispatch, defect in C11 TM failure state** | C++ delegates wire encode/decode to PUS C11 functions; PUS-A and PUS-C remain distinct. Invalid CUC on C11 TM decoding can partially update output (A-01). |
-| CUC | **Single wire implementation** | `time::serialize/deserialize` call C11. `TmSecondaryHeader::setTimestamp()` uses C++ allocating serialization just to validate a prospective field. This is C11-backed but expensive, not independent wire logic. |
+| CUC | **Single wire implementation** | `time::serialize/deserialize` call C11. In the original audited baseline, `TmSecondaryHeader::setTimestamp()` allocates a temporary CUC vector to validate a prospective field; PR #201 (integrated into the #202 candidate) replaces it with stack-bounded CUC validation and adds caller-owned C++ overloads without duplicating wire rules. |
 | Validator | **Correct source of decisions, allocation/typing risks** | Calls `ccsds_validate_packet_coherence`, `ccsds_validate_pus_coherence`, and C11 CUC/CRC utilities. CRC input is assembled via temporary vectors; PUS subtype discrimination relies on unchecked static downcasts (A-04). Its report itself is fixed capacity. |
 | Manager | **C11 protocol core leveraged, read semantics defective** | Uses C11 segmentation, sequence increments, stream walker and reassembly. C++ owns packet storage/contracts. Public getters directly advance the persistent validator (A-03). Manager also independently packs the primary-header Packet Identification bits. |
 | DataField/custom header | **Object-level rules valid, unsafe raw overload** | Registry checks, serialized object sizes and configured capacity are legitimate C++ rules. Pointer-size typed overload lacks a null guard; sum-based capacity checks can overflow (A-02). |
@@ -161,6 +194,43 @@ temporary owning vectors (A-07). Add positive default/non-default
 tests and negative corruption tests that use the same explicit configuration.
 Verify error codes and Manager validation with the custom profile.
 
+### A-13 | P1/blocker | Packet update/serialization cache coherency and custom callback side effects
+
+**Code:** `src/CCSDSPacket.cpp::update()/serialize()`, public mutable
+`Packet::getPrimaryHeader()/getDataField()/getSecondaryHeader()`,
+`src/CCSDSDataField.cpp::update()`, and `Manager` const/readback output.
+
+A cached `m_updateStatus` could remain true after callers mutated a Header,
+application bytes or shared secondary header through public references. The
+next serialization could reuse a stale CRC16 despite emitting changed bytes.
+In disabled-auto-update mode a same-length modification could likewise emit
+a stale trailer. `Manager::getPacketsBuffer() const` serialized shallow Packet
+copies, which could invoke a mutating user callback on a shared header.
+
+**Remediation under review:** [issue #198](https://github.com/ExoSpaceLabs/CCSDSPack/issues/198)
+and [PR #199](https://github.com/ExoSpaceLabs/CCSDSPack/pull/199).
+Normal serialization re-finalizes using C11 when a mutable subobject has
+escaped or any secondary header is present. It retains CRC caching only for
+unaliased, secondary-header-free Packets with setter-based invalidation.
+Disabled-auto-update preserves finalized wire bytes only if CRC/length still
+match a callback-free independent C11 finalization. Explicit `update()`
+always finalizes. A const callback-free `serializeSnapshot()` is used for
+Manager read-style output so copied shared headers are not mutated.
+
+**Remaining acceptance:** independently exercise C11 CRC validation on direct
+Header/DataField/PUS mutations, stale-manual checks, guarded cache reuse,
+callback size-growth and bounded buffer handling, repeatable const Manager
+readback, Linux/Windows, ASan/UBSan/fuzz, C-only and MCU cross-builds. The
+legacy third-party `void SecondaryHeaderAbstract::update(DataField*)`
+callback remains intentionally stateful/non-transactional; arbitrary custom
+callbacks cannot be retrofitted with rollback guarantees. Explicitly
+document this limitation rather than claiming atomic user-code effects.
+Benchmark cached and alias-sensitive CRC paths; the initial always-recompute
+prototype exhibited a prohibitive large-buffer regression, motivating the
+guarded cache. This architecture problem is a **v2.2 release gate** and
+must be resolved before #166 or hardware freeze. Source review and PR CI
+are not physical validation.
+
 ### A-05 | P2/architecture | Remaining C++ wire-rule repetition
 
 **Code:** `Packet.cpp::validatePacketForSerialization()` (PVN,
@@ -195,14 +265,20 @@ before writing. Add an output sentinel test either way.
 
 **Code:** `src/CCSDSValidator.cpp::validate()` concatenates a serialized
 primary-header vector and full data-field vector solely to calculate CRC.
-`TmSecondaryHeader::setTimestamp()` allocates a C++ CUC serialization
-buffer to validate numeric range. C11 PUS TM decode validates tailoring
-and then calls `*_encoded_size()`, which validates it again.
+On `develop`, `TmSecondaryHeader::setTimestamp()` creates an owning CUC
+vector solely to validate numeric range. C11 PUS TM decode validates
+tailoring and then calls `*_encoded_size()`, which validates it again.
 
-**Disposition:** Stream CRC over existing pieces with C11 CRC update,
-expose a nonencoding CUC value-fit check if beneficial, and only optimize
-the C11 duplicate-validation path with measured evidence. No
-regression/performance improvement is asserted here; issue #166 is separate.
+**Disposition:** **Partially addressed by unmerged PR #201**: C++17 bounded
+CUC encode/decode overloads call the same C11 codec; successful PUS-A/C TM
+`setTimestamp()` operations no longer allocate. The protected TM tail
+helpers also stop materializing intermediate CUC vectors. Fixed-vector,
+overflow/error message and transactional state tests protect behavior.
+The owning vector API remains supported, and built-in PUS-A/C TM wire
+codecs already delegate to C11. Follow-up CRC aggregation and C11
+duplicate-tailoring validation remain open, subject to profiling. See
+issue #166 and the matched candidate evidence in
+[PERFORMANCE.md](PERFORMANCE.md). No whole-packet speedup is claimed.
 
 ### A-08 | P2/API consistency | Large Manager packet counts narrow to 16 bits
 
@@ -293,7 +369,7 @@ and add invalid-late-key regression tests.
 ## Required acceptance campaign
 
 1. **Correctness before performance:** resolve A-01, A-02, A-03,
-   A-04 and A-11; settle A-06's C output-failure contract. Add fixed C11 malformed
+   A-04, A-11 and A-13; settle A-06's C output-failure contract. Add fixed C11 malformed
    vectors, C++ raw-pointer negative tests, Manager repeat-read tests and
    RTTI-free adversarial PUS-subtype tests.
 2. **Complete the one-authority inventory:** disposition A-05 and A-07;

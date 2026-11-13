@@ -4,6 +4,7 @@
 #include "PusSecondaryHeaders.h"
 #include "ccsdspack/c/pus_tc.h"
 #include "ccsdspack/c/pus_tm.h"
+#include <array>
 #include <utility>
 
 namespace {
@@ -275,7 +276,12 @@ ccsds::ResultBool ccsds::pus::TmSecondaryHeader::setTimestamp(
   RET_IF_ERR_MSG(!m_timestampPresent,
                  ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS TM timestamp is disabled by the active tailoring.");
-  const auto encoded = time::serialize(timestamp, m_cuc);
+  // Basic CUC occupies at most 1 P-field + 4 coarse + 3 fine octets.
+  // Validate with the same C11 codec as packet serialization, but do not
+  // allocate a vector just to discard its contents after validation.
+  std::array<std::uint8_t, 8U> scratch{};
+  const auto encoded = time::serialize(
+    timestamp, m_cuc, scratch.data(), scratch.size());
   if (!encoded) {
     return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "Invalid PUS TM CUC timestamp: " + encoded.error().message()};
@@ -373,12 +379,18 @@ ccsds::ResultBool ccsds::pus::TmSecondaryHeader::loadFromConfig(
 
 ccsds::ResultBool ccsds::pus::TmSecondaryHeader::appendTmTail(
     std::vector<std::uint8_t> &bytes) const {
-  appendIdentifier(bytes, m_destinationId, m_destinationIdOctets);
+  // Complete CUC validation before modifying the caller's vector.
+  std::array<std::uint8_t, 8U> timestampBytes{};
+  std::size_t timestampSize = 0U;
   if (m_timestampPresent) {
-    std::vector<std::uint8_t> encoded;
-    ASSIGN_MV(encoded, time::serialize(m_timestamp, m_cuc));
-    bytes.insert(bytes.end(), encoded.begin(), encoded.end());
+    const auto encoded = time::serialize(
+      m_timestamp, m_cuc, timestampBytes.data(), timestampBytes.size());
+    if (!encoded) return encoded.error();
+    timestampSize = encoded.value();
   }
+  appendIdentifier(bytes, m_destinationId, m_destinationIdOctets);
+  bytes.insert(bytes.end(), timestampBytes.begin(),
+               timestampBytes.begin() + static_cast<std::ptrdiff_t>(timestampSize));
   bytes.insert(bytes.end(), m_secondaryHeaderSpareOctets, 0U);
   return true;
 }
@@ -386,23 +398,22 @@ ccsds::ResultBool ccsds::pus::TmSecondaryHeader::appendTmTail(
 ccsds::ResultBool ccsds::pus::TmSecondaryHeader::parseTmTail(
     const std::vector<std::uint8_t> &data, const std::size_t offset) {
   const auto tail = tmTailSize();
-  RET_IF_ERR_MSG(offset + tail != data.size(), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
+  RET_IF_ERR_MSG(offset > data.size() || tail != data.size() - offset,
+                 ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS TM secondary-header size does not match its tailoring.");
   RET_IF_ERR_MSG(!trailingSpareIsZero(data), ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                  "PUS TM secondary-header spare octets must be zero.");
   const auto destination = readIdentifier(data, offset, m_destinationIdOctets);
-  const auto timestampOffset = offset + m_destinationIdOctets;
-  const auto timestampSize = m_timestampPresent ? time::encodedSize(m_cuc) : 0U;
-  const auto timestampEnd = timestampOffset + timestampSize;
-  m_destinationId = destination;
+  time::CucTime timestamp{};
   if (m_timestampPresent) {
-    const std::vector<std::uint8_t> encoded(
-      data.begin() + static_cast<std::ptrdiff_t>(timestampOffset),
-      data.begin() + static_cast<std::ptrdiff_t>(timestampEnd));
-    ASSIGN_CP(m_timestamp, time::deserialize(encoded, m_cuc));
-  } else {
-    m_timestamp = {};
+    const auto timestampOffset = offset + m_destinationIdOctets;
+    const auto timestampSize = time::encodedSize(m_cuc);
+    ASSIGN_CP(timestamp, time::deserialize(
+      data.data() + timestampOffset, timestampSize, m_cuc));
   }
+  // Decode is transactional with respect to both fields.
+  m_destinationId = destination;
+  m_timestamp = timestamp;
   return true;
 }
 
@@ -733,3 +744,24 @@ ccsds::ResultBool ccsds::pus::rev_c::TmHeader::loadFromConfig(
   return true;
 }
 #endif
+
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_a::TcHeader::clonePus() const {
+  return std::make_shared<TcHeader>(*this);
+}
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_a::TmHeader::clonePus() const {
+  return std::make_shared<TmHeader>(*this);
+}
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_c::TcHeader::clonePus() const {
+  return std::make_shared<TcHeader>(*this);
+}
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_c::TmHeader::clonePus() const {
+  return std::make_shared<TmHeader>(*this);
+}

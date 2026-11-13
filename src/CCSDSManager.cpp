@@ -17,15 +17,16 @@ namespace {
     const auto rhsHeader = rhs.getSecondaryHeader();
     if (static_cast<bool>(lhsHeader) != static_cast<bool>(rhsHeader)) return false;
     if (!lhsHeader) return true;
+    const auto *lhsPus = lhsHeader->asPusHeader();
+    const auto *rhsPus = rhsHeader->asPusHeader();
     if (lhsHeader->getType() != rhsHeader->getType()
         || lhsHeader->getDirection() != rhsHeader->getDirection()
+        || static_cast<bool>(lhsPus) != static_cast<bool>(rhsPus)
         || lhsHeader->isPusHeader() != rhsHeader->isPusHeader()) {
       return false;
     }
-    if (!lhsHeader->isPusHeader()) return true;
-    return ccsds::pus::sameTailoring(
-      static_cast<const ccsds::pus::SecondaryHeader &>(*lhsHeader),
-      static_cast<const ccsds::pus::SecondaryHeader &>(*rhsHeader));
+    if (!lhsPus) return true;
+    return ccsds::pus::sameTailoring(*lhsPus, *rhsPus);
   }
 }
 
@@ -196,22 +197,22 @@ void ccsds::Manager::setAutoUpdateEnable(const bool enable) {
 void ccsds::Manager::setAutoValidateEnable(const bool enable) { m_validateEnable = enable; }
 
 ccsds::ResultBuffer ccsds::Manager::getPacketTemplate() {
-  auto packet = m_templatePacket;
-  packet.setUpdatePacketEnable(true);
-  return packet.serialize();
+  return m_templatePacket.serializeSnapshot();
 }
 
 ccsds::ResultBuffer ccsds::Manager::getPacketBufferAtIndex(const std::uint16_t index) {
   RET_IF_ERR_MSG(index >= m_packets.size(), ErrorCode::INVALID_DATA,
                  "Cannot get packet, index is out of bounds");
+  // The validation copy must never call a mutating custom-header callback:
+  // Packet copies share SecondaryHeaderAbstract through std::shared_ptr.
   auto packet = m_packets[index];
+  packet.setUpdatePacketEnable(false);
   if (m_validateEnable) {
-    const auto updateResult = packet.update();
-    if (!updateResult) return updateResult.error();
-    RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
+    FORWARD_RESULT(packet.update());  // C11 finalization on the local packet only
+    RET_IF_ERR_MSG(!m_validator.validateStateless(packet), ErrorCode::VALIDATION_FAILURE,
                    "Validation failure for packet at index " + std::to_string(index));
   }
-  return packet.serialize();
+  return packet.serializeSnapshot();
 }
 
 ccsds::ResultBuffer ccsds::Manager::getPacketsBuffer() const {
@@ -231,7 +232,7 @@ ccsds::ResultBuffer ccsds::Manager::getPacketsBuffer() const {
 
   std::vector<std::uint8_t> buffer(totalSize);
   std::size_t offset = 0U;
-  for (auto packet : m_packets) {
+  for (const auto &packet : m_packets) {
     std::size_t prefixWritten = 0U;
     const auto prefixStatus = ccsds_packet_stream_write_prefix(
       m_syncPattEnable ? 1 : 0,
@@ -243,7 +244,7 @@ ccsds::ResultBuffer ccsds::Manager::getPacketsBuffer() const {
                    "Cannot serialize packet stream synchronization prefix.");
     offset += prefixWritten;
 
-    const auto written = packet.serialize(
+    const auto written = packet.serializeSnapshot(
       buffer.data() + offset, buffer.size() - offset);
     if (!written) return written.error();
     offset += written.value();
@@ -274,7 +275,7 @@ ccsds::ResultBuffer ccsds::Manager::getApplicationDataBuffer() {
   for (std::size_t index = 0U; index < m_packets.size(); ++index) {
     const auto &packet = m_packets[index];
     if (m_validateEnable) {
-      RET_IF_ERR_MSG(!m_validator.validate(packet), ErrorCode::VALIDATION_FAILURE,
+      RET_IF_ERR_MSG(!m_validator.validateStateless(packet), ErrorCode::VALIDATION_FAILURE,
                      "Validation failure for packet at index " + std::to_string(index));
     }
 

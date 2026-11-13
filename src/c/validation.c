@@ -217,7 +217,8 @@ ccsds_status_t ccsds_validate_packet_coherence(
     int primary_valid;
     int sequence_flags_valid;
 
-    if (input == NULL || sequence == NULL || report == NULL) {
+    if (input == NULL || report == NULL
+        || (sequence == NULL && validate_sequence_count != 0)) {
         return CCSDS_STATUS_NULL_POINTER;
     }
 
@@ -268,11 +269,15 @@ ccsds_status_t ccsds_validate_packet_coherence(
         if (status != CCSDS_STATUS_OK) return status;
     }
 
-    sequence_flags_valid = ccsds_sequence_flags_valid(
-        sequence, input->header.sequence_flags);
-    status = set_check(report, CCSDS_VALIDATION_SEQUENCE_FLAGS,
-                       sequence_flags_valid);
-    if (status != CCSDS_STATUS_OK) return status;
+    /* Stateless packet inspection omits sequence checks altogether.
+       Ordered stream ingestion passes a non-NULL sequence validator. */
+    if (sequence != NULL) {
+        sequence_flags_valid = ccsds_sequence_flags_valid(
+            sequence, input->header.sequence_flags);
+        status = set_check(report, CCSDS_VALIDATION_SEQUENCE_FLAGS,
+                           sequence_flags_valid);
+        if (status != CCSDS_STATUS_OK) return status;
+    }
 
     if (validate_sequence_count != 0) {
         status = set_check(

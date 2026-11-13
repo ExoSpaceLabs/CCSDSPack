@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -483,6 +484,48 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
            && packets[1].getPrimaryHeader().getSequenceCount() == 0U;
   });
 
+  tester->unitTest("Manager packet reads and reconstruction do not consume sequence state.", [] {
+    ccsds::Packet protocolTemplate;
+    protocolTemplate.setPacketErrorControlMode(ccsds::PacketErrorControlMode::None);
+    protocolTemplate.setSequenceFlags(ccsds::FIRST_SEGMENT);
+    protocolTemplate.setDataFieldSize(4U);
+
+    ccsds::Packet first = protocolTemplate;
+    first.setSequenceFlags(ccsds::FIRST_SEGMENT);
+    TEST_VOID(first.setSequenceCount(0x3FFEU));
+    TEST_VOID(first.setApplicationData({0xAAU, 0xBBU}));
+    const auto firstBytes = first.serialize();
+    if (!firstBytes) return false;
+
+    ccsds::Packet last = protocolTemplate;
+    last.setSequenceFlags(ccsds::LAST_SEGMENT);
+    TEST_VOID(last.setSequenceCount(0x3FFFU));
+    TEST_VOID(last.setApplicationData({0xCCU}));
+    const auto lastBytes = last.serialize();
+    if (!lastBytes) return false;
+
+    ccsds::Manager manager;
+    manager.setAutoUpdateEnable(false);
+    TEST_VOID(manager.setPacketTemplate(protocolTemplate));
+    TEST_VOID(manager.load(std::vector<ccsds::Packet>{first, last}));
+
+    // The Manager sequence validator has already consumed both packets.
+    // A random-access inspection must not consume the same sequence again.
+    const auto lastRead1 = manager.getPacketBufferAtIndex(1U);
+    const auto firstRead = manager.getPacketBufferAtIndex(0U);
+    const auto lastRead2 = manager.getPacketBufferAtIndex(1U);
+    if (!lastRead1 || !firstRead || !lastRead2
+        || lastRead1.value() != lastBytes.value()
+        || lastRead2.value() != lastBytes.value()
+        || firstRead.value() != firstBytes.value()) return false;
+
+    const auto payload1 = manager.getApplicationDataBuffer();
+    const auto payload2 = manager.getApplicationDataBuffer();
+    return payload1 && payload2
+           && payload1.value() == std::vector<std::uint8_t>({0xAAU, 0xBBU, 0xCCU})
+           && payload2.value() == payload1.value();
+  });
+
   tester->unitTest("Maximum Packet Data Length value is encoded", []() {
     ccsds::Packet packet;
     packet.setDataFieldSize(0xFFFEU);
@@ -493,6 +536,39 @@ void testGroupEdgeCases(TestManager *tester, const std::string &description) {
            && serialized[4] == 0xFF
            && serialized[5] == 0xFF
            && packet.getPrimaryHeader().getDataLength() == 0xFFFFU;
+  });
+
+  tester->unitTest("DataField raw secondary-header APIs reject null and wrapped lengths", [] {
+    ccsds::DataField field;
+    field.setDataPacketSize(3U);
+    TEST_VOID(field.setApplicationData(std::vector<std::uint8_t>{0x11U, 0x22U}));
+    const std::uint8_t byte = 0x33U;
+    const auto huge = std::numeric_limits<std::size_t>::max();
+
+    const auto nullTyped = field.setSecondaryHeader(nullptr, 1U, "PUS:revC:TC");
+    const auto nullOpaque = field.setSecondaryHeader(nullptr, 1U);
+    if (nullTyped || nullOpaque
+        || nullTyped.error().code() != ccsds::NULL_POINTER
+        || nullOpaque.error().code() != ccsds::NULL_POINTER) return false;
+
+    const auto oversizedTyped = field.setSecondaryHeader(&byte, huge, "PUS:revC:TC");
+    const auto oversizedOpaque = field.setSecondaryHeader(&byte, huge);
+    const auto oversizedApplication = field.setApplicationData(&byte, huge);
+    if (oversizedTyped || oversizedOpaque || oversizedApplication
+        || oversizedTyped.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+        || oversizedOpaque.error().code() != ccsds::INVALID_SECONDARY_HEADER_DATA
+        || oversizedApplication.error().code() != ccsds::INVALID_APPLICATION_DATA)
+      return false;
+
+    // Exact remaining capacity succeeds, and a one-byte overflow does not
+    // change the previously installed opaque header.
+    TEST_VOID(field.setSecondaryHeader(&byte, 1U));
+    const std::uint8_t twoBytes[] = {0x44U, 0x55U};
+    const auto tooLarge = field.setSecondaryHeader(twoBytes, 2U);
+    return !tooLarge
+           && tooLarge.error().code() == ccsds::INVALID_SECONDARY_HEADER_DATA
+           && field.getSecondaryHeaderBytes() == std::vector<std::uint8_t>({0x33U})
+           && field.getApplicationData() == std::vector<std::uint8_t>({0x11U, 0x22U});
   });
 
   tester->unitTest("Packet Data Length overflow is rejected", []() {

@@ -19,7 +19,9 @@ CCSDSPack exposes three cooperating levels:
 4. Install an optional secondary header and application data.
 5. Call `serialize()` and check the returned `ResultBuffer`.
 
-`serialize()` performs checked finalization, including Packet Data Length and optional CRC16 generation. `update()` performs checked finalization without returning wire bytes. Inspection getters do not finalize hidden state.
+`Packet::serialize()` performs checked C11 finalization from the **current** mutable header, secondary-header bytes and application data when automatic update is enabled. It may reuse a finalized CRC/length **only** for a secondary-header-free Packet whose mutable Header/DataField/secondary-header accessors have never exposed state and whose Packet setters have not changed values. Otherwise it re-finalizes the current wire bytes. Aliased objects never rely on a cached CRC. `Packet::update()` explicitly finalizes the same current state even when automatic updates are disabled; if enabled, it also runs a pending legacy secondary-header `update(DataField*)` callback. Inspection getters do not finalize hidden state.
+
+`setUpdatePacketEnable(false)` selects **manual/frozen wire mode**: normal `serialize()` does not modify Packet Data Length or CRC, but **rejects** them when they no longer match the current data. A valid parsed packet therefore round-trips without implicit changes. Call `update()` explicitly to re-finalize a modified manual packet. `serializeSnapshot() const` instead produces a **fresh, non-mutating C11 finalized wire view** of the current packet for inspection/readback without executing secondary-header callbacks. This snapshot does not modify the stored Packet CRC/length. The optional callback is stateful and remains a legacy extension hook; it is not protocol authority.
 
 ## Generate a stream
 
@@ -63,7 +65,7 @@ For explicit sequence validation, one Validator instance should be used per sequ
 
 ## Reassemble application data
 
-`getApplicationDataBuffer()` concatenates stored application data in packet order and returns a checked `ResultBuffer`.
+`getApplicationDataBuffer()` concatenates stored application data in packet order and returns a checked `ResultBuffer`. Inspection uses stateless packet-coherence validation; ordered sequence/segmentation checks occur in the local C11 reassembly state. Repeated inspection does not advance the Manager's retained ingestion Validator state. Random-access `getPacketBufferAtIndex()` validates packet/template coherence without attempting stream sequence checks outside its ordering context. `getPacketsBuffer() const`, `getPacketTemplate()` and indexed packet output use callback-free finalized snapshots: reading a copied packet must not invoke a mutating callback on a secondary header shared with the stored packet. Custom-header derived fields that require a callback must be prepared explicitly before read-style snapshot generation.
 
 The optional Manager synchronization pattern is external stream framing and is not part of the CCSDS Space Packet PDU.
 

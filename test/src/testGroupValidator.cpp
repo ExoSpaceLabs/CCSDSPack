@@ -82,10 +82,64 @@ namespace {
       return {0x39U, 17U, 1U, 0x12U, 0x34U, 0xFFU};
     }
   };
+
+  // Deliberately spoofs the legacy classifier without inheriting from PUS.
+  // RTTI-free consumers must not turn this hint into a static downcast.
+  class SpoofedPusHeader final : public ccsds::SecondaryHeaderAbstract {
+  public:
+    [[nodiscard]] bool isPusHeader() const override { return true; }
+    [[nodiscard]] std::string getType() const override { return "SpoofedCustomHeader"; }
+    [[nodiscard]] std::uint16_t getSize() const override { return 1U; }
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return {0x5AU}; }
+    [[nodiscard]] ccsds::ResultBool deserialize(
+        const std::vector<std::uint8_t> &data) override {
+      return data.size() == 1U;
+    }
+    void update(ccsds::DataField *) override {}
+#ifndef CCSDS_MCU
+    ccsds::ResultBool loadFromConfig(const ccsds::Config &) override { return true; }
+#endif
+  };
 }
 
 void testGroupValidator(TestManager *tester, const std::string &description) {
   std::cout << "  testGroupValidator: " << description << std::endl;
+
+  tester->unitTest("Validator rejects legacy PUS classification spoof without a cast.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setSecondaryHeader(std::make_shared<SpoofedPusHeader>()));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    if (!packet.serialize()) return false;
+
+    ccsds::Validator validator;
+    validator.configure(true, false, false);
+    const auto report = validator.validate(packet);
+    return report.failed(ccsds::ValidationCode::PusHeader);
+  });
+
+  tester->unitTest("PUS clone rejects subclass identity without unsafe concrete downcast.", [] {
+    ccsds::pus::SecondaryHeaderFactory factory;
+    MalformedPusCTcHeader subclass;
+    const auto cloned = factory.clone(subclass);
+    return !cloned && cloned.error().code() == ccsds::INVALID_SECONDARY_HEADER_DATA;
+  });
+
+  tester->unitTest("PUS factory clones all four final codec identities.", [] {
+    ccsds::pus::SecondaryHeaderFactory factory;
+    std::vector<std::shared_ptr<ccsds::pus::SecondaryHeader>> originals{
+      std::make_shared<ccsds::pus::rev_a::TcHeader>(),
+      std::make_shared<ccsds::pus::rev_a::TmHeader>(),
+      std::make_shared<ccsds::pus::rev_c::TcHeader>(),
+      std::make_shared<ccsds::pus::rev_c::TmHeader>()
+    };
+    for (const auto &original : originals) {
+      const auto clone = factory.clone(*original);
+      if (!clone || !clone.value()->asPusHeader()
+          || clone.value()->getType() != original->getType()
+          || clone.value().get() == original.get()) return false;
+    }
+    return true;
+  });
 
   tester->unitTest("Validator accepts a non-zero unsegmented sequence count.", [] {
     ccsds::Validator validator;
@@ -198,6 +252,39 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     const auto report = validator.validate(packet);
     return report.failed(ccsds::ValidationCode::PacketDataLength)
            && report.passed(ccsds::ValidationCode::PacketIdentifier);
+  });
+
+  tester->unitTest("Validator uses the Packet's configured CRC16 parameters.", [] {
+    ccsds::Packet packet;
+    packet.setCrcConfig(0x1021U, 0x0000U, 0x0000U);
+    TEST_VOID(packet.setApplicationData({0xAAU, 0x55U}));
+    const auto encoded = packet.serialize();
+    if (!encoded) return false;
+
+    // This is an independent fixed wire vector from the packet edge suite:
+    // default CRC parameters must not be substituted for the configured ones.
+    const std::vector<std::uint8_t> expected{
+      0x00U, 0x00U, 0xC0U, 0x00U, 0x00U, 0x03U,
+      0xAAU, 0x55U, 0x1FU, 0x85U
+    };
+    if (encoded.value() != expected) return false;
+
+    ccsds::Validator validator;
+    validator.configure(true, false, false);
+    const auto validReport = validator.validate(packet);
+    if (!validReport.valid() || !validReport.passed(ccsds::ValidationCode::Crc16))
+      return false;
+
+    ccsds::Packet parsed;
+    parsed.setCrcConfig(0x1021U, 0x0000U, 0x0000U);
+    TEST_VOID(parsed.deserialize(encoded.value()));
+    if (!validator.validate(parsed).passed(ccsds::ValidationCode::Crc16))
+      return false;
+
+    // Corruption must still be detected using the same custom configuration.
+    TEST_VOID(parsed.setApplicationData({0xAAU, 0x54U}));
+    const auto invalidReport = validator.validate(parsed);
+    return invalidReport.failed(ccsds::ValidationCode::Crc16);
   });
 
   tester->unitTest("Validator isolates a CRC failure.", [] {

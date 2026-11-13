@@ -20,6 +20,7 @@
 
 namespace ccsds {
   class DataField;
+  namespace pus { class SecondaryHeader; }
 
   /**
    * @class SecondaryHeaderAbstract
@@ -49,8 +50,13 @@ namespace ccsds {
       return PacketDirection::Unspecified;
     }
 
-    /** @brief Identifies standards-defined PUS codecs without requiring RTTI. */
+    /** @brief Legacy classifier, never a sufficient proof for a C++ downcast. */
     [[nodiscard]] virtual bool isPusHeader() const { return false; }
+
+    /** @brief Returns a typed PUS view without RTTI; null for custom headers. */
+    [[nodiscard]] virtual const pus::SecondaryHeader *asPusHeader() const noexcept {
+      return nullptr;
+    }
 
 #ifndef CCSDS_MCU
     virtual ResultBool loadFromConfig(const ccsds::Config &config) = 0;

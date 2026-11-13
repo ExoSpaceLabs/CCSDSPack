@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <CCSDSValidator.h>
+#include "PusSecondaryHeaders.h"
+#include "ccsdspack/c/packet_view.h"
 #include <algorithm>
 #include <cstdio>
 #include <iostream>
@@ -58,6 +60,33 @@ namespace {
   private:
     std::vector<std::uint8_t> m_data{};
   };
+
+  class GrowingSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
+  public:
+    [[nodiscard]] ccsds::ResultBool deserialize(
+        const std::vector<std::uint8_t> &data) override {
+      m_bytes = data;
+      return true;
+    }
+    [[nodiscard]] std::uint16_t getSize() const override {
+      return static_cast<std::uint16_t>(m_bytes.size());
+    }
+    [[nodiscard]] std::string getType() const override { return "GrowingSecondaryHeader"; }
+    [[nodiscard]] std::vector<std::uint8_t> serialize() const override { return m_bytes; }
+    void update(ccsds::DataField *) override {
+      m_bytes.push_back(0x42U);
+    }
+    ccsds::ResultBool loadFromConfig(const ccsds::Config &) override { return true; }
+  private:
+    std::vector<std::uint8_t> m_bytes{0x10U};
+  };
+
+  bool coreCrcValid(const std::vector<std::uint8_t> &bytes) {
+    ccsds_packet_view_t view{};
+    return ccsds_packet_view_parse(
+      bytes.data(), bytes.size(), CCSDS_PACKET_ERROR_CONTROL_CRC16,
+      nullptr, &view) == CCSDS_STATUS_OK && view.consumed == bytes.size();
+  }
 
   class FailingSecondaryHeader final : public ccsds::SecondaryHeaderAbstract {
   public:
@@ -248,6 +277,159 @@ void testGroupCore(TestManager *tester, const std::string &description) {
     const auto result = packet.serialize();
     return !result && result.error().code() == ccsds::INVALID_DATA
            && result.error().message().find("Packet Data Length") != std::string::npos;
+  });
+
+  tester->unitTest("Unaliased Packet cache invalidates through normal setters.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setApplicationData({0x10U, 0x20U}));
+    TEST_VOID(packet.update());
+    const auto cached1 = packet.serialize();
+    const auto cached2 = packet.serialize();
+    if (!cached1 || !cached2 || cached1.value() != cached2.value()
+        || !coreCrcValid(cached1.value())) return false;
+
+    // No mutable reference has escaped. Invalidating through the owning
+    // Packet setter must still force C11 re-finalization.
+    TEST_VOID(packet.setApplicationData({0x10U, 0x21U}));
+    const auto changed = packet.serialize();
+    return changed && coreCrcValid(changed.value())
+        && changed.value() != cached1.value();
+  });
+
+  tester->unitTest("Current mutable Header/DataField/PUS values always re-finalize CRC.", [] {
+    ccsds::Packet packet;
+    auto pusHeader = std::make_shared<ccsds::pus::rev_c::TcHeader>();
+    TEST_VOID(packet.setSecondaryHeader(pusHeader));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    const auto first = packet.serialize();
+    if (!first || !coreCrcValid(first.value())) return false;
+
+    TEST_VOID(packet.getPrimaryHeader().setAPID(0x123U));
+    const auto second = packet.serialize();
+    if (!second || !coreCrcValid(second.value())
+        || first.value() == second.value()) return false;
+
+    TEST_VOID(packet.getDataField().setApplicationData(std::vector<std::uint8_t>{0xBBU}));
+    const auto third = packet.serialize();
+    if (!third || !coreCrcValid(third.value())
+        || second.value() == third.value()) return false;
+
+    pusHeader->setServiceType(5U);
+    const auto fourth = packet.serialize();
+    if (!fourth || !coreCrcValid(fourth.value())
+        || third.value() == fourth.value()) return false;
+
+    TEST_VOID(packet.getPrimaryHeader().setSequenceCount(0x3FFFU));
+    const auto fifth = packet.serialize();
+    ccsds_packet_view_t view{};
+    return fifth && coreCrcValid(fifth.value())
+        && ccsds_packet_view_parse(
+             fifth.value().data(), fifth.value().size(),
+             CCSDS_PACKET_ERROR_CONTROL_CRC16, nullptr, &view) == CCSDS_STATUS_OK
+        && view.primary_header.sequence_count == 0x3FFFU
+        && view.primary_header.apid == 0x123U;
+  });
+
+  tester->unitTest("Manual Packet serialization rejects stale same-length CRC.", [] {
+    ccsds::Packet sender;
+    TEST_VOID(sender.setApplicationData({0x11U, 0x22U}));
+    const auto original = sender.serialize();
+    if (!original) return false;
+
+    ccsds::Packet packet;
+    TEST_VOID(packet.deserialize(original.value()));
+    packet.setUpdatePacketEnable(false);
+    const auto unchanged = packet.serialize();
+    if (!unchanged || unchanged.value() != original.value()) return false;
+
+    TEST_VOID(packet.getDataField().setApplicationData(
+      std::vector<std::uint8_t>{0x11U, 0x23U}));
+    const auto stale = packet.serialize();
+    if (stale || stale.error().code() != ccsds::INVALID_CHECKSUM
+        || packet.getCRC() != sender.getCRC()) return false;
+
+    // An explicit update is a checked finalization even in manual mode.
+    TEST_VOID(packet.update());
+    const auto corrected = packet.serialize();
+    return corrected && corrected.value() != original.value()
+        && coreCrcValid(corrected.value());
+  });
+
+  tester->unitTest("Const packet snapshot recomputes wire without mutating packet state.", [] {
+    ccsds::Packet packet;
+    TEST_VOID(packet.setApplicationData({0x11U}));
+    const auto original = packet.serialize();
+    if (!original) return false;
+    packet.setUpdatePacketEnable(false);
+    const auto savedCrc = packet.getCRC();
+    const auto savedLength = packet.getPrimaryHeader().getDataLength();
+    TEST_VOID(packet.getDataField().setApplicationData(
+      std::vector<std::uint8_t>{0x22U}));
+    const ccsds::Packet &view = packet;
+    const auto snapshot1 = view.serializeSnapshot();
+    const auto snapshot2 = view.serializeSnapshot();
+    return snapshot1 && snapshot2
+        && snapshot1.value() == snapshot2.value()
+        && snapshot1.value() != original.value()
+        && coreCrcValid(snapshot1.value())
+        && packet.getCRC() == savedCrc
+        && packet.getPrimaryHeader().getDataLength() == savedLength
+        && !packet.serialize();
+  });
+
+  tester->unitTest("Serialization allocates for secondary-header callback growth.", [] {
+    ccsds::Packet packet;
+    auto header = std::make_shared<GrowingSecondaryHeader>();
+    TEST_VOID(packet.setSecondaryHeader(header));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    const auto originalSize = packet.getSerializedSize();
+    const auto wire = packet.serialize();
+    if (!wire || wire.value().size() != originalSize + 1U
+        || !coreCrcValid(wire.value())
+        || header->getSize() != 2U) return false;
+    const auto repeated = packet.serialize();
+    return repeated && repeated.value() == wire.value()
+        && header->getSize() == 2U;
+  });
+
+  tester->unitTest("Raw serialization bounds callback size growth before writing.", [] {
+    ccsds::Packet packet;
+    auto header = std::make_shared<GrowingSecondaryHeader>();
+    TEST_VOID(packet.setSecondaryHeader(header));
+    TEST_VOID(packet.setApplicationData({0xAAU}));
+    const auto originalSize = packet.getSerializedSize();
+    std::vector<std::uint8_t> output(originalSize, 0xA5U);
+    const auto tooSmall = packet.serialize(output.data(), output.size());
+    if (tooSmall || tooSmall.error().code() != ccsds::INVALID_DATA
+        || output != std::vector<std::uint8_t>(originalSize, 0xA5U)
+        || header->getSize() != 2U) return false;
+
+    // The legacy callback has deliberately mutated its own header and is not
+    // failure-transactional. The caller's output buffer is still untouched,
+    // and retrying with adequate space must produce a valid C11 packet.
+    const auto recovered = packet.serialize();
+    return recovered && recovered.value().size() == originalSize + 1U
+        && coreCrcValid(recovered.value());
+  });
+
+  tester->unitTest("Const Manager retrieval never invokes callbacks on shared headers.", [] {
+    ccsds::Packet prototype;
+    auto header = std::make_shared<UpdatingSecondaryHeader>();
+    TEST_VOID(prototype.setSecondaryHeader(header));
+    ccsds::Manager manager(prototype);
+    manager.setAutoValidateEnable(false);
+    manager.setDataFieldSize(8U);
+    TEST_VOID(manager.setApplicationData({0xAAU, 0xBBU}));
+    const ccsds::Manager &view = manager;
+    const auto before = header->serialize();
+    const auto stream1 = view.getPacketsBuffer();
+    const auto stream2 = view.getPacketsBuffer();
+    const auto indexed = manager.getPacketBufferAtIndex(0U);
+    return stream1 && stream2 && indexed
+        && stream1.value() == stream2.value()
+        && stream1.value() == indexed.value()
+        && coreCrcValid(stream1.value())
+        && header->serialize() == before;
   });
 
   tester->unitTest("Parsed packet inspection preserves received sequence and CRC.", [] {

@@ -179,6 +179,10 @@ ccsds_status_t ccsds_sequence_validator_accept(ccsds_sequence_validator_t *valid
  * Sequence state is inspected but never advanced. This lets higher-level
  * validation append PUS/template checks before deciding whether to accept the
  * packet into the sequence stream.
+ *
+ * Passing sequence=NULL with validate_sequence_count=0 skips both sequence
+ * flag transition checks and count checks for stateless packet inspection.
+ * Passing sequence=NULL with validate_sequence_count!=0 is an error.
  */
 ccsds_status_t ccsds_validate_packet_coherence(
     const ccsds_packet_coherence_input_t *input,

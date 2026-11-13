@@ -11,10 +11,14 @@
 #include "CCSDSSecondaryHeaderAbstract.h"
 #include "PusTailoring.h"
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace ccsds::pus {
+
+  class TcSecondaryHeader;
+  class TmSecondaryHeader;
 
   class SecondaryHeader : public ccsds::SecondaryHeaderAbstract {
   public:
@@ -23,6 +27,13 @@ namespace ccsds::pus {
       return selector(getRevision(), getDirection());
     }
     [[nodiscard]] bool isPusHeader() const override { return true; }
+    [[nodiscard]] const SecondaryHeader *asPusHeader() const noexcept final { return this; }
+    [[nodiscard]] virtual const TcSecondaryHeader *asTc() const noexcept { return nullptr; }
+    [[nodiscard]] virtual const TmSecondaryHeader *asTm() const noexcept { return nullptr; }
+    /** @brief RTTI-free clone only for supported concrete PUS codecs. */
+    [[nodiscard]] virtual std::shared_ptr<ccsds::SecondaryHeaderAbstract> clonePus() const {
+      return nullptr;
+    }
     [[nodiscard]] std::uint8_t getSecondaryHeaderSpareOctets() const noexcept {
       return m_secondaryHeaderSpareOctets;
     }
@@ -46,6 +57,7 @@ namespace ccsds::pus {
   public:
     static constexpr PacketDirection Direction = PacketDirection::Telecommand;
     [[nodiscard]] PacketDirection getDirection() const noexcept override { return Direction; }
+    [[nodiscard]] const TcSecondaryHeader *asTc() const noexcept final { return this; }
     [[nodiscard]] std::uint8_t getAcknowledgementFlags() const { return m_acknowledgementFlags; }
     [[nodiscard]] std::uint8_t getServiceType() const { return m_serviceType; }
     [[nodiscard]] std::uint8_t getServiceSubtype() const { return m_serviceSubtype; }
@@ -76,6 +88,10 @@ namespace ccsds::pus {
   public:
     static constexpr PacketDirection Direction = PacketDirection::Telemetry;
     [[nodiscard]] PacketDirection getDirection() const noexcept override { return Direction; }
+    [[nodiscard]] const TmSecondaryHeader *asTm() const noexcept final { return this; }
+    [[nodiscard]] virtual bool packetSubcounterPresent() const noexcept { return false; }
+    [[nodiscard]] virtual std::uint8_t getPacketSubcounter() const { return 0U; }
+    [[nodiscard]] virtual std::uint8_t getTimeReferenceStatus() const { return 0U; }
     [[nodiscard]] std::uint8_t getServiceType() const { return m_serviceType; }
     [[nodiscard]] std::uint8_t getServiceSubtype() const { return m_serviceSubtype; }
     [[nodiscard]] std::uint32_t getDestinationId() const { return m_destinationId; }
@@ -86,6 +102,13 @@ namespace ccsds::pus {
     void setServiceType(std::uint8_t value) { m_serviceType = value; }
     void setServiceSubtype(std::uint8_t value) { m_serviceSubtype = value; }
     ResultBool setDestinationId(std::uint32_t value);
+    /**
+     * @brief Set a numeric CUC timestamp with no heap allocation on success.
+     *
+     * The C11 CUC codec validates epoch, P-field and coarse/fractional widths
+     * through a bounded eight-octet stack buffer. Diagnostic strings may
+     * allocate on failure; the stored timestamp remains unchanged.
+     */
     ResultBool setTimestamp(const time::CucTime &timestamp);
 #ifndef CCSDS_MCU
     ResultBool loadFromConfig(const ccsds::Config &config) override;
@@ -121,6 +144,7 @@ namespace ccsds::pus {
       [[nodiscard]] TcTailoring getTailoring() const noexcept {
         return {m_sourceIdOctets, m_secondaryHeaderSpareOctets};
       }
+      [[nodiscard]] std::shared_ptr<ccsds::SecondaryHeaderAbstract> clonePus() const override;
       [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override;
       [[nodiscard]] std::uint16_t getSize() const override { return tcSize(); }
       [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
@@ -137,13 +161,14 @@ namespace ccsds::pus {
                         std::uint8_t serviceSubtype = 0U, std::uint8_t packetSubcounter = 0U,
                         std::uint32_t destinationId = 0U, time::CucTime timestamp = {});
       [[nodiscard]] Revision getRevision() const noexcept override { return RevisionValue; }
-      [[nodiscard]] std::uint8_t getPacketSubcounter() const { return m_packetSubcounter; }
-      [[nodiscard]] bool packetSubcounterPresent() const noexcept { return m_packetSubcounterPresent; }
+      [[nodiscard]] std::uint8_t getPacketSubcounter() const override { return m_packetSubcounter; }
+      [[nodiscard]] bool packetSubcounterPresent() const noexcept override { return m_packetSubcounterPresent; }
       void setPacketSubcounter(std::uint8_t value) { m_packetSubcounter = value; }
       [[nodiscard]] TmTailoring getTailoring() const noexcept {
         return {m_destinationIdOctets, m_packetSubcounterPresent, m_timestampPresent,
                 m_cuc, m_secondaryHeaderSpareOctets};
       }
+      [[nodiscard]] std::shared_ptr<ccsds::SecondaryHeaderAbstract> clonePus() const override;
       [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override;
       [[nodiscard]] std::uint16_t getSize() const override;
       [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
@@ -168,6 +193,7 @@ namespace ccsds::pus {
                         std::uint8_t acknowledgementFlags = 0U);
       [[nodiscard]] Revision getRevision() const noexcept override { return RevisionValue; }
       [[nodiscard]] TcTailoring getTailoring() const noexcept { return {m_secondaryHeaderSpareOctets}; }
+      [[nodiscard]] std::shared_ptr<ccsds::SecondaryHeaderAbstract> clonePus() const override;
       [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override;
       [[nodiscard]] std::uint16_t getSize() const override { return tcSize(); }
       [[nodiscard]] std::vector<std::uint8_t> serialize() const override;
@@ -188,12 +214,13 @@ namespace ccsds::pus {
                         time::CucTime timestamp = {});
       [[nodiscard]] Revision getRevision() const noexcept override { return RevisionValue; }
       [[nodiscard]] std::uint16_t getMessageTypeCounter() const { return m_messageTypeCounter; }
-      [[nodiscard]] std::uint8_t getTimeReferenceStatus() const { return m_timeReferenceStatus; }
+      [[nodiscard]] std::uint8_t getTimeReferenceStatus() const override { return m_timeReferenceStatus; }
       void setMessageTypeCounter(std::uint16_t value) { m_messageTypeCounter = value; }
       ResultBool setTimeReferenceStatus(std::uint8_t value);
       [[nodiscard]] TmTailoring getTailoring() const noexcept {
         return {m_timestampPresent, m_cuc, m_secondaryHeaderSpareOctets};
       }
+      [[nodiscard]] std::shared_ptr<ccsds::SecondaryHeaderAbstract> clonePus() const override;
       [[nodiscard]] ResultBool deserialize(const std::vector<std::uint8_t> &data) override;
       [[nodiscard]] std::uint16_t getSize() const override;
       [[nodiscard]] std::vector<std::uint8_t> serialize() const override;

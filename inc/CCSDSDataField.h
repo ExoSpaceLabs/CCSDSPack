@@ -88,6 +88,10 @@ namespace ccsds {
     std::shared_ptr<SecondaryHeaderAbstract> getSecondaryHeader();
     [[nodiscard]] std::shared_ptr<const SecondaryHeaderAbstract> getSecondaryHeader() const;
 
+    /** @brief Run the pending legacy custom-secondary-header refresh callback.
+     * @note The user-provided callback is stateful and void-returning; this is
+     *       not protocol finalization and it has no rollback guarantee.
+     */
     void update();
 
   private:

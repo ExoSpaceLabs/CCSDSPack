@@ -20,7 +20,7 @@ if (!report.valid()) {
 }
 ```
 
-Validation is read-only with respect to the Packet and its secondary header. A Validator retains sequence-stream state between calls when sequence validation is enabled.
+Validation is read-only with respect to the Packet and its secondary header. `Validator::validate()` retains sequence-stream state between accepted calls. `Validator::validateStateless()` performs packet/template/PUS checks on a temporary copy without advancing stream state; its report intentionally omits `SequenceFlags` and `SequenceCount`. Manager readback uses this stateless path, while ordered reassembly validates sequence transitions in the C11 reassembly state.
 
 **v2.2 source-audit limitation:** `Validator` currently recomputes CRC16 with default parameters, even for a Packet configured with non-default CRC settings (A-11). Manager inspection getters also reuse the persistent sequence Validator and may change validation results across repeated reads (A-03). Both require fixes and regression evidence before v2.2 qualification; see the [architecture audit](V2_2_ARCHITECTURE_AUDIT.md).
 
