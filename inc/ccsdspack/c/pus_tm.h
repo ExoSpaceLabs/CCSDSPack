@@ -71,7 +71,7 @@ ccsds_status_t ccsds_pus_a_tm_encode(
     size_t capacity,
     size_t *written_out);
 
-/** @brief Decodes one complete PUS-A TM secondary header. */
+/** @brief Decodes one complete PUS-A TM secondary header.\n * @note On failure, fields_out is unchanged.\n */
 ccsds_status_t ccsds_pus_a_tm_decode(
     const uint8_t *data,
     size_t size,
@@ -86,7 +86,7 @@ ccsds_status_t ccsds_pus_c_tm_encode(
     size_t capacity,
     size_t *written_out);
 
-/** @brief Decodes one complete PUS-C TM secondary header. */
+/** @brief Decodes one complete PUS-C TM secondary header.\n * @note On failure, fields_out is unchanged.\n */
 ccsds_status_t ccsds_pus_c_tm_decode(
     const uint8_t *data,
     size_t size,
