@@ -107,6 +107,14 @@ namespace ccsds {
                    bool validateSequenceCount,
                    bool validateAgainstTemplate);
     [[nodiscard]] ValidationReport validate(const Packet &packet);
+    /**
+     * @brief Inspect packet coherence/template/PUS without consuming stream sequence state.
+     *
+     * SequenceFlags and SequenceCount are intentionally absent from the returned
+     * report. This operation never modifies the Validator's retained report or
+     * sequencing state. Ordered stream ingestion must use validate().
+     */
+    [[nodiscard]] ValidationReport validateStateless(const Packet &packet) const;
     [[nodiscard]] const ValidationReport &getReport() const noexcept { return m_report; }
     void clear();
 
@@ -118,6 +126,7 @@ namespace ccsds {
     bool m_validatePacketCoherence{true};
     bool m_validateAgainstTemplate{false};
     bool m_validateSequenceCount{true};
+    bool m_skipSequence{false};
     ccsds_sequence_validator_t m_sequenceState{};
     ValidationReport m_report{};
   };
