@@ -250,11 +250,13 @@ namespace ccsds {
 
     void setCrcConfig(const CRC16Config crcConfig) {
       m_CRC16Config = crcConfig;
+      m_wireFinalized = false;
     }
     void setCrcConfig(const std::uint16_t polynomial,
                       const std::uint16_t initialValue,
                       const std::uint16_t finalXorValue) {
       m_CRC16Config = {polynomial, initialValue, finalXorValue};
+      m_wireFinalized = false;
     }
 
     /** @brief Explicitly finalize from current data/headers using C11 (even in manual mode).
@@ -284,6 +286,15 @@ namespace ccsds {
     [[nodiscard]] Result<std::size_t> serializePrepared(
       std::uint8_t *output, std::size_t capacity) const;
 
+    /** @brief Cached finalization is safe only when no mutable subobject can
+     *         have escaped and no externally mutable secondary header is held.
+     * The public Packet/DataField/header accessors remain API-compatible.
+     */
+    [[nodiscard]] bool canReuseFinalization() const noexcept {
+      return m_wireFinalized && !m_mutableStateExposed
+             && !m_dataField.getSecondaryHeaderFlag();
+    }
+
     static constexpr std::uint16_t SEQUENCE_COUNT_MASK = 0x3FFFU;
     static constexpr std::uint16_t PACKET_ERROR_CONTROL_DISABLED_MASK = 0x8000U;
 
@@ -292,6 +303,8 @@ namespace ccsds {
     std::uint16_t m_CRC16{};
     CRC16Config m_CRC16Config;
     bool m_enableUpdatePacket{true};
+    bool m_wireFinalized{false};
+    bool m_mutableStateExposed{false};
     std::uint16_t m_sequenceCounter{0};
   };
 }
