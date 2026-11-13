@@ -733,3 +733,24 @@ ccsds::ResultBool ccsds::pus::rev_c::TmHeader::loadFromConfig(
   return true;
 }
 #endif
+
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_a::TcHeader::clonePus() const {
+  return std::make_shared<TcHeader>(*this);
+}
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_a::TmHeader::clonePus() const {
+  return std::make_shared<TmHeader>(*this);
+}
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_c::TcHeader::clonePus() const {
+  return std::make_shared<TcHeader>(*this);
+}
+
+std::shared_ptr<ccsds::SecondaryHeaderAbstract>
+ccsds::pus::rev_c::TmHeader::clonePus() const {
+  return std::make_shared<TmHeader>(*this);
+}
