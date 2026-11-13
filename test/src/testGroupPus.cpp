@@ -350,6 +350,114 @@ void testGroupPus(TestManager *tester, const std::string &description) {
     return implicit && implicit.value() == std::vector<std::uint8_t>({0x12U, 0x34U, 0x80U});
   });
 
+  tester->unitTest("Bounded C++ CUC produces fixed CCSDS 301.0 basic vectors.", [] {
+    using namespace ccsds::time;
+    const CucConfiguration standard{
+      Epoch::Ccsds1958Tai, PFieldMode::Explicit, 4U, 3U};
+    const CucConfiguration agency{
+      Epoch::AgencyDefined, PFieldMode::Explicit, 2U, 1U};
+    const CucConfiguration minimum{
+      Epoch::Ccsds1958Tai, PFieldMode::Explicit, 1U, 0U};
+    struct Case {
+      CucConfiguration cfg;
+      CucTime value;
+      std::vector<std::uint8_t> expected;
+    };
+    const std::vector<Case> vectors{
+      {standard, {0x01020304U, 0xA0B0C0U},
+        {0x1FU, 1U, 2U, 3U, 4U, 0xA0U, 0xB0U, 0xC0U}},
+      {agency, {0x1234U, 0x80U}, {0x25U, 0x12U, 0x34U, 0x80U}},
+      {minimum, {0x7FU, 0U}, {0x10U, 0x7FU}}
+    };
+    for (const auto &entry : vectors) {
+      std::array<std::uint8_t, 8U> bytes{};
+      const auto written = serialize(
+        entry.value, entry.cfg, bytes.data(), bytes.size());
+      if (!written || written.value() != entry.expected.size()
+          || !std::equal(entry.expected.begin(), entry.expected.end(),
+                         bytes.begin())) return false;
+      const auto decoded = deserialize(
+        bytes.data(), written.value(), entry.cfg);
+      if (!decoded || decoded.value() != entry.value) return false;
+    }
+    return true;
+  });
+
+  tester->unitTest("Bounded C++ CUC matches C11 on all 64 basic layouts.", [] {
+    using namespace ccsds::time;
+    for (const auto epoch : {Epoch::Ccsds1958Tai, Epoch::AgencyDefined}) {
+      for (const auto mode : {PFieldMode::Implicit, PFieldMode::Explicit}) {
+        for (std::uint8_t coarse = 1U; coarse <= 4U; ++coarse) {
+          for (std::uint8_t fine = 0U; fine <= 3U; ++fine) {
+            const CucConfiguration cfg{epoch, mode, coarse, fine};
+            const ccsds_cuc_config_t cCfg{
+              static_cast<ccsds_cuc_epoch_t>(epoch),
+              static_cast<ccsds_cuc_pfield_mode_t>(mode), coarse, fine};
+            const auto coarseMax = (UINT64_C(1) << (coarse * 8U)) - 1U;
+            const auto fineMax = fine == 0U ? 0U
+              : (UINT64_C(1) << (fine * 8U)) - 1U;
+            const CucTime val{UINT64_C(0xDEADBEEF) & coarseMax,
+                              UINT64_C(0x00AABBCC) & fineMax};
+            const ccsds_cuc_time_t cVal{val.coarse, val.fine};
+            std::array<std::uint8_t, 8U> rawC{};
+            std::array<std::uint8_t, 8U> rawCpp{};
+            std::size_t cWritten = 0U;
+            if (ccsds_cuc_encode(&cVal, &cCfg, rawC.data(), rawC.size(),
+                                 &cWritten) != CCSDS_STATUS_OK) return false;
+            const auto cppWritten = serialize(
+              val, cfg, rawCpp.data(), rawCpp.size());
+            const auto legacy = serialize(val, cfg);
+            if (!cppWritten || cppWritten.value() != cWritten
+                || !legacy || legacy.value().size() != cWritten
+                || !std::equal(rawC.begin(), rawC.begin() + cWritten,
+                               rawCpp.begin())
+                || !std::equal(rawC.begin(), rawC.begin() + cWritten,
+                               legacy.value().begin())) return false;
+            const auto decoded = deserialize(rawCpp.data(), cWritten, cfg);
+            const auto legacyDecoded = deserialize(legacy.value(), cfg);
+            if (!decoded || decoded.value() != val
+                || !legacyDecoded || legacyDecoded.value() != val) return false;
+          }
+        }
+      }
+    }
+    return true;
+  });
+
+  tester->unitTest("Bounded CUC rejects invalid output without partial writes.", [] {
+    using namespace ccsds::time;
+    const CucConfiguration cfg{
+      Epoch::Ccsds1958Tai, PFieldMode::Explicit, 1U, 1U};
+    std::array<std::uint8_t, 8U> output{};
+    output.fill(0xA5U);
+    const auto saved = output;
+    const auto tooSmall = serialize(
+      {0x12U, 0x34U}, cfg, output.data(), 2U);
+    const auto nullOut = serialize({0x12U, 0x34U}, cfg, nullptr, 3U);
+    const auto overflow = serialize({0x100U, 0U}, cfg, output.data(), output.size());
+    const auto fineOverflow = serialize({0U, 0x100U}, cfg, output.data(), output.size());
+    auto invalid = cfg;
+    invalid.coarseOctets = 0U;
+    const auto badConfig = serialize({0U, 0U}, invalid, output.data(), output.size());
+    if (tooSmall || nullOut || overflow || fineOverflow || badConfig
+        || output != saved
+        || tooSmall.error().code() != ccsds::INVALID_DATA
+        || nullOut.error().code() != ccsds::NULL_POINTER
+        || overflow.error().message() != "CUC coarse time does not fit the configured width."
+        || fineOverflow.error().message() != "CUC fine time does not fit the configured width."
+        || badConfig.error().message() != "Basic CUC coarse time requires 1 to 4 octets.") {
+      return false;
+    }
+    const std::array<std::uint8_t, 3U> incorrectPfield{0x20U, 0x12U, 0x34U};
+    const auto mismatch = deserialize(incorrectPfield.data(), incorrectPfield.size(), cfg);
+    const auto badSize = deserialize(incorrectPfield.data(), 2U, cfg);
+    const auto nullIn = deserialize(nullptr, 3U, cfg);
+    return !mismatch && !badSize && !nullIn
+        && mismatch.error().message() == "CUC P-field does not match the configured epoch or widths."
+        && badSize.error().message() == "CUC encoded size does not match the configured layout."
+        && nullIn.error().code() == ccsds::NULL_POINTER;
+  });
+
   tester->unitTest("C++ CUC encoding delegates all 64 supported layouts to the C11 codec.", [] {
     for (const auto epoch : {ccsds::time::Epoch::Ccsds1958Tai,
                              ccsds::time::Epoch::AgencyDefined}) {
