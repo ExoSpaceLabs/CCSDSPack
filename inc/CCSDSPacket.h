@@ -248,6 +248,9 @@ namespace ccsds {
     Header &getPrimaryHeader();
     [[nodiscard]] const Header &getPrimaryHeader() const;
 
+    /** @brief CRC parameters used by finalization, parsing and validation. */
+    [[nodiscard]] CRC16Config getCrcConfig() const noexcept { return m_CRC16Config; }
+
     void setCrcConfig(const CRC16Config crcConfig) {
       m_CRC16Config = crcConfig;
       m_wireFinalized = false;
