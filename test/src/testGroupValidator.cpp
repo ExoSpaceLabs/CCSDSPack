@@ -124,6 +124,23 @@ void testGroupValidator(TestManager *tester, const std::string &description) {
     return !cloned && cloned.error().code() == ccsds::INVALID_SECONDARY_HEADER_DATA;
   });
 
+  tester->unitTest("PUS factory clones all four final codec identities.", [] {
+    ccsds::pus::SecondaryHeaderFactory factory;
+    std::vector<std::shared_ptr<ccsds::pus::SecondaryHeader>> originals{
+      std::make_shared<ccsds::pus::rev_a::TcHeader>(),
+      std::make_shared<ccsds::pus::rev_a::TmHeader>(),
+      std::make_shared<ccsds::pus::rev_c::TcHeader>(),
+      std::make_shared<ccsds::pus::rev_c::TmHeader>()
+    };
+    for (const auto &original : originals) {
+      const auto clone = factory.clone(*original);
+      if (!clone || !clone.value()->asPusHeader()
+          || clone.value()->getType() != original->getType()
+          || clone.value().get() == original.get()) return false;
+    }
+    return true;
+  });
+
   tester->unitTest("Validator accepts a non-zero unsegmented sequence count.", [] {
     ccsds::Validator validator;
     validator.configure(true, true, false);
