@@ -22,26 +22,24 @@ bool ccsds::pus::sameTailoring(const SecondaryHeader &lhs,
   }
 
   if (lhs.getDirection() == PacketDirection::Telecommand) {
-    const auto &lhsTc = static_cast<const TcSecondaryHeader &>(lhs);
-    const auto &rhsTc = static_cast<const TcSecondaryHeader &>(rhs);
-    return lhsTc.getSourceIdOctets() == rhsTc.getSourceIdOctets();
+    const auto *lhsTc = lhs.asTc();
+    const auto *rhsTc = rhs.asTc();
+    return lhsTc != nullptr && rhsTc != nullptr
+        && lhsTc->getSourceIdOctets() == rhsTc->getSourceIdOctets();
   }
 
   if (lhs.getDirection() == PacketDirection::Telemetry) {
-    const auto &lhsTm = static_cast<const TmSecondaryHeader &>(lhs);
-    const auto &rhsTm = static_cast<const TmSecondaryHeader &>(rhs);
-    if (lhsTm.getDestinationIdOctets() != rhsTm.getDestinationIdOctets()
-        || lhsTm.timestampPresent() != rhsTm.timestampPresent()
-        || !sameCuc(lhsTm.getCucConfiguration(), rhsTm.getCucConfiguration())) {
+    const auto *lhsTm = lhs.asTm();
+    const auto *rhsTm = rhs.asTm();
+    if (!lhsTm || !rhsTm
+        || lhsTm->getDestinationIdOctets() != rhsTm->getDestinationIdOctets()
+        || lhsTm->timestampPresent() != rhsTm->timestampPresent()
+        || !sameCuc(lhsTm->getCucConfiguration(), rhsTm->getCucConfiguration())) {
       return false;
     }
 
-    if (lhs.getRevision() == Revision::A) {
-      const auto &lhsATm = static_cast<const rev_a::TmHeader &>(lhs);
-      const auto &rhsATm = static_cast<const rev_a::TmHeader &>(rhs);
-      return lhsATm.packetSubcounterPresent() == rhsATm.packetSubcounterPresent();
-    }
-    return true;
+    return lhs.getRevision() != Revision::A
+        || lhsTm->packetSubcounterPresent() == rhsTm->packetSubcounterPresent();
   }
 
   return false;
