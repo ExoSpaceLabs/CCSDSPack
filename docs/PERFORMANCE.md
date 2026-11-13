@@ -401,7 +401,32 @@ and depend on the toolchain and shared-library linkage. No protocol semantics
 were changed; wire/error regression evidence remains governed by the existing
 C11/C++ tests, sanitizers and fixed vectors.
 
-**Disposition:** keep #166 open for a future, justified candidate using
-controlled static/shared linkage comparison or call-graph profiling. Do not
-rewrite basic CUC solely to remove the C++ convenience layer. Applications
-with hard timing constraints can already use the C11 codec directly.
+**Disposition (historical v2.1):** the vector-returning C++ CUC wrapper retains
+its owning allocation and published performance regression. No compliant
+rewrite of the basic C11 codec was justified by this evidence.
+
+### v2.2 candidate: optional C++ caller-owned CUC adapter (#166)
+
+The `perf/v2.2-cuc-cpp-bounded` branch adds C++17 overloads for
+`serialize(value, config, uint8_t*, capacity)` and
+`deserialize(const uint8_t*, size, config)`. They call the same C11
+CUC encode/decode functions as the owning C++ methods and preserve their
+existing error translation. No time-code wire representation, supported
+epoch, P-field policy or width changes.
+
+`test/performance/cuc_path_benchmark.cpp` profiles
+`cpp_bounded_encode_caller_buffer` and
+`cpp_bounded_decode_borrowed_buffer` in the **same process** as the C11
+and legacy C++ variants, including heap-allocation instrumentation.
+This is a new **non-owning** interface, so latency differences versus
+the owning-vector method are ownership differences, not evidence
+that the original vector-returning API became faster. No performance
+claim is accepted without completed matched CI data.
+
+Acceptance requires fixed CCSDS 301.0-B-4 §3.2.2 vectors, all 64
+supported basic CUC layouts, negative P-field/size/config/overflow
+cases, no output-buffer mutation on error, and unchanged C11 tests,
+C++ legacy byte/error compatibility, Linux/Windows, sanitizers and MCU
+cross-builds. `#166` stays open until an accepted measurement and an
+integration decision on `develop`.
+
