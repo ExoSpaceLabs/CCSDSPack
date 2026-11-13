@@ -30,29 +30,10 @@ ccsds::pus::SecondaryHeaderFactory::create(const std::string &value) const {
 
 ccsds::Result<std::shared_ptr<ccsds::SecondaryHeaderAbstract>>
 ccsds::pus::SecondaryHeaderFactory::clone(const SecondaryHeader &header) const {
-  if (header.getRevision() == Revision::A
-      && header.getDirection() == PacketDirection::Telecommand) {
-    const auto &typed = static_cast<const rev_a::TcHeader &>(header);
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(
-      std::make_shared<rev_a::TcHeader>(typed));
-  }
-  if (header.getRevision() == Revision::A
-      && header.getDirection() == PacketDirection::Telemetry) {
-    const auto &typed = static_cast<const rev_a::TmHeader &>(header);
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(
-      std::make_shared<rev_a::TmHeader>(typed));
-  }
-  if (header.getRevision() == Revision::C
-      && header.getDirection() == PacketDirection::Telecommand) {
-    const auto &typed = static_cast<const rev_c::TcHeader &>(header);
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(
-      std::make_shared<rev_c::TcHeader>(typed));
-  }
-  if (header.getRevision() == Revision::C
-      && header.getDirection() == PacketDirection::Telemetry) {
-    const auto &typed = static_cast<const rev_c::TmHeader &>(header);
-    return std::static_pointer_cast<SecondaryHeaderAbstract>(
-      std::make_shared<rev_c::TmHeader>(typed));
+  auto cloned = header.clonePus();
+  if (cloned && cloned->asPusHeader() != nullptr
+      && cloned->getType() == header.getType()) {
+    return cloned;
   }
   return Error{ErrorCode::INVALID_SECONDARY_HEADER_DATA,
                "Cannot clone unsupported PUS header identity."};
