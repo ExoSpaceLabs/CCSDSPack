@@ -401,7 +401,105 @@ and depend on the toolchain and shared-library linkage. No protocol semantics
 were changed; wire/error regression evidence remains governed by the existing
 C11/C++ tests, sanitizers and fixed vectors.
 
-**Disposition:** keep #166 open for a future, justified candidate using
-controlled static/shared linkage comparison or call-graph profiling. Do not
-rewrite basic CUC solely to remove the C++ convenience layer. Applications
-with hard timing constraints can already use the C11 codec directly.
+**Disposition (historical v2.1):** the vector-returning C++ CUC wrapper retains
+its owning allocation and published performance regression. No compliant
+rewrite of the basic C11 codec was justified by this evidence.
+
+### v2.2 candidate: optional C++ caller-owned CUC adapter (#166)
+
+The `perf/v2.2-cuc-cpp-bounded` branch adds C++17 overloads for
+`serialize(value, config, uint8_t*, capacity)` and
+`deserialize(const uint8_t*, size, config)`. They call the same C11
+CUC encode/decode functions as the owning C++ methods and preserve their
+existing error translation. No time-code wire representation, supported
+epoch, P-field policy or width changes.
+
+`test/performance/cuc_path_benchmark.cpp` profiles
+`cpp_bounded_encode_caller_buffer` and
+`cpp_bounded_decode_borrowed_buffer` in the **same process** as the C11
+and legacy C++ variants, including heap-allocation instrumentation.
+This is a new **non-owning** interface, so latency differences versus
+the owning-vector method are ownership differences, not evidence
+that the original vector-returning API became faster. The CUC microbenchmark's **same-process** candidate run on GitHub Actions
+Ubuntu 26.04 at `4b61e85fb938ffc6a02d666ac346e96b2c6be0e7`
+([Linux run 43441835419](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43441835419),
+`build-and-test (ubuntu-26.04)`) measured medians across 7 batches of
+200,000 iterations, with allocation tracking enabled:
+
+| Same-process path | Median ns/op | Allocations/op | Bytes allocated/op |
+| --- | ---: | ---: | ---: |
+| C11 encode into caller buffer | 7.292 | 0 | 0 |
+| C++17 bounded encode into caller buffer | **11.921** | **0** | **0** |
+| Existing C++17 owning-vector encode | 26.093 | 1 | 7 |
+| C11 decode from caller buffer | 4.466 | 0 | 0 |
+| C++17 bounded decode from borrowed buffer | 13.978 | 0 | 0 |
+| Existing C++17 vector-argument decode | 13.991 | 0 | 0 |
+
+This supports a **2.19× improvement in the encode operation** when callers
+choose the *new bounded C++ API* instead of the owning-vector API, and removes
+one output allocation. It does **not** show an improvement in existing
+vector-returning C++ encoding; the old method was retained without changes.
+The two C++ decode paths are indistinguishable at this measurement
+precision. Decoding external borrowed buffers may avoid vector construction
+performed by a caller, but this benchmark does not include such setup costs.
+
+### PUS TM internal timestamp and tail helpers
+
+Prior to this optimization, `TmSecondaryHeader::setTimestamp()` called the
+owning `time::serialize(value, config)` and discarded its encoded vector:
+a heap allocation per successful timestamp update in the basic CUC subset.
+It now validates with the bounded `time::serialize(value, config, data, capacity)`
+into an eight-octet local array, **without changing** the public setter,
+its error categories/messages, or successful field values.
+
+The protected `appendTmTail()` and `parseTmTail()` helpers also now use
+bounded CUC operations instead of temporary encoded/sliced CUC vectors.
+The helpers preserve size/spare/P-field errors and now avoid partial
+destination/timestamp mutation if CUC decoding fails. The built-in
+PUS-A/PUS-C TM wire serializers and deserializers already call the
+C11 PUS TM codecs, which delegate time encoding directly to C11 CUC;
+those hot paths are **not** claimed to have gained from this setter change.
+
+The benchmark `cpp_pus_a_tm_set_timestamp` and
+`cpp_pus_c_tm_set_timestamp` cases report same-process timing,
+allocations and allocated bytes under successful updates.
+
+The [Ubuntu 26.04 implementation CI run #43446881949](https://github.com/ExoSpaceLabs/CCSDSPack/actions/runs/43446881949)
+on source commit `7d0f72f00191bab37852d1e2a01637d456d93d1f`
+recorded these **same-process** medians over seven batches of 200,000
+iterations, following warmup. Success-path allocation counts were
+measured using the benchmark's tracked global `operator new`.
+
+| Operation | Median ns/op | Allocations/op | Allocated bytes/op |
+| --- | ---: | ---: | ---: |
+| C11 CUC caller-owned encode | 10.107 | 0 | 0 |
+| C++17 bounded CUC encode | 13.339 | 0 | 0 |
+| C++17 owning-vector CUC encode | 28.980 | 1 | 7 |
+| **PUS-A TM setTimestamp() (new)** | **15.248** | **0** | **0** |
+| **PUS-C TM setTimestamp() (new)** | **15.252** | **0** | **0** |
+
+The previous setter called the owning CUC encode, which allocated a
+temporary vector, and then discarded it. The new success path does not
+allocate. The standalone vector API still allocates as designed.
+The old setter was **not** separately timed under this same benchmark;
+no exact setter before/after latency multiplier is claimed. Error
+diagnostic construction may still allocate on failure.
+
+These numbers are not grounds to infer end-to-end packet speedups;
+the built-in PUS-A/C TM wire encoders already used the C11 codec
+directly.
+
+The 7.292 ns C11 encode figure is faster than the 11.733 ns historical
+C11 baseline; this is **not** evidence of changed C11 implementation,
+because CI runners and conditions vary. Only within-run comparisons are
+suitable for evaluating this additive API. Cross-PR matched v2.2
+performance acceptance and source-frozen hardware qualification remain
+separate gates.
+
+Acceptance requires fixed CCSDS 301.0-B-4 §3.2.2 vectors, all 64
+supported basic CUC layouts, negative P-field/size/config/overflow
+cases, no output-buffer mutation on error, and unchanged C11 tests,
+C++ legacy byte/error compatibility, Linux/Windows, sanitizers and MCU
+cross-builds. `#166` stays open until an accepted measurement and an
+integration decision on `develop`.
+
