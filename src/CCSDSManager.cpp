@@ -17,15 +17,16 @@ namespace {
     const auto rhsHeader = rhs.getSecondaryHeader();
     if (static_cast<bool>(lhsHeader) != static_cast<bool>(rhsHeader)) return false;
     if (!lhsHeader) return true;
+    const auto *lhsPus = lhsHeader->asPusHeader();
+    const auto *rhsPus = rhsHeader->asPusHeader();
     if (lhsHeader->getType() != rhsHeader->getType()
         || lhsHeader->getDirection() != rhsHeader->getDirection()
+        || static_cast<bool>(lhsPus) != static_cast<bool>(rhsPus)
         || lhsHeader->isPusHeader() != rhsHeader->isPusHeader()) {
       return false;
     }
-    if (!lhsHeader->isPusHeader()) return true;
-    return ccsds::pus::sameTailoring(
-      static_cast<const ccsds::pus::SecondaryHeader &>(*lhsHeader),
-      static_cast<const ccsds::pus::SecondaryHeader &>(*rhsHeader));
+    if (!lhsPus) return true;
+    return ccsds::pus::sameTailoring(*lhsPus, *rhsPus);
   }
 }
 
