@@ -77,6 +77,11 @@ namespace ccsds {
     void setSequenceFlags(ESequenceFlag flags);
     [[nodiscard]] ResultBool setSequenceCount(std::uint16_t count);
     void setDataFieldSize(std::uint16_t size);
+    /** @brief Enable implicit finalization/legacy callback when serializing.
+     * @note Disabled mode preserves stored wire fields but rejects stale CRC/length.
+     *       Explicit update() still finalizes. No secondary-header callback runs
+     *       in disabled mode.
+     */
     void setUpdatePacketEnable(bool enable);
 
     /** @brief Selects packet-level error control independently of PUS/custom headers. */
