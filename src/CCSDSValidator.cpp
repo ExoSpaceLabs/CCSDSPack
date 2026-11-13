@@ -163,7 +163,8 @@ ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
     ccsds_validation_report_t coreReport{};
     ccsds_validation_report_reset(&coreReport);
     const auto coreStatus = ccsds_validate_packet_coherence(
-      &input, &m_sequenceState, m_validateSequenceCount ? 1 : 0, &coreReport);
+      &input, m_skipSequence ? nullptr : &m_sequenceState,
+      (!m_skipSequence && m_validateSequenceCount) ? 1 : 0, &coreReport);
     if (coreStatus != CCSDS_STATUS_OK) {
       setCheck(ValidationCode::PrimaryHeader, false);
       return m_report;
@@ -269,18 +270,24 @@ ccsds::ValidationReport ccsds::Validator::validate(const Packet &packet) {
   }
 
   const bool sequenceFlagsValid =
-    !m_validatePacketCoherence
+    !m_validatePacketCoherence || m_skipSequence
     || m_report.passed(ValidationCode::SequenceFlags);
   const bool sequenceCountValid =
-    !m_validatePacketCoherence
+    !m_validatePacketCoherence || m_skipSequence
     || !m_validateSequenceCount
     || m_report.passed(ValidationCode::SequenceCount);
 
-  if (m_validatePacketCoherence && sequenceFlagsValid
+  if (m_validatePacketCoherence && !m_skipSequence && sequenceFlagsValid
       && sequenceCountValid && m_report.valid()) {
     acceptSequence(header);
   }
   return m_report;
+}
+
+ccsds::ValidationReport ccsds::Validator::validateStateless(const Packet &packet) const {
+  Validator copy = *this;
+  copy.m_skipSequence = true;
+  return copy.validate(packet);
 }
 
 void ccsds::Validator::clear() {
