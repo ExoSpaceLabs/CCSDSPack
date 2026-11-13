@@ -94,6 +94,13 @@ packet.setSecondaryHeader(
     ccsds::time::CucTime{0x01020304, 0}));
 ```
 
+The PUS-A/C `TmSecondaryHeader::setTimestamp()` convenience API validates
+time through the same C11 CUC encoder using an eight-octet stack buffer.
+It does not construct a temporary CUC vector just to check whether the
+numeric timestamp fits the configured epoch and field widths. On validation
+failure the previously installed timestamp is left intact. Built-in PUS-A/C
+TM wire serialization already delegates directly to C11 PUS TM codecs.
+
 ## Typed PUS parsing
 
 ```cpp
